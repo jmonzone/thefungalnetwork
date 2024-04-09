@@ -15,16 +15,21 @@ public class Fish : MonoBehaviour
     private void Awake()
     {
         movementController = GetComponent<MovementController>();
-        movementController.OnDestinationReached += () =>
-        {
-            movementController.Speed = 3f;
-            OnCaught?.Invoke();
-        };
+        
     }
 
     public void Attract(Transform bob)
     {
         movementController.SetTarget(bob);
+        movementController.OnDestinationReached += OnDestinationReached;
+    }
+
+    private void OnDestinationReached()
+    {
+        movementController.Speed = 5f;
+        OnCaught?.Invoke();
+
+        movementController.OnDestinationReached -= OnDestinationReached;
     }
 
     public void Scare(Vector3 bobPosition)
@@ -35,5 +40,6 @@ public class Fish : MonoBehaviour
         direction.y = 0;
         movementController.SetDirection(direction);
 
+        movementController.Speed = 2f;
     }
 }
