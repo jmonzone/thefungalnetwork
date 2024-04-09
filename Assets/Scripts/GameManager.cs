@@ -46,8 +46,9 @@ public class GameManager : MonoBehaviour
         fishFactory.OnEntityCreated += fish =>
         {
             var movement = fish.GetComponent<MovementController>();
-            var direction = Vector3.down;
+            var direction = Vector3.back;
             movement.SetDirection(direction);
+            movement.transform.forward = direction;
         };
 
         fishingRod.OnFishCaught += () =>
