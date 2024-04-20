@@ -28,6 +28,16 @@ public class GameData
         else saveData = new JObject();
     }
 
+    public void ResetData()
+    {
+        if (File.Exists(SaveDataPath))
+        {
+            File.Delete(SaveDataPath);
+        }
+
+        saveData = new JObject();
+    }
+
     private void SaveData(string key, string value)
     {
         saveData[key] = value;
@@ -47,6 +57,7 @@ public class HomeSceneManager : MonoBehaviour
     [SerializeField] private PetInfoManager petInfoManager;
     [SerializeField] private GameData gameData;
     [SerializeField] private List<PetData> petCollection;
+    [SerializeField] private bool resetData;
 
     private enum HomeSceneState
     {
@@ -57,7 +68,8 @@ public class HomeSceneManager : MonoBehaviour
     private void Start()
     {
         gameData = new GameData();
-        gameData.LoadData();
+        if (resetData) gameData.ResetData();
+        else gameData.LoadData();
 
         if (string.IsNullOrEmpty(gameData.Pet))
         {

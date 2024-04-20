@@ -7,14 +7,11 @@ public class EggSelection : MonoBehaviour
 {
     private Camera mainCamera;
 
-    private List<EggController> eggControllers;
-
     public event UnityAction<PetData> OnEggSelected;
 
     private void Awake()
     {
         mainCamera = Camera.main;
-        eggControllers = GetComponentsInChildren<EggController>().ToList();
     }
 
     private void Update()
@@ -37,7 +34,9 @@ public class EggSelection : MonoBehaviour
 
     public void SetPets(List<PetData> pets)
     {
-        for(var i = 0; i < eggControllers.Count && i < pets.Count; i++)
+        var eggControllers = GetComponentsInChildren<EggController>().ToList();
+
+        for (var i = 0; i < eggControllers.Count && i < pets.Count; i++)
         {
             eggControllers[i].SetPet(pets[i]);
         }
