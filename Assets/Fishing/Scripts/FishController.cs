@@ -34,6 +34,13 @@ public class FishController : MonoBehaviour
         movementController.OnDestinationReached += HandleCapture;
     }
 
+    public void Catch()
+    {
+        IsCaught = true;
+        OnCaught?.Invoke();
+        gameObject.SetActive(false);
+    }
+
     private void HandleCapture()
     {
         IsCaught = true;

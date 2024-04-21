@@ -49,7 +49,7 @@ public class PetInfoManager : MonoBehaviour
 
     }
 
-    public void SetPet(PetData pet)
+    public void SetPet(Pet pet)
     {
         petNameText.text = pet.Name;
 

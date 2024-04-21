@@ -2,21 +2,21 @@ using UnityEngine;
 
 public class EggController : MonoBehaviour
 {
-    public PetData Pet { get; private set; }
+    public Pet Pet { get; private set; }
 
-    private Rigidbody rigidbody;
+    private Rigidbody _rigidbody;
 
     private void Awake()
     {
-        rigidbody = GetComponent<Rigidbody>();
+        _rigidbody = GetComponent<Rigidbody>();
     }
 
     public void Jump()
     {
-        rigidbody.AddForce(Vector3.up * 100f);
+        _rigidbody.AddForce(Vector3.up * 100f);
     }
 
-    public void SetPet(PetData pet)
+    public void SetPet(Pet pet)
     {
         Pet = pet;
         var renderer = GetComponentInChildren<Renderer>();

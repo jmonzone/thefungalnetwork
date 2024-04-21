@@ -19,8 +19,7 @@ public class FishingRod : MonoBehaviour
     [SerializeField] private float catchRadius = 5f;
     [SerializeField] private bool scareFish = false;
     [SerializeField] private float launchSpeed = 0.5f;
-    [SerializeField] private float minLaunchAngle = 45f;
-    [SerializeField] private float maxLaunchAngle = 90f;
+    [SerializeField] private float launchAngle = 45f;
 
     [SerializeField] private float dragDistance = 7.5f;
     [SerializeField] private float dragSpeed = 3f;
@@ -123,7 +122,7 @@ public class FishingRod : MonoBehaviour
         else if (inputDireciton.magnitude > 400) inputDireciton = inputDireciton.normalized * 400;
 
         bob.PersistDirection = true;
-        var rotatedVector = Quaternion.Euler(minLaunchAngle, 0, 0) * inputDireciton;
+        var rotatedVector = Quaternion.Euler(launchAngle, 0, 0) * inputDireciton;
         rotatedVector.x *= 0.75f;
         bob.Launch(rotatedVector * launchScalar);
         SetCurrentState(FishingRodState.CASTING);

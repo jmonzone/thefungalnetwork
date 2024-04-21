@@ -1,63 +1,14 @@
 using System.Collections;
-using System.IO;
 using UnityEngine;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
-[Serializable]
-public class GameData
+public class HomeSceneManager : BaseSceneManager
 {
-    [SerializeField] private string pet;
-
-    public string Pet => pet;
-
-    private string SaveDataPath => $"{Application.persistentDataPath}/data.json";
-    private JObject saveData;
-
-
-    public void LoadData()
-    {
-        if (File.Exists(SaveDataPath))
-        {
-            var configFile = File.ReadAllText(SaveDataPath);
-            saveData = JObject.Parse(configFile);
-
-            if (saveData.ContainsKey("currentPet")) pet = saveData["currentPet"].ToString();
-        }
-        else saveData = new JObject();
-    }
-
-    public void ResetData()
-    {
-        if (File.Exists(SaveDataPath))
-        {
-            File.Delete(SaveDataPath);
-        }
-
-        saveData = new JObject();
-    }
-
-    private void SaveData(string key, string value)
-    {
-        saveData[key] = value;
-        File.WriteAllText(SaveDataPath, saveData.ToString());
-    }
-
-    public void SetCurrentPet(string pet)
-    {
-        this.pet = pet;
-        SaveData("currentPet", pet);
-    }
-}
-
-public class HomeSceneManager : MonoBehaviour
-{
+    [Header("Scene References")]
     [SerializeField] private EggSelection eggSelection;
     [SerializeField] private PetInfoManager petInfoManager;
-    [SerializeField] private GameData gameData;
-    [SerializeField] private List<PetData> petCollection;
-    [SerializeField] private bool resetData;
+    [SerializeField] private Button resetButton;
 
     private enum HomeSceneState
     {
@@ -67,33 +18,34 @@ public class HomeSceneManager : MonoBehaviour
 
     private void Start()
     {
-        gameData = new GameData();
-        if (resetData) gameData.ResetData();
-        else gameData.LoadData();
-
-        if (string.IsNullOrEmpty(gameData.Pet))
-        {
-            eggSelection.OnEggSelected += pet => StartCoroutine(OnEggSelected(pet));
-            eggSelection.SetPets(petCollection.GetRange(0, 3));
-            SetCurrentState(HomeSceneState.EGG_SELECTION);
-        }
-        else
+        if (CurrentPet)
         {
             GoToPetInfo();
         }
-        
+        else
+        {
+            eggSelection.OnEggSelected += pet => StartCoroutine(OnEggSelected(pet));
+            eggSelection.SetPets(Data.Pets.GetRange(0, 3));
+            SetCurrentState(HomeSceneState.EGG_SELECTION);
+        }
+
+        resetButton.onClick.AddListener(() =>
+        {
+            ResetData();
+            SceneManager.LoadScene(0);
+        });
     }
 
-    private IEnumerator OnEggSelected(PetData pet)
+    private IEnumerator OnEggSelected(Pet pet)
     {
-        gameData.SetCurrentPet(pet.Name);
+        CurrentPet = pet;
         yield return new WaitForSeconds(1f);
         GoToPetInfo();
     }
 
     private void GoToPetInfo()
     {
-        petInfoManager.SetPet(petCollection.Find(pet => pet.Name == gameData.Pet));
+        petInfoManager.SetPet(CurrentPet);
         SetCurrentState(HomeSceneState.PET_INFO);
     }
 

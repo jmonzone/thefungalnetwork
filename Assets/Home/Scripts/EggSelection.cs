@@ -7,7 +7,7 @@ public class EggSelection : MonoBehaviour
 {
     private Camera mainCamera;
 
-    public event UnityAction<PetData> OnEggSelected;
+    public event UnityAction<Pet> OnEggSelected;
 
     private void Awake()
     {
@@ -32,7 +32,7 @@ public class EggSelection : MonoBehaviour
         }
     }
 
-    public void SetPets(List<PetData> pets)
+    public void SetPets(List<Pet> pets)
     {
         var eggControllers = GetComponentsInChildren<EggController>().ToList();
 
