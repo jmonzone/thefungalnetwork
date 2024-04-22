@@ -1507,7 +1507,6 @@ MonoBehaviour:
   dragSpeed: 3
   launchThreshold: 1
   launchScalar: 0.1
-  currentState: 0
 --- !u!120 &519688049
 LineRenderer:
   serializedVersion: 2
@@ -4375,8 +4374,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b531d6ef7b29f454190e11c85dcbeabc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2
-  rotationSpeed: 0.5
+  speed: 3
+  rotationSpeed: 5
   idleRadius: 4
   autoFishCooldown: 5
   flightHeight: 5
@@ -6243,6 +6242,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resetDataOnAwake: 0
   data: {fileID: 11400000, guid: 276b43fc95fac42cfabc6ee046c48db8, type: 2}
+  experience: 0
+  level: 0
   pet: {fileID: 0}
   saveDataPath: 
   fishingUpgrades: {fileID: 11400000, guid: 9de9909a5fadb4449b443477288db122, type: 2}
@@ -6253,9 +6254,9 @@ MonoBehaviour:
   spawnAnchors:
   - {fileID: 1860463686}
   logFlumes:
-  - {fileID: 3096777570242103634}
   - {fileID: 1860463690}
   - {fileID: 1787266394}
+  - {fileID: 3096777570242103634}
   textPopup: {fileID: 709813643}
   levelText: {fileID: 1618110490}
   experienceSlider: {fileID: 606382653}

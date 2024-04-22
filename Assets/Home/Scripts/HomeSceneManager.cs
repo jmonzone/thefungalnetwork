@@ -46,6 +46,7 @@ public class HomeSceneManager : BaseSceneManager
     private void GoToPetInfo()
     {
         petInfoManager.SetPet(CurrentPet);
+        petInfoManager.SetLevel(Level);
         SetCurrentState(HomeSceneState.PET_INFO);
     }
 
@@ -53,5 +54,15 @@ public class HomeSceneManager : BaseSceneManager
     {
         eggSelection.gameObject.SetActive(state == HomeSceneState.EGG_SELECTION);
         petInfoManager.gameObject.SetActive(state == HomeSceneState.PET_INFO);
+    }
+
+    protected override void OnExperienceChanged(float experience)
+    {
+        //throw new System.NotImplementedException();
+    }
+
+    protected override void OnLevelChanged(int level)
+    {
+        //throw new System.NotImplementedException();
     }
 }

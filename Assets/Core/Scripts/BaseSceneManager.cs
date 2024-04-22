@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 using Newtonsoft.Json.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public abstract class BaseSceneManager : MonoBehaviour
@@ -12,10 +13,16 @@ public abstract class BaseSceneManager : MonoBehaviour
     [SerializeField] private GameData data;
 
     [Header("Debug")]
+    [SerializeField] private float experience = 0;
+    [SerializeField] private int level = 1;
     [SerializeField] private Pet pet;
     [SerializeField] private string saveDataPath;
 
     private JObject saveData;
+
+    private const string PET_KEY = "currentPet";
+    private const string LEVEL_KEY = "level";
+    private const string EXPERIENCE_KEY = "experience";
 
     protected virtual void Awake()
     {
@@ -23,10 +30,57 @@ public abstract class BaseSceneManager : MonoBehaviour
 
         if (Application.isEditor && resetDataOnAwake) ResetData();
         else LoadData();
+
+        if (saveData.ContainsKey(LEVEL_KEY) && int.TryParse(saveData[LEVEL_KEY].ToString(), out int level))
+        {
+            Level = level;
+        }
+        else
+        {
+            Level = 1;
+        }
+
+        if (saveData.ContainsKey(EXPERIENCE_KEY) && float.TryParse(saveData[EXPERIENCE_KEY].ToString(), out float experience))
+        {
+            Experience = experience;
+        }
+        else
+        {
+            Experience = 0;
+        }
+    }
+
+    protected virtual void Update()
+    {
+        if (Input.GetKeyUp(KeyCode.L)) Experience = ExperienceAtLevel(level + 1) + 10f;
     }
 
     #region Protected Methods
     protected GameData Data => data;
+
+    protected float Experience
+    {
+        get => experience;
+        set
+        {
+            experience = value;
+            OnExperienceChanged(experience);
+            SaveData(EXPERIENCE_KEY, experience);
+            var requiredExperience = ExperienceAtLevel(level + 1);
+            if (experience > requiredExperience) LevelUp();
+        }
+    }
+
+    protected int Level
+    {
+        get => level;
+        set
+        {
+            level = value;
+            OnLevelChanged(level);
+            SaveData(LEVEL_KEY, level);
+        }
+    }
 
     protected Pet CurrentPet
     {
@@ -34,7 +88,7 @@ public abstract class BaseSceneManager : MonoBehaviour
         set
         {
             pet = value;
-            SaveData("currentPet", pet.Name);
+            SaveData(PET_KEY, pet.Name);
         }
     }
 
@@ -47,6 +101,25 @@ public abstract class BaseSceneManager : MonoBehaviour
 
         saveData = new JObject();
     }
+
+    protected virtual void LevelUp()
+    {
+        Level++;
+    }
+
+    protected abstract void OnExperienceChanged(float experience);
+    protected abstract void OnLevelChanged(int level);
+
+    protected float ExperienceAtLevel(int level)
+    {
+        float total = 0;
+        for (int i = 1; i < level; i++)
+        {
+            total += Mathf.Floor(i + 300 * Mathf.Pow(2, i / 7.0f));
+        }
+
+        return Mathf.Floor(total / 4);
+    }
     #endregion Protected Methods
 
     #region Private Methods
@@ -57,7 +130,10 @@ public abstract class BaseSceneManager : MonoBehaviour
             var configFile = File.ReadAllText(saveDataPath);
             saveData = JObject.Parse(configFile);
 
-            pet = data.Pets.FirstOrDefault(pet => pet.Name == saveData["currentPet"].ToString());
+            if (saveData.ContainsKey(PET_KEY))
+            {
+                pet = data.Pets.FirstOrDefault(pet => pet.Name == saveData[PET_KEY].ToString());
+            }
         }
         else
         {
@@ -65,7 +141,7 @@ public abstract class BaseSceneManager : MonoBehaviour
         }
     }
 
-    private void SaveData(string key, string value)
+    private void SaveData(string key, JToken value)
     {
         saveData[key] = value;
         File.WriteAllText(saveDataPath, saveData.ToString());

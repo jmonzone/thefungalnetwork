@@ -7,7 +7,9 @@ using UnityEngine.UI;
 public class PetInfoManager : MonoBehaviour
 {
     [SerializeField] private Transform petModelAnchor;
-    [SerializeField] private TextMeshProUGUI petNameText;
+    [SerializeField] private TextMeshProUGUI nameText;
+    [SerializeField] private TextMeshProUGUI typeText;
+    [SerializeField] private TextMeshProUGUI levelText;
     [SerializeField] private Button closeButton;
 
     private Camera mainCamera;
@@ -51,11 +53,18 @@ public class PetInfoManager : MonoBehaviour
 
     public void SetPet(Pet pet)
     {
-        petNameText.text = pet.Name;
+        nameText.text = pet.Name;
+        typeText.text = pet.Type.ToString();
+
 
         var petInstance = Instantiate(pet.Prefab, petModelAnchor);
         var animator = petInstance.GetComponentInChildren<Animator>();
         animator.speed = 0.5f;
+    }
+
+    public void SetLevel(int level)
+    {
+        levelText.text = $"Level {level}";
     }
 
     private void GoToFishingGameplay()

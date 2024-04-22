@@ -26,12 +26,7 @@ public class FishingRod : MonoBehaviour
     [SerializeField] private float launchThreshold = 100f;
     [SerializeField] private float launchScalar = 0.01f;
 
-
-
-    [Header("Read Only")]
-
-    [SerializeField] private FishingRodState currentState;
-
+    private FishingRodState currentState;
     private Vector3 startPosition;
     private FishController targetFish;
     private Camera mainCamera;
@@ -109,23 +104,21 @@ public class FishingRod : MonoBehaviour
             bob.SetTargetPosition(targetPosition);
         }
 
-        Debug.Log($"{inputDireciton.magnitude}");
-
-
         if (inputDireciton.magnitude < launchThreshold)
         {
-            bob.SetTargetPosition(startPosition);
-            yield break;
+            bob.SetTargetPosition(this.startPosition);
         }
+        else
+        {
+            if (inputDireciton.magnitude < 50) inputDireciton = inputDireciton.normalized * 50;
+            else if (inputDireciton.magnitude > 400) inputDireciton = inputDireciton.normalized * 400;
 
-        if (inputDireciton.magnitude < 50) inputDireciton = inputDireciton.normalized * 50;
-        else if (inputDireciton.magnitude > 400) inputDireciton = inputDireciton.normalized * 400;
-
-        bob.PersistDirection = true;
-        var rotatedVector = Quaternion.Euler(launchAngle, 0, 0) * inputDireciton;
-        rotatedVector.x *= 0.75f;
-        bob.Launch(rotatedVector * launchScalar);
-        SetCurrentState(FishingRodState.CASTING);
+            bob.PersistDirection = true;
+            var rotatedVector = Quaternion.Euler(launchAngle, 0, 0) * inputDireciton;
+            rotatedVector.x *= 0.75f;
+            bob.Launch(rotatedVector * launchScalar);
+            SetCurrentState(FishingRodState.CASTING);
+        }
     }
 
     private void ReelIn()

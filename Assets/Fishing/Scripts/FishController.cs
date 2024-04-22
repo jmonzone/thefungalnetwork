@@ -14,6 +14,7 @@ public class FishController : MonoBehaviour
     public bool IsTreasure => isTreasure;
     public bool IsCaught { get; private set; }
     public bool IsCatchable { get => isCatchable; set => isCatchable = value; }
+    public bool IsAttacted { get; private set; }
 
     public event UnityAction OnCaught;
 
@@ -29,6 +30,7 @@ public class FishController : MonoBehaviour
 
     public void Attract(Transform bob)
     {
+        IsAttacted = true;
         movementController.Speed = 2f;
         movementController.SetTarget(bob);
         movementController.OnDestinationReached += HandleCapture;
@@ -55,6 +57,7 @@ public class FishController : MonoBehaviour
         if (isTreasure) return;
 
         IsCaught = false;
+        IsAttacted = false;
 
         var direction = transform.position - bobPosition;
         direction.y = 0;

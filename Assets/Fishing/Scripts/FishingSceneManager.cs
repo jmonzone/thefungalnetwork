@@ -32,9 +32,8 @@ public class FishingSceneManager : BaseSceneManager
     [SerializeField] private List<FishController> fishControllers;
 
     private int flumeIndex = 0;
-    private float experience;
-    private int level;
-    private float cooldown = 3f;
+    private const float BASE_COOLDOWN = 3f;
+    private float cooldown = BASE_COOLDOWN;
     private float timer = 0f;
     private int fishCount = 0;
     private Camera mainCamera;
@@ -49,9 +48,6 @@ public class FishingSceneManager : BaseSceneManager
         petController.SetPet(CurrentPet);
         petController.SetFish(fishControllers);
 
-        Level = 1;
-        Experience = ExperienceAtLevel(Level);
-
         mainCamera = Camera.main;
 
         fishingRod.OnReeledIn += fish =>
@@ -59,17 +55,20 @@ public class FishingSceneManager : BaseSceneManager
             if (fish.IsTreasure)
             {
                 flumeIndex++;
+                cooldown = BASE_COOLDOWN / (flumeIndex + 1);
                 var flume = logFlumes[flumeIndex];
 
-                AddSpawnAnchor(flume.SpawnAnchor);
+                spawnAnchors.Add(flume.SpawnAnchor);
                 flume.gameObject.SetActive(true);
                 treasureUI.gameObject.SetActive(true);
             }
         };
     }
 
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
+
         if (timer > 1)
         {
             SpawnFish();
@@ -81,7 +80,6 @@ public class FishingSceneManager : BaseSceneManager
         }
 
         if (Input.GetMouseButtonDown(0) && !IsPointerOverUI) fishingRod.Use();
-        if (Input.GetKeyUp(KeyCode.L)) Experience = ExperienceAtLevel(level + 1) + 10f;
     }
 
     public bool IsPointerOverUI
@@ -103,11 +101,6 @@ public class FishingSceneManager : BaseSceneManager
 
             return false;
         }
-    }
-
-    public void AddSpawnAnchor(Transform spawnAnchor)
-    {
-        spawnAnchors.Add(spawnAnchor);
     }
 
     private void SpawnFish()
@@ -170,63 +163,37 @@ public class FishingSceneManager : BaseSceneManager
         return go;
     }
 
-    private void LevelUp()
+    protected override void OnExperienceChanged(float experience)
     {
-        Level++;
+        experienceSlider.value = experience;
+    }
 
-        if (fishingUpgrades.OfLevel(level, out Upgrade upgrade))
+    protected override void OnLevelChanged(int level)
+    {
+        levelText.text = (level).ToString();
+        experienceSlider.minValue = ExperienceAtLevel(level);
+        experienceSlider.maxValue = ExperienceAtLevel(level + 1);
+
+        availableFish = new List<FishData>() { defaultFish };
+
+        availableFish.AddRange(fishingUpgrades
+            .OfLevel(level)
+            .OfType<NewFishUpgrade>()
+            .Select(upgrade => upgrade.Fish));
+    }
+
+    protected override void LevelUp()
+    {
+        base.LevelUp();
+
+        if (fishingUpgrades.OfLevel(Level, out Upgrade upgrade))
         {
-            levelUpUI.Show(level, upgrade);
+            levelUpUI.Show(Level, upgrade);
         }
 
         if (flumeIndex < logFlumes.Count && Level % 5 == 0)
         {
-
-            
             Spawn(treasurePrefab);
         }
-    }
-
-    private float Experience
-    {
-        get => experience;
-        set
-        {
-            experience = value;
-
-            var requiredExperience = ExperienceAtLevel(level + 1);
-            if (experience > requiredExperience) LevelUp();
-            experienceSlider.value = experience;
-        }
-    }
-
-    private int Level
-    {
-        get => level;
-        set
-        {
-            level = value;
-            levelText.text = (level).ToString();
-            experienceSlider.minValue = ExperienceAtLevel(level);
-            experienceSlider.maxValue = ExperienceAtLevel(level + 1);
-
-            availableFish = new List<FishData>() { defaultFish };
-
-            availableFish.AddRange(fishingUpgrades
-                .OfLevel(level)
-                .OfType<NewFishUpgrade>()
-                .Select(upgrade => upgrade.Fish));
-        }
-    }
-
-    private float ExperienceAtLevel(int level)
-    {
-        float total = 0;
-        for (int i = 1; i < level; i++)
-        {
-            total += Mathf.Floor(i + 300 * Mathf.Pow(2, i / 7.0f));
-        }
-
-        return Mathf.Floor(total / 4);
     }
 }

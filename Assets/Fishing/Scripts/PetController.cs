@@ -34,7 +34,14 @@ public class PetController : MonoBehaviour
             var petObject = Instantiate(pet.Prefab, transform);
             petObject.transform.localScale = Vector3.one * 3f;
 
-            if (pet.Type == PetType.SKY) origin.y = 5;
+            var animator = petObject.GetComponentInChildren<Animator>();
+            animator.speed = 0.5f;
+
+            if (pet.Type == PetType.SKY)
+            {
+                origin.y = 5;
+                transform.position = origin;
+            }
         }
     }
 
@@ -75,11 +82,25 @@ public class PetController : MonoBehaviour
             timer = 0;
         }
 
-        if (!targetFish && fish.Count > 0 && timer > autoFishCooldown)
+        if (timer > autoFishCooldown)
         {
-            targetFish = fish[0];
-        }
+            targetFish = null;
 
-        timer += Time.deltaTime;
+            var closestDistance = Mathf.Infinity;
+            foreach (var _fish in fish)
+            {
+                if (_fish.IsAttacted || _fish.IsCaught) continue;
+                var distance = Vector3.Distance(_fish.transform.position, transform.position);
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    targetFish = _fish;
+                }
+            }
+        }
+        else
+        {
+            timer += Time.deltaTime;
+        }
     }
 }
