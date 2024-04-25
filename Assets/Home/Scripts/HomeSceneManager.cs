@@ -8,11 +8,14 @@ public class HomeSceneManager : BaseSceneManager
     [Header("Scene References")]
     [SerializeField] private EggSelection eggSelection;
     [SerializeField] private PetInfoManager petInfoManager;
+    [SerializeField] private Button petInfoButton;
     [SerializeField] private Button resetButton;
+    [SerializeField] private Button closeButton;
 
-    private enum HomeSceneState
+    private enum GameState
     {
         EGG_SELECTION,
+        GAMEPLAY,
         PET_INFO
     }
 
@@ -20,14 +23,17 @@ public class HomeSceneManager : BaseSceneManager
     {
         if (CurrentPet)
         {
-            GoToPetInfo();
+            SetCurrentState(GameState.GAMEPLAY);
         }
         else
         {
             eggSelection.OnEggSelected += pet => StartCoroutine(OnEggSelected(pet));
             eggSelection.SetPets(Data.Pets.GetRange(0, 3));
-            SetCurrentState(HomeSceneState.EGG_SELECTION);
+            SetCurrentState(GameState.EGG_SELECTION);
         }
+
+        petInfoButton.onClick.AddListener(() => GoToPetInfo());
+        closeButton.onClick.AddListener(() => SetCurrentState(GameState.GAMEPLAY));
 
         resetButton.onClick.AddListener(() =>
         {
@@ -47,13 +53,13 @@ public class HomeSceneManager : BaseSceneManager
     {
         petInfoManager.SetPet(CurrentPet);
         petInfoManager.SetLevel(Level);
-        SetCurrentState(HomeSceneState.PET_INFO);
+        SetCurrentState(GameState.PET_INFO);
     }
 
-    private void SetCurrentState(HomeSceneState state)
+    private void SetCurrentState(GameState state)
     {
-        eggSelection.gameObject.SetActive(state == HomeSceneState.EGG_SELECTION);
-        petInfoManager.gameObject.SetActive(state == HomeSceneState.PET_INFO);
+        eggSelection.gameObject.SetActive(state == GameState.EGG_SELECTION);
+        petInfoManager.gameObject.SetActive(state == GameState.PET_INFO);
     }
 
     protected override void OnExperienceChanged(float experience)
