@@ -11,6 +11,7 @@ public class HomeSceneManager : BaseSceneManager
     [SerializeField] private Button petInfoButton;
     [SerializeField] private Button resetButton;
     [SerializeField] private Button closeButton;
+    [SerializeField] private PetController petController;
 
     private enum GameState
     {
@@ -23,6 +24,8 @@ public class HomeSceneManager : BaseSceneManager
     {
         if (CurrentPet)
         {
+            petInfoManager.SetPet(CurrentPet);
+            SpawnPet();
             SetCurrentState(GameState.GAMEPLAY);
         }
         else
@@ -46,9 +49,18 @@ public class HomeSceneManager : BaseSceneManager
     {
         CurrentPet = pet;
         yield return new WaitForSeconds(1f);
+        SpawnPet();
         GoToPetInfo();
     }
 
+    private void SpawnPet()
+    {
+        petController.SetPet(CurrentPet);
+        //var overWorldPet = Instantiate(CurrentPet.Prefab, Vector3.left * 2.0f, Quaternion.identity);
+        //overWorldPet.transform.forward = Vector3.back;
+        //var overworldAnimator = overWorldPet.GetComponentInChildren<Animator>();
+        //overworldAnimator.speed = 0.25f;
+    }
     private void GoToPetInfo()
     {
         petInfoManager.SetPet(CurrentPet);

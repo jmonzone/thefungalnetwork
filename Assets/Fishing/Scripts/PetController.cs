@@ -10,6 +10,7 @@ public class PetController : MonoBehaviour
     [SerializeField] private float autoFishCooldown = 4f;
     [SerializeField] private float flightHeight = 5f;
     [SerializeField] private Vector3 offset;
+    [SerializeField] private bool randomizePositions = false;
 
     [Header("References")]
     [SerializeField] private GameObject placeholder;
@@ -17,7 +18,7 @@ public class PetController : MonoBehaviour
     private Vector3 origin;
     private float timer;
     private FishController targetFish;
-    private List<FishController> fish;
+    private List<FishController> fish = new List<FishController>();
 
     private void Awake()
     {
@@ -32,10 +33,10 @@ public class PetController : MonoBehaviour
         if (pet)
         {
             var petObject = Instantiate(pet.Prefab, transform);
-            petObject.transform.localScale = Vector3.one * 3f;
+            petObject.transform.localScale = Vector3.one;
 
             var animator = petObject.GetComponentInChildren<Animator>();
-            animator.speed = 0.5f;
+            animator.speed = 0.25f;
 
             if (pet.Type == PetType.SKY)
             {
@@ -50,10 +51,23 @@ public class PetController : MonoBehaviour
         this.fish = fish;
     }
 
+    private Vector3 targetPosition = Vector3.right * 3f;
     private Vector3 TargetPosition
     {
         get
         {
+            if (randomizePositions)
+            {
+                if (Vector3.Distance(transform.position, targetPosition) < 0.5f)
+                {
+                    var random = (Vector3) Random.insideUnitCircle.normalized * 5f;
+                    random.z = random.y;
+                    random.y = 0;
+                    targetPosition = random;
+                }
+
+                return targetPosition;
+            }
             if (targetFish)
             {
                 return targetFish.transform.position;
@@ -98,9 +112,7 @@ public class PetController : MonoBehaviour
                 }
             }
         }
-        else
-        {
-            timer += Time.deltaTime;
-        }
+
+        timer += Time.deltaTime;
     }
 }

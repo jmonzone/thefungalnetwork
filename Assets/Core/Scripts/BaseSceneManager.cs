@@ -89,7 +89,13 @@ public abstract class BaseSceneManager : MonoBehaviour
         {
             pet = value;
             SaveData(PET_KEY, pet.Name);
+            OnCurrentPetChanged(pet);
         }
+    }
+
+    protected virtual void OnCurrentPetChanged(Pet pet)
+    {
+
     }
 
     protected void ResetData()

@@ -51,15 +51,18 @@ public class PetInfoManager : MonoBehaviour
 
     }
 
+    private GameObject petInstance;
     public void SetPet(Pet pet)
     {
         nameText.text = pet.Name;
         typeText.text = pet.Type.ToString();
 
-
-        var petInstance = Instantiate(pet.Prefab, petModelAnchor);
-        var animator = petInstance.GetComponentInChildren<Animator>();
-        animator.speed = 0.5f;
+        if (!petInstance)
+        {
+            petInstance = Instantiate(pet.Prefab, petModelAnchor);
+            var animator = petInstance.GetComponentInChildren<Animator>();
+            animator.speed = 0.25f;
+        }
     }
 
     public void SetLevel(int level)
