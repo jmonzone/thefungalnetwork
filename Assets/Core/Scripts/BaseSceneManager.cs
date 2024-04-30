@@ -64,6 +64,7 @@ public abstract class BaseSceneManager : MonoBehaviour
 
     protected void AddToInventory(Item item)
     {
+        if (inventory.Count >= 8) return;
         Debug.Log($"adding item {item.Name} {saveData}");
         inventory.Add(item);
         (saveData[INVENTORY_KEY] as JArray).Add(item.Name);

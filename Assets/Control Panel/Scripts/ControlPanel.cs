@@ -37,11 +37,16 @@ public class ControlPanel : MonoBehaviour
 
     public void SetInventory(List<Item> items)
     {
-        var i = 0;
-        foreach(var item in items)
+        var maxIterations = Mathf.Min(inventorySlots.Count, items.Count);
+
+        for (var i = 0; i < maxIterations; i++)
         {
-            inventorySlots[i].SetItem(item);
-            i++;
+            inventorySlots[i].SetItem(items[i]);
+        }
+
+        for (var i = items.Count; i < inventorySlots.Count; i++)
+        {
+            inventorySlots[i].SetItem(null);
         }
     }
 }

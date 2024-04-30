@@ -7,7 +7,11 @@ public class InventorySlot : MonoBehaviour
 
     public void SetItem(Item item)
     {
-        itemImage.sprite = item.Sprite;
-        itemImage.gameObject.SetActive(true);
+        if (item)
+        {
+            itemImage.sprite = item.Sprite;
+        }
+
+        itemImage.gameObject.SetActive(item);
     }
 }

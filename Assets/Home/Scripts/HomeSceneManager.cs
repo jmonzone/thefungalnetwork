@@ -76,6 +76,7 @@ public class HomeSceneManager : BaseSceneManager
         petInfoManager.SetLevel(Level);
         petController.SetPet(CurrentPet);
     }
+
     private void GoToPetInfo()
     {
         SetCurrentState(GameState.PET_INFO);
