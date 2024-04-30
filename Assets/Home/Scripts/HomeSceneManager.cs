@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+
 public class HomeSceneManager : BaseSceneManager
 {
     [Header("Scene References")]
@@ -12,6 +13,9 @@ public class HomeSceneManager : BaseSceneManager
     [SerializeField] private Button resetButton;
     [SerializeField] private Button closeButton;
     [SerializeField] private PetController petController;
+    [SerializeField] private ActionButton actionButton;
+    [SerializeField] private Rigidbody player;
+    [SerializeField] private ControlPanel controlPanel;
 
     private enum GameState
     {
@@ -24,7 +28,6 @@ public class HomeSceneManager : BaseSceneManager
     {
         if (CurrentPet)
         {
-            petInfoManager.SetPet(CurrentPet);
             SpawnPet();
             SetCurrentState(GameState.GAMEPLAY);
         }
@@ -43,6 +46,19 @@ public class HomeSceneManager : BaseSceneManager
             ResetData();
             SceneManager.LoadScene(0);
         });
+
+        controlPanel.SetInventory(Inventory);
+    }
+
+    protected override void Update()
+    {
+        base.Update();
+
+        if (CurrentPet)
+        {
+            var distance = Vector3.Distance(player.transform.position, petController.transform.position);
+            actionButton.SetVisible(distance < 4f);
+        }
     }
 
     private IEnumerator OnEggSelected(Pet pet)
@@ -50,21 +66,18 @@ public class HomeSceneManager : BaseSceneManager
         CurrentPet = pet;
         yield return new WaitForSeconds(1f);
         SpawnPet();
-        GoToPetInfo();
+        SetCurrentState(GameState.GAMEPLAY);
     }
 
     private void SpawnPet()
     {
+        actionButton.Initialize(CurrentPet.ActionImage, CurrentPet.Color);
+        petInfoManager.SetPet(CurrentPet);
+        petInfoManager.SetLevel(Level);
         petController.SetPet(CurrentPet);
-        //var overWorldPet = Instantiate(CurrentPet.Prefab, Vector3.left * 2.0f, Quaternion.identity);
-        //overWorldPet.transform.forward = Vector3.back;
-        //var overworldAnimator = overWorldPet.GetComponentInChildren<Animator>();
-        //overworldAnimator.speed = 0.25f;
     }
     private void GoToPetInfo()
     {
-        petInfoManager.SetPet(CurrentPet);
-        petInfoManager.SetLevel(Level);
         SetCurrentState(GameState.PET_INFO);
     }
 
@@ -72,6 +85,8 @@ public class HomeSceneManager : BaseSceneManager
     {
         eggSelection.gameObject.SetActive(state == GameState.EGG_SELECTION);
         petInfoManager.gameObject.SetActive(state == GameState.PET_INFO);
+        petInfoButton.gameObject.SetActive(state != GameState.EGG_SELECTION);
+
     }
 
     protected override void OnExperienceChanged(float experience)

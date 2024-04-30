@@ -122,6 +122,7 @@ public class FishingSceneManager : BaseSceneManager
             {
                 if (!fishController.IsTreasure)
                 {
+                    AddToInventory(fishController.Data);
                     var experience = fishController.Data.Experience;
                     Experience += experience;
 

@@ -1,7 +1,7 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Newtonsoft.Json.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public abstract class BaseSceneManager : MonoBehaviour
@@ -16,13 +16,17 @@ public abstract class BaseSceneManager : MonoBehaviour
     [SerializeField] private float experience = 0;
     [SerializeField] private int level = 1;
     [SerializeField] private Pet pet;
+    [SerializeField] private List<Item> inventory = new List<Item>();
     [SerializeField] private string saveDataPath;
 
     private JObject saveData;
 
+    protected List<Item> Inventory => inventory;
+
     private const string PET_KEY = "currentPet";
     private const string LEVEL_KEY = "level";
     private const string EXPERIENCE_KEY = "experience";
+    private const string INVENTORY_KEY = "inventory";
 
     protected virtual void Awake()
     {
@@ -57,6 +61,14 @@ public abstract class BaseSceneManager : MonoBehaviour
 
     #region Protected Methods
     protected GameData Data => data;
+
+    protected void AddToInventory(Item item)
+    {
+        Debug.Log($"adding item {item.Name} {saveData}");
+        inventory.Add(item);
+        (saveData[INVENTORY_KEY] as JArray).Add(item.Name);
+        File.WriteAllText(saveDataPath, saveData.ToString());
+    }
 
     protected float Experience
     {
@@ -131,20 +143,38 @@ public abstract class BaseSceneManager : MonoBehaviour
     #region Private Methods
     private void LoadData()
     {
-        if (File.Exists(saveDataPath))
+        if (!File.Exists(saveDataPath)) saveData = new JObject();
+        else 
         {
             var configFile = File.ReadAllText(saveDataPath);
             saveData = JObject.Parse(configFile);
+        }
 
-            if (saveData.ContainsKey(PET_KEY))
+        if (saveData.ContainsKey(PET_KEY))
+        {
+            pet = data.Pets.FirstOrDefault(pet => pet.Name == saveData[PET_KEY].ToString());
+        }
+        else saveData[PET_KEY] = "";
+
+        if (saveData.ContainsKey(INVENTORY_KEY))
+        {
+            foreach (var itemName in saveData[INVENTORY_KEY] as JArray)
             {
-                pet = data.Pets.FirstOrDefault(pet => pet.Name == saveData[PET_KEY].ToString());
+                var itemData = data.Items.Find(item =>
+                {
+                    Debug.Log($"{item.Name} {itemName}");
+                    return item.Name == itemName.ToString();
+                });
+                if (itemData) inventory.Add(itemData);
+                else Debug.LogWarning($"Item {itemName} not found in game data");
             }
         }
         else
         {
-            saveData = new JObject();
+            saveData[INVENTORY_KEY] = new JArray();
         }
+
+        File.WriteAllText(saveDataPath, saveData.ToString());
     }
 
     private void SaveData(string key, JToken value)
