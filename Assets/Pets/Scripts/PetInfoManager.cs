@@ -10,13 +10,13 @@ public class PetInfoManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI typeText;
     [SerializeField] private TextMeshProUGUI levelText;
-    [SerializeField] private Button closeButton;
+    [SerializeField] private Button playButton;
 
     private Camera mainCamera;
 
     private void Awake()
     {
-        closeButton.onClick.AddListener(GoToFishingGameplay);
+        playButton.onClick.AddListener(GoToFishingGameplay);
         mainCamera = Camera.main;
     }
 

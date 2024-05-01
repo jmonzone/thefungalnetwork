@@ -3,17 +3,13 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-
 public class HomeSceneManager : BaseSceneManager
 {
     [Header("Scene References")]
     [SerializeField] private EggSelection eggSelection;
     [SerializeField] private PetInfoManager petInfoManager;
-    [SerializeField] private Button petInfoButton;
     [SerializeField] private Button resetButton;
-    [SerializeField] private Button closeButton;
     [SerializeField] private PetController petController;
-    [SerializeField] private ActionButton actionButton;
     [SerializeField] private Rigidbody player;
     [SerializeField] private ControlPanel controlPanel;
 
@@ -38,9 +34,6 @@ public class HomeSceneManager : BaseSceneManager
             SetCurrentState(GameState.EGG_SELECTION);
         }
 
-        petInfoButton.onClick.AddListener(() => GoToPetInfo());
-        closeButton.onClick.AddListener(() => SetCurrentState(GameState.GAMEPLAY));
-
         resetButton.onClick.AddListener(() =>
         {
             ResetData();
@@ -57,8 +50,10 @@ public class HomeSceneManager : BaseSceneManager
         if (CurrentPet)
         {
             var distance = Vector3.Distance(player.transform.position, petController.transform.position);
-            actionButton.SetVisible(distance < 4f);
+            if (distance < 4f) controlPanel.SetNearbyPet(CurrentPet);
+            else controlPanel.SetNearbyPet(null);
         }
+        else controlPanel.SetNearbyPet(null);
     }
 
     private IEnumerator OnEggSelected(Pet pet)
@@ -71,7 +66,6 @@ public class HomeSceneManager : BaseSceneManager
 
     private void SpawnPet()
     {
-        actionButton.Initialize(CurrentPet.ActionImage, CurrentPet.Color);
         petInfoManager.SetPet(CurrentPet);
         petInfoManager.SetLevel(Level);
         petController.SetPet(CurrentPet);
@@ -86,8 +80,6 @@ public class HomeSceneManager : BaseSceneManager
     {
         eggSelection.gameObject.SetActive(state == GameState.EGG_SELECTION);
         petInfoManager.gameObject.SetActive(state == GameState.PET_INFO);
-        petInfoButton.gameObject.SetActive(state != GameState.EGG_SELECTION);
-
     }
 
     protected override void OnExperienceChanged(float experience)

@@ -161,11 +161,7 @@ public abstract class BaseSceneManager : MonoBehaviour
         {
             foreach (var itemName in saveData[INVENTORY_KEY] as JArray)
             {
-                var itemData = data.Items.Find(item =>
-                {
-                    Debug.Log($"{item.Name} {itemName}");
-                    return item.Name == itemName.ToString();
-                });
+                var itemData = data.Items.Find(item => item.Name == itemName.ToString());
                 if (itemData) inventory.Add(itemData);
                 else Debug.LogWarning($"Item {itemName} not found in game data");
             }

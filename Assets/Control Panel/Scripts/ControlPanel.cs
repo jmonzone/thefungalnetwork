@@ -6,9 +6,13 @@ public class ControlPanel : MonoBehaviour
 {
     [SerializeField] private GameObject joystick;
     [SerializeField] private GameObject inventory;
+    [SerializeField] private GameObject interactions;
+    [SerializeField] private GameObject info;
 
     [SerializeField] private Button inventoryButton;
     [SerializeField] private Button closeButton;
+    [SerializeField] private Button infoButton;
+    [SerializeField] private ActionButton actionButton;
 
     [SerializeField] private Transform inventorySlotAnchor;
 
@@ -17,13 +21,18 @@ public class ControlPanel : MonoBehaviour
     private enum State
     {
         JOYSTICK,
-        INVENTORY
+        INVENTORY,
+        INTERACTIONS,
+        INFO
     }
 
     private void Awake()
     {
         inventoryButton.onClick.AddListener(() => SetState(State.INVENTORY));
         closeButton.onClick.AddListener(() => SetState(State.JOYSTICK));
+        infoButton.onClick.AddListener(() => SetState(State.INFO));
+
+        actionButton.OnClicked += () => SetState(State.INTERACTIONS);
 
         inventorySlots = new List<InventorySlot>(inventorySlotAnchor.GetComponentsInChildren<InventorySlot>(includeInactive: true));
         SetState(State.JOYSTICK);
@@ -33,6 +42,11 @@ public class ControlPanel : MonoBehaviour
     {
         joystick.SetActive(state == State.JOYSTICK);
         inventory.SetActive(state == State.INVENTORY);
+        interactions.SetActive(state == State.INTERACTIONS);
+        info.SetActive(state == State.INFO);
+
+        inventoryButton.gameObject.SetActive(state == State.JOYSTICK);
+        closeButton.gameObject.SetActive(state != State.JOYSTICK);
     }
 
     public void SetInventory(List<Item> items)
@@ -48,5 +62,11 @@ public class ControlPanel : MonoBehaviour
         {
             inventorySlots[i].SetItem(null);
         }
+    }
+
+    public void SetNearbyPet(Pet pet)
+    {
+        if (pet) actionButton.SetInteraction(pet.ActionImage, pet.Color);
+        actionButton.SetVisible(pet);
     }
 }
