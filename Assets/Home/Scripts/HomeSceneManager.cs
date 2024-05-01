@@ -50,10 +50,10 @@ public class HomeSceneManager : BaseSceneManager
         if (CurrentPet)
         {
             var distance = Vector3.Distance(player.transform.position, petController.transform.position);
-            if (distance < 4f) controlPanel.SetNearbyPet(CurrentPet);
-            else controlPanel.SetNearbyPet(null);
+            if (distance < 4f) controlPanel.SetPetInteractions(petController);
+            else controlPanel.SetPetInteractions(null);
         }
-        else controlPanel.SetNearbyPet(null);
+        else controlPanel.SetPetInteractions(null);
     }
 
     private IEnumerator OnEggSelected(Pet pet)

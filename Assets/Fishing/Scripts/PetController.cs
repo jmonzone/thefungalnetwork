@@ -11,12 +11,15 @@ public class PetController : MonoBehaviour
     [SerializeField] private float flightHeight = 5f;
     [SerializeField] private Vector3 offset;
     [SerializeField] private bool randomizePositions = false;
+    [SerializeField] private float distanceThreshold = 1f;
 
     [Header("References")]
     [SerializeField] private GameObject placeholder;
 
+    public Pet Data { get; private set; }
     private Vector3 origin;
     private float timer;
+    private Transform target;
     private FishController targetFish;
     private List<FishController> fish = new List<FishController>();
 
@@ -30,6 +33,8 @@ public class PetController : MonoBehaviour
 
     public void SetPet(Pet pet)
     {
+        Data = pet;
+
         if (pet)
         {
             var petObject = Instantiate(pet.Prefab, transform);
@@ -46,6 +51,12 @@ public class PetController : MonoBehaviour
         }
     }
 
+    public void SetTarget(Transform target)
+    {
+        this.target = target;
+        randomizePositions = false;
+    }
+
     public void SetFish(List<FishController> fish)
     {
         this.fish = fish;
@@ -58,7 +69,7 @@ public class PetController : MonoBehaviour
         {
             if (randomizePositions)
             {
-                if (Vector3.Distance(transform.position, targetPosition) < 0.5f)
+                if (Vector3.Distance(transform.position, targetPosition) < distanceThreshold)
                 {
                     var random = (Vector3) Random.insideUnitCircle.normalized * 5f;
                     random.z = random.y;
@@ -68,9 +79,9 @@ public class PetController : MonoBehaviour
 
                 return targetPosition;
             }
-            if (targetFish)
+            if (target)
             {
-                return targetFish.transform.position;
+                return target.position;
             }
             else
             {
@@ -84,7 +95,7 @@ public class PetController : MonoBehaviour
     private void Update()
     {
         var direction = TargetPosition - transform.position;
-        if (direction.magnitude > 0.5f)
+        if (direction.magnitude > distanceThreshold)
         {
             transform.position += speed * Time.deltaTime * direction.normalized;
             transform.forward = Vector3.Lerp(transform.forward, direction, rotationSpeed * Time.deltaTime);
@@ -92,6 +103,7 @@ public class PetController : MonoBehaviour
         else if (targetFish)
         {
             targetFish.Catch();
+            target = null;
             targetFish = null;
             timer = 0;
         }
@@ -108,6 +120,7 @@ public class PetController : MonoBehaviour
                 if (distance < closestDistance)
                 {
                     closestDistance = distance;
+                    target = _fish.transform;
                     targetFish = _fish;
                 }
             }

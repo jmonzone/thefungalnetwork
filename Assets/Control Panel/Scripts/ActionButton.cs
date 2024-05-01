@@ -22,7 +22,7 @@ public class ActionButton : MonoBehaviour
         button.onClick.AddListener(() => OnClicked?.Invoke());
         visiblePosition = transform.position;
         hiddenPosition = transform.position + Vector3.left * 500f;
-        Debug.Log($"{visiblePosition} {hiddenPosition}");
+        transform.position = hiddenPosition;
     }
 
     public void SetInteraction(Sprite sprite, Color color)
