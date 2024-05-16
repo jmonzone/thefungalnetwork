@@ -15,6 +15,8 @@ public class PetController : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private GameObject placeholder;
+    [SerializeField] private Transform indicatorAnchor;
+    [SerializeField] private RectTransform hungerIndicator;
 
     public PetInstance Instance { get; private set; }
     private Vector3 origin;
@@ -23,12 +25,15 @@ public class PetController : MonoBehaviour
     private FishController targetFish;
     private List<FishController> fish = new List<FishController>();
 
+    private Camera mainCamera;
+
     private void Awake()
     {
         Destroy(placeholder);
         placeholder = null;
 
         origin = transform.position;
+        mainCamera = Camera.main;
     }
 
     public void SetPet(PetInstance pet)
@@ -95,6 +100,19 @@ public class PetController : MonoBehaviour
     private void Update()
     {
         Instance.Hunger -= Time.deltaTime;
+
+        if (Instance.Hunger < 3)
+        {
+            hungerIndicator.gameObject.SetActive(true);
+            var position = mainCamera.WorldToScreenPoint(indicatorAnchor.transform.position);
+            hungerIndicator.position = position;
+        }
+        else
+        {
+            hungerIndicator.gameObject.SetActive(false);
+        }
+        
+
         var direction = TargetPosition - transform.position;
         if (direction.magnitude > distanceThreshold)
         {
