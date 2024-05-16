@@ -122,7 +122,9 @@ public class FishingSceneManager : BaseSceneManager
             {
                 if (!fishController.IsTreasure)
                 {
-                    AddToInventory(fishController.Data);
+                    var item = ScriptableObject.CreateInstance<ItemInstance>();
+                    item.Initialize(fishController.Data);
+                    AddToInventory(item);
                     var experience = fishController.Data.Experience;
                     Experience += experience;
 

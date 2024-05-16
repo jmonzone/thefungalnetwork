@@ -17,12 +17,12 @@ public abstract class BaseSceneManager : MonoBehaviour
     [SerializeField] private float experience = 0;
     [SerializeField] private int level = 1;
     [SerializeField] private PetInstance pet;
-    [SerializeField] private List<Item> inventory = new List<Item>();
+    [SerializeField] private List<ItemInstance> inventory = new List<ItemInstance>();
     [SerializeField] private string saveDataPath;
 
     private JObject saveData;
 
-    protected List<Item> Inventory => inventory;
+    protected List<ItemInstance> Inventory => inventory;
     public event UnityAction OnInventoryChanged;
 
     private const string PET_KEY = "currentPet";
@@ -64,14 +64,38 @@ public abstract class BaseSceneManager : MonoBehaviour
     #region Protected Methods
     protected GameData Data => data;
 
-    protected void AddToInventory(Item item)
+    protected void AddToInventory(ItemInstance item)
     {
         if (inventory.Count >= 8) return;
-        Debug.Log($"adding item {item.Name} {saveData}");
+        Debug.Log($"adding item {item.Data.name} {saveData}");
         inventory.Add(item);
-        (saveData[INVENTORY_KEY] as JArray).Add(item.Name);
+        (saveData[INVENTORY_KEY] as JArray).Add(item.Data.name);
         File.WriteAllText(saveDataPath, saveData.ToString());
         OnInventoryChanged?.Invoke();
+    }
+
+    protected void RemoveFromInventory(ItemInstance item)
+    {
+        if (inventory.Contains(item))
+        {
+            inventory.Remove(item);
+            var jarray = saveData[INVENTORY_KEY] as JArray;
+
+            var itemIndex = -1;
+
+            for (var i = 0; i < jarray.Count; i++)
+            {
+                if (jarray[i].ToString() == item.Data.name)
+                {
+                    itemIndex = i;
+                    break;
+                }
+            }
+            jarray.RemoveAt(itemIndex);
+
+            File.WriteAllText(saveDataPath, saveData.ToString());
+            OnInventoryChanged?.Invoke();
+        }
     }
 
     protected float Experience
@@ -201,7 +225,10 @@ public abstract class BaseSceneManager : MonoBehaviour
             foreach (var itemName in saveData[INVENTORY_KEY] as JArray)
             {
                 var itemData = data.Items.Find(item => item.Name == itemName.ToString());
-                if (itemData) inventory.Add(itemData);
+                var item = ScriptableObject.CreateInstance<ItemInstance>();
+                item.Initialize(itemData);
+                item.OnConsumed += () => RemoveFromInventory(item);
+                if (itemData) inventory.Add(item);
                 else Debug.LogWarning($"Item {itemName} not found in game data");
             }
         }

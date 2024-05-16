@@ -11,6 +11,7 @@ public class FeedPanel : MonoBehaviour
         inventoryList.OnItemSelected += item =>
         {
             Pet.Hunger = 100;
+            item.Consume();
         };
     }
 }

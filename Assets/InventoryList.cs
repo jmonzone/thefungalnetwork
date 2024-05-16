@@ -6,7 +6,7 @@ public class InventoryList : MonoBehaviour
 {
     private List<InventorySlot> inventorySlots;
 
-    public event UnityAction<Item> OnItemSelected;
+    public event UnityAction<ItemInstance> OnItemSelected;
 
     private void Awake()
     {
@@ -21,7 +21,7 @@ public class InventoryList : MonoBehaviour
         }
     }
 
-    public void SetInventory(List<Item> items)
+    public void SetInventory(List<ItemInstance> items)
     {
         if (inventorySlots == null)
         {

@@ -7,7 +7,7 @@ public class InventorySlot : MonoBehaviour
     [SerializeField] private Image itemImage;
     [SerializeField] private Button itemButton;
 
-    public Item Item { get; private set; }
+    public ItemInstance Item { get; private set; }
     public event UnityAction OnItemSelected;
 
     private void Awake()
@@ -15,13 +15,13 @@ public class InventorySlot : MonoBehaviour
         itemButton.onClick.AddListener(() => OnItemSelected?.Invoke());
     }
 
-    public void SetItem(Item item)
+    public void SetItem(ItemInstance item)
     {
         Item = item;
 
         if (item)
         {
-            itemImage.sprite = item.Sprite;
+            itemImage.sprite = item.Data.Sprite;
         }
 
         itemImage.gameObject.SetActive(item);
