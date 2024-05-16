@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 public abstract class BaseSceneManager : MonoBehaviour
 {
@@ -22,6 +23,7 @@ public abstract class BaseSceneManager : MonoBehaviour
     private JObject saveData;
 
     protected List<Item> Inventory => inventory;
+    public event UnityAction OnInventoryChanged;
 
     private const string PET_KEY = "currentPet";
     private const string LEVEL_KEY = "level";
@@ -69,6 +71,7 @@ public abstract class BaseSceneManager : MonoBehaviour
         inventory.Add(item);
         (saveData[INVENTORY_KEY] as JArray).Add(item.Name);
         File.WriteAllText(saveDataPath, saveData.ToString());
+        OnInventoryChanged?.Invoke();
     }
 
     protected float Experience

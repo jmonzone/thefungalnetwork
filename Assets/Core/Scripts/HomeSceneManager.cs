@@ -12,6 +12,8 @@ public class HomeSceneManager : BaseSceneManager
     [SerializeField] private PetController petController;
     [SerializeField] private Rigidbody player;
     [SerializeField] private ControlPanel controlPanel;
+    [SerializeField] private InventoryList inventoryUI;
+    [SerializeField] private InventoryList feedUI;
 
     private enum GameState
     {
@@ -40,7 +42,14 @@ public class HomeSceneManager : BaseSceneManager
             SceneManager.LoadScene(0);
         });
 
-        controlPanel.SetInventory(Inventory);
+        void UpdateInventory()
+        {
+            inventoryUI.SetInventory(Inventory);
+            feedUI.SetInventory(Inventory);
+        }
+
+        OnInventoryChanged += UpdateInventory;
+        UpdateInventory();
     }
 
     protected override void Update()

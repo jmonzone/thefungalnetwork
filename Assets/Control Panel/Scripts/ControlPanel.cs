@@ -8,25 +8,26 @@ public class ControlPanel : MonoBehaviour
     [SerializeField] private GameObject inventory;
     [SerializeField] private GameObject interactions;
     [SerializeField] private GameObject info;
+    [SerializeField] private GameObject feedPanel;
 
     [SerializeField] private Button inventoryButton;
     [SerializeField] private Button closeButton;
     [SerializeField] private Button infoButton;
     [SerializeField] private Button escortButton;
+    [SerializeField] private Button feedButton;
     [SerializeField] private ActionButton actionButton;
 
     [SerializeField] private Transform player;
-    [SerializeField] private Transform inventorySlotAnchor;
 
     private PetController pet;
-    private List<InventorySlot> inventorySlots;
 
     private enum State
     {
         JOYSTICK,
         INVENTORY,
         INTERACTIONS,
-        INFO
+        INFO,
+        FEED
     }
 
     private void Awake()
@@ -36,8 +37,8 @@ public class ControlPanel : MonoBehaviour
         infoButton.onClick.AddListener(() => SetState(State.INFO));
         escortButton.onClick.AddListener(() => pet.SetTarget(player));
         actionButton.OnClicked += () => SetState(State.INTERACTIONS);
+        feedButton.onClick.AddListener(() => SetState(State.FEED));
 
-        inventorySlots = new List<InventorySlot>(inventorySlotAnchor.GetComponentsInChildren<InventorySlot>(includeInactive: true));
         SetState(State.JOYSTICK);
     }
 
@@ -47,24 +48,8 @@ public class ControlPanel : MonoBehaviour
         inventory.SetActive(state == State.INVENTORY);
         interactions.SetActive(state == State.INTERACTIONS);
         info.SetActive(state == State.INFO);
-
-        inventoryButton.gameObject.SetActive(state == State.JOYSTICK);
+        feedPanel.SetActive(state == State.FEED);
         closeButton.gameObject.SetActive(state != State.JOYSTICK);
-    }
-
-    public void SetInventory(List<Item> items)
-    {
-        var maxIterations = Mathf.Min(inventorySlots.Count, items.Count);
-
-        for (var i = 0; i < maxIterations; i++)
-        {
-            inventorySlots[i].SetItem(items[i]);
-        }
-
-        for (var i = items.Count; i < inventorySlots.Count; i++)
-        {
-            inventorySlots[i].SetItem(null);
-        }
     }
 
     public void SetPetInteractions(PetController pet)
