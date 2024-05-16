@@ -101,7 +101,7 @@ public class PetController : MonoBehaviour
     {
         Instance.Hunger -= Time.deltaTime;
 
-        if (Instance.Hunger < 3)
+        if (Instance.Hunger < 30)
         {
             hungerIndicator.gameObject.SetActive(true);
             var position = mainCamera.WorldToScreenPoint(indicatorAnchor.transform.position);

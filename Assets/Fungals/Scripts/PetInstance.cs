@@ -29,7 +29,7 @@ public class PetInstance : ScriptableObject
     public void Initialize(Pet pet)
     {
         data = pet;
-        hunger = 100;
+        hunger = 50;
     }
 
     public void Initialize(Pet pet, JObject json)

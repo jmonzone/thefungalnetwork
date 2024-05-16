@@ -1,19 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class FeedPanel : MonoBehaviour
 {
-    //private 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] private InventoryList inventoryList;
 
-    // Update is called once per frame
-    void Update()
+    public PetInstance Pet { get; set; }
+
+    private void Awake()
     {
-        
+        inventoryList.OnItemSelected += item =>
+        {
+            Pet.Hunger = 100;
+        };
     }
 }

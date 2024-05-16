@@ -8,7 +8,7 @@ public class ControlPanel : MonoBehaviour
     [SerializeField] private GameObject inventory;
     [SerializeField] private GameObject interactions;
     [SerializeField] private GameObject info;
-    [SerializeField] private GameObject feedPanel;
+    [SerializeField] private FeedPanel feedPanel;
 
     [SerializeField] private Button inventoryButton;
     [SerializeField] private Button closeButton;
@@ -48,14 +48,20 @@ public class ControlPanel : MonoBehaviour
         inventory.SetActive(state == State.INVENTORY);
         interactions.SetActive(state == State.INTERACTIONS);
         info.SetActive(state == State.INFO);
-        feedPanel.SetActive(state == State.FEED);
+        feedPanel.gameObject.SetActive(state == State.FEED);
         closeButton.gameObject.SetActive(state != State.JOYSTICK);
     }
 
     public void SetPetInteractions(PetController pet)
     {
         this.pet = pet;
-        if (pet) actionButton.SetInteraction(pet.Instance.Data.ActionImage, pet.Instance.Data.Color);
+
+        if (pet)
+        {
+            feedPanel.Pet = pet.Instance;
+            actionButton.SetInteraction(pet.Instance.Data.ActionImage, pet.Instance.Data.Color);
+        }
+
         actionButton.SetVisible(pet);
     }
 }
