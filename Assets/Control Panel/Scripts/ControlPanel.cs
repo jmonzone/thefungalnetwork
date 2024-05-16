@@ -70,7 +70,7 @@ public class ControlPanel : MonoBehaviour
     public void SetPetInteractions(PetController pet)
     {
         this.pet = pet;
-        if (pet) actionButton.SetInteraction(pet.Data.ActionImage, pet.Data.Color);
+        if (pet) actionButton.SetInteraction(pet.Instance.Data.ActionImage, pet.Instance.Data.Color);
         actionButton.SetVisible(pet);
     }
 }

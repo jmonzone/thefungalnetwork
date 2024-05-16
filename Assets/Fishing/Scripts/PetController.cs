@@ -16,7 +16,7 @@ public class PetController : MonoBehaviour
     [Header("References")]
     [SerializeField] private GameObject placeholder;
 
-    public Pet Data { get; private set; }
+    public PetInstance Instance { get; private set; }
     private Vector3 origin;
     private float timer;
     private Transform target;
@@ -31,19 +31,19 @@ public class PetController : MonoBehaviour
         origin = transform.position;
     }
 
-    public void SetPet(Pet pet)
+    public void SetPet(PetInstance pet)
     {
-        Data = pet;
+        Instance = pet;
 
         if (pet)
         {
-            var petObject = Instantiate(pet.Prefab, transform);
+            var petObject = Instantiate(pet.Data.Prefab, transform);
             petObject.transform.localScale = Vector3.one;
 
             var animator = petObject.GetComponentInChildren<Animator>();
             animator.speed = 0.25f;
 
-            if (pet.Type == PetType.SKY)
+            if (pet.Data.Type == PetType.SKY)
             {
                 origin.y = 5;
                 transform.position = origin;
@@ -94,6 +94,7 @@ public class PetController : MonoBehaviour
 
     private void Update()
     {
+        Instance.Hunger -= Time.deltaTime;
         var direction = TargetPosition - transform.position;
         if (direction.magnitude > distanceThreshold)
         {

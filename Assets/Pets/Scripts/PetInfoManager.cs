@@ -52,14 +52,14 @@ public class PetInfoManager : MonoBehaviour
     }
 
     private GameObject petInstance;
-    public void SetPet(Pet pet)
+    public void SetPet(PetInstance pet)
     {
-        nameText.text = pet.Name;
-        typeText.text = pet.Type.ToString();
+        nameText.text = pet.Data.Name;
+        typeText.text = pet.Data.Type.ToString();
 
         if (!petInstance)
         {
-            petInstance = Instantiate(pet.Prefab, petModelAnchor);
+            petInstance = Instantiate(pet.Data.Prefab, petModelAnchor);
             var animator = petInstance.GetComponentInChildren<Animator>();
             animator.speed = 0.25f;
         }

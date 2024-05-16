@@ -15,7 +15,7 @@ public abstract class BaseSceneManager : MonoBehaviour
     [Header("Debug")]
     [SerializeField] private float experience = 0;
     [SerializeField] private int level = 1;
-    [SerializeField] private Pet pet;
+    [SerializeField] private PetInstance pet;
     [SerializeField] private List<Item> inventory = new List<Item>();
     [SerializeField] private string saveDataPath;
 
@@ -95,18 +95,36 @@ public abstract class BaseSceneManager : MonoBehaviour
         }
     }
 
-    protected Pet CurrentPet
+    protected PetInstance CurrentPet
     {
         get => pet;
         set
         {
+            void SavePetData()
+            {
+                SaveData(PET_KEY, pet.Json);
+            }
+
+            if (pet)
+            {
+                pet.OnDataChanged -= SavePetData;
+            }
+
             pet = value;
-            SaveData(PET_KEY, pet.Name);
+
+            if (pet)
+            {
+                pet.OnDataChanged += SavePetData;
+            }
+
+            
             OnCurrentPetChanged(pet);
         }
     }
 
-    protected virtual void OnCurrentPetChanged(Pet pet)
+    
+
+    protected virtual void OnCurrentPetChanged(PetInstance pet)
     {
 
     }
@@ -153,9 +171,27 @@ public abstract class BaseSceneManager : MonoBehaviour
 
         if (saveData.ContainsKey(PET_KEY))
         {
-            pet = data.Pets.FirstOrDefault(pet => pet.Name == saveData[PET_KEY].ToString());
+            CurrentPet = ScriptableObject.CreateInstance<PetInstance>();
+
+            if (saveData[PET_KEY] is JObject json)
+            {
+                var petData = data.Pets.FirstOrDefault(pet => pet.Name == json["name"].ToString());
+                CurrentPet.Initialize(petData, json);
+
+                Debug.Log("json available");
+            }
+            else
+            {
+                var petData = data.Pets.FirstOrDefault(pet => pet.Name == saveData[PET_KEY].ToString());
+                CurrentPet.Initialize(petData);
+                Debug.Log("name available");
+
+            }
         }
-        else saveData[PET_KEY] = "";
+        else
+        {
+            saveData[PET_KEY] = "";
+        }
 
         if (saveData.ContainsKey(INVENTORY_KEY))
         {

@@ -56,9 +56,10 @@ public class HomeSceneManager : BaseSceneManager
         else controlPanel.SetPetInteractions(null);
     }
 
-    private IEnumerator OnEggSelected(Pet pet)
+    private IEnumerator OnEggSelected(Pet petData)
     {
-        CurrentPet = pet;
+        CurrentPet = ScriptableObject.CreateInstance<PetInstance>();
+        CurrentPet.Initialize(petData);
         yield return new WaitForSeconds(1f);
         SpawnPet();
         SetCurrentState(GameState.GAMEPLAY);
