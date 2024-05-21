@@ -9,7 +9,7 @@ public class HomeSceneManager : BaseSceneManager
     [SerializeField] private EggSelection eggSelection;
     [SerializeField] private PetInfoManager petInfoManager;
     [SerializeField] private Button resetButton;
-    [SerializeField] private PetController petController;
+    [SerializeField] private FungalController petController;
     [SerializeField] private Rigidbody player;
     [SerializeField] private ControlPanel controlPanel;
     [SerializeField] private InventoryList inventoryUI;

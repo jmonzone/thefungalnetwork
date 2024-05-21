@@ -14,7 +14,7 @@ public class FishingSceneManager : BaseSceneManager
     [SerializeField] private FishData defaultFish;
 
     [Header("Fishing References")]
-    [SerializeField] private PetController petController;
+    [SerializeField] private FungalController petController;
     [SerializeField] private Collider fishBounds;
     [SerializeField] private LevelUpUI levelUpUI;
     [SerializeField] private List<Transform> spawnAnchors;

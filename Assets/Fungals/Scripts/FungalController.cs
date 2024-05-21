@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class PetController : MonoBehaviour
+public class FungalController : MonoBehaviour
 {
     [Header("Configuration")]
     [SerializeField] private float speed = 2f;

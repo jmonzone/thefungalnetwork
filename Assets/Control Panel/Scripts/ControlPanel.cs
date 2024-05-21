@@ -19,7 +19,7 @@ public class ControlPanel : MonoBehaviour
 
     [SerializeField] private Transform player;
 
-    private PetController pet;
+    private FungalController pet;
 
     private enum State
     {
@@ -52,7 +52,7 @@ public class ControlPanel : MonoBehaviour
         closeButton.gameObject.SetActive(state != State.JOYSTICK);
     }
 
-    public void SetPetInteractions(PetController pet)
+    public void SetPetInteractions(FungalController pet)
     {
         this.pet = pet;
 
