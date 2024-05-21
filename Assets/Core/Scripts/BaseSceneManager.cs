@@ -196,7 +196,7 @@ public abstract class BaseSceneManager : MonoBehaviour
             saveData = JObject.Parse(configFile);
         }
 
-        if (saveData.ContainsKey(PET_KEY))
+        if (saveData.ContainsKey(PET_KEY) && !string.IsNullOrEmpty(saveData[PET_KEY].ToString()))
         {
             CurrentPet = ScriptableObject.CreateInstance<PetInstance>();
 
@@ -211,7 +211,8 @@ public abstract class BaseSceneManager : MonoBehaviour
             {
                 var petData = data.Pets.FirstOrDefault(pet => pet.Name == saveData[PET_KEY].ToString());
                 CurrentPet.Initialize(petData);
-                Debug.Log("name available");
+                Debug.Log(saveData[PET_KEY]);
+                Debug.Log($"name available ");
 
             }
         }

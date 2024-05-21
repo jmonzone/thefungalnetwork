@@ -58,8 +58,8 @@ public class ControlPanel : MonoBehaviour
 
         if (pet)
         {
-            feedPanel.Pet = pet.Instance;
-            actionButton.SetInteraction(pet.Instance.Data.ActionImage, pet.Instance.Data.Color);
+            feedPanel.Pet = pet.PetInstance;
+            actionButton.SetInteraction(pet.PetInstance.Data.ActionImage, pet.PetInstance.Data.Color);
         }
 
         actionButton.SetVisible(pet);

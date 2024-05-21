@@ -56,7 +56,7 @@ public class HomeSceneManager : BaseSceneManager
     {
         base.Update();
 
-        if (CurrentPet)
+        if (petController.PetInstance)
         {
             var distance = Vector3.Distance(player.transform.position, petController.transform.position);
             if (distance < 4f) controlPanel.SetPetInteractions(petController);
