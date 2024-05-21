@@ -72,7 +72,11 @@ public class PetController : MonoBehaviour
     {
         get
         {
-            if (randomizePositions)
+            if (target)
+            {
+                return target.position;
+            }
+            else if (randomizePositions)
             {
                 if (Vector3.Distance(transform.position, targetPosition) < distanceThreshold)
                 {
@@ -83,10 +87,6 @@ public class PetController : MonoBehaviour
                 }
 
                 return targetPosition;
-            }
-            if (target)
-            {
-                return target.position;
             }
             else
             {
@@ -134,6 +134,7 @@ public class PetController : MonoBehaviour
             targetFish = null;
 
             var closestDistance = Mathf.Infinity;
+
             foreach (var _fish in fish)
             {
                 if (_fish.IsAttacted || _fish.IsCaught) continue;

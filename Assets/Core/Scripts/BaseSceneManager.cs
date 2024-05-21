@@ -211,7 +211,6 @@ public abstract class BaseSceneManager : MonoBehaviour
             {
                 var petData = data.Pets.FirstOrDefault(pet => pet.Name == saveData[PET_KEY].ToString());
                 CurrentPet.Initialize(petData);
-                Debug.Log(saveData[PET_KEY]);
                 Debug.Log($"name available ");
 
             }
