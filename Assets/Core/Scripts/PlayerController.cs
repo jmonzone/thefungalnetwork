@@ -1,4 +1,3 @@
-using GURU;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour

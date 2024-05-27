@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5569854717866690982}
   - component: {fileID: 1985368070077868474}
-  - component: {fileID: 2175806428794837362}
+  - component: {fileID: 4701732161822769148}
   m_Layer: 3
   m_Name: Pike
   m_TagString: Untagged
@@ -48,7 +48,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data: {fileID: 0}
   isTreasure: 0
---- !u!114 &2175806428794837362
+  isCatchable: 0
+--- !u!114 &4701732161822769148
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -57,17 +58,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 1998284645538067842}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a5bd5ef7785ba470cb7383006ceededa, type: 3}
+  m_Script: {fileID: 11500000, guid: cdb142e028de0494990eb6be58e30dab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   is2D: 0
   distanceThreshold: 0.5
-  speed: 1.5
+  speed: 2
   direction: {x: 0, y: 0, z: 0}
   inputType: 0
   faceForward: 1
   normalizeSpeed: 0
-  persistDirection: 1
+  persistDirection: 0
 --- !u!1001 &450373414579174310
 PrefabInstance:
   m_ObjectHideFlags: 0
