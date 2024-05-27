@@ -34,6 +34,7 @@ public class PetInstance : ScriptableObject
 
     public void Initialize(Pet pet, JObject json)
     {
+        name = pet.Name;
         data = pet;
         hunger = (float)json["hunger"];
     }
