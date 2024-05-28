@@ -7,8 +7,8 @@ public class ControlPanel : MonoBehaviour
     [SerializeField] private GameObject joystick;
     [SerializeField] private GameObject inventory;
     [SerializeField] private GameObject interactions;
-    [SerializeField] private GameObject info;
     [SerializeField] private FeedPanel feedPanel;
+    [SerializeField] private PetInfoManager petInfoManager;
 
     [SerializeField] private Button inventoryButton;
     [SerializeField] private Button closeButton;
@@ -19,7 +19,7 @@ public class ControlPanel : MonoBehaviour
 
     [SerializeField] private Transform player;
 
-    private FungalController pet;
+    private FungalController fungal;
 
     private enum State
     {
@@ -35,7 +35,7 @@ public class ControlPanel : MonoBehaviour
         inventoryButton.onClick.AddListener(() => SetState(State.INVENTORY));
         closeButton.onClick.AddListener(() => SetState(State.JOYSTICK));
         infoButton.onClick.AddListener(() => SetState(State.INFO));
-        escortButton.onClick.AddListener(() => pet.SetTarget(player));
+        escortButton.onClick.AddListener(() => fungal.SetTarget(player));
         actionButton.OnClicked += () => SetState(State.INTERACTIONS);
         feedButton.onClick.AddListener(() => SetState(State.FEED));
 
@@ -47,21 +47,24 @@ public class ControlPanel : MonoBehaviour
         joystick.SetActive(state == State.JOYSTICK);
         inventory.SetActive(state == State.INVENTORY);
         interactions.SetActive(state == State.INTERACTIONS);
-        info.SetActive(state == State.INFO);
+        petInfoManager.gameObject.SetActive(state == State.INFO);
         feedPanel.gameObject.SetActive(state == State.FEED);
         closeButton.gameObject.SetActive(state != State.JOYSTICK);
     }
 
-    public void SetPetInteractions(FungalController pet)
+    public void SetClosestFungalInteractions(FungalController fungal)
     {
-        this.pet = pet;
+        if (this.fungal == fungal) return;
 
-        if (pet)
+        this.fungal = fungal;
+
+        if (fungal)
         {
-            feedPanel.Pet = pet.PetInstance;
-            actionButton.SetInteraction(pet.PetInstance.Data.ActionImage, pet.PetInstance.Data.Color);
+            feedPanel.Fungal = fungal.FungalInstance;
+            actionButton.SetInteraction(fungal.FungalInstance.Data.ActionImage, fungal.FungalInstance.Data.Color);
+            petInfoManager.SetFungal(fungal.FungalInstance);
         }
 
-        actionButton.SetVisible(pet);
+        actionButton.SetVisible(fungal);
     }
 }

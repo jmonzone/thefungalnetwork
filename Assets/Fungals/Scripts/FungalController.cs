@@ -18,9 +18,10 @@ public class FungalController : MonoBehaviour
     [SerializeField] private Transform indicatorAnchor;
     [SerializeField] private RectTransform hungerIndicator;
 
-    public PetInstance PetInstance { get; private set; }
+    public FungalInstance FungalInstance { get; private set; }
     private Vector3 origin;
     private float timer;
+    private float hungerTimer;
     private Transform target;
     private FishController targetFish;
     private List<FishController> fish = new List<FishController>();
@@ -36,19 +37,20 @@ public class FungalController : MonoBehaviour
         mainCamera = Camera.main;
     }
 
-    public void SetPet(PetInstance pet)
+    public void Initialize(FungalInstance fungalInstance)
     {
-        PetInstance = pet;
+        Debug.Log($"initializing fungal controller {fungalInstance}");
+        FungalInstance = fungalInstance;
 
-        if (pet)
+        if (fungalInstance)
         {
-            var petObject = Instantiate(pet.Data.Prefab, transform);
+            var petObject = Instantiate(fungalInstance.Data.Prefab, transform);
             petObject.transform.localScale = Vector3.one;
 
             var animator = petObject.GetComponentInChildren<Animator>();
             animator.speed = 0.25f;
 
-            if (pet.Data.Type == PetType.SKY)
+            if (fungalInstance.Data.Type == PetType.SKY)
             {
                 origin.y = 5;
                 transform.position = origin;
@@ -99,11 +101,17 @@ public class FungalController : MonoBehaviour
 
     private void Update()
     {
-        if (PetInstance)
+        if (FungalInstance)
         {
-            PetInstance.Hunger -= Time.deltaTime;
+            hungerTimer += Time.deltaTime;
 
-            if (PetInstance.Hunger < 30)
+            if (hungerTimer > 2)
+            {
+                FungalInstance.Hunger -= 5;
+                hungerTimer = 0;
+            }
+
+            if (FungalInstance.Hunger < 30)
             {
                 hungerIndicator.gameObject.SetActive(true);
                 var position = mainCamera.WorldToScreenPoint(indicatorAnchor.transform.position);

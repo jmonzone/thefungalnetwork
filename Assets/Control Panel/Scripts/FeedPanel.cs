@@ -4,13 +4,13 @@ public class FeedPanel : MonoBehaviour
 {
     [SerializeField] private InventoryList inventoryList;
 
-    public PetInstance Pet { get; set; }
+    public FungalInstance Fungal { get; set; }
 
     private void Awake()
     {
         inventoryList.OnItemSelected += item =>
         {
-            Pet.Hunger = 100;
+            Fungal.Hunger = 100;
             item.Consume();
         };
     }

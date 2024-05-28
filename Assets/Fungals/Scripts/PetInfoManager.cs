@@ -51,23 +51,19 @@ public class PetInfoManager : MonoBehaviour
 
     }
 
-    private GameObject petInstance;
-    public void SetPet(PetInstance pet)
+    private GameObject fungalModelView;
+    public void SetFungal(FungalInstance fungalInstance)
     {
-        nameText.text = pet.Data.Name;
-        typeText.text = pet.Data.Type.ToString();
+        nameText.text = fungalInstance.Data.Name;
+        typeText.text = fungalInstance.Data.Type.ToString();
+        levelText.text = $"Level {fungalInstance.Level}";
 
-        if (!petInstance)
+        if (!fungalModelView)
         {
-            petInstance = Instantiate(pet.Data.Prefab, petModelAnchor);
-            var animator = petInstance.GetComponentInChildren<Animator>();
+            fungalModelView = Instantiate(fungalInstance.Data.Prefab, petModelAnchor);
+            var animator = fungalModelView.GetComponentInChildren<Animator>();
             animator.speed = 0.25f;
         }
-    }
-
-    public void SetLevel(int level)
-    {
-        levelText.text = $"Level {level}";
     }
 
     private void GoToFishingGameplay()

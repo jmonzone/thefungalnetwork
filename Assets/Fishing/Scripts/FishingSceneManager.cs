@@ -12,7 +12,7 @@ public class FishingSceneManager : BaseSceneManager
     [SerializeField] private FishData defaultFish;
 
     [Header("Fishing References")]
-    [SerializeField] private FungalController petController;
+    [SerializeField] private FungalController fungalController;
     [SerializeField] private Collider fishBounds;
     [SerializeField] private LevelUpUI levelUpUI;
     [SerializeField] private List<Transform> spawnAnchors;
@@ -43,8 +43,14 @@ public class FishingSceneManager : BaseSceneManager
     {
         base.Awake();
 
-        petController.SetPet(CurrentPet);
-        petController.SetFish(fishControllers);
+        fungalController.Initialize(Fungals[0]);
+        fungalController.SetFish(fishControllers);
+        fungalController.FungalInstance.OnExperienceChanged += OnExperienceChanged;
+        fungalController.FungalInstance.OnLevelChanged += OnLevelChanged;
+        fungalController.FungalInstance.OnLevelUp += OnLevelUp;
+
+        OnLevelChanged(fungalController.FungalInstance.Level);
+        OnExperienceChanged(fungalController.FungalInstance.Experience);
 
         mainCamera = Camera.main;
 
@@ -124,7 +130,7 @@ public class FishingSceneManager : BaseSceneManager
                     item.Initialize(fishController.Data);
                     AddToInventory(item);
                     var experience = fishController.Data.Experience;
-                    Experience += experience;
+                    fungalController.FungalInstance.Experience += experience;
 
                     var position = mainCamera.WorldToScreenPoint(fish.transform.position + Vector3.up);
                     textPopup.transform.position = position;
@@ -164,16 +170,16 @@ public class FishingSceneManager : BaseSceneManager
         return go;
     }
 
-    protected override void OnExperienceChanged(float experience)
+    private void OnExperienceChanged(float experience)
     {
         experienceSlider.value = experience;
     }
 
-    protected override void OnLevelChanged(int level)
+    private void OnLevelChanged(int level)
     {
         levelText.text = (level).ToString();
-        experienceSlider.minValue = ExperienceAtLevel(level);
-        experienceSlider.maxValue = ExperienceAtLevel(level + 1);
+        experienceSlider.minValue = FungalInstance.ExperienceAtLevel(level);
+        experienceSlider.maxValue = FungalInstance.ExperienceAtLevel(level + 1);
 
         availableFish = new List<FishData>() { defaultFish };
 
@@ -183,16 +189,14 @@ public class FishingSceneManager : BaseSceneManager
             .Select(upgrade => upgrade.Fish));
     }
 
-    protected override void LevelUp()
+    private void OnLevelUp()
     {
-        base.LevelUp();
-
-        if (fishingUpgrades.OfLevel(Level, out Upgrade upgrade))
+        if (fishingUpgrades.OfLevel(fungalController.FungalInstance.Level, out Upgrade upgrade))
         {
-            levelUpUI.Show(Level, upgrade);
+            levelUpUI.Show(fungalController.FungalInstance.Level, upgrade);
         }
 
-        if (flumeIndex < logFlumes.Count && Level % 5 == 0)
+        if (flumeIndex < logFlumes.Count && fungalController.FungalInstance.Level % 5 == 0)
         {
             Spawn(treasurePrefab);
         }

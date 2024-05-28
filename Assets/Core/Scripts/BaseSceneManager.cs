@@ -5,72 +5,73 @@ using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
+public static class ConfigKeys
+{
+    public const string CURRENT_PET_KEY = "currentPet";
+    public const string LEVEL_KEY = "level";
+    public const string EXPERIENCE_KEY = "experience";
+    public const string INVENTORY_KEY = "inventory";
+    public const string HUNGER_KEY = "hunger";
+    public const string NAME_KEY = "name";
+}
+
 public abstract class BaseSceneManager : MonoBehaviour
 {
     [Header("Developer Options")]
     [SerializeField] private bool resetDataOnAwake;
 
     [Header("Game Data")]
-    [SerializeField] private GameData data;
+    [SerializeField] private GameData gameData;
 
     [Header("Debug")]
-    [SerializeField] private float experience = 0;
-    [SerializeField] private int level = 1;
-    [SerializeField] private PetInstance pet;
+    [SerializeField] private List<FungalInstance> fungals = new List<FungalInstance>();
     [SerializeField] private List<ItemInstance> inventory = new List<ItemInstance>();
     [SerializeField] private string saveDataPath;
 
-    private JObject saveData;
+    protected GameData GameData => gameData;
 
+    public JObject JsonFile { get; private set; }
+    protected List<FungalInstance> Fungals => fungals;
     protected List<ItemInstance> Inventory => inventory;
-    public event UnityAction OnInventoryChanged;
 
-    private const string PET_KEY = "currentPet";
-    private const string LEVEL_KEY = "level";
-    private const string EXPERIENCE_KEY = "experience";
-    private const string INVENTORY_KEY = "inventory";
+    public event UnityAction OnInventoryChanged;
 
     protected virtual void Awake()
     {
         saveDataPath = $"{Application.persistentDataPath}/data.json";
 
         if (Application.isEditor && resetDataOnAwake) ResetData();
-        else LoadData();
 
-        if (saveData.ContainsKey(LEVEL_KEY) && int.TryParse(saveData[LEVEL_KEY].ToString(), out int level))
-        {
-            Level = level;
-        }
+        if (!File.Exists(saveDataPath)) JsonFile = new JObject();
         else
         {
-            Level = 1;
+            var configFile = File.ReadAllText(saveDataPath);
+            JsonFile = JObject.Parse(configFile);
         }
 
-        if (saveData.ContainsKey(EXPERIENCE_KEY) && float.TryParse(saveData[EXPERIENCE_KEY].ToString(), out float experience))
-        {
-            Experience = experience;
-        }
-        else
-        {
-            Experience = 0;
-        }
+        RunMigrations();
+        UnpackJsonFile();
+    }
+
+    protected virtual void Start()
+    {
+
     }
 
     protected virtual void Update()
     {
-        if (Input.GetKeyUp(KeyCode.L)) Experience = ExperienceAtLevel(level + 1) + 10f;
+        //if (Input.GetKeyUp(KeyCode.L)) Experience = ExperienceAtLevel(level + 1) + 10f;
     }
 
     #region Protected Methods
-    protected GameData Data => data;
 
     protected void AddToInventory(ItemInstance item)
     {
         if (inventory.Count >= 8) return;
-        Debug.Log($"adding item {item.Data.name} {saveData}");
+        Debug.Log($"adding item {item.Data.name} {JsonFile}");
         inventory.Add(item);
-        (saveData[INVENTORY_KEY] as JArray).Add(item.Data.name);
-        File.WriteAllText(saveDataPath, saveData.ToString());
+        (JsonFile[ConfigKeys.INVENTORY_KEY] as JArray).Add(item.Data.name);
+        File.WriteAllText(saveDataPath, JsonFile.ToString());
         OnInventoryChanged?.Invoke();
     }
 
@@ -79,7 +80,7 @@ public abstract class BaseSceneManager : MonoBehaviour
         if (inventory.Contains(item))
         {
             inventory.Remove(item);
-            var jarray = saveData[INVENTORY_KEY] as JArray;
+            var jarray = JsonFile[ConfigKeys.INVENTORY_KEY] as JArray;
 
             var itemIndex = -1;
 
@@ -93,65 +94,27 @@ public abstract class BaseSceneManager : MonoBehaviour
             }
             jarray.RemoveAt(itemIndex);
 
-            File.WriteAllText(saveDataPath, saveData.ToString());
+            SaveData();
             OnInventoryChanged?.Invoke();
         }
     }
 
-    protected float Experience
+    protected void AddFungal(FungalInstance fungal)
     {
-        get => experience;
-        set
-        {
-            experience = value;
-            OnExperienceChanged(experience);
-            SaveData(EXPERIENCE_KEY, experience);
-            var requiredExperience = ExperienceAtLevel(level + 1);
-            if (experience > requiredExperience) LevelUp();
-        }
+        Debug.Log($"adding fungal {fungal.Data.name} {JsonFile}");
+        fungals.Add(fungal);
+        (JsonFile[ConfigKeys.CURRENT_PET_KEY] as JArray).Add(fungal.Json);
+        SaveData();
     }
 
-    protected int Level
+    private void OnFungalDataChanged(FungalInstance fungal)
     {
-        get => level;
-        set
-        {
-            level = value;
-            OnLevelChanged(level);
-            SaveData(LEVEL_KEY, level);
-        }
+        Debug.Log("Update fungal data");
+        JsonFile[ConfigKeys.CURRENT_PET_KEY][fungal.Index] = fungal.Json;
+        SaveData();
     }
 
-    protected PetInstance CurrentPet
-    {
-        get => pet;
-        set
-        {
-            void SavePetData()
-            {
-                SaveData(PET_KEY, pet.Json);
-            }
-
-            if (pet)
-            {
-                pet.OnDataChanged -= SavePetData;
-            }
-
-            pet = value;
-
-            if (pet)
-            {
-                pet.OnDataChanged += SavePetData;
-            }
-
-            
-            OnCurrentPetChanged(pet);
-        }
-    }
-
-    
-
-    protected virtual void OnCurrentPetChanged(PetInstance pet)
+    protected virtual void OnCurrentPetChanged(FungalInstance pet)
     {
 
     }
@@ -163,68 +126,34 @@ public abstract class BaseSceneManager : MonoBehaviour
             File.Delete(saveDataPath);
         }
 
-        saveData = new JObject();
-    }
-
-    protected virtual void LevelUp()
-    {
-        Level++;
-    }
-
-    protected abstract void OnExperienceChanged(float experience);
-    protected abstract void OnLevelChanged(int level);
-
-    protected float ExperienceAtLevel(int level)
-    {
-        float total = 0;
-        for (int i = 1; i < level; i++)
-        {
-            total += Mathf.Floor(i + 300 * Mathf.Pow(2, i / 7.0f));
-        }
-
-        return Mathf.Floor(total / 4);
+        JsonFile = new JObject();
     }
     #endregion Protected Methods
 
     #region Private Methods
-    private void LoadData()
+    private void UnpackJsonFile()
     {
-        if (!File.Exists(saveDataPath)) saveData = new JObject();
-        else 
+        Debug.Log("loading game data");
+
+        if (JsonFile.ContainsKey(ConfigKeys.CURRENT_PET_KEY) && JsonFile[ConfigKeys.CURRENT_PET_KEY] is JArray fungalArray)
         {
-            var configFile = File.ReadAllText(saveDataPath);
-            saveData = JObject.Parse(configFile);
-        }
-
-        if (saveData.ContainsKey(PET_KEY) && !string.IsNullOrEmpty(saveData[PET_KEY].ToString()))
-        {
-            CurrentPet = ScriptableObject.CreateInstance<PetInstance>();
-
-            if (saveData[PET_KEY] is JObject json)
+            var i = 0;
+            foreach (JObject fungalObject in fungalArray)
             {
-                var petData = data.Pets.FirstOrDefault(pet => pet.Name == json["name"].ToString());
-                CurrentPet.Initialize(petData, json);
-
-                Debug.Log("json available");
-            }
-            else
-            {
-                var petData = data.Pets.FirstOrDefault(pet => pet.Name == saveData[PET_KEY].ToString());
-                CurrentPet.Initialize(petData);
-                Debug.Log($"name available ");
-
+                var fungal = ScriptableObject.CreateInstance<FungalInstance>();
+                var fungalData = gameData.Pets.FirstOrDefault(pet => pet.Name == fungalObject["name"].ToString());
+                fungal.Initialize(index: i, fungalData, fungalObject);
+                fungal.OnDataChanged += () => OnFungalDataChanged(fungal);
+                fungals.Add(fungal);
+                i++;
             }
         }
-        else
-        {
-            saveData[PET_KEY] = "";
-        }
 
-        if (saveData.ContainsKey(INVENTORY_KEY))
+        if (JsonFile.ContainsKey(ConfigKeys.INVENTORY_KEY))
         {
-            foreach (var itemName in saveData[INVENTORY_KEY] as JArray)
+            foreach (var itemName in JsonFile[ConfigKeys.INVENTORY_KEY] as JArray)
             {
-                var itemData = data.Items.Find(item => item.Name == itemName.ToString());
+                var itemData = gameData.Items.Find(item => item.Name == itemName.ToString());
                 var item = ScriptableObject.CreateInstance<ItemInstance>();
                 item.Initialize(itemData);
                 item.OnConsumed += () => RemoveFromInventory(item);
@@ -234,16 +163,75 @@ public abstract class BaseSceneManager : MonoBehaviour
         }
         else
         {
-            saveData[INVENTORY_KEY] = new JArray();
+            JsonFile[ConfigKeys.INVENTORY_KEY] = new JArray();
         }
 
-        File.WriteAllText(saveDataPath, saveData.ToString());
+        SaveData();
     }
 
-    private void SaveData(string key, JToken value)
+    protected void SaveData(string key, JToken value)
     {
-        saveData[key] = value;
-        File.WriteAllText(saveDataPath, saveData.ToString());
+        JsonFile[key] = value;
+        SaveData();
     }
+
+    protected void SaveData()
+    {
+        File.WriteAllText(saveDataPath, JsonFile.ToString());
+    }
+
     #endregion Private Methods
+
+    #region Migrations
+    private void RunMigrations()
+    {
+        Debug.Log("checking available migrations");
+        MigratePetFieldToObject();
+        MigratePetObjectToArray();
+    }
+
+    // May 27, 2023
+    private void MigratePetFieldToObject()
+    {
+        var petName = JsonFile[ConfigKeys.CURRENT_PET_KEY];
+        if (petName?.Type == JTokenType.String)
+        {
+            Debug.Log($"running {nameof(MigratePetFieldToObject)}");
+
+            var petData = GameData.Pets.FirstOrDefault(pet => pet.Name == petName.ToString());
+
+            JsonFile[ConfigKeys.CURRENT_PET_KEY] = new JObject
+            {
+                ["name"] = petData.name,
+                ["hunger"] = 100,
+            };
+
+            SaveData();
+        }
+    }
+
+    // May 27, 2023
+    private void MigratePetObjectToArray()
+    {
+        var currentPetObject = JsonFile[ConfigKeys.CURRENT_PET_KEY];
+        if (currentPetObject?.Type == JTokenType.Object)
+        {
+            Debug.Log($"running {nameof(MigratePetObjectToArray)}");
+
+            currentPetObject["level"] = JsonFile[ConfigKeys.LEVEL_KEY];
+            currentPetObject["experience"] = JsonFile[ConfigKeys.EXPERIENCE_KEY];
+
+            var fungalsArray = new JArray
+            {
+                currentPetObject
+            };
+
+            JsonFile[ConfigKeys.CURRENT_PET_KEY] = fungalsArray;
+
+            JsonFile.Remove(ConfigKeys.LEVEL_KEY);
+            JsonFile.Remove(ConfigKeys.EXPERIENCE_KEY);
+            SaveData();
+        }
+    }
+    #endregion
 }

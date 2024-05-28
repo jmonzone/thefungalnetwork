@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -7,13 +8,14 @@ public class HomeSceneManager : BaseSceneManager
 {
     [Header("Scene References")]
     [SerializeField] private EggSelection eggSelection;
-    [SerializeField] private PetInfoManager petInfoManager;
     [SerializeField] private Button resetButton;
-    [SerializeField] private FungalController petController;
+    [SerializeField] private FungalController fungalControllerPrefab;
     [SerializeField] private Rigidbody player;
     [SerializeField] private ControlPanel controlPanel;
     [SerializeField] private InventoryList inventoryUI;
     [SerializeField] private InventoryList feedUI;
+
+    private List<FungalController> fungalControllers = new List<FungalController>();
 
     private enum GameState
     {
@@ -24,15 +26,15 @@ public class HomeSceneManager : BaseSceneManager
 
     private void Start()
     {
-        if (CurrentPet)
+        if (Fungals.Count > 0)
         {
-            SpawnPet();
+            SpawnFungals();
             SetCurrentState(GameState.GAMEPLAY);
         }
         else
         {
             eggSelection.OnEggSelected += pet => StartCoroutine(OnEggSelected(pet));
-            eggSelection.SetPets(Data.Pets.GetRange(0, 3));
+            eggSelection.SetPets(GameData.Pets.GetRange(0, 3));
             SetCurrentState(GameState.EGG_SELECTION);
         }
 
@@ -55,50 +57,66 @@ public class HomeSceneManager : BaseSceneManager
     protected override void Update()
     {
         base.Update();
+        HandleProximityFungalInteractions();
+    }
 
-        if (petController.PetInstance)
+    private const float MINIMUM_PROXIMITY_DISTANCE = 4f;
+
+    private void HandleProximityFungalInteractions()
+    {
+        FungalController closestFungal = null;
+        float closestDistance = MINIMUM_PROXIMITY_DISTANCE;
+        foreach (var fungalController in fungalControllers)
         {
-            var distance = Vector3.Distance(player.transform.position, petController.transform.position);
-            if (distance < 4f) controlPanel.SetPetInteractions(petController);
-            else controlPanel.SetPetInteractions(null);
+            if (fungalController.FungalInstance)
+            {
+                var distance = Vector3.Distance(player.transform.position, fungalController.transform.position);
+                if (distance < MINIMUM_PROXIMITY_DISTANCE && distance < closestDistance)
+                {
+                    closestFungal = fungalController;
+                }
+            }
         }
-        else controlPanel.SetPetInteractions(null);
+
+        if (closestFungal)
+        {
+            controlPanel.SetClosestFungalInteractions(closestFungal);
+        }
+        else
+        {
+            controlPanel.SetClosestFungalInteractions(null);
+        }
     }
 
     private IEnumerator OnEggSelected(Pet petData)
     {
-        CurrentPet = ScriptableObject.CreateInstance<PetInstance>();
-        CurrentPet.Initialize(petData);
+        var fungal = ScriptableObject.CreateInstance<FungalInstance>();
+        fungal.Initialize(petData);
+        AddFungal(fungal);
+
         yield return new WaitForSeconds(1f);
-        SpawnPet();
+        SpawnFungal(fungal);
         SetCurrentState(GameState.GAMEPLAY);
     }
 
-    private void SpawnPet()
+    private void SpawnFungals()
     {
-        petInfoManager.SetPet(CurrentPet);
-        petInfoManager.SetLevel(Level);
-        petController.SetPet(CurrentPet);
+        Debug.Log("Spawning Fungals");
+        foreach(var fungal in Fungals)
+        {
+            SpawnFungal(fungal);
+        }
     }
 
-    private void GoToPetInfo()
+    private void SpawnFungal(FungalInstance fungal)
     {
-        SetCurrentState(GameState.PET_INFO);
+        var fungalController = Instantiate(fungalControllerPrefab);
+        fungalController.Initialize(fungal);
+        fungalControllers.Add(fungalController);
     }
 
     private void SetCurrentState(GameState state)
     {
         eggSelection.gameObject.SetActive(state == GameState.EGG_SELECTION);
-        petInfoManager.gameObject.SetActive(state == GameState.PET_INFO);
-    }
-
-    protected override void OnExperienceChanged(float experience)
-    {
-        //throw new System.NotImplementedException();
-    }
-
-    protected override void OnLevelChanged(int level)
-    {
-        //throw new System.NotImplementedException();
     }
 }
