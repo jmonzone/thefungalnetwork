@@ -27,7 +27,7 @@ public class ActionButton : MonoBehaviour
     {
         this.entity = entity;
         actionImage.sprite = entity.ActionImage;
-        background.color = entity.Color;
+        background.color = entity.ActionColor;
         text.text = entity switch {
             FungalController _ => "Talk",
             EggController _ => "Hatch",

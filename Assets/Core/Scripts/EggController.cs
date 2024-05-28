@@ -11,7 +11,7 @@ public class EggController : EntityController
     public event UnityAction OnHatch;
 
     public override Sprite ActionImage => Fungal.ActionImage;
-    public override Color Color => Fungal.Color;
+    public override Color ActionColor => Fungal.ActionColor;
 
     private void Awake()
     {
@@ -22,7 +22,7 @@ public class EggController : EntityController
     {
         Fungal = fungal;
         var renderer = GetComponentInChildren<Renderer>();
-        renderer.material.color = fungal.Color;
+        renderer.material.color = fungal.EggColor;
     }
 
     public void Hatch()
