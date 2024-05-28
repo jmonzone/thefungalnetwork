@@ -8,6 +8,7 @@ using UnityEngine.Events;
 public static class ConfigKeys
 {
     public const string CURRENT_PET_KEY = "currentPet";
+    public const string FUNGALS_KEY = "fungals";
     public const string LEVEL_KEY = "level";
     public const string EXPERIENCE_KEY = "experience";
     public const string INVENTORY_KEY = "inventory";
@@ -103,14 +104,14 @@ public abstract class BaseSceneManager : MonoBehaviour
     {
         Debug.Log($"adding fungal {fungal.Data.name} {JsonFile}");
         fungals.Add(fungal);
-        (JsonFile[ConfigKeys.CURRENT_PET_KEY] as JArray).Add(fungal.Json);
+        (JsonFile[ConfigKeys.FUNGALS_KEY] as JArray).Add(fungal.Json);
         SaveData();
     }
 
     private void OnFungalDataChanged(FungalInstance fungal)
     {
         Debug.Log("Update fungal data");
-        JsonFile[ConfigKeys.CURRENT_PET_KEY][fungal.Index] = fungal.Json;
+        JsonFile[ConfigKeys.FUNGALS_KEY][fungal.Index] = fungal.Json;
         SaveData();
     }
 
@@ -135,13 +136,13 @@ public abstract class BaseSceneManager : MonoBehaviour
     {
         Debug.Log("loading game data");
 
-        if (JsonFile.ContainsKey(ConfigKeys.CURRENT_PET_KEY) && JsonFile[ConfigKeys.CURRENT_PET_KEY] is JArray fungalArray)
+        if (JsonFile.ContainsKey(ConfigKeys.FUNGALS_KEY) && JsonFile[ConfigKeys.FUNGALS_KEY] is JArray fungalArray)
         {
             var i = 0;
             foreach (JObject fungalObject in fungalArray)
             {
                 var fungal = ScriptableObject.CreateInstance<FungalInstance>();
-                var fungalData = gameData.Pets.FirstOrDefault(pet => pet.Name == fungalObject["name"].ToString());
+                var fungalData = gameData.Fungals.FirstOrDefault(fungal => fungal.Name == fungalObject["name"].ToString());
                 fungal.Initialize(index: i, fungalData, fungalObject);
                 fungal.OnDataChanged += () => OnFungalDataChanged(fungal);
                 fungals.Add(fungal);
@@ -198,7 +199,7 @@ public abstract class BaseSceneManager : MonoBehaviour
         {
             Debug.Log($"running {nameof(MigratePetFieldToObject)}");
 
-            var petData = GameData.Pets.FirstOrDefault(pet => pet.Name == petName.ToString());
+            var petData = GameData.Fungals.FirstOrDefault(pet => pet.Name == petName.ToString());
 
             JsonFile[ConfigKeys.CURRENT_PET_KEY] = new JObject
             {
@@ -226,8 +227,9 @@ public abstract class BaseSceneManager : MonoBehaviour
                 currentPetObject
             };
 
-            JsonFile[ConfigKeys.CURRENT_PET_KEY] = fungalsArray;
+            JsonFile[ConfigKeys.FUNGALS_KEY] = fungalsArray;
 
+            JsonFile.Remove(ConfigKeys.CURRENT_PET_KEY);
             JsonFile.Remove(ConfigKeys.LEVEL_KEY);
             JsonFile.Remove(ConfigKeys.EXPERIENCE_KEY);
             SaveData();

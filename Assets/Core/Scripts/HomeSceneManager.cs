@@ -24,8 +24,10 @@ public class HomeSceneManager : BaseSceneManager
         PET_INFO
     }
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
+
         if (Fungals.Count > 0)
         {
             SpawnFungals();
@@ -34,7 +36,7 @@ public class HomeSceneManager : BaseSceneManager
         else
         {
             eggSelection.OnEggSelected += pet => StartCoroutine(OnEggSelected(pet));
-            eggSelection.SetPets(GameData.Pets.GetRange(0, 3));
+            eggSelection.SetPets(GameData.Fungals.GetRange(0, 3));
             SetCurrentState(GameState.EGG_SELECTION);
         }
 
