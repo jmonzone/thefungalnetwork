@@ -12,6 +12,8 @@ public class PetInfoManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI levelText;
     [SerializeField] private Button playButton;
 
+    private FungalInstance fungal;
+    private GameObject fungalModelView;
     private Camera mainCamera;
 
     private void Awake()
@@ -51,16 +53,23 @@ public class PetInfoManager : MonoBehaviour
 
     }
 
-    private GameObject fungalModelView;
-    public void SetFungal(FungalInstance fungalInstance)
+    public void SetFungal(FungalInstance fungal)
     {
-        nameText.text = fungalInstance.Data.Name;
-        typeText.text = fungalInstance.Data.Type.ToString();
-        levelText.text = $"Level {fungalInstance.Level}";
+        if (this.fungal == fungal) return;
+
+        if (fungalModelView)
+        {
+            Destroy(fungalModelView);
+            fungalModelView = null;
+        }
+
+        nameText.text = fungal.Data.Name;
+        typeText.text = fungal.Data.Type.ToString();
+        levelText.text = $"Level {fungal.Level}";
 
         if (!fungalModelView)
         {
-            fungalModelView = Instantiate(fungalInstance.Data.Prefab, petModelAnchor);
+            fungalModelView = Instantiate(fungal.Data.Prefab, petModelAnchor);
             var animator = fungalModelView.GetComponentInChildren<Animator>();
             animator.speed = 0.25f;
         }

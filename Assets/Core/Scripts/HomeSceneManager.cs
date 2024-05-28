@@ -76,6 +76,7 @@ public class HomeSceneManager : BaseSceneManager
                 if (distance < MINIMUM_PROXIMITY_DISTANCE && distance < closestDistance)
                 {
                     closestFungal = fungalController;
+                    closestDistance = distance;
                 }
             }
         }
