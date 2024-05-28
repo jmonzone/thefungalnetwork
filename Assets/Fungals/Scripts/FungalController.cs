@@ -1,7 +1,13 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class FungalController : MonoBehaviour
+public abstract class EntityController : MonoBehaviour
+{
+    public abstract Sprite ActionImage { get; }
+    public abstract Color Color { get; }
+}
+
+public class FungalController : EntityController
 {
     [Header("Configuration")]
     [SerializeField] private float speed = 2f;
@@ -27,6 +33,10 @@ public class FungalController : MonoBehaviour
     [SerializeField] private List<FishController> fish = new List<FishController>();
 
     public FungalInstance FungalInstance { get; private set; }
+    public bool IsFollowing { get; set; } = false;
+
+    public override Sprite ActionImage => FungalInstance.Data.ActionImage;
+    public override Color Color => FungalInstance.Data.Color;
 
     private Camera mainCamera;
 
@@ -54,10 +64,22 @@ public class FungalController : MonoBehaviour
         }
     }
 
+    public void Escort(Transform target)
+    {
+        IsFollowing = true;
+        SetTarget(target);
+    }
+
+    public void Unescort()
+    {
+        IsFollowing = false;
+    }
+
     public void SetTarget(Transform target)
     {
         this.target = target;
-        randomizePositions = false;
+        
+        randomizePositions = !target;
     }
 
     public void SetFish(List<FishController> fish)
@@ -101,9 +123,9 @@ public class FungalController : MonoBehaviour
         {
             hungerTimer += Time.deltaTime;
 
-            if (hungerTimer > 2)
+            if (hungerTimer > 5)
             {
-                FungalInstance.Hunger -= 5;
+                FungalInstance.Hunger -= 1;
                 hungerTimer = 0;
             }
 
@@ -120,10 +142,13 @@ public class FungalController : MonoBehaviour
         }
 
         var direction = TargetPosition - transform.position;
+        transform.forward = Vector3.Lerp(transform.forward, direction, rotationSpeed * Time.deltaTime);
+
         if (direction.magnitude > distanceThreshold)
         {
-            transform.position += speed * Time.deltaTime * direction.normalized;
-            transform.forward = Vector3.Lerp(transform.forward, direction, rotationSpeed * Time.deltaTime);
+            var fixedSpeed = speed;
+            if (target) fixedSpeed *= 2;
+            transform.position += fixedSpeed * Time.deltaTime * direction.normalized;
         }
         else if (targetFish)
         {

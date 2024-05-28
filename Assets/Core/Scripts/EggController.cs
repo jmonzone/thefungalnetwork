@@ -1,25 +1,40 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
-public class EggController : MonoBehaviour
+public class EggController : EntityController
 {
-    public Pet Pet { get; private set; }
+    public Pet Fungal { get; private set; }
 
     private Rigidbody _rigidbody;
+
+    public event UnityAction<Pet> OnHatch;
+
+    public override Sprite ActionImage => Fungal.ActionImage;
+    public override Color Color => Fungal.Color;
 
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
     }
 
-    public void Jump()
+    public void Initialize(Pet fungal)
     {
-        _rigidbody.AddForce(Vector3.up * 100f);
+        Fungal = fungal;
+        var renderer = GetComponentInChildren<Renderer>();
+        renderer.material.color = fungal.Color;
     }
 
-    public void SetPet(Pet pet)
+    public void Hatch()
     {
-        Pet = pet;
-        var renderer = GetComponentInChildren<Renderer>();
-        renderer.material.color = pet.Color;
+        _rigidbody.AddForce(Vector3.up * 100f);
+        StartCoroutine(OnEggHatched());
+    }
+
+    private IEnumerator OnEggHatched()
+    {
+        yield return new WaitForSeconds(1f);
+        OnHatch?.Invoke(Fungal);
+        gameObject.SetActive(false);
     }
 }

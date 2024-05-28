@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,11 +16,14 @@ public class ControlPanel : MonoBehaviour
     [SerializeField] private Button escortButton;
     [SerializeField] private Button feedButton;
     [SerializeField] private ActionButton actionButton;
+    [SerializeField] private TextMeshProUGUI escortButtonText;
 
     [SerializeField] private Transform player;
 
+    private EntityController proximityEntity;
     private FungalController fungal;
     private UIState currentState;
+    private bool isEscorting;
 
     private enum UIState
     {
@@ -33,13 +37,47 @@ public class ControlPanel : MonoBehaviour
     private void Awake()
     {
         inventoryButton.onClick.AddListener(() => SetState(UIState.INVENTORY));
-        closeButton.onClick.AddListener(() => SetState(UIState.JOYSTICK));
+        closeButton.onClick.AddListener(() =>
+        {
+            if (fungal && !fungal.IsFollowing) fungal.SetTarget(null);
+            SetState(UIState.JOYSTICK);
+        });
+
         infoButton.onClick.AddListener(() => SetState(UIState.INFO));
-        escortButton.onClick.AddListener(() => fungal.SetTarget(player));
-        actionButton.OnClicked += () => SetState(UIState.INTERACTIONS);
+        escortButton.onClick.AddListener(() =>
+        {
+            if (fungal.IsFollowing) {
+                fungal.Unescort();
+            }
+            else {
+                fungal.Escort(player);
+            }
+
+            UpdateEscortButtonText();
+        });
+
+        actionButton.OnClicked += entity =>
+        {
+            switch (entity)
+            {
+                case FungalController fungal:
+                    fungal.SetTarget(player);
+                    SetState(UIState.INTERACTIONS);
+                    break;
+                case EggController egg:
+                    egg.Hatch();
+                    break;
+            }
+        };
+
         feedButton.onClick.AddListener(() => SetState(UIState.FEED));
 
         SetState(UIState.JOYSTICK);
+    }
+
+    private void UpdateEscortButtonText()
+    {
+        escortButtonText.text = fungal.IsFollowing ? "Unescort" : "Escort";
     }
 
     private void SetState(UIState state)
@@ -54,19 +92,28 @@ public class ControlPanel : MonoBehaviour
         closeButton.gameObject.SetActive(state != UIState.JOYSTICK);
     }
 
-    public void SetClosestFungalInteractions(FungalController fungal)
+    public void SetProximityAction(EntityController entity)
     {
-        if (this.fungal == fungal || currentState == UIState.INFO) return;
+        if (currentState != UIState.JOYSTICK) return;
+        if (proximityEntity == entity) return;
 
-        this.fungal = fungal;
+        proximityEntity = entity;
 
-        if (fungal)
+        if (entity)
         {
-            feedPanel.Fungal = fungal.FungalInstance;
-            actionButton.SetInteraction(fungal.FungalInstance.Data.ActionImage, fungal.FungalInstance.Data.Color);
-            petInfoManager.SetFungal(fungal.FungalInstance);
+            actionButton.SetInteraction(entity);
+
+            if (entity is FungalController fungal)
+            {
+                this.fungal = fungal;
+
+                feedPanel.Fungal = fungal.FungalInstance;
+                petInfoManager.SetFungal(fungal.FungalInstance);
+                UpdateEscortButtonText();
+            }
         }
 
-        actionButton.SetVisible(fungal);
+        actionButton.SetVisible(entity);
+
     }
 }

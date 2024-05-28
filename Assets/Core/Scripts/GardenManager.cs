@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -40,14 +41,19 @@ public class GardenManager : BaseSceneManager
         }
         else
         {
-            eggSelection.OnEggSelected += pet => StartCoroutine(OnEggSelected(pet));
+            eggSelection.OnEggSelected += pet => OnEggHatched(pet);
             eggSelection.SetPets(GameData.Fungals.GetRange(0, 3));
             SetCurrentState(GameState.EGG_SELECTION);
         }
 
-        if (Fungals.Count == 1 && Fungals[0].Level > 10)
+        if (Fungals.Count == 1 && Fungals[0].Level >= 10)
         {
-            SpawnEgg();
+            var availableFungals = GameData.Fungals.Where(fungal => fungal != Fungals[0].Data).ToList();
+            Debug.Log(availableFungals.Count);
+            var randomIndex = Random.Range(0, availableFungals.Count);
+            var secondFungal = availableFungals[randomIndex];
+            Debug.Log(secondFungal.name);
+            SpawnEgg(secondFungal);
         }
 
         resetButton.onClick.AddListener(() =>
@@ -70,56 +76,60 @@ public class GardenManager : BaseSceneManager
     protected override void Update()
     {
         base.Update();
-        HandleProximityFungalInteractions();
+        HandleProximityInteractions();
     }
 
     private const float MINIMUM_PROXIMITY_DISTANCE = 4f;
 
-    private void HandleProximityFungalInteractions()
+    private void HandleProximityInteractions()
     {
-        FungalController closestFungal = null;
+        EntityController closestEntity = null;
         float closestDistance = MINIMUM_PROXIMITY_DISTANCE;
-        foreach (var fungalController in fungalControllers)
+
+        var colliders = Physics.OverlapSphere(player.transform.position, MINIMUM_PROXIMITY_DISTANCE);
+
+        foreach(var collider in colliders)
         {
-            if (fungalController.FungalInstance)
+            var entity = collider.GetComponentInParent<EntityController>();
+            if (entity)
             {
-                var distance = Vector3.Distance(player.transform.position, fungalController.transform.position);
+                var distance = Vector3.Distance(player.transform.position, entity.transform.position);
                 if (distance < MINIMUM_PROXIMITY_DISTANCE && distance < closestDistance)
                 {
-                    closestFungal = fungalController;
+                    closestEntity = entity;
                     closestDistance = distance;
                 }
             }
         }
 
-        if (closestFungal)
+        if (closestEntity)
         {
-            controlPanel.SetClosestFungalInteractions(closestFungal);
+            controlPanel.SetProximityAction(closestEntity);
         }
         else
         {
-            controlPanel.SetClosestFungalInteractions(null);
+            controlPanel.SetProximityAction(null);
         }
     }
 
-    private IEnumerator OnEggSelected(Pet petData)
+    private void OnEggHatched(Pet petData)
     {
         var fungal = ScriptableObject.CreateInstance<FungalInstance>();
         fungal.Initialize(petData);
         AddFungal(fungal);
-
-        yield return new WaitForSeconds(1f);
         SpawnFungal(fungal);
         SetCurrentState(GameState.GAMEPLAY);
     }
 
-    private void SpawnEgg()
+    private void SpawnEgg(Pet fungal)
     {
         var randomPosition = (Vector3)Random.insideUnitCircle.normalized * 4;
         randomPosition.z = Mathf.Abs(randomPosition.y);
         randomPosition.y = 1;
 
         var eggController = Instantiate(eggControllerPrefab, randomPosition, Quaternion.identity);
+        eggController.Initialize(fungal);
+        eggController.OnHatch += pet => OnEggHatched(pet);
     }
 
     private void SpawnFungals()
@@ -133,7 +143,7 @@ public class GardenManager : BaseSceneManager
 
     private void SpawnFungal(FungalInstance fungal)
     {
-        var randomPosition = (Vector3)Random.insideUnitCircle.normalized * Random.Range(2, 3);
+        var randomPosition = (Vector3)Random.insideUnitCircle.normalized * Random.Range(3, 6);
         randomPosition.z = Mathf.Abs(randomPosition.y);
         randomPosition.y = 0;
 

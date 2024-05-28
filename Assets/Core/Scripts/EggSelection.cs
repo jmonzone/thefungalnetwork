@@ -5,13 +5,24 @@ using UnityEngine.Events;
 
 public class EggSelection : MonoBehaviour
 {
-    private Camera mainCamera;
-
     public event UnityAction<Pet> OnEggSelected;
+
+    private Camera mainCamera;
 
     private void Awake()
     {
         mainCamera = Camera.main;
+    }
+
+    public void SetPets(List<Pet> pets)
+    {
+        var eggControllers = GetComponentsInChildren<EggController>().ToList();
+
+        for (var i = 0; i < eggControllers.Count && i < pets.Count; i++)
+        {
+            eggControllers[i].Initialize(pets[i]);
+            eggControllers[i].OnHatch += pet => OnEggSelected?.Invoke(pet);
+        }
     }
 
     private void Update()
@@ -24,21 +35,10 @@ public class EggSelection : MonoBehaviour
                 var egg = hit.transform.GetComponentInParent<EggController>();
                 if (egg)
                 {
-                    egg.Jump();
+                    egg.Hatch();
                     enabled = false;
-                    OnEggSelected?.Invoke(egg.Pet);
                 }
             }
-        }
-    }
-
-    public void SetPets(List<Pet> pets)
-    {
-        var eggControllers = GetComponentsInChildren<EggController>().ToList();
-
-        for (var i = 0; i < eggControllers.Count && i < pets.Count; i++)
-        {
-            eggControllers[i].SetPet(pets[i]);
         }
     }
 }
