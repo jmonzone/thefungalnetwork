@@ -2566,7 +2566,7 @@ GameObject:
   - component: {fileID: 373087730}
   - component: {fileID: 373087728}
   m_Layer: 0
-  m_Name: Player
+  m_Name: Player Controller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5577,16 +5577,15 @@ MonoBehaviour:
   inventory: []
   saveDataPath: 
   eggSelection: {fileID: 1590202532}
-  resetButton: {fileID: 1291448537}
+  player: {fileID: 373087728}
   fungalControllerPrefab: {fileID: 173026516737802164, guid: 9e5e876e58a73433bbb5be4472984e7e,
     type: 3}
-  player: {fileID: 373087728}
+  eggControllerPrefab: {fileID: 5952156050388943029, guid: d86fdc00fde0f4b9e958c056b6c0a95a,
+    type: 3}
+  resetButton: {fileID: 1291448537}
   controlPanel: {fileID: 307486408}
   inventoryUI: {fileID: 1756319189}
   feedUI: {fileID: 1896359642}
-  virtualJoystick: {fileID: 3544129046768494335}
-  playerSpeed: 2
-  cameraSpeed: 3
 --- !u!1 &922913586
 GameObject:
   m_ObjectHideFlags: 0

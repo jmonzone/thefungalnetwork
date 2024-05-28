@@ -6,11 +6,16 @@ using UnityEngine.UI;
 
 public class GardenManager : BaseSceneManager
 {
-    [Header("Scene References")]
+    [Header("Gameplay References")]
     [SerializeField] private EggSelection eggSelection;
-    [SerializeField] private Button resetButton;
-    [SerializeField] private FungalController fungalControllerPrefab;
     [SerializeField] private Rigidbody player;
+
+    [Header("Prefabs")]
+    [SerializeField] private FungalController fungalControllerPrefab;
+    [SerializeField] private EggController eggControllerPrefab;
+
+    [Header("UI References")]
+    [SerializeField] private Button resetButton;
     [SerializeField] private ControlPanel controlPanel;
     [SerializeField] private InventoryList inventoryUI;
     [SerializeField] private InventoryList feedUI;
@@ -42,7 +47,7 @@ public class GardenManager : BaseSceneManager
 
         if (Fungals.Count == 1 && Fungals[0].Level > 10)
         {
-            Debug.Log("Show new egg");
+            SpawnEgg();
         }
 
         resetButton.onClick.AddListener(() =>
@@ -108,9 +113,18 @@ public class GardenManager : BaseSceneManager
         SetCurrentState(GameState.GAMEPLAY);
     }
 
+    private void SpawnEgg()
+    {
+        var randomPosition = (Vector3)Random.insideUnitCircle.normalized * 4;
+        randomPosition.z = Mathf.Abs(randomPosition.y);
+        randomPosition.y = 1;
+
+        var eggController = Instantiate(eggControllerPrefab, randomPosition, Quaternion.identity);
+    }
+
     private void SpawnFungals()
     {
-        Debug.Log("Spawning Fungals");
+        Debug.Log("spawning fungals");
         foreach(var fungal in Fungals)
         {
             SpawnFungal(fungal);
@@ -119,8 +133,8 @@ public class GardenManager : BaseSceneManager
 
     private void SpawnFungal(FungalInstance fungal)
     {
-        var randomPosition = (Vector3)Random.insideUnitCircle.normalized * 3;
-        randomPosition.z = randomPosition.y;
+        var randomPosition = (Vector3)Random.insideUnitCircle.normalized * Random.Range(2, 3);
+        randomPosition.z = Mathf.Abs(randomPosition.y);
         randomPosition.y = 0;
 
         var fungalController = Instantiate(fungalControllerPrefab, randomPosition, Quaternion.identity);
