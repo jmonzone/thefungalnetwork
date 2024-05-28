@@ -3,6 +3,9 @@ using UnityEngine;
 
 public abstract class EntityController : MonoBehaviour
 {
+    [SerializeField] private bool hasInteraction = false;
+
+    public bool HasInteraction => hasInteraction;
     public abstract Sprite ActionImage { get; }
     public abstract Color Color { get; }
 }

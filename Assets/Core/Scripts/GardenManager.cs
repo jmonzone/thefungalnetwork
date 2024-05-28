@@ -91,7 +91,7 @@ public class GardenManager : BaseSceneManager
         foreach(var collider in colliders)
         {
             var entity = collider.GetComponentInParent<EntityController>();
-            if (entity)
+            if (entity && entity.HasInteraction)
             {
                 var distance = Vector3.Distance(player.transform.position, entity.transform.position);
                 if (distance < MINIMUM_PROXIMITY_DISTANCE && distance < closestDistance)

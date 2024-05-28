@@ -51,8 +51,15 @@ public abstract class BaseSceneManager : MonoBehaviour
         if (!File.Exists(saveDataPath)) JsonFile = new JObject();
         else
         {
-            var configFile = File.ReadAllText(saveDataPath);
-            JsonFile = JObject.Parse(configFile);
+            try
+            {
+                var configFile = File.ReadAllText(saveDataPath);
+                JsonFile = JObject.Parse(configFile);
+            }
+            catch
+            {
+                JsonFile = new JObject();
+            }
         }
 
         RunMigrations();
@@ -109,7 +116,14 @@ public abstract class BaseSceneManager : MonoBehaviour
     {
         Debug.Log($"adding fungal {fungal.Data.name} {JsonFile}");
         fungals.Add(fungal);
-        (JsonFile[ConfigKeys.FUNGALS_KEY] as JArray).Add(fungal.Json);
+        if (JsonFile.ContainsKey(ConfigKeys.FUNGALS_KEY) && JsonFile[ConfigKeys.FUNGALS_KEY] is JArray fungalArray)
+        {
+            fungalArray.Add(fungal.Json);
+        }
+        else
+        {
+            JsonFile[ConfigKeys.FUNGALS_KEY] = new JArray { fungal.Json };
+        }
         SaveData();
     }
 

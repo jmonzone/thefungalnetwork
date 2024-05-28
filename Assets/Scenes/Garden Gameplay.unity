@@ -1305,11 +1305,11 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1993234878}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -200}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 450}
   m_SizeDelta: {x: 400, y: 50}
-  m_Pivot: {x: 0.5, y: 1}
+  m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &233765575
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1358,8 +1358,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 75
-  m_fontSizeBase: 75
+  m_fontSize: 50
+  m_fontSizeBase: 50
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1374,7 +1374,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_enableWordWrapping: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
@@ -3980,6 +3980,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 437275008}
     m_Modifications:
+    - target: {fileID: 5952156050388943029, guid: d86fdc00fde0f4b9e958c056b6c0a95a,
+        type: 3}
+      propertyPath: hasInteraction
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7201975520520081364, guid: d86fdc00fde0f4b9e958c056b6c0a95a,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4450,6 +4455,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 2703f3af9c42c4396b2bdb59b673b025,
         type: 2}
+    - target: {fileID: 5952156050388943029, guid: d86fdc00fde0f4b9e958c056b6c0a95a,
+        type: 3}
+      propertyPath: hasInteraction
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7201975520520081364, guid: d86fdc00fde0f4b9e958c056b6c0a95a,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5193,7 +5203,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &746851466
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9516,7 +9526,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1890581872
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9834,6 +9844,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: b40ec03b7ccdd42ddbf3b9f7a6b3bb36,
         type: 2}
+    - target: {fileID: 5952156050388943029, guid: d86fdc00fde0f4b9e958c056b6c0a95a,
+        type: 3}
+      propertyPath: hasInteraction
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7201975520520081364, guid: d86fdc00fde0f4b9e958c056b6c0a95a,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -10193,7 +10208,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_TargetDisplay: 0
 --- !u!1001 &2065310299
 PrefabInstance:
