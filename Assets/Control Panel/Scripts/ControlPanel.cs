@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,8 +19,9 @@ public class ControlPanel : MonoBehaviour
     [SerializeField] private Transform player;
 
     private FungalController fungal;
+    private UIState currentState;
 
-    private enum State
+    private enum UIState
     {
         JOYSTICK,
         INVENTORY,
@@ -32,29 +32,31 @@ public class ControlPanel : MonoBehaviour
 
     private void Awake()
     {
-        inventoryButton.onClick.AddListener(() => SetState(State.INVENTORY));
-        closeButton.onClick.AddListener(() => SetState(State.JOYSTICK));
-        infoButton.onClick.AddListener(() => SetState(State.INFO));
+        inventoryButton.onClick.AddListener(() => SetState(UIState.INVENTORY));
+        closeButton.onClick.AddListener(() => SetState(UIState.JOYSTICK));
+        infoButton.onClick.AddListener(() => SetState(UIState.INFO));
         escortButton.onClick.AddListener(() => fungal.SetTarget(player));
-        actionButton.OnClicked += () => SetState(State.INTERACTIONS);
-        feedButton.onClick.AddListener(() => SetState(State.FEED));
+        actionButton.OnClicked += () => SetState(UIState.INTERACTIONS);
+        feedButton.onClick.AddListener(() => SetState(UIState.FEED));
 
-        SetState(State.JOYSTICK);
+        SetState(UIState.JOYSTICK);
     }
 
-    private void SetState(State state)
+    private void SetState(UIState state)
     {
-        joystick.SetActive(state == State.JOYSTICK);
-        inventory.SetActive(state == State.INVENTORY);
-        interactions.SetActive(state == State.INTERACTIONS);
-        petInfoManager.gameObject.SetActive(state == State.INFO);
-        feedPanel.gameObject.SetActive(state == State.FEED);
-        closeButton.gameObject.SetActive(state != State.JOYSTICK);
+        currentState = state;
+
+        joystick.SetActive(state == UIState.JOYSTICK);
+        inventory.SetActive(state == UIState.INVENTORY);
+        interactions.SetActive(state == UIState.INTERACTIONS);
+        petInfoManager.gameObject.SetActive(state == UIState.INFO);
+        feedPanel.gameObject.SetActive(state == UIState.FEED);
+        closeButton.gameObject.SetActive(state != UIState.JOYSTICK);
     }
 
     public void SetClosestFungalInteractions(FungalController fungal)
     {
-        if (this.fungal == fungal) return;
+        if (this.fungal == fungal || currentState == UIState.INFO) return;
 
         this.fungal = fungal;
 

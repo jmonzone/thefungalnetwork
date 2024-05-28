@@ -63,6 +63,7 @@ public class PetInfoManager : MonoBehaviour
             fungalModelView = null;
         }
 
+        this.fungal = fungal;
         nameText.text = fungal.Data.Name;
         typeText.text = fungal.Data.Type.ToString();
         levelText.text = $"Level {fungal.Level}";
@@ -77,6 +78,7 @@ public class PetInfoManager : MonoBehaviour
 
     private void GoToFishingGameplay()
     {
+        SceneParameters.FungalIndex = fungal.Index;
         SceneManager.LoadScene(1);
     }
 }

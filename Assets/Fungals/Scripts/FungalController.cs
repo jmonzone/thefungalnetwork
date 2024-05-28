@@ -18,13 +18,15 @@ public class FungalController : MonoBehaviour
     [SerializeField] private Transform indicatorAnchor;
     [SerializeField] private RectTransform hungerIndicator;
 
+    [Header("Debug")]
+    [SerializeField] private Vector3 origin;
+    [SerializeField] private float timer;
+    [SerializeField] private float hungerTimer;
+    [SerializeField] private Transform target;
+    [SerializeField] private FishController targetFish;
+    [SerializeField] private List<FishController> fish = new List<FishController>();
+
     public FungalInstance FungalInstance { get; private set; }
-    private Vector3 origin;
-    private float timer;
-    private float hungerTimer;
-    private Transform target;
-    private FishController targetFish;
-    private List<FishController> fish = new List<FishController>();
 
     private Camera mainCamera;
 

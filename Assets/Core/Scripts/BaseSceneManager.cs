@@ -16,6 +16,11 @@ public static class ConfigKeys
     public const string NAME_KEY = "name";
 }
 
+public static class SceneParameters
+{
+    public static int FungalIndex = 0;
+}
+
 public abstract class BaseSceneManager : MonoBehaviour
 {
     [Header("Developer Options")]

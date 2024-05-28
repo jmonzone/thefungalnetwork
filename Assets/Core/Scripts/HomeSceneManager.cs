@@ -113,7 +113,11 @@ public class HomeSceneManager : BaseSceneManager
 
     private void SpawnFungal(FungalInstance fungal)
     {
-        var fungalController = Instantiate(fungalControllerPrefab);
+        var randomPosition = (Vector3)Random.insideUnitCircle.normalized * 3;
+        randomPosition.z = randomPosition.y;
+        randomPosition.y = 0;
+
+        var fungalController = Instantiate(fungalControllerPrefab, randomPosition, Quaternion.identity);
         fungalController.Initialize(fungal);
         fungalControllers.Add(fungalController);
     }
