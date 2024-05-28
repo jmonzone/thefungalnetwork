@@ -66,7 +66,7 @@ public abstract class BaseSceneManager : MonoBehaviour
 
     protected virtual void Update()
     {
-        //if (Input.GetKeyUp(KeyCode.L)) Experience = ExperienceAtLevel(level + 1) + 10f;
+
     }
 
     #region Protected Methods

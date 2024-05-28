@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 public class EggSelection : MonoBehaviour
 {
-    public event UnityAction<Pet> OnEggSelected;
+    public event UnityAction<EggController> OnEggSelected;
 
     private Camera mainCamera;
 
@@ -20,8 +20,9 @@ public class EggSelection : MonoBehaviour
 
         for (var i = 0; i < eggControllers.Count && i < pets.Count; i++)
         {
-            eggControllers[i].Initialize(pets[i]);
-            eggControllers[i].OnHatch += pet => OnEggSelected?.Invoke(pet);
+            var egg = eggControllers[i];
+            egg.Initialize(pets[i]);
+            egg.OnHatch += () => OnEggSelected?.Invoke(egg);
         }
     }
 

@@ -8,7 +8,7 @@ public class EggController : EntityController
 
     private Rigidbody _rigidbody;
 
-    public event UnityAction<Pet> OnHatch;
+    public event UnityAction OnHatch;
 
     public override Sprite ActionImage => Fungal.ActionImage;
     public override Color Color => Fungal.Color;
@@ -34,7 +34,7 @@ public class EggController : EntityController
     private IEnumerator OnEggHatched()
     {
         yield return new WaitForSeconds(1f);
-        OnHatch?.Invoke(Fungal);
+        OnHatch?.Invoke();
         gameObject.SetActive(false);
     }
 }

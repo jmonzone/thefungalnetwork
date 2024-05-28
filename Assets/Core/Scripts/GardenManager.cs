@@ -41,7 +41,7 @@ public class GardenManager : BaseSceneManager
         }
         else
         {
-            eggSelection.OnEggSelected += pet => OnEggHatched(pet);
+            eggSelection.OnEggSelected += egg => OnEggHatched(egg);
             eggSelection.SetPets(GameData.Fungals.GetRange(0, 3));
             SetCurrentState(GameState.EGG_SELECTION);
         }
@@ -112,12 +112,12 @@ public class GardenManager : BaseSceneManager
         }
     }
 
-    private void OnEggHatched(Pet petData)
+    private void OnEggHatched(EggController egg)
     {
         var fungal = ScriptableObject.CreateInstance<FungalInstance>();
-        fungal.Initialize(petData);
+        fungal.Initialize(egg.Fungal);
         AddFungal(fungal);
-        SpawnFungal(fungal);
+        SpawnFungal(fungal, egg.transform.position);
         SetCurrentState(GameState.GAMEPLAY);
     }
 
@@ -129,25 +129,27 @@ public class GardenManager : BaseSceneManager
 
         var eggController = Instantiate(eggControllerPrefab, randomPosition, Quaternion.identity);
         eggController.Initialize(fungal);
-        eggController.OnHatch += pet => OnEggHatched(pet);
+        eggController.OnHatch += () => OnEggHatched(eggController);
     }
 
     private void SpawnFungals()
     {
         Debug.Log("spawning fungals");
+
         foreach(var fungal in Fungals)
         {
-            SpawnFungal(fungal);
+            var randomPosition = (Vector3)Random.insideUnitCircle.normalized * Random.Range(3, 6);
+            randomPosition.z = Mathf.Abs(randomPosition.y);
+            randomPosition.y = 0;
+
+            SpawnFungal(fungal, randomPosition);
         }
     }
 
-    private void SpawnFungal(FungalInstance fungal)
+    private void SpawnFungal(FungalInstance fungal, Vector3 spawnPosition)
     {
-        var randomPosition = (Vector3)Random.insideUnitCircle.normalized * Random.Range(3, 6);
-        randomPosition.z = Mathf.Abs(randomPosition.y);
-        randomPosition.y = 0;
 
-        var fungalController = Instantiate(fungalControllerPrefab, randomPosition, Quaternion.identity);
+        var fungalController = Instantiate(fungalControllerPrefab, spawnPosition, Quaternion.identity);
         fungalController.Initialize(fungal);
         fungalControllers.Add(fungalController);
     }

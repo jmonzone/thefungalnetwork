@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 [CreateAssetMenu]
@@ -11,9 +10,17 @@ public class UpgradeCollection : ScriptableObject
 
     public bool OfLevel(int level, out Upgrade upgrade)
     {
-        upgrade = upgrades.ElementAtOrDefault(level - 2);
-        if (upgrade) Debug.Log($"{level} {upgrade.name}");
-        else Debug.Log($"{level}");
+        upgrade = null;
+
+        foreach (var _upgrade in upgrades)
+        {
+            if (_upgrade is NewFishUpgrade fishUpgrade && fishUpgrade.Fish.LevelRequirement == level)
+            {
+                upgrade = _upgrade;
+                break;
+            }
+        }
+
         return upgrade;
     }
 
