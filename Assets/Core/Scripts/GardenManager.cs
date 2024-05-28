@@ -1,37 +1,135 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
-public class GardenManager : MonoBehaviour
+public class GardenManager : BaseSceneManager
 {
-    [SerializeField] private VirtualJoystick virtualJoystick;
-    [SerializeField] private Transform player;
-    [SerializeField] private float playerSpeed = 2f;
-    [SerializeField] private float cameraSpeed = 3f;
+    [Header("Scene References")]
+    [SerializeField] private EggSelection eggSelection;
+    [SerializeField] private Button resetButton;
+    [SerializeField] private FungalController fungalControllerPrefab;
+    [SerializeField] private Rigidbody player;
+    [SerializeField] private ControlPanel controlPanel;
+    [SerializeField] private InventoryList inventoryUI;
+    [SerializeField] private InventoryList feedUI;
 
-    private Camera mainCamera;
-    private Vector3 cameraOffset;
+    private List<FungalController> fungalControllers = new List<FungalController>();
 
-    // Start is called before the first frame update
-    void Start()
+    private enum GameState
     {
-        virtualJoystick.OnJoystickUpdate += input =>
-        {
-            var direction = new Vector3(input.x, 0, input.y);
-            player.transform.position += playerSpeed * 0.01f * Time.deltaTime * direction;
-        };
-
-        mainCamera = Camera.main;
-        cameraOffset = mainCamera.transform.position - player.transform.position;
+        EGG_SELECTION,
+        GAMEPLAY,
+        PET_INFO
     }
 
-    // Update is called once per frame
-    void Update()
+    protected override void Start()
     {
-        var targetPosition = player.transform.position + cameraOffset;
-        var direction = targetPosition - mainCamera.transform.position;
+        base.Start();
 
-        if (direction.magnitude > 0.05f)
+        if (Fungals.Count > 0)
         {
-            mainCamera.transform.position += cameraSpeed * Time.deltaTime * direction;
+            SpawnFungals();
+            SetCurrentState(GameState.GAMEPLAY);
         }
+        else
+        {
+            eggSelection.OnEggSelected += pet => StartCoroutine(OnEggSelected(pet));
+            eggSelection.SetPets(GameData.Fungals.GetRange(0, 3));
+            SetCurrentState(GameState.EGG_SELECTION);
+        }
+
+        if (Fungals.Count == 1 && Fungals[0].Level > 10)
+        {
+            Debug.Log("Show new egg");
+        }
+
+        resetButton.onClick.AddListener(() =>
+        {
+            ResetData();
+            SceneManager.LoadScene(0);
+        });
+
+        void UpdateInventory()
+        {
+            inventoryUI.SetInventory(Inventory);
+            feedUI.SetInventory(Inventory);
+        }
+
+        OnInventoryChanged += UpdateInventory;
+        UpdateInventory();
+
+    }
+
+    protected override void Update()
+    {
+        base.Update();
+        HandleProximityFungalInteractions();
+    }
+
+    private const float MINIMUM_PROXIMITY_DISTANCE = 4f;
+
+    private void HandleProximityFungalInteractions()
+    {
+        FungalController closestFungal = null;
+        float closestDistance = MINIMUM_PROXIMITY_DISTANCE;
+        foreach (var fungalController in fungalControllers)
+        {
+            if (fungalController.FungalInstance)
+            {
+                var distance = Vector3.Distance(player.transform.position, fungalController.transform.position);
+                if (distance < MINIMUM_PROXIMITY_DISTANCE && distance < closestDistance)
+                {
+                    closestFungal = fungalController;
+                    closestDistance = distance;
+                }
+            }
+        }
+
+        if (closestFungal)
+        {
+            controlPanel.SetClosestFungalInteractions(closestFungal);
+        }
+        else
+        {
+            controlPanel.SetClosestFungalInteractions(null);
+        }
+    }
+
+    private IEnumerator OnEggSelected(Pet petData)
+    {
+        var fungal = ScriptableObject.CreateInstance<FungalInstance>();
+        fungal.Initialize(petData);
+        AddFungal(fungal);
+
+        yield return new WaitForSeconds(1f);
+        SpawnFungal(fungal);
+        SetCurrentState(GameState.GAMEPLAY);
+    }
+
+    private void SpawnFungals()
+    {
+        Debug.Log("Spawning Fungals");
+        foreach(var fungal in Fungals)
+        {
+            SpawnFungal(fungal);
+        }
+    }
+
+    private void SpawnFungal(FungalInstance fungal)
+    {
+        var randomPosition = (Vector3)Random.insideUnitCircle.normalized * 3;
+        randomPosition.z = randomPosition.y;
+        randomPosition.y = 0;
+
+        var fungalController = Instantiate(fungalControllerPrefab, randomPosition, Quaternion.identity);
+        fungalController.Initialize(fungal);
+        fungalControllers.Add(fungalController);
+    }
+
+    private void SetCurrentState(GameState state)
+    {
+        eggSelection.gameObject.SetActive(state == GameState.EGG_SELECTION);
     }
 }

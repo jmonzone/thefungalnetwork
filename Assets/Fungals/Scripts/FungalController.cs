@@ -51,12 +51,6 @@ public class FungalController : MonoBehaviour
 
             var animator = petObject.GetComponentInChildren<Animator>();
             animator.speed = 0.25f;
-
-            if (fungalInstance.Data.Type == PetType.SKY)
-            {
-                origin.y = 5;
-                transform.position = origin;
-            }
         }
     }
 
