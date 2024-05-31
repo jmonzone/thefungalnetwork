@@ -12,10 +12,9 @@ public class FishingSceneManager : BaseSceneManager
     [SerializeField] private FishData defaultFish;
 
     [Header("Fishing References")]
-    [SerializeField] private FungalController petController;
+    [SerializeField] private FungalController fungalController;
     [SerializeField] private Collider fishBounds;
     [SerializeField] private LevelUpUI levelUpUI;
-    [SerializeField] private List<Transform> spawnAnchors;
     [SerializeField] private List<LogFlume> logFlumes;
     [SerializeField] private TextPopup textPopup;
     [SerializeField] private TextMeshProUGUI levelText;
@@ -26,48 +25,76 @@ public class FishingSceneManager : BaseSceneManager
     [SerializeField] private LayerMask uiLayer;
 
     [Header("Debug")]
+    [SerializeField] private float cooldown = BASE_COOLDOWN;
     [SerializeField] private List<FishData> availableFish;
     [SerializeField] private List<FishController> fishControllers;
 
     private int flumeIndex = 0;
     private const float BASE_COOLDOWN = 3f;
-    private float cooldown = BASE_COOLDOWN;
     private float timer = 0f;
     private int fishCount = 0;
     private Camera mainCamera;
 
-    private Transform RandomSpawnAnchor => spawnAnchors[Random.Range(0, spawnAnchors.Count)];
+    private Transform RandomSpawnAnchor
+    {
+        get
+        {
+            var availableLogFlumes = logFlumes.Where(flume => flume.gameObject.activeSelf).ToList();
+            return availableLogFlumes[Random.Range(0, availableLogFlumes.Count)].SpawnAnchor;
+        }
+    }
     private FishData RandomFish => availableFish[Random.Range(0, availableFish.Count)];
 
     protected override void Awake()
     {
         base.Awake();
 
-        petController.SetPet(CurrentPet);
-        petController.SetFish(fishControllers);
+        fungalController.Initialize(Fungals[SceneParameters.FungalIndex]);
+        fungalController.SetFish(fishControllers);
+        fungalController.FungalInstance.OnExperienceChanged += OnExperienceChanged;
+        fungalController.FungalInstance.OnLevelChanged += OnLevelChanged;
+        fungalController.FungalInstance.OnLevelUp += OnLevelUp;
+
+        OnLevelChanged(fungalController.FungalInstance.Level);
+        OnExperienceChanged(fungalController.FungalInstance.Experience);
 
         mainCamera = Camera.main;
+
+        if (JsonFile.ContainsKey("flumes")) flumeIndex = (int)JsonFile["flumes"];
+        else flumeIndex = 0;
+
+        UpdateFlumes();
 
         fishingRod.OnReeledIn += fish =>
         {
             if (fish.IsTreasure)
             {
                 flumeIndex++;
-                cooldown = BASE_COOLDOWN / (flumeIndex + 1);
-                var flume = logFlumes[flumeIndex];
+                JsonFile["flumes"] = flumeIndex;
+                SaveData();
 
-                spawnAnchors.Add(flume.SpawnAnchor);
-                flume.gameObject.SetActive(true);
                 treasureUI.gameObject.SetActive(true);
+                UpdateFlumes();
             }
         };
+    }
+
+    private void UpdateFlumes()
+    {
+        for (var i = 0; i < flumeIndex + 1 && i < logFlumes.Count; i++)
+        {
+            var flume = logFlumes[i];
+            flume.gameObject.SetActive(true);
+        }
+
+        cooldown = BASE_COOLDOWN / (flumeIndex + 1);
     }
 
     protected override void Update()
     {
         base.Update();
 
-        if (timer > 1)
+        if (timer > 1 && fishCount < 5)
         {
             SpawnFish();
             timer = 0;
@@ -78,6 +105,11 @@ public class FishingSceneManager : BaseSceneManager
         }
 
         if (Input.GetMouseButtonDown(0) && !IsPointerOverUI) fishingRod.Use();
+
+        if (Input.GetKeyUp(KeyCode.L))
+        {
+            fungalController.FungalInstance.Experience = FungalInstance.ExperienceAtLevel(fungalController.FungalInstance.Level + 1) + 10f;
+        }
     }
 
     public bool IsPointerOverUI
@@ -118,20 +150,27 @@ public class FishingSceneManager : BaseSceneManager
 
             void OnFishCaught()
             {
+                Debug.Log("fish caught");
                 if (!fishController.IsTreasure)
                 {
                     var item = ScriptableObject.CreateInstance<ItemInstance>();
                     item.Initialize(fishController.Data);
+                    Debug.Log($"item initialized {fishController.Data}");
+
                     AddToInventory(item);
+
                     var experience = fishController.Data.Experience;
-                    Experience += experience;
+                    fungalController.FungalInstance.Experience += experience;
+                    Debug.Log($"adding experience {experience}");
 
                     var position = mainCamera.WorldToScreenPoint(fish.transform.position + Vector3.up);
                     textPopup.transform.position = position;
                     textPopup.ShowText($"+{experience}");
+
+                    Debug.Log($"text popup at {position}");
                 }
 
-                fishControllers.Remove(fishController);
+                fishCount--;
                 fishController.OnCaught -= OnFishCaught;
             }
         }
@@ -164,35 +203,28 @@ public class FishingSceneManager : BaseSceneManager
         return go;
     }
 
-    protected override void OnExperienceChanged(float experience)
+    private void OnExperienceChanged(float experience)
     {
         experienceSlider.value = experience;
     }
 
-    protected override void OnLevelChanged(int level)
+    private void OnLevelChanged(int level)
     {
         levelText.text = (level).ToString();
-        experienceSlider.minValue = ExperienceAtLevel(level);
-        experienceSlider.maxValue = ExperienceAtLevel(level + 1);
+        experienceSlider.minValue = FungalInstance.ExperienceAtLevel(level);
+        experienceSlider.maxValue = FungalInstance.ExperienceAtLevel(level + 1);
 
-        availableFish = new List<FishData>() { defaultFish };
-
-        availableFish.AddRange(fishingUpgrades
-            .OfLevel(level)
-            .OfType<NewFishUpgrade>()
-            .Select(upgrade => upgrade.Fish));
+        availableFish = new List<FishData>(GameData.Items.OfType<FishData>().Where(fish => fish.LevelRequirement <= level));
     }
 
-    protected override void LevelUp()
+    private void OnLevelUp()
     {
-        base.LevelUp();
-
-        if (fishingUpgrades.OfLevel(Level, out Upgrade upgrade))
+        if (fishingUpgrades.OfLevel(fungalController.FungalInstance.Level, out Upgrade upgrade))
         {
-            levelUpUI.Show(Level, upgrade);
+            levelUpUI.Show(fungalController.FungalInstance.Level, upgrade);
         }
 
-        if (flumeIndex < logFlumes.Count && Level % 5 == 0)
+        if (flumeIndex < logFlumes.Count && fungalController.FungalInstance.Level % 5 == 0)
         {
             Spawn(treasurePrefab);
         }

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,8 +7,8 @@ public class ControlPanel : MonoBehaviour
     [SerializeField] private GameObject joystick;
     [SerializeField] private GameObject inventory;
     [SerializeField] private GameObject interactions;
-    [SerializeField] private GameObject info;
     [SerializeField] private FeedPanel feedPanel;
+    [SerializeField] private PetInfoManager petInfoManager;
 
     [SerializeField] private Button inventoryButton;
     [SerializeField] private Button closeButton;
@@ -16,12 +16,16 @@ public class ControlPanel : MonoBehaviour
     [SerializeField] private Button escortButton;
     [SerializeField] private Button feedButton;
     [SerializeField] private ActionButton actionButton;
+    [SerializeField] private TextMeshProUGUI escortButtonText;
 
     [SerializeField] private Transform player;
 
-    private FungalController pet;
+    private EntityController proximityEntity;
+    private FungalController fungal;
+    private UIState currentState;
+    private bool isEscorting;
 
-    private enum State
+    private enum UIState
     {
         JOYSTICK,
         INVENTORY,
@@ -32,36 +36,84 @@ public class ControlPanel : MonoBehaviour
 
     private void Awake()
     {
-        inventoryButton.onClick.AddListener(() => SetState(State.INVENTORY));
-        closeButton.onClick.AddListener(() => SetState(State.JOYSTICK));
-        infoButton.onClick.AddListener(() => SetState(State.INFO));
-        escortButton.onClick.AddListener(() => pet.SetTarget(player));
-        actionButton.OnClicked += () => SetState(State.INTERACTIONS);
-        feedButton.onClick.AddListener(() => SetState(State.FEED));
-
-        SetState(State.JOYSTICK);
-    }
-
-    private void SetState(State state)
-    {
-        joystick.SetActive(state == State.JOYSTICK);
-        inventory.SetActive(state == State.INVENTORY);
-        interactions.SetActive(state == State.INTERACTIONS);
-        info.SetActive(state == State.INFO);
-        feedPanel.gameObject.SetActive(state == State.FEED);
-        closeButton.gameObject.SetActive(state != State.JOYSTICK);
-    }
-
-    public void SetPetInteractions(FungalController pet)
-    {
-        this.pet = pet;
-
-        if (pet)
+        inventoryButton.onClick.AddListener(() => SetState(UIState.INVENTORY));
+        closeButton.onClick.AddListener(() =>
         {
-            feedPanel.Pet = pet.PetInstance;
-            actionButton.SetInteraction(pet.PetInstance.Data.ActionImage, pet.PetInstance.Data.Color);
+            if (fungal && !fungal.IsFollowing) fungal.SetTarget(null);
+            SetState(UIState.JOYSTICK);
+        });
+
+        infoButton.onClick.AddListener(() => SetState(UIState.INFO));
+        escortButton.onClick.AddListener(() =>
+        {
+            if (fungal.IsFollowing) {
+                fungal.Unescort();
+            }
+            else {
+                fungal.Escort(player);
+            }
+
+            UpdateEscortButtonText();
+        });
+
+        actionButton.OnClicked += entity =>
+        {
+            switch (entity)
+            {
+                case FungalController fungal:
+                    fungal.SetTarget(player);
+                    SetState(UIState.INTERACTIONS);
+                    break;
+                case EggController egg:
+                    egg.Hatch();
+                    break;
+            }
+        };
+
+        feedButton.onClick.AddListener(() => SetState(UIState.FEED));
+
+        SetState(UIState.JOYSTICK);
+    }
+
+    private void UpdateEscortButtonText()
+    {
+        escortButtonText.text = fungal.IsFollowing ? "Unescort" : "Escort";
+    }
+
+    private void SetState(UIState state)
+    {
+        currentState = state;
+
+        joystick.SetActive(state == UIState.JOYSTICK);
+        inventory.SetActive(state == UIState.INVENTORY);
+        interactions.SetActive(state == UIState.INTERACTIONS);
+        petInfoManager.gameObject.SetActive(state == UIState.INFO);
+        feedPanel.gameObject.SetActive(state == UIState.FEED);
+        closeButton.gameObject.SetActive(state != UIState.JOYSTICK);
+    }
+
+    public void SetProximityAction(EntityController entity)
+    {
+        if (currentState != UIState.JOYSTICK) return;
+        if (proximityEntity == entity) return;
+
+        proximityEntity = entity;
+
+        if (entity)
+        {
+            actionButton.SetInteraction(entity);
+
+            if (entity is FungalController fungal)
+            {
+                this.fungal = fungal;
+
+                feedPanel.Fungal = fungal.FungalInstance;
+                petInfoManager.SetFungal(fungal.FungalInstance);
+                UpdateEscortButtonText();
+            }
         }
 
-        actionButton.SetVisible(pet);
+        actionButton.SetVisible(entity);
+
     }
 }

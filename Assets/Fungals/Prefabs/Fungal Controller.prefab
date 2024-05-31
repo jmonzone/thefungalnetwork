@@ -243,7 +243,7 @@ Transform:
   m_GameObject: {fileID: 4710098450848900613}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.9, y: 1, z: 6.12}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -264,7 +264,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b531d6ef7b29f454190e11c85dcbeabc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 1
+  hasInteraction: 1
+  speed: 0.5
   rotationSpeed: 5
   idleRadius: 5
   autoFishCooldown: 5
@@ -275,6 +276,12 @@ MonoBehaviour:
   placeholder: {fileID: 1583402221495386806}
   indicatorAnchor: {fileID: 4122731614883033435}
   hungerIndicator: {fileID: 2269699273759727975}
+  origin: {x: 0, y: 0, z: 0}
+  timer: 0
+  hungerTimer: 0
+  target: {fileID: 0}
+  targetFish: {fileID: 0}
+  fish: []
 --- !u!1 &5985720208242059808
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,7 +1,16 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class FungalController : MonoBehaviour
+public abstract class EntityController : MonoBehaviour
+{
+    [SerializeField] private bool hasInteraction = false;
+
+    public bool HasInteraction => hasInteraction;
+    public abstract Sprite ActionImage { get; }
+    public abstract Color ActionColor { get; }
+}
+
+public class FungalController : EntityController
 {
     [Header("Configuration")]
     [SerializeField] private float speed = 2f;
@@ -18,12 +27,19 @@ public class FungalController : MonoBehaviour
     [SerializeField] private Transform indicatorAnchor;
     [SerializeField] private RectTransform hungerIndicator;
 
-    public PetInstance PetInstance { get; private set; }
-    private Vector3 origin;
-    private float timer;
-    private Transform target;
-    private FishController targetFish;
-    private List<FishController> fish = new List<FishController>();
+    [Header("Debug")]
+    [SerializeField] private Vector3 origin;
+    [SerializeField] private float timer;
+    [SerializeField] private float hungerTimer;
+    [SerializeField] private Transform target;
+    [SerializeField] private FishController targetFish;
+    [SerializeField] private List<FishController> fish = new List<FishController>();
+
+    public FungalInstance FungalInstance { get; private set; }
+    public bool IsFollowing { get; set; } = false;
+
+    public override Sprite ActionImage => FungalInstance.Data.ActionImage;
+    public override Color ActionColor => FungalInstance.Data.ActionColor;
 
     private Camera mainCamera;
 
@@ -36,30 +52,37 @@ public class FungalController : MonoBehaviour
         mainCamera = Camera.main;
     }
 
-    public void SetPet(PetInstance pet)
+    public void Initialize(FungalInstance fungalInstance)
     {
-        PetInstance = pet;
+        Debug.Log($"initializing fungal controller {fungalInstance}");
+        FungalInstance = fungalInstance;
 
-        if (pet)
+        if (fungalInstance)
         {
-            var petObject = Instantiate(pet.Data.Prefab, transform);
+            var petObject = Instantiate(fungalInstance.Data.Prefab, transform);
             petObject.transform.localScale = Vector3.one;
 
             var animator = petObject.GetComponentInChildren<Animator>();
             animator.speed = 0.25f;
-
-            if (pet.Data.Type == PetType.SKY)
-            {
-                origin.y = 5;
-                transform.position = origin;
-            }
         }
+    }
+
+    public void Escort(Transform target)
+    {
+        IsFollowing = true;
+        SetTarget(target);
+    }
+
+    public void Unescort()
+    {
+        IsFollowing = false;
     }
 
     public void SetTarget(Transform target)
     {
         this.target = target;
-        randomizePositions = false;
+        
+        randomizePositions = !target;
     }
 
     public void SetFish(List<FishController> fish)
@@ -99,11 +122,17 @@ public class FungalController : MonoBehaviour
 
     private void Update()
     {
-        if (PetInstance)
+        if (FungalInstance)
         {
-            PetInstance.Hunger -= Time.deltaTime;
+            hungerTimer += Time.deltaTime;
 
-            if (PetInstance.Hunger < 30)
+            if (hungerTimer > 5)
+            {
+                FungalInstance.Hunger -= 1;
+                hungerTimer = 0;
+            }
+
+            if (FungalInstance.Hunger < 30)
             {
                 hungerIndicator.gameObject.SetActive(true);
                 var position = mainCamera.WorldToScreenPoint(indicatorAnchor.transform.position);
@@ -116,10 +145,13 @@ public class FungalController : MonoBehaviour
         }
 
         var direction = TargetPosition - transform.position;
+        transform.forward = Vector3.Lerp(transform.forward, direction, rotationSpeed * Time.deltaTime);
+
         if (direction.magnitude > distanceThreshold)
         {
-            transform.position += speed * Time.deltaTime * direction.normalized;
-            transform.forward = Vector3.Lerp(transform.forward, direction, rotationSpeed * Time.deltaTime);
+            var fixedSpeed = speed;
+            if (target) fixedSpeed *= 2;
+            transform.position += fixedSpeed * Time.deltaTime * direction.normalized;
         }
         else if (targetFish)
         {

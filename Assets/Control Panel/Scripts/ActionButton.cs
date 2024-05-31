@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -9,26 +10,35 @@ public class ActionButton : MonoBehaviour
     [SerializeField] private Image background;
     [SerializeField] private Transform hiddenAnchor;
     [SerializeField] private Transform visibleAnchor;
+    [SerializeField] private TextMeshProUGUI text;
 
     private bool isVisible;
+    private EntityController entity;
 
-    public event UnityAction OnClicked;
+    public event UnityAction<EntityController> OnClicked;
 
     private void Awake()
     {
-        button.onClick.AddListener(() => OnClicked?.Invoke());
+        button.onClick.AddListener(() => OnClicked?.Invoke(entity));
         transform.position = hiddenAnchor.transform.position;
     }
 
-    public void SetInteraction(Sprite sprite, Color color)
+    public void SetInteraction(EntityController entity)
     {
-        actionImage.sprite = sprite;
-        background.color = color;
+        this.entity = entity;
+        actionImage.sprite = entity.ActionImage;
+        background.color = entity.ActionColor;
+        text.text = entity switch {
+            FungalController _ => "Talk",
+            EggController _ => "Hatch",
+            _ => "???"
+        };
     }
 
     public void SetVisible(bool value)
     {
         isVisible = value;
+        button.interactable = value;
     }
 
     private void Update()
