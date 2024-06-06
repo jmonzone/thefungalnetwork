@@ -2631,6 +2631,7 @@ MonoBehaviour:
   virtualJoystick: {fileID: 3544129046768494335}
   playerSpeed: 1
   cameraSpeed: 3
+  model: {fileID: 1778584731}
 --- !u!1 &384862510
 GameObject:
   m_ObjectHideFlags: 0
@@ -9224,7 +9225,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8606755148461151098, guid: 9e89634fe9474125ab42aefdc22a787d,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1778584733}
+      addedObject: {fileID: 1778584735}
   m_SourcePrefab: {fileID: 100100000, guid: 9e89634fe9474125ab42aefdc22a787d, type: 3}
 --- !u!4 &1778584731 stripped
 Transform:
@@ -9232,8 +9233,8 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1778584730}
   m_PrefabAsset: {fileID: 0}
---- !u!136 &1778584733
-CapsuleCollider:
+--- !u!65 &1778584735
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -9250,10 +9251,8 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 1.5
-  m_Direction: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!1 &1800189680
 GameObject:
@@ -11186,6 +11185,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rect: {fileID: 3544129046768494334}
   joystickRect: {fileID: 2015113355122782890}
+  flickSensitivity: 0.125
 --- !u!1 &4642637631622576142
 GameObject:
   m_ObjectHideFlags: 0

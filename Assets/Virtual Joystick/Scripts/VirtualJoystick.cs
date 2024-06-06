@@ -6,10 +6,12 @@ public class VirtualJoystick : MonoBehaviour
 {
     [SerializeField] private RectTransform rect;
     [SerializeField] private RectTransform joystickRect;
+    [SerializeField] private float flickSensitivity = 0.2f;
 
     public event UnityAction<Vector3> OnJoystickStart;
     public event UnityAction<Vector3> OnJoystickUpdate;
     public event UnityAction OnJoystickEnd;
+    public event UnityAction<Vector3> OnJoystickFlicked;
 
     private const float JOYSTICK_LENGTH = 250f;
 
@@ -22,6 +24,10 @@ public class VirtualJoystick : MonoBehaviour
     {
         defaultPosition = rect.position;
     }
+
+
+    private float timer;
+    private bool flicked;
 
     private void Update()
     {
@@ -41,13 +47,23 @@ public class VirtualJoystick : MonoBehaviour
             startPosition = Input.mousePosition;
             rect.position = startPosition;
             OnJoystickStart?.Invoke(startPosition);
+            timer = 0;
+            flicked = false;
         }
+
+        timer += Time.deltaTime;
 
         if (IsActive && !IsPointerOverUI && Input.GetMouseButton(0))
         {
             var direction = Vector3.ClampMagnitude(Input.mousePosition - startPosition, JOYSTICK_LENGTH);
             joystickRect.position = rect.position + direction;
             OnJoystickUpdate?.Invoke(direction);
+
+            if (!flicked && timer < flickSensitivity && direction.magnitude == JOYSTICK_LENGTH)
+            {
+                flicked = true;
+                OnJoystickFlicked?.Invoke(direction);
+            }
         }
     }
 
