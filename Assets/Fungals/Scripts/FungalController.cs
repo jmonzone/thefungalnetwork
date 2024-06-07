@@ -130,7 +130,7 @@ public class FungalController : EntityController
 
             if (hungerTimer > 5)
             {
-                FungalInstance.Hunger -= 1;
+                FungalInstance.Hunger -= 5 / (1 + FungalInstance.Stamina * 0.1f);
                 hungerTimer = 0;
             }
 
