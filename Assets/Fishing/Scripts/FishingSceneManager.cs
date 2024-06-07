@@ -49,7 +49,7 @@ public class FishingSceneManager : BaseSceneManager
     {
         base.Awake();
 
-        fungalController.Initialize(Fungals[SceneParameters.FungalIndex]);
+        fungalController.SetFungal(Fungals[SceneParameters.FungalIndex]);
         fungalController.SetFish(fishControllers);
         fungalController.FungalInstance.OnExperienceChanged += OnExperienceChanged;
         fungalController.FungalInstance.OnLevelChanged += OnLevelChanged;

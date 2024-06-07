@@ -150,7 +150,7 @@ public class GardenManager : BaseSceneManager
     {
 
         var fungalController = Instantiate(fungalControllerPrefab, spawnPosition, Quaternion.identity);
-        fungalController.Initialize(fungal);
+        fungalController.SetFungal(fungal);
         fungalControllers.Add(fungalController);
     }
 

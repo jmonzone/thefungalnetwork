@@ -10,6 +10,12 @@ public class FungalInstance : ScriptableObject
     [SerializeField] private int level;
     [SerializeField] private float experience;
 
+    [Header("Fungal Stats")]
+    [SerializeField] private float balance;
+    [SerializeField] private float speed;
+    [SerializeField] private float stamina;
+    [SerializeField] private float power;
+
     public event UnityAction OnDataChanged;
     public event UnityAction<float> OnExperienceChanged;
     public event UnityAction<int> OnLevelChanged;
@@ -23,7 +29,14 @@ public class FungalInstance : ScriptableObject
         [ConfigKeys.NAME_KEY] = Data.name,
         [ConfigKeys.HUNGER_KEY] = Hunger,
         [ConfigKeys.LEVEL_KEY] = Level,
-        [ConfigKeys.EXPERIENCE_KEY] = Experience
+        [ConfigKeys.EXPERIENCE_KEY] = Experience,
+        [ConfigKeys.STATS_KEY] = new JObject
+        {
+            [ConfigKeys.BALANCE_KEY] = balance,
+            [ConfigKeys.SPEED_KEY] = speed,
+            [ConfigKeys.STAMINA_KEY] = stamina,
+            [ConfigKeys.POWER_KEY] = power,
+        }
     };
 
     public void Initialize(Pet pet)
@@ -33,6 +46,10 @@ public class FungalInstance : ScriptableObject
         level = 1;
         experience = 0;
         hunger = 100;
+        balance = 0;
+        speed = 0;
+        stamina = 0;
+        power = 0;
     }
 
     public void Initialize(int index, Pet pet, JObject json)
@@ -44,8 +61,14 @@ public class FungalInstance : ScriptableObject
         level = (int)json[ConfigKeys.LEVEL_KEY];
         experience = (float)json[ConfigKeys.EXPERIENCE_KEY];
         hunger = (float)json[ConfigKeys.HUNGER_KEY];
+        balance = (float)json[ConfigKeys.STATS_KEY][ConfigKeys.BALANCE_KEY];
+        speed = (float)json[ConfigKeys.STATS_KEY][ConfigKeys.SPEED_KEY];
+        stamina = (float)json[ConfigKeys.STATS_KEY][ConfigKeys.STAMINA_KEY];
+        power = (float)json[ConfigKeys.STATS_KEY][ConfigKeys.POWER_KEY];
+
     }
 
+    #region Properties
     public float Hunger
     {
         get => hunger;
@@ -79,6 +102,48 @@ public class FungalInstance : ScriptableObject
             OnDataChanged?.Invoke();
         }
     }
+
+    public float Balance
+    {
+        get => balance;
+        set
+        {
+            balance = value;
+            OnDataChanged?.Invoke();
+        }
+    }
+
+    public float Speed
+    {
+        get => speed;
+        set
+        {
+            speed = value;
+            OnDataChanged?.Invoke();
+        }
+    }
+
+    public float Stamina
+    {
+        get => stamina;
+        set
+        {
+            stamina = value;
+            OnDataChanged?.Invoke();
+        }
+    }
+
+    public float Power
+    {
+        get => power;
+        set
+        {
+            power = value;
+            OnDataChanged?.Invoke();
+        }
+    }
+    #endregion
+
 
     private void LevelUp()
     {
