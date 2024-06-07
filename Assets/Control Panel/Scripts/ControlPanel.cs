@@ -8,7 +8,7 @@ public class ControlPanel : MonoBehaviour
     [SerializeField] private GameObject inventory;
     [SerializeField] private GameObject interactions;
     [SerializeField] private FeedPanel feedPanel;
-    [SerializeField] private FungalInfoUI petInfoManager;
+    [SerializeField] private FungalInfoUI fungalInfoUI;
 
     [SerializeField] private Button inventoryButton;
     [SerializeField] private Button closeButton;
@@ -62,6 +62,7 @@ public class ControlPanel : MonoBehaviour
             {
                 case FungalController fungal:
                     fungal.SetTarget(player);
+                    fungalInfoUI.SetFungal(fungal.FungalInstance);
                     SetState(UIState.INTERACTIONS);
                     break;
                 case EggController egg:
@@ -87,7 +88,7 @@ public class ControlPanel : MonoBehaviour
         joystick.SetActive(state == UIState.JOYSTICK);
         inventory.SetActive(state == UIState.INVENTORY);
         interactions.SetActive(state == UIState.INTERACTIONS);
-        petInfoManager.gameObject.SetActive(state == UIState.INFO);
+        fungalInfoUI.gameObject.SetActive(state == UIState.INFO);
         feedPanel.gameObject.SetActive(state == UIState.FEED);
         closeButton.gameObject.SetActive(state != UIState.JOYSTICK);
     }
@@ -108,7 +109,6 @@ public class ControlPanel : MonoBehaviour
                 this.fungal = fungal;
 
                 feedPanel.Fungal = fungal.FungalInstance;
-                petInfoManager.SetFungal(fungal.FungalInstance);
                 UpdateEscortButtonText();
             }
         }

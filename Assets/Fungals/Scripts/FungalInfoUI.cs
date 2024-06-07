@@ -47,6 +47,11 @@ public class FungalInfoUI : MonoBehaviour
 
     public void SetFungal(FungalInstance fungal)
     {
+        balanceText.text = fungal.Balance.ToString();
+        speedText.text = fungal.Speed.ToString();
+        staminaText.text = fungal.Stamina.ToString();
+        powerText.text = fungal.Power.ToString();
+
         if (this.fungal == fungal) return;
 
         if (fungalModelView)
@@ -59,11 +64,6 @@ public class FungalInfoUI : MonoBehaviour
         nameText.text = fungal.Data.Name;
         typeText.text = fungal.Data.Type.ToString();
         levelText.text = $"Level {fungal.Level}";
-
-        balanceText.text = fungal.Balance.ToString();
-        speedText.text = fungal.Speed.ToString();
-        staminaText.text = fungal.Stamina.ToString();
-        powerText.text = fungal.Power.ToString();
 
         if (!fungalModelView)
         {

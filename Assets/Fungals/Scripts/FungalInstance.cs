@@ -103,11 +103,45 @@ public class FungalInstance : ScriptableObject
         }
     }
 
-    public float Balance => balance;
-    public float Speed => speed;
-    public float Stamina => stamina;
-    public float Power => power;
+    public float Balance
+    {
+        get => balance;
+        set
+        {
+            balance = value;
+            OnDataChanged?.Invoke();
+        }
+    }
 
+    public float Speed
+    {
+        get => speed;
+        set
+        {
+            speed = value;
+            OnDataChanged?.Invoke();
+        }
+    }
+
+    public float Stamina
+    {
+        get => stamina;
+        set
+        {
+            stamina = value;
+            OnDataChanged?.Invoke();
+        }
+    }
+
+    public float Power
+    {
+        get => power;
+        set
+        {
+            power = value;
+            OnDataChanged?.Invoke();
+        }
+    }
     #endregion
 
 
