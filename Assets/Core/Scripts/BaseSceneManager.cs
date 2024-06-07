@@ -14,6 +14,13 @@ public static class ConfigKeys
     public const string INVENTORY_KEY = "inventory";
     public const string HUNGER_KEY = "hunger";
     public const string NAME_KEY = "name";
+
+    // stats
+    public const string STATS_KEY = "stats";
+    public const string BALANCE_KEY = "balance";
+    public const string STAMINA_KEY = "stamina";
+    public const string SPEED_KEY = "speed";
+    public const string POWER_KEY = "power";
 }
 
 public static class SceneParameters
@@ -208,6 +215,7 @@ public abstract class BaseSceneManager : MonoBehaviour
         Debug.Log("checking available migrations");
         MigratePetFieldToObject();
         MigratePetObjectToArray();
+        AddStatsToFungals();
     }
 
     // May 27, 2023
@@ -222,8 +230,8 @@ public abstract class BaseSceneManager : MonoBehaviour
 
             JsonFile[ConfigKeys.CURRENT_PET_KEY] = new JObject
             {
-                ["name"] = petData.name,
-                ["hunger"] = 100,
+                [ConfigKeys.NAME_KEY] = petData.name,
+                [ConfigKeys.HUNGER_KEY] = 100,
             };
 
             SaveData();
@@ -238,8 +246,8 @@ public abstract class BaseSceneManager : MonoBehaviour
         {
             Debug.Log($"running {nameof(MigratePetObjectToArray)}");
 
-            currentPetObject["level"] = JsonFile[ConfigKeys.LEVEL_KEY];
-            currentPetObject["experience"] = JsonFile[ConfigKeys.EXPERIENCE_KEY];
+            currentPetObject[ConfigKeys.LEVEL_KEY] = JsonFile[ConfigKeys.LEVEL_KEY];
+            currentPetObject[ConfigKeys.EXPERIENCE_KEY] = JsonFile[ConfigKeys.EXPERIENCE_KEY];
 
             var fungalsArray = new JArray
             {
@@ -253,6 +261,26 @@ public abstract class BaseSceneManager : MonoBehaviour
             JsonFile.Remove(ConfigKeys.EXPERIENCE_KEY);
             SaveData();
         }
+    }
+
+    // Jun 6, 2023
+    private void AddStatsToFungals()
+    {
+        var fungals = JsonFile[ConfigKeys.FUNGALS_KEY] as JArray;
+        for (var i = 0; i < fungals.Count; i++)
+        {
+            if (JsonFile[ConfigKeys.FUNGALS_KEY][i][ConfigKeys.STATS_KEY] is JObject) continue;
+
+            JsonFile[ConfigKeys.FUNGALS_KEY][i][ConfigKeys.STATS_KEY] = new JObject
+            {
+                [ConfigKeys.BALANCE_KEY] = 0f,
+                [ConfigKeys.SPEED_KEY] = 0f,
+                [ConfigKeys.STAMINA_KEY] = 0f,
+                [ConfigKeys.POWER_KEY] = 0f,
+            }; ;
+        }
+
+        SaveData();
     }
     #endregion
 }

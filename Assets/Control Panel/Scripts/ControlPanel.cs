@@ -8,7 +8,7 @@ public class ControlPanel : MonoBehaviour
     [SerializeField] private GameObject inventory;
     [SerializeField] private GameObject interactions;
     [SerializeField] private FeedPanel feedPanel;
-    [SerializeField] private PetInfoManager petInfoManager;
+    [SerializeField] private FungalInfoUI petInfoManager;
 
     [SerializeField] private Button inventoryButton;
     [SerializeField] private Button closeButton;
