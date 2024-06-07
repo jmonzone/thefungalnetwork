@@ -52,7 +52,7 @@ public class FungalController : EntityController
         mainCamera = Camera.main;
     }
 
-    public void Initialize(FungalInstance fungalInstance)
+    public void SetFungal(FungalInstance fungalInstance)
     {
         Debug.Log($"initializing fungal controller {fungalInstance}");
         FungalInstance = fungalInstance;
@@ -64,6 +64,8 @@ public class FungalController : EntityController
 
             var animator = petObject.GetComponentInChildren<Animator>();
             animator.speed = 0.25f;
+
+            speed = 0.5f + fungalInstance.Speed * 0.1f;
         }
     }
 
