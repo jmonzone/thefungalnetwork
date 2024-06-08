@@ -62,7 +62,7 @@ public class ControlPanel : MonoBehaviour
             {
                 case FungalController fungal:
                     fungal.SetTarget(player);
-                    fungalInfoUI.SetFungal(fungal.FungalInstance);
+                    fungalInfoUI.SetFungal(fungal);
                     SetState(UIState.INTERACTIONS);
                     break;
                 case EggController egg:
@@ -108,7 +108,7 @@ public class ControlPanel : MonoBehaviour
             {
                 this.fungal = fungal;
 
-                feedPanel.Fungal = fungal.FungalInstance;
+                feedPanel.Fungal = fungal.Model;
                 UpdateEscortButtonText();
             }
         }

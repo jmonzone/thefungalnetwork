@@ -17,7 +17,7 @@ public class FungalInfoUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI staminaText;
     [SerializeField] private TextMeshProUGUI powerText;
 
-    private FungalInstance fungal;
+    private FungalController fungal;
     private Camera mainCamera;
 
     private void Awake()
@@ -42,22 +42,49 @@ public class FungalInfoUI : MonoBehaviour
         }
     }
 
-    public void SetFungal(FungalInstance fungal)
+    public void SetFungal(FungalController fungal)
     {
-        this.fungal = fungal;
-        nameText.text = fungal.Data.Name;
-        typeText.text = fungal.Data.Type.ToString();
-        levelText.text = $"Level {fungal.Level}";
+        if (this.fungal && this.fungal != fungal)
+        {
+            this.fungal.SpotlightCamera.gameObject.SetActive(false);
 
-        balanceText.text = fungal.Balance.ToString();
-        speedText.text = fungal.Speed.ToString();
-        staminaText.text = fungal.Stamina.ToString();
-        powerText.text = fungal.Power.ToString();
+            var defaultLayer = LayerMask.NameToLayer("Default");
+            this.fungal.Model3D.layer = defaultLayer;
+
+            foreach (Transform child in this.fungal.Model3D.transform)
+            {
+                child.gameObject.layer = defaultLayer;
+            }
+        }
+
+        this.fungal = fungal;
+
+        if (this.fungal)
+        {
+            fungal.SpotlightCamera.gameObject.SetActive(true);
+
+            var fungalLayer = LayerMask.NameToLayer("Fungal");
+            fungal.Model3D.layer = fungalLayer;
+
+            foreach (Transform child in fungal.Model3D.transform)
+            {
+                child.gameObject.layer = fungalLayer;
+            }
+
+            nameText.text = fungal.Model.Data.Name;
+            typeText.text = fungal.Model.Data.Type.ToString();
+            levelText.text = $"Level {fungal.Model.Level}";
+
+            balanceText.text = fungal.Model.Balance.ToString();
+            speedText.text = fungal.Model.Speed.ToString();
+            staminaText.text = fungal.Model.Stamina.ToString();
+            powerText.text = fungal.Model.Power.ToString();
+        }
     }
 
     private void GoToFishingGameplay()
     {
-        SceneParameters.FungalIndex = fungal.Index;
+        SceneParameters.FungalIndex = fungal.Model.Index;
         SceneManager.LoadScene(1);
     }
 }

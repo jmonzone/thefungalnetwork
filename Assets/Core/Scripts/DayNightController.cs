@@ -4,7 +4,7 @@ using UnityEngine;
 public class DayNightController : MonoBehaviour
 {
     [Header("Refrences")]
-    [SerializeField] private Light light;
+    [SerializeField] private Light targetLight;
     [SerializeField] private Color dayColor;
     [SerializeField] private Color nightColor;
 
@@ -18,11 +18,11 @@ public class DayNightController : MonoBehaviour
 
         if (time < 0.5)
         {
-            light.color = Color.Lerp(nightColor, dayColor, time / 0.5f);
+            targetLight.color = Color.Lerp(nightColor, dayColor, time / 0.5f);
         }
         else
         {
-            light.color = Color.Lerp(dayColor, nightColor, (time - 0.5f) / 0.5f);
+            targetLight.color = Color.Lerp(dayColor, nightColor, (time - 0.5f) / 0.5f);
         }
     }
 }

@@ -49,12 +49,12 @@ public class FishingSceneManager : MonoBehaviour
     {
         fungalController.SetFungal(GameManager.Instance.Fungals[SceneParameters.FungalIndex]);
         fungalController.SetFish(fishControllers);
-        fungalController.FungalInstance.OnExperienceChanged += OnExperienceChanged;
-        fungalController.FungalInstance.OnLevelChanged += OnLevelChanged;
-        fungalController.FungalInstance.OnLevelUp += OnLevelUp;
+        fungalController.Model.OnExperienceChanged += OnExperienceChanged;
+        fungalController.Model.OnLevelChanged += OnLevelChanged;
+        fungalController.Model.OnLevelUp += OnLevelUp;
 
-        OnLevelChanged(fungalController.FungalInstance.Level);
-        OnExperienceChanged(fungalController.FungalInstance.Experience);
+        OnLevelChanged(fungalController.Model.Level);
+        OnExperienceChanged(fungalController.Model.Experience);
 
         mainCamera = Camera.main;
 
@@ -104,7 +104,7 @@ public class FishingSceneManager : MonoBehaviour
 
         if (Input.GetKeyUp(KeyCode.L))
         {
-            fungalController.FungalInstance.Experience = FungalInstance.ExperienceAtLevel(fungalController.FungalInstance.Level + 1) + 10f;
+            fungalController.Model.Experience = FungalInstance.ExperienceAtLevel(fungalController.Model.Level + 1) + 10f;
         }
     }
 
@@ -156,7 +156,7 @@ public class FishingSceneManager : MonoBehaviour
                     GameManager.Instance.AddToInventory(item);
 
                     var experience = fishController.Data.Experience;
-                    fungalController.FungalInstance.Experience += experience;
+                    fungalController.Model.Experience += experience;
                     Debug.Log($"adding experience {experience}");
 
                     var position = mainCamera.WorldToScreenPoint(fish.transform.position + Vector3.up);
@@ -215,12 +215,12 @@ public class FishingSceneManager : MonoBehaviour
 
     private void OnLevelUp()
     {
-        if (fishingUpgrades.OfLevel(fungalController.FungalInstance.Level, out Upgrade upgrade))
+        if (fishingUpgrades.OfLevel(fungalController.Model.Level, out Upgrade upgrade))
         {
-            levelUpUI.Show(fungalController.FungalInstance.Level, upgrade);
+            levelUpUI.Show(fungalController.Model.Level, upgrade);
         }
 
-        if (flumeIndex < logFlumes.Count && fungalController.FungalInstance.Level % 5 == 0)
+        if (flumeIndex < logFlumes.Count && fungalController.Model.Level % 5 == 0)
         {
             Spawn(treasurePrefab);
         }

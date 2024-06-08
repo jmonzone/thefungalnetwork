@@ -27,6 +27,7 @@ public class FungalController : EntityController
     [SerializeField] private GameObject placeholder;
     [SerializeField] private Transform indicatorAnchor;
     [SerializeField] private RectTransform hungerIndicator;
+    [SerializeField] private Camera spotlightCamera;
 
     [Header("Debug")]
     [SerializeField] private Vector3 origin;
@@ -36,14 +37,18 @@ public class FungalController : EntityController
     [SerializeField] private FishController targetFish;
     [SerializeField] private List<FishController> fish = new List<FishController>();
 
-    public FungalInstance FungalInstance { get; private set; }
+    public FungalInstance Model { get; private set; }
     public bool IsFollowing { get; set; } = false;
 
-    public override Sprite ActionImage => FungalInstance.Data.ActionImage;
-    public override Color ActionColor => FungalInstance.Data.ActionColor;
+    public override Sprite ActionImage => Model.Data.ActionImage;
+    public override Color ActionColor => Model.Data.ActionColor;
     public override string ActionText => "Talk";
 
+    public Camera SpotlightCamera => spotlightCamera;
+    public GameObject Model3D => model3D;
+
     private Camera mainCamera;
+    private GameObject model3D;
 
     private void Awake()
     {
@@ -57,14 +62,15 @@ public class FungalController : EntityController
     public void SetFungal(FungalInstance fungalInstance)
     {
         Debug.Log($"initializing fungal controller {fungalInstance}");
-        FungalInstance = fungalInstance;
+        Model = fungalInstance;
 
         if (fungalInstance)
         {
-            var petObject = Instantiate(fungalInstance.Data.Prefab, transform);
-            petObject.transform.localScale = Vector3.one;
+            name = $"Fungal Controller - {fungalInstance.name}";
+            model3D = Instantiate(fungalInstance.Data.Prefab, transform);
+            model3D.transform.localScale = Vector3.one;
 
-            var animator = petObject.GetComponentInChildren<Animator>();
+            var animator = model3D.GetComponentInChildren<Animator>();
             animator.speed = 0.25f;
 
             speed = 0.5f + fungalInstance.Speed * 0.1f;
@@ -126,17 +132,17 @@ public class FungalController : EntityController
 
     private void Update()
     {
-        if (FungalInstance)
+        if (Model)
         {
             hungerTimer += Time.deltaTime;
 
             if (hungerTimer > 5)
             {
-                FungalInstance.Hunger -= 5 / (1 + FungalInstance.Stamina * 0.1f);
+                Model.Hunger -= 5 / (1 + Model.Stamina * 0.1f);
                 hungerTimer = 0;
             }
 
-            if (FungalInstance.Hunger < 30)
+            if (Model.Hunger < 30)
             {
                 hungerIndicator.gameObject.SetActive(true);
                 var position = mainCamera.WorldToScreenPoint(indicatorAnchor.transform.position);
