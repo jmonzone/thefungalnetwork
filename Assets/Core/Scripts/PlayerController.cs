@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
         virtualJoystick.OnJoystickUpdate += input =>
         {
             var direction = new Vector3(input.x, 0, input.y);
+            animator.speed = direction.magnitude / 250f;
             transform.position += playerSpeed * 0.01f * Time.deltaTime * direction;
             if(direction.magnitude > 0) transform.forward = direction;
         };
