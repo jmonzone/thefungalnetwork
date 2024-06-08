@@ -12,6 +12,7 @@ public class EggController : EntityController
 
     public override Sprite ActionImage => Fungal.ActionImage;
     public override Color ActionColor => Fungal.ActionColor;
+    public override string ActionText => "Hatch";
 
     private void Awake()
     {

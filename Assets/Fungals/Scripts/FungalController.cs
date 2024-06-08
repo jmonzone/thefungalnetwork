@@ -8,6 +8,7 @@ public abstract class EntityController : MonoBehaviour
     public bool HasInteraction => hasInteraction;
     public abstract Sprite ActionImage { get; }
     public abstract Color ActionColor { get; }
+    public abstract string ActionText { get; }
 }
 
 public class FungalController : EntityController
@@ -40,6 +41,7 @@ public class FungalController : EntityController
 
     public override Sprite ActionImage => FungalInstance.Data.ActionImage;
     public override Color ActionColor => FungalInstance.Data.ActionColor;
+    public override string ActionText => "Talk";
 
     private Camera mainCamera;
 

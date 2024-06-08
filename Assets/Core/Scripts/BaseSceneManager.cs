@@ -136,7 +136,6 @@ public abstract class BaseSceneManager : MonoBehaviour
 
     private void OnFungalDataChanged(FungalInstance fungal)
     {
-        Debug.Log("Update fungal data");
         JsonFile[ConfigKeys.FUNGALS_KEY][fungal.Index] = fungal.Json;
         SaveData();
     }
