@@ -16,6 +16,7 @@ public class GardenManager : BaseSceneManager
     [SerializeField] private EggController eggControllerPrefab;
 
     [Header("UI References")]
+    [SerializeField] private GameObject gameplayCanvas;
     [SerializeField] private Button resetButton;
     [SerializeField] private ControlPanel controlPanel;
     [SerializeField] private InventoryList inventoryUI;
@@ -71,6 +72,7 @@ public class GardenManager : BaseSceneManager
         OnInventoryChanged += UpdateInventory;
         UpdateInventory();
 
+        gameplayCanvas.SetActive(true);
     }
 
     protected override void Update()
