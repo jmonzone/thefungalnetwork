@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -6,6 +7,7 @@ public class VirtualJoystick : MonoBehaviour
 {
     [SerializeField] private RectTransform rect;
     [SerializeField] private RectTransform joystickRect;
+    [SerializeField] private GameObject target;
 
     public event UnityAction<Vector3> OnJoystickStart;
     public event UnityAction<Vector3> OnJoystickUpdate;
@@ -33,9 +35,7 @@ public class VirtualJoystick : MonoBehaviour
             OnJoystickEnd?.Invoke();
         }
 
-        if (IsPointerOverUI) return;
-
-        if (Input.GetMouseButtonDown(0))
+        if (IsPointerOverTarget && Input.GetMouseButtonDown(0))
         {
             IsActive = true;
             startPosition = Input.mousePosition;
@@ -43,7 +43,7 @@ public class VirtualJoystick : MonoBehaviour
             OnJoystickStart?.Invoke(startPosition);
         }
 
-        if (IsActive && !IsPointerOverUI && Input.GetMouseButton(0))
+        if (IsActive && Input.GetMouseButton(0))
         {
             var direction = Vector3.ClampMagnitude(Input.mousePosition - startPosition, JOYSTICK_LENGTH);
             joystickRect.position = rect.position + direction;
@@ -51,12 +51,29 @@ public class VirtualJoystick : MonoBehaviour
         }
     }
 
-    public bool IsPointerOverUI
+    public bool IsPointerOverTarget
     {
         get
         {
-            var currentGameObject = EventSystem.current.currentSelectedGameObject;
-            return currentGameObject && currentGameObject != gameObject;
+            // Create a new PointerEventData
+            PointerEventData pointerEventData = new PointerEventData(EventSystem.current)
+            {
+                // Set the pointer position
+                position = Input.mousePosition
+            };
+
+            // Raycast to all UI elements under the pointer position
+            List<RaycastResult> results = new List<RaycastResult>();
+            EventSystem.current.RaycastAll(pointerEventData, results);
+
+            if (results.Count > 0)
+            {
+                if (results[0].gameObject == target)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
            
     }
