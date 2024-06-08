@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class FishingSceneManager : BaseSceneManager
+public class FishingSceneManager : MonoBehaviour
 {
     [Header("Configuration")]
     [SerializeField] private UpgradeCollection fishingUpgrades;
@@ -45,11 +45,9 @@ public class FishingSceneManager : BaseSceneManager
     }
     private FishData RandomFish => availableFish[Random.Range(0, availableFish.Count)];
 
-    protected override void Awake()
+    private void Start()
     {
-        base.Awake();
-
-        fungalController.SetFungal(Fungals[SceneParameters.FungalIndex]);
+        fungalController.SetFungal(GameManager.Instance.Fungals[SceneParameters.FungalIndex]);
         fungalController.SetFish(fishControllers);
         fungalController.FungalInstance.OnExperienceChanged += OnExperienceChanged;
         fungalController.FungalInstance.OnLevelChanged += OnLevelChanged;
@@ -60,7 +58,7 @@ public class FishingSceneManager : BaseSceneManager
 
         mainCamera = Camera.main;
 
-        if (JsonFile.ContainsKey("flumes")) flumeIndex = (int)JsonFile["flumes"];
+        if (GameManager.Instance.JsonFile.ContainsKey("flumes")) flumeIndex = (int)GameManager.Instance.JsonFile["flumes"];
         else flumeIndex = 0;
 
         UpdateFlumes();
@@ -70,8 +68,8 @@ public class FishingSceneManager : BaseSceneManager
             if (fish.IsTreasure)
             {
                 flumeIndex++;
-                JsonFile["flumes"] = flumeIndex;
-                SaveData();
+                GameManager.Instance.JsonFile["flumes"] = flumeIndex;
+                GameManager.Instance.SaveData();
 
                 treasureUI.gameObject.SetActive(true);
                 UpdateFlumes();
@@ -90,10 +88,8 @@ public class FishingSceneManager : BaseSceneManager
         cooldown = BASE_COOLDOWN / (flumeIndex + 1);
     }
 
-    protected override void Update()
+    private void Update()
     {
-        base.Update();
-
         if (timer > 1 && fishCount < 5)
         {
             SpawnFish();
@@ -157,7 +153,7 @@ public class FishingSceneManager : BaseSceneManager
                     item.Initialize(fishController.Data);
                     Debug.Log($"item initialized {fishController.Data}");
 
-                    AddToInventory(item);
+                    GameManager.Instance.AddToInventory(item);
 
                     var experience = fishController.Data.Experience;
                     fungalController.FungalInstance.Experience += experience;
@@ -214,7 +210,7 @@ public class FishingSceneManager : BaseSceneManager
         experienceSlider.minValue = FungalInstance.ExperienceAtLevel(level);
         experienceSlider.maxValue = FungalInstance.ExperienceAtLevel(level + 1);
 
-        availableFish = new List<FishData>(GameData.Items.OfType<FishData>().Where(fish => fish.LevelRequirement <= level));
+        availableFish = new List<FishData>(GameManager.Instance.GameData.Items.OfType<FishData>().Where(fish => fish.LevelRequirement <= level));
     }
 
     private void OnLevelUp()

@@ -28,8 +28,11 @@ public static class SceneParameters
     public static int FungalIndex = 0;
 }
 
-public abstract class BaseSceneManager : MonoBehaviour
+// handles persistent data across the game and provides an API to the save data
+public class GameManager : MonoBehaviour
 {
+    public static GameManager Instance { get; private set; }
+
     [Header("Developer Options")]
     [SerializeField] private bool resetDataOnAwake;
 
@@ -41,16 +44,27 @@ public abstract class BaseSceneManager : MonoBehaviour
     [SerializeField] private List<ItemInstance> inventory = new List<ItemInstance>();
     [SerializeField] private string saveDataPath;
 
-    protected GameData GameData => gameData;
+    public GameData GameData => gameData;
 
     public JObject JsonFile { get; private set; }
-    protected List<FungalInstance> Fungals => fungals;
-    protected List<ItemInstance> Inventory => inventory;
+    public List<FungalInstance> Fungals => fungals;
+    public List<ItemInstance> Inventory => inventory;
 
     public event UnityAction OnInventoryChanged;
 
-    protected virtual void Awake()
+    private void Awake()
     {
+        if (Instance)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        else
+        {
+            Instance = this;
+            DontDestroyOnLoad(Instance);
+        }
+
         saveDataPath = $"{Application.persistentDataPath}/data.json";
 
         if (Application.isEditor && resetDataOnAwake) ResetData();
@@ -72,20 +86,9 @@ public abstract class BaseSceneManager : MonoBehaviour
         RunMigrations();
         UnpackJsonFile();
     }
-
-    protected virtual void Start()
-    {
-
-    }
-
-    protected virtual void Update()
-    {
-
-    }
-
     #region Protected Methods
 
-    protected void AddToInventory(ItemInstance item)
+    public void AddToInventory(ItemInstance item)
     {
         if (inventory.Count >= 8) return;
         Debug.Log($"adding item {item.Data.name} {JsonFile}");
@@ -119,7 +122,7 @@ public abstract class BaseSceneManager : MonoBehaviour
         }
     }
 
-    protected void AddFungal(FungalInstance fungal)
+    public void AddFungal(FungalInstance fungal)
     {
         Debug.Log($"adding fungal {fungal.Data.name} {JsonFile}");
         fungals.Add(fungal);
@@ -145,7 +148,7 @@ public abstract class BaseSceneManager : MonoBehaviour
 
     }
 
-    protected void ResetData()
+    public void ResetData()
     {
         if (File.Exists(saveDataPath))
         {
@@ -201,7 +204,7 @@ public abstract class BaseSceneManager : MonoBehaviour
         SaveData();
     }
 
-    protected void SaveData()
+    public void SaveData()
     {
         File.WriteAllText(saveDataPath, JsonFile.ToString());
     }

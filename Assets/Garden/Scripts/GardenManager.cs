@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class GardenManager : BaseSceneManager
+public class GardenManager : MonoBehaviour
 {
     [Header("Gameplay References")]
     [SerializeField] private EggSelection eggSelection;
@@ -24,6 +24,10 @@ public class GardenManager : BaseSceneManager
 
     private List<FungalController> fungalControllers = new List<FungalController>();
 
+    private List<FungalInstance> Fungals => GameManager.Instance.Fungals;
+    private List<ItemInstance> Inventory => GameManager.Instance.Inventory;
+    private GameData GameData => GameManager.Instance.GameData;
+
     private enum GameState
     {
         EGG_SELECTION,
@@ -31,10 +35,8 @@ public class GardenManager : BaseSceneManager
         PET_INFO
     }
 
-    protected override void Start()
+    private void Start()
     {
-        base.Start();
-
         if (Fungals.Count > 0)
         {
             SpawnFungals();
@@ -59,7 +61,7 @@ public class GardenManager : BaseSceneManager
 
         resetButton.onClick.AddListener(() =>
         {
-            ResetData();
+            GameManager.Instance.ResetData();
             SceneManager.LoadScene(0);
         });
 
@@ -69,15 +71,14 @@ public class GardenManager : BaseSceneManager
             feedUI.SetInventory(Inventory);
         }
 
-        OnInventoryChanged += UpdateInventory;
+        GameManager.Instance.OnInventoryChanged += UpdateInventory;
         UpdateInventory();
 
         gameplayCanvas.SetActive(true);
     }
 
-    protected override void Update()
+    private void Update()
     {
-        base.Update();
         HandleProximityInteractions();
     }
 
@@ -118,7 +119,7 @@ public class GardenManager : BaseSceneManager
     {
         var fungal = ScriptableObject.CreateInstance<FungalInstance>();
         fungal.Initialize(egg.Fungal);
-        AddFungal(fungal);
+        GameManager.Instance.AddFungal(fungal);
         SpawnFungal(fungal, egg.transform.position);
         SetCurrentState(GameState.GAMEPLAY);
     }
