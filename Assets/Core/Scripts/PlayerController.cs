@@ -4,10 +4,8 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] private VirtualJoystick virtualJoystick;
     [SerializeField] private float playerSpeed = 2f;
-    [SerializeField] private float cameraSpeed = 3f;
+    [SerializeField] private Transform cameraController;
 
-    private Camera mainCamera;
-    private Vector3 cameraOffset;
 
     // Start is called before the first frame update
     void Start()
@@ -20,23 +18,10 @@ public class PlayerController : MonoBehaviour
         {
             var direction = new Vector3(input.x, 0, input.y);
             animator.speed = direction.magnitude / 250f;
+            direction = Quaternion.Euler(0, cameraController.eulerAngles.y, 0) * direction;
+
             transform.position += playerSpeed * 0.01f * Time.deltaTime * direction;
             if(direction.magnitude > 0) transform.forward = direction;
         };
-
-        mainCamera = Camera.main;
-        cameraOffset = mainCamera.transform.position - transform.position;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        var targetPosition = transform.position + cameraOffset;
-        var direction = targetPosition - mainCamera.transform.position;
-
-        if (direction.magnitude > 0.05f)
-        {
-            mainCamera.transform.position += cameraSpeed * Time.deltaTime * direction;
-        }
     }
 }
