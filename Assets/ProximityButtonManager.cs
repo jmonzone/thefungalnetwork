@@ -12,7 +12,7 @@ public class ProximityButtonManager : MonoBehaviour
 
     public event UnityAction<EntityController> OnButtonClicked;
 
-    private const float MAXIMUM_PROXIMITY_DISTANCE = 5f;
+    private const float MAXIMUM_PROXIMITY_DISTANCE = 3f;
 
     private void Awake()
     {
