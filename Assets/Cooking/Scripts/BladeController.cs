@@ -48,8 +48,7 @@ public class BladeController : MonoBehaviour
 
     private void StartSlicing()
     {
-        Vector3 newPosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-        newPosition.z = 0f;
+        Vector3 newPosition = GetWorldPositionOnPlane(Input.mousePosition, transform.position.z);
 
         transform.position = newPosition;
 
@@ -68,8 +67,7 @@ public class BladeController : MonoBehaviour
 
     private void ContinueSlicing()
     {
-        Vector3 newPosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-        newPosition.z = 0;
+        Vector3 newPosition = GetWorldPositionOnPlane(Input.mousePosition, transform.position.z);
 
         Direciton = newPosition - transform.position;
 
@@ -77,5 +75,14 @@ public class BladeController : MonoBehaviour
         bladeCollider.enabled = velocity > minVelocity;
 
         transform.position = newPosition;
+    }
+
+    public Vector3 GetWorldPositionOnPlane(Vector3 screenPosition, float z)
+    {
+        Ray ray = mainCamera.ScreenPointToRay(screenPosition);
+        Plane xy = new Plane(Vector3.forward, new Vector3(0, 0, z));
+        float distance;
+        xy.Raycast(ray, out distance);
+        return ray.GetPoint(distance);
     }
 }

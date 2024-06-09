@@ -23,8 +23,16 @@ public class IngredientManager : MonoBehaviour
             ingredient.gameObject.SetActive(false);
             ingredientPool.Add(ingredient);
         }
+    }
 
+    public void SpawnIngredients()
+    {
         StartCoroutine(ThrowIngredients());
+    }
+
+    public void StopIngredients()
+    {
+        StopAllCoroutines();
     }
 
     private IEnumerator ThrowIngredients()
@@ -34,8 +42,8 @@ public class IngredientManager : MonoBehaviour
             yield return new WaitForSeconds(throwFrequency);
 
             var spawnPostion = ingredientSpawnAnchor.position;
-            spawnPostion.x = Random.Range(-maxHorizontal, maxHorizontal);
-
+            //spawnPostion.x = Random.Range(-maxHorizontal, maxHorizontal);
+            Debug.Log(spawnPostion);
             var ingredient = ingredientPool[ingredientIndex % ingredientPool.Count];
             ingredient.Spawn(spawnPostion);
 

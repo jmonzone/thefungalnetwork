@@ -17,6 +17,7 @@ public class ControlPanel : MonoBehaviour
     [SerializeField] private Button feedButton;
     [SerializeField] private ActionButton actionButton;
     [SerializeField] private TextMeshProUGUI escortButtonText;
+    [SerializeField] private SlideAnimation slideAnimation;
 
     [SerializeField] private Transform player;
 
@@ -56,6 +57,7 @@ public class ControlPanel : MonoBehaviour
             UpdateEscortButtonText();
         });
 
+        // todo: move functionality to respective scripts
         actionButton.OnClicked += entity =>
         {
             switch (entity)
@@ -67,6 +69,9 @@ public class ControlPanel : MonoBehaviour
                     break;
                 case EggController egg:
                     egg.Hatch();
+                    break;
+                case CookingStation cookingStation:
+                    cookingStation.OnActionClicked();
                     break;
             }
         };
