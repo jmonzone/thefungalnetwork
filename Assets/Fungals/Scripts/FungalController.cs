@@ -9,6 +9,8 @@ public abstract class EntityController : MonoBehaviour
     public abstract Sprite ActionImage { get; }
     public abstract Color ActionColor { get; }
     public abstract string ActionText { get; }
+
+    public abstract void UseAction();
 }
 
 public class FungalController : EntityController
@@ -191,5 +193,9 @@ public class FungalController : EntityController
         }
 
         timer += Time.deltaTime;
+    }
+
+    public override void UseAction()
+    {
     }
 }

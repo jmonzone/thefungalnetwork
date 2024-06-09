@@ -26,6 +26,11 @@ public class EggController : EntityController
         renderer.material.color = fungal.EggColor;
     }
 
+    public override void UseAction()
+    {
+        Hatch();
+    }
+
     public void Hatch()
     {
         _rigidbody.AddForce(Vector3.up * 100f);

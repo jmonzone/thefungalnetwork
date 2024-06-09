@@ -77,44 +77,6 @@ public class GardenManager : MonoBehaviour
         gameplayCanvas.SetActive(true);
     }
 
-    private void Update()
-    {
-        HandleProximityInteractions();
-    }
-
-    private const float MINIMUM_PROXIMITY_DISTANCE = 4f;
-
-    private void HandleProximityInteractions()
-    {
-        EntityController closestEntity = null;
-        float closestDistance = MINIMUM_PROXIMITY_DISTANCE;
-
-        var colliders = Physics.OverlapSphere(player.transform.position, MINIMUM_PROXIMITY_DISTANCE);
-
-        foreach(var collider in colliders)
-        {
-            var entity = collider.GetComponentInParent<EntityController>();
-            if (entity && entity.HasInteraction)
-            {
-                var distance = Vector3.Distance(player.transform.position, entity.transform.position);
-                if (distance < MINIMUM_PROXIMITY_DISTANCE && distance < closestDistance)
-                {
-                    closestEntity = entity;
-                    closestDistance = distance;
-                }
-            }
-        }
-
-        if (closestEntity)
-        {
-            controlPanel.SetProximityAction(closestEntity);
-        }
-        else
-        {
-            controlPanel.SetProximityAction(null);
-        }
-    }
-
     private void OnEggHatched(EggController egg)
     {
         var fungal = ScriptableObject.CreateInstance<FungalInstance>();

@@ -15,16 +15,13 @@ public class ControlPanel : MonoBehaviour
     [SerializeField] private Button infoButton;
     [SerializeField] private Button escortButton;
     [SerializeField] private Button feedButton;
-    [SerializeField] private ActionButton actionButton;
     [SerializeField] private TextMeshProUGUI escortButtonText;
     [SerializeField] private SlideAnimation slideAnimation;
 
     [SerializeField] private Transform player;
 
-    private EntityController proximityEntity;
+    private ProximityButtonManager proximityButtonManager;
     private FungalController fungal;
-    private UIState currentState;
-    private bool isEscorting;
 
     private enum UIState
     {
@@ -57,24 +54,21 @@ public class ControlPanel : MonoBehaviour
             UpdateEscortButtonText();
         });
 
-        // todo: move functionality to respective scripts
-        actionButton.OnClicked += entity =>
+        proximityButtonManager = GetComponentInChildren<ProximityButtonManager>();
+        proximityButtonManager.OnButtonClicked += entity =>
         {
-            switch (entity)
+            if (entity is FungalController fungal)
             {
-                case FungalController fungal:
-                    fungal.SetTarget(player);
-                    fungalInfoUI.SetFungal(fungal);
-                    SetState(UIState.INTERACTIONS);
-                    break;
-                case EggController egg:
-                    egg.Hatch();
-                    break;
-                case CookingStation cookingStation:
-                    cookingStation.OnActionClicked();
-                    break;
+                this.fungal = fungal;
+                fungal.SetTarget(player);
+                feedPanel.Fungal = fungal.Model;
+                UpdateEscortButtonText();
+
+                fungalInfoUI.SetFungal(fungal);
+                SetState(UIState.INTERACTIONS);
             }
         };
+        
 
         feedButton.onClick.AddListener(() => SetState(UIState.FEED));
 
@@ -88,37 +82,11 @@ public class ControlPanel : MonoBehaviour
 
     private void SetState(UIState state)
     {
-        currentState = state;
-
         joystick.SetActive(state == UIState.JOYSTICK);
         inventory.SetActive(state == UIState.INVENTORY);
         interactions.SetActive(state == UIState.INTERACTIONS);
         fungalInfoUI.gameObject.SetActive(state == UIState.INFO);
         feedPanel.gameObject.SetActive(state == UIState.FEED);
         closeButton.gameObject.SetActive(state != UIState.JOYSTICK);
-    }
-
-    public void SetProximityAction(EntityController entity)
-    {
-        if (currentState != UIState.JOYSTICK) return;
-        if (proximityEntity == entity) return;
-
-        proximityEntity = entity;
-
-        if (entity)
-        {
-            actionButton.SetInteraction(entity);
-
-            if (entity is FungalController fungal)
-            {
-                this.fungal = fungal;
-
-                feedPanel.Fungal = fungal.Model;
-                UpdateEscortButtonText();
-            }
-        }
-
-        actionButton.SetVisible(entity);
-
     }
 }

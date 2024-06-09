@@ -11,21 +11,26 @@ public class ActionButton : MonoBehaviour
     [SerializeField] private SlideAnimation slideAnimation;
     [SerializeField] private TextMeshProUGUI text;
 
-    private EntityController entity;
+    public EntityController Entity { get; set; }
 
     public event UnityAction<EntityController> OnClicked;
 
     private void Awake()
     {
-        button.onClick.AddListener(() => OnClicked?.Invoke(entity));
+        button.onClick.AddListener(() => OnClicked?.Invoke(Entity));
     }
 
-    public void SetInteraction(EntityController entity)
+    public void SetEntity(EntityController entity)
     {
-        this.entity = entity;
-        actionImage.sprite = entity.ActionImage;
-        background.color = entity.ActionColor;
-        text.text = entity.ActionText;
+        Entity = entity;
+        SetVisible(Entity);
+
+        if (Entity)
+        {
+            actionImage.sprite = entity.ActionImage;
+            background.color = entity.ActionColor;
+            text.text = entity.ActionText;
+        }
     }
 
     public void SetVisible(bool value)

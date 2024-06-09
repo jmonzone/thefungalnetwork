@@ -40,7 +40,7 @@ public class CookingStation : EntityController
         });
     }
 
-    public void OnActionClicked()
+    public override void UseAction()
     {
         camera.Priority = 2;
         controlPanel.IsVisible = false;
