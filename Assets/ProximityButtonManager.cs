@@ -6,26 +6,27 @@ using UnityEngine.Events;
 public class ProximityButtonManager : MonoBehaviour
 {
     [SerializeField] private Transform player;
+    [SerializeField] private List<Transform> positionAnchors;
 
     private List<ActionButton> actionButtonList;
 
     public event UnityAction<EntityController> OnButtonClicked;
 
-    private const float MAXIMUM_PROXIMITY_DISTANCE = 4f;
+    private const float MAXIMUM_PROXIMITY_DISTANCE = 5f;
 
     private void Awake()
     {
-        actionButtonList = GetComponentsInChildren<ActionButton>().ToList();
-
-        foreach(var button in actionButtonList)
-        {
-            button.OnClicked += entity =>
+        actionButtonList = GetComponentsInChildren<ActionButton>()
+            .Select((button, index) =>
             {
-                entity.UseAction();
-                OnButtonClicked?.Invoke(entity);
-            };
-        }
-        
+                button.OnClicked += entity =>
+                {
+                    entity.UseAction();
+                    OnButtonClicked?.Invoke(entity);
+                };
+                return button;
+            })
+            .ToList();
     }
 
     private void Update()
@@ -33,6 +34,8 @@ public class ProximityButtonManager : MonoBehaviour
         var closestEntities = GetClosestEntities();
 
         AssignEntitiesToButtons(closestEntities);
+        AssignOrderToButtons();
+
     }
 
     private List<EntityController> GetClosestEntities()
@@ -76,27 +79,17 @@ public class ProximityButtonManager : MonoBehaviour
         }
     }
 
-    //public void SetProximityAction(EntityController entity)
-    //{
-    //    if (currentState != UIState.JOYSTICK) return;
-    //    if (proximityEntity == entity) return;
+    private void AssignOrderToButtons()
+    {
+        var buttonsWithEntities = actionButtonList.Where(button => button.Entity).ToList();
+        buttonsWithEntities.Sort((button1, button2) => button1.Order.CompareTo(button2.Order));
 
-    //    proximityEntity = entity;
-
-    //    if (entity)
-    //    {
-    //        actionButton.SetInteraction(entity);
-
-    //        if (entity is FungalController fungal)
-    //        {
-    //            this.fungal = fungal;
-
-    //            feedPanel.Fungal = fungal.Model;
-    //            UpdateEscortButtonText();
-    //        }
-    //    }
-
-    //    actionButton.SetVisible(entity);
-
-    //}
+        for (int i = 0; i < buttonsWithEntities.Count; i++)
+        {
+            var button = buttonsWithEntities[i];
+            button.TargetPosition = positionAnchors[i].position;
+            if (button.Order == 99) button.transform.parent.position = positionAnchors[i].position;
+            button.Order = i;
+        }
+    }
 }

@@ -11,13 +11,32 @@ public class ActionButton : MonoBehaviour
     [SerializeField] private SlideAnimation slideAnimation;
     [SerializeField] private TextMeshProUGUI text;
 
+    public Vector3 TargetPosition { get; set; }
+    public int Order { get; set; } = -1;
     public EntityController Entity { get; set; }
 
     public event UnityAction<EntityController> OnClicked;
 
     private void Awake()
     {
+
         button.onClick.AddListener(() => OnClicked?.Invoke(Entity));
+    }
+
+    private void Update()
+    {
+        if (Entity)
+        {
+            var direction = TargetPosition - transform.parent.position;
+
+            //Debug.Log($"{transform.parent.name} {targetPosition} {direction.magnitude}");
+
+            if (direction.magnitude > 10f)
+            {
+                transform.parent.position += 5f * Time.deltaTime * direction + direction.normalized;
+            }
+            else transform.parent.position = TargetPosition;
+        }
     }
 
     public void SetEntity(EntityController entity)
@@ -30,6 +49,10 @@ public class ActionButton : MonoBehaviour
             actionImage.sprite = entity.ActionImage;
             background.color = entity.ActionColor;
             text.text = entity.ActionText;
+        }
+        else
+        {
+            Order = 99;
         }
     }
 
