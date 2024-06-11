@@ -22,7 +22,7 @@ public class ControlPanel : MonoBehaviour
 
     private ProximityButtonManager proximityButtonManager;
 
-    public FungalController Fungal { get; private set; }
+    public FungalController EscortedFungal { get; private set; }
 
     private enum UIState
     {
@@ -45,8 +45,15 @@ public class ControlPanel : MonoBehaviour
         infoButton.onClick.AddListener(() => SetState(UIState.INFO));
         escortButton.onClick.AddListener(() =>
         {
-            if (Fungal.IsFollowing) Fungal.Unescort();
-            else Fungal.Escort(player.transform);
+            if (EscortedFungal)
+            {
+                UnescortFungal();
+            }
+            else
+            {
+                EscortedFungal = player.TalkingFungal;
+                EscortedFungal.Escort(player.transform);
+            }
 
             UpdateEscortButtonText();
         });
@@ -65,10 +72,17 @@ public class ControlPanel : MonoBehaviour
         SetState(UIState.JOYSTICK);
     }
 
+    public void UnescortFungal()
+    {
+        if (EscortedFungal)
+        {
+            EscortedFungal.Unescort();
+            EscortedFungal = null;
+        }
+    }
+
     private void StartFungalInteraction(FungalController fungal)
     {
-        Fungal = fungal;
-
         player.TalkToFungal(fungal);
 
         feedPanel.Fungal = fungal.Model;
@@ -80,7 +94,7 @@ public class ControlPanel : MonoBehaviour
 
     private void UpdateEscortButtonText()
     {
-        escortButtonText.text = Fungal.IsFollowing ? "Unescort" : "Escort";
+        escortButtonText.text = player.TalkingFungal.IsFollowing ? "Unescort" : "Escort";
     }
 
     private void SetState(UIState state)

@@ -49,10 +49,11 @@ public class CookingStation : EntityController
         camera.Priority = 2;
         controlPanel.SetVisible(false);
 
-        if (controlPanel.Fungal)
+        var fungal = controlPanel.EscortedFungal;
+        if (fungal)
         {
-            controlPanel.Fungal.Unescort();
-            controlPanel.Fungal.MoveToPosition(fungalPositionAnchor.position, fungalLookTarget);
+            controlPanel.UnescortFungal();
+            fungal.MoveToPosition(fungalPositionAnchor.position, fungalLookTarget);
         }
 
         playerController.Movement.SetPosition(playerPositionAnchor.position, () =>
