@@ -2284,7 +2284,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   virtualJoystick: {fileID: 3544129046768494335}
-  playerSpeed: 1
   cameraController: {fileID: 1786476004}
   virtualCamera: {fileID: 749026490}
   cameraAnchors:
@@ -2299,19 +2298,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 373087727}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cdb142e028de0494990eb6be58e30dab, type: 3}
+  m_Script: {fileID: 11500000, guid: d2b252d604a094065a18d719180c3a27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  is2D: 0
-  distanceThreshold: 0.5
-  speed: 2
-  direction: {x: 0, y: 0, z: 0}
-  inputType: 1
-  faceForward: 1
-  normalizeSpeed: 0
-  persistDirection: 0
+  playerSpeed: 2
 --- !u!4 &375630455 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4458032547626594, guid: 8ae7718c33e89b042b204b36902c7745,
@@ -8584,13 +8576,15 @@ MonoBehaviour:
   actionColor: {r: 0.70980394, g: 0.45882353, b: 0.6627451, a: 1}
   camera: {fileID: 540506998}
   ingredientManager: {fileID: 610605781}
-  controlPanel: {fileID: 307486409}
+  controlPanel: {fileID: 0}
   cookingUIAnimation: {fileID: 1193566599}
   backButton: {fileID: 1522020934}
   playerController: {fileID: 373087730}
   background: {fileID: 460870816}
   playerPositionAnchor: {fileID: 55185953}
   playerLookTarget: {fileID: 1038761319}
+  fungalPositionAnchor: {fileID: 0}
+  fungalLookTarget: {fileID: 0}
 --- !u!1001 &1566327956
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12003,6 +11997,7 @@ MonoBehaviour:
   rect: {fileID: 3544129046768494334}
   joystickRect: {fileID: 2015113355122782890}
   target: {fileID: 1582505138}
+  sensitivity: 0.005
 --- !u!1 &4642637631622576142
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,7 +10,7 @@ public class CookingStation : EntityController
     [SerializeField] private Color actionColor;
     [SerializeField] private CinemachineVirtualCamera camera;
     [SerializeField] private IngredientManager ingredientManager;
-    [SerializeField] private SlideAnimation controlPanel;
+    [SerializeField] private ControlPanel controlPanel;
     [SerializeField] private SlideAnimation cookingUIAnimation;
     [SerializeField] private Button backButton;
     [SerializeField] private PlayerController playerController;
@@ -21,7 +21,8 @@ public class CookingStation : EntityController
     [Header("Position References")]
     [SerializeField] private Transform playerPositionAnchor;
     [SerializeField] private Transform playerLookTarget;
-
+    [SerializeField] private Transform fungalPositionAnchor;
+    [SerializeField] private Transform fungalLookTarget;
 
     public override Sprite ActionImage => actionImage;
 
@@ -36,7 +37,7 @@ public class CookingStation : EntityController
             StartCoroutine(LerpAlpha(0, () =>
             {
                 camera.Priority = 0;
-                controlPanel.IsVisible = true;
+                controlPanel.SetVisible(true);
                 cookingUIAnimation.IsVisible = false;
                 ingredientManager.StopAllCoroutines();
             }));
@@ -46,10 +47,11 @@ public class CookingStation : EntityController
     public override void UseAction()
     {
         camera.Priority = 2;
-        controlPanel.IsVisible = false;
-        playerController.MoveToTarget(playerPositionAnchor, () =>
+        controlPanel.SetVisible(false);
+
+        playerController.Movement.MoveToTarget(playerPositionAnchor, () =>
         {
-            playerController.LookAtTarget(playerLookTarget);
+            playerController.Movement.LookAtTarget(playerLookTarget);
         });
 
         StartCoroutine(ShowBackground());

@@ -21,7 +21,8 @@ public class ControlPanel : MonoBehaviour
     [SerializeField] private PlayerController player;
 
     private ProximityButtonManager proximityButtonManager;
-    private FungalController fungal;
+
+    public FungalController Fungal { get; private set; }
 
     private enum UIState
     {
@@ -44,8 +45,8 @@ public class ControlPanel : MonoBehaviour
         infoButton.onClick.AddListener(() => SetState(UIState.INFO));
         escortButton.onClick.AddListener(() =>
         {
-            if (fungal.IsFollowing) fungal.Unescort();
-            else fungal.Escort(player.transform);
+            if (Fungal.IsFollowing) Fungal.Unescort();
+            else Fungal.Escort(player.transform);
 
             UpdateEscortButtonText();
         });
@@ -66,7 +67,7 @@ public class ControlPanel : MonoBehaviour
 
     private void StartFungalInteraction(FungalController fungal)
     {
-        this.fungal = fungal;
+        Fungal = fungal;
 
         player.TalkToFungal(fungal);
 
@@ -79,7 +80,7 @@ public class ControlPanel : MonoBehaviour
 
     private void UpdateEscortButtonText()
     {
-        escortButtonText.text = fungal.IsFollowing ? "Unescort" : "Escort";
+        escortButtonText.text = Fungal.IsFollowing ? "Unescort" : "Escort";
     }
 
     private void SetState(UIState state)
@@ -90,5 +91,10 @@ public class ControlPanel : MonoBehaviour
         fungalInfoUI.gameObject.SetActive(state == UIState.INFO);
         feedPanel.gameObject.SetActive(state == UIState.FEED);
         closeButton.gameObject.SetActive(state != UIState.JOYSTICK);
+    }
+
+    public void SetVisible(bool visible)
+    {
+        slideAnimation.IsVisible = visible;
     }
 }

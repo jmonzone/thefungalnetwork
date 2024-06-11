@@ -8,6 +8,7 @@ public class VirtualJoystick : MonoBehaviour
     [SerializeField] private RectTransform rect;
     [SerializeField] private RectTransform joystickRect;
     [SerializeField] private GameObject target;
+    [SerializeField] private float sensitivity;
 
     public event UnityAction<Vector3> OnJoystickStart;
     public event UnityAction<Vector3> OnJoystickUpdate;
@@ -47,7 +48,7 @@ public class VirtualJoystick : MonoBehaviour
         {
             var direction = Vector3.ClampMagnitude(Input.mousePosition - startPosition, JOYSTICK_LENGTH);
             joystickRect.position = rect.position + direction;
-            OnJoystickUpdate?.Invoke(direction);
+            OnJoystickUpdate?.Invoke(direction * sensitivity);
         }
     }
 

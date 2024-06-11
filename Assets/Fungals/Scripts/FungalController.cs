@@ -26,7 +26,6 @@ public class FungalController : EntityController
     [SerializeField] private float distanceThreshold = 1f;
 
     [Header("References")]
-    [SerializeField] private GameObject placeholder;
     [SerializeField] private Transform indicatorAnchor;
     [SerializeField] private RectTransform hungerIndicator;
     [SerializeField] private Camera spotlightCamera;
@@ -54,9 +53,6 @@ public class FungalController : EntityController
 
     private void Awake()
     {
-        Destroy(placeholder);
-        placeholder = null;
-
         origin = transform.position;
         mainCamera = Camera.main;
     }
