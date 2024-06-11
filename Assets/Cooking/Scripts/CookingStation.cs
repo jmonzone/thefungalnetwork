@@ -49,9 +49,15 @@ public class CookingStation : EntityController
         camera.Priority = 2;
         controlPanel.SetVisible(false);
 
-        playerController.Movement.MoveToTarget(playerPositionAnchor, () =>
+        if (controlPanel.Fungal)
         {
-            playerController.Movement.LookAtTarget(playerLookTarget);
+            controlPanel.Fungal.Unescort();
+            controlPanel.Fungal.MoveToPosition(fungalPositionAnchor.position, fungalLookTarget);
+        }
+
+        playerController.Movement.SetPosition(playerPositionAnchor.position, () =>
+        {
+            playerController.Movement.SetLookTarget(playerLookTarget);
         });
 
         StartCoroutine(ShowBackground());

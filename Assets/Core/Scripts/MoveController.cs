@@ -1,53 +1,109 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 
 public class MoveController : MonoBehaviour
 {
-    [SerializeField] private float playerSpeed = 2f;
+    [SerializeField] private float speed = 2f;
+    [SerializeField] private MoveType type;
 
-    public Vector3 Direction { get; private set; }
+    public enum MoveType
+    {
+        STOP,
+        TARGET,
+        POSITION,
+        DIRECTION,
+    }
+
+    private Transform target;
+    private Vector3 position;
+    private Vector3 direction;
 
     public event UnityAction OnStart;
     public event UnityAction OnEnd;
-    public event UnityAction OnUpdate;
+    public event UnityAction<Vector3> OnUpdate;
 
-    public void MoveToTarget(Transform target, UnityAction onComplete)
+    private event UnityAction OnDestinationReached;
+
+    private void Update()
     {
-        StartCoroutine(MoveRoutine(target, onComplete));
+        switch (type)
+        {
+            case MoveType.DIRECTION:
+                MoveInDirection(direction);
+                break;
+            case MoveType.TARGET:
+                SetLookTarget(target);
+                MoveToPosition(target.position, 2f);
+                break;
+            case MoveType.POSITION:
+                MoveToPosition(position, 0.1f);
+                break;
+        }
     }
 
-    public void LookAtTarget(Transform target)
+    public void SetTarget(Transform target)
+    {
+        this.target = target;
+        type = MoveType.TARGET;
+    }
+
+    public void SetDirection(Vector3 direction)
+    {
+        this.direction = direction;
+        type = MoveType.DIRECTION;
+    }
+
+    public void SetPosition(Vector3 position, UnityAction onComplete)
+    {
+        this.position = position;
+        type = MoveType.POSITION;
+
+        void EventListener()
+        {
+            onComplete?.Invoke();
+            OnDestinationReached -= EventListener;
+        }
+
+        OnDestinationReached += EventListener;
+    }
+
+    public void SetSpeed(float speed)
+    {
+        this.speed = speed;
+    }
+
+    public void SetLookTarget(Transform target)
     {
         var direction = target.position - transform.position;
         direction.y = 0;
         transform.forward = direction;
     }
 
-    private IEnumerator MoveRoutine(Transform target, UnityAction onComplete)
+    public void Stop()
     {
-        OnStart?.Invoke();
-
-        while (Vector3.Distance(transform.position, target.position) > 0.1f)
-        {
-            var direction = target.position - transform.position;
-            direction.y = 0;
-            MoveInDirection(direction.normalized);
-            yield return null;
-        }
-
-        transform.position = target.position;
-
-        OnEnd?.Invoke();
-        onComplete?.Invoke();
+        type = MoveType.STOP;
     }
 
-    public void MoveInDirection(Vector3 direction)
+    private void MoveToPosition(Vector3 targetPosition, float distanceThreshold)
     {
-        Direction = direction;
-        transform.position += playerSpeed * Time.deltaTime * direction;
+        if (Vector3.Distance(transform.position, targetPosition) > distanceThreshold)
+        {
+            var direction = targetPosition - transform.position;
+            MoveInDirection(direction.normalized);
+        }
+        else
+        {
+            OnDestinationReached?.Invoke();
+        }
+    }
+
+    private void MoveInDirection(Vector3 direction)
+    {
+        direction.y = 0;
+
+        transform.position += speed * Time.deltaTime * direction;
         if (direction.magnitude > 0) transform.forward = direction;
 
-        OnUpdate?.Invoke();
+        OnUpdate?.Invoke(direction);
     }
 }

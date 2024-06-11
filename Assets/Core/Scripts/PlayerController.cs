@@ -20,18 +20,21 @@ public class PlayerController : MonoBehaviour
         Movement = GetComponent<MoveController>();
         Movement.OnStart += () => animator.SetBool("isMoving", true);
         Movement.OnEnd += () => animator.SetBool("isMoving", false);
-        Movement.OnUpdate += () => animator.speed = Movement.Direction.magnitude / 1.5f;
+        Movement.OnUpdate += direction => animator.speed = direction.magnitude / 1.5f;
 
         animator = GetComponentInChildren<Animator>();
         virtualJoystick.OnJoystickStart += _ => animator.SetBool("isMoving", true);
-        virtualJoystick.OnJoystickEnd += () => animator.SetBool("isMoving", false);
+        virtualJoystick.OnJoystickEnd += () =>
+        {
+            animator.SetBool("isMoving", false);
+            Movement.Stop();
+        };
 
         virtualJoystick.OnJoystickUpdate += input =>
         {
             var direction = new Vector3(input.x, 0, input.y);
             direction = Quaternion.Euler(0, cameraController.transform.eulerAngles.y, 0) * direction;
-
-            Movement.MoveInDirection(direction);
+            Movement.SetDirection(direction);
         };
     }
 
@@ -46,9 +49,10 @@ public class PlayerController : MonoBehaviour
     public void TalkToFungal(FungalController fungal)
     {
         this.fungal = fungal;
-        fungal.SetTarget(transform);
 
-        Movement.LookAtTarget(fungal.transform);
+        fungal.MoveToTarget(transform);
+
+        Movement.SetLookTarget(fungal.transform);
 
         virtualCamera.Priority = 2;
 
@@ -69,7 +73,7 @@ public class PlayerController : MonoBehaviour
     {
         if (fungal)
         {
-            if (!fungal.IsFollowing) fungal.SetTarget(null);
+            if (!fungal.IsFollowing) fungal.Stop();
             fungal = null;
             virtualCamera.Priority = 0;
         }

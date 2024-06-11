@@ -23,7 +23,9 @@ public class FungalController : EntityController
     [SerializeField] private float flightHeight = 5f;
     [SerializeField] private Vector3 offset;
     [SerializeField] private bool randomizePositions = false;
-    [SerializeField] private float distanceThreshold = 1f;
+
+    private float targetDistanceThreshold = 0.1f;
+    private float followDistanceThreshold = 2.5f;
 
     [Header("References")]
     [SerializeField] private Transform indicatorAnchor;
@@ -51,10 +53,13 @@ public class FungalController : EntityController
     private Camera mainCamera;
     private GameObject model3D;
 
+    private MoveController movement;
+
     private void Awake()
     {
         origin = transform.position;
         mainCamera = Camera.main;
+        movement = GetComponent<MoveController>();
     }
 
     public void SetFungal(FungalInstance fungalInstance)
@@ -75,57 +80,41 @@ public class FungalController : EntityController
         }
     }
 
+    public void MoveToPosition(Vector3 position, Transform lookTarget = null)
+    {
+        movement.SetPosition(position, () =>
+        {
+            Debug.Log("complete");
+            if (lookTarget) movement.SetLookTarget(lookTarget);
+        });
+    }
+
+    public void MoveToTarget(Transform target)
+    {
+        movement.SetTarget(target);
+    }
+
+    public void Stop()
+    {
+        IsFollowing = false;
+        movement.Stop();
+    }
+
     public void Escort(Transform target)
     {
         IsFollowing = true;
-        SetTarget(target);
+        movement.SetTarget(target);
     }
 
     public void Unescort()
     {
         IsFollowing = false;
-    }
-
-    public void SetTarget(Transform target)
-    {
-        this.target = target;
-        
-        randomizePositions = !target;
+        movement.Stop();
     }
 
     public void SetFish(List<FishController> fish)
     {
         this.fish = fish;
-    }
-
-    private Vector3 targetPosition = Vector3.right * 3f;
-    private Vector3 TargetPosition
-    {
-        get
-        {
-            if (target)
-            {
-                return target.position;
-            }
-            else if (randomizePositions)
-            {
-                if (Vector3.Distance(transform.position, targetPosition) < distanceThreshold)
-                {
-                    var random = (Vector3) Random.insideUnitCircle.normalized * 5f;
-                    random.z = random.y;
-                    random.y = 0;
-                    targetPosition = random;
-                }
-
-                return targetPosition;
-            }
-            else
-            {
-                var x = Mathf.Cos(timer);
-                var z = Mathf.Sin(timer);
-                return origin + offset - new Vector3(x, 0, z) * idleRadius;
-            }
-        }
     }
 
     private void Update()
@@ -152,43 +141,43 @@ public class FungalController : EntityController
             }
         }
 
-        var direction = TargetPosition - transform.position;
-        transform.forward = Vector3.Lerp(transform.forward, direction, rotationSpeed * Time.deltaTime);
+        //var direction = TargetPosition - transform.position;
+        //transform.forward = Vector3.Lerp(transform.forward, direction, rotationSpeed * Time.deltaTime);
 
-        if (direction.magnitude > distanceThreshold)
-        {
-            var fixedSpeed = speed;
-            if (target) fixedSpeed *= 2;
-            transform.position += fixedSpeed * Time.deltaTime * direction.normalized;
-        }
-        else if (targetFish)
-        {
-            targetFish.Catch();
-            target = null;
-            targetFish = null;
-            timer = 0;
-        }
+        //if (direction.magnitude > distanceThreshold)
+        //{
+        //    var fixedSpeed = speed;
+        //    if (target) fixedSpeed *= 2;
+        //    transform.position += fixedSpeed * Time.deltaTime * direction.normalized;
+        //}
+        //else if (targetFish)
+        //{
+        //    targetFish.Catch();
+        //    target = null;
+        //    targetFish = null;
+        //    timer = 0;
+        //}
 
-        if (timer > autoFishCooldown)
-        {
-            targetFish = null;
+        //if (timer > autoFishCooldown)
+        //{
+        //    targetFish = null;
 
-            var closestDistance = Mathf.Infinity;
+        //    var closestDistance = Mathf.Infinity;
 
-            foreach (var _fish in fish)
-            {
-                if (_fish.IsAttacted || _fish.IsCaught) continue;
-                var distance = Vector3.Distance(_fish.transform.position, transform.position);
-                if (distance < closestDistance)
-                {
-                    closestDistance = distance;
-                    target = _fish.transform;
-                    targetFish = _fish;
-                }
-            }
-        }
+        //    foreach (var _fish in fish)
+        //    {
+        //        if (_fish.IsAttacted || _fish.IsCaught) continue;
+        //        var distance = Vector3.Distance(_fish.transform.position, transform.position);
+        //        if (distance < closestDistance)
+        //        {
+        //            closestDistance = distance;
+        //            target = _fish.transform;
+        //            targetFish = _fish;
+        //        }
+        //    }
+        //}
 
-        timer += Time.deltaTime;
+        //timer += Time.deltaTime;
     }
 
     public override void UseAction()
