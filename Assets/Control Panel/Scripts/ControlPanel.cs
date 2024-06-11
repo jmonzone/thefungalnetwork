@@ -18,7 +18,7 @@ public class ControlPanel : MonoBehaviour
     [SerializeField] private TextMeshProUGUI escortButtonText;
     [SerializeField] private SlideAnimation slideAnimation;
 
-    [SerializeField] private LookController player;
+    [SerializeField] private PlayerController player;
 
     private ProximityButtonManager proximityButtonManager;
     private FungalController fungal;
@@ -37,7 +37,7 @@ public class ControlPanel : MonoBehaviour
         inventoryButton.onClick.AddListener(() => SetState(UIState.INVENTORY));
         closeButton.onClick.AddListener(() =>
         {
-            StopFungalInteraction();
+            player.EndTalk();
             SetState(UIState.JOYSTICK);
         });
 
@@ -67,27 +67,14 @@ public class ControlPanel : MonoBehaviour
     private void StartFungalInteraction(FungalController fungal)
     {
         this.fungal = fungal;
-        fungal.SetTarget(player.transform);
 
-        var direction = fungal.transform.position - player.transform.position;
-        direction.y = 0;
-        player.Direction = direction;
-        player.enabled = true;
+        player.TalkToFungal(fungal);
 
         feedPanel.Fungal = fungal.Model;
         UpdateEscortButtonText();
 
         fungalInfoUI.SetFungal(fungal);
         SetState(UIState.INTERACTIONS);
-    }
-
-    private void StopFungalInteraction()
-    {
-        if (fungal)
-        {
-            player.enabled = false;
-            if (!fungal.IsFollowing) fungal.SetTarget(null);
-        }
     }
 
     private void UpdateEscortButtonText()
