@@ -18,7 +18,7 @@ public class ControlPanel : MonoBehaviour
     [SerializeField] private TextMeshProUGUI escortButtonText;
     [SerializeField] private SlideAnimation slideAnimation;
 
-    [SerializeField] private Transform player;
+    [SerializeField] private LookController player;
 
     private ProximityButtonManager proximityButtonManager;
     private FungalController fungal;
@@ -37,19 +37,15 @@ public class ControlPanel : MonoBehaviour
         inventoryButton.onClick.AddListener(() => SetState(UIState.INVENTORY));
         closeButton.onClick.AddListener(() =>
         {
-            if (fungal && !fungal.IsFollowing) fungal.SetTarget(null);
+            StopFungalInteraction();
             SetState(UIState.JOYSTICK);
         });
 
         infoButton.onClick.AddListener(() => SetState(UIState.INFO));
         escortButton.onClick.AddListener(() =>
         {
-            if (fungal.IsFollowing) {
-                fungal.Unescort();
-            }
-            else {
-                fungal.Escort(player);
-            }
+            if (fungal.IsFollowing) fungal.Unescort();
+            else fungal.Escort(player.transform);
 
             UpdateEscortButtonText();
         });
@@ -59,20 +55,39 @@ public class ControlPanel : MonoBehaviour
         {
             if (entity is FungalController fungal)
             {
-                this.fungal = fungal;
-                fungal.SetTarget(player);
-                feedPanel.Fungal = fungal.Model;
-                UpdateEscortButtonText();
-
-                fungalInfoUI.SetFungal(fungal);
-                SetState(UIState.INTERACTIONS);
+                StartFungalInteraction(fungal);
             }
         };
         
-
         feedButton.onClick.AddListener(() => SetState(UIState.FEED));
 
         SetState(UIState.JOYSTICK);
+    }
+
+    private void StartFungalInteraction(FungalController fungal)
+    {
+        this.fungal = fungal;
+        fungal.SetTarget(player.transform);
+
+        var direction = fungal.transform.position - player.transform.position;
+        direction.y = 0;
+        player.Direction = direction;
+        player.enabled = true;
+
+        feedPanel.Fungal = fungal.Model;
+        UpdateEscortButtonText();
+
+        fungalInfoUI.SetFungal(fungal);
+        SetState(UIState.INTERACTIONS);
+    }
+
+    private void StopFungalInteraction()
+    {
+        if (fungal)
+        {
+            player.enabled = false;
+            if (!fungal.IsFollowing) fungal.SetTarget(null);
+        }
     }
 
     private void UpdateEscortButtonText()

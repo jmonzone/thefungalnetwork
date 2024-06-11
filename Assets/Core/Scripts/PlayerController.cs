@@ -6,9 +6,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float playerSpeed = 2f;
     [SerializeField] private Transform cameraController;
 
-
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
         var animator = GetComponentInChildren<Animator>();
         virtualJoystick.OnJoystickStart += _ => animator.SetBool("isMoving", true);
@@ -24,4 +22,12 @@ public class PlayerController : MonoBehaviour
             if(direction.magnitude > 0) transform.forward = direction;
         };
     }
+
+    //private void 
+
+    //private void SetLookDirection(Vector3 direction)
+    //{
+    //    if (faceForward) Forward = Vector3.Lerp(Forward, direction, 5f * Time.deltaTime);
+
+    //}
 }
