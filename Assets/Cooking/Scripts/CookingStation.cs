@@ -13,11 +13,15 @@ public class CookingStation : EntityController
     [SerializeField] private SlideAnimation controlPanel;
     [SerializeField] private SlideAnimation cookingUIAnimation;
     [SerializeField] private Button backButton;
-    [SerializeField] private Transform playerAnchor;
-    [SerializeField] private MovementController playerController;
+    [SerializeField] private PlayerController playerController;
 
     [Header("Background References")]
     [SerializeField] private Image background;
+
+    [Header("Position References")]
+    [SerializeField] private Transform playerPositionAnchor;
+    [SerializeField] private Transform playerLookTarget;
+
 
     public override Sprite ActionImage => actionImage;
 
@@ -35,7 +39,6 @@ public class CookingStation : EntityController
                 controlPanel.IsVisible = true;
                 cookingUIAnimation.IsVisible = false;
                 ingredientManager.StopAllCoroutines();
-                playerController.enabled = false;
             }));
         });
     }
@@ -44,8 +47,10 @@ public class CookingStation : EntityController
     {
         camera.Priority = 2;
         controlPanel.IsVisible = false;
-        playerController.enabled = true;
-        playerController.SetTarget(playerAnchor);
+        playerController.MoveToTarget(playerPositionAnchor, () =>
+        {
+            playerController.LookAtTarget(playerLookTarget);
+        });
 
         StartCoroutine(ShowBackground());
     }

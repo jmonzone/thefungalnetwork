@@ -2215,7 +2215,6 @@ GameObject:
   m_Component:
   - component: {fileID: 373087729}
   - component: {fileID: 373087730}
-  - component: {fileID: 373087732}
   - component: {fileID: 373087731}
   - component: {fileID: 373087728}
   m_Layer: 0
@@ -2287,7 +2286,6 @@ MonoBehaviour:
   virtualJoystick: {fileID: 3544129046768494335}
   playerSpeed: 1
   cameraController: {fileID: 1786476004}
-  lookController: {fileID: 373087732}
   virtualCamera: {fileID: 749026490}
   cameraAnchors:
   - {fileID: 1061777009}
@@ -2314,19 +2312,6 @@ MonoBehaviour:
   faceForward: 1
   normalizeSpeed: 0
   persistDirection: 0
---- !u!114 &373087732
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 373087727}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf162cc15287949e896842d3ea5c5263, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rotationSpeed: 3
 --- !u!4 &375630455 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4458032547626594, guid: 8ae7718c33e89b042b204b36902c7745,
@@ -8602,9 +8587,10 @@ MonoBehaviour:
   controlPanel: {fileID: 307486409}
   cookingUIAnimation: {fileID: 1193566599}
   backButton: {fileID: 1522020934}
-  playerAnchor: {fileID: 55185953}
-  playerController: {fileID: 373087731}
+  playerController: {fileID: 373087730}
   background: {fileID: 460870816}
+  playerPositionAnchor: {fileID: 55185953}
+  playerLookTarget: {fileID: 1038761319}
 --- !u!1001 &1566327956
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9894,7 +9880,6 @@ MonoBehaviour:
   movementSpeed: 3
   minVerticalAngle: -30
   maxVerticalAngle: 0
-  virtualCamera: {fileID: 1005055589}
 --- !u!4 &1786476005
 Transform:
   m_ObjectHideFlags: 0
