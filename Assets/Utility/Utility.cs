@@ -1,6 +1,9 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public static class Utility
 {
@@ -41,5 +44,22 @@ public static class Utility
 
             return false;
         }
+    }
+
+    public static IEnumerator LerpAlpha(this Image background, float target, UnityAction onComplete = null)
+    {
+        var startColor = background.color;
+        var targetColor = startColor;
+        targetColor.a = target;
+
+        var i = 0f;
+        while (i < 1)
+        {
+            background.color = Color.Lerp(startColor, targetColor, i);
+            i += Time.deltaTime;
+            yield return null;
+        }
+
+        onComplete?.Invoke();
     }
 }

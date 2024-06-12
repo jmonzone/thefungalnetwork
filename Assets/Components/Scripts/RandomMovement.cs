@@ -60,6 +60,6 @@ public class RandomMovement : MonoBehaviour
 
     public void SetBounds(Collider collider)
     {
-        positionAnchor.SetBounds(collider);
+        positionAnchor.Bounds = collider;
     }
 }

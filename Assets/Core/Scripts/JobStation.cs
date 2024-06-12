@@ -57,25 +57,28 @@ public abstract class JobStation : EntityController
         OnJobStarted();
     }
 
-    public abstract void SetFungal(FungalController fungal);
-
-    protected abstract void OnJobStarted();
-
-    protected abstract void OnBackButtonClicked();
-
     protected void EndAction()
     {
         IsActive = false;
         camera.Priority = 0;
         uIAnimation.IsVisible = false;
+
+        IEnumerator ShowControlPanel()
+        {
+            yield return new WaitForSeconds(1f);
+            controlPanel.SetVisible(true);
+        }
+
         StartCoroutine(ShowControlPanel());
 
         OnJobEnd?.Invoke();
+
+        OnJobEnded();
     }
 
-    private IEnumerator ShowControlPanel()
-    {
-        yield return new WaitForSeconds(1f);
-        controlPanel.SetVisible(true);
-    }
+    public abstract void SetFungal(FungalController fungal);
+    protected abstract void OnJobStarted();
+    protected abstract void OnJobEnded();
+    protected abstract void OnBackButtonClicked();
+
 }

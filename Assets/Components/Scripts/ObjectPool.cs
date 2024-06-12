@@ -1,45 +1,38 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
-
-public class ObjectPool : MonoBehaviour
+public abstract class ObjectPool<T> : MonoBehaviour where T : MonoBehaviour
 {
-    [SerializeField] private GameObject prefab;
+    [SerializeField] private T prefab;
     [SerializeField] private float frequency;
-    [SerializeField] private PositionAnchor spawnPosition;
+    [SerializeField] protected PositionAnchor spawnPosition;
 
-    private List<GameObject> pool = new List<GameObject>();
+    private List<T> pool = new List<T>();
     private int index;
-
-    public event UnityAction<GameObject> OnInstantiate;
-    public event UnityAction<GameObject> OnSpawn;
+    private float timer;
 
     private void Awake()
     {
         for (var i = 0; i < 10; i++)
         {
             var obj = Instantiate(prefab);
-            obj.SetActive(false);
-            OnInstantiate?.Invoke(obj);
+            obj.gameObject.SetActive(false);
+            OnInstantiate(obj);
             pool.Add(obj);
         }
     }
-
-    private float timer;
 
     private void Update()
     {
         if (timer > frequency)
         {
             var obj = pool[index % pool.Count];
-            index++;
-
             obj.transform.position = spawnPosition.Position;
-            obj.SetActive(true);
+            obj.gameObject.SetActive(true);
+            OnSpawn(obj);
 
-            OnSpawn?.Invoke(obj);
             timer = 0;
+            index++;
         }
         else
         {
@@ -47,5 +40,6 @@ public class ObjectPool : MonoBehaviour
         }
     }
 
-
+    protected abstract void OnInstantiate(T obj);
+    protected abstract void OnSpawn(T obj);
 }

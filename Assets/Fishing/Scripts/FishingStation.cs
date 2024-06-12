@@ -2,25 +2,33 @@ using UnityEngine;
 
 public class FishingStation : JobStation
 {
+    [SerializeField] private FishManager fishManager;
     [SerializeField] private FishingRod fishingRod;
 
     public override string ActionText => "Fish";
 
-    protected override void OnBackButtonClicked()
+    private void Update()
     {
-        EndAction();
+        if (IsActive && Input.GetMouseButtonDown(0) && !Utility.IsPointerOverUI) fishingRod.Use();
     }
 
     public override void SetFungal(FungalController fungal)
     {
+
     }
 
     protected override void OnJobStarted()
     {
+        fishManager.enabled = true;
     }
 
-    private void Update()
+    protected override void OnJobEnded()
     {
-        if (IsActive && Input.GetMouseButtonDown(0) && !Utility.IsPointerOverUI) fishingRod.Use();
+        fishManager.enabled = false;
+    }
+
+    protected override void OnBackButtonClicked()
+    {
+        EndAction();
     }
 }

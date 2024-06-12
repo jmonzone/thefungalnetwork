@@ -3373,7 +3373,6 @@ GameObject:
   - component: {fileID: 441051991}
   - component: {fileID: 441051992}
   - component: {fileID: 441051993}
-  - component: {fileID: 441051994}
   m_Layer: 0
   m_Name: Fishing Station
   m_TagString: Untagged
@@ -3426,6 +3425,7 @@ MonoBehaviour:
   playerLookTarget: {fileID: 187012867}
   uIAnimation: {fileID: 252122850}
   backButton: {fileID: 252122849}
+  fishManager: {fileID: 441051993}
   fishingRod: {fileID: 988718706}
 --- !u!114 &441051993
 MonoBehaviour:
@@ -3434,30 +3434,17 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 441051990}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9c1321d84a924d6bb9c746c72420ade, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultFish: {fileID: 11400000, guid: 259ca4af75d8b4b03802dec6e194fd09, type: 2}
-  bounds: {fileID: 1331387107}
---- !u!114 &441051994
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 441051990}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 46a7015f25300416aa81c8b5c38d8d39, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefab: {fileID: 1998284645538067842, guid: 4d25c1f56be9d47d780c72b86caaa2e4, type: 3}
+  prefab: {fileID: 1985368070077868474, guid: 4d25c1f56be9d47d780c72b86caaa2e4, type: 3}
   frequency: 2
   spawnPosition:
     anchor: {fileID: 0}
     bounds: {fileID: 1331387107}
+  defaultFish: {fileID: 11400000, guid: 259ca4af75d8b4b03802dec6e194fd09, type: 2}
 --- !u!1 &446155710
 GameObject:
   m_ObjectHideFlags: 0
@@ -4870,7 +4857,6 @@ GameObject:
   m_Component:
   - component: {fileID: 610605780}
   - component: {fileID: 610605781}
-  - component: {fileID: 610605782}
   m_Layer: 0
   m_Name: Ingredient Manager
   m_TagString: Untagged
@@ -4900,33 +4886,21 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 610605779}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3fdea13a0be954e08840cc09976e85fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  prefab: {fileID: 9173131824021314546, guid: 564d87d99cd2d414fb8d8f20682f90c7, type: 3}
+  frequency: 1
+  spawnPosition:
+    anchor: {fileID: 1038761319}
+    bounds: {fileID: 0}
   maxLaunchForce: 400
   minLaunchForce: 350
   throwFrequency: 1
   maxHorizontal: 1
   maxLaunchAngle: 5
---- !u!114 &610605782
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 610605779}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 46a7015f25300416aa81c8b5c38d8d39, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefab: {fileID: 48612807583080110, guid: 564d87d99cd2d414fb8d8f20682f90c7, type: 3}
-  frequency: 1
-  spawnPosition:
-    anchor: {fileID: 1038761319}
-    bounds: {fileID: 0}
 --- !u!1 &677907824
 GameObject:
   m_ObjectHideFlags: 0
@@ -5691,7 +5665,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 812510312}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -6142,8 +6116,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   disableControlPanel: 0
   fungalManager: {fileID: 1982422563}
-  gameplayCanvas: {fileID: 5884041806096412880}
-  resetButton: {fileID: 1291448537}
   controlPanel: {fileID: 307486408}
   inventoryUI: {fileID: 1756319189}
   feedUI: {fileID: 1896359642}
@@ -7912,18 +7884,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 065211b13cf2c0b45a7ad739ba6e8cc2, type: 3}
---- !u!114 &1291448537 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 378801801401981055, guid: 34776522747d54c00a6de282d05fae72,
-    type: 3}
-  m_PrefabInstance: {fileID: 8877347202298855170}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1299237550 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8606755148461151098, guid: 9e89634fe9474125ab42aefdc22a787d,
@@ -12975,7 +12935,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1982422562}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5cf7c1bf6126446afaaf3e744d53c03f, type: 3}
+  m_Script: {fileID: 11500000, guid: 0c50236924c624d3bac58cf42c7e6522, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 373087730}
@@ -14191,7 +14151,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &7244195681036552017
 MonoBehaviour:
   m_ObjectHideFlags: 0

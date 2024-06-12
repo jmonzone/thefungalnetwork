@@ -18,14 +18,6 @@ public class CookingStation : JobStation
 
     public override string ActionText => "Cook";
 
-    protected override void OnJobStarted()
-    {
-        
-        bladeController.enabled = true;
-
-        StartCoroutine(ShowBackground());
-    }
-
     public override void SetFungal(FungalController fungal)
     {
         if (fungal)
@@ -34,39 +26,35 @@ public class CookingStation : JobStation
         }
     }
 
+    protected override void OnJobStarted()
+    {
+        bladeController.enabled = true;
+
+        IEnumerator ShowBackground()
+        {
+            yield return new WaitForSeconds(2);
+            yield return background.LerpAlpha(0.75f);
+            ingredientManager.enabled = true;
+        }
+
+        StartCoroutine(ShowBackground());
+    }
+
+    protected override void OnJobEnded()
+    {
+    }
+
     protected override void OnBackButtonClicked()
     {
         StopAllCoroutines();
         bladeController.enabled = false;
 
-        StartCoroutine(LerpAlpha(0, () =>
+        StartCoroutine(background.LerpAlpha(0, () =>
         {
             EndAction();
-            ingredientManager.StopAllCoroutines();
+            ingredientManager.enabled = false;
         }));
     }
 
-    private IEnumerator ShowBackground()
-    {
-        yield return new WaitForSeconds(2);
-        yield return LerpAlpha(0.75f);
-        ingredientManager.SpawnIngredients();
-    }
 
-    private IEnumerator LerpAlpha(float target, UnityAction onComplete = null)
-    {
-        var startColor = background.color;
-        var targetColor = startColor;
-        targetColor.a = target;
-
-        var i = 0f;
-        while (i < 1)
-        {
-            background.color = Color.Lerp(startColor, targetColor, i);
-            i += Time.deltaTime;
-            yield return null;
-        }
-
-        onComplete?.Invoke();
-    }
 }

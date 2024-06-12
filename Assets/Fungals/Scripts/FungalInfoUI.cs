@@ -9,7 +9,6 @@ public class FungalInfoUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI typeText;
     [SerializeField] private TextMeshProUGUI levelText;
-    [SerializeField] private Button playButton;
 
     [Header("Fungal Stats")]
     [SerializeField] private TextMeshProUGUI balanceText;
@@ -22,7 +21,6 @@ public class FungalInfoUI : MonoBehaviour
 
     private void Awake()
     {
-        playButton.onClick.AddListener(GoToFishingGameplay);
         mainCamera = Camera.main;
     }
 
@@ -80,11 +78,5 @@ public class FungalInfoUI : MonoBehaviour
             staminaText.text = fungal.Model.Stamina.ToString();
             powerText.text = fungal.Model.Power.ToString();
         }
-    }
-
-    private void GoToFishingGameplay()
-    {
-        SceneParameters.FungalIndex = fungal.Model.Index;
-        SceneManager.LoadScene(1);
     }
 }

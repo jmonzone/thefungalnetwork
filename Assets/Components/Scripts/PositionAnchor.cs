@@ -19,8 +19,9 @@ public class PositionAnchor
         }
     }
 
-    public void SetBounds(Collider collider)
+    public Collider Bounds
     {
-        bounds = collider;
+        get => bounds;
+        set => bounds = value;
     }
 }

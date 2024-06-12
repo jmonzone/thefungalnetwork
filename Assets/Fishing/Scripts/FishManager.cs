@@ -1,18 +1,16 @@
 using UnityEngine;
 
-[RequireComponent(typeof(ObjectPool))]
-public class FishManager : MonoBehaviour
+public class FishManager : ObjectPool<FishController>
 {
     [SerializeField] private FishData defaultFish;
-    [SerializeField] private Collider bounds;
 
-    private void Awake()
+    protected override void OnInstantiate(FishController fish)
     {
-        var objectPool = GetComponent<ObjectPool>();
-        objectPool.OnInstantiate += obj =>
-        {
-            var fish = obj.GetComponent<FishController>();
-            fish.Initialize(defaultFish, bounds);
-        };
+        fish.Initialize(defaultFish, spawnPosition.Bounds);
+    }
+
+    protected override void OnSpawn(FishController obj)
+    {
     }
 }
+

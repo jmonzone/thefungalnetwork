@@ -1,7 +1,6 @@
 using UnityEngine;
 
-[RequireComponent(typeof(ObjectPool))]
-public class IngredientManager : MonoBehaviour
+public class IngredientManager : ObjectPool<IngredientController>
 {
     [SerializeField] private float maxLaunchForce;
     [SerializeField] private float minLaunchForce;
@@ -9,27 +8,17 @@ public class IngredientManager : MonoBehaviour
     [SerializeField] private float maxHorizontal;
     [SerializeField] private float maxLaunchAngle;
 
-    private ObjectPool ingredientPool;
-
-    private void Start()
+    protected override void OnInstantiate(IngredientController obj)
     {
-        ingredientPool = GetComponent<ObjectPool>();
-        ingredientPool.OnSpawn += obj =>
-        {
-            var ingredient = obj.GetComponent<IngredientController>();
-            var launchAngle = Quaternion.Euler(0, 0, Random.Range(-maxLaunchAngle, maxLaunchAngle)) * Vector3.up;
-            ingredient.RigidBody.AddForce(launchAngle * Random.Range(minLaunchForce, maxLaunchForce));
-        };
+
     }
 
-    public void SpawnIngredients()
+    protected override void OnSpawn(IngredientController obj)
     {
-        ingredientPool.enabled = true;
-    }
+        var ingredient = obj.GetComponent<IngredientController>();
+        ingredient.Reset();
 
-    public void StopIngredients()
-    {
-        ingredientPool.enabled = false;
+        var launchAngle = Quaternion.Euler(0, 0, Random.Range(-maxLaunchAngle, maxLaunchAngle)) * Vector3.up;
+        ingredient.RigidBody.AddForce(launchAngle * Random.Range(minLaunchForce, maxLaunchForce));
     }
-
 }

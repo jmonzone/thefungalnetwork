@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class FungalManager : MonoBehaviour
 {
@@ -20,6 +21,8 @@ public class FungalManager : MonoBehaviour
 
     public FungalController TalkingFungal { get; private set; }
     public FungalController EscortedFungal { get; private set; }
+
+    public event UnityAction OnFungalTalkStart;
 
     private void Start()
     {
@@ -96,6 +99,8 @@ public class FungalManager : MonoBehaviour
         TalkingFungal = fungal;
         fungal.MoveToTarget(player.transform);
         player.TalkToFungal(fungal);
+
+        OnFungalTalkStart?.Invoke();
     }
 
     public void EndFungalTalk()

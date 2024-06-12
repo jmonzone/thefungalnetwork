@@ -14,7 +14,7 @@ public class IngredientController : MonoBehaviour
         ingredientCollider = GetComponent<Collider>();
     }
 
-    private void OnEnable()
+    public void Reset()
     {
         transform.rotation = Random.rotation;
 
