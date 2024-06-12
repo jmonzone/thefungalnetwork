@@ -140,7 +140,7 @@ public class FishingSceneManager : MonoBehaviour
 
         if (fishController)
         {
-            fishController.SetData(randomFish);
+            fishController.Initialize(randomFish, fishBounds);
             fishControllers.Add(fishController);
             fishController.OnCaught += OnFishCaught;
 

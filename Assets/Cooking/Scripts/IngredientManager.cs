@@ -14,7 +14,7 @@ public class IngredientManager : MonoBehaviour
     private void Start()
     {
         ingredientPool = GetComponent<ObjectPool>();
-        ingredientPool.OnObjectInstantiated += obj =>
+        ingredientPool.OnSpawn += obj =>
         {
             var ingredient = obj.GetComponent<IngredientController>();
             var launchAngle = Quaternion.Euler(0, 0, Random.Range(-maxLaunchAngle, maxLaunchAngle)) * Vector3.up;

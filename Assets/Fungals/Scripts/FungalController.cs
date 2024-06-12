@@ -15,7 +15,6 @@ public abstract class EntityController : MonoBehaviour
 
 public enum FungalState
 {
-    IDLE,
     RANDOM,
     ESCORT,
     TARGET,
@@ -40,9 +39,7 @@ public class FungalController : EntityController
 
     private Camera mainCamera;
     private MoveController movement;
-    private Animator animator;
     private float hungerTimer;
-    private float idleTimer;
     private FungalState state;
 
     public event UnityAction OnTalkStart;
@@ -65,12 +62,12 @@ public class FungalController : EntityController
             Render = Instantiate(model.Data.Prefab, transform);
             Render.transform.localScale = Vector3.one;
 
-            animator = Render.GetComponentInChildren<Animator>();
+            var animator = Render.GetComponentInChildren<Animator>();
             animator.speed = 0.25f;
 
             movement.SetSpeed(1f + model.Speed * 0.1f);
 
-            SetState(FungalState.IDLE);
+            SetState(FungalState.RANDOM);
         }
     }
 
@@ -92,7 +89,7 @@ public class FungalController : EntityController
     {
         IsFollowing = false;
         movement.Stop();
-        SetState(FungalState.IDLE);
+        SetState(FungalState.RANDOM);
     }
 
     public void Escort(Transform target)
@@ -106,42 +103,17 @@ public class FungalController : EntityController
     {
         IsFollowing = false;
         movement.Stop();
-        SetState(FungalState.IDLE);
+        SetState(FungalState.RANDOM);
     }
 
     private void Update()
     {
         UpdateHunger();
-
-        switch (state)
-        {
-            case FungalState.IDLE:
-                idleTimer += Time.deltaTime;
-                if (idleTimer > 5f) SetState(FungalState.RANDOM);
-                break;
-            case FungalState.RANDOM:
-                if (!movement.IsMovingToPosition) SetState(FungalState.IDLE);
-                break;
-        }
-
     }
 
     private void SetState(FungalState state)
     {
         this.state = state;
-
-        switch (state)
-        {
-            case FungalState.IDLE:
-                idleTimer = Random.Range(0f, 3f);
-                animator.SetBool("isMoving", false);
-                break;
-
-            case FungalState.RANDOM:
-                animator.SetBool("isMoving", true);
-                MoveToPosition(Utility.RandomXZVector * 5f);
-                break;
-        }
     }
 
     public override void UseAction()

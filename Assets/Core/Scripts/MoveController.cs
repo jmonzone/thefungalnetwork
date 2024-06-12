@@ -55,7 +55,7 @@ public class MoveController : MonoBehaviour
         type = MoveType.DIRECTION;
     }
 
-    public void SetPosition(Vector3 position, UnityAction onComplete)
+    public void SetPosition(Vector3 position, UnityAction onComplete = null)
     {
         this.position = position;
         type = MoveType.POSITION;
