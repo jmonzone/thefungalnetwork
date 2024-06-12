@@ -47,8 +47,8 @@ public class FishingSceneManager : MonoBehaviour
 
     private void Start()
     {
-        fungalController.SetFungal(GameManager.Instance.Fungals[SceneParameters.FungalIndex]);
-        fungalController.SetFish(fishControllers);
+        //fungalController.Initialize(GameManager.Instance.Fungals[SceneParameters.FungalIndex]);
+        //fungalController.SetFish(fishControllers);
         fungalController.Model.OnExperienceChanged += OnExperienceChanged;
         fungalController.Model.OnLevelChanged += OnLevelChanged;
         fungalController.Model.OnLevelUp += OnLevelUp;
@@ -104,7 +104,7 @@ public class FishingSceneManager : MonoBehaviour
 
         if (Input.GetKeyUp(KeyCode.L))
         {
-            fungalController.Model.Experience = FungalInstance.ExperienceAtLevel(fungalController.Model.Level + 1) + 10f;
+            fungalController.Model.Experience = FungalModel.ExperienceAtLevel(fungalController.Model.Level + 1) + 10f;
         }
     }
 
@@ -207,8 +207,8 @@ public class FishingSceneManager : MonoBehaviour
     private void OnLevelChanged(int level)
     {
         levelText.text = (level).ToString();
-        experienceSlider.minValue = FungalInstance.ExperienceAtLevel(level);
-        experienceSlider.maxValue = FungalInstance.ExperienceAtLevel(level + 1);
+        experienceSlider.minValue = FungalModel.ExperienceAtLevel(level);
+        experienceSlider.maxValue = FungalModel.ExperienceAtLevel(level + 1);
 
         availableFish = new List<FishData>(GameManager.Instance.GameData.Items.OfType<FishData>().Where(fish => fish.LevelRequirement <= level));
     }

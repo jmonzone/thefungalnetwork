@@ -2,9 +2,9 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public class FungalInstance : ScriptableObject
+public class FungalModel : ScriptableObject
 {
-    [SerializeField] private Pet data;
+    [SerializeField] private FungalData data;
     [SerializeField] private int index;
     [SerializeField] private float hunger;
     [SerializeField] private int level;
@@ -22,7 +22,7 @@ public class FungalInstance : ScriptableObject
     public event UnityAction OnLevelUp;
 
     public int Index => index;
-    public Pet Data => data;
+    public FungalData Data => data;
 
     public JObject Json => new JObject
     {
@@ -39,9 +39,9 @@ public class FungalInstance : ScriptableObject
         }
     };
 
-    public void Initialize(Pet pet)
+    public void Initialize(FungalData pet)
     {
-        name = pet.Name;
+        name = pet.Id;
         data = pet;
         level = 1;
         experience = 0;
@@ -52,11 +52,11 @@ public class FungalInstance : ScriptableObject
         power = 0;
     }
 
-    public void Initialize(int index, Pet pet, JObject json)
+    public void Initialize(int index, FungalData pet, JObject json)
     {
         this.index = index;
 
-        name = pet.Name;
+        name = pet.Id;
         data = pet;
         level = (int)json[ConfigKeys.LEVEL_KEY];
         experience = (float)json[ConfigKeys.EXPERIENCE_KEY];

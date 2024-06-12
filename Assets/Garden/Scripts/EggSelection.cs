@@ -14,7 +14,7 @@ public class EggSelection : MonoBehaviour
         mainCamera = Camera.main;
     }
 
-    public void SetPets(List<Pet> pets)
+    public void SetPets(List<FungalData> pets)
     {
         var eggControllers = GetComponentsInChildren<EggController>().ToList();
 

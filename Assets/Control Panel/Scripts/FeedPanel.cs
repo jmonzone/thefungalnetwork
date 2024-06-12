@@ -4,7 +4,7 @@ public class FeedPanel : MonoBehaviour
 {
     [SerializeField] private InventoryList inventoryList;
 
-    public FungalInstance Fungal { get; set; }
+    public FungalModel Fungal { get; set; }
 
     private void Awake()
     {

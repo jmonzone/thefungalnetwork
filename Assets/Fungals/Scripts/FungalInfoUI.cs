@@ -49,9 +49,9 @@ public class FungalInfoUI : MonoBehaviour
             this.fungal.SpotlightCamera.gameObject.SetActive(false);
 
             var defaultLayer = LayerMask.NameToLayer("Default");
-            this.fungal.Model3D.layer = defaultLayer;
+            this.fungal.Render.layer = defaultLayer;
 
-            foreach (Transform child in this.fungal.Model3D.transform)
+            foreach (Transform child in this.fungal.Render.transform)
             {
                 child.gameObject.layer = defaultLayer;
             }
@@ -64,14 +64,14 @@ public class FungalInfoUI : MonoBehaviour
             fungal.SpotlightCamera.gameObject.SetActive(true);
 
             var fungalLayer = LayerMask.NameToLayer("Fungal");
-            fungal.Model3D.layer = fungalLayer;
+            fungal.Render.layer = fungalLayer;
 
-            foreach (Transform child in fungal.Model3D.transform)
+            foreach (Transform child in fungal.Render.transform)
             {
                 child.gameObject.layer = fungalLayer;
             }
 
-            nameText.text = fungal.Model.Data.Name;
+            nameText.text = fungal.Model.Data.Id;
             typeText.text = fungal.Model.Data.Type.ToString();
             levelText.text = $"Level {fungal.Model.Level}";
 

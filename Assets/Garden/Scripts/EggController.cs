@@ -4,7 +4,7 @@ using UnityEngine.Events;
 
 public class EggController : EntityController
 {
-    public Pet Fungal { get; private set; }
+    public FungalData Fungal { get; private set; }
 
     private Rigidbody _rigidbody;
 
@@ -19,7 +19,7 @@ public class EggController : EntityController
         _rigidbody = GetComponent<Rigidbody>();
     }
 
-    public void Initialize(Pet fungal)
+    public void Initialize(FungalData fungal)
     {
         Fungal = fungal;
         var renderer = GetComponentInChildren<Renderer>();

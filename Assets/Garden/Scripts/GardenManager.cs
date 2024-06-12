@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -24,7 +23,7 @@ public class GardenManager : MonoBehaviour
 
     private List<FungalController> fungalControllers = new List<FungalController>();
 
-    private List<FungalInstance> Fungals => GameManager.Instance.Fungals;
+    private List<FungalModel> Fungals => GameManager.Instance.Fungals;
     private List<ItemInstance> Inventory => GameManager.Instance.Inventory;
     private GameData GameData => GameManager.Instance.GameData;
 
@@ -79,14 +78,14 @@ public class GardenManager : MonoBehaviour
 
     private void OnEggHatched(EggController egg)
     {
-        var fungal = ScriptableObject.CreateInstance<FungalInstance>();
+        var fungal = ScriptableObject.CreateInstance<FungalModel>();
         fungal.Initialize(egg.Fungal);
         GameManager.Instance.AddFungal(fungal);
         SpawnFungal(fungal, egg.transform.position);
         SetCurrentState(GameState.GAMEPLAY);
     }
 
-    private void SpawnEgg(Pet fungal)
+    private void SpawnEgg(FungalData fungal)
     {
         var randomPosition = (Vector3)Random.insideUnitCircle.normalized * 4;
         randomPosition.z = Mathf.Abs(randomPosition.y);
@@ -111,11 +110,11 @@ public class GardenManager : MonoBehaviour
         }
     }
 
-    private void SpawnFungal(FungalInstance fungal, Vector3 spawnPosition)
+    private void SpawnFungal(FungalModel fungal, Vector3 spawnPosition)
     {
-
         var fungalController = Instantiate(fungalControllerPrefab, spawnPosition, Quaternion.identity);
-        fungalController.SetFungal(fungal);
+        fungalController.Initialize(fungal, controlPanel);
+        fungalController.transform.forward = Utility.RandomXZVector;
         fungalControllers.Add(fungalController);
     }
 

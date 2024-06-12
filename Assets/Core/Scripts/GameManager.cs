@@ -40,14 +40,14 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameData gameData;
 
     [Header("Debug")]
-    [SerializeField] private List<FungalInstance> fungals = new List<FungalInstance>();
+    [SerializeField] private List<FungalModel> fungals = new List<FungalModel>();
     [SerializeField] private List<ItemInstance> inventory = new List<ItemInstance>();
     [SerializeField] private string saveDataPath;
 
     public GameData GameData => gameData;
 
     public JObject JsonFile { get; private set; }
-    public List<FungalInstance> Fungals => fungals;
+    public List<FungalModel> Fungals => fungals;
     public List<ItemInstance> Inventory => inventory;
 
     public event UnityAction OnInventoryChanged;
@@ -122,7 +122,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void AddFungal(FungalInstance fungal)
+    public void AddFungal(FungalModel fungal)
     {
         Debug.Log($"adding fungal {fungal.Data.name} {JsonFile}");
         fungals.Add(fungal);
@@ -137,13 +137,13 @@ public class GameManager : MonoBehaviour
         SaveData();
     }
 
-    private void OnFungalDataChanged(FungalInstance fungal)
+    private void OnFungalDataChanged(FungalModel fungal)
     {
         JsonFile[ConfigKeys.FUNGALS_KEY][fungal.Index] = fungal.Json;
         SaveData();
     }
 
-    protected virtual void OnCurrentPetChanged(FungalInstance pet)
+    protected virtual void OnCurrentPetChanged(FungalModel pet)
     {
 
     }
@@ -169,8 +169,8 @@ public class GameManager : MonoBehaviour
             var i = 0;
             foreach (JObject fungalObject in fungalArray)
             {
-                var fungal = ScriptableObject.CreateInstance<FungalInstance>();
-                var fungalData = gameData.Fungals.FirstOrDefault(fungal => fungal.Name == fungalObject["name"].ToString());
+                var fungal = ScriptableObject.CreateInstance<FungalModel>();
+                var fungalData = gameData.Fungals.FirstOrDefault(fungal => fungal.Id == fungalObject["name"].ToString());
                 fungal.Initialize(index: i, fungalData, fungalObject);
                 fungal.OnDataChanged += () => OnFungalDataChanged(fungal);
                 fungals.Add(fungal);
@@ -228,7 +228,7 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log($"running {nameof(MigratePetFieldToObject)}");
 
-            var petData = GameData.Fungals.FirstOrDefault(pet => pet.Name == petName.ToString());
+            var petData = GameData.Fungals.FirstOrDefault(pet => pet.Id == petName.ToString());
 
             JsonFile[ConfigKeys.CURRENT_PET_KEY] = new JObject
             {

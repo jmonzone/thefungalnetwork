@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.Events;
 
 public class MoveController : MonoBehaviour
@@ -14,15 +15,16 @@ public class MoveController : MonoBehaviour
         DIRECTION,
     }
 
+    public bool IsMovingToPosition { get; private set; }
+
     private Transform target;
     private Vector3 position;
     private Vector3 direction;
+    private Coroutine positionReachedRoutine;
 
     public event UnityAction OnStart;
     public event UnityAction OnEnd;
     public event UnityAction<Vector3> OnUpdate;
-
-    private event UnityAction OnDestinationReached;
 
     private void Update()
     {
@@ -58,13 +60,18 @@ public class MoveController : MonoBehaviour
         this.position = position;
         type = MoveType.POSITION;
 
-        void EventListener()
-        {
-            onComplete?.Invoke();
-            OnDestinationReached -= EventListener;
-        }
+        IsMovingToPosition = true;
 
-        OnDestinationReached += EventListener;
+        if (positionReachedRoutine != null) StopCoroutine(positionReachedRoutine);
+        positionReachedRoutine = StartCoroutine(WaitUntilDestinationReached(position, onComplete));
+    }
+
+    private IEnumerator WaitUntilDestinationReached(Vector3 position, UnityAction onComplete)
+    {
+        yield return new WaitUntil(() => Vector3.Distance(transform.position, position) < 0.1f);
+        onComplete?.Invoke();
+
+        IsMovingToPosition = false;
     }
 
     public void SetSpeed(float speed)
@@ -90,10 +97,6 @@ public class MoveController : MonoBehaviour
         {
             var direction = targetPosition - transform.position;
             MoveInDirection(direction.normalized);
-        }
-        else
-        {
-            OnDestinationReached?.Invoke();
         }
     }
 

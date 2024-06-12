@@ -25,10 +25,10 @@ public class CookingStation : EntityController
     [SerializeField] private Transform fungalLookTarget;
 
     public override Sprite ActionImage => actionImage;
-
     public override Color ActionColor => actionColor;
-
     public override string ActionText => "Cook";
+
+    private FungalController fungal;
 
     private void Awake()
     {
@@ -40,6 +40,8 @@ public class CookingStation : EntityController
                 controlPanel.SetVisible(true);
                 cookingUIAnimation.IsVisible = false;
                 ingredientManager.StopAllCoroutines();
+
+                if (fungal) fungal.Stop();
             }));
         });
     }
@@ -49,7 +51,7 @@ public class CookingStation : EntityController
         camera.Priority = 2;
         controlPanel.SetVisible(false);
 
-        var fungal = controlPanel.EscortedFungal;
+        fungal = controlPanel.EscortedFungal;
         if (fungal)
         {
             controlPanel.UnescortFungal();

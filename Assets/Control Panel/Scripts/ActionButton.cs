@@ -1,6 +1,5 @@
 using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class ActionButton : MonoBehaviour
@@ -15,12 +14,10 @@ public class ActionButton : MonoBehaviour
     public int Order { get; set; } = -1;
     public EntityController Entity { get; set; }
 
-    public event UnityAction<EntityController> OnClicked;
-
     private void Awake()
     {
 
-        button.onClick.AddListener(() => OnClicked?.Invoke(Entity));
+        button.onClick.AddListener(() => Entity.UseAction());
     }
 
     private void Update()

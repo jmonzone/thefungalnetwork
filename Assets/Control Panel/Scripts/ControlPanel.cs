@@ -20,9 +20,8 @@ public class ControlPanel : MonoBehaviour
 
     [SerializeField] private PlayerController player;
 
-    private ProximityButtonManager proximityButtonManager;
-
     public FungalController EscortedFungal { get; private set; }
+    public PlayerController Player => player;
 
     private enum UIState
     {
@@ -57,15 +56,6 @@ public class ControlPanel : MonoBehaviour
 
             UpdateEscortButtonText();
         });
-
-        proximityButtonManager = GetComponentInChildren<ProximityButtonManager>();
-        proximityButtonManager.OnButtonClicked += entity =>
-        {
-            if (entity is FungalController fungal)
-            {
-                StartFungalInteraction(fungal);
-            }
-        };
         
         feedButton.onClick.AddListener(() => SetState(UIState.FEED));
 
@@ -81,10 +71,8 @@ public class ControlPanel : MonoBehaviour
         }
     }
 
-    private void StartFungalInteraction(FungalController fungal)
+    public void StartFungalInteraction(FungalController fungal)
     {
-        player.TalkToFungal(fungal);
-
         feedPanel.Fungal = fungal.Model;
         UpdateEscortButtonText();
 

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class ProximityButtonManager : MonoBehaviour
 {
@@ -10,23 +9,11 @@ public class ProximityButtonManager : MonoBehaviour
 
     private List<ActionButton> actionButtonList;
 
-    public event UnityAction<EntityController> OnButtonClicked;
-
     private const float MAXIMUM_PROXIMITY_DISTANCE = 3f;
 
     private void Awake()
     {
-        actionButtonList = GetComponentsInChildren<ActionButton>()
-            .Select((button, index) =>
-            {
-                button.OnClicked += entity =>
-                {
-                    entity.UseAction();
-                    OnButtonClicked?.Invoke(entity);
-                };
-                return button;
-            })
-            .ToList();
+        actionButtonList = GetComponentsInChildren<ActionButton>().ToList();
     }
 
     private void Update()

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public abstract class EntityController : MonoBehaviour
 {
@@ -13,70 +12,64 @@ public abstract class EntityController : MonoBehaviour
     public abstract void UseAction();
 }
 
+public enum FungalState
+{
+    IDLE,
+    RANDOM,
+    ESCORT,
+    TARGET,
+}
+
 public class FungalController : EntityController
 {
-    [Header("Configuration")]
-    [SerializeField] private float speed = 2f;
-    [SerializeField] private float rotationSpeed = 2f;
-    [SerializeField] private float idleRadius = 4f;
-    [SerializeField] private float autoFishCooldown = 4f;
-    [SerializeField] private float flightHeight = 5f;
-    [SerializeField] private Vector3 offset;
-    [SerializeField] private bool randomizePositions = false;
-
-    private float targetDistanceThreshold = 0.1f;
-    private float followDistanceThreshold = 2.5f;
-
     [Header("References")]
     [SerializeField] private Transform indicatorAnchor;
     [SerializeField] private RectTransform hungerIndicator;
     [SerializeField] private Camera spotlightCamera;
 
-    [Header("Debug")]
-    [SerializeField] private Vector3 origin;
-    [SerializeField] private float timer;
-    [SerializeField] private float hungerTimer;
-    [SerializeField] private Transform target;
-    [SerializeField] private FishController targetFish;
-    [SerializeField] private List<FishController> fish = new List<FishController>();
+    public FungalModel Model { get; private set; }
+    public GameObject Render { get; private set; }
+    public bool IsFollowing { get; set; }
 
-    public FungalInstance Model { get; private set; }
-    public bool IsFollowing { get; set; } = false;
+    public Camera SpotlightCamera => spotlightCamera;
 
     public override Sprite ActionImage => Model.Data.ActionImage;
     public override Color ActionColor => Model.Data.ActionColor;
     public override string ActionText => "Talk";
 
-    public Camera SpotlightCamera => spotlightCamera;
-    public GameObject Model3D => model3D;
-
     private Camera mainCamera;
-    private GameObject model3D;
-
+    private ControlPanel controlPanel;
     private MoveController movement;
+    private Animator animator;
+    private float hungerTimer;
+    private float idleTimer;
+    private FungalState state;
 
     private void Awake()
     {
-        origin = transform.position;
         mainCamera = Camera.main;
         movement = GetComponent<MoveController>();
     }
 
-    public void SetFungal(FungalInstance fungalInstance)
+    public void Initialize(FungalModel model, ControlPanel controlPanel)
     {
-        Debug.Log($"initializing fungal controller {fungalInstance}");
-        Model = fungalInstance;
+        Debug.Log($"initializing fungal controller {model}");
 
-        if (fungalInstance)
+        this.controlPanel = controlPanel;
+        Model = model;
+
+        if (model)
         {
-            name = $"Fungal Controller - {fungalInstance.name}";
-            model3D = Instantiate(fungalInstance.Data.Prefab, transform);
-            model3D.transform.localScale = Vector3.one;
+            name = $"Fungal Controller - {model.name}";
+            Render = Instantiate(model.Data.Prefab, transform);
+            Render.transform.localScale = Vector3.one;
 
-            var animator = model3D.GetComponentInChildren<Animator>();
+            animator = Render.GetComponentInChildren<Animator>();
             animator.speed = 0.25f;
 
-            speed = 0.5f + fungalInstance.Speed * 0.1f;
+            movement.SetSpeed(1f + model.Speed * 0.1f);
+
+            SetState(FungalState.IDLE);
         }
     }
 
@@ -84,7 +77,6 @@ public class FungalController : EntityController
     {
         movement.SetPosition(position, () =>
         {
-            Debug.Log("complete");
             if (lookTarget) movement.SetLookTarget(lookTarget);
         });
     }
@@ -92,18 +84,21 @@ public class FungalController : EntityController
     public void MoveToTarget(Transform target)
     {
         movement.SetTarget(target);
+        SetState(FungalState.TARGET);
     }
 
     public void Stop()
     {
         IsFollowing = false;
         movement.Stop();
+        SetState(FungalState.IDLE);
     }
 
     public void Escort(Transform target)
     {
         IsFollowing = true;
         movement.SetTarget(target);
+        SetState(FungalState.ESCORT);
     }
 
     public void Unescort()
@@ -112,12 +107,48 @@ public class FungalController : EntityController
         movement.Stop();
     }
 
-    public void SetFish(List<FishController> fish)
+    private void Update()
     {
-        this.fish = fish;
+        UpdateHunger();
+
+        switch (state)
+        {
+            case FungalState.IDLE:
+                idleTimer += Time.deltaTime;
+                if (idleTimer > 5f) SetState(FungalState.RANDOM);
+                break;
+            case FungalState.RANDOM:
+                if (!movement.IsMovingToPosition) SetState(FungalState.IDLE);
+                break;
+        }
+
     }
 
-    private void Update()
+    private void SetState(FungalState state)
+    {
+        this.state = state;
+
+        switch (state)
+        {
+            case FungalState.IDLE:
+                idleTimer = Random.Range(0f, 3f);
+                animator.SetBool("isMoving", false);
+                break;
+
+            case FungalState.RANDOM:
+                animator.SetBool("isMoving", true);
+                MoveToPosition(Utility.RandomXZVector * 5f);
+                break;
+        }
+    }
+
+    public override void UseAction()
+    {
+        controlPanel.Player.TalkToFungal(this);
+        controlPanel.StartFungalInteraction(this);
+    }
+
+    private void UpdateHunger()
     {
         if (Model)
         {
@@ -140,47 +171,5 @@ public class FungalController : EntityController
                 hungerIndicator.gameObject.SetActive(false);
             }
         }
-
-        //var direction = TargetPosition - transform.position;
-        //transform.forward = Vector3.Lerp(transform.forward, direction, rotationSpeed * Time.deltaTime);
-
-        //if (direction.magnitude > distanceThreshold)
-        //{
-        //    var fixedSpeed = speed;
-        //    if (target) fixedSpeed *= 2;
-        //    transform.position += fixedSpeed * Time.deltaTime * direction.normalized;
-        //}
-        //else if (targetFish)
-        //{
-        //    targetFish.Catch();
-        //    target = null;
-        //    targetFish = null;
-        //    timer = 0;
-        //}
-
-        //if (timer > autoFishCooldown)
-        //{
-        //    targetFish = null;
-
-        //    var closestDistance = Mathf.Infinity;
-
-        //    foreach (var _fish in fish)
-        //    {
-        //        if (_fish.IsAttacted || _fish.IsCaught) continue;
-        //        var distance = Vector3.Distance(_fish.transform.position, transform.position);
-        //        if (distance < closestDistance)
-        //        {
-        //            closestDistance = distance;
-        //            target = _fish.transform;
-        //            targetFish = _fish;
-        //        }
-        //    }
-        //}
-
-        //timer += Time.deltaTime;
-    }
-
-    public override void UseAction()
-    {
     }
 }
