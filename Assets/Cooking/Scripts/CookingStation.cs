@@ -6,16 +6,20 @@ using UnityEngine.Events;
 
 public class CookingStation : EntityController
 {
-    [SerializeField] private Sprite actionImage;
-    [SerializeField] private Color actionColor;
+    [Header("Gameplay References")]
     [SerializeField] private CinemachineVirtualCamera camera;
     [SerializeField] private IngredientManager ingredientManager;
+    [SerializeField] private PlayerController playerController;
+    [SerializeField] private BladeController bladeController;
+
+    [Header("Action References")]
+    [SerializeField] private Sprite actionImage;
+    [SerializeField] private Color actionColor;
+
+    [Header("UI References")]
     [SerializeField] private ControlPanel controlPanel;
     [SerializeField] private SlideAnimation cookingUIAnimation;
     [SerializeField] private Button backButton;
-    [SerializeField] private PlayerController playerController;
-
-    [Header("Background References")]
     [SerializeField] private Image background;
 
     [Header("Position References")]
@@ -34,6 +38,8 @@ public class CookingStation : EntityController
     {
         backButton.onClick.AddListener(() =>
         {
+            bladeController.enabled = false;
+
             StartCoroutine(LerpAlpha(0, () =>
             {
                 camera.Priority = 0;
@@ -62,6 +68,8 @@ public class CookingStation : EntityController
         {
             playerController.Movement.SetLookTarget(playerLookTarget);
         });
+
+        bladeController.enabled = true;
 
         StartCoroutine(ShowBackground());
     }
