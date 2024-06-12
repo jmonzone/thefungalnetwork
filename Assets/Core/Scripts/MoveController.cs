@@ -62,6 +62,8 @@ public class MoveController : MonoBehaviour
 
         IsMovingToPosition = true;
 
+        OnStart?.Invoke();
+
         if (positionReachedRoutine != null) StopCoroutine(positionReachedRoutine);
         positionReachedRoutine = StartCoroutine(WaitUntilDestinationReached(position, onComplete));
     }
@@ -70,6 +72,7 @@ public class MoveController : MonoBehaviour
     {
         yield return new WaitUntil(() => Vector3.Distance(transform.position, position) < 0.1f);
         onComplete?.Invoke();
+        OnEnd?.Invoke();
 
         IsMovingToPosition = false;
     }
