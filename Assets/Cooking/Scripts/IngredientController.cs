@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class IngredientController : MonoBehaviour
@@ -16,10 +14,9 @@ public class IngredientController : MonoBehaviour
         ingredientCollider = GetComponent<Collider>();
     }
 
-    public void Spawn(Vector3 position)
+    private void OnEnable()
     {
-        transform.SetPositionAndRotation(position, Random.rotation);
-        gameObject.SetActive(true);
+        transform.rotation = Random.rotation;
 
         whole.SetActive(true);
         sliced.SetActive(false);

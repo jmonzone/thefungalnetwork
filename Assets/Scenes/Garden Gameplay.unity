@@ -3268,6 +3268,7 @@ GameObject:
   - component: {fileID: 441051991}
   - component: {fileID: 441051992}
   - component: {fileID: 441051993}
+  - component: {fileID: 441051994}
   m_Layer: 0
   m_Name: Fishing Station
   m_TagString: Untagged
@@ -3309,6 +3310,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hasInteraction: 1
+  enableAtStart: 1
   playerController: {fileID: 373087730}
   camera: {fileID: 832005055}
   controlPanel: {fileID: 307486408}
@@ -3331,6 +3333,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9c1321d84a924d6bb9c746c72420ade, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  defaultFish: {fileID: 0}
+  fishBounds: {fileID: 0}
+--- !u!114 &441051994
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 441051990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46a7015f25300416aa81c8b5c38d8d39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 1998284645538067842, guid: 4d25c1f56be9d47d780c72b86caaa2e4, type: 3}
+  frequency: 2
 --- !u!1 &446155710
 GameObject:
   m_ObjectHideFlags: 0
@@ -4743,6 +4761,7 @@ GameObject:
   m_Component:
   - component: {fileID: 610605780}
   - component: {fileID: 610605781}
+  - component: {fileID: 610605782}
   m_Layer: 0
   m_Name: Ingredient Manager
   m_TagString: Untagged
@@ -4777,14 +4796,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fdea13a0be954e08840cc09976e85fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ingredientPrefab: {fileID: 9173131824021314546, guid: 564d87d99cd2d414fb8d8f20682f90c7,
-    type: 3}
   ingredientSpawnAnchor: {fileID: 1038761319}
   maxLaunchForce: 400
   minLaunchForce: 350
   throwFrequency: 1
   maxHorizontal: 1
   maxLaunchAngle: 5
+--- !u!114 &610605782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 610605779}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46a7015f25300416aa81c8b5c38d8d39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 48612807583080110, guid: 564d87d99cd2d414fb8d8f20682f90c7, type: 3}
+  frequency: 1
 --- !u!1 &677907824
 GameObject:
   m_ObjectHideFlags: 0
@@ -9521,6 +9552,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hasInteraction: 1
+  enableAtStart: 0
   playerController: {fileID: 373087730}
   camera: {fileID: 540506998}
   controlPanel: {fileID: 307486408}
