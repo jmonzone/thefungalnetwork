@@ -392,6 +392,7 @@ GameObject:
   - component: {fileID: 7365126062320909308}
   - component: {fileID: 173026516737802164}
   - component: {fileID: 4462087301603915868}
+  - component: {fileID: 8658621383190838864}
   m_Layer: 0
   m_Name: Fungal Controller
   m_TagString: Untagged
@@ -448,6 +449,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 1.5
   type: 0
+--- !u!114 &8658621383190838864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4710098450848900613}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 645ecd717131043d4867cc4879548c5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveImmediate: 0
+  minIdleDuration: 2
+  maxIdleDuration: 5
+  animator: {fileID: 0}
+  positionAnchor:
+    anchor: {fileID: 0}
+    bounds: {fileID: 0}
 --- !u!1 &5985720208242059808
 GameObject:
   m_ObjectHideFlags: 0

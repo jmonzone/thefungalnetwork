@@ -23,6 +23,7 @@ public class RandomMovement : MonoBehaviour
     private void OnEnable()
     {
         if (moveImmediate && positionAnchor.IsInitialized) StartMoving();
+        else StopMoving();
     }
 
     private void Update()
@@ -50,6 +51,11 @@ public class RandomMovement : MonoBehaviour
         idleTimer = UnityEngine.Random.Range(0f, maxIdleDuration - minIdleDuration);
         if (animator) animator.SetBool("isMoving", false);
         isMoving = false;
+    }
+
+    public void SetAnimator(Animator animator)
+    {
+        this.animator = animator;
     }
 
     public void SetBounds(Collider collider)
