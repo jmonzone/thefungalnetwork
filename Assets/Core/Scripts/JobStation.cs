@@ -20,6 +20,7 @@ public abstract class JobStation : EntityController
     public override Color ActionColor => actionColor;
 
     protected FungalController Fungal { get; private set; }
+    public bool IsActive { get; private set; }
 
     private void Awake()
     {
@@ -34,18 +35,18 @@ public abstract class JobStation : EntityController
 
     public sealed override void UseAction()
     {
+        IsActive = true;
         camera.Priority = 2;
+        uIAnimation.IsVisible = true;
         controlPanel.SetVisible(false);
+
         Fungal = controlPanel.EscortedFungal;
         if (Fungal) controlPanel.UnescortFungal();
-
 
         playerController.Movement.SetPosition(playerPositionAnchor.position, () =>
         {
             playerController.Movement.SetLookTarget(playerLookTarget);
         });
-
-        uIAnimation.IsVisible = true;
 
         OnJobStarted();
     }
@@ -56,9 +57,9 @@ public abstract class JobStation : EntityController
 
     protected void EndAction()
     {
+        IsActive = false;
         camera.Priority = 0;
         uIAnimation.IsVisible = false;
-
         StartCoroutine(ShowControlPanel());
 
         if (Fungal) Fungal.Stop();

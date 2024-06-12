@@ -74,6 +74,7 @@ public class GardenManager : MonoBehaviour
         UpdateInventory();
 
         gameplayCanvas.SetActive(true);
+        controlPanel.gameObject.SetActive(true);
     }
 
     private void OnEggHatched(EggController egg)
