@@ -20,14 +20,18 @@ public class CookingStation : JobStation
 
     protected override void OnJobStarted()
     {
-        if (Fungal)
-        {
-            Fungal.MoveToPosition(fungalPositionAnchor.position, fungalLookTarget);
-        }
-
+        
         bladeController.enabled = true;
 
         StartCoroutine(ShowBackground());
+    }
+
+    public override void SetFungal(FungalController fungal)
+    {
+        if (fungal)
+        {
+            fungal.MoveToPosition(fungalPositionAnchor.position, fungalLookTarget);
+        }
     }
 
     protected override void OnBackButtonClicked()

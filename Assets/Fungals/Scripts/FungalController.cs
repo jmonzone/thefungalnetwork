@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 
 public abstract class EntityController : MonoBehaviour
 {
@@ -38,12 +39,13 @@ public class FungalController : EntityController
     public override string ActionText => "Talk";
 
     private Camera mainCamera;
-    private ControlPanel controlPanel;
     private MoveController movement;
     private Animator animator;
     private float hungerTimer;
     private float idleTimer;
     private FungalState state;
+
+    public event UnityAction OnTalkStart;
 
     private void Awake()
     {
@@ -51,11 +53,10 @@ public class FungalController : EntityController
         movement = GetComponent<MoveController>();
     }
 
-    public void Initialize(FungalModel model, ControlPanel controlPanel)
+    public void SetFungal(FungalModel model)
     {
         Debug.Log($"initializing fungal controller {model}");
 
-        this.controlPanel = controlPanel;
         Model = model;
 
         if (model)
@@ -104,7 +105,9 @@ public class FungalController : EntityController
     public void Unescort()
     {
         IsFollowing = false;
+        Debug.Log("isfollowing" + IsFollowing);
         movement.Stop();
+        SetState(FungalState.IDLE);
     }
 
     private void Update()
@@ -144,8 +147,7 @@ public class FungalController : EntityController
 
     public override void UseAction()
     {
-        controlPanel.Player.TalkToFungal(this);
-        controlPanel.StartFungalInteraction(this);
+        OnTalkStart?.Invoke();
     }
 
     private void UpdateHunger()

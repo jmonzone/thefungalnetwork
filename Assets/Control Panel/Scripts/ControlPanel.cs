@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class ControlPanel : MonoBehaviour
@@ -20,8 +21,11 @@ public class ControlPanel : MonoBehaviour
 
     [SerializeField] private PlayerController player;
 
-    public FungalController EscortedFungal { get; private set; }
     public PlayerController Player => player;
+
+    public event UnityAction OnEscortButtonClicked;
+
+    private FungalController fungal;
 
     private enum UIState
     {
@@ -44,16 +48,7 @@ public class ControlPanel : MonoBehaviour
         infoButton.onClick.AddListener(() => SetState(UIState.INFO));
         escortButton.onClick.AddListener(() =>
         {
-            if (EscortedFungal)
-            {
-                UnescortFungal();
-            }
-            else
-            {
-                EscortedFungal = player.TalkingFungal;
-                EscortedFungal.Escort(player.transform);
-            }
-
+            OnEscortButtonClicked?.Invoke();
             UpdateEscortButtonText();
         });
         
@@ -62,27 +57,19 @@ public class ControlPanel : MonoBehaviour
         SetState(UIState.JOYSTICK);
     }
 
-    public void UnescortFungal()
+    public void SetFungal(FungalController fungal)
     {
-        if (EscortedFungal)
-        {
-            EscortedFungal.Unescort();
-            EscortedFungal = null;
-        }
-    }
-
-    public void StartFungalInteraction(FungalController fungal)
-    {
+        this.fungal = fungal;
+        fungalInfoUI.SetFungal(fungal);
         feedPanel.Fungal = fungal.Model;
         UpdateEscortButtonText();
-
-        fungalInfoUI.SetFungal(fungal);
         SetState(UIState.INTERACTIONS);
     }
 
     private void UpdateEscortButtonText()
     {
-        escortButtonText.text = player.TalkingFungal.IsFollowing ? "Unescort" : "Escort";
+        Debug.Log(fungal.IsFollowing);
+        escortButtonText.text = fungal.IsFollowing ? "Unescort" : "Escort";
     }
 
     private void SetState(UIState state)

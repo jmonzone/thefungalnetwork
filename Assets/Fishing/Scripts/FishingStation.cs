@@ -11,6 +11,10 @@ public class FishingStation : JobStation
         EndAction();
     }
 
+    public override void SetFungal(FungalController fungal)
+    {
+    }
+
     protected override void OnJobStarted()
     {
     }

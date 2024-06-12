@@ -50,8 +50,6 @@ public class PlayerController : MonoBehaviour
     {
         TalkingFungal = fungal;
 
-        fungal.MoveToTarget(transform);
-
         Movement.SetLookTarget(fungal.transform);
 
         virtualCamera.Priority = 2;

@@ -8,7 +8,7 @@ public class GardenManager : MonoBehaviour
 {
     [Header("Gameplay References")]
     [SerializeField] private EggSelection eggSelection;
-    [SerializeField] private Rigidbody player;
+    [SerializeField] private PlayerController player;
 
     [Header("Prefabs")]
     [SerializeField] private FungalController fungalControllerPrefab;
@@ -23,9 +23,13 @@ public class GardenManager : MonoBehaviour
 
     private List<FungalController> fungalControllers = new List<FungalController>();
 
+    private List<JobStation> jobStations = new List<JobStation>();
     private List<FungalModel> Fungals => GameManager.Instance.Fungals;
     private List<ItemInstance> Inventory => GameManager.Instance.Inventory;
     private GameData GameData => GameManager.Instance.GameData;
+
+    public FungalController TalkingFungal { get; private set; }
+    public FungalController EscortedFungal { get; private set; }
 
     private enum GameState
     {
@@ -73,8 +77,32 @@ public class GardenManager : MonoBehaviour
         GameManager.Instance.OnInventoryChanged += UpdateInventory;
         UpdateInventory();
 
+        controlPanel.OnEscortButtonClicked += OnEscortButtonClicked;
+
+        jobStations = FindObjectsOfType<JobStation>().ToList();
+        foreach(var station in jobStations)
+        {
+            station.OnJobStart += () => Station_OnJobStart(station);
+            station.OnJobEnd += Station_OnJobEnd;
+        }
+
         gameplayCanvas.SetActive(true);
         controlPanel.gameObject.SetActive(true);
+    }
+
+    private void Station_OnJobEnd()
+    {
+        if (EscortedFungal) EscortedFungal.Unescort();
+    }
+
+    private void Station_OnJobStart(JobStation station)
+    {
+        var fungal = EscortedFungal;
+        if (fungal)
+        {
+            UnescortFungal();
+            station.SetFungal(fungal);
+        }
     }
 
     private void OnEggHatched(EggController egg)
@@ -114,13 +142,44 @@ public class GardenManager : MonoBehaviour
     private void SpawnFungal(FungalModel fungal, Vector3 spawnPosition)
     {
         var fungalController = Instantiate(fungalControllerPrefab, spawnPosition, Quaternion.identity);
-        fungalController.Initialize(fungal, controlPanel);
+        fungalController.SetFungal(fungal);
         fungalController.transform.forward = Utility.RandomXZVector;
         fungalControllers.Add(fungalController);
+        fungalController.OnTalkStart += () => OnFungalTalkStart(fungalController);
     }
 
     private void SetCurrentState(GameState state)
     {
         eggSelection.gameObject.SetActive(state == GameState.EGG_SELECTION);
+    }
+
+    private void OnFungalTalkStart(FungalController fungal)
+    {
+        TalkingFungal = fungal;
+        fungal.MoveToTarget(player.transform);
+        player.TalkToFungal(fungal);
+        controlPanel.SetFungal(fungal);
+    }
+
+    private void OnEscortButtonClicked()
+    {
+        if (EscortedFungal)
+        {
+            UnescortFungal();
+        }
+        else
+        {
+            EscortedFungal = TalkingFungal;
+            EscortedFungal.Escort(player.transform);
+        }
+    }
+
+    private void UnescortFungal()
+    {
+        if (EscortedFungal)
+        {
+            EscortedFungal.Unescort();
+            EscortedFungal = null;
+        }
     }
 }

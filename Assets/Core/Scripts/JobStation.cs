@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using Cinemachine;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public abstract class JobStation : EntityController
@@ -19,8 +20,10 @@ public abstract class JobStation : EntityController
     public override Sprite ActionImage => actionImage;
     public override Color ActionColor => actionColor;
 
-    protected FungalController Fungal { get; private set; }
     public bool IsActive { get; private set; }
+
+    public event UnityAction OnJobStart;
+    public event UnityAction OnJobEnd;
 
     private void Awake()
     {
@@ -40,8 +43,7 @@ public abstract class JobStation : EntityController
         uIAnimation.IsVisible = true;
         controlPanel.SetVisible(false);
 
-        Fungal = controlPanel.EscortedFungal;
-        if (Fungal) controlPanel.UnescortFungal();
+        OnJobStart?.Invoke();
 
         playerController.Movement.SetPosition(playerPositionAnchor.position, () =>
         {
@@ -50,6 +52,8 @@ public abstract class JobStation : EntityController
 
         OnJobStarted();
     }
+
+    public abstract void SetFungal(FungalController fungal);
 
     protected abstract void OnJobStarted();
 
@@ -62,7 +66,7 @@ public abstract class JobStation : EntityController
         uIAnimation.IsVisible = false;
         StartCoroutine(ShowControlPanel());
 
-        if (Fungal) Fungal.Stop();
+        OnJobEnd?.Invoke();
     }
 
     private IEnumerator ShowControlPanel()
