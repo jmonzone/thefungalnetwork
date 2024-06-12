@@ -42,8 +42,7 @@ public class IngredientManager : MonoBehaviour
             yield return new WaitForSeconds(throwFrequency);
 
             var spawnPostion = ingredientSpawnAnchor.position;
-            //spawnPostion.x = Random.Range(-maxHorizontal, maxHorizontal);
-            Debug.Log(spawnPostion);
+
             var ingredient = ingredientPool[ingredientIndex % ingredientPool.Count];
             ingredient.Spawn(spawnPostion);
 
