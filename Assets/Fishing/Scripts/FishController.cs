@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -19,6 +20,21 @@ public class FishController : MonoBehaviour
     private void OnEnable()
     {
         transform.forward = Utility.RandomXZVector;
+        transform.localScale = Vector3.zero;
+
+        IEnumerator LerpScale()
+        {
+            while (transform.localScale.x < 1)
+            {
+                var scale = transform.localScale.x + Time.deltaTime;
+                transform.localScale = Vector3.one * scale;
+                yield return null;
+            }
+
+            transform.localScale = Vector3.one;
+        }
+
+        StartCoroutine(LerpScale());
     }
 
     public void Initialize(FishData data, Collider bounds)
