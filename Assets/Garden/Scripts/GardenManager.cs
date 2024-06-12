@@ -6,6 +6,9 @@ using UnityEngine.UI;
 
 public class GardenManager : MonoBehaviour
 {
+    [Header("Developer Options")]
+    [SerializeField] private bool disableControlPanel;
+
     [Header("Gameplay References")]
     [SerializeField] private EggSelection eggSelection;
     [SerializeField] private PlayerController player;
@@ -35,7 +38,7 @@ public class GardenManager : MonoBehaviour
     {
         EGG_SELECTION,
         GAMEPLAY,
-        PET_INFO
+        PET_INFO,
     }
 
     private void Start()
@@ -87,8 +90,11 @@ public class GardenManager : MonoBehaviour
             station.OnJobEnd += Station_OnJobEnd;
         }
 
-        gameplayCanvas.SetActive(true);
-        controlPanel.gameObject.SetActive(true);
+        if (!disableControlPanel)
+        {
+            gameplayCanvas.SetActive(true);
+            controlPanel.gameObject.SetActive(true);
+        }
     }
 
     private void Station_OnJobEnd()

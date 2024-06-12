@@ -2355,7 +2355,6 @@ MonoBehaviour:
   feedButton: {fileID: 1951222046}
   escortButtonText: {fileID: 1473503613}
   slideAnimation: {fileID: 307486409}
-  player: {fileID: 373087730}
 --- !u!114 &307486409
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3268,6 +3267,7 @@ GameObject:
   m_Component:
   - component: {fileID: 441051991}
   - component: {fileID: 441051992}
+  - component: {fileID: 441051993}
   m_Layer: 0
   m_Name: Fishing Station
   m_TagString: Untagged
@@ -3319,6 +3319,18 @@ MonoBehaviour:
   uIAnimation: {fileID: 252122850}
   backButton: {fileID: 252122849}
   fishingRod: {fileID: 988718706}
+--- !u!114 &441051993
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 441051990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9c1321d84a924d6bb9c746c72420ade, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &446155710
 GameObject:
   m_ObjectHideFlags: 0
@@ -5581,7 +5593,7 @@ MonoBehaviour:
   - m_Script
   m_LockStageInInspector: 
   m_StreamingVersion: 20170927
-  m_Priority: 1
+  m_Priority: 3
   m_StandbyUpdate: 2
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
@@ -5880,6 +5892,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 264d61891807545a2b9c11803a9cede7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  disableControlPanel: 1
   eggSelection: {fileID: 1590202532}
   player: {fileID: 373087730}
   fungalControllerPrefab: {fileID: 173026516737802164, guid: 9e5e876e58a73433bbb5be4472984e7e,

@@ -6,6 +6,9 @@ using UnityEngine.UI;
 
 public abstract class JobStation : EntityController
 {
+    [Header("Developer Options")]
+    [SerializeField] private bool enableAtStart;
+
     [Header("Job References")]
     [SerializeField] private PlayerController playerController;
     [SerializeField] private CinemachineVirtualCamera camera;
@@ -33,8 +36,9 @@ public abstract class JobStation : EntityController
         });
 
         uIAnimation.gameObject.SetActive(true);
-    }
 
+        if (enableAtStart) UseAction();
+    }
 
     public sealed override void UseAction()
     {
