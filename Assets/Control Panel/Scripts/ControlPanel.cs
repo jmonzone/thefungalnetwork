@@ -19,11 +19,8 @@ public class ControlPanel : MonoBehaviour
     [SerializeField] private TextMeshProUGUI escortButtonText;
     [SerializeField] private SlideAnimation slideAnimation;
 
-    [SerializeField] private PlayerController player;
-
-    public PlayerController Player => player;
-
     public event UnityAction OnEscortButtonClicked;
+    public event UnityAction OnFungalInteractionEnd;
 
     private FungalController fungal;
 
@@ -41,7 +38,7 @@ public class ControlPanel : MonoBehaviour
         inventoryButton.onClick.AddListener(() => SetState(UIState.INVENTORY));
         closeButton.onClick.AddListener(() =>
         {
-            player.EndTalk();
+            OnFungalInteractionEnd?.Invoke();
             SetState(UIState.JOYSTICK);
         });
 
@@ -68,7 +65,6 @@ public class ControlPanel : MonoBehaviour
 
     private void UpdateEscortButtonText()
     {
-        Debug.Log(fungal.IsFollowing);
         escortButtonText.text = fungal.IsFollowing ? "Unescort" : "Escort";
     }
 

@@ -105,7 +105,6 @@ public class FungalController : EntityController
     public void Unescort()
     {
         IsFollowing = false;
-        Debug.Log("isfollowing" + IsFollowing);
         movement.Stop();
         SetState(FungalState.IDLE);
     }

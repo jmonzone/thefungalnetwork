@@ -9,11 +9,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private CinemachineVirtualCamera virtualCamera;
     [SerializeField] private List<Transform> cameraAnchors;
 
+    public MoveController Movement { get; private set; }
+
     private Transform virtualCameraAnchor;
     private Animator animator;
-
-    public FungalController TalkingFungal { get; private set; }
-    public MoveController Movement { get; private set; }
+    private FungalController talkingFungal;
 
     private void Awake()
     {
@@ -40,7 +40,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (TalkingFungal)
+        if (talkingFungal)
         {
             virtualCamera.transform.SetPositionAndRotation(virtualCameraAnchor.position, virtualCameraAnchor.rotation);
         }
@@ -48,7 +48,7 @@ public class PlayerController : MonoBehaviour
 
     public void TalkToFungal(FungalController fungal)
     {
-        TalkingFungal = fungal;
+        talkingFungal = fungal;
 
         Movement.SetLookTarget(fungal.transform);
 
@@ -69,10 +69,9 @@ public class PlayerController : MonoBehaviour
 
     public void EndTalk()
     {
-        if (TalkingFungal)
+        if (talkingFungal)
         {
-            if (!TalkingFungal.IsFollowing) TalkingFungal.Stop();
-            TalkingFungal = null;
+            talkingFungal = null;
             virtualCamera.Priority = 0;
         }
     }

@@ -78,6 +78,7 @@ public class GardenManager : MonoBehaviour
         UpdateInventory();
 
         controlPanel.OnEscortButtonClicked += OnEscortButtonClicked;
+        controlPanel.OnFungalInteractionEnd += ControlPanel_OnFungalInteractionEnd;
 
         jobStations = FindObjectsOfType<JobStation>().ToList();
         foreach(var station in jobStations)
@@ -103,6 +104,21 @@ public class GardenManager : MonoBehaviour
             UnescortFungal();
             station.SetFungal(fungal);
         }
+    }
+
+    private void OnFungalTalkStart(FungalController fungal)
+    {
+        TalkingFungal = fungal;
+        fungal.MoveToTarget(player.transform);
+        player.TalkToFungal(fungal);
+        controlPanel.SetFungal(fungal);
+    }
+
+    private void ControlPanel_OnFungalInteractionEnd()
+    {
+        if (TalkingFungal != EscortedFungal) TalkingFungal.Stop();
+        TalkingFungal = null;
+        player.EndTalk();
     }
 
     private void OnEggHatched(EggController egg)
@@ -151,14 +167,6 @@ public class GardenManager : MonoBehaviour
     private void SetCurrentState(GameState state)
     {
         eggSelection.gameObject.SetActive(state == GameState.EGG_SELECTION);
-    }
-
-    private void OnFungalTalkStart(FungalController fungal)
-    {
-        TalkingFungal = fungal;
-        fungal.MoveToTarget(player.transform);
-        player.TalkToFungal(fungal);
-        controlPanel.SetFungal(fungal);
     }
 
     private void OnEscortButtonClicked()
