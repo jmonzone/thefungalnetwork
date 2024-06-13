@@ -63,18 +63,18 @@ public class FishingSceneManager : MonoBehaviour
 
         UpdateFlumes();
 
-        fishingRod.OnReeledIn += fish =>
-        {
-            if (fish.IsTreasure)
-            {
-                flumeIndex++;
-                GameManager.Instance.JsonFile["flumes"] = flumeIndex;
-                GameManager.Instance.SaveData();
+        //fishingRod.OnReeledIn += fish =>
+        //{
+        //    if (fish.IsTreasure)
+        //    {
+        //        flumeIndex++;
+        //        GameManager.Instance.JsonFile["flumes"] = flumeIndex;
+        //        GameManager.Instance.SaveData();
 
-                treasureUI.gameObject.SetActive(true);
-                UpdateFlumes();
-            }
-        };
+        //        treasureUI.gameObject.SetActive(true);
+        //        UpdateFlumes();
+        //    }
+        //};
     }
 
     private void UpdateFlumes()
@@ -179,22 +179,22 @@ public class FishingSceneManager : MonoBehaviour
         var fishController = go.GetComponent<FishController>();
         fishController.IsCatchable = false;
 
-        var movement = go.GetComponent<MovementController>();
+        //var movement = go.GetComponent<MovementController>();
 
-        void OnDestinationReached()
-        {
-            fishController.IsCatchable = true;
-            movement.Speed = 1f;
-            movement.normalizeSpeed = true;
-            movement.SetBounds(fishBounds.bounds);
-            movement.OnDestinationReached -= OnDestinationReached;
-        }
+        //void OnDestinationReached()
+        //{
+        //    fishController.IsCatchable = true;
+        //    movement.Speed = 1f;
+        //    movement.normalizeSpeed = true;
+        //    movement.SetBounds(fishBounds.bounds);
+        //    movement.OnDestinationReached -= OnDestinationReached;
+        //}
 
-        var inWaterPosition = movement.transform.position + Vector3.right * Random.Range(2f, 7f);
-        inWaterPosition.y = 0;
-        movement.Speed = 3f;
-        movement.SetTargetPosition(inWaterPosition);
-        movement.OnDestinationReached += OnDestinationReached;
+        //var inWaterPosition = movement.transform.position + Vector3.right * Random.Range(2f, 7f);
+        //inWaterPosition.y = 0;
+        //movement.Speed = 3f;
+        //movement.SetTargetPosition(inWaterPosition);
+        //movement.OnDestinationReached += OnDestinationReached;
 
         return go;
     }

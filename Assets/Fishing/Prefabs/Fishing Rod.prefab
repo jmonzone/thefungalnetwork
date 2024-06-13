@@ -28,7 +28,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 3, y: 10, z: -25}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 5096812961888132429}
@@ -48,23 +48,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 121e83b48c9b242f19ad9d34ab3b0816, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bob: {fileID: 6894292901339830401}
-  catchRadiusIndicator: {fileID: 6286461677692985857}
-  fishingLineAnchor: {fileID: 1416089314715247054}
-  oceanLayer:
-    serializedVersion: 2
-    m_Bits: 16
-  catchLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  catchRadius: 3
-  scareFish: 0
-  launchSpeed: 0.01
-  launchAngle: 45
+  bob: {fileID: 8251712126158116311}
   dragDistance: 7.5
-  dragSpeed: 3
-  launchThreshold: 1
-  launchScalar: 0.1
+  maxDistance: 20
+  sensitivity: 0.01
+  gravity: 10
 --- !u!120 &110008528210164041
 LineRenderer:
   serializedVersion: 2
@@ -178,7 +166,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 529034305399281898}
-  - component: {fileID: 6894292901339830401}
+  - component: {fileID: 8251712126158116311}
   m_Layer: 0
   m_Name: Fishing Rod Bob
   m_TagString: Untagged
@@ -195,33 +183,40 @@ Transform:
   m_GameObject: {fileID: 905378114239011120}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -3, y: -2.5, z: 0}
+  m_LocalPosition: {x: -2, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1727348066093778948}
   m_Father: {fileID: 2867715166276073019}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6894292901339830401
-MonoBehaviour:
+--- !u!54 &8251712126158116311
+Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 905378114239011120}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cdb142e028de0494990eb6be58e30dab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  is2D: 0
-  distanceThreshold: 0.5
-  speed: 2
-  direction: {x: 0, y: 0, z: 0}
-  inputType: 0
-  faceForward: 0
-  normalizeSpeed: 0
-  persistDirection: 0
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &4198732418123504095
 GameObject:
   m_ObjectHideFlags: 0
@@ -441,7 +436,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
