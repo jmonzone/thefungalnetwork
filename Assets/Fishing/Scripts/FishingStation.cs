@@ -7,11 +7,6 @@ public class FishingStation : JobStation
 
     public override string ActionText => "Fish";
 
-    private void Update()
-    {
-        if (IsActive && Input.GetMouseButtonDown(0) && !Utility.IsPointerOverUI) fishingRod.Use();
-    }
-
     public override void SetFungal(FungalController fungal)
     {
 
@@ -20,11 +15,13 @@ public class FishingStation : JobStation
     protected override void OnJobStarted()
     {
         fishManager.enabled = true;
+        fishingRod.enabled = true;
     }
 
     protected override void OnJobEnded()
     {
         fishManager.enabled = false;
+        fishingRod.enabled = false;
     }
 
     protected override void OnBackButtonClicked()

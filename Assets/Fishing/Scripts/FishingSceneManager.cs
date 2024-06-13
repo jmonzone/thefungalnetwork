@@ -100,8 +100,6 @@ public class FishingSceneManager : MonoBehaviour
             timer += Time.deltaTime / cooldown;
         }
 
-        if (Input.GetMouseButtonDown(0) && !IsPointerOverUI) fishingRod.Use();
-
         if (Input.GetKeyUp(KeyCode.L))
         {
             fungalController.Model.Experience = FungalModel.ExperienceAtLevel(fungalController.Model.Level + 1) + 10f;
