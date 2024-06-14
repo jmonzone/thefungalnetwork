@@ -48,7 +48,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 121e83b48c9b242f19ad9d34ab3b0816, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bob: {fileID: 8251712126158116311}
+  bob: {fileID: 5396303650339022477}
   minDistance: 1
   maxDistance: 20
   sensitivity: 0.01
@@ -166,6 +166,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 529034305399281898}
+  - component: {fileID: 5396303650339022477}
   - component: {fileID: 8251712126158116311}
   m_Layer: 0
   m_Name: Fishing Rod Bob
@@ -190,6 +191,19 @@ Transform:
   - {fileID: 1727348066093778948}
   m_Father: {fileID: 2867715166276073019}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5396303650339022477
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 905378114239011120}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43b70dd7aebc746ccab03ae6d0e27271, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gravity: 10
 --- !u!54 &8251712126158116311
 Rigidbody:
   m_ObjectHideFlags: 0
