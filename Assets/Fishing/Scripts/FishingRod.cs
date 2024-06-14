@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public enum FishingRodState
@@ -14,8 +15,10 @@ public class FishingRod : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private FishingBobController bob;
+    [SerializeField] private Transform catchIndicator;
 
     [Header("Configuration")]
+    [SerializeField] private float catchRadius = 5f;
     [SerializeField] private float minDistance = 0.1f;
     [SerializeField] private float maxDistance = 10f;
     [SerializeField] private float sensitivity = 0.1f;
@@ -47,11 +50,16 @@ public class FishingRod : MonoBehaviour
     {
         currentState = state;
         bob.SetState(state);
+        catchIndicator.gameObject.SetActive(state == FishingRodState.IN_WATER);
 
         switch (currentState)
         {
             case FishingRodState.CASTING:
                 startInputPosition = Input.mousePosition;
+                break;
+            case FishingRodState.IN_WATER:
+                catchIndicator.transform.position = bob.transform.position;
+                catchIndicator.transform.localScale = Vector3.one * catchRadius;
                 break;
         }
     }
@@ -65,9 +73,12 @@ public class FishingRod : MonoBehaviour
                 break;
             case FishingRodState.IN_WATER:
                 if (IsUsing) SetState(FishingRodState.REELING);
+                else
+                {
+
+                }
                 break;
             case FishingRodState.CASTING:
-
                 var ray = mainCamera.ScreenPointToRay(Input.mousePosition);
                 var targetPosition = ray.origin + ray.direction * dragDistance;
                 bob.Rigidbody.MovePosition(targetPosition);

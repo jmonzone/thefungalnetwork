@@ -49,10 +49,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bob: {fileID: 5396303650339022477}
+  catchIndicator: {fileID: 1106733936014677686}
+  catchRadius: 10
   minDistance: 1
   maxDistance: 20
   sensitivity: 0.01
-  gravity: 10
 --- !u!120 &110008528210164041
 LineRenderer:
   serializedVersion: 2
@@ -184,7 +185,7 @@ Transform:
   m_GameObject: {fileID: 905378114239011120}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -204,6 +205,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gravity: 10
+  reelSpeed: 15
 --- !u!54 &8251712126158116311
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -256,7 +258,7 @@ Transform:
   m_GameObject: {fileID: 4198732418123504095}
   serializedVersion: 2
   m_LocalRotation: {x: 0.4980974, y: -0.043577895, z: 0.07547913, w: 0.86272997}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 2, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -279,7 +281,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1106733936014677686
 Transform:
   m_ObjectHideFlags: 0
@@ -288,13 +290,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6286461677692985857}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 3, z: 3.5}
-  m_LocalScale: {x: 10, y: 10, z: 10}
+  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: -20, z: 30}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 2867715166276073019}
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!212 &1549183087203650123
 SpriteRenderer:
   m_ObjectHideFlags: 0
