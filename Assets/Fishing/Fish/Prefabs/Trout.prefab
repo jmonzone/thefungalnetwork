@@ -10,7 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5569854717866690982}
   - component: {fileID: 1985368070077868474}
-  - component: {fileID: 4701732161822769148}
+  - component: {fileID: 7343356333989190285}
+  - component: {fileID: 2199149365160050836}
   m_Layer: 3
   m_Name: Trout
   m_TagString: Untagged
@@ -49,7 +50,7 @@ MonoBehaviour:
   data: {fileID: 0}
   isTreasure: 0
   isCatchable: 0
---- !u!114 &4701732161822769148
+--- !u!114 &7343356333989190285
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -58,17 +59,30 @@ MonoBehaviour:
   m_GameObject: {fileID: 1998284645538067842}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cdb142e028de0494990eb6be58e30dab, type: 3}
+  m_Script: {fileID: 11500000, guid: d2b252d604a094065a18d719180c3a27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  is2D: 0
-  distanceThreshold: 0.5
   speed: 2
-  direction: {x: 0, y: 0, z: 0}
-  inputType: 0
-  faceForward: 1
-  normalizeSpeed: 0
-  persistDirection: 0
+  type: 0
+--- !u!114 &2199149365160050836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1998284645538067842}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 645ecd717131043d4867cc4879548c5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveImmediate: 1
+  minIdleDuration: 1
+  maxIdleDuration: 2
+  animator: {fileID: 0}
+  positionAnchor:
+    anchor: {fileID: 0}
+    bounds: {fileID: 0}
 --- !u!1001 &450373414579174310
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -182,6 +196,18 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4036406035427534, guid: 925bc3fd925fd0c4c80d7e83b67ba239, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 4036406035427534, guid: 925bc3fd925fd0c4c80d7e83b67ba239, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 4036406035427534, guid: 925bc3fd925fd0c4c80d7e83b67ba239, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 4036406035427534, guid: 925bc3fd925fd0c4c80d7e83b67ba239, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -220,6 +246,10 @@ PrefabInstance:
     - target: {fileID: 4036406035427534, guid: 925bc3fd925fd0c4c80d7e83b67ba239, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4036406035427534, guid: 925bc3fd925fd0c4c80d7e83b67ba239, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 137582937049031282, guid: 925bc3fd925fd0c4c80d7e83b67ba239,
         type: 3}

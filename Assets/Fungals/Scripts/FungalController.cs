@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.Events;
 
 public abstract class EntityController : MonoBehaviour
 {
@@ -8,133 +8,139 @@ public abstract class EntityController : MonoBehaviour
     public bool HasInteraction => hasInteraction;
     public abstract Sprite ActionImage { get; }
     public abstract Color ActionColor { get; }
+    public abstract string ActionText { get; }
+
+    public abstract void UseAction();
 }
 
+public enum FungalState
+{
+    RANDOM,
+    ESCORT,
+    TARGET,
+}
+
+[RequireComponent(typeof(RandomMovement))]
 public class FungalController : EntityController
 {
-    [Header("Configuration")]
-    [SerializeField] private float speed = 2f;
-    [SerializeField] private float rotationSpeed = 2f;
-    [SerializeField] private float idleRadius = 4f;
-    [SerializeField] private float autoFishCooldown = 4f;
-    [SerializeField] private float flightHeight = 5f;
-    [SerializeField] private Vector3 offset;
-    [SerializeField] private bool randomizePositions = false;
-    [SerializeField] private float distanceThreshold = 1f;
-
     [Header("References")]
-    [SerializeField] private GameObject placeholder;
     [SerializeField] private Transform indicatorAnchor;
     [SerializeField] private RectTransform hungerIndicator;
+    [SerializeField] private Camera spotlightCamera;
 
-    [Header("Debug")]
-    [SerializeField] private Vector3 origin;
-    [SerializeField] private float timer;
-    [SerializeField] private float hungerTimer;
-    [SerializeField] private Transform target;
-    [SerializeField] private FishController targetFish;
-    [SerializeField] private List<FishController> fish = new List<FishController>();
+    public FungalModel Model { get; private set; }
+    public GameObject Render { get; private set; }
+    public bool IsFollowing { get; set; }
 
-    public FungalInstance FungalInstance { get; private set; }
-    public bool IsFollowing { get; set; } = false;
+    public Camera SpotlightCamera => spotlightCamera;
 
-    public override Sprite ActionImage => FungalInstance.Data.ActionImage;
-    public override Color ActionColor => FungalInstance.Data.ActionColor;
+    public override Sprite ActionImage => Model.Data.ActionImage;
+    public override Color ActionColor => Model.Data.ActionColor;
+    public override string ActionText => "Talk";
 
     private Camera mainCamera;
+    private MoveController movement;
+    private RandomMovement randomMovement;
+
+    private float hungerTimer;
+    private FungalState state;
+
+    public event UnityAction OnTalkStart;
 
     private void Awake()
     {
-        Destroy(placeholder);
-        placeholder = null;
-
-        origin = transform.position;
         mainCamera = Camera.main;
+        movement = GetComponent<MoveController>();
+        randomMovement = GetComponent<RandomMovement>();
     }
 
-    public void SetFungal(FungalInstance fungalInstance)
+    public void Initialize(FungalModel model, Collider bounds)
     {
-        Debug.Log($"initializing fungal controller {fungalInstance}");
-        FungalInstance = fungalInstance;
+        Debug.Log($"initializing fungal controller {model}");
 
-        if (fungalInstance)
+        Model = model;
+
+        if (model)
         {
-            var petObject = Instantiate(fungalInstance.Data.Prefab, transform);
-            petObject.transform.localScale = Vector3.one;
+            name = $"Fungal Controller - {model.name}";
+            Render = Instantiate(model.Data.Prefab, transform);
+            Render.transform.localScale = Vector3.one;
 
-            var animator = petObject.GetComponentInChildren<Animator>();
+            var animator = Render.GetComponentInChildren<Animator>();
             animator.speed = 0.25f;
+            randomMovement.SetAnimator(animator);
+            randomMovement.SetBounds(bounds);
 
-            speed = 0.5f + fungalInstance.Speed * 0.1f;
+            movement.SetSpeed(1f + model.Speed * 0.1f);
+
+            SetState(FungalState.RANDOM);
         }
+    }
+
+    public void MoveToPosition(Vector3 position, Transform lookTarget = null)
+    {
+        movement.SetPosition(position, () =>
+        {
+            if (lookTarget) movement.SetLookTarget(lookTarget);
+        });
+    }
+
+    public void MoveToTarget(Transform target)
+    {
+        movement.SetTarget(target);
+        SetState(FungalState.TARGET);
+    }
+
+    public void Stop()
+    {
+        IsFollowing = false;
+        movement.Stop();
+        SetState(FungalState.RANDOM);
     }
 
     public void Escort(Transform target)
     {
         IsFollowing = true;
-        SetTarget(target);
+        movement.SetTarget(target);
+        SetState(FungalState.ESCORT);
     }
 
     public void Unescort()
     {
         IsFollowing = false;
-    }
-
-    public void SetTarget(Transform target)
-    {
-        this.target = target;
-        
-        randomizePositions = !target;
-    }
-
-    public void SetFish(List<FishController> fish)
-    {
-        this.fish = fish;
-    }
-
-    private Vector3 targetPosition = Vector3.right * 3f;
-    private Vector3 TargetPosition
-    {
-        get
-        {
-            if (target)
-            {
-                return target.position;
-            }
-            else if (randomizePositions)
-            {
-                if (Vector3.Distance(transform.position, targetPosition) < distanceThreshold)
-                {
-                    var random = (Vector3) Random.insideUnitCircle.normalized * 5f;
-                    random.z = random.y;
-                    random.y = 0;
-                    targetPosition = random;
-                }
-
-                return targetPosition;
-            }
-            else
-            {
-                var x = Mathf.Cos(timer);
-                var z = Mathf.Sin(timer);
-                return origin + offset - new Vector3(x, 0, z) * idleRadius;
-            }
-        }
+        movement.Stop();
+        SetState(FungalState.RANDOM);
     }
 
     private void Update()
     {
-        if (FungalInstance)
+        UpdateHunger();
+    }
+
+    private void SetState(FungalState state)
+    {
+        this.state = state;
+        randomMovement.enabled = state == FungalState.RANDOM;
+    }
+
+    public override void UseAction()
+    {
+        OnTalkStart?.Invoke();
+    }
+
+    private void UpdateHunger()
+    {
+        if (Model)
         {
             hungerTimer += Time.deltaTime;
 
             if (hungerTimer > 5)
             {
-                FungalInstance.Hunger -= 5 / (1 + FungalInstance.Stamina * 0.1f);
+                Model.Hunger -= 5 / (1 + Model.Stamina * 0.1f);
                 hungerTimer = 0;
             }
 
-            if (FungalInstance.Hunger < 30)
+            if (Model.Hunger < 30)
             {
                 hungerIndicator.gameObject.SetActive(true);
                 var position = mainCamera.WorldToScreenPoint(indicatorAnchor.transform.position);
@@ -145,43 +151,5 @@ public class FungalController : EntityController
                 hungerIndicator.gameObject.SetActive(false);
             }
         }
-
-        var direction = TargetPosition - transform.position;
-        transform.forward = Vector3.Lerp(transform.forward, direction, rotationSpeed * Time.deltaTime);
-
-        if (direction.magnitude > distanceThreshold)
-        {
-            var fixedSpeed = speed;
-            if (target) fixedSpeed *= 2;
-            transform.position += fixedSpeed * Time.deltaTime * direction.normalized;
-        }
-        else if (targetFish)
-        {
-            targetFish.Catch();
-            target = null;
-            targetFish = null;
-            timer = 0;
-        }
-
-        if (timer > autoFishCooldown)
-        {
-            targetFish = null;
-
-            var closestDistance = Mathf.Infinity;
-
-            foreach (var _fish in fish)
-            {
-                if (_fish.IsAttacted || _fish.IsCaught) continue;
-                var distance = Vector3.Distance(_fish.transform.position, transform.position);
-                if (distance < closestDistance)
-                {
-                    closestDistance = distance;
-                    target = _fish.transform;
-                    targetFish = _fish;
-                }
-            }
-        }
-
-        timer += Time.deltaTime;
     }
 }

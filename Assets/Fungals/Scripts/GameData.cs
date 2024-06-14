@@ -34,10 +34,10 @@ public class ItemInstance : ScriptableObject
 [CreateAssetMenu]
 public class GameData : ScriptableObject
 {
-    [SerializeField] private List<Pet> fungals;
+    [SerializeField] private List<FungalData> fungals;
     [SerializeField] private List<Item> items;
 
-    public List<Pet> Fungals => fungals;
+    public List<FungalData> Fungals => fungals;
     public List<Item> Items => items;
 
 }

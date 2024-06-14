@@ -1,14 +1,14 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
-[RequireComponent(typeof(MovementController))]
+[RequireComponent(typeof(RandomMovement))]
 public class FishController : MonoBehaviour
 {
     [SerializeField] private FishData data;
     [SerializeField] private bool isTreasure = false;
     [SerializeField] private bool isCatchable;
 
-    private MovementController movementController;
     public FishData Data => data;
     public bool IsTreasure => isTreasure;
     public bool IsCaught { get; private set; }
@@ -17,22 +17,37 @@ public class FishController : MonoBehaviour
 
     public event UnityAction OnCaught;
 
-    private void Awake()
+    private void OnEnable()
     {
-        movementController = GetComponent<MovementController>();
+        transform.forward = Utility.RandomXZVector;
+        transform.localScale = Vector3.zero;
+
+        IEnumerator LerpScale()
+        {
+            while (transform.localScale.x < 1)
+            {
+                var scale = transform.localScale.x + Time.deltaTime;
+                transform.localScale = Vector3.one * scale;
+                yield return null;
+            }
+
+            transform.localScale = Vector3.one;
+        }
+
+        StartCoroutine(LerpScale());
     }
 
-    public void SetData(FishData data)
+    public void Initialize(FishData data, Collider bounds)
     {
         this.data = data;
+
+        var randomMovement = GetComponent<RandomMovement>();
+        randomMovement.SetBounds(bounds);
     }
 
     public void Attract(Transform bob)
     {
         IsAttacted = true;
-        movementController.Speed = 2f;
-        movementController.SetTarget(bob);
-        movementController.OnDestinationReached += HandleCapture;
     }
 
     public void Catch()
@@ -45,10 +60,7 @@ public class FishController : MonoBehaviour
     private void HandleCapture()
     {
         IsCaught = true;
-        movementController.Speed = 6f;
-        movementController.normalizeSpeed = false;
         OnCaught?.Invoke();
-        movementController.OnDestinationReached -= HandleCapture;
     }
 
     public void Scare(Vector3 bobPosition)
@@ -61,8 +73,5 @@ public class FishController : MonoBehaviour
         var direction = transform.position - bobPosition;
         direction.y = 0;
         transform.forward = direction;
-        movementController.SetDirection(direction);
-
-        movementController.Speed = 2f;
     }
 }

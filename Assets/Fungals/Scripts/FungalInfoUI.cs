@@ -6,11 +6,9 @@ using UnityEngine.UI;
 
 public class FungalInfoUI : MonoBehaviour
 {
-    [SerializeField] private Transform fungalModelAnchor;
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI typeText;
     [SerializeField] private TextMeshProUGUI levelText;
-    [SerializeField] private Button playButton;
 
     [Header("Fungal Stats")]
     [SerializeField] private TextMeshProUGUI balanceText;
@@ -18,13 +16,11 @@ public class FungalInfoUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI staminaText;
     [SerializeField] private TextMeshProUGUI powerText;
 
-    private FungalInstance fungal;
-    private GameObject fungalModelView;
+    private FungalController fungal;
     private Camera mainCamera;
 
     private void Awake()
     {
-        playButton.onClick.AddListener(GoToFishingGameplay);
         mainCamera = Camera.main;
     }
 
@@ -39,57 +35,48 @@ public class FungalInfoUI : MonoBehaviour
                 if (pet)
                 {
                     pet.Play("Attack");
-                    StartCoroutine(RotatePet(pet));
                 }
             }
         }
     }
 
-    public void SetFungal(FungalInstance fungal)
+    public void SetFungal(FungalController fungal)
     {
-        balanceText.text = fungal.Balance.ToString();
-        speedText.text = fungal.Speed.ToString();
-        staminaText.text = fungal.Stamina.ToString();
-        powerText.text = fungal.Power.ToString();
-
-        if (this.fungal == fungal) return;
-
-        if (fungalModelView)
+        if (this.fungal && this.fungal != fungal)
         {
-            Destroy(fungalModelView);
-            fungalModelView = null;
+            this.fungal.SpotlightCamera.gameObject.SetActive(false);
+
+            var defaultLayer = LayerMask.NameToLayer("Default");
+            this.fungal.Render.layer = defaultLayer;
+
+            foreach (Transform child in this.fungal.Render.transform)
+            {
+                child.gameObject.layer = defaultLayer;
+            }
         }
 
         this.fungal = fungal;
-        nameText.text = fungal.Data.Name;
-        typeText.text = fungal.Data.Type.ToString();
-        levelText.text = $"Level {fungal.Level}";
 
-        if (!fungalModelView)
+        if (this.fungal)
         {
-            fungalModelView = Instantiate(fungal.Data.Prefab, fungalModelAnchor);
-            var animator = fungalModelView.GetComponentInChildren<Animator>();
-            animator.speed = 0.25f;
+            fungal.SpotlightCamera.gameObject.SetActive(true);
+
+            var fungalLayer = LayerMask.NameToLayer("Fungal");
+            fungal.Render.layer = fungalLayer;
+
+            foreach (Transform child in fungal.Render.transform)
+            {
+                child.gameObject.layer = fungalLayer;
+            }
+
+            nameText.text = fungal.Model.Data.Id;
+            typeText.text = fungal.Model.Data.Type.ToString();
+            levelText.text = $"Level {fungal.Model.Level}";
+
+            balanceText.text = fungal.Model.Balance.ToString();
+            speedText.text = fungal.Model.Speed.ToString();
+            staminaText.text = fungal.Model.Stamina.ToString();
+            powerText.text = fungal.Model.Power.ToString();
         }
-    }
-
-    private IEnumerator RotatePet(Animator pet)
-    {
-        while (Input.GetMouseButton(0))
-        {
-            var startPosition = Input.mousePosition;
-            yield return new WaitForEndOfFrame();
-            var endPosition = Input.mousePosition;
-
-            var inputDirection = endPosition - startPosition;
-            pet.transform.Rotate(Vector3.up, -inputDirection.x * Time.deltaTime * 10f);
-        }
-
-    }
-
-    private void GoToFishingGameplay()
-    {
-        SceneParameters.FungalIndex = fungal.Index;
-        SceneManager.LoadScene(1);
     }
 }
