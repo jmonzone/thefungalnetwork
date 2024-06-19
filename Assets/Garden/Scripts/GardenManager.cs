@@ -2,16 +2,24 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+public enum InitialGameState
+{
+    GARDEN,
+    FISHING,
+    COOKING
+}
+
 public class GardenManager : MonoBehaviour
 {
     [Header("Developer Options")]
-    [SerializeField] private bool disableControlPanel;
+    [SerializeField] private InitialGameState initialGameState;
 
     [Header("References")]
     [SerializeField] private FungalManager fungalManager;
     [SerializeField] private ControlPanel controlPanel;
     [SerializeField] private InventoryList inventoryUI;
     [SerializeField] private InventoryList feedUI;
+    [SerializeField] private FishingStation fishingStation;
 
     private List<JobStation> jobStations = new List<JobStation>();
     private List<ItemInstance> Inventory => GameManager.Instance.Inventory;
@@ -28,9 +36,15 @@ public class GardenManager : MonoBehaviour
         InitializeControlPanel();
         InitializeJobStations();
 
-        if (!disableControlPanel)
+        if (Application.isEditor)
         {
-            controlPanel.gameObject.SetActive(true);
+            controlPanel.gameObject.SetActive(initialGameState == InitialGameState.GARDEN);
+            switch (initialGameState)
+            {
+                case InitialGameState.FISHING:
+                    fishingStation.UseAction();
+                    break;
+            }
         }
     }
 

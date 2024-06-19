@@ -3156,7 +3156,7 @@ PrefabInstance:
     - target: {fileID: 1168827416820420266, guid: 9ee82dfe17b014e45aabf1993a2292db,
         type: 3}
       propertyPath: catchRadius
-      value: 10
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2867715166276073019, guid: 9ee82dfe17b014e45aabf1993a2292db,
         type: 3}
@@ -3310,7 +3310,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hasInteraction: 1
-  enableAtStart: 1
   playerController: {fileID: 373087730}
   camera: {fileID: 832005055}
   controlPanel: {fileID: 307486408}
@@ -5992,11 +5991,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 264d61891807545a2b9c11803a9cede7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  disableControlPanel: 1
+  initialGameState: 1
   fungalManager: {fileID: 1982422563}
   controlPanel: {fileID: 307486408}
   inventoryUI: {fileID: 1756319189}
   feedUI: {fileID: 1896359642}
+  fishingStation: {fileID: 441051992}
 --- !u!1 &922913586
 GameObject:
   m_ObjectHideFlags: 0
@@ -9806,7 +9806,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hasInteraction: 1
-  enableAtStart: 0
   playerController: {fileID: 373087730}
   camera: {fileID: 540506998}
   controlPanel: {fileID: 307486408}

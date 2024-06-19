@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public enum FishingRodState
@@ -59,7 +60,7 @@ public class FishingRod : MonoBehaviour
                 break;
             case FishingRodState.IN_WATER:
                 catchIndicator.transform.position = bob.transform.position;
-                catchIndicator.transform.localScale = Vector3.one * catchRadius;
+                catchIndicator.transform.localScale = 2 * catchRadius / transform.localScale.x * Vector3.one;
                 break;
         }
     }
@@ -75,7 +76,7 @@ public class FishingRod : MonoBehaviour
                 if (IsUsing) SetState(FishingRodState.REELING);
                 else
                 {
-
+                    Debug.Log($"Catchable Fish: {CatchableFish.Count}");
                 }
                 break;
             case FishingRodState.CASTING:
@@ -107,4 +108,9 @@ public class FishingRod : MonoBehaviour
                 break;
         }
     }
+
+    private List<FishController> CatchableFish => Physics.OverlapSphere(bob.transform.position, catchRadius)
+        .Select(collider => collider.GetComponentInParent<FishController>())
+        .Where(fish => fish)
+        .ToList();
 }
