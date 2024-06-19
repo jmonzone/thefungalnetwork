@@ -2651,7 +2651,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0.38268343, y: 0, z: 0, w: 0.92387956}
-  m_LocalPosition: {x: 0, y: 15, z: 13}
+  m_LocalPosition: {x: 0, y: 10, z: -11}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3153,11 +3153,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fishing Rod
       objectReference: {fileID: 0}
-    - target: {fileID: 1168827416820420266, guid: 9ee82dfe17b014e45aabf1993a2292db,
-        type: 3}
-      propertyPath: catchRadius
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 2867715166276073019, guid: 9ee82dfe17b014e45aabf1993a2292db,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3269,6 +3264,7 @@ GameObject:
   m_Component:
   - component: {fileID: 441051991}
   - component: {fileID: 441051992}
+  - component: {fileID: 441051993}
   m_Layer: 0
   m_Name: Fishing Station
   m_TagString: Untagged
@@ -3309,18 +3305,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 166aa93a0d6404aeb8d13f8b398cc605, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hasInteraction: 1
   playerController: {fileID: 373087730}
   camera: {fileID: 832005055}
   controlPanel: {fileID: 307486408}
-  actionImage: {fileID: 21300000, guid: abb42f6ee7d2243ddad9f10ff94eb040, type: 3}
-  actionColor: {r: 0.5372549, g: 0.6901961, b: 0.7254902, a: 1}
   playerPositionAnchor: {fileID: 784209685}
   playerLookTarget: {fileID: 1043662376}
   uIAnimation: {fileID: 252122850}
   backButton: {fileID: 252122849}
   fishManager: {fileID: 1043662375}
   fishingRod: {fileID: 988718706}
+--- !u!114 &441051993
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 441051990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0ebbc806cd2749d7b7aacc0d551eede, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprite: {fileID: 21300000, guid: abb42f6ee7d2243ddad9f10ff94eb040, type: 3}
+  color: {r: 0.5372549, g: 0.6901961, b: 0.7254902, a: 1}
+  text: Fish
 --- !u!1 &446155710
 GameObject:
   m_ObjectHideFlags: 0
@@ -4038,6 +4046,11 @@ PrefabInstance:
       propertyPath: hasInteraction
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5952156050388943029, guid: d86fdc00fde0f4b9e958c056b6c0a95a,
+        type: 3}
+      propertyPath: proximityAction
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 7201975520520081364, guid: d86fdc00fde0f4b9e958c056b6c0a95a,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4093,7 +4106,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Egg
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6276456149722772709, guid: d86fdc00fde0f4b9e958c056b6c0a95a, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -4484,6 +4498,11 @@ PrefabInstance:
       propertyPath: hasInteraction
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5952156050388943029, guid: d86fdc00fde0f4b9e958c056b6c0a95a,
+        type: 3}
+      propertyPath: proximityAction
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 7201975520520081364, guid: d86fdc00fde0f4b9e958c056b6c0a95a,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4539,7 +4558,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Egg (1)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6276456149722772709, guid: d86fdc00fde0f4b9e958c056b6c0a95a, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -5691,7 +5711,7 @@ MonoBehaviour:
   - m_Script
   m_LockStageInInspector: 
   m_StreamingVersion: 20170927
-  m_Priority: 2
+  m_Priority: 0
   m_StandbyUpdate: 2
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
@@ -5991,7 +6011,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 264d61891807545a2b9c11803a9cede7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialGameState: 1
+  initialGameState: 0
   fungalManager: {fileID: 1982422563}
   controlPanel: {fileID: 307486408}
   inventoryUI: {fileID: 1756319189}
@@ -6864,7 +6884,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1080624913}
   m_Layer: 5
-  m_Name: Virtual Controlle Show Position
+  m_Name: Virtual Controller Show Position
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7206,7 +7226,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1200593729}
   m_Layer: 5
-  m_Name: Virtual Controlle Hide Position
+  m_Name: Virtual Controller Hide Position
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9762,6 +9782,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1559030692}
   - component: {fileID: 1559030693}
+  - component: {fileID: 1559030694}
   m_Layer: 0
   m_Name: Cooking Station
   m_TagString: Untagged
@@ -9805,12 +9826,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bbb1414a78fb490990d382dfa8e5a19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hasInteraction: 1
   playerController: {fileID: 373087730}
   camera: {fileID: 540506998}
   controlPanel: {fileID: 307486408}
-  actionImage: {fileID: 21300000, guid: c234d8fb9e8644827aa58e604c8860e0, type: 3}
-  actionColor: {r: 0.70980394, g: 0.45882353, b: 0.6627451, a: 1}
   playerPositionAnchor: {fileID: 55185953}
   playerLookTarget: {fileID: 1038761319}
   uIAnimation: {fileID: 1193566599}
@@ -9820,6 +9838,21 @@ MonoBehaviour:
   background: {fileID: 460870816}
   fungalPositionAnchor: {fileID: 1834893898}
   fungalLookTarget: {fileID: 1038761319}
+--- !u!114 &1559030694
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1559030691}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0ebbc806cd2749d7b7aacc0d551eede, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprite: {fileID: 21300000, guid: c234d8fb9e8644827aa58e604c8860e0, type: 3}
+  color: {r: 0.70980394, g: 0.45882356, b: 0.6627451, a: 1}
+  text: Cook
 --- !u!1001 &1566327956
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12273,6 +12306,11 @@ PrefabInstance:
       propertyPath: hasInteraction
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5952156050388943029, guid: d86fdc00fde0f4b9e958c056b6c0a95a,
+        type: 3}
+      propertyPath: proximityAction
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 7201975520520081364, guid: d86fdc00fde0f4b9e958c056b6c0a95a,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -12328,7 +12366,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Egg (2)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6276456149722772709, guid: d86fdc00fde0f4b9e958c056b6c0a95a, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

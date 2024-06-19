@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
-using UnityEngine.Events;
 
 public class CookingStation : JobStation
 {
@@ -15,8 +14,6 @@ public class CookingStation : JobStation
     [Header("Position References")]
     [SerializeField] private Transform fungalPositionAnchor;
     [SerializeField] private Transform fungalLookTarget;
-
-    public override string ActionText => "Cook";
 
     public override void SetFungal(FungalController fungal)
     {

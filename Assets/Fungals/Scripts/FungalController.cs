@@ -1,18 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 
-public abstract class EntityController : MonoBehaviour
-{
-    [SerializeField] private bool hasInteraction = false;
-
-    public bool HasInteraction => hasInteraction;
-    public abstract Sprite ActionImage { get; }
-    public abstract Color ActionColor { get; }
-    public abstract string ActionText { get; }
-
-    public abstract void UseAction();
-}
-
 public enum FungalState
 {
     RANDOM,
@@ -21,7 +9,8 @@ public enum FungalState
 }
 
 [RequireComponent(typeof(RandomMovement))]
-public class FungalController : EntityController
+[RequireComponent(typeof(ProximityAction))]
+public class FungalController : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Transform indicatorAnchor;
@@ -33,10 +22,6 @@ public class FungalController : EntityController
     public bool IsFollowing { get; set; }
 
     public Camera SpotlightCamera => spotlightCamera;
-
-    public override Sprite ActionImage => Model.Data.ActionImage;
-    public override Color ActionColor => Model.Data.ActionColor;
-    public override string ActionText => "Talk";
 
     private Camera mainCamera;
     private MoveController movement;
@@ -65,6 +50,11 @@ public class FungalController : EntityController
             name = $"Fungal Controller - {model.name}";
             Render = Instantiate(model.Data.Prefab, transform);
             Render.transform.localScale = Vector3.one;
+
+            var proximityAction = GetComponent<ProximityAction>();
+            proximityAction.Sprite = Model.Data.ActionImage;
+            proximityAction.Color = Model.Data.ActionColor;
+            proximityAction.OnUse += () => OnTalkStart?.Invoke();
 
             var animator = Render.GetComponentInChildren<Animator>();
             animator.speed = 0.25f;
@@ -121,11 +111,6 @@ public class FungalController : EntityController
     {
         this.state = state;
         randomMovement.enabled = state == FungalState.RANDOM;
-    }
-
-    public override void UseAction()
-    {
-        OnTalkStart?.Invoke();
     }
 
     private void UpdateHunger()

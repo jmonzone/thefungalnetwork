@@ -393,6 +393,7 @@ GameObject:
   - component: {fileID: 173026516737802164}
   - component: {fileID: 4462087301603915868}
   - component: {fileID: 8658621383190838864}
+  - component: {fileID: 5190689289194876585}
   m_Layer: 0
   m_Name: Fungal Controller
   m_TagString: Untagged
@@ -431,7 +432,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b531d6ef7b29f454190e11c85dcbeabc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hasInteraction: 1
   indicatorAnchor: {fileID: 4122731614883033435}
   hungerIndicator: {fileID: 2269699273759727975}
   spotlightCamera: {fileID: 4365257586158887710}
@@ -468,6 +468,21 @@ MonoBehaviour:
   positionAnchor:
     anchor: {fileID: 0}
     bounds: {fileID: 0}
+--- !u!114 &5190689289194876585
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4710098450848900613}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0ebbc806cd2749d7b7aacc0d551eede, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprite: {fileID: 0}
+  color: {r: 0, g: 0, b: 0, a: 0}
+  text: Talk
 --- !u!1 &5985720208242059808
 GameObject:
   m_ObjectHideFlags: 0

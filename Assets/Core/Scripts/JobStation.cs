@@ -4,21 +4,17 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public abstract class JobStation : EntityController
+[RequireComponent(typeof(ProximityAction))]
+public abstract class JobStation : MonoBehaviour
 {
     [Header("Job References")]
     [SerializeField] private PlayerController playerController;
     [SerializeField] private CinemachineVirtualCamera camera;
     [SerializeField] private ControlPanel controlPanel;
-    [SerializeField] private Sprite actionImage;
-    [SerializeField] private Color actionColor;
     [SerializeField] private Transform playerPositionAnchor;
     [SerializeField] private Transform playerLookTarget;
     [SerializeField] private SlideAnimation uIAnimation;
     [SerializeField] private Button backButton;
-
-    public override Sprite ActionImage => actionImage;
-    public override Color ActionColor => actionColor;
 
     public bool IsActive { get; private set; }
 
@@ -33,9 +29,12 @@ public abstract class JobStation : EntityController
         });
 
         uIAnimation.gameObject.SetActive(true);
+
+        var proximityAction = GetComponent<ProximityAction>();
+        proximityAction.OnUse += UseAction;
     }
 
-    public sealed override void UseAction()
+    public void UseAction()
     {
         IsActive = true;
         camera.Priority = 2;

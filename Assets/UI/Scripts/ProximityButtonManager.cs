@@ -25,11 +25,11 @@ public class ProximityButtonManager : MonoBehaviour
 
     }
 
-    private List<EntityController> GetClosestEntities()
+    private List<ProximityAction> GetClosestEntities()
     {
         var closestEntities = Physics.OverlapSphere(player.position, MAXIMUM_PROXIMITY_DISTANCE)
-            .Select(collider => collider.GetComponentInParent<EntityController>())
-            .Where(entity => entity != null && entity.HasInteraction)
+            .Select(collider => collider.GetComponentInParent<ProximityAction>())
+            .Where(action => action)
             .OrderBy(entity => Vector3.Distance(player.position, entity.transform.position))
             .Distinct()
             .Take(actionButtonList.Count)
@@ -38,37 +38,37 @@ public class ProximityButtonManager : MonoBehaviour
         return closestEntities;
     }
 
-    private void AssignEntitiesToButtons(List<EntityController> closestEntities)
+    private void AssignEntitiesToButtons(List<ProximityAction> closestEntities)
     {
-        var usedEntities = new HashSet<EntityController>();
+        var usedEntities = new HashSet<ProximityAction>();
         var usedButtons = new List<ActionButton>();
 
-        foreach (var button in actionButtonList.Where(button => closestEntities.Contains(button.Entity)))
+        foreach (var button in actionButtonList.Where(button => closestEntities.Contains(button.ProximityAction)))
         {
-            usedEntities.Add(button.Entity);
+            usedEntities.Add(button.ProximityAction);
             usedButtons.Add(button);
         }
 
-        foreach (var entity in closestEntities.Except(usedEntities))
+        foreach (var action in closestEntities.Except(usedEntities))
         {
             var button = actionButtonList.FirstOrDefault(b => !usedButtons.Contains(b));
             if (button)
             {
-                button.SetEntity(entity);
-                usedEntities.Add(entity);
+                button.SetProximityAction(action);
+                usedEntities.Add(action);
                 usedButtons.Add(button);
             }
         }
 
         foreach (var button in actionButtonList.Where(button => !usedButtons.Contains(button)))
         {
-            button.SetEntity(null);
+            button.SetProximityAction(null);
         }
     }
 
     private void AssignOrderToButtons()
     {
-        var buttonsWithEntities = actionButtonList.Where(button => button.Entity).ToList();
+        var buttonsWithEntities = actionButtonList.Where(button => button.ProximityAction).ToList();
         buttonsWithEntities.Sort((button1, button2) => button1.Order.CompareTo(button2.Order));
 
         for (int i = 0; i < buttonsWithEntities.Count; i++)

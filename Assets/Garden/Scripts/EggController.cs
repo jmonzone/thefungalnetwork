@@ -2,17 +2,15 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class EggController : EntityController
+public class EggController : MonoBehaviour
 {
+    [SerializeField] private ProximityAction proximityAction;
+
     public FungalData Fungal { get; private set; }
 
     private Rigidbody _rigidbody;
 
     public event UnityAction OnHatch;
-
-    public override Sprite ActionImage => Fungal.ActionImage;
-    public override Color ActionColor => Fungal.ActionColor;
-    public override string ActionText => "Hatch";
 
     private void Awake()
     {
@@ -24,11 +22,13 @@ public class EggController : EntityController
         Fungal = fungal;
         var renderer = GetComponentInChildren<Renderer>();
         renderer.material.color = fungal.EggColor;
-    }
 
-    public override void UseAction()
-    {
-        Hatch();
+        if (proximityAction)
+        {
+            proximityAction.Sprite = Fungal.ActionImage;
+            proximityAction.Color = Fungal.ActionColor;
+            proximityAction.OnUse += Hatch;
+        }
     }
 
     public void Hatch()

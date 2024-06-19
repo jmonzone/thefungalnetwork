@@ -12,17 +12,16 @@ public class ActionButton : MonoBehaviour
 
     public Vector3 TargetPosition { get; set; }
     public int Order { get; set; } = -1;
-    public EntityController Entity { get; set; }
+    public ProximityAction ProximityAction { get; set; }
 
     private void Awake()
     {
-
-        button.onClick.AddListener(() => Entity.UseAction());
+        button.onClick.AddListener(() => ProximityAction.Use());
     }
 
     private void Update()
     {
-        if (Entity)
+        if (ProximityAction)
         {
             var direction = TargetPosition - transform.parent.position;
 
@@ -36,16 +35,16 @@ public class ActionButton : MonoBehaviour
         }
     }
 
-    public void SetEntity(EntityController entity)
+    public void SetProximityAction(ProximityAction proximityAction)
     {
-        Entity = entity;
-        SetVisible(Entity);
+        ProximityAction = proximityAction;
+        SetVisible(ProximityAction);
 
-        if (Entity)
+        if (ProximityAction)
         {
-            actionImage.sprite = entity.ActionImage;
-            background.color = entity.ActionColor;
-            text.text = entity.ActionText;
+            actionImage.sprite = proximityAction.Sprite;
+            background.color = proximityAction.Color;
+            text.text = proximityAction.Text;
         }
         else
         {

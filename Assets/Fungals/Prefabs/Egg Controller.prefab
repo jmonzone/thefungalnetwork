@@ -115,6 +115,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7201975520520081364}
   - component: {fileID: 5952156050388943029}
+  - component: {fileID: 6276456149722772709}
   - component: {fileID: 7483530558153920761}
   m_Layer: 0
   m_Name: Egg Controller
@@ -151,7 +152,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a47b5770acdc42d8b11fdaaab014495, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hasInteraction: 1
+  proximityAction: {fileID: 6276456149722772709}
+--- !u!114 &6276456149722772709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7971683105946853346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0ebbc806cd2749d7b7aacc0d551eede, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprite: {fileID: 0}
+  color: {r: 0, g: 0, b: 0, a: 0}
+  text: Hatch
 --- !u!54 &7483530558153920761
 Rigidbody:
   m_ObjectHideFlags: 0
