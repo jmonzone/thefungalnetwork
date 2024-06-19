@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 5569854717866690982}
   - component: {fileID: 1985368070077868474}
   - component: {fileID: 7343356333989190285}
-  - component: {fileID: 2199149365160050836}
   m_Layer: 3
   m_Name: Trout
   m_TagString: Untagged
@@ -48,8 +47,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 0}
-  isTreasure: 0
-  isCatchable: 0
 --- !u!114 &7343356333989190285
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -62,27 +59,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2b252d604a094065a18d719180c3a27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2
   type: 0
---- !u!114 &2199149365160050836
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1998284645538067842}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 645ecd717131043d4867cc4879548c5e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveImmediate: 1
-  minIdleDuration: 1
-  maxIdleDuration: 2
-  animator: {fileID: 0}
+  speed: 2
   positionAnchor:
     anchor: {fileID: 0}
     bounds: {fileID: 0}
+  animator: {fileID: 0}
+  startIdle: 0
+  minIdleDuration: 1
+  maxIdleDuration: 2
 --- !u!1001 &450373414579174310
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -4,8 +4,13 @@ using UnityEngine.Events;
 
 public class MoveController : MonoBehaviour
 {
-    [SerializeField] private float speed = 2f;
     [SerializeField] private MoveType type;
+    [SerializeField] private float speed = 2f;
+    [SerializeField] private PositionAnchor positionAnchor;
+    [SerializeField] private Animator animator;
+    [SerializeField] private bool startIdle;
+    [SerializeField] private float minIdleDuration = 2f;
+    [SerializeField] private float maxIdleDuration = 5f;
 
     public enum MoveType
     {
@@ -13,14 +18,15 @@ public class MoveController : MonoBehaviour
         TARGET,
         POSITION,
         DIRECTION,
+        RANDOM,
     }
-
-    public bool IsMovingToPosition { get; private set; }
 
     private Transform target;
     private Vector3 position;
     private Vector3 direction;
     private Coroutine positionReachedRoutine;
+    private bool isIdle;
+    private float idleTimer;
 
     public event UnityAction OnStart;
     public event UnityAction OnEnd;
@@ -40,9 +46,24 @@ public class MoveController : MonoBehaviour
             case MoveType.POSITION:
                 MoveToPosition(position, 0.1f);
                 break;
+            case MoveType.RANDOM:
+                if (isIdle)
+                {
+                    idleTimer += Time.deltaTime;
+                    if (idleTimer > maxIdleDuration)
+                    {
+                        StopIdle();
+                    }
+                }
+                else
+                {
+                    MoveToPosition(position, 0.1f);
+                }
+                break;
         }
     }
 
+    #region Initialize Movement Type
     public void SetTarget(Transform target)
     {
         this.target = target;
@@ -57,10 +78,67 @@ public class MoveController : MonoBehaviour
 
     public void SetPosition(Vector3 position, UnityAction onComplete = null)
     {
-        this.position = position;
         type = MoveType.POSITION;
+        StartPositionMovement(position, onComplete);
+    }
 
-        IsMovingToPosition = true;
+    public void StartRandomMovement()
+    {
+        type = MoveType.RANDOM;
+        if (startIdle) StartIdle();
+        else StopIdle();
+    }
+
+    private void StartIdle()
+    {
+        idleTimer = Random.Range(0f, maxIdleDuration - minIdleDuration);
+        isIdle = true;
+    }
+
+    private void StopIdle()
+    {
+        idleTimer = maxIdleDuration;
+        isIdle = false;
+        StartPositionMovement(positionAnchor.Position, StartIdle);
+    }
+
+    public void Stop()
+    {
+        type = MoveType.STOP;
+    }
+    #endregion
+
+    #region Initialization
+    public void SetAnimator(Animator animator)
+    {
+        this.animator = animator;
+    }
+
+    public void SetBounds(Collider collider)
+    {
+        positionAnchor.Bounds = collider;
+    }
+    #endregion
+
+    #region Mutators
+    public void SetSpeed(float speed)
+    {
+        this.speed = speed;
+    }
+
+    public void SetLookTarget(Transform target)
+    {
+        var direction = target.position - transform.position;
+        direction.y = 0;
+        transform.forward = direction;
+    }
+    #endregion
+
+    private void StartPositionMovement(Vector3 position, UnityAction onComplete = null)
+    {
+        if (animator) animator.SetBool("isMoving", true);
+
+        this.position = position;
 
         OnStart?.Invoke();
 
@@ -74,24 +152,8 @@ public class MoveController : MonoBehaviour
         onComplete?.Invoke();
         OnEnd?.Invoke();
 
-        IsMovingToPosition = false;
-    }
+        if (animator) animator.SetBool("isMoving", false);
 
-    public void SetSpeed(float speed)
-    {
-        this.speed = speed;
-    }
-
-    public void SetLookTarget(Transform target)
-    {
-        var direction = target.position - transform.position;
-        direction.y = 0;
-        transform.forward = direction;
-    }
-
-    public void Stop()
-    {
-        type = MoveType.STOP;
     }
 
     private void MoveToPosition(Vector3 targetPosition, float distanceThreshold)

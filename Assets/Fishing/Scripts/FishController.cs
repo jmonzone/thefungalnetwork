@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
-[RequireComponent(typeof(RandomMovement))]
+[RequireComponent(typeof(MoveController))]
 public class FishController : MonoBehaviour
 {
     [SerializeField] private FishData data;
@@ -19,12 +19,10 @@ public class FishController : MonoBehaviour
 
     private FishState state;
     private MoveController movement;
-    private RandomMovement randomMovement;
 
     private void Awake()
     {
         movement = GetComponent<MoveController>();
-        randomMovement = GetComponent<RandomMovement>();
     }
 
     private void OnEnable()
@@ -60,7 +58,7 @@ public class FishController : MonoBehaviour
     public void Initialize(FishData data, Collider bounds)
     {
         this.data = data;
-        randomMovement.SetBounds(bounds);
+        movement.SetBounds(bounds);
     }
 
     public void Attract(Transform bob)
@@ -72,7 +70,10 @@ public class FishController : MonoBehaviour
     private void SetState(FishState state)
     {
         this.state = state;
-        randomMovement.enabled = state == FishState.IDLE;
+        if (state == FishState.IDLE)
+        {
+            movement.StartRandomMovement();
+        }
     }
 
 }

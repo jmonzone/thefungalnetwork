@@ -15,7 +15,8 @@ public class PositionAnchor
         {
 
             if (bounds) return bounds.GetRandomXZPosition();
-            return anchor.position;
+            if (anchor) return anchor.position;
+            else return Vector3.zero;
         }
     }
 

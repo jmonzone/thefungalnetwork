@@ -8,7 +8,7 @@ public enum FungalState
     TARGET,
 }
 
-[RequireComponent(typeof(RandomMovement))]
+[RequireComponent(typeof(MoveController))]
 [RequireComponent(typeof(ProximityAction))]
 public class FungalController : MonoBehaviour
 {
@@ -25,7 +25,6 @@ public class FungalController : MonoBehaviour
 
     private Camera mainCamera;
     private MoveController movement;
-    private RandomMovement randomMovement;
 
     private float hungerTimer;
     private FungalState state;
@@ -36,7 +35,6 @@ public class FungalController : MonoBehaviour
     {
         mainCamera = Camera.main;
         movement = GetComponent<MoveController>();
-        randomMovement = GetComponent<RandomMovement>();
     }
 
     public void Initialize(FungalModel model, Collider bounds)
@@ -58,9 +56,9 @@ public class FungalController : MonoBehaviour
 
             var animator = Render.GetComponentInChildren<Animator>();
             animator.speed = 0.25f;
-            randomMovement.SetAnimator(animator);
-            randomMovement.SetBounds(bounds);
 
+            movement.SetAnimator(animator);
+            movement.SetBounds(bounds);
             movement.SetSpeed(1f + model.Speed * 0.1f);
 
             SetState(FungalState.RANDOM);
@@ -110,7 +108,10 @@ public class FungalController : MonoBehaviour
     private void SetState(FungalState state)
     {
         this.state = state;
-        randomMovement.enabled = state == FungalState.RANDOM;
+        if (state == FungalState.RANDOM)
+        {
+            movement.StartRandomMovement();
+        }
     }
 
     private void UpdateHunger()
