@@ -6,16 +6,26 @@ using UnityEngine.Events;
 public class FishController : MonoBehaviour
 {
     [SerializeField] private FishData data;
-    [SerializeField] private bool isTreasure = false;
-    [SerializeField] private bool isCatchable;
 
     public FishData Data => data;
-    public bool IsTreasure => isTreasure;
-    public bool IsCaught { get; private set; }
-    public bool IsCatchable { get => isCatchable; set => isCatchable = value; }
-    public bool IsAttacted { get; private set; }
 
     public event UnityAction OnCaught;
+
+    private enum FishState
+    {
+        IDLE,
+        ATTRACTED
+    }
+
+    private FishState state;
+    private MoveController movement;
+    private RandomMovement randomMovement;
+
+    private void Awake()
+    {
+        movement = GetComponent<MoveController>();
+        randomMovement = GetComponent<RandomMovement>();
+    }
 
     private void OnEnable()
     {
@@ -35,43 +45,34 @@ public class FishController : MonoBehaviour
         }
 
         StartCoroutine(LerpScale());
+        SetState(FishState.IDLE);
+    }
+
+    private void Update()
+    {
+        switch (state)
+        {
+            case FishState.ATTRACTED:
+                break;
+        }
     }
 
     public void Initialize(FishData data, Collider bounds)
     {
         this.data = data;
-
-        var randomMovement = GetComponent<RandomMovement>();
         randomMovement.SetBounds(bounds);
     }
 
     public void Attract(Transform bob)
     {
-        IsAttacted = true;
+        movement.SetTarget(bob.transform);
+        SetState(FishState.ATTRACTED);
     }
 
-    public void Catch()
+    private void SetState(FishState state)
     {
-        IsCaught = true;
-        OnCaught?.Invoke();
-        gameObject.SetActive(false);
+        this.state = state;
+        randomMovement.enabled = state == FishState.IDLE;
     }
 
-    private void HandleCapture()
-    {
-        IsCaught = true;
-        OnCaught?.Invoke();
-    }
-
-    public void Scare(Vector3 bobPosition)
-    {
-        if (isTreasure) return;
-
-        IsCaught = false;
-        IsAttacted = false;
-
-        var direction = transform.position - bobPosition;
-        direction.y = 0;
-        transform.forward = direction;
-    }
 }

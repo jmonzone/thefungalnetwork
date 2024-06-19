@@ -8,6 +8,7 @@ public enum FishingRodState
     CASTING,
     IN_AIR,
     IN_WATER,
+    ATTRACTING,
     REELING
 }
 
@@ -28,6 +29,7 @@ public class FishingRod : MonoBehaviour
     private FishingRodState currentState;
     private Vector3 startInputPosition;
     private float dragDistance;
+    private FishController targetFish;
 
     private bool IsUsing => Input.GetMouseButtonDown(0) && !Utility.IsPointerOverUI;
 
@@ -62,6 +64,10 @@ public class FishingRod : MonoBehaviour
                 catchIndicator.transform.position = bob.transform.position;
                 catchIndicator.transform.localScale = 2 * catchRadius / transform.localScale.x * Vector3.one;
                 break;
+            case FishingRodState.ATTRACTING:
+                targetFish = CatchableFish[0];
+                targetFish.Attract(bob.transform);
+                break;
         }
     }
 
@@ -74,31 +80,13 @@ public class FishingRod : MonoBehaviour
                 break;
             case FishingRodState.IN_WATER:
                 if (IsUsing) SetState(FishingRodState.REELING);
-                else
-                {
-                    Debug.Log($"Catchable Fish: {CatchableFish.Count}");
-                }
+                else if (CatchableFish.Count > 0) SetState(FishingRodState.ATTRACTING);
                 break;
             case FishingRodState.CASTING:
                 var ray = mainCamera.ScreenPointToRay(Input.mousePosition);
                 var targetPosition = ray.origin + ray.direction * dragDistance;
                 bob.Rigidbody.MovePosition(targetPosition);
-
-                if (Input.GetMouseButtonUp(0))
-                {
-                    var throwDirection = (Input.mousePosition - startInputPosition) * sensitivity;
-                    if (throwDirection.y < 0 || throwDirection.magnitude < minDistance)
-                    {
-                        SetState(FishingRodState.IDLE);
-                    }
-                    else
-                    {
-                        var launchVelocity = throwDirection.y * mainCamera.transform.up + throwDirection.x * mainCamera.transform.right;
-                        var clampedVelocity = Vector3.ClampMagnitude(launchVelocity, maxDistance);
-                        bob.Rigidbody.velocity = clampedVelocity;
-                        SetState(FishingRodState.IN_AIR);
-                    }
-                }
+                if (Input.GetMouseButtonUp(0)) LaunchBob();
                 break;
             case FishingRodState.IN_AIR:
                 if (bob.transform.position.y < 0) SetState(FishingRodState.IN_WATER);
@@ -109,8 +97,25 @@ public class FishingRod : MonoBehaviour
         }
     }
 
+    private void LaunchBob()
+    {
+        var throwDirection = (Input.mousePosition - startInputPosition) * sensitivity;
+        if (throwDirection.y < 0 || throwDirection.magnitude < minDistance)
+        {
+            SetState(FishingRodState.IDLE);
+        }
+        else
+        {
+            var launchVelocity = throwDirection.y * mainCamera.transform.up + throwDirection.x * mainCamera.transform.right;
+            var clampedVelocity = Vector3.ClampMagnitude(launchVelocity, maxDistance);
+            bob.Rigidbody.velocity = clampedVelocity;
+            SetState(FishingRodState.IN_AIR);
+        }
+    }
+
     private List<FishController> CatchableFish => Physics.OverlapSphere(bob.transform.position, catchRadius)
         .Select(collider => collider.GetComponentInParent<FishController>())
         .Where(fish => fish)
+        .OrderBy(fish => Vector3.Distance(fish.transform.position, bob.transform.position))
         .ToList();
 }

@@ -145,24 +145,24 @@ public class FishingSceneManager : MonoBehaviour
             void OnFishCaught()
             {
                 Debug.Log("fish caught");
-                if (!fishController.IsTreasure)
-                {
-                    var item = ScriptableObject.CreateInstance<ItemInstance>();
-                    item.Initialize(fishController.Data);
-                    Debug.Log($"item initialized {fishController.Data}");
+                //if (!fishController.IsTreasure)
+                //{
+                //    var item = ScriptableObject.CreateInstance<ItemInstance>();
+                //    item.Initialize(fishController.Data);
+                //    Debug.Log($"item initialized {fishController.Data}");
 
-                    GameManager.Instance.AddToInventory(item);
+                //    GameManager.Instance.AddToInventory(item);
 
-                    var experience = fishController.Data.Experience;
-                    fungalController.Model.Experience += experience;
-                    Debug.Log($"adding experience {experience}");
+                //    var experience = fishController.Data.Experience;
+                //    fungalController.Model.Experience += experience;
+                //    Debug.Log($"adding experience {experience}");
 
-                    var position = mainCamera.WorldToScreenPoint(fish.transform.position + Vector3.up);
-                    textPopup.transform.position = position;
-                    textPopup.ShowText($"+{experience}");
+                //    var position = mainCamera.WorldToScreenPoint(fish.transform.position + Vector3.up);
+                //    textPopup.transform.position = position;
+                //    textPopup.ShowText($"+{experience}");
 
-                    Debug.Log($"text popup at {position}");
-                }
+                //    Debug.Log($"text popup at {position}");
+                //}
 
                 fishCount--;
                 fishController.OnCaught -= OnFishCaught;
@@ -175,7 +175,7 @@ public class FishingSceneManager : MonoBehaviour
         var spawnPosition = RandomSpawnAnchor.position;
         var go = Instantiate(prefab, spawnPosition, Quaternion.identity);
         var fishController = go.GetComponent<FishController>();
-        fishController.IsCatchable = false;
+        //fishController.IsCatchable = false;
 
         //var movement = go.GetComponent<MovementController>();
 
