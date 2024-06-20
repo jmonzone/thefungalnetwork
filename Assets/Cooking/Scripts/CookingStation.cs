@@ -25,16 +25,16 @@ public class CookingStation : JobStation
 
     protected override void OnJobStarted()
     {
+    }
+
+    protected override void OnCameraPrepared()
+    {
         bladeController.enabled = true;
 
-        IEnumerator ShowBackground()
+        StartCoroutine(background.LerpAlpha(0.75f, () =>
         {
-            yield return new WaitForSeconds(2);
-            yield return background.LerpAlpha(0.75f);
             ingredientManager.enabled = true;
-        }
-
-        StartCoroutine(ShowBackground());
+        }));
     }
 
     protected override void OnJobEnded()

@@ -33,14 +33,11 @@ public class FishingRod : MonoBehaviour
 
     private bool IsUsing => Input.GetMouseButtonDown(0) && !Utility.IsPointerOverUI;
 
-    private void Awake()
-    {
-        mainCamera = Camera.main;
-    }
-
     private void OnEnable()
     {
         SetState(FishingRodState.IDLE);
+
+        mainCamera = Camera.main;
 
         Vector3 planeNormal = mainCamera.transform.forward; // The normal of the plane
         Vector3 planePoint = mainCamera.transform.position; // A point on the plane
@@ -85,7 +82,7 @@ public class FishingRod : MonoBehaviour
             case FishingRodState.CASTING:
                 var ray = mainCamera.ScreenPointToRay(Input.mousePosition);
                 var targetPosition = ray.origin + ray.direction * dragDistance;
-                bob.Rigidbody.MovePosition(targetPosition);
+                bob.transform.position = targetPosition;
                 if (Input.GetMouseButtonUp(0)) LaunchBob();
                 break;
             case FishingRodState.IN_AIR:

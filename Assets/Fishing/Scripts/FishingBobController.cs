@@ -3,10 +3,11 @@ using UnityEngine;
 // handles the behaviour of the fishing rod bob
 public class FishingBobController : MonoBehaviour
 {
+    [SerializeField] private Rigidbody rigidbody;
     [SerializeField] private float gravity = 0.1f;
     [SerializeField] private float reelSpeed = 2f;
 
-    public Rigidbody Rigidbody { get; private set; }
+    public Rigidbody Rigidbody => rigidbody;
     public Vector3 StartPosition { get; private set; }
 
     private FishingRodState state;
@@ -15,8 +16,12 @@ public class FishingBobController : MonoBehaviour
 
     private void Awake()
     {
-        Rigidbody = GetComponent<Rigidbody>();
         StartPosition = transform.position;
+    }
+
+    private void OnEnable()
+    {
+        SetState(FishingRodState.IDLE);
     }
 
     public void SetState(FishingRodState state)

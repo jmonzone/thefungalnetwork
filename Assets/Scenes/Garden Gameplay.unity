@@ -2867,8 +2867,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2b252d604a094065a18d719180c3a27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2.5
   type: 0
+  speed: 2.5
+  positionAnchor:
+    anchor: {fileID: 0}
+    bounds: {fileID: 0}
+  animator: {fileID: 0}
+  startIdle: 0
+  minIdleDuration: 2
+  maxIdleDuration: 5
 --- !u!4 &375630455 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4458032547626594, guid: 8ae7718c33e89b042b204b36902c7745,
@@ -3152,6 +3159,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Fishing Rod
+      objectReference: {fileID: 0}
+    - target: {fileID: 337140688757518554, guid: 9ee82dfe17b014e45aabf1993a2292db,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2867715166276073019, guid: 9ee82dfe17b014e45aabf1993a2292db,
         type: 3}
@@ -4129,7 +4141,7 @@ GameObject:
   - component: {fileID: 540506997}
   - component: {fileID: 540506998}
   m_Layer: 0
-  m_Name: Virtual Camera
+  m_Name: Cooking Virtual Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5673,7 +5685,7 @@ GameObject:
   - component: {fileID: 832005054}
   - component: {fileID: 832005055}
   m_Layer: 0
-  m_Name: Virtual Camera
+  m_Name: Fishing Virtual Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6011,7 +6023,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 264d61891807545a2b9c11803a9cede7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialGameState: 0
+  initialGameState: 1
   fungalManager: {fileID: 1982422563}
   controlPanel: {fileID: 307486408}
   inventoryUI: {fileID: 1756319189}

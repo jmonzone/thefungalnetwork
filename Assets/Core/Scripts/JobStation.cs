@@ -49,7 +49,18 @@ public abstract class JobStation : MonoBehaviour
         });
 
         OnJobStarted();
+
+        StartCoroutine(WaitUntilCameraPrepared());
     }
+
+    private IEnumerator WaitUntilCameraPrepared()
+    {
+        var mainCamera = Camera.main.transform;
+        yield return new WaitUntil(() => mainCamera.position == camera.transform.position);
+        OnCameraPrepared();
+    }
+
+    protected abstract void OnCameraPrepared();
 
     protected void EndAction()
     {

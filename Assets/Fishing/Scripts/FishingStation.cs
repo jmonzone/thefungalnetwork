@@ -13,13 +13,17 @@ public class FishingStation : JobStation
     protected override void OnJobStarted()
     {
         fishManager.enabled = true;
-        fishingRod.enabled = true;
+    }
+
+    protected override void OnCameraPrepared()
+    {
+        fishingRod.gameObject.SetActive(true);
     }
 
     protected override void OnJobEnded()
     {
         fishManager.enabled = false;
-        fishingRod.enabled = false;
+        fishingRod.gameObject.SetActive(false);
     }
 
     protected override void OnBackButtonClicked()
