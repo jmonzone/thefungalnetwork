@@ -8,6 +8,8 @@ public class FishingBobController : MonoBehaviour
     [SerializeField] private float reelSpeed = 2f;
 
     public Rigidbody Rigidbody => rigidbody;
+    public float ReelSpeed => reelSpeed;
+
     public Vector3 StartPosition { get; private set; }
 
     private FishingRodState state;

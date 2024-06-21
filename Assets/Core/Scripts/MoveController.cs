@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -28,6 +29,19 @@ public class MoveController : MonoBehaviour
     private bool isIdle;
     private float idleTimer;
 
+    private const float TARGET_DISTANCE_THRESHOLD = 2f;
+    private const float POSITION_DISTANCE_THRESHOLD = 0.1f;
+
+    public float Speed => speed;
+
+    public bool IsAtDestination => type switch
+    {
+        MoveType.POSITION => Vector3.Distance(transform.position, position) < POSITION_DISTANCE_THRESHOLD,
+        MoveType.RANDOM => Vector3.Distance(transform.position, position) < POSITION_DISTANCE_THRESHOLD,
+        MoveType.TARGET => Vector3.Distance(transform.position, target.position) < TARGET_DISTANCE_THRESHOLD,
+        _ => false,
+    };
+
     public event UnityAction OnStart;
     public event UnityAction OnEnd;
     public event UnityAction<Vector3> OnUpdate;
@@ -41,24 +55,14 @@ public class MoveController : MonoBehaviour
                 break;
             case MoveType.TARGET:
                 SetLookTarget(target);
-                MoveToPosition(target.position, 2f);
+                MoveToPosition(target.position);
                 break;
             case MoveType.POSITION:
-                MoveToPosition(position, 0.1f);
+                MoveToPosition(position);
                 break;
             case MoveType.RANDOM:
-                if (isIdle)
-                {
-                    idleTimer += Time.deltaTime;
-                    if (idleTimer > maxIdleDuration)
-                    {
-                        StopIdle();
-                    }
-                }
-                else
-                {
-                    MoveToPosition(position, 0.1f);
-                }
+                if (isIdle) UpdateIdle();
+                else MoveToPosition(position);
                 break;
         }
     }
@@ -91,7 +95,7 @@ public class MoveController : MonoBehaviour
 
     private void StartIdle()
     {
-        idleTimer = Random.Range(0f, maxIdleDuration - minIdleDuration);
+        idleTimer = UnityEngine.Random.Range(0f, maxIdleDuration - minIdleDuration);
         isIdle = true;
     }
 
@@ -100,6 +104,12 @@ public class MoveController : MonoBehaviour
         idleTimer = maxIdleDuration;
         isIdle = false;
         StartPositionMovement(positionAnchor.Position, StartIdle);
+    }
+
+    private void UpdateIdle()
+    {
+        idleTimer += Time.deltaTime;
+        if (idleTimer > maxIdleDuration) StopIdle();
     }
 
     public void Stop()
@@ -143,12 +153,12 @@ public class MoveController : MonoBehaviour
         OnStart?.Invoke();
 
         if (positionReachedRoutine != null) StopCoroutine(positionReachedRoutine);
-        positionReachedRoutine = StartCoroutine(WaitUntilDestinationReached(position, onComplete));
+        positionReachedRoutine = StartCoroutine(WaitUntilDestinationReached(onComplete));
     }
-
-    private IEnumerator WaitUntilDestinationReached(Vector3 position, UnityAction onComplete)
+ 
+    private IEnumerator WaitUntilDestinationReached(UnityAction onComplete)
     {
-        yield return new WaitUntil(() => Vector3.Distance(transform.position, position) < 0.1f);
+        yield return new WaitUntil(() => IsAtDestination);
         onComplete?.Invoke();
         OnEnd?.Invoke();
 
@@ -156,9 +166,9 @@ public class MoveController : MonoBehaviour
 
     }
 
-    private void MoveToPosition(Vector3 targetPosition, float distanceThreshold)
+    private void MoveToPosition(Vector3 targetPosition)
     {
-        if (Vector3.Distance(transform.position, targetPosition) > distanceThreshold)
+        if (!IsAtDestination)
         {
             var direction = targetPosition - transform.position;
             MoveInDirection(direction.normalized);

@@ -63,7 +63,7 @@ public class FishingRod : MonoBehaviour
                 break;
             case FishingRodState.ATTRACTING:
                 targetFish = CatchableFish[0];
-                targetFish.Attract(bob.transform);
+                targetFish.Attract(bob);
                 break;
         }
     }
@@ -75,23 +75,31 @@ public class FishingRod : MonoBehaviour
             case FishingRodState.IDLE:
                 if (IsUsing) SetState(FishingRodState.CASTING);
                 break;
-            case FishingRodState.IN_WATER:
-                if (IsUsing) SetState(FishingRodState.REELING);
-                else if (CatchableFish.Count > 0) SetState(FishingRodState.ATTRACTING);
-                break;
             case FishingRodState.CASTING:
-                var ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-                var targetPosition = ray.origin + ray.direction * dragDistance;
-                bob.transform.position = targetPosition;
+                CastBob();
                 if (Input.GetMouseButtonUp(0)) LaunchBob();
                 break;
             case FishingRodState.IN_AIR:
                 if (bob.transform.position.y < 0) SetState(FishingRodState.IN_WATER);
                 break;
+            case FishingRodState.IN_WATER:
+                if (IsUsing) SetState(FishingRodState.REELING);
+                else if (CatchableFish.Count > 0) SetState(FishingRodState.ATTRACTING);
+                break;
+            case FishingRodState.ATTRACTING:
+                if (targetFish.State == FishState.CAUGHT) SetState(FishingRodState.REELING);
+                break;
             case FishingRodState.REELING:
                 if (bob.IsReeledIn) SetState(FishingRodState.IDLE);
                 break;
         }
+    }
+
+    private void CastBob()
+    {
+        var ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        var targetPosition = ray.origin + ray.direction * dragDistance;
+        bob.transform.position = targetPosition;
     }
 
     private void LaunchBob()

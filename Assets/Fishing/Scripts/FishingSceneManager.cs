@@ -140,7 +140,7 @@ public class FishingSceneManager : MonoBehaviour
         {
             fishController.Initialize(randomFish, fishBounds);
             fishControllers.Add(fishController);
-            fishController.OnCaught += OnFishCaught;
+            //fishController.OnCaught += OnFishCaught;
 
             void OnFishCaught()
             {
@@ -165,7 +165,7 @@ public class FishingSceneManager : MonoBehaviour
                 //}
 
                 fishCount--;
-                fishController.OnCaught -= OnFishCaught;
+                //fishController.OnCaught -= OnFishCaught;
             }
         }
     }

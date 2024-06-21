@@ -1,6 +1,12 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Events;
+
+public enum FishState
+{
+    IDLE,
+    ATTRACTED,
+    CAUGHT
+}
 
 [RequireComponent(typeof(MoveController))]
 public class FishController : MonoBehaviour
@@ -9,26 +15,30 @@ public class FishController : MonoBehaviour
 
     public FishData Data => data;
 
-    public event UnityAction OnCaught;
+    public FishState State { get; private set; }
 
-    private enum FishState
-    {
-        IDLE,
-        ATTRACTED
-    }
-
-    private FishState state;
     private MoveController movement;
+    private float baseSpeed;
+    private float reelSpeed;
+    private FishingBobController fishingBob;
 
     private void Awake()
     {
         movement = GetComponent<MoveController>();
+        baseSpeed = movement.Speed;
+    }
+
+    public void Initialize(FishData data, Collider bounds)
+    {
+        this.data = data;
+        movement.SetBounds(bounds);
     }
 
     private void OnEnable()
     {
         transform.forward = Utility.RandomXZVector;
         transform.localScale = Vector3.zero;
+
 
         IEnumerator LerpScale()
         {
@@ -46,34 +56,40 @@ public class FishController : MonoBehaviour
         SetState(FishState.IDLE);
     }
 
-    private void Update()
+    private void SetState(FishState state)
     {
+        State = state;
+
         switch (state)
         {
+            case FishState.IDLE:
+                movement.SetSpeed(baseSpeed);
+                movement.StartRandomMovement();
+                break;
             case FishState.ATTRACTED:
+                movement.SetTarget(fishingBob.transform);
+                break;
+            case FishState.CAUGHT:
+                movement.SetSpeed(reelSpeed);
                 break;
         }
     }
 
-    public void Initialize(FishData data, Collider bounds)
+    private void Update()
     {
-        this.data = data;
-        movement.SetBounds(bounds);
-    }
-
-    public void Attract(Transform bob)
-    {
-        movement.SetTarget(bob.transform);
-        SetState(FishState.ATTRACTED);
-    }
-
-    private void SetState(FishState state)
-    {
-        this.state = state;
-        if (state == FishState.IDLE)
+        switch (State)
         {
-            movement.StartRandomMovement();
+            case FishState.ATTRACTED:
+                if (movement.IsAtDestination) SetState(FishState.CAUGHT);
+                break;
         }
+    }
+
+    public void Attract(FishingBobController bob)
+    {
+        fishingBob = bob;
+        reelSpeed = bob.ReelSpeed;
+        SetState(FishState.ATTRACTED);
     }
 
 }
