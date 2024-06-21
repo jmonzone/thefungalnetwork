@@ -19,7 +19,6 @@ public class FishController : MonoBehaviour
 
     private MoveController movement;
     private float baseSpeed;
-    private float reelSpeed;
     private FishingBobController fishingBob;
 
     private void Awake()
@@ -70,7 +69,7 @@ public class FishController : MonoBehaviour
                 movement.SetTarget(fishingBob.transform);
                 break;
             case FishState.CAUGHT:
-                movement.SetSpeed(reelSpeed);
+                movement.SetSpeed(fishingBob.ReelSpeed);
                 break;
         }
     }
@@ -88,8 +87,6 @@ public class FishController : MonoBehaviour
     public void Attract(FishingBobController bob)
     {
         fishingBob = bob;
-        reelSpeed = bob.ReelSpeed;
         SetState(FishState.ATTRACTED);
     }
-
 }

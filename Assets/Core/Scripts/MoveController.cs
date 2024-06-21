@@ -43,6 +43,7 @@ public class MoveController : MonoBehaviour
     {
         state = MoveState.POSITION;
         isIdle = false;
+        if (positionReachedRoutine != null) StopCoroutine(positionReachedRoutine);
 
         getTargetPosition = () =>
         {
@@ -50,7 +51,7 @@ public class MoveController : MonoBehaviour
             return target.position - direction.normalized * 2f;
         };
 
-        getDirection = () => target.position - transform.position;
+        getDirection = () => getTargetPosition() - transform.position;
     }
 
     public void SetDirection(Vector3 direction)
@@ -127,7 +128,6 @@ public class MoveController : MonoBehaviour
         if (IsAtDestination) return;
 
         var direction = getDirection().normalized;
-        direction.y = 0;
 
         transform.position += speed * Time.deltaTime * direction;
         if (direction != Vector3.zero) transform.forward = direction;
