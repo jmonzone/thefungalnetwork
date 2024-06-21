@@ -3,9 +3,15 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
+public enum MoveState
+{
+    POSITION,
+    DIRECTION,
+}
+
 public class MoveController : MonoBehaviour
 {
-    [SerializeField] private MoveType type;
+    [SerializeField] private MoveState state;
     [SerializeField] private float speed = 2f;
     [SerializeField] private PositionAnchor positionAnchor;
     [SerializeField] private Animator animator;
@@ -13,67 +19,73 @@ public class MoveController : MonoBehaviour
     [SerializeField] private float minIdleDuration = 2f;
     [SerializeField] private float maxIdleDuration = 5f;
 
-    public enum MoveType
-    {
-        STOP,
-        TARGET,
-        POSITION,
-        DIRECTION,
-        RANDOM,
-    }
-
     private Func<Vector3> getTargetPosition;
-
-    private Vector3 direction;
+    private Func<Vector3> getDirection;
     private Coroutine positionReachedRoutine;
     private bool isIdle;
     private float idleTimer;
-
-    private const float TARGET_DISTANCE_THRESHOLD = 2f;
-    private const float POSITION_DISTANCE_THRESHOLD = 0.1f;
-
-    public float Speed => speed;
 
     public event UnityAction OnStart;
     public event UnityAction OnEnd;
     public event UnityAction<Vector3> OnUpdate;
 
-    #region Public Methods
-    public bool IsAtDestination => type switch
+    public float Speed => speed;
+
+    public bool IsAtDestination => state switch
     {
-        MoveType.POSITION => Vector3.Distance(transform.position, getTargetPosition()) < POSITION_DISTANCE_THRESHOLD,
-        MoveType.RANDOM => Vector3.Distance(transform.position, getTargetPosition()) < POSITION_DISTANCE_THRESHOLD,
-        MoveType.TARGET => Vector3.Distance(transform.position, getTargetPosition()) < TARGET_DISTANCE_THRESHOLD,
+        MoveState.POSITION => Vector3.Distance(transform.position, getTargetPosition()) < 0.1f,
+        MoveState.DIRECTION => false,
         _ => false,
     };
 
+    #region Public Methods
     public void SetTarget(Transform target)
     {
-        getTargetPosition = () => target.position;
-        SetState(MoveType.TARGET);
+        state = MoveState.POSITION;
+        isIdle = false;
+
+        getTargetPosition = () =>
+        {
+            var direction = target.position - transform.position;
+            return target.position - direction.normalized * 2f;
+        };
+
+        getDirection = () => target.position - transform.position;
     }
 
     public void SetDirection(Vector3 direction)
     {
-        this.direction = direction;
-        SetState(MoveType.DIRECTION);
+        state = MoveState.DIRECTION;
+        isIdle = false;
+
+        getDirection = () => direction;
     }
 
     public void SetPosition(Vector3 position, UnityAction onComplete = null)
     {
-        SetState(MoveType.POSITION);
-        StartPositionMovement(position, onComplete);
+        state = MoveState.POSITION;
+
+        if (animator) animator.SetBool("isMoving", true);
+
+        getTargetPosition = () => position;
+        getDirection = () => position - transform.position;
+
+        OnStart?.Invoke();
+
+        if (positionReachedRoutine != null) StopCoroutine(positionReachedRoutine);
+        positionReachedRoutine = StartCoroutine(WaitUntilDestinationReached(onComplete));
     }
 
     public void StartRandomMovement()
     {
-        SetState(MoveType.RANDOM);
-        
+        if (startIdle) StartIdle();
+        else StopIdle();
     }
 
     public void Stop()
     {
-        SetState(MoveType.STOP);
+        isIdle = false;
+        SetPosition(transform.position);
     }
 
     public void SetAnimator(Animator animator)
@@ -99,47 +111,22 @@ public class MoveController : MonoBehaviour
     }
     #endregion
 
-    private void SetState(MoveType type)
+    private void Awake()
     {
-        this.type = type;
-        isIdle = type == MoveType.RANDOM && startIdle;
-        switch (type)
-        {
-            case MoveType.RANDOM:
-                if (startIdle) StartIdle();
-                else StopIdle();
-                break;
-        }
+        Stop();
     }
 
     private void Update()
     {
-        switch (type)
-        {
-            case MoveType.DIRECTION:
-                UpdateDirection(direction);
-                break;
-            case MoveType.TARGET:
-            case MoveType.POSITION:
-                UpdatePosition();
-                break;
-            case MoveType.RANDOM:
-                if (isIdle) UpdateIdle();
-                else UpdatePosition();
-                break;
-        }
+        if (isIdle) UpdateIdle();
+        else UpdatePosition();
     }
 
     private void UpdatePosition()
     {
         if (IsAtDestination) return;
 
-        var direction = getTargetPosition() - transform.position;
-        UpdateDirection(direction.normalized);
-    }
-
-    private void UpdateDirection(Vector3 direction)
-    {
+        var direction = getDirection().normalized;
         direction.y = 0;
 
         transform.position += speed * Time.deltaTime * direction;
@@ -148,19 +135,6 @@ public class MoveController : MonoBehaviour
         OnUpdate?.Invoke(direction);
     }
 
-
-    private void StartPositionMovement(Vector3 position, UnityAction onComplete = null)
-    {
-        if (animator) animator.SetBool("isMoving", true);
-
-        getTargetPosition = () => position;
-
-        OnStart?.Invoke();
-
-        if (positionReachedRoutine != null) StopCoroutine(positionReachedRoutine);
-        positionReachedRoutine = StartCoroutine(WaitUntilDestinationReached(onComplete));
-    }
- 
     private IEnumerator WaitUntilDestinationReached(UnityAction onComplete)
     {
         yield return new WaitUntil(() => IsAtDestination);
@@ -180,7 +154,7 @@ public class MoveController : MonoBehaviour
     {
         idleTimer = maxIdleDuration;
         isIdle = false;
-        StartPositionMovement(positionAnchor.Position, StartIdle);
+        SetPosition(positionAnchor.Position, StartIdle);
     }
 
     private void UpdateIdle()
