@@ -33,6 +33,7 @@ public class FungalController : MonoBehaviour
     {
         mainCamera = Camera.main;
         Movement = GetComponent<MoveController>();
+        hungerIndicator.gameObject.SetActive(false);
     }
 
     public void Initialize(FungalModel model, Collider bounds)
