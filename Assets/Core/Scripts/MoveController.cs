@@ -22,8 +22,8 @@ public class MoveController : MonoBehaviour
         RANDOM,
     }
 
-    private Transform target;
-    private Vector3 position;
+    private Func<Vector3> getTargetPosition;
+
     private Vector3 direction;
     private Coroutine positionReachedRoutine;
     private bool isIdle;
@@ -34,63 +34,140 @@ public class MoveController : MonoBehaviour
 
     public float Speed => speed;
 
-    public bool IsAtDestination => type switch
-    {
-        MoveType.POSITION => Vector3.Distance(transform.position, position) < POSITION_DISTANCE_THRESHOLD,
-        MoveType.RANDOM => Vector3.Distance(transform.position, position) < POSITION_DISTANCE_THRESHOLD,
-        MoveType.TARGET => Vector3.Distance(transform.position, target.position) < TARGET_DISTANCE_THRESHOLD,
-        _ => false,
-    };
-
     public event UnityAction OnStart;
     public event UnityAction OnEnd;
     public event UnityAction<Vector3> OnUpdate;
+
+    #region Public Methods
+    public bool IsAtDestination => type switch
+    {
+        MoveType.POSITION => Vector3.Distance(transform.position, getTargetPosition()) < POSITION_DISTANCE_THRESHOLD,
+        MoveType.RANDOM => Vector3.Distance(transform.position, getTargetPosition()) < POSITION_DISTANCE_THRESHOLD,
+        MoveType.TARGET => Vector3.Distance(transform.position, getTargetPosition()) < TARGET_DISTANCE_THRESHOLD,
+        _ => false,
+    };
+
+    public void SetTarget(Transform target)
+    {
+        getTargetPosition = () => target.position;
+        SetState(MoveType.TARGET);
+    }
+
+    public void SetDirection(Vector3 direction)
+    {
+        this.direction = direction;
+        SetState(MoveType.DIRECTION);
+    }
+
+    public void SetPosition(Vector3 position, UnityAction onComplete = null)
+    {
+        SetState(MoveType.POSITION);
+        StartPositionMovement(position, onComplete);
+    }
+
+    public void StartRandomMovement()
+    {
+        SetState(MoveType.RANDOM);
+        
+    }
+
+    public void Stop()
+    {
+        SetState(MoveType.STOP);
+    }
+
+    public void SetAnimator(Animator animator)
+    {
+        this.animator = animator;
+    }
+
+    public void SetBounds(Collider collider)
+    {
+        positionAnchor.Bounds = collider;
+    }
+
+    public void SetSpeed(float speed)
+    {
+        this.speed = speed;
+    }
+
+    public void SetLookTarget(Transform target)
+    {
+        var direction = target.position - transform.position;
+        direction.y = 0;
+        transform.forward = direction;
+    }
+    #endregion
+
+    private void SetState(MoveType type)
+    {
+        this.type = type;
+        isIdle = type == MoveType.RANDOM && startIdle;
+        switch (type)
+        {
+            case MoveType.RANDOM:
+                if (startIdle) StartIdle();
+                else StopIdle();
+                break;
+        }
+    }
 
     private void Update()
     {
         switch (type)
         {
             case MoveType.DIRECTION:
-                MoveInDirection(direction);
+                UpdateDirection(direction);
                 break;
             case MoveType.TARGET:
-                SetLookTarget(target);
-                MoveToPosition(target.position);
-                break;
             case MoveType.POSITION:
-                MoveToPosition(position);
+                UpdatePosition();
                 break;
             case MoveType.RANDOM:
                 if (isIdle) UpdateIdle();
-                else MoveToPosition(position);
+                else UpdatePosition();
                 break;
         }
     }
 
-    #region Initialize Movement Type
-    public void SetTarget(Transform target)
+    private void UpdatePosition()
     {
-        this.target = target;
-        type = MoveType.TARGET;
+        if (IsAtDestination) return;
+
+        var direction = getTargetPosition() - transform.position;
+        UpdateDirection(direction.normalized);
     }
 
-    public void SetDirection(Vector3 direction)
+    private void UpdateDirection(Vector3 direction)
     {
-        this.direction = direction;
-        type = MoveType.DIRECTION;
+        direction.y = 0;
+
+        transform.position += speed * Time.deltaTime * direction;
+        if (direction != Vector3.zero) transform.forward = direction;
+
+        OnUpdate?.Invoke(direction);
     }
 
-    public void SetPosition(Vector3 position, UnityAction onComplete = null)
-    {
-        type = MoveType.POSITION;
-        StartPositionMovement(position, onComplete);
-    }
 
-    public void StartRandomMovement()
+    private void StartPositionMovement(Vector3 position, UnityAction onComplete = null)
     {
-        type = MoveType.RANDOM;
-        if (startIdle) StartIdle();
-        else StopIdle();
+        if (animator) animator.SetBool("isMoving", true);
+
+        getTargetPosition = () => position;
+
+        OnStart?.Invoke();
+
+        if (positionReachedRoutine != null) StopCoroutine(positionReachedRoutine);
+        positionReachedRoutine = StartCoroutine(WaitUntilDestinationReached(onComplete));
+    }
+ 
+    private IEnumerator WaitUntilDestinationReached(UnityAction onComplete)
+    {
+        yield return new WaitUntil(() => IsAtDestination);
+        onComplete?.Invoke();
+        OnEnd?.Invoke();
+
+        if (animator) animator.SetBool("isMoving", false);
     }
 
     private void StartIdle()
@@ -110,78 +187,5 @@ public class MoveController : MonoBehaviour
     {
         idleTimer += Time.deltaTime;
         if (idleTimer > maxIdleDuration) StopIdle();
-    }
-
-    public void Stop()
-    {
-        type = MoveType.STOP;
-    }
-    #endregion
-
-    #region Initialization
-    public void SetAnimator(Animator animator)
-    {
-        this.animator = animator;
-    }
-
-    public void SetBounds(Collider collider)
-    {
-        positionAnchor.Bounds = collider;
-    }
-    #endregion
-
-    #region Mutators
-    public void SetSpeed(float speed)
-    {
-        this.speed = speed;
-    }
-
-    public void SetLookTarget(Transform target)
-    {
-        var direction = target.position - transform.position;
-        direction.y = 0;
-        transform.forward = direction;
-    }
-    #endregion
-
-    private void StartPositionMovement(Vector3 position, UnityAction onComplete = null)
-    {
-        if (animator) animator.SetBool("isMoving", true);
-
-        this.position = position;
-
-        OnStart?.Invoke();
-
-        if (positionReachedRoutine != null) StopCoroutine(positionReachedRoutine);
-        positionReachedRoutine = StartCoroutine(WaitUntilDestinationReached(onComplete));
-    }
- 
-    private IEnumerator WaitUntilDestinationReached(UnityAction onComplete)
-    {
-        yield return new WaitUntil(() => IsAtDestination);
-        onComplete?.Invoke();
-        OnEnd?.Invoke();
-
-        if (animator) animator.SetBool("isMoving", false);
-
-    }
-
-    private void MoveToPosition(Vector3 targetPosition)
-    {
-        if (!IsAtDestination)
-        {
-            var direction = targetPosition - transform.position;
-            MoveInDirection(direction.normalized);
-        }
-    }
-
-    private void MoveInDirection(Vector3 direction)
-    {
-        direction.y = 0;
-
-        transform.position += speed * Time.deltaTime * direction;
-        if (direction.magnitude > 0) transform.forward = direction;
-
-        OnUpdate?.Invoke(direction);
     }
 }
