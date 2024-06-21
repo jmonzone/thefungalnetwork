@@ -19,22 +19,20 @@ public class FungalController : MonoBehaviour
 
     public FungalModel Model { get; private set; }
     public GameObject Render { get; private set; }
+    public MoveController Movement { get; private set; }
     public bool IsFollowing { get; set; }
 
     public Camera SpotlightCamera => spotlightCamera;
 
     private Camera mainCamera;
-    private MoveController movement;
-
     private float hungerTimer;
-    private FungalState state;
 
     public event UnityAction OnTalkStart;
 
     private void Awake()
     {
         mainCamera = Camera.main;
-        movement = GetComponent<MoveController>();
+        Movement = GetComponent<MoveController>();
     }
 
     public void Initialize(FungalModel model, Collider bounds)
@@ -57,61 +55,47 @@ public class FungalController : MonoBehaviour
             var animator = Render.GetComponentInChildren<Animator>();
             animator.speed = 0.25f;
 
-            movement.SetAnimator(animator);
-            movement.SetBounds(bounds);
-            movement.SetSpeed(1f + model.Speed * 0.1f);
-
-            SetState(FungalState.RANDOM);
+            Movement.SetAnimator(animator);
+            Movement.SetBounds(bounds);
+            Movement.SetSpeed(1f + model.Speed * 0.1f);
+            Movement.StartRandomMovement();
         }
     }
 
     public void MoveToPosition(Vector3 position, Transform lookTarget = null)
     {
-        movement.SetPosition(position, () =>
+        Movement.SetPosition(position, () =>
         {
-            if (lookTarget) movement.SetLookTarget(lookTarget);
+            if (lookTarget) Movement.SetLookTarget(lookTarget);
         });
     }
 
     public void MoveToTarget(Transform target)
     {
-        movement.SetTarget(target);
-        SetState(FungalState.TARGET);
+        Movement.SetTarget(target);
     }
 
     public void Stop()
     {
         IsFollowing = false;
-        movement.Stop();
-        SetState(FungalState.RANDOM);
+        Movement.StartRandomMovement();
     }
 
     public void Escort(Transform target)
     {
         IsFollowing = true;
-        movement.SetTarget(target);
-        SetState(FungalState.ESCORT);
+        Movement.SetTarget(target);
     }
 
     public void Unescort()
     {
         IsFollowing = false;
-        movement.Stop();
-        SetState(FungalState.RANDOM);
+        Movement.StartRandomMovement();
     }
 
     private void Update()
     {
-        UpdateHunger();
-    }
-
-    private void SetState(FungalState state)
-    {
-        this.state = state;
-        if (state == FungalState.RANDOM)
-        {
-            movement.StartRandomMovement();
-        }
+        //UpdateHunger();
     }
 
     private void UpdateHunger()

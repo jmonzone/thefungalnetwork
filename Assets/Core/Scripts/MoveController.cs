@@ -3,15 +3,8 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
-public enum MoveState
-{
-    POSITION,
-    DIRECTION,
-}
-
 public class MoveController : MonoBehaviour
 {
-    [SerializeField] private MoveState state;
     [SerializeField] private float speed = 2f;
     [SerializeField] private PositionAnchor positionAnchor;
     [SerializeField] private Animator animator;
@@ -31,19 +24,12 @@ public class MoveController : MonoBehaviour
 
     public float Speed => speed;
 
-    public bool IsAtDestination => state switch
-    {
-        MoveState.POSITION => Vector3.Distance(transform.position, getTargetPosition()) < 0.1f,
-        MoveState.DIRECTION => false,
-        _ => false,
-    };
+    public bool IsAtDestination => getTargetPosition != null && Vector3.Distance(transform.position, getTargetPosition()) < 0.1f;
 
     #region Public Methods
     public void SetTarget(Transform target)
     {
-        state = MoveState.POSITION;
-        isIdle = false;
-        if (positionReachedRoutine != null) StopCoroutine(positionReachedRoutine);
+        StopIdle();
 
         getTargetPosition = () =>
         {
@@ -56,15 +42,15 @@ public class MoveController : MonoBehaviour
 
     public void SetDirection(Vector3 direction)
     {
-        state = MoveState.DIRECTION;
-        isIdle = false;
+        StopIdle();
 
+        getTargetPosition = null;
         getDirection = () => direction;
     }
 
     public void SetPosition(Vector3 position, UnityAction onComplete = null)
     {
-        state = MoveState.POSITION;
+        StopIdle();
 
         if (animator) animator.SetBool("isMoving", true);
 
@@ -73,19 +59,33 @@ public class MoveController : MonoBehaviour
 
         OnStart?.Invoke();
 
-        if (positionReachedRoutine != null) StopCoroutine(positionReachedRoutine);
         positionReachedRoutine = StartCoroutine(WaitUntilDestinationReached(onComplete));
+    }
+
+    public void StartRadialMovement(Vector3 origin)
+    {
+        StopIdle();
+
+        var angle = 0f;
+        getTargetPosition = () =>
+        {
+            angle += Time.deltaTime;
+            var x = Mathf.Cos(angle);
+            var z = Mathf.Sin(angle);
+            var direction = new Vector3(x, 0, z) * 5f;
+            return origin + direction;
+        };
+        getDirection = () => getTargetPosition() - transform.position;
     }
 
     public void StartRandomMovement()
     {
         if (startIdle) StartIdle();
-        else StopIdle();
+        else SetPosition(positionAnchor.Position, StartIdle);
     }
 
     public void Stop()
     {
-        isIdle = false;
         SetPosition(transform.position);
     }
 
@@ -152,14 +152,13 @@ public class MoveController : MonoBehaviour
 
     private void StopIdle()
     {
-        idleTimer = maxIdleDuration;
         isIdle = false;
-        SetPosition(positionAnchor.Position, StartIdle);
+        if (positionReachedRoutine != null) StopCoroutine(positionReachedRoutine);
     }
 
     private void UpdateIdle()
     {
         idleTimer += Time.deltaTime;
-        if (idleTimer > maxIdleDuration) StopIdle();
+        if (idleTimer > maxIdleDuration) SetPosition(positionAnchor.Position, StartIdle);
     }
 }

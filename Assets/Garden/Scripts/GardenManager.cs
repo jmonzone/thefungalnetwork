@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -38,13 +39,20 @@ public class GardenManager : MonoBehaviour
 
         if (Application.isEditor)
         {
-            controlPanel.gameObject.SetActive(initialGameState == InitialGameState.GARDEN);
-            switch (initialGameState)
-            {
-                case InitialGameState.FISHING:
-                    fishingStation.UseAction();
-                    break;
-            }
+            StartCoroutine(WaitForInitialization());
+        }
+    }
+
+    private IEnumerator WaitForInitialization()
+    {
+        yield return new WaitForFixedUpdate();
+        controlPanel.gameObject.SetActive(initialGameState == InitialGameState.GARDEN);
+        switch (initialGameState)
+        {
+            case InitialGameState.FISHING:
+                fishingStation.SetFungal(fungalManager.FungalControllers[0]);
+                fishingStation.UseAction();
+                break;
         }
     }
 

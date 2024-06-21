@@ -14,7 +14,7 @@ public class FungalManager : MonoBehaviour
     [SerializeField] private FungalController fungalControllerPrefab;
     [SerializeField] private EggController eggControllerPrefab;
 
-    private List<FungalController> fungalControllers = new List<FungalController>();
+    public List<FungalController> FungalControllers { get; private set; } = new List<FungalController>();
 
     public List<FungalModel> Fungals => GameManager.Instance.Fungals;
     private GameData GameData => GameManager.Instance.GameData;
@@ -76,7 +76,7 @@ public class FungalManager : MonoBehaviour
         var fungalController = Instantiate(fungalControllerPrefab, spawnPosition, Quaternion.identity);
         fungalController.Initialize(fungal, fungalBounds);
         fungalController.transform.forward = Utility.RandomXZVector;
-        fungalControllers.Add(fungalController);
+        FungalControllers.Add(fungalController);
         fungalController.OnTalkStart += () => StartFungalTalk(fungalController);
     }
 
