@@ -54,6 +54,13 @@ public class FishingRod : MonoBehaviour
 
         switch (currentState)
         {
+            case FishingRodState.IDLE:
+                if (targetFish)
+                {
+                    targetFish.gameObject.SetActive(false);
+                    targetFish = null;
+                }
+                break;
             case FishingRodState.CASTING:
                 startInputPosition = Input.mousePosition;
                 break;
