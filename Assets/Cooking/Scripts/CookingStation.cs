@@ -14,7 +14,7 @@ public class CookingStation : JobStation
     [SerializeField] private Transform fungalPositionAnchor;
     [SerializeField] private Transform fungalLookTarget;
 
-    public override void SetFungal(FungalController fungal)
+    protected override void OnFungalChanged(FungalController fungal)
     {
         if (fungal)
         {

@@ -10,23 +10,22 @@ public class FishingStation : JobStation
 {
     [SerializeField] private FishManager fishManager;
     [SerializeField] private FishingRod fishingRod;
+    [SerializeField] private TextPopup textPopup;
 
-    private FungalController fungal;
     private float fishingTimer;
     private float baseDistanceThreshold;
     private FungalFishState state;
     private FishController targetFish;
 
-    public override void SetFungal(FungalController fungal)
+    protected override void OnFungalChanged(FungalController fungal)
     {
-        this.fungal = fungal;
         SetFungalState(FungalFishState.IDLE);
+        fungal.Movement.SetDistanceThreshold(0.1f);
     }
 
     protected override void OnJobStarted()
     {
         fishManager.enabled = true;
-        fungal.Movement.SetDistanceThreshold(0.1f);
     }
 
     protected override void OnCameraPrepared()
@@ -38,7 +37,7 @@ public class FishingStation : JobStation
     {
         fishManager.enabled = false;
         fishingRod.gameObject.SetActive(false);
-        fungal.Movement.SetDistanceThreshold(baseDistanceThreshold);
+        Fungal.Movement.SetDistanceThreshold(baseDistanceThreshold);
     }
 
     protected override void OnBackButtonClicked()
@@ -55,16 +54,15 @@ public class FishingStation : JobStation
                 fishingTimer = 0;
 
                 var origin = fishManager.transform.position;
-                if (fungal.Model.Data.Type == FungalType.SKY) origin += Vector3.up * 1.5f;
-                baseDistanceThreshold = fungal.Movement.DistanceThreshold;
-                fungal.Movement.StartRadialMovement(origin);
+                if (Fungal.Model.Data.Type == FungalType.SKY) origin += Vector3.up * 1.5f;
+                baseDistanceThreshold = Fungal.Movement.DistanceThreshold;
+                Fungal.Movement.StartRadialMovement(origin);
                 break;
         }
     }
 
     private void Update()
     {
-
         switch (state)
         {
             case FungalFishState.IDLE:
@@ -72,7 +70,7 @@ public class FishingStation : JobStation
                 if (fishingTimer > 5f) SetFungalState(FungalFishState.FISHING);
                 break;
             case FungalFishState.FISHING:
-                var catchableFish = fungal.transform.OverlapSphere<FishController>(20f, fish =>
+                var catchableFish = Fungal.transform.OverlapSphere<FishController>(20f, fish =>
                 {
                     return fish.State == FishState.IDLE;
                 });
@@ -80,14 +78,18 @@ public class FishingStation : JobStation
                 if (catchableFish.Count > 0)
                 {
                     targetFish = catchableFish[0];
-                    fungal.Movement.SetTarget(targetFish.transform);
-                }
+                    Fungal.Movement.SetTarget(targetFish.transform);
 
-                if (fungal.Movement.IsAtDestination)
-                {
-                    targetFish.gameObject.SetActive(false);
-                    targetFish = null;
-                    SetFungalState(FungalFishState.IDLE);
+                    if (Fungal.Movement.IsAtDestination)
+                    {
+                        var position = Camera.main.WorldToScreenPoint(targetFish.transform.position + Vector3.up);
+                        textPopup.transform.position = position;
+                        textPopup.ShowText($"+{targetFish.Data.Experience}");
+                        Fungal.Model.Experience += targetFish.Data.Experience;
+                        targetFish.gameObject.SetActive(false);
+                        targetFish = null;
+                        SetFungalState(FungalFishState.IDLE);
+                    }
                 }
                 break;
         }

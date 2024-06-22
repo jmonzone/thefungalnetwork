@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using Cinemachine;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -15,8 +16,11 @@ public abstract class JobStation : MonoBehaviour
     [SerializeField] private Transform playerLookTarget;
     [SerializeField] private SlideAnimation uIAnimation;
     [SerializeField] private Button backButton;
+    [SerializeField] private TextMeshProUGUI levelText;
+    [SerializeField] private Slider experienceSlider;
 
     public bool IsActive { get; private set; }
+    public FungalController Fungal { get; private set; }
 
     public event UnityAction OnJobStart;
     public event UnityAction OnJobEnd;
@@ -81,7 +85,27 @@ public abstract class JobStation : MonoBehaviour
         OnJobEnded();
     }
 
-    public abstract void SetFungal(FungalController fungal);
+    public void SetFungal(FungalController fungal)
+    {
+        Fungal = fungal;
+
+        fungal.Model.OnExperienceChanged += _ => UpdateExperience();
+
+        UpdateExperience();
+
+        OnFungalChanged(fungal);
+    }
+
+    private void UpdateExperience()
+    {
+        levelText.text = Fungal.Model.Level.ToString();
+
+        experienceSlider.minValue = FungalModel.ExperienceAtLevel(Fungal.Model.Level);
+        experienceSlider.maxValue = FungalModel.ExperienceAtLevel(Fungal.Model.Level + 1);
+        experienceSlider.value = Fungal.Model.Experience;
+    }
+
+    protected abstract void OnFungalChanged(FungalController fungal);
     protected abstract void OnJobStarted();
     protected abstract void OnJobEnded();
     protected abstract void OnBackButtonClicked();
