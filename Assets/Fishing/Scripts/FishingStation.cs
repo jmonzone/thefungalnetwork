@@ -15,6 +15,7 @@ public class FishingStation : JobStation
     private float fishingTimer;
     private float baseDistanceThreshold;
     private FungalFishState state;
+    private FishController targetFish;
 
     public override void SetFungal(FungalController fungal)
     {
@@ -25,6 +26,7 @@ public class FishingStation : JobStation
     protected override void OnJobStarted()
     {
         fishManager.enabled = true;
+        fungal.Movement.SetDistanceThreshold(0.1f);
     }
 
     protected override void OnCameraPrepared()
@@ -77,11 +79,16 @@ public class FishingStation : JobStation
 
                 if (catchableFish.Count > 0)
                 {
-                    fungal.Movement.SetDistanceThreshold(0.1f);
-                    fungal.Movement.SetTarget(catchableFish[0].transform);
+                    targetFish = catchableFish[0];
+                    fungal.Movement.SetTarget(targetFish.transform);
                 }
 
-                if (fungal.Movement.IsAtDestination) SetFungalState(FungalFishState.IDLE);
+                if (fungal.Movement.IsAtDestination)
+                {
+                    targetFish.gameObject.SetActive(false);
+                    targetFish = null;
+                    SetFungalState(FungalFishState.IDLE);
+                }
                 break;
         }
     }

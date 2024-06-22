@@ -446,15 +446,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2b252d604a094065a18d719180c3a27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 0
   speed: 1.5
   positionAnchor:
     anchor: {fileID: 0}
     bounds: {fileID: 0}
   animator: {fileID: 0}
+  distanceThreshold: 2
   startIdle: 1
   minIdleDuration: 2
   maxIdleDuration: 5
+  radius: 3
+  radialSpeed: 0.25
 --- !u!114 &5190689289194876585
 MonoBehaviour:
   m_ObjectHideFlags: 0
