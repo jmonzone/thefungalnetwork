@@ -46,7 +46,15 @@ public class MoveController : MonoBehaviour
     public float Speed => speed;
     public float DistanceThreshold => distanceThreshold;
 
-    public bool IsAtDestination => Vector3.Distance(transform.position, position) < 0.1f;
+    public bool IsAtDestination => Vector3.Distance(transform.position, TargetPosition) < 0.1f;
+
+    public Vector3 TargetPosition => type switch
+    {
+        MovementType.TARGET => GetTargetPosition(),
+        MovementType.DIRECTION => transform.position + direction,
+        MovementType.RADIAL => GetRadialPosition(),
+        _ => position,
+    };
 
     #region Public Methods
     public void SetTarget(Transform target)
@@ -130,18 +138,7 @@ public class MoveController : MonoBehaviour
     private void Update()
     {
         if (isIdle) UpdateIdle();
-        else
-        {
-            position = type switch
-            {
-                MovementType.TARGET => GetTargetPosition(),
-                MovementType.DIRECTION => transform.position + direction,
-                MovementType.RADIAL => GetRadialPosition(),
-                _ => position,
-            };
-
-            UpdatePosition();
-        }
+        else UpdatePosition();
     }
 
     private Vector3 GetTargetPosition()
@@ -165,7 +162,7 @@ public class MoveController : MonoBehaviour
 
         if (animator) animator.SetBool("isMoving", !IsAtDestination);
 
-        direction = (position - transform.position).normalized;
+        direction = (TargetPosition - transform.position).normalized;
 
         transform.position += speed * Time.deltaTime * direction;
         if (direction != Vector3.zero) transform.forward = direction;

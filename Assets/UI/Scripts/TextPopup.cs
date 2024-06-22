@@ -20,7 +20,7 @@ public class TextPopup : MonoBehaviour
         else
         {
             timer += Time.deltaTime;
-            //transform.position += 100 * Time.deltaTime * Vector3.up;
+            transform.position += 200 * Time.deltaTime * Vector3.up;
         }
     }
 }
