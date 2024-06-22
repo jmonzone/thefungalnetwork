@@ -50,7 +50,7 @@ public class FishingRod : MonoBehaviour
     {
         currentState = state;
         bob.SetState(state);
-        catchIndicator.gameObject.SetActive(state == FishingRodState.IN_WATER);
+        //catchIndicator.gameObject.SetActive(state == FishingRodState.IN_WATER);
 
         switch (currentState)
         {

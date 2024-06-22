@@ -7,7 +7,9 @@ public class FishingStation : JobStation
 
     public override void SetFungal(FungalController fungal)
     {
-        fungal.Movement.StartRadialMovement(fishManager.transform.position);
+        var origin = fishManager.transform.position;
+        if (fungal.Model.Data.Type == FungalType.SKY) origin += Vector3.up * 1.5f;
+        fungal.Movement.StartRadialMovement(origin);
     }
 
     protected override void OnJobStarted()

@@ -50,7 +50,9 @@ public class GardenManager : MonoBehaviour
         switch (initialGameState)
         {
             case InitialGameState.FISHING:
-                fishingStation.SetFungal(fungalManager.FungalControllers[0]);
+                var fungal = fungalManager.FungalControllers[0];
+                fungal.transform.position = fishingStation.transform.position;
+                fishingStation.SetFungal(fungal);
                 fishingStation.UseAction();
                 break;
         }

@@ -8,9 +8,18 @@ public class MoveController : MonoBehaviour
     [SerializeField] private float speed = 2f;
     [SerializeField] private PositionAnchor positionAnchor;
     [SerializeField] private Animator animator;
+
+    [Header("Target Movement")]
+    [SerializeField] private float distanceThreshold = 2f;
+
+    [Header("Random Movement")]
     [SerializeField] private bool startIdle;
     [SerializeField] private float minIdleDuration = 2f;
     [SerializeField] private float maxIdleDuration = 5f;
+
+    [Header("Radial Movement")]
+    [SerializeField] private float radius = 4f;
+    [SerializeField] private float radialSpeed = 0.25f;
 
     private Func<Vector3> getTargetPosition;
     private Func<Vector3> getDirection;
@@ -34,7 +43,7 @@ public class MoveController : MonoBehaviour
         getTargetPosition = () =>
         {
             var direction = target.position - transform.position;
-            return target.position - direction.normalized * 2f;
+            return target.position - direction.normalized * distanceThreshold;
         };
 
         getDirection = () => getTargetPosition() - transform.position;
@@ -51,7 +60,6 @@ public class MoveController : MonoBehaviour
     public void SetPosition(Vector3 position, UnityAction onComplete = null)
     {
         StopIdle();
-
         if (animator) animator.SetBool("isMoving", true);
 
         getTargetPosition = () => position;
@@ -69,10 +77,10 @@ public class MoveController : MonoBehaviour
         var angle = 0f;
         getTargetPosition = () =>
         {
-            angle += Time.deltaTime;
+            angle += Time.deltaTime * radialSpeed;
             var x = Mathf.Cos(angle);
             var z = Mathf.Sin(angle);
-            var direction = new Vector3(x, 0, z) * 5f;
+            var direction = new Vector3(x, 0, z) * radius;
             return origin + direction;
         };
         getDirection = () => getTargetPosition() - transform.position;
@@ -127,6 +135,8 @@ public class MoveController : MonoBehaviour
     {
         if (IsAtDestination) return;
 
+        if (animator) animator.SetBool("isMoving", !IsAtDestination);
+
         var direction = getDirection().normalized;
 
         transform.position += speed * Time.deltaTime * direction;
@@ -140,8 +150,6 @@ public class MoveController : MonoBehaviour
         yield return new WaitUntil(() => IsAtDestination);
         onComplete?.Invoke();
         OnEnd?.Invoke();
-
-        if (animator) animator.SetBool("isMoving", false);
     }
 
     private void StartIdle()
