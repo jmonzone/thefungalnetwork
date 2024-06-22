@@ -25,7 +25,7 @@ public abstract class JobStation : MonoBehaviour
     public event UnityAction OnJobStart;
     public event UnityAction OnJobEnd;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         backButton.onClick.AddListener(() =>
         {

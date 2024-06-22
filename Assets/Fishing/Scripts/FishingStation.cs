@@ -17,6 +17,18 @@ public class FishingStation : JobStation
     private FungalFishState state;
     private FishController targetFish;
 
+    protected override void Awake()
+    {
+        base.Awake();
+        fishingRod.OnStateChanged += state =>
+        {
+            if (state == FishingRodState.REELING && fishingRod.TargetFish)
+            {
+                OnFishCaught(fishingRod.TargetFish);
+            }
+        };
+    }
+
     protected override void OnFungalChanged(FungalController fungal)
     {
         SetFungalState(FungalFishState.IDLE);
@@ -82,10 +94,7 @@ public class FishingStation : JobStation
 
                     if (Fungal.Movement.IsAtDestination)
                     {
-                        var position = Camera.main.WorldToScreenPoint(targetFish.transform.position + Vector3.up);
-                        textPopup.transform.position = position;
-                        textPopup.ShowText($"+{targetFish.Data.Experience}");
-                        Fungal.Model.Experience += targetFish.Data.Experience;
+                        OnFishCaught(targetFish);
                         targetFish.gameObject.SetActive(false);
                         targetFish = null;
                         SetFungalState(FungalFishState.IDLE);
@@ -93,5 +102,13 @@ public class FishingStation : JobStation
                 }
                 break;
         }
+    }
+
+    private void OnFishCaught(FishController fish)
+    {
+        var position = Camera.main.WorldToScreenPoint(fish.transform.position);
+        textPopup.transform.position = position;
+        textPopup.ShowText($"+{fish.Data.Experience}");
+        Fungal.Model.Experience += fish.Data.Experience;
     }
 }

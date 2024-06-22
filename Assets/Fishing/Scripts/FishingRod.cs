@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 public enum FishingRodState
 {
@@ -29,9 +30,11 @@ public class FishingRod : MonoBehaviour
     private FishingRodState currentState;
     private Vector3 startInputPosition;
     private float dragDistance;
-    private FishController targetFish;
 
+    public FishController TargetFish { get; private set; }
     private bool IsUsing => Input.GetMouseButtonDown(0) && !Utility.IsPointerOverUI;
+
+    public event UnityAction<FishingRodState> OnStateChanged;
 
     private void OnEnable()
     {
@@ -55,10 +58,10 @@ public class FishingRod : MonoBehaviour
         switch (currentState)
         {
             case FishingRodState.IDLE:
-                if (targetFish)
+                if (TargetFish)
                 {
-                    targetFish.gameObject.SetActive(false);
-                    targetFish = null;
+                    TargetFish.gameObject.SetActive(false);
+                    TargetFish = null;
                 }
                 break;
             case FishingRodState.CASTING:
@@ -69,10 +72,12 @@ public class FishingRod : MonoBehaviour
                 catchIndicator.transform.localScale = 2 * catchRadius / transform.localScale.x * Vector3.one;
                 break;
             case FishingRodState.ATTRACTING:
-                targetFish = CatchableFish[0];
-                targetFish.Attract(bob);
+                TargetFish = CatchableFish[0];
+                TargetFish.Attract(bob);
                 break;
         }
+
+        OnStateChanged?.Invoke(currentState);
     }
 
     private void Update()
@@ -94,7 +99,7 @@ public class FishingRod : MonoBehaviour
                 else if (CatchableFish.Count > 0) SetState(FishingRodState.ATTRACTING);
                 break;
             case FishingRodState.ATTRACTING:
-                if (targetFish.State == FishState.CAUGHT) SetState(FishingRodState.REELING);
+                if (TargetFish.State == FishState.CAUGHT) SetState(FishingRodState.REELING);
                 break;
             case FishingRodState.REELING:
                 if (bob.IsReeledIn) SetState(FishingRodState.IDLE);
