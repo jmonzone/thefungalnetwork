@@ -21,10 +21,24 @@ public class MoveController : MonoBehaviour
     [SerializeField] private float radius = 4f;
     [SerializeField] private float radialSpeed = 0.25f;
 
-    private Func<Vector3> getTargetPosition;
+    private enum MovementType
+    {
+        TARGET,
+        DIRECTION,
+        POSITION,
+        RADIAL
+    }
+
+    private MovementType type;
     private Coroutine positionReachedRoutine;
     private bool isIdle;
     private float idleTimer;
+
+    private Transform target;
+    private Vector3 direction;
+    private Vector3 position;
+    private Vector3 origin;
+    private float angle;
 
     public event UnityAction OnStart;
     public event UnityAction OnEnd;
@@ -32,52 +46,41 @@ public class MoveController : MonoBehaviour
 
     public float Speed => speed;
 
-    public bool IsAtDestination => Vector3.Distance(transform.position, getTargetPosition()) < 0.1f;
+    public bool IsAtDestination => Vector3.Distance(transform.position, position) < 0.1f;
 
     #region Public Methods
     public void SetTarget(Transform target)
     {
-        StopIdle();
-
-        getTargetPosition = () =>
-        {
-            var direction = target.position - transform.position;
-            return target.position - direction.normalized * distanceThreshold;
-        };
+        this.target = target;
+        SetType(MovementType.TARGET);
     }
 
     public void SetDirection(Vector3 direction)
     {
-        StopIdle();
-
-        getTargetPosition = () => transform.position + direction;
+        this.direction = direction;
+        SetType(MovementType.DIRECTION);
     }
 
     public void SetPosition(Vector3 position, UnityAction onComplete = null)
     {
-        StopIdle();
-        if (animator) animator.SetBool("isMoving", true);
-
-        getTargetPosition = () => position;
+        this.position = position;
+        SetType(MovementType.POSITION);
 
         OnStart?.Invoke();
-
         positionReachedRoutine = StartCoroutine(WaitUntilDestinationReached(onComplete));
     }
 
     public void StartRadialMovement(Vector3 origin)
     {
-        StopIdle();
+        this.origin = origin;
+        SetType(MovementType.RADIAL);
+    }
 
-        var angle = 0f;
-        getTargetPosition = () =>
-        {
-            angle += Time.deltaTime * radialSpeed;
-            var x = Mathf.Cos(angle);
-            var z = Mathf.Sin(angle);
-            var direction = new Vector3(x, 0, z) * radius;
-            return origin + direction;
-        };
+    private void SetType(MovementType type)
+    {
+        this.type = type;
+        isIdle = false;
+        if (positionReachedRoutine != null) StopCoroutine(positionReachedRoutine);
     }
 
     public void StartRandomMovement()
@@ -122,7 +125,33 @@ public class MoveController : MonoBehaviour
     private void Update()
     {
         if (isIdle) UpdateIdle();
-        else UpdatePosition();
+        else
+        {
+            position = type switch
+            {
+                MovementType.TARGET => GetTargetPosition(),
+                MovementType.DIRECTION => transform.position + direction,
+                MovementType.RADIAL => GetRadialPosition(),
+                _ => position,
+            };
+
+            UpdatePosition();
+        }
+    }
+
+    private Vector3 GetTargetPosition()
+    {
+        var direction = (target.position - transform.position);
+        return target.position - direction.normalized * distanceThreshold;
+    }
+
+    private Vector3 GetRadialPosition()
+    {
+        angle += Time.deltaTime * radialSpeed;
+        var x = Mathf.Cos(angle);
+        var z = Mathf.Sin(angle);
+        var direction = new Vector3(x, 0, z) * radius;
+        return origin + direction;
     }
 
     private void UpdatePosition()
@@ -131,7 +160,7 @@ public class MoveController : MonoBehaviour
 
         if (animator) animator.SetBool("isMoving", !IsAtDestination);
 
-        var direction = (getTargetPosition() - transform.position).normalized;
+        direction = (position - transform.position).normalized;
 
         transform.position += speed * Time.deltaTime * direction;
         if (direction != Vector3.zero) transform.forward = direction;
@@ -150,12 +179,6 @@ public class MoveController : MonoBehaviour
     {
         idleTimer = UnityEngine.Random.Range(0f, maxIdleDuration - minIdleDuration);
         isIdle = true;
-    }
-
-    private void StopIdle()
-    {
-        isIdle = false;
-        if (positionReachedRoutine != null) StopCoroutine(positionReachedRoutine);
     }
 
     private void UpdateIdle()
