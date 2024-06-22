@@ -22,7 +22,6 @@ public class MoveController : MonoBehaviour
     [SerializeField] private float radialSpeed = 0.25f;
 
     private Func<Vector3> getTargetPosition;
-    private Func<Vector3> getDirection;
     private Coroutine positionReachedRoutine;
     private bool isIdle;
     private float idleTimer;
@@ -33,7 +32,7 @@ public class MoveController : MonoBehaviour
 
     public float Speed => speed;
 
-    public bool IsAtDestination => getTargetPosition != null && Vector3.Distance(transform.position, getTargetPosition()) < 0.1f;
+    public bool IsAtDestination => Vector3.Distance(transform.position, getTargetPosition()) < 0.1f;
 
     #region Public Methods
     public void SetTarget(Transform target)
@@ -45,16 +44,13 @@ public class MoveController : MonoBehaviour
             var direction = target.position - transform.position;
             return target.position - direction.normalized * distanceThreshold;
         };
-
-        getDirection = () => getTargetPosition() - transform.position;
     }
 
     public void SetDirection(Vector3 direction)
     {
         StopIdle();
 
-        getTargetPosition = null;
-        getDirection = () => direction;
+        getTargetPosition = () => transform.position + direction;
     }
 
     public void SetPosition(Vector3 position, UnityAction onComplete = null)
@@ -63,7 +59,6 @@ public class MoveController : MonoBehaviour
         if (animator) animator.SetBool("isMoving", true);
 
         getTargetPosition = () => position;
-        getDirection = () => position - transform.position;
 
         OnStart?.Invoke();
 
@@ -83,7 +78,6 @@ public class MoveController : MonoBehaviour
             var direction = new Vector3(x, 0, z) * radius;
             return origin + direction;
         };
-        getDirection = () => getTargetPosition() - transform.position;
     }
 
     public void StartRandomMovement()
@@ -137,7 +131,7 @@ public class MoveController : MonoBehaviour
 
         if (animator) animator.SetBool("isMoving", !IsAtDestination);
 
-        var direction = getDirection().normalized;
+        var direction = (getTargetPosition() - transform.position).normalized;
 
         transform.position += speed * Time.deltaTime * direction;
         if (direction != Vector3.zero) transform.forward = direction;
