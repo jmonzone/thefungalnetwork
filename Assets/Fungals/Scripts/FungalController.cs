@@ -63,19 +63,6 @@ public class FungalController : MonoBehaviour
         }
     }
 
-    public void MoveToPosition(Vector3 position, Transform lookTarget = null)
-    {
-        Movement.SetPosition(position, () =>
-        {
-            if (lookTarget) Movement.SetLookTarget(lookTarget);
-        });
-    }
-
-    public void MoveToTarget(Transform target)
-    {
-        Movement.SetTarget(target);
-    }
-
     public void Stop()
     {
         IsFollowing = false;

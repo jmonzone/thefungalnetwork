@@ -97,7 +97,7 @@ public class FungalManager : MonoBehaviour
     private void StartFungalTalk(FungalController fungal)
     {
         TalkingFungal = fungal;
-        fungal.MoveToTarget(player.transform);
+        fungal.Movement.SetTarget(player.transform);
         player.TalkToFungal(fungal);
 
         OnFungalTalkStart?.Invoke();

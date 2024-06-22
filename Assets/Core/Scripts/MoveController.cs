@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -45,6 +44,7 @@ public class MoveController : MonoBehaviour
     public event UnityAction<Vector3> OnUpdate;
 
     public float Speed => speed;
+    public float DistanceThreshold => distanceThreshold;
 
     public bool IsAtDestination => Vector3.Distance(transform.position, position) < 0.1f;
 
@@ -115,6 +115,11 @@ public class MoveController : MonoBehaviour
         direction.y = 0;
         transform.forward = direction;
     }
+
+    public void SetDistanceThreshold(float distanceThreshold)
+    {
+        this.distanceThreshold = distanceThreshold;
+    }
     #endregion
 
     private void Awake()
@@ -177,7 +182,7 @@ public class MoveController : MonoBehaviour
 
     private void StartIdle()
     {
-        idleTimer = UnityEngine.Random.Range(0f, maxIdleDuration - minIdleDuration);
+        idleTimer = Random.Range(0f, maxIdleDuration - minIdleDuration);
         isIdle = true;
     }
 

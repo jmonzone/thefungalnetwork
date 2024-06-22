@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -7,10 +9,17 @@ using UnityEngine.UI;
 
 public static class Utility
 {
+    public static List<T> OverlapSphere<T>(this Transform transform, float radius, Predicate<T> predicate = null) where T : MonoBehaviour
+        => Physics.OverlapSphere(transform.position, radius)
+        .Select(collider => collider.GetComponentInParent<T>())
+        .Where(entity => entity && (predicate == null || predicate(entity)))
+        .OrderBy(entity => Vector3.Distance(entity.transform.position, transform.position))
+        .ToList();
+
     public static Vector3 GetRandomXZPosition(this Collider collider)
     {
-        var x = Random.Range(collider.bounds.min.x, collider.bounds.max.x);
-        var z = Random.Range(collider.bounds.min.z, collider.bounds.max.z);
+        var x = UnityEngine.Random.Range(collider.bounds.min.x, collider.bounds.max.x);
+        var z = UnityEngine.Random.Range(collider.bounds.min.z, collider.bounds.max.z);
         return new Vector3(x, 0, z);
     }
 
@@ -18,7 +27,7 @@ public static class Utility
     {
         get
         {
-            var randomPosition = (Vector3)Random.insideUnitCircle;
+            var randomPosition = (Vector3)UnityEngine.Random.insideUnitCircle;
             randomPosition.z = randomPosition.y;
             randomPosition.y = 0;
             return randomPosition;

@@ -125,9 +125,5 @@ public class FishingRod : MonoBehaviour
         }
     }
 
-    private List<FishController> CatchableFish => Physics.OverlapSphere(bob.transform.position, catchRadius)
-        .Select(collider => collider.GetComponentInParent<FishController>())
-        .Where(fish => fish)
-        .OrderBy(fish => Vector3.Distance(fish.transform.position, bob.transform.position))
-        .ToList();
+    private List<FishController> CatchableFish => bob.transform.OverlapSphere<FishController>(catchRadius);
 }

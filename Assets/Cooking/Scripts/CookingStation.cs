@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 
 public class CookingStation : JobStation
 {
@@ -19,7 +18,10 @@ public class CookingStation : JobStation
     {
         if (fungal)
         {
-            fungal.MoveToPosition(fungalPositionAnchor.position, fungalLookTarget);
+            fungal.Movement.SetPosition(fungalPositionAnchor.position, () =>
+            {
+                fungal.Movement.SetLookTarget(fungalLookTarget);
+            });
         }
     }
 
