@@ -4885,7 +4885,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fdea13a0be954e08840cc09976e85fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: 9173131824021314546, guid: 564d87d99cd2d414fb8d8f20682f90c7, type: 3}
+  prefabs: []
   frequency: 1
   maxObjects: 10
   spawnPosition:
@@ -6756,13 +6756,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9c1321d84a924d6bb9c746c72420ade, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: 1985368070077868474, guid: 4d25c1f56be9d47d780c72b86caaa2e4, type: 3}
+  prefabs:
+  - {fileID: 1985368070077868474, guid: 4d25c1f56be9d47d780c72b86caaa2e4, type: 3}
+  - {fileID: 6726220744394366846, guid: e0952adeb12e5435692f08daeb19a4b3, type: 3}
   frequency: 2
   maxObjects: 5
   spawnPosition:
     anchor: {fileID: 1043662376}
     bounds: {fileID: 1331387107}
   defaultFish: {fileID: 11400000, guid: 259ca4af75d8b4b03802dec6e194fd09, type: 2}
+  treasure: {fileID: 6726220744394366846, guid: e0952adeb12e5435692f08daeb19a4b3,
+    type: 3}
 --- !u!4 &1043662376
 Transform:
   m_ObjectHideFlags: 0

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7582512635617759764}
   - component: {fileID: 6726220744394366846}
-  - component: {fileID: 6430525897607950355}
+  - component: {fileID: 8527546334207878192}
   m_Layer: 3
   m_Name: Treasure
   m_TagString: Untagged
@@ -31,8 +31,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2906279061856301700}
   - {fileID: 2478242335192330529}
+  - {fileID: 2906279061856301700}
   - {fileID: 1244001076229496699}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -48,9 +48,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b54965bd37bcc473cbe4dc0a87e48f7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isCatchable: 1
-  isTreasure: 1
---- !u!114 &6430525897607950355
+  data: {fileID: 0}
+--- !u!114 &8527546334207878192
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -59,17 +58,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 435136631182783080}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a5bd5ef7785ba470cb7383006ceededa, type: 3}
+  m_Script: {fileID: 11500000, guid: d2b252d604a094065a18d719180c3a27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  is2D: 0
-  distanceThreshold: 0.5
   speed: 2
-  direction: {x: 0, y: 0, z: 0}
-  inputType: 0
-  faceForward: 0
-  normalizeSpeed: 0
-  persistDirection: 1
+  positionAnchor:
+    anchor: {fileID: 0}
+    bounds: {fileID: 0}
+  animator: {fileID: 0}
+  distanceThreshold: 2
+  startIdle: 0
+  minIdleDuration: 2
+  maxIdleDuration: 5
+  radius: 4
+  radialSpeed: 0.25
 --- !u!1 &4574325704542198475
 GameObject:
   m_ObjectHideFlags: 0
@@ -83,7 +85,7 @@ GameObject:
   - component: {fileID: 188777976710734804}
   - component: {fileID: 2941961959530153669}
   m_Layer: 3
-  m_Name: Cube
+  m_Name: Bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -99,7 +101,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 2, z: 2}
+  m_LocalScale: {x: 0.75, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7582512635617759764}
@@ -188,7 +190,7 @@ GameObject:
   - component: {fileID: 7581223732320720779}
   - component: {fileID: 2509493833545197717}
   m_Layer: 3
-  m_Name: Cube (2)
+  m_Name: Lock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -203,8 +205,8 @@ Transform:
   m_GameObject: {fileID: 5960010549521829719}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.52, z: -0.61}
-  m_LocalScale: {x: 0.5, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0.13, z: 0.1525}
+  m_LocalScale: {x: 0.125, y: 0.25, z: 0.25}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7582512635617759764}
@@ -293,7 +295,7 @@ GameObject:
   - component: {fileID: 2152065898627495467}
   - component: {fileID: 7872896000149382959}
   m_Layer: 3
-  m_Name: Cube (1)
+  m_Name: 'Top '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -308,8 +310,8 @@ Transform:
   m_GameObject: {fileID: 5984172161442924886}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.17, z: 0}
-  m_LocalScale: {x: 3.1, y: 1, z: 2.1}
+  m_LocalPosition: {x: 0, y: 0.2925, z: 0}
+  m_LocalScale: {x: 0.775, y: 0.25, z: 0.525}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7582512635617759764}

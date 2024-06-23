@@ -42,10 +42,8 @@ public class FungalManager : MonoBehaviour
         if (Fungals.Count == 1 && Fungals[0].Level >= 10)
         {
             var availableFungals = GameData.Fungals.Where(fungal => fungal != Fungals[0].Data).ToList();
-            Debug.Log(availableFungals.Count);
             var randomIndex = Random.Range(0, availableFungals.Count);
             var secondFungal = availableFungals[randomIndex];
-            Debug.Log(secondFungal.name);
             SpawnEgg(secondFungal);
         }
 

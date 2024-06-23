@@ -19,7 +19,6 @@ public abstract class JobStation : MonoBehaviour
     [SerializeField] private TextMeshProUGUI levelText;
     [SerializeField] private Slider experienceSlider;
 
-    public bool IsActive { get; private set; }
     public FungalController Fungal { get; private set; }
 
     public event UnityAction OnJobStart;
@@ -36,11 +35,13 @@ public abstract class JobStation : MonoBehaviour
 
         var proximityAction = GetComponent<ProximityAction>();
         proximityAction.OnUse += UseAction;
+
+        enabled = false;
     }
 
     public void UseAction()
     {
-        IsActive = true;
+        enabled = true;
         camera.Priority = 2;
         uIAnimation.IsVisible = true;
         controlPanel.SetVisible(false);
@@ -68,7 +69,7 @@ public abstract class JobStation : MonoBehaviour
 
     protected void EndAction()
     {
-        IsActive = false;
+        enabled = false;
         camera.Priority = 0;
         uIAnimation.IsVisible = false;
 
