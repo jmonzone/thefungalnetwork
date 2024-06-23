@@ -164,8 +164,15 @@ public class MoveController : MonoBehaviour
 
         direction = (TargetPosition - transform.position).normalized;
 
-        transform.position += speed * Time.deltaTime * direction;
-        if (direction != Vector3.zero) transform.forward = direction;
+
+        float angle = Vector3.Angle(transform.forward, direction);
+        if (angle < Mathf.PI) transform.position += speed * Time.deltaTime * direction;
+
+        if (direction != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 500 * Time.deltaTime);
+        }
 
         OnUpdate?.Invoke(direction);
     }
