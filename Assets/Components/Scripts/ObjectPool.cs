@@ -83,7 +83,7 @@ public abstract class ObjectPoolManager<T> : MonoBehaviour where T : MonoBehavio
         {
             var pool = GetTargetPool(Pools);
 
-            if (pool.Objects.Where(obj => obj.gameObject.activeSelf).Count() < maxObjects)
+            if (Pools.All(pool => pool.Value.Objects.Where(obj => obj.gameObject.activeSelf).Count() < maxObjects))
             {
                 var obj = pool.Spawn(spawnPosition.Position);
                 OnSpawn(obj);
