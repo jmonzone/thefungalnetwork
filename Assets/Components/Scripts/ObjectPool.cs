@@ -68,13 +68,13 @@ public abstract class ObjectPoolManager<T> : MonoBehaviour where T : MonoBehavio
 
     private void OnDisable()
     {
-        foreach(var pool in Pools.Keys)
-        {
-            foreach(var obj in Pools[pool].Objects)
-            {
-                obj.gameObject.SetActive(false);
-            }
-        }
+        //foreach(var pool in Pools.Keys)
+        //{
+        //    foreach(var obj in Pools[pool].Objects)
+        //    {
+        //        obj.gameObject.SetActive(false);
+        //    }
+        //}
     }
 
     private void Update()
