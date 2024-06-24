@@ -51,6 +51,8 @@ public class ControlPanel : MonoBehaviour
         
         feedButton.onClick.AddListener(() => SetState(UIState.FEED));
 
+        fungalInfoUI.OnClose += () => SetState(UIState.INTERACTIONS);
+
         SetState(UIState.JOYSTICK);
     }
 

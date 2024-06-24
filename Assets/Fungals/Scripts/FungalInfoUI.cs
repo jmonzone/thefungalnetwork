@@ -1,7 +1,6 @@
-using System.Collections;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class FungalInfoUI : MonoBehaviour
@@ -9,6 +8,7 @@ public class FungalInfoUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI typeText;
     [SerializeField] private TextMeshProUGUI levelText;
+    [SerializeField] private Button closeButton; 
 
     [Header("Fungal Stats")]
     [SerializeField] private TextMeshProUGUI balanceText;
@@ -19,9 +19,12 @@ public class FungalInfoUI : MonoBehaviour
     private FungalController fungal;
     private Camera mainCamera;
 
+    public event UnityAction OnClose;
+
     private void Awake()
     {
         mainCamera = Camera.main;
+        closeButton.onClick.AddListener(() => OnClose?.Invoke());
     }
 
     private void Update()
