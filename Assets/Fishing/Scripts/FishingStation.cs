@@ -49,7 +49,7 @@ public class FishingStation : JobStation
     {
         fishManager.enabled = false;
         fishingRod.gameObject.SetActive(false);
-        Fungal.Movement.SetDistanceThreshold(baseDistanceThreshold);
+        if (Fungal) Fungal.Movement.SetDistanceThreshold(baseDistanceThreshold);
     }
 
     protected override void OnBackButtonClicked()
@@ -75,6 +75,8 @@ public class FishingStation : JobStation
 
     private void Update()
     {
+        if (!Fungal) return;
+
         switch (state)
         {
             case FungalFishState.IDLE:
@@ -106,9 +108,12 @@ public class FishingStation : JobStation
 
     private void OnFishCaught(FishController fish)
     {
-        var position = Camera.main.WorldToScreenPoint(fish.transform.position);
-        textPopup.transform.position = position;
-        textPopup.ShowText($"+{fish.Data.Experience}");
-        Fungal.Model.Experience += fish.Data.Experience;
+        if (Fungal)
+        {
+            var position = Camera.main.WorldToScreenPoint(fish.transform.position);
+            textPopup.transform.position = position;
+            textPopup.ShowText($"+{fish.Data.Experience}");
+            Fungal.Model.Experience += fish.Data.Experience;
+        }
     }
 }

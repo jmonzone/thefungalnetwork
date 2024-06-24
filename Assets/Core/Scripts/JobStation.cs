@@ -16,6 +16,7 @@ public abstract class JobStation : MonoBehaviour
     [SerializeField] private Transform playerLookTarget;
     [SerializeField] private SlideAnimation uIAnimation;
     [SerializeField] private Button backButton;
+    [SerializeField] private GameObject experienceContainer;
     [SerializeField] private TextMeshProUGUI levelText;
     [SerializeField] private Slider experienceSlider;
 
@@ -35,6 +36,8 @@ public abstract class JobStation : MonoBehaviour
 
         var proximityAction = GetComponent<ProximityAction>();
         proximityAction.OnUse += UseAction;
+
+        experienceContainer.SetActive(false);
 
         enabled = false;
     }
@@ -93,6 +96,8 @@ public abstract class JobStation : MonoBehaviour
         fungal.Model.OnExperienceChanged += _ => UpdateExperience();
 
         UpdateExperience();
+
+        experienceContainer.SetActive(true);
 
         OnFungalChanged(fungal);
     }

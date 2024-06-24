@@ -268,21 +268,24 @@ public class GameManager : MonoBehaviour
     // Jun 6, 2023
     private void AddStatsToFungals()
     {
-        var fungals = JsonFile[ConfigKeys.FUNGALS_KEY] as JArray;
-        for (var i = 0; i < fungals.Count; i++)
+        if (JsonFile[ConfigKeys.FUNGALS_KEY] is JArray fungals)
         {
-            if (JsonFile[ConfigKeys.FUNGALS_KEY][i][ConfigKeys.STATS_KEY] is JObject) continue;
-
-            JsonFile[ConfigKeys.FUNGALS_KEY][i][ConfigKeys.STATS_KEY] = new JObject
+            for (var i = 0; i < fungals.Count; i++)
             {
-                [ConfigKeys.BALANCE_KEY] = 0f,
-                [ConfigKeys.SPEED_KEY] = 0f,
-                [ConfigKeys.STAMINA_KEY] = 0f,
-                [ConfigKeys.POWER_KEY] = 0f,
-            }; ;
-        }
+                if (JsonFile[ConfigKeys.FUNGALS_KEY][i][ConfigKeys.STATS_KEY] is JObject) continue;
 
-        SaveData();
+                JsonFile[ConfigKeys.FUNGALS_KEY][i][ConfigKeys.STATS_KEY] = new JObject
+                {
+                    [ConfigKeys.BALANCE_KEY] = 0f,
+                    [ConfigKeys.SPEED_KEY] = 0f,
+                    [ConfigKeys.STAMINA_KEY] = 0f,
+                    [ConfigKeys.POWER_KEY] = 0f,
+                }; ;
+            }
+
+            SaveData();
+        }
+       
     }
     #endregion
 }

@@ -3,18 +3,18 @@ using UnityEngine;
 
 public class IngredientManager : ObjectPoolManager<IngredientController>
 {
+    [SerializeField] private IngredientController prefab;
     [SerializeField] private float maxLaunchForce;
     [SerializeField] private float minLaunchForce;
     [SerializeField] private float throwFrequency;
     [SerializeField] private float maxHorizontal;
     [SerializeField] private float maxLaunchAngle;
 
-    protected override List<IngredientController> Prefabs => new List<IngredientController>();
+    protected override List<IngredientController> Prefabs => new List<IngredientController> { prefab };
 
     protected override ObjectPool<IngredientController> GetTargetPool(Dictionary<IngredientController, ObjectPool<IngredientController>> pools)
     {
-        return null;
-        //throw new System.NotImplementedException();
+        return pools[prefab];
     }
 
     protected override void OnInstantiate(IngredientController obj)

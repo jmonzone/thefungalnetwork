@@ -14,6 +14,11 @@ public class IngredientController : MonoBehaviour
         ingredientCollider = GetComponent<Collider>();
     }
 
+    private void Update()
+    {
+        if (transform.position.y < 0) gameObject.SetActive(false);
+    }
+
     public void Reset()
     {
         transform.rotation = Random.rotation;
