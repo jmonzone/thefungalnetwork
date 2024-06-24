@@ -15,7 +15,7 @@ public class ObjectPool<T> where T : MonoBehaviour
 
         for (var i = 0; i < 10; i++)
         {
-            var obj = Object.Instantiate(prefab, parent);
+            var obj = Object.Instantiate(prefab, parent.position, Quaternion.identity, parent);
             obj.gameObject.SetActive(false);
             onInstantiate(obj);
             Objects.Add(obj);
@@ -27,7 +27,6 @@ public class ObjectPool<T> where T : MonoBehaviour
         var obj = GetNextObject();
         obj.transform.position = position;
         obj.gameObject.SetActive(true);
-
         return obj;
     }
 

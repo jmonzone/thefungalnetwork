@@ -14,7 +14,7 @@ public class FishManager : ObjectPoolManager<FishController>
 
     protected override ObjectPool<FishController> GetTargetPool(Dictionary<FishController, ObjectPool<FishController>> pools)
     {
-        var isTreasure = Random.Range(0f, 1f) > 0.9;
+        var isTreasure = Random.Range(0f, 1f) > 0.95;
         return pools[isTreasure ? treasure : defaultFish.Prefab];
     }
 

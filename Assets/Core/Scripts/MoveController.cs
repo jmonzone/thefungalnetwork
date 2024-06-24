@@ -5,6 +5,8 @@ using UnityEngine.Events;
 public class MoveController : MonoBehaviour
 {
     [SerializeField] private float speed = 2f;
+    [SerializeField] private bool faceForward = true;
+    [SerializeField] private bool lockXZ = false;
     [SerializeField] private PositionAnchor positionAnchor;
     [SerializeField] private Animator animator;
 
@@ -45,6 +47,7 @@ public class MoveController : MonoBehaviour
 
     public float Speed => speed;
     public float DistanceThreshold => distanceThreshold;
+    public bool FaceForward => faceForward;
 
     public bool IsAtDestination => Vector3.Distance(transform.position, TargetPosition) < 0.1f;
 
@@ -166,11 +169,12 @@ public class MoveController : MonoBehaviour
 
 
         float angle = Vector3.Angle(transform.forward, direction);
-        if (angle < Mathf.PI) transform.position += speed * Time.deltaTime * direction;
+        if (!faceForward || angle < Mathf.PI) transform.position += speed * Time.deltaTime * direction;
 
-        if (direction != Vector3.zero)
+        if (faceForward && direction != Vector3.zero)
         {
             Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
+            if (lockXZ) targetRotation = Quaternion.Euler(0, targetRotation.eulerAngles.y, 0); // Keep only y-axis rotation
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 500 * Time.deltaTime);
         }
 
