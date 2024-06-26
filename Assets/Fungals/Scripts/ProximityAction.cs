@@ -11,10 +11,16 @@ public class ProximityAction : MonoBehaviour
     public Color Color { get => color; set => color = value; }
     public string Text { get => text; set => text = value; }
 
-    public event UnityAction OnUse;
+    [SerializeField] private UnityEvent onUse;
+
+    public event UnityAction OnUse
+    {
+        add => onUse.AddListener(value);
+        remove => onUse.RemoveListener(value);
+    }
 
     public void Use()
     {
-        OnUse?.Invoke();
+        onUse?.Invoke();
     }
 }

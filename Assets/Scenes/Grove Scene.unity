@@ -2683,7 +2683,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0.38268343, y: 0, z: 0, w: 0.92387956}
-  m_LocalPosition: {x: 0, y: 10, z: -11}
+  m_LocalPosition: {x: 0, y: 5, z: 14}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3474,6 +3474,9 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: abb42f6ee7d2243ddad9f10ff94eb040, type: 3}
   color: {r: 0.5372549, g: 0.6901961, b: 0.7254902, a: 1}
   text: Fish
+  onUse:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &446155710
 GameObject:
   m_ObjectHideFlags: 0
@@ -10319,6 +10322,9 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: c234d8fb9e8644827aa58e604c8860e0, type: 3}
   color: {r: 0.70980394, g: 0.45882356, b: 0.6627451, a: 1}
   text: Cook
+  onUse:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &1566327956
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11858,6 +11864,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1786122487}
   - component: {fileID: 1786122488}
+  - component: {fileID: 1786122489}
   m_Layer: 0
   m_Name: Cavern
   m_TagString: Untagged
@@ -11903,6 +11910,33 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: b9d12509853404dc8aa1a392f956f2a2, type: 3}
   color: {r: 0.3490566, g: 0.103729084, b: 0.17037144, a: 1}
   text: Enter
+  onUse:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1786122489}
+        m_TargetAssemblyTypeName: NavigateToScene, Assembly-CSharp
+        m_MethodName: Navigate
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1786122489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1786122486}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a92d590d931c4049bccd635fe1f267e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1786476003
 GameObject:
   m_ObjectHideFlags: 0
