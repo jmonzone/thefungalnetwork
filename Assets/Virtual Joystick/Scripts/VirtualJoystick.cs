@@ -67,14 +67,9 @@ public class VirtualJoystick : MonoBehaviour
             List<RaycastResult> results = new List<RaycastResult>();
             EventSystem.current.RaycastAll(pointerEventData, results);
 
-            if (results.Count > 0)
-            {
-                if (results[0].gameObject == target)
-                {
-                    return true;
-                }
-            }
-            return false;
+            if (!target) return true;
+            else if (results.Count > 0 && results[0].gameObject == target) return true;
+            else return false;
         }
            
     }

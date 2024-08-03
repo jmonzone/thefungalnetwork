@@ -10,13 +10,21 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float minVerticalAngle = -30f; // Minimum vertical angle
     [SerializeField] private float maxVerticalAngle = 60f; // Maximum vertical angle
 
+    [SerializeField] private bool rotateCamera = true;
+
     private Vector2 lastInputPosition;
     private bool isDragging = false;
     private Vector3 cameraOffset;
     private float currentVerticalAngle = 0f;
 
+    public Transform Target { get => target; set => target = value; }
+
     void Update()
     {
+        if (rotateCamera) HandleRotateCamera();
+
+        if (!target) return;
+
         var targetPosition = target.position + cameraOffset;
         var direction = targetPosition - transform.position;
 
@@ -25,7 +33,10 @@ public class CameraController : MonoBehaviour
             transform.position += movementSpeed * Time.deltaTime * direction;
         }
 
+    }
 
+    private void HandleRotateCamera()
+    {
         // Check for touch input
         if (Input.touchCount > 0)
         {
