@@ -14,14 +14,14 @@ using UnityEngine.Events;
 
 public class MultiplayerManager : MonoBehaviour
 {
+    public string PlayerName { get; private set; }
+    public Lobby JoinedLobby { get; private set; }
 
-    private string playerName;
     private int maxPlayers = 10;
 
     private Lobby hostLobby;
     private bool joinedRelay;
 
-    public Lobby JoinedLobby { get; private set; }
 
     private float heartbeatTimer;
     private float lobbyUpdateTimer;
@@ -68,9 +68,9 @@ public class MultiplayerManager : MonoBehaviour
 
     public async void SignIn(string playerName, UnityAction onComplete)
     {
-        this.playerName = playerName.Replace(" ", "_");
+        this.PlayerName = playerName.Replace(" ", "_");
         InitializationOptions initializationOptions = new InitializationOptions();
-        initializationOptions.SetProfile(this.playerName);
+        initializationOptions.SetProfile(this.PlayerName);
 
         await UnityServices.InitializeAsync();
 
@@ -237,7 +237,7 @@ public class MultiplayerManager : MonoBehaviour
     {
         Data = new Dictionary<string, PlayerDataObject>
         {
-            { "PlayerName", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, playerName) }
+            { "PlayerName", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, PlayerName) }
         }
     };
 
