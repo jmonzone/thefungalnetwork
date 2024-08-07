@@ -1,4 +1,4 @@
-Library: /Users/johnnanmonzon/jmonzone/fungals/Temp/BurstOutput/StaticLibraries/lib_burst_generated
+Library: /Users/johnnanmonzon/jmonzone/thefungalnetwork/Temp/BurstOutput/StaticLibraries/lib_burst_generated
 --platform=iOS
 --backend=burst-llvm-10
 --target=ARMV8A_AARCH64
@@ -20,6 +20,7 @@ Library: /Users/johnnanmonzon/jmonzone/fungals/Temp/BurstOutput/StaticLibraries/
 --assembly-defines=System.Runtime.Serialization;
 --assembly-defines=System.Xml;
 --assembly-defines=System.Xml.Linq;
+--assembly-defines=unity-websocket-sharp;
 --assembly-defines=Unity.2D.Animation.Runtime;
 --assembly-defines=Unity.Burst;
 --assembly-defines=Unity.Burst.Unsafe;
@@ -27,6 +28,7 @@ Library: /Users/johnnanmonzon/jmonzone/fungals/Temp/BurstOutput/StaticLibraries/
 --assembly-defines=Unity.Collections.LowLevel.ILSupport;
 --assembly-defines=Unity.InternalAPIEngineBridge.001;
 --assembly-defines=Unity.Mathematics;
+--assembly-defines=Unity.Multiplayer.Samples.Utilities.ClientAuthority;
 --assembly-defines=Unity.Multiplayer.Tools.Adapters;
 --assembly-defines=Unity.Multiplayer.Tools.Adapters.Ngo1;
 --assembly-defines=Unity.Multiplayer.Tools.Common;
@@ -35,21 +37,36 @@ Library: /Users/johnnanmonzon/jmonzone/fungals/Temp/BurstOutput/StaticLibraries/
 --assembly-defines=Unity.Multiplayer.Tools.NetStats;
 --assembly-defines=Unity.Multiplayer.Tools.NetStatsReporting;
 --assembly-defines=Unity.Multiplayer.Tools.NetworkSolutionInterface;
+--assembly-defines=Unity.Netcode.Components;
 --assembly-defines=Unity.Netcode.Runtime;
 --assembly-defines=Unity.Networking.Transport;
 --assembly-defines=Unity.RenderPipeline.Universal.ShaderLibrary;
 --assembly-defines=Unity.RenderPipelines.Core.Runtime;
 --assembly-defines=Unity.RenderPipelines.Universal.Runtime;
+--assembly-defines=Unity.Services.Authentication;
+--assembly-defines=Unity.Services.Core.Configuration;
+--assembly-defines=Unity.Services.Core.Device;
+--assembly-defines=Unity.Services.Core;
+--assembly-defines=Unity.Services.Core.Environments.Internal;
+--assembly-defines=Unity.Services.Core.Internal;
+--assembly-defines=Unity.Services.Core.Registration;
+--assembly-defines=Unity.Services.Core.Scheduler;
+--assembly-defines=Unity.Services.Core.Telemetry;
+--assembly-defines=Unity.Services.Core.Threading;
+--assembly-defines=Unity.Services.Lobbies;
+--assembly-defines=Unity.Services.QoS;
+--assembly-defines=Unity.Services.Relay;
+--assembly-defines=Unity.Services.Wire.Internal;
 --assembly-defines=Unity.TextMeshPro;
 --assembly-defines=Unity.Timeline;
 --assembly-defines=UnityEngine;
 --linker-options=min-ios-version=12.0
 --generate-link-xml=Temp/burst.link.xml
---temp-folder=/Users/johnnanmonzon/jmonzone/fungals/Temp/Burst
+--temp-folder=/Users/johnnanmonzon/jmonzone/thefungalnetwork/Temp/Burst
 --generate-static-linkage-methods
 --key-folder=/Applications/Unity/Hub/Editor/2022.3.19f1/PlaybackEngines/iOSSupport
---decode-folder=/Users/johnnanmonzon/jmonzone/fungals/Library/Burst
---output=/Users/johnnanmonzon/jmonzone/fungals/Temp/BurstOutput/StaticLibraries/lib_burst_generated
+--decode-folder=/Users/johnnanmonzon/jmonzone/thefungalnetwork/Library/Burst
+--output=/Users/johnnanmonzon/jmonzone/thefungalnetwork/Temp/BurstOutput/StaticLibraries/lib_burst_generated
 --pdb-search-paths=Temp/ManagedSymbols/
 
 --method=Unity.Burst.BurstCompiler+BurstCompilerHelper, Unity.Burst, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::IsBurstEnabled()--8c2be93e18276203cbd918daa2748a10
@@ -152,6 +169,7 @@ Library: /Users/johnnanmonzon/jmonzone/fungals/Temp/BurstOutput/StaticLibraries/
 --assembly-defines=System.Runtime.Serialization;
 --assembly-defines=System.Xml;
 --assembly-defines=System.Xml.Linq;
+--assembly-defines=unity-websocket-sharp;
 --assembly-defines=Unity.2D.Animation.Runtime;
 --assembly-defines=Unity.Burst;
 --assembly-defines=Unity.Burst.Unsafe;
@@ -159,6 +177,7 @@ Library: /Users/johnnanmonzon/jmonzone/fungals/Temp/BurstOutput/StaticLibraries/
 --assembly-defines=Unity.Collections.LowLevel.ILSupport;
 --assembly-defines=Unity.InternalAPIEngineBridge.001;
 --assembly-defines=Unity.Mathematics;
+--assembly-defines=Unity.Multiplayer.Samples.Utilities.ClientAuthority;
 --assembly-defines=Unity.Multiplayer.Tools.Adapters;
 --assembly-defines=Unity.Multiplayer.Tools.Adapters.Ngo1;
 --assembly-defines=Unity.Multiplayer.Tools.Common;
@@ -167,21 +186,36 @@ Library: /Users/johnnanmonzon/jmonzone/fungals/Temp/BurstOutput/StaticLibraries/
 --assembly-defines=Unity.Multiplayer.Tools.NetStats;
 --assembly-defines=Unity.Multiplayer.Tools.NetStatsReporting;
 --assembly-defines=Unity.Multiplayer.Tools.NetworkSolutionInterface;
+--assembly-defines=Unity.Netcode.Components;
 --assembly-defines=Unity.Netcode.Runtime;
 --assembly-defines=Unity.Networking.Transport;
 --assembly-defines=Unity.RenderPipeline.Universal.ShaderLibrary;
 --assembly-defines=Unity.RenderPipelines.Core.Runtime;
 --assembly-defines=Unity.RenderPipelines.Universal.Runtime;
+--assembly-defines=Unity.Services.Authentication;
+--assembly-defines=Unity.Services.Core.Configuration;
+--assembly-defines=Unity.Services.Core.Device;
+--assembly-defines=Unity.Services.Core;
+--assembly-defines=Unity.Services.Core.Environments.Internal;
+--assembly-defines=Unity.Services.Core.Internal;
+--assembly-defines=Unity.Services.Core.Registration;
+--assembly-defines=Unity.Services.Core.Scheduler;
+--assembly-defines=Unity.Services.Core.Telemetry;
+--assembly-defines=Unity.Services.Core.Threading;
+--assembly-defines=Unity.Services.Lobbies;
+--assembly-defines=Unity.Services.QoS;
+--assembly-defines=Unity.Services.Relay;
+--assembly-defines=Unity.Services.Wire.Internal;
 --assembly-defines=Unity.TextMeshPro;
 --assembly-defines=Unity.Timeline;
 --assembly-defines=UnityEngine;
 --linker-options=min-ios-version=12.0
 --generate-link-xml=Temp/burst.link.xml
---temp-folder=/Users/johnnanmonzon/jmonzone/fungals/Temp/Burst
+--temp-folder=/Users/johnnanmonzon/jmonzone/thefungalnetwork/Temp/Burst
 --generate-static-linkage-methods
 --key-folder=/Applications/Unity/Hub/Editor/2022.3.19f1/PlaybackEngines/iOSSupport
---decode-folder=/Users/johnnanmonzon/jmonzone/fungals/Library/Burst
---output=/Users/johnnanmonzon/jmonzone/fungals/Temp/BurstOutput/StaticLibraries/lib_burst_generated
+--decode-folder=/Users/johnnanmonzon/jmonzone/thefungalnetwork/Library/Burst
+--output=/Users/johnnanmonzon/jmonzone/thefungalnetwork/Temp/BurstOutput/StaticLibraries/lib_burst_generated
 --pdb-search-paths=Temp/ManagedSymbols/
 
 --method=Unity.Jobs.IJobForExtensions+ForJobStruct`1[[UnityEngine.Rendering.Universal.ZBinningJob, Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(UnityEngine.Rendering.Universal.ZBinningJob&, Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--77fc393cb521ac129b1392d4eb94d29a
