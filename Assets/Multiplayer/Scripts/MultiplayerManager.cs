@@ -14,17 +14,34 @@ using UnityEngine.Events;
 
 public class MultiplayerManager : MonoBehaviour
 {
+
+
     public string PlayerName { get; private set; }
-    public Lobby JoinedLobby { get; private set; }
+
+
+    private Lobby joinedLobby;
+    public Lobby JoinedLobby
+    {
+        get => joinedLobby;
+        private set
+        {
+            joinedLobby = value;
+            OnLobbyUpdated?.Invoke();
+        }
+    }
+
+    public event UnityAction OnLobbyUpdated;
 
     private int maxPlayers = 10;
 
     private Lobby hostLobby;
+
     private bool joinedRelay;
 
 
     private float heartbeatTimer;
     private float lobbyUpdateTimer;
+
 
 
 
@@ -70,7 +87,7 @@ public class MultiplayerManager : MonoBehaviour
     {
         PlayerName = playerName.Replace(" ", "_");
         InitializationOptions initializationOptions = new InitializationOptions();
-        initializationOptions.SetProfile(this.PlayerName);
+        initializationOptions.SetProfile(PlayerName);
 
         await UnityServices.InitializeAsync();
 
@@ -205,6 +222,7 @@ public class MultiplayerManager : MonoBehaviour
             {
                 HostId = JoinedLobby.Players[1].Id
             });
+
             JoinedLobby = hostLobby;
         }
         catch (LobbyServiceException e)

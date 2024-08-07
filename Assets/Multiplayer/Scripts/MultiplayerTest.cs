@@ -61,6 +61,7 @@ public class MultiplayerTest : MonoBehaviour
             joinButton.interactable = CanJoin;
         });
 
+        multiplayerManager.OnLobbyUpdated += () => UpdateLobbyInfoUI();
 
         virtualJoystick.gameObject.SetActive(false);
         virtualJoystick.OnJoystickUpdate += direction =>
@@ -98,6 +99,12 @@ public class MultiplayerTest : MonoBehaviour
     private void OnGameJoined()
     {
         gameplayUI.SetActive(true);
+        UpdateLobbyInfoUI();
+        virtualJoystick.gameObject.SetActive(true);
+    }
+
+    private void UpdateLobbyInfoUI()
+    {
         lobbyCodeText.text = multiplayerManager.JoinedLobby.LobbyCode;
 
         playersText.text = "<b>Players:</b> ";
@@ -108,8 +115,9 @@ public class MultiplayerTest : MonoBehaviour
             if (AuthenticationService.Instance.PlayerId == player.Id) playersText.text += " (You)";
 
             playersText.text += " ";
-       
+
         }
-        virtualJoystick.gameObject.SetActive(true);
+
+        Debug.Log(playersText.text);
     }
 }
