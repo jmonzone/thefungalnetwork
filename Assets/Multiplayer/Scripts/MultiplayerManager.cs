@@ -68,7 +68,7 @@ public class MultiplayerManager : MonoBehaviour
 
     public async void SignIn(string playerName, UnityAction onComplete)
     {
-        this.PlayerName = playerName.Replace(" ", "_");
+        PlayerName = playerName.Replace(" ", "_");
         InitializationOptions initializationOptions = new InitializationOptions();
         initializationOptions.SetProfile(this.PlayerName);
 
@@ -83,50 +83,6 @@ public class MultiplayerManager : MonoBehaviour
     {
         var joinCode = await CreateRelay();
         await CreateLobby(joinCode);
-    }
-
-    private async void OnSignedIn()
-    {
-        Debug.Log("signed in " + AuthenticationService.Instance.PlayerId);
-
-        try
-        {
-            var queryOptions = new QueryLobbiesOptions
-            {
-                Count = maxPlayers,
-                Filters = new List<QueryFilter>
-                {
-                    new QueryFilter(QueryFilter.FieldOptions.AvailableSlots, "0", QueryFilter.OpOptions.GT)
-                },
-            };
-
-            var queryResponse = await Lobbies.Instance.QueryLobbiesAsync(queryOptions);
-
-            Debug.Log("Lobbies found: " + queryResponse.Results.Count);
-
-
-            foreach (var lobby in queryResponse.Results)
-            {
-                Debug.Log($"lobby slots: {lobby.AvailableSlots} {lobby.Created} {lobby.LobbyCode} {lobby.MaxPlayers}");
-                foreach(var player in lobby.Players)
-                {
-                    Debug.Log($"player {player.Profile?.Name}");
-
-                }
-            }
-            if (queryResponse.Results.Count > 0)
-            {
-                await QuickJoinLobby();
-            }
-            else
-            {
-                CreateRelayAndLobby();
-            }
-        }
-        catch (LobbyServiceException e)
-        {
-            Debug.Log(e);
-        }
     }
 
     private async Task<string> CreateRelay()

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using TMPro;
+using Unity.Services.Authentication;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -20,7 +21,7 @@ public class MultiplayerTest : MonoBehaviour
 
     [Header("Gameplay UI References")]
     [SerializeField] private GameObject gameplayUI;
-    [SerializeField] private TextMeshProUGUI usernameText;
+    [SerializeField] private TextMeshProUGUI playersText;
     [SerializeField] private TextMeshProUGUI lobbyCodeText;
 
 
@@ -97,8 +98,18 @@ public class MultiplayerTest : MonoBehaviour
     private void OnGameJoined()
     {
         gameplayUI.SetActive(true);
-        usernameText.text = multiplayerManager.PlayerName.Replace("_", " ");
         lobbyCodeText.text = multiplayerManager.JoinedLobby.LobbyCode;
+
+        playersText.text = "<b>Players:</b> ";
+
+        foreach (var player in multiplayerManager.JoinedLobby.Players)
+        {
+            playersText.text += player.Data["PlayerName"].Value.Replace("_", " ");
+            if (AuthenticationService.Instance.PlayerId == player.Id) playersText.text += " (You)";
+
+            playersText.text += " ";
+       
+        }
         virtualJoystick.gameObject.SetActive(true);
     }
 }
