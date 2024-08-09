@@ -117,7 +117,5 @@ public class MultiplayerTest : MonoBehaviour
             playersText.text += " ";
 
         }
-
-        Debug.Log(playersText.text);
     }
 }

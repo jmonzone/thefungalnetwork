@@ -14,8 +14,6 @@ using UnityEngine.Events;
 
 public class MultiplayerManager : MonoBehaviour
 {
-
-
     public string PlayerName { get; private set; }
 
 
@@ -42,7 +40,10 @@ public class MultiplayerManager : MonoBehaviour
     private float heartbeatTimer;
     private float lobbyUpdateTimer;
 
+    private void Start()
+    {
 
+    }
 
 
     private void Update()
@@ -100,6 +101,7 @@ public class MultiplayerManager : MonoBehaviour
     {
         var joinCode = await CreateRelay();
         await CreateLobby(joinCode);
+
     }
 
     private async Task<string> CreateRelay()
@@ -110,12 +112,27 @@ public class MultiplayerManager : MonoBehaviour
 
             string joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
 
-            Debug.Log(joinCode);
-
             RelayServerData relayServerData = new RelayServerData(allocation, "dtls");
 
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
             NetworkManager.Singleton.StartHost();
+            NetworkManager.Singleton.OnClientDisconnectCallback += async (clientId) =>
+            {
+                Debug.Log($"Client disconnected: {clientId}");
+
+                foreach(var player in joinedLobby.Players)
+                {
+                    Debug.Log($"player: {player.Data["NetworkId"].Value}");
+
+                    if (player.Data["NetworkId"].Value == clientId.ToString())
+                    {
+                        await LobbyService.Instance.RemovePlayerAsync(joinedLobby.Id, player.Id);
+                    }
+                }
+
+
+            };
+
             joinedRelay = true;
 
             return joinCode;
@@ -139,6 +156,17 @@ public class MultiplayerManager : MonoBehaviour
 
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
             NetworkManager.Singleton.StartClient();
+
+            NetworkManager.Singleton.OnClientConnectedCallback += async (clientId) =>
+            {
+                await LobbyService.Instance.UpdatePlayerAsync(joinedLobby.Id, AuthenticationService.Instance.PlayerId, new UpdatePlayerOptions
+                {
+                    Data = new Dictionary<string, PlayerDataObject>
+                {
+                    { "NetworkId", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, NetworkManager.Singleton.LocalClientId.ToString()) }
+                }
+                });
+            };
         }
         catch (RelayServiceException e)
         {
@@ -146,14 +174,21 @@ public class MultiplayerManager : MonoBehaviour
         }
     }
 
+
     private async Task CreateLobby(string joinCode)
     {
         try
         {
+            var player = Player;
+            var clientId = NetworkManager.Singleton.LocalClientId;
+            player.Data["NetworkId"] = new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, clientId.ToString());
+            Debug.Log(clientId);
+
+
             CreateLobbyOptions createLobbyOptions = new CreateLobbyOptions
             {
                 IsPrivate = false,
-                Player = Player,
+                Player = player,
                 Data = new Dictionary<string, DataObject>()
                 {
                     { "JoinCode", new DataObject(DataObject.VisibilityOptions.Member, joinCode) }
@@ -211,28 +246,29 @@ public class MultiplayerManager : MonoBehaviour
         Data = new Dictionary<string, PlayerDataObject>
         {
             { "PlayerName", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, PlayerName) }
+
         }
     };
 
-    private async void MigrateHost()
-    {
-        try
-        {
-            hostLobby = await Lobbies.Instance.UpdateLobbyAsync(hostLobby.Id, new UpdateLobbyOptions
-            {
-                HostId = JoinedLobby.Players[1].Id
-            });
+    //private async void MigrateHost()
+    //{
+    //    try
+    //    {
+    //        hostLobby = await Lobbies.Instance.UpdateLobbyAsync(hostLobby.Id, new UpdateLobbyOptions
+    //        {
+    //            HostId = JoinedLobby.Players[1].Id
+    //        });
 
-            JoinedLobby = hostLobby;
-        }
-        catch (LobbyServiceException e)
-        {
-            Debug.Log(e);
-        }
-    }
+    //        JoinedLobby = hostLobby;
+    //    }
+    //    catch (LobbyServiceException e)
+    //    {
+    //        Debug.Log(e);
+    //    }
+    //}
 
-    private void OnApplicationQuit()
-    {
-        MigrateHost();
-    }
+    //private void OnApplicationQuit()
+    //{
+    //    MigrateHost();
+    //}
 }
