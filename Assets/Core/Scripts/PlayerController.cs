@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField] private MoveController movementController;
     [SerializeField] private VirtualJoystick virtualJoystick;
     [SerializeField] private CameraController cameraController;
     [SerializeField] private CinemachineVirtualCamera virtualCamera;
     [SerializeField] private List<Transform> cameraAnchors;
 
-    public MoveController Movement { get; private set; }
 
     private Transform virtualCameraAnchor;
     private Animator animator;
@@ -17,27 +17,26 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
-        Movement = GetComponent<MoveController>();
-        Movement.OnStart += () => animator.SetBool("isMoving", true);
-        Movement.OnEnd += () => animator.SetBool("isMoving", false);
-        Movement.OnUpdate += direction => animator.speed = direction.magnitude / 1.5f;
+        //movementController = GetComponent<MoveController>();
+        //Movement.OnStart += () => animator.SetBool("isMoving", true);
+        //Movement.OnEnd += () => animator.SetBool("isMoving", false);
+        //Movement.OnUpdate += direction => animator.speed = direction.magnitude / 1.5f;
 
         animator = GetComponentInChildren<Animator>();
-        virtualJoystick.OnJoystickStart += _ => animator.SetBool("isMoving", true);
+        //virtualJoystick.OnJoystickStart += _ => animator.SetBool("isMoving", true);
         virtualJoystick.OnJoystickEnd += () =>
         {
-            animator.SetBool("isMoving", false);
-            Movement.Stop();
+            //animator.SetBool("isMoving", false);
+            movementController.Stop();
         };
 
         virtualJoystick.OnJoystickUpdate += input =>
         {
             var direction = new Vector3(input.x, 0, input.y);
             direction = Quaternion.Euler(0, cameraController.transform.eulerAngles.y, 0) * direction;
-            Movement.SetDirection(direction);
+            movementController.SetDirection(direction);
         };
     }
-
     private void Update()
     {
         if (talkingFungal)
@@ -48,23 +47,26 @@ public class PlayerController : MonoBehaviour
 
     public void TalkToFungal(FungalController fungal)
     {
-        talkingFungal = fungal;
+        //talkingFungal = fungal;
 
-        Movement.SetLookTarget(fungal.transform);
+        movementController.gameObject.SetActive(false);
+        movementController = fungal.Movement;
+        //movementController.SetLookTarget(fungal.transform);
 
-        virtualCamera.Priority = 2;
+        cameraController.Target = fungal.transform;
+        //virtualCamera.Priority = 2;
 
-        var mainCamera = Camera.main.transform;
-        var closestDistance = Mathf.Infinity;
-        foreach(var cameraAnchor in cameraAnchors)
-        {
-            var distance = Vector3.Distance(mainCamera.position, cameraAnchor.position);
+        //var mainCamera = Camera.main.transform;
+        //var closestDistance = Mathf.Infinity;
+        //foreach(var cameraAnchor in cameraAnchors)
+        //{
+        //    var distance = Vector3.Distance(mainCamera.position, cameraAnchor.position);
 
-            if (distance > closestDistance) continue;
+        //    if (distance > closestDistance) continue;
 
-            virtualCameraAnchor = cameraAnchor;
-            closestDistance = distance;
-        }
+        //    virtualCameraAnchor = cameraAnchor;
+        //    closestDistance = distance;
+        //}
     }
 
     public void EndTalk()

@@ -51,10 +51,10 @@ public abstract class JobStation : MonoBehaviour
 
         OnJobStart?.Invoke();
 
-        playerController.Movement.SetPosition(playerPositionAnchor.position, () =>
-        {
-            playerController.Movement.SetLookTarget(playerLookTarget);
-        });
+        //playerController.Movement.SetPosition(playerPositionAnchor.position, () =>
+        //{
+        //    playerController.Movement.SetLookTarget(playerLookTarget);
+        //});
 
         OnJobStarted();
 

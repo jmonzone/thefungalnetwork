@@ -2847,11 +2847,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 373087729}
-  - component: {fileID: 373087730}
   - component: {fileID: 373087731}
   - component: {fileID: 373087728}
   m_Layer: 0
-  m_Name: Player Controller
+  m_Name: Player Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2904,26 +2903,6 @@ Transform:
   - {fileID: 1875712030}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &373087730
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 373087727}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8f04cfcf90b9482e81bb3d9052b932b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  virtualJoystick: {fileID: 3544129046768494335}
-  cameraController: {fileID: 1786476004}
-  virtualCamera: {fileID: 749026490}
-  cameraAnchors:
-  - {fileID: 1061777009}
-  - {fileID: 1832736801}
-  - {fileID: 132990498}
-  - {fileID: 1875712030}
 --- !u!114 &373087731
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3426,7 +3405,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 166aa93a0d6404aeb8d13f8b398cc605, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerController: {fileID: 373087730}
+  playerController: {fileID: 0}
   camera: {fileID: 832005055}
   controlPanel: {fileID: 307486408}
   playerPositionAnchor: {fileID: 784209685}
@@ -5939,7 +5918,7 @@ MonoBehaviour:
   - m_Script
   m_LockStageInInspector: 
   m_StreamingVersion: 20170927
-  m_Priority: 1
+  m_Priority: 0
   m_StandbyUpdate: 2
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
@@ -9387,7 +9366,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1496451168
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9716,7 +9695,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bbb1414a78fb490990d382dfa8e5a19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerController: {fileID: 373087730}
+  playerController: {fileID: 0}
   camera: {fileID: 540506998}
   controlPanel: {fileID: 307486408}
   playerPositionAnchor: {fileID: 55185953}
@@ -10479,6 +10458,59 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1638136890}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1639580480
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1639580482}
+  - component: {fileID: 1639580481}
+  m_Layer: 0
+  m_Name: Player Controller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1639580481
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1639580480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8f04cfcf90b9482e81bb3d9052b932b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementController: {fileID: 373087731}
+  virtualJoystick: {fileID: 3544129046768494335}
+  cameraController: {fileID: 1786476004}
+  virtualCamera: {fileID: 749026490}
+  cameraAnchors:
+  - {fileID: 1061777009}
+  - {fileID: 1832736801}
+  - {fileID: 132990498}
+  - {fileID: 1875712030}
+--- !u!4 &1639580482
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1639580480}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1641868628
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12765,7 +12797,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c50236924c624d3bac58cf42c7e6522, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 373087730}
+  player: {fileID: 1639580481}
   fungalBounds: {fileID: 128919072}
   eggSelection: {fileID: 1590202532}
   fungalControllerPrefab: {fileID: 173026516737802164, guid: 9e5e876e58a73433bbb5be4472984e7e,
@@ -15161,6 +15193,7 @@ SceneRoots:
   - {fileID: 832575519}
   - {fileID: 1527531030}
   - {fileID: 749026489}
+  - {fileID: 1639580482}
   - {fileID: 373087729}
   - {fileID: 330585546}
   - {fileID: 1786476005}

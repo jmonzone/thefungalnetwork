@@ -9,6 +9,12 @@ public class ProximityInteraction : MonoBehaviour
 
     private const float MAXIMUM_PROXIMITY_DISTANCE = 3f;
 
+    private ProximityAction targetAction;
+
+    private void Awake()
+    {
+        interactionButton.onClick.AddListener(() => targetAction.Use());
+    }
     private void Update()
     {
         interactionButton.interactable = TryFindProximityInteraction();
@@ -22,6 +28,7 @@ public class ProximityInteraction : MonoBehaviour
             .OrderBy(entity => Vector3.Distance(proximityHolder.position, entity.transform.position))
             .ToList();
 
+        if (closestEntities.Count > 0) targetAction = closestEntities.First();
         return closestEntities.Count > 0;
     }
 
