@@ -5,8 +5,7 @@ public class AstralProjection : MonoBehaviour
     [SerializeField] private Animator playerAnimator;
     [SerializeField] private ProximityAction playerInteraction; 
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         FungalManager.Instance.OnInteractionStarted += OnFungalInteractionStarted;
 
@@ -15,10 +14,11 @@ public class AstralProjection : MonoBehaviour
 
     private void ReturnToBody()
     {
+        var fungal = PlayerController.Instance.Movement;
         playerAnimator.SetTrigger("returnToBody");
-
         var movement = playerInteraction.GetComponent<MoveController>();
         PlayerController.Instance.SetMovementController(movement);
+        fungal.StartRandomMovement();
     }
 
     private void OnFungalInteractionStarted(FungalController fungal)
