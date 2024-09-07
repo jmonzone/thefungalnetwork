@@ -22,7 +22,14 @@ public class FungalManager : MonoBehaviour
     public FungalController TalkingFungal { get; private set; }
     public FungalController EscortedFungal { get; private set; }
 
-    public event UnityAction OnFungalTalkStart;
+    public static FungalManager Instance { get; private set; }
+
+    public event UnityAction<FungalController> OnInteractionStarted;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void Start()
     {
@@ -75,7 +82,7 @@ public class FungalManager : MonoBehaviour
         fungalController.Initialize(fungal, fungalBounds);
         fungalController.transform.forward = Utility.RandomXZVector;
         FungalControllers.Add(fungalController);
-        fungalController.OnInteract += () => player.SetMovementController(fungalController.Movement);
+        fungalController.OnInteractionStarted += () => OnInteractionStarted?.Invoke(fungalController);
     }
 
     private void SpawnFungals()

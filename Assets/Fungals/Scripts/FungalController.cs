@@ -22,7 +22,7 @@ public class FungalController : MonoBehaviour
 
     public Camera SpotlightCamera => spotlightCamera;
 
-    public event UnityAction OnInteract;
+    public event UnityAction OnInteractionStarted;
 
     public void Initialize(FungalModel model, Collider bounds)
     {
@@ -39,11 +39,7 @@ public class FungalController : MonoBehaviour
             var proximityAction = GetComponent<ProximityAction>();
             proximityAction.Sprite = Model.Data.ActionImage;
             proximityAction.Color = Model.Data.ActionColor;
-            proximityAction.OnUse += () =>
-            {
-                Movement.Stop();
-                OnInteract?.Invoke();
-            };
+            proximityAction.OnUse += StartInteraction;
 
             var animator = Render.GetComponentInChildren<Animator>();
             animator.speed = 0.25f;
@@ -53,6 +49,12 @@ public class FungalController : MonoBehaviour
             Movement.SetSpeed(1f + model.Speed * 0.1f);
             Movement.StartRandomMovement();
         }
+    }
+
+    private void StartInteraction()
+    {
+        Movement.Stop();
+        OnInteractionStarted?.Invoke();
     }
 
     public void Stop()

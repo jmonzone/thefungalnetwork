@@ -19,7 +19,17 @@ public class PlayerController : MonoBehaviour
         };
     }
 
-    public void SetMovementController(MoveController movement)
+    private void Start()
+    {
+        FungalManager.Instance.OnInteractionStarted += OnFungalInteractionStarted;
+    }
+
+    private void OnFungalInteractionStarted(FungalController fungal)
+    {
+        SetMovementController(fungal.Movement);
+    }
+
+    private void SetMovementController(MoveController movement)
     {
         movementController = movement;
         cameraController.Target = movement.transform;

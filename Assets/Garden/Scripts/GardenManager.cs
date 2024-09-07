@@ -72,7 +72,6 @@ public class GardenManager : MonoBehaviour
 
     private void InitializeControlPanel()
     {
-        fungalManager.OnFungalTalkStart += () => controlPanel.SetFungal(fungalManager.TalkingFungal);
         controlPanel.OnFungalInteractionEnd += fungalManager.EndFungalTalk;
         controlPanel.OnEscortButtonClicked += () =>
         {
