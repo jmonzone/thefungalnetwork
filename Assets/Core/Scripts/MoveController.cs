@@ -41,10 +41,6 @@ public class MoveController : MonoBehaviour
     private Vector3 origin;
     private float angle;
 
-    public event UnityAction OnStart;
-    public event UnityAction OnEnd;
-    public event UnityAction<Vector3> OnUpdate;
-
     public float Speed => speed;
     public float DistanceThreshold => distanceThreshold;
     public bool FaceForward => faceForward;
@@ -72,12 +68,15 @@ public class MoveController : MonoBehaviour
         SetType(MovementType.DIRECTION);
     }
 
+    public void StartMovement()
+    {
+        if (animator) animator.SetBool("isMoving", true);
+    }
+
     public void SetPosition(Vector3 position, UnityAction onComplete = null)
     {
         this.position = position;
         SetType(MovementType.POSITION);
-
-        OnStart?.Invoke();
         positionReachedRoutine = StartCoroutine(WaitUntilDestinationReached(onComplete));
     }
 
@@ -91,6 +90,7 @@ public class MoveController : MonoBehaviour
     {
         this.type = type;
         isIdle = false;
+        StartMovement();
         if (positionReachedRoutine != null) StopCoroutine(positionReachedRoutine);
     }
 
@@ -178,14 +178,14 @@ public class MoveController : MonoBehaviour
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 500 * Time.deltaTime);
         }
 
-        OnUpdate?.Invoke(direction);
+        if (animator) animator.speed = direction.magnitude / 1.5f;
     }
 
     private IEnumerator WaitUntilDestinationReached(UnityAction onComplete)
     {
         yield return new WaitUntil(() => IsAtDestination);
+        if (animator) animator.SetBool("isMoving", false);
         onComplete?.Invoke();
-        OnEnd?.Invoke();
     }
 
     private void StartIdle()

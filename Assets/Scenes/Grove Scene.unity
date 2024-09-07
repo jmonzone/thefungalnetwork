@@ -2921,7 +2921,7 @@ MonoBehaviour:
   positionAnchor:
     anchor: {fileID: 0}
     bounds: {fileID: 0}
-  animator: {fileID: 0}
+  animator: {fileID: 1778584737}
   distanceThreshold: 2
   startIdle: 0
   minIdleDuration: 2
@@ -10490,12 +10490,6 @@ MonoBehaviour:
   movementController: {fileID: 373087731}
   virtualJoystick: {fileID: 3544129046768494335}
   cameraController: {fileID: 1786476004}
-  virtualCamera: {fileID: 749026490}
-  cameraAnchors:
-  - {fileID: 1061777009}
-  - {fileID: 1832736801}
-  - {fileID: 132990498}
-  - {fileID: 1875712030}
 --- !u!4 &1639580482
 Transform:
   m_ObjectHideFlags: 0
@@ -11144,6 +11138,12 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0.5, z: 0}
+--- !u!95 &1778584737 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 8912693915797022553, guid: 9e89634fe9474125ab42aefdc22a787d,
+    type: 3}
+  m_PrefabInstance: {fileID: 1778584730}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1785708578
 GameObject:
   m_ObjectHideFlags: 0

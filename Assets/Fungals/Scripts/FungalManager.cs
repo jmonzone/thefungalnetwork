@@ -96,7 +96,6 @@ public class FungalManager : MonoBehaviour
     {
         if (TalkingFungal != EscortedFungal) TalkingFungal.Stop();
         TalkingFungal = null;
-        player.EndTalk();
     }
 
     public void EscortFungal()
