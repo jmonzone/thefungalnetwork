@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public static PlayerController Instance { get; private set; }
+
     [SerializeField] private MoveController movementController;
     [SerializeField] private VirtualJoystick virtualJoystick;
     [SerializeField] private CameraController cameraController;
@@ -10,6 +12,8 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        Instance = this;
+
         virtualJoystick.OnJoystickStart += _ => movementController.StartMovement();
         virtualJoystick.OnJoystickEnd += () => movementController.Stop();
 
@@ -21,17 +25,7 @@ public class PlayerController : MonoBehaviour
         };
     }
 
-    private void Start()
-    {
-        FungalManager.Instance.OnInteractionStarted += OnFungalInteractionStarted;
-    }
-
-    private void OnFungalInteractionStarted(FungalController fungal)
-    {
-        SetMovementController(fungal.Movement);
-    }
-
-    private void SetMovementController(MoveController movement)
+    public void SetMovementController(MoveController movement)
     {
         movementController = movement;
         cameraController.Target = movement.transform;
