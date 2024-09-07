@@ -28,8 +28,17 @@ public class ProximityInteraction : MonoBehaviour
             .OrderBy(entity => Vector3.Distance(proximityHolder.position, entity.transform.position))
             .ToList();
 
-        if (closestEntities.Count > 0) targetAction = closestEntities.First();
-        return closestEntities.Count > 0;
+        if (closestEntities.Count > 0) SetTargetAction(closestEntities.First());
+        else SetTargetAction(null);
+
+        return targetAction;
+    }
+
+    private void SetTargetAction(ProximityAction action)
+    {
+        if (targetAction && targetAction != action) targetAction.SetInteractable(false);
+        targetAction = action;
+        if (targetAction) targetAction.SetInteractable(true);
     }
 
 
