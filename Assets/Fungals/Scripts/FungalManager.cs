@@ -75,7 +75,7 @@ public class FungalManager : MonoBehaviour
         fungalController.Initialize(fungal, fungalBounds);
         fungalController.transform.forward = Utility.RandomXZVector;
         FungalControllers.Add(fungalController);
-        fungalController.OnTalkStart += () => StartFungalTalk(fungalController);
+        fungalController.OnInteract += () => player.SetMovementController(fungalController.Movement);
     }
 
     private void SpawnFungals()
@@ -90,16 +90,6 @@ public class FungalManager : MonoBehaviour
 
             SpawnFungal(fungal, randomPosition);
         }
-    }
-
-    private void StartFungalTalk(FungalController fungal)
-    {
-        //TalkingFungal = fungal;
-        //fungal.Movement.SetTarget(player.transform);
-        player.TalkToFungal(fungal);
-
-
-        //OnFungalTalkStart?.Invoke();
     }
 
     public void EndFungalTalk()

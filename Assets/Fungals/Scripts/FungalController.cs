@@ -24,14 +24,10 @@ public class FungalController : MonoBehaviour
 
     public Camera SpotlightCamera => spotlightCamera;
 
-    private Camera mainCamera;
-    private float hungerTimer;
-
-    public event UnityAction OnTalkStart;
+    public event UnityAction OnInteract;
 
     private void Awake()
     {
-        mainCamera = Camera.main;
         Movement = GetComponent<MoveController>();
         hungerIndicator.gameObject.SetActive(false);
     }
@@ -51,7 +47,11 @@ public class FungalController : MonoBehaviour
             var proximityAction = GetComponent<ProximityAction>();
             proximityAction.Sprite = Model.Data.ActionImage;
             proximityAction.Color = Model.Data.ActionColor;
-            proximityAction.OnUse += () => OnTalkStart?.Invoke();
+            proximityAction.OnUse += () =>
+            {
+                Movement.Stop();
+                OnInteract?.Invoke();
+            };
 
             var animator = Render.GetComponentInChildren<Animator>();
             animator.speed = 0.25f;
@@ -79,35 +79,5 @@ public class FungalController : MonoBehaviour
     {
         IsFollowing = false;
         Movement.StartRandomMovement();
-    }
-
-    private void Update()
-    {
-        //UpdateHunger();
-    }
-
-    private void UpdateHunger()
-    {
-        if (Model)
-        {
-            hungerTimer += Time.deltaTime;
-
-            if (hungerTimer > 5)
-            {
-                Model.Hunger -= 5 / (1 + Model.Stamina * 0.1f);
-                hungerTimer = 0;
-            }
-
-            if (Model.Hunger < 30)
-            {
-                hungerIndicator.gameObject.SetActive(true);
-                var position = mainCamera.WorldToScreenPoint(indicatorAnchor.transform.position);
-                hungerIndicator.position = position;
-            }
-            else
-            {
-                hungerIndicator.gameObject.SetActive(false);
-            }
-        }
     }
 }

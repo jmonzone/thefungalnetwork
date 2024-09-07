@@ -45,28 +45,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void TalkToFungal(FungalController fungal)
+    public void SetMovementController(MoveController movement)
     {
-        //talkingFungal = fungal;
-
         movementController.gameObject.SetActive(false);
-        movementController = fungal.Movement;
-        //movementController.SetLookTarget(fungal.transform);
-
-        cameraController.Target = fungal.transform;
-        //virtualCamera.Priority = 2;
-
-        //var mainCamera = Camera.main.transform;
-        //var closestDistance = Mathf.Infinity;
-        //foreach(var cameraAnchor in cameraAnchors)
-        //{
-        //    var distance = Vector3.Distance(mainCamera.position, cameraAnchor.position);
-
-        //    if (distance > closestDistance) continue;
-
-        //    virtualCameraAnchor = cameraAnchor;
-        //    closestDistance = distance;
-        //}
+        movementController = movement;
+        cameraController.Target = movement.transform;
     }
 
     public void EndTalk()
