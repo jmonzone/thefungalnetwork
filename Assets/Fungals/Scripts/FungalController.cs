@@ -8,29 +8,21 @@ public enum FungalState
     TARGET,
 }
 
-[RequireComponent(typeof(MoveController))]
 [RequireComponent(typeof(ProximityAction))]
 public class FungalController : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private Transform indicatorAnchor;
-    [SerializeField] private RectTransform hungerIndicator;
+    [SerializeField] private MoveController movement;
     [SerializeField] private Camera spotlightCamera;
 
     public FungalModel Model { get; private set; }
     public GameObject Render { get; private set; }
-    public MoveController Movement { get; private set; }
+    public MoveController Movement => movement;
     public bool IsFollowing { get; set; }
 
     public Camera SpotlightCamera => spotlightCamera;
 
     public event UnityAction OnInteract;
-
-    private void Awake()
-    {
-        Movement = GetComponent<MoveController>();
-        hungerIndicator.gameObject.SetActive(false);
-    }
 
     public void Initialize(FungalModel model, Collider bounds)
     {
