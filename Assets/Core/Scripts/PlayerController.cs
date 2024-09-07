@@ -6,6 +6,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private VirtualJoystick virtualJoystick;
     [SerializeField] private CameraController cameraController;
 
+    public MoveController Movement => movementController;
+
     private void Awake()
     {
         virtualJoystick.OnJoystickStart += _ => movementController.StartMovement();

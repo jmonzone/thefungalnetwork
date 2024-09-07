@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class ProximityInteraction : MonoBehaviour
 {
     [SerializeField] private Button interactionButton;
-    [SerializeField] private Transform proximityHolder;
+    [SerializeField] private PlayerController playerController;
 
     private const float MAXIMUM_PROXIMITY_DISTANCE = 3f;
 
@@ -22,10 +22,10 @@ public class ProximityInteraction : MonoBehaviour
 
     private bool TryFindProximityInteraction()
     {
-        var closestEntities = Physics.OverlapSphere(proximityHolder.position, MAXIMUM_PROXIMITY_DISTANCE)
+        var closestEntities = Physics.OverlapSphere(playerController.Movement.transform.position, MAXIMUM_PROXIMITY_DISTANCE)
             .Select(collider => collider.GetComponentInParent<ProximityAction>())
-            .Where(action => action)
-            .OrderBy(entity => Vector3.Distance(proximityHolder.position, entity.transform.position))
+            .Where(action => action && action.transform != playerController.Movement.transform)
+            .OrderBy(entity => Vector3.Distance(playerController.Movement.transform.position, entity.transform.position))
             .ToList();
 
         if (closestEntities.Count > 0) SetTargetAction(closestEntities.First());
