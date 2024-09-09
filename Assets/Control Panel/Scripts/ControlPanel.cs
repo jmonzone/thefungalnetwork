@@ -17,7 +17,6 @@ public class ControlPanel : MonoBehaviour
     [SerializeField] private Button escortButton;
     [SerializeField] private Button feedButton;
     [SerializeField] private TextMeshProUGUI escortButtonText;
-    [SerializeField] private SlideAnimation slideAnimation;
 
     public event UnityAction OnEscortButtonClicked;
     public event UnityAction OnFungalInteractionEnd;
@@ -78,10 +77,5 @@ public class ControlPanel : MonoBehaviour
         fungalInfoUI.gameObject.SetActive(state == UIState.INFO);
         feedPanel.gameObject.SetActive(state == UIState.FEED);
         closeButton.gameObject.SetActive(state != UIState.JOYSTICK);
-    }
-
-    public void SetVisible(bool visible)
-    {
-        slideAnimation.IsVisible = visible;
     }
 }

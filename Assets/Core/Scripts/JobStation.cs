@@ -14,8 +14,6 @@ public abstract class JobStation : MonoBehaviour
     [SerializeField] private ControlPanel controlPanel;
     [SerializeField] private Transform playerPositionAnchor;
     [SerializeField] private Transform playerLookTarget;
-    [SerializeField] private SlideAnimation uIAnimation;
-    [SerializeField] private Button backButton;
     [SerializeField] private GameObject experienceContainer;
     [SerializeField] private TextMeshProUGUI levelText;
     [SerializeField] private Slider experienceSlider;
@@ -27,17 +25,10 @@ public abstract class JobStation : MonoBehaviour
 
     protected virtual void Awake()
     {
-        backButton.onClick.AddListener(() =>
-        {
-            OnBackButtonClicked();
-        });
-
-        uIAnimation.gameObject.SetActive(true);
+        controlPanel.gameObject.SetActive(true);
 
         var proximityAction = GetComponent<ProximityAction>();
         proximityAction.OnUse += UseAction;
-
-        experienceContainer.SetActive(false);
 
         enabled = false;
     }
@@ -46,17 +37,10 @@ public abstract class JobStation : MonoBehaviour
     {
         enabled = true;
         camera.Priority = 2;
-        uIAnimation.IsVisible = true;
-        controlPanel.SetVisible(false);
-
-        OnJobStart?.Invoke();
-
-        //playerController.Movement.SetPosition(playerPositionAnchor.position, () =>
-        //{
-        //    playerController.Movement.SetLookTarget(playerLookTarget);
-        //});
+        controlPanel.gameObject.SetActive(false);
 
         OnJobStarted();
+        OnJobStart?.Invoke();
 
         StartCoroutine(WaitUntilCameraPrepared());
     }
@@ -74,19 +58,10 @@ public abstract class JobStation : MonoBehaviour
     {
         enabled = false;
         camera.Priority = 0;
-        uIAnimation.IsVisible = false;
-
-        IEnumerator ShowControlPanel()
-        {
-            yield return new WaitForSeconds(1f);
-            controlPanel.SetVisible(true);
-        }
-
-        StartCoroutine(ShowControlPanel());
-
-        OnJobEnd?.Invoke();
+        controlPanel.gameObject.SetActive(true);
 
         OnJobEnded();
+        OnJobEnd?.Invoke();
     }
 
     public void SetFungal(FungalController fungal)

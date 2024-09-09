@@ -9,6 +9,7 @@ public class MoveController : MonoBehaviour
     [SerializeField] private bool lockXZ = false;
     [SerializeField] private PositionAnchor positionAnchor;
     [SerializeField] private Animator animator;
+    [SerializeField] private float animationSpeed;
 
     [Header("Target Movement")]
     [SerializeField] private float distanceThreshold = 2f;
@@ -178,7 +179,7 @@ public class MoveController : MonoBehaviour
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 500 * Time.deltaTime);
         }
 
-        if (animator) animator.speed = direction.magnitude / 1.5f;
+        if (animator) animator.speed = animationSpeed * direction.magnitude / 1.5f;
     }
 
     private IEnumerator WaitUntilDestinationReached(UnityAction onComplete)

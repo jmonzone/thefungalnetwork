@@ -46,7 +46,7 @@ public class FungalController : MonoBehaviour
 
             Movement.SetAnimator(animator);
             Movement.SetBounds(bounds);
-            Movement.SetSpeed(1f + model.Speed * 0.1f);
+            //Movement.SetSpeed(1f + model.Speed * 0.1f);
             Movement.StartRandomMovement();
         }
     }

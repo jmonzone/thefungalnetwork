@@ -18,11 +18,16 @@ public class DayNightController : MonoBehaviour
 
         if (time < 0.5)
         {
-            targetLight.color = Color.Lerp(nightColor, dayColor, time / 0.5f);
+            var t = time / 0.5f;
+            targetLight.color = Color.Lerp(nightColor, dayColor, t);
+            targetLight.intensity = Mathf.Lerp(0.5f, 1, t);
         }
         else
         {
-            targetLight.color = Color.Lerp(dayColor, nightColor, (time - 0.5f) / 0.5f);
+            var t = (time - 0.5f) / 0.5f;
+            targetLight.color = Color.Lerp(dayColor, nightColor, t);
+            targetLight.intensity = Mathf.Lerp(1, 0.5f, t);
+
         }
     }
 }
