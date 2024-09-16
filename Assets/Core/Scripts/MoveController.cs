@@ -162,9 +162,9 @@ public class MoveController : MonoBehaviour
 
     private void UpdatePosition()
     {
-        if (IsAtDestination) return;
-
         if (animator) animator.SetBool("isMoving", !IsAtDestination);
+
+        if (IsAtDestination) return;
 
         direction = (TargetPosition - transform.position).normalized;
 

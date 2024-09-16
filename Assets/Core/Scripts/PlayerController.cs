@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
     {
         Instance = this;
 
-        virtualJoystick.OnJoystickStart += _ => movementController.StartMovement();
+        //virtualJoystick.OnJoystickStart += _ => movementController.StartMovement();
         virtualJoystick.OnJoystickEnd += () => movementController.Stop();
 
         virtualJoystick.OnJoystickUpdate += input =>

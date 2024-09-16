@@ -92,15 +92,17 @@ public class CameraController : MonoBehaviour
         float angleX = delta.x * rotationSpeed;
         float angleY = delta.y * rotationSpeed;
 
+        var targetPoint = target != null ? target.position : Vector3.zero;
+
         // Rotate the camera around the target on the Y-axis for horizontal swipe
-        transform.RotateAround(target.position, Vector3.up, angleX);
+        transform.RotateAround(targetPoint, Vector3.up, angleX);
 
         // Calculate the new vertical angle and clamp it
         float newVerticalAngle = Mathf.Clamp(currentVerticalAngle - angleY, minVerticalAngle, maxVerticalAngle);
 
         // Apply the clamped vertical rotation
         float verticalRotation = newVerticalAngle - currentVerticalAngle;
-        transform.RotateAround(target.position, transform.right, verticalRotation);
+        transform.RotateAround(targetPoint, transform.right, verticalRotation);
 
         // Update the current vertical angle
         currentVerticalAngle = newVerticalAngle;
