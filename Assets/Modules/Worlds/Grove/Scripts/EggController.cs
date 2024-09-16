@@ -25,8 +25,6 @@ public class EggController : MonoBehaviour
 
         if (proximityAction)
         {
-            proximityAction.Sprite = Fungal.ActionImage;
-            proximityAction.Color = Fungal.ActionColor;
             proximityAction.OnUse += Hatch;
         }
     }

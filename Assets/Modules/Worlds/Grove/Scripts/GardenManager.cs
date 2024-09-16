@@ -17,12 +17,9 @@ public class GardenManager : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private FungalManager fungalManager;
-    [SerializeField] private InventoryList inventoryUI;
-    [SerializeField] private InventoryList feedUI;
     [SerializeField] private FishingStation fishingStation;
 
     private List<JobStation> jobStations = new List<JobStation>();
-    private List<ItemInstance> Inventory => GameManager.Instance.Inventory;
 
     private enum GameState
     {
@@ -32,7 +29,6 @@ public class GardenManager : MonoBehaviour
 
     private void Start()
     {
-        InitializeInventory();
         InitializeJobStations();
 
         if (Application.isEditor)
@@ -53,18 +49,6 @@ public class GardenManager : MonoBehaviour
                 fishingStation.UseAction();
                 break;
         }
-    }
-
-    private void InitializeInventory()
-    {
-        void UpdateInventory()
-        {
-            inventoryUI.SetInventory(Inventory);
-            feedUI.SetInventory(Inventory);
-        }
-
-        GameManager.Instance.OnInventoryChanged += UpdateInventory;
-        UpdateInventory();
     }
 
     private void InitializeJobStations()

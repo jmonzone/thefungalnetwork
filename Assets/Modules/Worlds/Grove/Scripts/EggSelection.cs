@@ -5,8 +5,6 @@ using UnityEngine.Events;
 
 public class EggSelection : MonoBehaviour
 {
-    [SerializeField] private GameObject instructions;
-
     public event UnityAction<EggController> OnEggSelected;
 
     private Camera mainCamera;
@@ -14,16 +12,6 @@ public class EggSelection : MonoBehaviour
     private void Awake()
     {
         mainCamera = Camera.main;
-    }
-
-    private void OnEnable()
-    {
-        instructions.SetActive(true);
-    }
-
-    private void OnDisable()
-    {
-        instructions.SetActive(false);
     }
 
     public void SetPets(List<FungalData> pets)

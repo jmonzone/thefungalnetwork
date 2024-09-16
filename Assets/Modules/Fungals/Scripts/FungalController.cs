@@ -37,8 +37,6 @@ public class FungalController : MonoBehaviour
             Render.transform.localScale = Vector3.one;
 
             var proximityAction = GetComponent<ProximityAction>();
-            proximityAction.Sprite = Model.Data.ActionImage;
-            proximityAction.Color = Model.Data.ActionColor;
             proximityAction.OnUse += StartInteraction;
 
             var animator = Render.GetComponentInChildren<Animator>();
@@ -46,7 +44,6 @@ public class FungalController : MonoBehaviour
 
             Movement.SetAnimator(animator);
             Movement.SetBounds(bounds);
-            //Movement.SetSpeed(1f + model.Speed * 0.1f);
             Movement.StartRandomMovement();
         }
     }

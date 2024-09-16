@@ -15,7 +15,7 @@ public class SceneManagerEditor : Editor
         // Add a button in the inspector
         if (GUILayout.Button("Load Scene"))
         {
-            sceneManager.LoadScene(1);
+            SceneManager.LoadScene(1);
         }
     }
 }

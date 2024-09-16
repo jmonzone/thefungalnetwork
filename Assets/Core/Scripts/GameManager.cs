@@ -50,8 +50,6 @@ public class GameManager : MonoBehaviour
     public List<FungalModel> Fungals => fungals;
     public List<ItemInstance> Inventory => inventory;
 
-    public event UnityAction OnInventoryChanged;
-
     private void Awake()
     {
         if (Instance)
@@ -95,7 +93,6 @@ public class GameManager : MonoBehaviour
         inventory.Add(item);
         (JsonFile[ConfigKeys.INVENTORY_KEY] as JArray).Add(item.Data.name);
         File.WriteAllText(saveDataPath, JsonFile.ToString());
-        OnInventoryChanged?.Invoke();
     }
 
     protected void RemoveFromInventory(ItemInstance item)
@@ -118,7 +115,6 @@ public class GameManager : MonoBehaviour
             jarray.RemoveAt(itemIndex);
 
             SaveData();
-            OnInventoryChanged?.Invoke();
         }
     }
 

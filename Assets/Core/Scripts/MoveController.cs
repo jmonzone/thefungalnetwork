@@ -31,7 +31,7 @@ public class MoveController : MonoBehaviour
         RADIAL
     }
 
-    private MovementType type;
+    private MovementType type = MovementType.POSITION;
     private Coroutine positionReachedRoutine;
     private bool isIdle;
     private float idleTimer;
