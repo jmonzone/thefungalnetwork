@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class FishingUI : MonoBehaviour
@@ -8,6 +7,6 @@ public class FishingUI : MonoBehaviour
 
     private void Start()
     {
-        backButton.onClick.AddListener(() => SceneManager.LoadScene(0));
+        backButton.onClick.AddListener(() => UnityEngine.SceneManagement.SceneManager.LoadScene(0));
     }
 }
