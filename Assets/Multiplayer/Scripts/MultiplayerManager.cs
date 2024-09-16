@@ -40,12 +40,6 @@ public class MultiplayerManager : MonoBehaviour
     private float heartbeatTimer;
     private float lobbyUpdateTimer;
 
-    private void Start()
-    {
-
-    }
-
-
     private void Update()
     {
         HandleLobbyHeartbeat();
@@ -205,24 +199,6 @@ public class MultiplayerManager : MonoBehaviour
         }
     }
 
-    private async Task QuickJoinLobby()
-    {
-        try
-        {
-            QuickJoinLobbyOptions quickJoinLobbyOptions = new QuickJoinLobbyOptions
-            {
-                Player = Player,
-            };
-
-            Lobby lobby = await LobbyService.Instance.QuickJoinLobbyAsync(quickJoinLobbyOptions);
-            JoinedLobby = lobby;
-        }
-        catch (LobbyServiceException e)
-        {
-            Debug.Log(e);
-        }
-    }
-
     public async Task JoinLobbyByCode(string lobbyCode)
     {
         try
@@ -249,26 +225,4 @@ public class MultiplayerManager : MonoBehaviour
 
         }
     };
-
-    //private async void MigrateHost()
-    //{
-    //    try
-    //    {
-    //        hostLobby = await Lobbies.Instance.UpdateLobbyAsync(hostLobby.Id, new UpdateLobbyOptions
-    //        {
-    //            HostId = JoinedLobby.Players[1].Id
-    //        });
-
-    //        JoinedLobby = hostLobby;
-    //    }
-    //    catch (LobbyServiceException e)
-    //    {
-    //        Debug.Log(e);
-    //    }
-    //}
-
-    //private void OnApplicationQuit()
-    //{
-    //    MigrateHost();
-    //}
 }

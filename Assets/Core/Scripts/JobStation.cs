@@ -10,8 +10,7 @@ public abstract class JobStation : MonoBehaviour
 {
     [Header("Job References")]
     [SerializeField] private PlayerController playerController;
-    [SerializeField] private CinemachineVirtualCamera camera;
-    [SerializeField] private ControlPanel controlPanel;
+    [SerializeField] private CinemachineVirtualCamera virtualCamera;
     [SerializeField] private Transform playerPositionAnchor;
     [SerializeField] private Transform playerLookTarget;
     [SerializeField] private GameObject experienceContainer;
@@ -25,8 +24,6 @@ public abstract class JobStation : MonoBehaviour
 
     protected virtual void Awake()
     {
-        controlPanel.gameObject.SetActive(true);
-
         var proximityAction = GetComponent<ProximityAction>();
         proximityAction.OnUse += UseAction;
 
@@ -36,8 +33,7 @@ public abstract class JobStation : MonoBehaviour
     public void UseAction()
     {
         enabled = true;
-        camera.Priority = 2;
-        controlPanel.gameObject.SetActive(false);
+        virtualCamera.Priority = 2;
 
         OnJobStarted();
         OnJobStart?.Invoke();
@@ -48,7 +44,7 @@ public abstract class JobStation : MonoBehaviour
     private IEnumerator WaitUntilCameraPrepared()
     {
         var mainCamera = Camera.main.transform;
-        yield return new WaitUntil(() => mainCamera.position == camera.transform.position);
+        yield return new WaitUntil(() => mainCamera.position == virtualCamera.transform.position);
         OnCameraPrepared();
     }
 
@@ -57,8 +53,7 @@ public abstract class JobStation : MonoBehaviour
     protected void EndAction()
     {
         enabled = false;
-        camera.Priority = 0;
-        controlPanel.gameObject.SetActive(true);
+        virtualCamera.Priority = 0;
 
         OnJobEnded();
         OnJobEnd?.Invoke();

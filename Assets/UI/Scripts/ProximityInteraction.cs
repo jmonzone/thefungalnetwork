@@ -14,7 +14,10 @@ public class ProximityInteraction : MonoBehaviour
     private void Awake()
     {
         interactionButton.onClick.AddListener(() => targetAction.Use());
+
+        enabled = playerController.Movement;
     }
+
     private void Update()
     {
         interactionButton.interactable = TryFindProximityInteraction();

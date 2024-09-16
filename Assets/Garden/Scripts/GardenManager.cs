@@ -17,7 +17,6 @@ public class GardenManager : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private FungalManager fungalManager;
-    [SerializeField] private ControlPanel controlPanel;
     [SerializeField] private InventoryList inventoryUI;
     [SerializeField] private InventoryList feedUI;
     [SerializeField] private FishingStation fishingStation;
@@ -34,7 +33,6 @@ public class GardenManager : MonoBehaviour
     private void Start()
     {
         InitializeInventory();
-        InitializeControlPanel();
         InitializeJobStations();
 
         if (Application.isEditor)
@@ -46,7 +44,6 @@ public class GardenManager : MonoBehaviour
     private IEnumerator WaitForInitialization()
     {
         yield return new WaitForFixedUpdate();
-        controlPanel.gameObject.SetActive(initialGameState == InitialGameState.GARDEN);
         switch (initialGameState)
         {
             case InitialGameState.FISHING:
@@ -68,23 +65,6 @@ public class GardenManager : MonoBehaviour
 
         GameManager.Instance.OnInventoryChanged += UpdateInventory;
         UpdateInventory();
-    }
-
-    private void InitializeControlPanel()
-    {
-        controlPanel.OnFungalInteractionEnd += fungalManager.EndFungalTalk;
-        controlPanel.OnEscortButtonClicked += () =>
-        {
-            if (fungalManager.EscortedFungal)
-            {
-                fungalManager.UnescortFungal();
-            }
-            else
-            {
-                fungalManager.EscortFungal();
-            }
-        };
-
     }
 
     private void InitializeJobStations()

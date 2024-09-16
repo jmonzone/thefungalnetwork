@@ -16,14 +16,12 @@ public class MultiplayerTest : MonoBehaviour
     [SerializeField] private Button joinButton;
 
     [Header("Gameplay References")]
-    [SerializeField] private VirtualJoystick virtualJoystick;
-    [SerializeField] private CameraController cameraController;
+    [SerializeField] private PlayerController playerController;
 
     [Header("Gameplay UI References")]
     [SerializeField] private GameObject gameplayUI;
     [SerializeField] private TextMeshProUGUI playersText;
     [SerializeField] private TextMeshProUGUI lobbyCodeText;
-
 
     private Transform player;
 
@@ -63,18 +61,11 @@ public class MultiplayerTest : MonoBehaviour
 
         multiplayerManager.OnLobbyUpdated += () => UpdateLobbyInfoUI();
 
-        virtualJoystick.gameObject.SetActive(false);
-        virtualJoystick.OnJoystickUpdate += direction =>
-        {
-            if (!player) return;
-            var mappedDirection = new Vector3(direction.x, 0, direction.y);
-            player.transform.position += mappedDirection;
-        };
-
         NetworkPlayer.OnLocalPlayerSpawned += player =>
         {
             this.player = player;
-            cameraController.Target = player;
+            var movementController = player.GetComponent<MoveController>();
+            playerController.SetMovementController(movementController);
         };
     }
 
@@ -100,7 +91,6 @@ public class MultiplayerTest : MonoBehaviour
     {
         gameplayUI.SetActive(true);
         UpdateLobbyInfoUI();
-        virtualJoystick.gameObject.SetActive(true);
     }
 
     private void UpdateLobbyInfoUI()
