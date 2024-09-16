@@ -12,12 +12,12 @@ public enum FungalState
 public class FungalController : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private MoveController movement;
+    [SerializeField] private MovementController movement;
     [SerializeField] private Camera spotlightCamera;
 
     public FungalModel Model { get; private set; }
     public GameObject Render { get; private set; }
-    public MoveController Movement => movement;
+    public MovementController Movement => movement;
     public bool IsFollowing { get; set; }
 
     public Camera SpotlightCamera => spotlightCamera;
@@ -42,7 +42,6 @@ public class FungalController : MonoBehaviour
             var animator = Render.GetComponentInChildren<Animator>();
             animator.speed = 0.25f;
 
-            Movement.SetAnimator(animator);
             Movement.SetBounds(bounds);
             Movement.StartRandomMovement();
         }

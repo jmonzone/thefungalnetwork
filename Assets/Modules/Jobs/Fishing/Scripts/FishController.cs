@@ -8,7 +8,7 @@ public enum FishState
     CAUGHT
 }
 
-[RequireComponent(typeof(MoveController))]
+[RequireComponent(typeof(MovementController))]
 public class FishController : MonoBehaviour
 {
     [SerializeField] private FishData data;
@@ -17,13 +17,13 @@ public class FishController : MonoBehaviour
 
     public FishState State { get; private set; }
 
-    private MoveController movement;
+    private MovementController movement;
     private float baseSpeed;
     private FishingBobController fishingBob;
 
     private void Awake()
     {
-        movement = GetComponent<MoveController>();
+        movement = GetComponent<MovementController>();
         baseSpeed = movement.Speed;
     }
 

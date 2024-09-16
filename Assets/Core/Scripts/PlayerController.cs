@@ -4,11 +4,11 @@ public class PlayerController : MonoBehaviour
 {
     public static PlayerController Instance { get; private set; }
 
-    [SerializeField] private MoveController movementController;
+    [SerializeField] private MovementController movementController;
     [SerializeField] private VirtualJoystick virtualJoystick;
     [SerializeField] private CameraController cameraController;
 
-    public MoveController Movement => movementController;
+    public MovementController Movement => movementController;
 
     private void Awake()
     {
@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour
         };
     }
 
-    public void SetMovementController(MoveController movement)
+    public void SetMovementController(MovementController movement)
     {
         movementController = movement;
         cameraController.Target = movement.transform;

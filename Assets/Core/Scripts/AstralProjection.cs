@@ -30,7 +30,7 @@ public class AstralProjection : MonoBehaviour
         LeaveFungal();
 
         playerAnimator.SetTrigger("returnToBody");
-        var movement = playerInteraction.GetComponent<MoveController>();
+        var movement = playerInteraction.GetComponent<MovementController>();
         PlayerController.Instance.SetMovementController(movement);
     }
 

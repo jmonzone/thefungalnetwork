@@ -5,6 +5,7 @@ using UnityEngine.Events;
 public class NetworkPlayer : NetworkBehaviour
 {
     public static UnityAction<Transform> OnLocalPlayerSpawned;
+    public static UnityAction<Transform> OnRemotePlayerSpawned;
 
     public override void OnNetworkSpawn()
     {
@@ -20,6 +21,7 @@ public class NetworkPlayer : NetworkBehaviour
         {
             // This is a remote player
             Debug.Log("Remote player spawned: " + gameObject.name);
+            OnRemotePlayerSpawned?.Invoke(transform);
         }
     }
 }

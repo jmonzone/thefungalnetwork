@@ -138,8 +138,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7365126062320909308}
   - component: {fileID: 173026516737802164}
-  - component: {fileID: 4462087301603915868}
   - component: {fileID: 5190689289194876585}
+  - component: {fileID: 5489956285008662036}
   m_Layer: 0
   m_Name: Fungal Controller
   m_TagString: Untagged
@@ -176,34 +176,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b531d6ef7b29f454190e11c85dcbeabc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movement: {fileID: 4462087301603915868}
+  movement: {fileID: 5489956285008662036}
   spotlightCamera: {fileID: 4365257586158887710}
---- !u!114 &4462087301603915868
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4710098450848900613}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d2b252d604a094065a18d719180c3a27, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 1.5
-  faceForward: 1
-  lockXZ: 0
-  positionAnchor:
-    anchor: {fileID: 0}
-    bounds: {fileID: 0}
-  animator: {fileID: 0}
-  animationSpeed: 0.5
-  distanceThreshold: 1
-  startIdle: 1
-  minIdleDuration: 2
-  maxIdleDuration: 5
-  radius: 3
-  radialSpeed: 0.25
 --- !u!114 &5190689289194876585
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -216,6 +190,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0ebbc806cd2749d7b7aacc0d551eede, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5489956285008662036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4710098450848900613}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47a3fda79a53a4b9e9ab1b8cf9d8acb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 2
+  faceForward: 1
+  lockXZ: 0
+  positionAnchor:
+    anchor: {fileID: 0}
+    bounds: {fileID: 0}
+  distanceThreshold: 2
+  startIdle: 0
+  minIdleDuration: 2
+  maxIdleDuration: 5
+  radius: 4
+  radialSpeed: 0.25
 --- !u!1001 &2562995384339588117
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5569854717866690982}
   - component: {fileID: 1985368070077868474}
-  - component: {fileID: 7343356333989190285}
+  - component: {fileID: 4701732161822769148}
   m_Layer: 3
   m_Name: Trout
   m_TagString: Untagged
@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 0}
---- !u!114 &7343356333989190285
+--- !u!114 &4701732161822769148
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -56,18 +56,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 1998284645538067842}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d2b252d604a094065a18d719180c3a27, type: 3}
+  m_Script: {fileID: 11500000, guid: 47a3fda79a53a4b9e9ab1b8cf9d8acb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 1
+  speed: 2
+  faceForward: 1
+  lockXZ: 0
   positionAnchor:
     anchor: {fileID: 0}
     bounds: {fileID: 0}
-  animator: {fileID: 0}
-  distanceThreshold: 0.1
+  distanceThreshold: 2
   startIdle: 0
-  minIdleDuration: 1
-  maxIdleDuration: 2
+  minIdleDuration: 2
+  maxIdleDuration: 5
   radius: 4
   radialSpeed: 0.25
 --- !u!1001 &450373414579174310

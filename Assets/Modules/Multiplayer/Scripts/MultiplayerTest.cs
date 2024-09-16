@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using TMPro;
+using Unity.Multiplayer.Samples.Utilities.ClientAuthority;
 using Unity.Services.Authentication;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -64,7 +66,8 @@ public class MultiplayerTest : MonoBehaviour
         NetworkPlayer.OnLocalPlayerSpawned += player =>
         {
             this.player = player;
-            var movementController = player.GetComponent<MoveController>();
+
+            var movementController = player.GetComponent<MovementController>();
             playerController.SetMovementController(movementController);
         };
     }

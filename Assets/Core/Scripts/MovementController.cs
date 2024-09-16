@@ -2,15 +2,13 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public class MoveController : MonoBehaviour
+public class MovementController : MonoBehaviour
 {
     [SerializeField] private float speed = 2f;
     [SerializeField] private bool faceForward = true;
     [SerializeField] private bool lockXZ = false;
     [SerializeField] private PositionAnchor positionAnchor;
-    [SerializeField] private Animator animator;
-    [SerializeField] private float animationSpeed;
-
+    
     [Header("Target Movement")]
     [SerializeField] private float distanceThreshold = 2f;
 
@@ -37,10 +35,11 @@ public class MoveController : MonoBehaviour
     private float idleTimer;
 
     private Transform target;
-    private Vector3 direction;
     private Vector3 position;
     private Vector3 origin;
     private float angle;
+
+    public Vector3 Direction { get; private set; }
 
     public float Speed => speed;
     public float DistanceThreshold => distanceThreshold;
@@ -51,7 +50,7 @@ public class MoveController : MonoBehaviour
     public Vector3 TargetPosition => type switch
     {
         MovementType.TARGET => GetTargetPosition(),
-        MovementType.DIRECTION => transform.position + direction,
+        MovementType.DIRECTION => transform.position + Direction,
         MovementType.RADIAL => GetRadialPosition(),
         _ => position,
     };
@@ -65,13 +64,8 @@ public class MoveController : MonoBehaviour
 
     public void SetDirection(Vector3 direction)
     {
-        this.direction = direction;
+        this.Direction = direction;
         SetType(MovementType.DIRECTION);
-    }
-
-    public void StartMovement()
-    {
-        if (animator) animator.SetBool("isMoving", true);
     }
 
     public void SetPosition(Vector3 position, UnityAction onComplete = null)
@@ -91,7 +85,6 @@ public class MoveController : MonoBehaviour
     {
         this.type = type;
         isIdle = false;
-        StartMovement();
         if (positionReachedRoutine != null) StopCoroutine(positionReachedRoutine);
     }
 
@@ -104,11 +97,6 @@ public class MoveController : MonoBehaviour
     public void Stop()
     {
         SetPosition(transform.position);
-    }
-
-    public void SetAnimator(Animator animator)
-    {
-        this.animator = animator;
     }
 
     public void SetBounds(Collider collider)
@@ -162,30 +150,26 @@ public class MoveController : MonoBehaviour
 
     private void UpdatePosition()
     {
-        if (animator) animator.SetBool("isMoving", !IsAtDestination);
-
         if (IsAtDestination) return;
 
-        direction = (TargetPosition - transform.position).normalized;
+        Direction = (TargetPosition - transform.position).normalized;
 
 
-        float angle = Vector3.Angle(transform.forward, direction);
-        if (!faceForward || angle < Mathf.PI) transform.position += speed * Time.deltaTime * direction;
+        float angle = Vector3.Angle(transform.forward, Direction);
+        if (!faceForward || angle < Mathf.PI) transform.position += speed * Time.deltaTime * Direction;
 
-        if (faceForward && direction != Vector3.zero)
+        if (faceForward && Direction != Vector3.zero)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
+            Quaternion targetRotation = Quaternion.LookRotation(Direction, Vector3.up);
             if (lockXZ) targetRotation = Quaternion.Euler(0, targetRotation.eulerAngles.y, 0); // Keep only y-axis rotation
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 500 * Time.deltaTime);
         }
 
-        if (animator) animator.speed = animationSpeed * direction.magnitude / 1.5f;
     }
 
     private IEnumerator WaitUntilDestinationReached(UnityAction onComplete)
     {
         yield return new WaitUntil(() => IsAtDestination);
-        if (animator) animator.SetBool("isMoving", false);
         onComplete?.Invoke();
     }
 

@@ -1674,9 +1674,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 373087729}
-  - component: {fileID: 373087731}
   - component: {fileID: 373087728}
   - component: {fileID: 373087733}
+  - component: {fileID: 373087734}
+  - component: {fileID: 373087735}
   m_Layer: 0
   m_Name: Grove Player
   m_TagString: Untagged
@@ -1728,32 +1729,6 @@ Transform:
   - {fileID: 1721001563}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &373087731
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 373087727}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d2b252d604a094065a18d719180c3a27, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 2.5
-  faceForward: 1
-  lockXZ: 1
-  positionAnchor:
-    anchor: {fileID: 0}
-    bounds: {fileID: 0}
-  animator: {fileID: 1778584737}
-  animationSpeed: 1
-  distanceThreshold: 2
-  startIdle: 0
-  minIdleDuration: 2
-  maxIdleDuration: 5
-  radius: 4
-  radialSpeed: 0.25
 --- !u!114 &373087733
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1766,6 +1741,45 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0ebbc806cd2749d7b7aacc0d551eede, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &373087734
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 373087727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47a3fda79a53a4b9e9ab1b8cf9d8acb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 2
+  faceForward: 1
+  lockXZ: 0
+  positionAnchor:
+    anchor: {fileID: 0}
+    bounds: {fileID: 0}
+  distanceThreshold: 2
+  startIdle: 0
+  minIdleDuration: 2
+  maxIdleDuration: 5
+  radius: 4
+  radialSpeed: 0.25
+--- !u!114 &373087735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 373087727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7511a942fc4cf4dcaa3d6d403a4ec0d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementController: {fileID: 373087734}
+  animator: {fileID: 1778584737}
+  animationSpeed: 1
 --- !u!4 &375630455 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4458032547626594, guid: 8ae7718c33e89b042b204b36902c7745,
@@ -9597,7 +9611,7 @@ PrefabInstance:
         type: 3}
       propertyPath: movementController
       value: 
-      objectReference: {fileID: 373087731}
+      objectReference: {fileID: 373087734}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
