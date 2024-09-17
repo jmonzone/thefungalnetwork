@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using TMPro;
-using Unity.Multiplayer.Samples.Utilities.ClientAuthority;
 using Unity.Services.Authentication;
 using UnityEngine;
 using UnityEngine.Events;
@@ -11,7 +10,6 @@ public class MultiplayerTest : MonoBehaviour
     [Header("Connection UI References")]
     [SerializeField] private MultiplayerManager multiplayerManager;
     [SerializeField] private GameObject connectUI;
-    [SerializeField] private TMP_InputField usernameInput;
     [SerializeField] private Button createButton;
     [SerializeField] private TMP_InputField lobbyCodeInput;
     [SerializeField] private Button joinButton;
@@ -24,9 +22,7 @@ public class MultiplayerTest : MonoBehaviour
     [SerializeField] private TextMeshProUGUI playersText;
     [SerializeField] private TextMeshProUGUI lobbyCodeText;
 
-    private Transform player;
-
-    private bool CanJoin => usernameInput.text.Length > 0 && lobbyCodeInput.text.Length == 6;
+    private bool CanJoin => lobbyCodeInput.text.Length == 6;
 
     private List<string> firstNames = new List<string> { "Konan", "Zayleen", "Danti", "Stony", "Feni" };
     private List<string> lastNames = new List<string> { "Zonzo", "Varden", "Vunza", "Starita", "Bagnay" };
@@ -48,13 +44,6 @@ public class MultiplayerTest : MonoBehaviour
         joinButton.onClick.AddListener(() => Connect(JoinGame));
         joinButton.interactable = CanJoin;
 
-        usernameInput.text = GenerateRandomName();
-        usernameInput.onValueChanged.AddListener(value =>
-        {
-            createButton.interactable = value.Length > 0;
-            joinButton.interactable = CanJoin;
-        });
-
         lobbyCodeInput.onValueChanged.AddListener(value =>
         {
             joinButton.interactable = CanJoin;
@@ -64,8 +53,6 @@ public class MultiplayerTest : MonoBehaviour
 
         NetworkPlayer.OnLocalPlayerSpawned += player =>
         {
-            this.player = player;
-
             var movementController = player.GetComponent<MovementController>();
             playerController.SetMovementController(movementController);
         };
@@ -73,7 +60,8 @@ public class MultiplayerTest : MonoBehaviour
 
     private void Connect(UnityAction onComplete)
     {
-        multiplayerManager.SignIn(usernameInput.text, onComplete);
+        var username = GenerateRandomName();
+        multiplayerManager.SignIn(username, onComplete);
         connectUI.SetActive(false);
     }
 

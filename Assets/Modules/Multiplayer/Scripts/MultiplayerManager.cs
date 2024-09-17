@@ -176,8 +176,6 @@ public class MultiplayerManager : MonoBehaviour
             var player = Player;
             var clientId = NetworkManager.Singleton.LocalClientId;
             player.Data["NetworkId"] = new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, clientId.ToString());
-            Debug.Log(clientId);
-
 
             CreateLobbyOptions createLobbyOptions = new CreateLobbyOptions
             {
