@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.Services.Authentication;
@@ -22,10 +23,11 @@ public class MultiplayerTest : MonoBehaviour
     private void Start()
     {  
         var username = GenerateRandomName();
-        multiplayerManager.SignIn(username, () => UpdateLobbyList());
+        multiplayerManager.SignIn(username, () => StartCoroutine(RefreshLobbyList()));
 
         connectionUI.gameObject.SetActive(true);
         connectionUI.OnCreateButtonClicked += () => CreateGame();
+        connectionUI.OnRefreshButtonClicked += () => UpdateLobbyList();
         connectionUI.OnLobbyJoinButtonClicked += lobby => JoinGame(lobby.Id);
 
         gameplayUI.SetActive(false);
@@ -37,6 +39,15 @@ public class MultiplayerTest : MonoBehaviour
             var movementController = player.GetComponent<MovementController>();
             playerController.SetMovementController(movementController);
         };
+    }
+
+    private IEnumerator RefreshLobbyList()
+    {
+        while (true)
+        {
+            UpdateLobbyList();
+            yield return new WaitForSeconds(2f);
+        }
     }
 
     private void UpdateLobbyList()

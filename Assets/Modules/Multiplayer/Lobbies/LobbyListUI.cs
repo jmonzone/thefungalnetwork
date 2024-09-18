@@ -19,6 +19,7 @@ public class LobbyListUI : MonoBehaviour
         foreach(var lobbyItem in lobbyItems)
         {
             lobbyItem.OnJoinButtonClicked += lobby => OnLobbyJoinButtonClicked(lobby);
+            lobbyItem.gameObject.SetActive(false);
         }
     }
 
