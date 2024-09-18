@@ -183,7 +183,7 @@ public class MultiplayerManager : MonoBehaviour
                 Player = player,
                 Data = new Dictionary<string, DataObject>()
                 {
-                    { "JoinCode", new DataObject(DataObject.VisibilityOptions.Member, joinCode) }
+                    { "JoinCode", new DataObject(DataObject.VisibilityOptions.Member, joinCode) },
                     { "HostName", new DataObject(DataObject.VisibilityOptions.Public, PlayerName)},
                 }
             };
