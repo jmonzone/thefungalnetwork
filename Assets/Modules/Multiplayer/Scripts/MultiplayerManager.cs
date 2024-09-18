@@ -86,9 +86,12 @@ public class MultiplayerManager : MonoBehaviour
 
         await UnityServices.InitializeAsync();
 
-        AuthenticationService.Instance.SignedIn += () => onComplete?.Invoke();
-
-        await AuthenticationService.Instance.SignInAnonymouslyAsync();
+        if (AuthenticationService.Instance.IsSignedIn) onComplete?.Invoke();
+        else
+        {
+            AuthenticationService.Instance.SignedIn += () => onComplete?.Invoke();
+            await AuthenticationService.Instance.SignInAnonymouslyAsync();
+        }
     }
 
     public async Task CreateRelayAndLobby()

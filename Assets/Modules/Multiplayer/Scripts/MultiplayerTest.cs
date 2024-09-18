@@ -20,12 +20,9 @@ public class MultiplayerTest : MonoBehaviour
     [SerializeField] private TextMeshProUGUI lobbyCodeText;
 
     private void Start()
-    {
+    {  
         var username = GenerateRandomName();
-        multiplayerManager.SignIn(username, () => multiplayerManager.ListLobbies(lobbies =>
-        {
-            connectionUI.SetLobbies(lobbies);
-        }));
+        multiplayerManager.SignIn(username, () => UpdateLobbyList());
 
         connectionUI.gameObject.SetActive(true);
         connectionUI.OnCreateButtonClicked += () => CreateGame();
@@ -40,6 +37,14 @@ public class MultiplayerTest : MonoBehaviour
             var movementController = player.GetComponent<MovementController>();
             playerController.SetMovementController(movementController);
         };
+    }
+
+    private void UpdateLobbyList()
+    {
+        multiplayerManager.ListLobbies(lobbies =>
+        {
+            connectionUI.SetLobbies(lobbies);
+        });
     }
 
 
