@@ -29,6 +29,7 @@ public class MultiplayerManager : MonoBehaviour
     }
 
     public event UnityAction OnLobbyUpdated;
+    public event UnityAction OnLobbyJoined;
 
     private int maxPlayers = 10;
 
@@ -194,6 +195,8 @@ public class MultiplayerManager : MonoBehaviour
             Lobby lobby = await LobbyService.Instance.CreateLobbyAsync("Test Lobby", maxPlayers, createLobbyOptions);
             hostLobby = lobby;
             JoinedLobby = lobby;
+
+            OnLobbyJoined?.Invoke();
         }
         catch (LobbyServiceException e)
         {

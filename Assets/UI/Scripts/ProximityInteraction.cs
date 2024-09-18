@@ -20,11 +20,13 @@ public class ProximityInteraction : MonoBehaviour
 
     private void Update()
     {
+        if (!playerController.Movement) return;
         interactionButton.interactable = TryFindProximityInteraction();
     }
 
     private bool TryFindProximityInteraction()
     {
+
         var closestEntities = Physics.OverlapSphere(playerController.Movement.transform.position, MAXIMUM_PROXIMITY_DISTANCE)
             .Select(collider => collider.GetComponentInParent<ProximityAction>())
             .Where(action => action && action.transform != playerController.Movement.transform)

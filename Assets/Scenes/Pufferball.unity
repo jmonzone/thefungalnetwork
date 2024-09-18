@@ -1570,32 +1570,15 @@ GameObject:
   m_Component:
   - component: {fileID: 930412750}
   - component: {fileID: 930412752}
-  - component: {fileID: 930412749}
+  - component: {fileID: 930412754}
+  - component: {fileID: 930412753}
   m_Layer: 0
-  m_Name: Multiplayer Test Manager
+  m_Name: PufferballManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &930412749
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 930412748}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 46c727f24be1445c495ff72da18ff7fe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  multiplayerManager: {fileID: 930412752}
-  connectionUI: {fileID: 722267798}
-  playerController: {fileID: 656082656}
-  gameplayUI: {fileID: 449218229}
-  playersText: {fileID: 253092211}
-  lobbyCodeText: {fileID: 1810747801}
 --- !u!4 &930412750
 Transform:
   m_ObjectHideFlags: 0
@@ -1623,6 +1606,113 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d67b8d0abbb2448ebffa1f7366472fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &930412753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 930412748}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8958e377a8d30438bb5a18e576441414, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  multiplayerManager: {fileID: 930412752}
+  connectionUI: {fileID: 722267798}
+  inputUI: {fileID: 1471663062}
+  playerController: {fileID: 656082656}
+  pufferballPrefab: {fileID: 5753454563831199646, guid: fa7c9dcaa6f7040d7a3ed4d32e3db3c1,
+    type: 3}
+--- !u!114 &930412754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 930412748}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 939606245
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+--- !u!1001 &1082532222
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 8447897468267845203, guid: 3e4fdda2acaca4357aea53facb3f9a60,
+        type: 3}
+      propertyPath: m_Name
+      value: Pufferball Arena
+      objectReference: {fileID: 0}
+    - target: {fileID: 8866415926229114242, guid: 3e4fdda2acaca4357aea53facb3f9a60,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8866415926229114242, guid: 3e4fdda2acaca4357aea53facb3f9a60,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8866415926229114242, guid: 3e4fdda2acaca4357aea53facb3f9a60,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8866415926229114242, guid: 3e4fdda2acaca4357aea53facb3f9a60,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8866415926229114242, guid: 3e4fdda2acaca4357aea53facb3f9a60,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8866415926229114242, guid: 3e4fdda2acaca4357aea53facb3f9a60,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8866415926229114242, guid: 3e4fdda2acaca4357aea53facb3f9a60,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8866415926229114242, guid: 3e4fdda2acaca4357aea53facb3f9a60,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8866415926229114242, guid: 3e4fdda2acaca4357aea53facb3f9a60,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8866415926229114242, guid: 3e4fdda2acaca4357aea53facb3f9a60,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 3e4fdda2acaca4357aea53facb3f9a60, type: 3}
 --- !u!1 &1152488256
 GameObject:
   m_ObjectHideFlags: 0
@@ -1983,6 +2073,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfdb3ff39d7d94b63aebb4052e8031d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1471663062 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4597692553077664990, guid: d234a41ded6f64a1d8230b0f5c8f9c7f,
+    type: 3}
+  m_PrefabInstance: {fileID: 1471663060}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1591541463
 GameObject:
   m_ObjectHideFlags: 0
@@ -2439,6 +2535,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Abyss Environment
       objectReference: {fileID: 0}
+    - target: {fileID: 1007802270919097035, guid: 1a0a3a7b581954056b26bd0767bde32b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2046580175987296782, guid: 1a0a3a7b581954056b26bd0767bde32b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2885,3 +2986,4 @@ SceneRoots:
   - {fileID: 166945122}
   - {fileID: 407066664}
   - {fileID: 245745176}
+  - {fileID: 1082532222}

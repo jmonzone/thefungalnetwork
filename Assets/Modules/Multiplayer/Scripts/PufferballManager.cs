@@ -1,24 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
-using Unity.Services.Authentication;
+using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.UI;
 
-public class MultiplayerTest : MonoBehaviour
+public class PufferballManager : NetworkBehaviour
 {
     [Header("Connection UI References")]
     [SerializeField] private MultiplayerManager multiplayerManager;
     [SerializeField] private ConnectionUI connectionUI;
-
-    [Header("Gameplay References")]
+    [SerializeField] private GameObject inputUI;
     [SerializeField] private PlayerController playerController;
-
-    [Header("Gameplay UI References")]
-    [SerializeField] private GameObject gameplayUI;
-    [SerializeField] private TextMeshProUGUI playersText;
-    [SerializeField] private TextMeshProUGUI lobbyCodeText;
+    [SerializeField] private PufferballController pufferballPrefab;
 
     private void Start()
     {  
@@ -30,14 +22,23 @@ public class MultiplayerTest : MonoBehaviour
         connectionUI.OnRefreshButtonClicked += () => UpdateLobbyList();
         connectionUI.OnLobbyJoinButtonClicked += lobby => JoinGame(lobby.Id);
 
-        gameplayUI.SetActive(false);
-
-        //multiplayerManager.OnLobbyUpdated += () => UpdateLobbyInfoUI();
-
         NetworkPlayer.OnLocalPlayerSpawned += player =>
         {
             var movementController = player.GetComponent<MovementController>();
             playerController.SetMovementController(movementController);
+        };
+
+        multiplayerManager.OnLobbyJoined += () =>
+        {
+            Debug.Log($"isHost: {IsHost} isServer: {IsServer}");
+            if (IsServer)
+            {
+                var spawnPosition = new Vector3(-2, 2, 2);
+                // Instantiate the object only on the server
+                var spawnedObject = Instantiate(pufferballPrefab, spawnPosition, Quaternion.identity);
+                // Spawn the object across the network
+                spawnedObject.GetComponent<NetworkObject>().Spawn();
+            }
         };
     }
 
@@ -88,33 +89,6 @@ public class MultiplayerTest : MonoBehaviour
 
     private void OnGameJoined()
     {
-        gameplayUI.SetActive(true);
-        UpdateLobbyInfoUI();
-    }
-
-    private void UpdateLobbyInfoUI()
-    {
-
-        Debug.Log(multiplayerManager.JoinedLobby);
-
-        Debug.Log(multiplayerManager.JoinedLobby.LobbyCode);
-
-        lobbyCodeText.text = multiplayerManager.JoinedLobby.LobbyCode;
-
-        playersText.text = "<b>Players:</b> ";
-
-
-        foreach (var player in multiplayerManager.JoinedLobby.Players)
-        {
-
-            Debug.Log(player.Data);
-            Debug.Log(player.Data["PlayerName"]);
-
-            playersText.text += player.Data["PlayerName"].Value.Replace("_", " ");
-            if (AuthenticationService.Instance.PlayerId == player.Id) playersText.text += " (You)";
-
-            playersText.text += " ";
-
-        }
+        inputUI.SetActive(true);
     }
 }
