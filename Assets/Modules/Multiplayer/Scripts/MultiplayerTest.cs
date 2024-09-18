@@ -21,13 +21,19 @@ public class MultiplayerTest : MonoBehaviour
 
     private void Start()
     {
+        var username = GenerateRandomName();
+        multiplayerManager.SignIn(username, () => multiplayerManager.ListLobbies(lobbies =>
+        {
+            connectionUI.SetLobbies(lobbies);
+        }));
+
         connectionUI.gameObject.SetActive(true);
-        connectionUI.OnCreateButtonClicked += () => Connect(CreateGame);
-        connectionUI.OnJoinButtonClicked += code => Connect(() => JoinGame(code));
+        connectionUI.OnCreateButtonClicked += () => CreateGame();
+        connectionUI.OnLobbyJoinButtonClicked += lobby => JoinGame(lobby.Id);
 
         gameplayUI.SetActive(false);
 
-        multiplayerManager.OnLobbyUpdated += () => UpdateLobbyInfoUI();
+        //multiplayerManager.OnLobbyUpdated += () => UpdateLobbyInfoUI();
 
         NetworkPlayer.OnLocalPlayerSpawned += player =>
         {
@@ -50,22 +56,17 @@ public class MultiplayerTest : MonoBehaviour
         return $"{firstName} {lastName}";
     }
 
-    private void Connect(UnityAction onComplete)
-    {
-        var username = GenerateRandomName();
-        multiplayerManager.SignIn(username, onComplete);
-        connectionUI.gameObject.SetActive(false);
-    }
-
     private async void CreateGame()
     {
+        connectionUI.gameObject.SetActive(false);
         await multiplayerManager.CreateRelayAndLobby();
         OnGameJoined();
     }
 
-    private async void JoinGame(string code)
+    private async void JoinGame(string id)
     {
-        await multiplayerManager.JoinLobbyByCode(code);
+        connectionUI.gameObject.SetActive(false);
+        await multiplayerManager.JoinLobbyById(id);
         OnGameJoined();
     }
 
@@ -77,12 +78,22 @@ public class MultiplayerTest : MonoBehaviour
 
     private void UpdateLobbyInfoUI()
     {
+
+        Debug.Log(multiplayerManager.JoinedLobby);
+
+        Debug.Log(multiplayerManager.JoinedLobby.LobbyCode);
+
         lobbyCodeText.text = multiplayerManager.JoinedLobby.LobbyCode;
 
         playersText.text = "<b>Players:</b> ";
 
+
         foreach (var player in multiplayerManager.JoinedLobby.Players)
         {
+
+            Debug.Log(player.Data);
+            Debug.Log(player.Data["PlayerName"]);
+
             playersText.text += player.Data["PlayerName"].Value.Replace("_", " ");
             if (AuthenticationService.Instance.PlayerId == player.Id) playersText.text += " (You)";
 

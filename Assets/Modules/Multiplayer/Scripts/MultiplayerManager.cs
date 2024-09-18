@@ -86,7 +86,7 @@ public class MultiplayerManager : MonoBehaviour
 
         await UnityServices.InitializeAsync();
 
-        AuthenticationService.Instance.SignedIn += () => onComplete();
+        AuthenticationService.Instance.SignedIn += () => onComplete?.Invoke();
 
         await AuthenticationService.Instance.SignInAnonymouslyAsync();
     }
@@ -184,6 +184,7 @@ public class MultiplayerManager : MonoBehaviour
                 Data = new Dictionary<string, DataObject>()
                 {
                     { "JoinCode", new DataObject(DataObject.VisibilityOptions.Member, joinCode) }
+                    { "HostName", new DataObject(DataObject.VisibilityOptions.Public, PlayerName)},
                 }
             };
 
@@ -212,6 +213,63 @@ public class MultiplayerManager : MonoBehaviour
         catch (LobbyServiceException e)
         {
             Debug.Log(e);
+        }
+    }
+
+    public async Task JoinLobbyById(string lobbyId)
+    {
+        try
+        {
+            JoinLobbyByIdOptions joinLobbyByIdOptions = new JoinLobbyByIdOptions
+            {
+                Player = Player,
+            };
+
+            // Join the lobby using its ID
+            Lobby lobby = await LobbyService.Instance.JoinLobbyByIdAsync(lobbyId, joinLobbyByIdOptions);
+            JoinedLobby = lobby;
+
+            // Confirm that the lobby has been joined
+            Debug.Log($"Successfully joined lobby with ID: {lobby.Id}");
+        }
+        catch (LobbyServiceException e)
+        {
+            Debug.LogError($"Failed to join lobby by ID: {e}");
+        }
+    }
+
+    public async void ListLobbies(UnityAction<List<Lobby>> onComplete)
+    {
+        try
+        {
+            // Set the query options such as max number of lobbies to return
+            QueryLobbiesOptions options = new QueryLobbiesOptions
+            {
+                Count = 10, // Max number of lobbies to return
+                Filters = new List<QueryFilter>
+                {
+                    // Example filter: only open lobbies
+                    new QueryFilter(
+                        field: QueryFilter.FieldOptions.AvailableSlots,
+                        op: QueryFilter.OpOptions.GT,
+                        value: "0")
+                }
+            };
+
+            QueryResponse lobbies = await LobbyService.Instance.QueryLobbiesAsync(options);
+
+            // Display found lobbies
+            Debug.Log("Available Lobbies:");
+            foreach (Lobby lobby in lobbies.Results)
+            {
+                Debug.Log($"Lobby: {lobby.Id}, Players: {lobby.Players.Count}/{lobby.MaxPlayers}");
+            }
+
+            onComplete?.Invoke(lobbies.Results);
+        }
+        catch (LobbyServiceException e)
+        {
+            Debug.LogError($"Failed to list lobbies: {e}");
         }
     }
 
