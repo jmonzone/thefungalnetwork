@@ -9,6 +9,11 @@ using UnityEngine.UI;
 
 public static class Utility
 {
+    public static bool Contains(this LayerMask layerMask, int layer)
+    {
+        return (layerMask.value & (1 << layer)) != 0;
+    }
+
     public static void LoadScene(string sceneName)
     {
         UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName);

@@ -2,9 +2,11 @@ using UnityEngine;
 
 public class PufferballController :  MonoBehaviour
 {
+    [SerializeField] private LayerMask wallLayer;
+
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.name == "Wall")
+        if (wallLayer.Contains(collision.gameObject.layer))
         {
             var contactPoint = collision.contacts[0];
 
