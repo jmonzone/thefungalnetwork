@@ -26,7 +26,7 @@ public class PufferballManager : NetworkBehaviour
         connectionUI.OnRefreshButtonClicked += () => UpdateLobbyList();
         connectionUI.OnLobbyJoinButtonClicked += lobby => JoinGame(lobby.Id);
 
-        NetworkPlayer.OnLocalPlayerSpawned += player =>
+        PufferballPlayer.OnLocalPlayerSpawned += player =>
         {
             var movementController = player.GetComponent<MovementController>();
             playerController.SetMovementController(movementController);
