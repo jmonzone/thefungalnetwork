@@ -8,7 +8,6 @@ using UnityEngine.UI;
 public class ConnectionUI : MonoBehaviour
 {
     [SerializeField] private Button createButton;
-    [SerializeField] private Button exitButton;
     [SerializeField] private Button refreshButton;
 
     [SerializeField] private LobbyListUI lobbyListUI;
@@ -19,7 +18,6 @@ public class ConnectionUI : MonoBehaviour
 
     private void Awake()
     {
-        exitButton.onClick.AddListener(() => SceneManager.LoadScene("Grove"));
         createButton.onClick.AddListener(() => OnCreateButtonClicked?.Invoke());
         refreshButton.onClick.AddListener(() =>
         {

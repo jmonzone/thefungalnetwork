@@ -2,15 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PufferballManager : NetworkBehaviour
 {
-    [Header("Connection UI References")]
+    [Header("Gameplay References")]
     [SerializeField] private MultiplayerManager multiplayerManager;
-    [SerializeField] private ConnectionUI connectionUI;
-    [SerializeField] private GameObject inputUI;
     [SerializeField] private PlayerController playerController;
     [SerializeField] private PufferballController pufferballPrefab;
+
+    [Header("UI References")]
+    [SerializeField] private ConnectionUI connectionUI;
+    [SerializeField] private GameObject inputUI;
+    [SerializeField] private Button exitButton;
 
     private void Start()
     {  
@@ -40,11 +44,18 @@ public class PufferballManager : NetworkBehaviour
                 spawnedObject.GetComponent<NetworkObject>().Spawn();
             }
         };
+
+        exitButton.onClick.AddListener(() =>
+        {
+            multiplayerManager.LeaveLobby();
+            multiplayerManager.DisconnectRelay();
+            SceneManager.LoadScene("Grove");
+        });
     }
 
     private IEnumerator RefreshLobbyList()
     {
-        while (true)
+        while (gameObject)
         {
             UpdateLobbyList();
             yield return new WaitForSeconds(2f);

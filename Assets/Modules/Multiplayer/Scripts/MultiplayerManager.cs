@@ -177,7 +177,7 @@ public class MultiplayerManager : MonoBehaviour
     {
         try
         {
-            var player = Player;
+            player = CreatePlayer();
             var clientId = NetworkManager.Singleton.LocalClientId;
             player.Data["NetworkId"] = new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, clientId.ToString());
 
@@ -208,9 +208,10 @@ public class MultiplayerManager : MonoBehaviour
     {
         try
         {
+            player = CreatePlayer();
             JoinLobbyByCodeOptions joinLobbyByCodeOptions = new JoinLobbyByCodeOptions
             {
-                Player = Player,
+                Player = player,
             };
 
             Lobby lobby = await LobbyService.Instance.JoinLobbyByCodeAsync(lobbyCode, joinLobbyByCodeOptions);
@@ -226,9 +227,10 @@ public class MultiplayerManager : MonoBehaviour
     {
         try
         {
+            player = CreatePlayer();
             JoinLobbyByIdOptions joinLobbyByIdOptions = new JoinLobbyByIdOptions
             {
-                Player = Player,
+                Player = player,
             };
 
             // Join the lobby using its ID
@@ -279,7 +281,37 @@ public class MultiplayerManager : MonoBehaviour
         }
     }
 
-    private Player Player => new Player
+    public async void LeaveLobby()
+    {
+        if (joinedLobby == null) return;
+
+        try
+        {
+            // Remove the player from the lobby
+            await LobbyService.Instance.RemovePlayerAsync(joinedLobby.Id, player.Id);
+            joinedLobby = null;
+            player = null;
+            Debug.Log("Player removed from lobby");
+        }
+        catch (LobbyServiceException e)
+        {
+            Debug.LogError($"Error leaving the lobby: {e.Message}");
+        }
+    }
+
+    public void DisconnectRelay()
+    {
+        if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsClient)
+        {
+            NetworkManager.Singleton.Shutdown();
+            Destroy(NetworkManager.Singleton.gameObject);
+            Debug.Log("Disconnected from relay.");
+        }
+    }
+
+    private Player player;
+
+    private Player CreatePlayer() => new Player
     {
         Data = new Dictionary<string, PlayerDataObject>
         {

@@ -347,7 +347,7 @@ MonoBehaviour:
     EnableTimeResync: 0
     TimeResyncInterval: 30
     EnsureNetworkVariableLengthSafety: 0
-    EnableSceneManagement: 1
+    EnableSceneManagement: 0
     ForceSamePrefabs: 1
     RecycleNetworkIds: 1
     NetworkIdRecycleDelay: 120
@@ -1518,7 +1518,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   createButton: {fileID: 318523858}
-  exitButton: {fileID: 1354203158}
   refreshButton: {fileID: 2104527457}
   lobbyListUI: {fileID: 1884339554}
 --- !u!114 &722267799
@@ -1720,11 +1719,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   multiplayerManager: {fileID: 930412752}
-  connectionUI: {fileID: 722267798}
-  inputUI: {fileID: 1471663062}
   playerController: {fileID: 656082656}
   pufferballPrefab: {fileID: 5753454563831199646, guid: fa7c9dcaa6f7040d7a3ed4d32e3db3c1,
     type: 3}
+  connectionUI: {fileID: 722267798}
+  inputUI: {fileID: 1471663062}
+  exitButton: {fileID: 1354203158}
 --- !u!114 &930412754
 MonoBehaviour:
   m_ObjectHideFlags: 0
