@@ -124,7 +124,7 @@ public class MovementController : MonoBehaviour
 
     private void Awake()
     {
-        Stop();
+        position = transform.position;
     }
 
     private void Update()

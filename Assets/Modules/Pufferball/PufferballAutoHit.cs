@@ -11,7 +11,7 @@ public class PufferballAutoHit : MonoBehaviour
         if (canHit)
         {
 
-            var colliders = Physics.OverlapSphere(transform.position, 1, layerMask);
+            var colliders = Physics.OverlapSphere(transform.position, 2, layerMask);
             if (colliders.Length > 0)
             {
                 Debug.Log("hitting");

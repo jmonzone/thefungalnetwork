@@ -19,7 +19,15 @@ public class CameraController : MonoBehaviour
 
     public Transform Target { get => target; set => target = value; }
 
-    void Update()
+    private void Awake()
+    {
+        if (target)
+        {
+            cameraOffset = transform.position - target.position;
+        }
+    }
+
+    private void Update()
     {
         if (rotateCamera) HandleRotateCamera();
 

@@ -6,7 +6,7 @@ public class PufferballTest : MonoBehaviour
 
     private void Start()
     {
-        var direction = new Vector3(0, 0, 1);
-        movement.SetDirection(direction);
+        //var direction = new Vector3(0, 0, 1);
+        //movement.SetDirection(direction);
     }
 }
