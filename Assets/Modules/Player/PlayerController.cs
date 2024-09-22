@@ -1,33 +1,32 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public static PlayerController Instance { get; private set; }
-
-    [SerializeField] private MovementController movementController;
-    [SerializeField] private VirtualJoystick virtualJoystick;
-    [SerializeField] private CameraController cameraController;
-
-    public MovementController Movement => movementController;
-
+    private Animator animator;
+    public ProximityAction Interaction { get; private set; }
+    public MovementController Movement { get; private set; }
     private void Awake()
     {
-        Instance = this;
+        animator = GetComponentInChildren<Animator>();
 
-        //virtualJoystick.OnJoystickStart += _ => movementController.StartMovement();
-        virtualJoystick.OnJoystickEnd += () => movementController.Stop();
-
-        virtualJoystick.OnJoystickUpdate += input =>
-        {
-            var direction = new Vector3(input.x, 0, input.y);
-            direction = Quaternion.Euler(0, cameraController.transform.eulerAngles.y, 0) * direction;
-            movementController.SetDirection(direction);
-        };
+        Interaction = GetComponent<ProximityAction>();
+        Movement = GetComponent<MovementController>();
     }
 
-    public void SetMovementController(MovementController movement)
+    public void PlayLeaveBodyAnimation()
     {
-        movementController = movement;
-        cameraController.Target = movement.transform;
+        Debug.Log("playing leave body animation");
+        animator.SetFloat("randomValue", Random.Range(0f, 1f));
+        animator.SetTrigger("leaveBody");
     }
+
+    public void PlayReturnToBodyAnimation()
+    {
+        var playerAnimator = GetComponentInChildren<Animator>();
+        playerAnimator.SetTrigger("returnToBody");
+
+    }
+
 }

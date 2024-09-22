@@ -304,9 +304,10 @@ public class MultiplayerManager : MonoBehaviour
         if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsClient)
         {
             NetworkManager.Singleton.Shutdown();
-            Destroy(NetworkManager.Singleton.gameObject);
             Debug.Log("Disconnected from relay.");
         }
+
+        Destroy(NetworkManager.Singleton.gameObject);
     }
 
     private Player player;

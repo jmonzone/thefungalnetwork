@@ -14,6 +14,7 @@ public static class ConfigKeys
     public const string INVENTORY_KEY = "inventory";
     public const string HUNGER_KEY = "hunger";
     public const string NAME_KEY = "name";
+    public const string PARTNER_KEY = "partner";
 
     // stats
     public const string STATS_KEY = "stats";
@@ -130,6 +131,19 @@ public class GameManager : MonoBehaviour
         {
             JsonFile[ConfigKeys.FUNGALS_KEY] = new JArray { fungal.Json };
         }
+        SaveData();
+    }
+
+    public FungalModel GetPartner()
+    {
+        var partnerId = JsonFile[ConfigKeys.PARTNER_KEY]?.ToString();
+        var partner = fungals.Find(x => x.Data.name == partnerId);
+        return partner;
+    }
+
+    public void SetPartner(FungalController fungal)
+    {
+        JsonFile[ConfigKeys.PARTNER_KEY] = fungal ? fungal.Model.name : null;
         SaveData();
     }
 

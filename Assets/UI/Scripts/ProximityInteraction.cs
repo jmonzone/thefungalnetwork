@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class ProximityInteraction : MonoBehaviour
 {
     [SerializeField] private Button interactionButton;
-    [SerializeField] private PlayerController playerController;
+    [SerializeField] private InputManager playerController;
 
     private const float MAXIMUM_PROXIMITY_DISTANCE = 3f;
 
@@ -14,8 +14,6 @@ public class ProximityInteraction : MonoBehaviour
     private void Awake()
     {
         interactionButton.onClick.AddListener(() => targetAction.Use());
-
-        enabled = playerController.Movement;
     }
 
     private void Update()
@@ -45,6 +43,4 @@ public class ProximityInteraction : MonoBehaviour
         targetAction = action;
         if (targetAction) targetAction.SetInteractable(true);
     }
-
-
 }

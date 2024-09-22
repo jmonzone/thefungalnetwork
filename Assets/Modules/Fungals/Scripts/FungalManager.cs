@@ -1,13 +1,11 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class FungalManager : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private PlayerController player;
-    [SerializeField] private Collider fungalBounds;
+    [SerializeField] private PositionAnchor positionAnchor;
     [SerializeField] private EggSelection eggSelection;
 
     [Header("Assets")]
@@ -17,7 +15,6 @@ public class FungalManager : MonoBehaviour
     public List<FungalController> FungalControllers { get; private set; } = new List<FungalController>();
 
     public List<FungalModel> Fungals => GameManager.Instance.Fungals;
-    private GameData GameData => GameManager.Instance.GameData;
 
     public FungalController TalkingFungal { get; private set; }
     public FungalController EscortedFungal { get; private set; }
@@ -31,31 +28,29 @@ public class FungalManager : MonoBehaviour
         Instance = this;
     }
 
-    private void Start()
-    {
-        if (Fungals.Count == 0)
-        {
-            eggSelection.SetPets(GameData.Fungals.GetRange(0, 3));
+    //private void Start()
+    //{
+    //    if (Fungals.Count == 0)
+    //    {
+    //        eggSelection.SetPets(GameData.Fungals.GetRange(0, 3));
 
-            eggSelection.OnEggSelected += egg =>
-            {
-                OnEggHatched(egg);
-                eggSelection.gameObject.SetActive(false);
-            };
+    //        eggSelection.OnEggSelected += egg =>
+    //        {
+    //            OnEggHatched(egg);
+    //            eggSelection.gameObject.SetActive(false);
+    //        };
 
-            eggSelection.gameObject.SetActive(true);
-        }
+    //        eggSelection.gameObject.SetActive(true);
+    //    }
 
-        if (Fungals.Count == 1 && Fungals[0].Level >= 10)
-        {
-            var availableFungals = GameData.Fungals.Where(fungal => fungal != Fungals[0].Data).ToList();
-            var randomIndex = Random.Range(0, availableFungals.Count);
-            var secondFungal = availableFungals[randomIndex];
-            SpawnEgg(secondFungal);
-        }
-
-        SpawnFungals();
-    }
+    //    if (Fungals.Count == 1 && Fungals[0].Level >= 10)
+    //    {
+    //        var availableFungals = GameData.Fungals.Where(fungal => fungal != Fungals[0].Data).ToList();
+    //        var randomIndex = Random.Range(0, availableFungals.Count);
+    //        var secondFungal = availableFungals[randomIndex];
+    //        SpawnEgg(secondFungal);
+    //    }
+    //}
 
     private void OnEggHatched(EggController egg)
     {
@@ -79,22 +74,19 @@ public class FungalManager : MonoBehaviour
     private void SpawnFungal(FungalModel fungal, Vector3 spawnPosition)
     {
         var fungalController = Instantiate(fungalControllerPrefab, spawnPosition, Quaternion.identity);
-        fungalController.Initialize(fungal, fungalBounds);
+        fungalController.Initialize(fungal, positionAnchor.Bounds);
         fungalController.transform.forward = Utility.RandomXZVector;
         FungalControllers.Add(fungalController);
         fungalController.OnInteractionStarted += () => OnInteractionStarted?.Invoke(fungalController);
     }
 
-    private void SpawnFungals()
+    public void SpawnFungals()
     {
         Debug.Log("spawning fungals");
 
         foreach (var fungal in Fungals)
         {
-            var randomPosition = (Vector3)Random.insideUnitCircle.normalized * Random.Range(3, 6);
-            randomPosition.z = Mathf.Abs(randomPosition.y);
-            randomPosition.y = 0;
-
+            var randomPosition = positionAnchor.Position;
             SpawnFungal(fungal, randomPosition);
         }
     }
@@ -103,20 +95,5 @@ public class FungalManager : MonoBehaviour
     {
         if (TalkingFungal != EscortedFungal) TalkingFungal.Stop();
         TalkingFungal = null;
-    }
-
-    public void EscortFungal()
-    {
-        EscortedFungal = TalkingFungal;
-        EscortedFungal.Escort(player.transform);
-    }
-
-    public void UnescortFungal()
-    {
-        if (EscortedFungal)
-        {
-            EscortedFungal.Unescort();
-            EscortedFungal = null;
-        }
     }
 }

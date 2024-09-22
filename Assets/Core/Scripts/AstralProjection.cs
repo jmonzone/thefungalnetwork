@@ -1,50 +1,66 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class AstralProjection : MonoBehaviour
 {
-    [SerializeField] private Animator playerAnimator;
-    [SerializeField] private ProximityAction playerInteraction;
+    private PlayerController player;
+    private InputManager inputManager;
+
+    public event UnityAction<FungalController> OnFungalPossessed;
+    public event UnityAction OnReturnedToBody;
+
+    private void Awake()
+    {
+        inputManager = GetComponentInChildren<InputManager>();
+
+        player = GetComponentInChildren<PlayerController>();
+
+        var groveManager = GetComponent<GroveManager>();
+        groveManager.OnPlayerSpawned += () =>
+        {
+            if (inputManager.Movement != player.Movement)
+            {
+                player.PlayLeaveBodyAnimation();
+            }
+        };
+    }
 
     private void Start()
     {
         FungalManager.Instance.OnInteractionStarted += PossessFungal;
-        playerInteraction.OnUse += ReturnToTheBody;
+        player.Interaction.OnUse += ReturnToTheBody;
     }
 
     private void PossessFungal(FungalController fungal)
     {
         if (IsLeavingTheBody)
         {
-            LeaveTheBody();
+            player.PlayLeaveBodyAnimation();
         }
         else
         {
             LeaveFungal();
         }
 
-        PlayerController.Instance.SetMovementController(fungal.Movement);
+        inputManager.SetMovementController(fungal.Movement);
+        GameManager.Instance.SetPartner(fungal);
     }
 
     private void ReturnToTheBody()
     {
         LeaveFungal();
 
-        playerAnimator.SetTrigger("returnToBody");
-        var movement = playerInteraction.GetComponent<MovementController>();
-        PlayerController.Instance.SetMovementController(movement);
-    }
+        player.PlayReturnToBodyAnimation();
 
-    private void LeaveTheBody()
-    {
-        playerAnimator.SetFloat("randomValue", Random.Range(0f, 1f));
-        playerAnimator.SetTrigger("leaveBody");
+        inputManager.SetMovementController(player.Movement);
+        GameManager.Instance.SetPartner(null);
     }
 
     private void LeaveFungal()
     {
-        var fungal = PlayerController.Instance.Movement;
+        var fungal = inputManager.Movement;
         fungal.StartRandomMovement();
     }
 
-    private bool IsLeavingTheBody => PlayerController.Instance.Movement.transform == playerInteraction.transform;
+    private bool IsLeavingTheBody => inputManager.Movement.transform == player.transform;
 }

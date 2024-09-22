@@ -15,8 +15,10 @@ public class MovementAnimations : MonoBehaviour
 
     private void Update()
     {
-        animator.SetBool("isMoving", !movementController.IsAtDestination);
-        animator.speed = animationSpeed * movementController.Direction.magnitude / 1.5f;
+        var isMoving = !movementController.IsAtDestination;
+        animator.SetBool("isMoving", isMoving);
+        animator.speed = animationSpeed;
+        if (isMoving) animator.speed *= movementController.Direction.magnitude / 1.5f;
     }
 
     public void SetAnimatior(Animator animator)

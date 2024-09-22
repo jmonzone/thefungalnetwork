@@ -9,6 +9,11 @@ using UnityEngine.UI;
 
 public static class Utility
 {
+    public static void LoadScene(string sceneName)
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName);
+    }
+
     public static List<T> OverlapSphere<T>(this Transform transform, float radius, Predicate<T> predicate = null) where T : MonoBehaviour
         => Physics.OverlapSphere(transform.position, radius)
         .Select(collider => collider.GetComponentInParent<T>())

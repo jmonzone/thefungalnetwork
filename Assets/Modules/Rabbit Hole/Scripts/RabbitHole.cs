@@ -5,6 +5,6 @@ public class RabbitHole : MonoBehaviour
     private void Start()
     {
         var proximityAction = GetComponent<ProximityAction>();
-        proximityAction.OnUse += () => SceneManager.LoadScene("Pufferball");
+        proximityAction.OnUse += () => Utility.LoadScene("Pufferball");
     }
 }

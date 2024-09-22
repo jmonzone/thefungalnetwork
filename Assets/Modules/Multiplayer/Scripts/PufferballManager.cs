@@ -8,7 +8,7 @@ public class PufferballManager : NetworkBehaviour
 {
     [Header("Gameplay References")]
     [SerializeField] private MultiplayerManager multiplayerManager;
-    [SerializeField] private PlayerController playerController;
+    [SerializeField] private InputManager playerController;
     [SerializeField] private PufferballController pufferballPrefab;
 
     [Header("UI References")]
@@ -49,7 +49,7 @@ public class PufferballManager : NetworkBehaviour
         {
             multiplayerManager.LeaveLobby();
             multiplayerManager.DisconnectRelay();
-            SceneManager.LoadScene("Grove");
+            Utility.LoadScene("Grove");
         });
     }
 
