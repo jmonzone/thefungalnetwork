@@ -14,11 +14,6 @@ public class FungalManager : MonoBehaviour
 
     public List<FungalController> FungalControllers { get; private set; } = new List<FungalController>();
 
-    public List<FungalModel> Fungals => GameManager.Instance.Fungals;
-
-    public FungalController TalkingFungal { get; private set; }
-    public FungalController EscortedFungal { get; private set; }
-
     public static FungalManager Instance { get; private set; }
 
     public event UnityAction<FungalController> OnInteractionStarted;
@@ -84,16 +79,10 @@ public class FungalManager : MonoBehaviour
     {
         Debug.Log("spawning fungals");
 
-        foreach (var fungal in Fungals)
+        foreach (var fungal in GameManager.Instance.Fungals)
         {
             var randomPosition = positionAnchor.Position;
             SpawnFungal(fungal, randomPosition);
         }
-    }
-
-    public void EndFungalTalk()
-    {
-        if (TalkingFungal != EscortedFungal) TalkingFungal.Stop();
-        TalkingFungal = null;
     }
 }

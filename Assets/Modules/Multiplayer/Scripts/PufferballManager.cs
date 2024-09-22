@@ -49,6 +49,7 @@ public class PufferballManager : NetworkBehaviour
         {
             multiplayerManager.LeaveLobby();
             multiplayerManager.DisconnectRelay();
+            StopAllCoroutines();
             Utility.LoadScene("Grove");
         });
     }

@@ -287,8 +287,9 @@ public class MultiplayerManager : MonoBehaviour
 
         try
         {
+            var playerId = player.Data["NetworkId"].Value;
             // Remove the player from the lobby
-            await LobbyService.Instance.RemovePlayerAsync(joinedLobby.Id, player.Id);
+            await LobbyService.Instance.RemovePlayerAsync(joinedLobby.Id, playerId);
             joinedLobby = null;
             player = null;
             Debug.Log("Player removed from lobby");

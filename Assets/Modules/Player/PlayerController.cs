@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
     private Animator animator;
     public ProximityAction Interaction { get; private set; }
     public MovementController Movement { get; private set; }
+
     private void Awake()
     {
         animator = GetComponentInChildren<Animator>();
