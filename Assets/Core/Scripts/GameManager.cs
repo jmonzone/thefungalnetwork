@@ -138,6 +138,12 @@ public class GameManager : MonoBehaviour
     {
         var partnerId = JsonFile[ConfigKeys.PARTNER_KEY]?.ToString();
         var partner = fungals.Find(x => x.Data.name == partnerId);
+
+        if (!string.IsNullOrEmpty(partnerId) && !partner)
+        {
+            Debug.LogWarning("Invalid partner found in config");
+        }
+
         return partner;
     }
 

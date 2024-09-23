@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -8,7 +7,7 @@ using UnityEngine.Events;
 public class PufferballPlayer : NetworkBehaviour
 {
     [SerializeField] private GameObject player;
-    [SerializeField] private GameObject fungal;
+    [SerializeField] private FungalCollection fungalCollection;
 
     public static UnityAction<Transform> OnLocalPlayerSpawned;
     public static UnityAction<Transform> OnRemotePlayerSpawned;
@@ -17,16 +16,32 @@ public class PufferballPlayer : NetworkBehaviour
     {
         base.OnNetworkPreSpawn(ref networkManager);
 
+        if (!TrySpawnPartner()) SetRender(player);
+
+        transform.position = new Vector3(0, 2, -4);
+    }
+
+    private bool TrySpawnPartner()
+    {
         var partner = GameManager.Instance.GetPartner();
 
         if (partner)
         {
-            SetRender(fungal);
+            var targetFungal = fungalCollection.Data.Find(fungal => fungal.Id == partner?.Data.Id);
+
+            if (targetFungal)
+            {
+                Debug.Log("target found");
+                var render = Instantiate(targetFungal.Prefab, transform);
+                SetRender(render);
+                return true;
+            }
+
+            Debug.Log("no target found");
+
         }
-        else
-        {
-            SetRender(player);
-        }
+
+        return false;
     }
 
     public override void OnNetworkSpawn()
@@ -56,7 +71,7 @@ public class PufferballPlayer : NetworkBehaviour
         var movementAnimations = GetComponent<MovementAnimations>();
         movementAnimations.SetAnimatior(animator);
 
-        var networkAnimator = render.GetComponent<NetworkAnimator>();
-        networkAnimator.Animator = animator;
+        var ownerNetworkAnimator = render.GetComponent<OwnerNetworkAnimator>();
+        ownerNetworkAnimator.Animator = animator;
     }
 }

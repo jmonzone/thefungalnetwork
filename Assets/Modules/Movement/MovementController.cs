@@ -4,6 +4,7 @@ using UnityEngine.Events;
 
 public class MovementController : MonoBehaviour
 {
+    [SerializeField] private MovementType type;
     [SerializeField] private float speed = 2f;
     [SerializeField] private bool lerpRotation = true;
     [SerializeField] private bool lockXZ = false;
@@ -24,13 +25,13 @@ public class MovementController : MonoBehaviour
 
     private enum MovementType
     {
+        IDLE,
+        POSITION,
         TARGET,
         DIRECTION,
-        POSITION,
         RADIAL
     }
 
-    private MovementType type = MovementType.POSITION;
     private Coroutine positionReachedRoutine;
     private bool isIdle;
     private float idleTimer;
@@ -50,6 +51,7 @@ public class MovementController : MonoBehaviour
 
     public Vector3 TargetPosition => type switch
     {
+        MovementType.IDLE => transform.position,
         MovementType.TARGET => GetTargetPosition(),
         MovementType.DIRECTION => transform.position + Direction,
         MovementType.RADIAL => GetRadialPosition(),
@@ -84,6 +86,7 @@ public class MovementController : MonoBehaviour
 
     private void SetType(MovementType type)
     {
+        Debug.Log(type);
         this.type = type;
         isIdle = false;
         if (positionReachedRoutine != null) StopCoroutine(positionReachedRoutine);
@@ -97,7 +100,7 @@ public class MovementController : MonoBehaviour
 
     public void Stop()
     {
-        SetPosition(transform.position);
+        SetType(MovementType.IDLE);
     }
 
     public void SetBounds(Collider collider)
@@ -125,7 +128,6 @@ public class MovementController : MonoBehaviour
 
     private void Awake()
     {
-        position = transform.position;
     }
 
     private void Update()
@@ -153,7 +155,7 @@ public class MovementController : MonoBehaviour
     {
         if (IsAtDestination) return;
 
-        Direction = (TargetPosition - transform.position).normalized;
+        if (type == MovementType.POSITION) Direction = (TargetPosition - transform.position).normalized;
 
         if (lerpRotation && Direction != Vector3.zero)
         {

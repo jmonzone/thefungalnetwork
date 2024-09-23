@@ -6,7 +6,7 @@ public enum FungalType
     SKY
 }
 
-[CreateAssetMenu]
+[CreateAssetMenu(menuName = "Fungals/New Fungal Data")]
 public class FungalData : ScriptableObject
 {
     [SerializeField] private string id;

@@ -1,13 +1,13 @@
+using Unity.Netcode;
 using UnityEngine;
 
-public class PufferballController :  MonoBehaviour
+public class PufferballController : NetworkBehaviour
 {
     public Rigidbody Rigidbody { get; private set; }
 
     private void Awake()
     {
         Rigidbody = GetComponent<Rigidbody>();
-
         Spawn();
     }
 
