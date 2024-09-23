@@ -18,7 +18,7 @@ public class PufferballAutoHit : MonoBehaviour
                 hitDirection.y = 0;
                 pufferball.Rigidbody.AddForce(500f * hitDirection);
                 canHit = false;
-                Invoke(nameof(ResetHitTimer), 2f);
+                Invoke(nameof(ResetHitTimer), 3f);
             }
         }
     }

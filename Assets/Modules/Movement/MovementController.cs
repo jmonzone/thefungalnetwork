@@ -5,7 +5,7 @@ using UnityEngine.Events;
 public class MovementController : MonoBehaviour
 {
     [SerializeField] private float speed = 2f;
-    [SerializeField] private bool faceForward = true;
+    [SerializeField] private bool lerpRotation = true;
     [SerializeField] private bool lockXZ = false;
     [SerializeField] private bool useDrag = false;
     [SerializeField] private PositionAnchor positionAnchor;
@@ -44,7 +44,7 @@ public class MovementController : MonoBehaviour
 
     public float Speed => speed;
     public float DistanceThreshold => distanceThreshold;
-    public bool FaceForward => faceForward;
+    public bool FaceForward => lerpRotation;
 
     public bool IsAtDestination => Vector3.Distance(transform.position, TargetPosition) < 0.1f;
 
@@ -155,9 +155,18 @@ public class MovementController : MonoBehaviour
 
         Direction = (TargetPosition - transform.position).normalized;
 
+        if (lerpRotation && Direction != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(Direction, Vector3.up);
+            if (lockXZ) targetRotation = Quaternion.Euler(0, targetRotation.eulerAngles.y, 0); // Keep only y-axis rotation
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 1000 * Time.deltaTime);
+        }
+        else
+        {
+            transform.forward = Direction;
+        }
 
-        float angle = Vector3.Angle(transform.forward, Direction);
-        if (!faceForward || angle < Mathf.PI) transform.position += speed * Time.deltaTime * Direction;
+        transform.position += speed * Time.deltaTime * transform.forward;
 
         if (useDrag)
         {
@@ -165,12 +174,6 @@ public class MovementController : MonoBehaviour
             else speed = 0;
         }
 
-        if (faceForward && Direction != Vector3.zero)
-        {
-            Quaternion targetRotation = Quaternion.LookRotation(Direction, Vector3.up);
-            if (lockXZ) targetRotation = Quaternion.Euler(0, targetRotation.eulerAngles.y, 0); // Keep only y-axis rotation
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 500 * Time.deltaTime);
-        }
 
     }
 
