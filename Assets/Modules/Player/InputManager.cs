@@ -13,11 +13,17 @@ public class InputManager : MonoBehaviour
 
     private void Awake()
     {
-        //virtualJoystick.OnJoystickStart += _ => movementController.StartMovement();
-        virtualJoystick.OnJoystickEnd += () => movementController.Stop();
+        if (movementController) SetMovementController(movementController);
+
+        virtualJoystick.OnJoystickEnd += () =>
+        {
+            if (!movementController) return;
+            movementController.Stop();
+        };
 
         virtualJoystick.OnJoystickUpdate += input =>
         {
+            if (!movementController) return;
             var direction = new Vector3(input.x, 0, input.y);
             direction = Quaternion.Euler(0, cameraController.transform.eulerAngles.y, 0) * direction;
             movementController.SetDirection(direction);
@@ -26,8 +32,8 @@ public class InputManager : MonoBehaviour
 
     public void SetMovementController(MovementController movement)
     {
-        movement.Stop();
         movementController = movement;
+        movement.Stop();
         cameraController.Target = movement.transform;
         OnMovementChanged?.Invoke(movement);
     }

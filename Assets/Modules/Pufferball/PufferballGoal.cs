@@ -6,7 +6,7 @@ public class PufferballGoal : MonoBehaviour
 
     private void Update()
     {
-        var colliders = Physics.OverlapSphere(transform.position, 1, pufferballLayer);
+        var colliders = Physics.OverlapSphere(transform.position, 2f, pufferballLayer);
         if (colliders.Length > 0)
         {
             Debug.Log("Goal!");

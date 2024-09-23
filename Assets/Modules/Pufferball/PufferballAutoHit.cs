@@ -16,7 +16,7 @@ public class PufferballAutoHit : MonoBehaviour
                 var pufferball = colliders[0].GetComponentInParent<PufferballController>();
                 var hitDirection = transform.forward;
                 hitDirection.y = 0;
-                pufferball.Rigidbody.AddForce(1000f * hitDirection);
+                pufferball.Rigidbody.AddForce(500f * hitDirection);
                 canHit = false;
                 Invoke(nameof(ResetHitTimer), 2f);
             }

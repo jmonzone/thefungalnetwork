@@ -13,13 +13,9 @@ public class PufferballController :  MonoBehaviour
 
     public void Spawn()
     {
-        Debug.Log("spawning");
         transform.position = new Vector3(0, 3, 0);
+        Rigidbody.velocity = Vector3.zero;
         gameObject.SetActive(true);
 
-        var targetDirection = Random.onUnitSphere;
-        targetDirection.y = 0;
-
-        Rigidbody.velocity = 5f * targetDirection.normalized;
     }
 }
