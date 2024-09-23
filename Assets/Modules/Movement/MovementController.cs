@@ -7,6 +7,7 @@ public class MovementController : MonoBehaviour
     [SerializeField] private float speed = 2f;
     [SerializeField] private bool faceForward = true;
     [SerializeField] private bool lockXZ = false;
+    [SerializeField] private bool useDrag = false;
     [SerializeField] private PositionAnchor positionAnchor;
     
     [Header("Target Movement")]
@@ -157,6 +158,12 @@ public class MovementController : MonoBehaviour
 
         float angle = Vector3.Angle(transform.forward, Direction);
         if (!faceForward || angle < Mathf.PI) transform.position += speed * Time.deltaTime * Direction;
+
+        if (useDrag)
+        {
+            if (speed > 0.05f) speed *= 1 - Time.deltaTime * 0.1f;
+            else speed = 0;
+        }
 
         if (faceForward && Direction != Vector3.zero)
         {

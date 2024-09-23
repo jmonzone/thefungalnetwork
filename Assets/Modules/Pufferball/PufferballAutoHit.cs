@@ -10,16 +10,13 @@ public class PufferballAutoHit : MonoBehaviour
     {
         if (canHit)
         {
-
-            var colliders = Physics.OverlapSphere(transform.position, 2, layerMask);
+            var colliders = Physics.OverlapSphere(transform.position, 1.5f, layerMask);
             if (colliders.Length > 0)
             {
-                Debug.Log("hitting");
-
-                var movement = colliders[0].GetComponentInParent<MovementController>();
+                var pufferball = colliders[0].GetComponentInParent<PufferballController>();
                 var hitDirection = transform.forward;
                 hitDirection.y = 0;
-                movement.SetDirection(hitDirection.normalized);
+                pufferball.Rigidbody.AddForce(1000f * hitDirection);
                 canHit = false;
                 Invoke(nameof(ResetHitTimer), 2f);
             }
