@@ -86,7 +86,6 @@ public class MovementController : MonoBehaviour
 
     private void SetType(MovementType type)
     {
-        Debug.Log(type);
         this.type = type;
         isIdle = false;
         if (positionReachedRoutine != null) StopCoroutine(positionReachedRoutine);

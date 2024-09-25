@@ -2820,7 +2820,6 @@ Transform:
   m_Children:
   - {fileID: 1227711476}
   - {fileID: 128919075}
-  - {fileID: 1982422564}
   - {fileID: 1123288671}
   - {fileID: 789209513}
   - {fileID: 1639580482}
@@ -2839,12 +2838,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86de0710620c24fa18165b123fb3604b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fungalCollection: {fileID: 0}
-  fungalControllerPrefab: {fileID: 0}
-  eggControllerPrefab: {fileID: 0}
+  fungalCollection: {fileID: 11400000, guid: 1d49e170120fe4ab1befd22e62e1ea65, type: 2}
+  fungalControllerPrefab: {fileID: 173026516737802164, guid: 9e5e876e58a73433bbb5be4472984e7e,
+    type: 3}
+  eggControllerPrefab: {fileID: 5952156050388943029, guid: d86fdc00fde0f4b9e958c056b6c0a95a,
+    type: 3}
   positionAnchor:
     anchor: {fileID: 0}
-    bounds: {fileID: 0}
+    bounds: {fileID: 128919072}
 --- !u!114 &905641446
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5554,7 +5555,7 @@ PrefabInstance:
     - target: {fileID: 8775268794026499108, guid: 0e73bedbc214640f68cd2550f4651719,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -7.5
       objectReference: {fileID: 0}
     - target: {fileID: 8775268794026499108, guid: 0e73bedbc214640f68cd2550f4651719,
         type: 3}
@@ -6494,56 +6495,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1969767472}
   m_CullTransparentMesh: 1
---- !u!1 &1982422562
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1982422564}
-  - component: {fileID: 1982422563}
-  m_Layer: 0
-  m_Name: Fungal Manager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1982422563
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1982422562}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0c50236924c624d3bac58cf42c7e6522, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  positionAnchor: {anchor: {fileID: 0}, bounds: {fileID: 128919072}}
-  fungalControllerPrefab: {fileID: 173026516737802164, guid: 9e5e876e58a73433bbb5be4472984e7e,
-    type: 3}
-  eggControllerPrefab: {fileID: 5952156050388943029, guid: d86fdc00fde0f4b9e958c056b6c0a95a,
-    type: 3}
-  <FungalControllers>k__BackingField: []
---- !u!4 &1982422564
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1982422562}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 905641444}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1985171167
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7025,6 +6976,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1576384917746520769, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1576384917746520769, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -18.5
+      objectReference: {fileID: 0}
     - target: {fileID: 3170229602314632740, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
         type: 3}
       propertyPath: m_Name
@@ -7264,7 +7225,7 @@ PrefabInstance:
     - target: {fileID: 1021674304043943559, guid: 3e21d2aa76abe4e3c91aec5273a7a706,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -7.5
       objectReference: {fileID: 0}
     - target: {fileID: 1021674304043943559, guid: 3e21d2aa76abe4e3c91aec5273a7a706,
         type: 3}
