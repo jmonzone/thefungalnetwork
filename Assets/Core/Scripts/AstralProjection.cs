@@ -27,7 +27,8 @@ public class AstralProjection : MonoBehaviour
 
     private void Start()
     {
-        FungalManager.Instance.OnInteractionStarted += PossessFungal;
+        var groveManager = GetComponent<GroveManager>();
+        groveManager.OnFungalInteracted += PossessFungal;
         player.Interaction.OnUse += ReturnToTheBody;
     }
 
