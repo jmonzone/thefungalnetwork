@@ -1455,7 +1455,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   createButton: {fileID: 318523858}
   refreshButton: {fileID: 2104527457}
-  lobbyListUI: {fileID: 1884339554}
+  lobbyListUI: {fileID: 1884339555}
 --- !u!114 &722267799
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2620,7 +2620,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1884339553}
-  - component: {fileID: 1884339554}
+  - component: {fileID: 1884339555}
   m_Layer: 5
   m_Name: Lobby List UI
   m_TagString: Untagged
@@ -2648,7 +2648,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 700, y: 328.9}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1884339554
+--- !u!114 &1884339555
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2657,11 +2657,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1884339552}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f87a0fd1616d348e1818a7ef370394fc, type: 3}
+  m_Script: {fileID: 11500000, guid: 80897a8546748426b961171b2a25cdd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lobbyItemAnchor: {fileID: 592648513}
-  lobbyItemPrefab: {fileID: 1903852112}
+  itemAnchor: {fileID: 592648513}
+  itemPrefab: {fileID: 5702373848261565857, guid: 3e1dcaa3ee19742d0a0e23fef3cc8970,
+    type: 3}
 --- !u!1001 &1896618731
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2747,18 +2748,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 4473386519015133201}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1903852112 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 568221979724885839, guid: 3e1dcaa3ee19742d0a0e23fef3cc8970,
-    type: 3}
-  m_PrefabInstance: {fileID: 4473386519015133201}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0fcd5044cd2b64a19bb075484eb3762b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2104527455
 GameObject:
   m_ObjectHideFlags: 0

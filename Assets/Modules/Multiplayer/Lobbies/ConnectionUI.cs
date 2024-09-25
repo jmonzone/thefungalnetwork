@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.Events;
@@ -10,7 +11,7 @@ public class ConnectionUI : MonoBehaviour
     [SerializeField] private Button createButton;
     [SerializeField] private Button refreshButton;
 
-    [SerializeField] private LobbyListUI lobbyListUI;
+    [SerializeField] private ListUI lobbyListUI;
 
     public event UnityAction OnCreateButtonClicked;
     public event UnityAction OnRefreshButtonClicked;
@@ -32,11 +33,16 @@ public class ConnectionUI : MonoBehaviour
 
             StartCoroutine(RefreshButton());
         });
-        lobbyListUI.OnLobbyJoinButtonClicked += lobby => OnLobbyJoinButtonClicked(lobby);
     }
 
     public void SetLobbies(List<Lobby> lobbies)
     {
-        lobbyListUI.SetLobbies(lobbies);
+        var lobbyListData = lobbies.Select(lobby => new ListItemData
+        {
+            label = lobby.Data["HostName"].Value.Replace("_", " "),
+            onClick = () => OnLobbyJoinButtonClicked?.Invoke(lobby),
+        }).ToList();
+
+        lobbyListUI.SetItems(lobbyListData);
     }
 }
