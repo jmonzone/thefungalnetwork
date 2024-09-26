@@ -4,10 +4,14 @@ using UnityEngine.Events;
 
 public class GroveManager : MonoBehaviour
 {
+    [Header("Prefab References")]
     [SerializeField] private FungalCollection fungalCollection;
     [SerializeField] private FungalController fungalControllerPrefab;
     [SerializeField] private EggController eggControllerPrefab;
-    [SerializeField] private PositionAnchor positionAnchor;
+
+    [Header("Position References")]
+    [SerializeField] private Transform rabbitHolePosition;
+    [SerializeField] private Collider fungalBounds;
 
     public List<FungalController> FungalControllers { get; private set; } = new List<FungalController>();
 
@@ -35,10 +39,12 @@ public class GroveManager : MonoBehaviour
         var targetFungal = FungalControllers.Find(fungal => fungal.Model == partner);
         if (targetFungal)
         {
+            targetFungal.transform.position = rabbitHolePosition.position;
             inputManager.SetMovementController(targetFungal.Movement);
         }
         else
         {
+            player.transform.position = rabbitHolePosition.position;
             inputManager.SetMovementController(player.Movement);
         }
 
@@ -51,7 +57,7 @@ public class GroveManager : MonoBehaviour
 
         foreach (var fungal in GameManager.Instance.Fungals)
         {
-            var randomPosition = positionAnchor.Position;
+            var randomPosition = fungalBounds.GetRandomXZPosition();
             SpawnFungal(fungal, randomPosition);
         }
     }
@@ -59,7 +65,7 @@ public class GroveManager : MonoBehaviour
     private void SpawnFungal(FungalModel fungal, Vector3 spawnPosition)
     {
         var fungalController = Instantiate(fungalControllerPrefab, spawnPosition, Quaternion.identity);
-        fungalController.Initialize(fungal, positionAnchor.Bounds);
+        fungalController.Initialize(fungal, fungalBounds);
         fungalController.transform.forward = Utility.RandomXZVector;
         FungalControllers.Add(fungalController);
         fungalController.OnInteractionStarted += () => OnFungalInteracted?.Invoke(fungalController);

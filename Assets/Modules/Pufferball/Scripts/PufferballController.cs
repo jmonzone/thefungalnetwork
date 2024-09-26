@@ -15,6 +15,7 @@ public class PufferballController : NetworkBehaviour
     {
         transform.position = new Vector3(0, 3, 0);
         Rigidbody.velocity = Vector3.zero;
+        Rigidbody.rotation = Quaternion.identity;
         gameObject.SetActive(true);
 
     }

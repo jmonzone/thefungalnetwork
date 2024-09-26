@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using GURU;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.Events;
