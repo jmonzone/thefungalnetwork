@@ -25,7 +25,7 @@ public class InputManager : MonoBehaviour
         {
             if (!movementController) return;
             var direction = new Vector3(input.x, 0, input.y);
-            direction = Quaternion.Euler(0, cameraController.transform.eulerAngles.y, 0) * direction;
+            direction = Quaternion.Euler(0, cameraController.transform.GetChild(0).eulerAngles.y, 0) * direction;
             movementController.SetDirection(direction);
         };
     }

@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
@@ -8,18 +7,10 @@ public class PufferballPlayer : NetworkBehaviour
 {
     [SerializeField] private GameObject player;
     [SerializeField] private FungalCollection fungalCollection;
+    [SerializeField] private PufferballController pufferballPrefab;
 
     public static UnityAction<Transform> OnLocalPlayerSpawned;
     public static UnityAction<Transform> OnRemotePlayerSpawned;
-
-    protected override void OnNetworkPreSpawn(ref NetworkManager networkManager)
-    {
-        base.OnNetworkPreSpawn(ref networkManager);
-
-        if (!TrySpawnPartner()) SetRender(player);
-
-        transform.position = new Vector3(0, 2, -4);
-    }
 
     private bool TrySpawnPartner()
     {
@@ -48,30 +39,55 @@ public class PufferballPlayer : NetworkBehaviour
     {
         base.OnNetworkSpawn();
 
+
         if (IsOwner)
         {
             // This is the local player
             Debug.Log("Local player spawned: " + gameObject.name);
+            if (!TrySpawnPartner()) SetRender(player);
+
+            if (IsServer)
+            {
+                var spawnPosition = new Vector3(0 , 2, 0);
+                // Instantiate the object only on the server
+                var spawnedObject = Instantiate(pufferballPrefab, spawnPosition, Quaternion.identity);
+                // Spawn the object across the network
+                spawnedObject.GetComponent<NetworkObject>().Spawn();
+
+                GetComponent<NetworkTransform>().Teleport(new Vector3(0, 2, -2), Quaternion.Euler(Vector3.back), Vector3.one);
+            }
+            else
+            {
+                GetComponent<NetworkTransform>().Teleport(new Vector3(0, 2, 2), Quaternion.Euler(Vector3.forward), Vector3.one);
+            }
+
             OnLocalPlayerSpawned?.Invoke(transform);
         }
         else
         {
             // This is a remote player
             Debug.Log("Remote player spawned: " + gameObject.name);
+            SetRender(player);
             OnRemotePlayerSpawned?.Invoke(transform);
         }
     }
 
     private void SetRender(GameObject render)
     {
+        Debug.Log("setting render");
         render.SetActive(true);
 
         var animator = render.GetComponent<Animator>();
+        Debug.Log("getting animator");
 
         var movementAnimations = GetComponent<MovementAnimations>();
         movementAnimations.SetAnimatior(animator);
+        Debug.Log("getting movementAnimations");
 
         var ownerNetworkAnimator = render.GetComponent<OwnerNetworkAnimator>();
         ownerNetworkAnimator.Animator = animator;
+
+        Debug.Log("getting ownerNetworkAnimator");
+
     }
 }

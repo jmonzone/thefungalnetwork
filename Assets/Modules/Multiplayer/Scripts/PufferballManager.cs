@@ -1,10 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PufferballManager : NetworkBehaviour
+public class PufferballManager : MonoBehaviour
 {
     [Header("Gameplay References")]
     [SerializeField] private MultiplayerManager multiplayerManager;
@@ -30,19 +29,6 @@ public class PufferballManager : NetworkBehaviour
         {
             var movementController = player.GetComponent<MovementController>();
             playerController.SetMovementController(movementController);
-        };
-
-        multiplayerManager.OnLobbyJoined += () =>
-        {
-            Debug.Log($"isHost: {IsHost} isServer: {IsServer}");
-            if (IsServer)
-            {
-                var spawnPosition = new Vector3(-2, 2, 2);
-                // Instantiate the object only on the server
-                var spawnedObject = Instantiate(pufferballPrefab, spawnPosition, Quaternion.identity);
-                // Spawn the object across the network
-                spawnedObject.GetComponent<NetworkObject>().Spawn();
-            }
         };
 
         exitButton.onClick.AddListener(() =>
