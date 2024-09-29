@@ -9,6 +9,8 @@ public class PufferballPlayer : NetworkBehaviour
     [SerializeField] private FungalCollection fungalCollection;
     [SerializeField] private PufferballController pufferballPrefab;
 
+    private NetworkTransform networkTransform;
+
     public static UnityAction<Transform> OnLocalPlayerSpawned;
     public static UnityAction<Transform> OnRemotePlayerSpawned;
 
@@ -42,6 +44,8 @@ public class PufferballPlayer : NetworkBehaviour
 
         if (IsOwner)
         {
+            networkTransform = GetComponent<NetworkTransform>();
+
             // This is the local player
             Debug.Log("Local player spawned: " + gameObject.name);
             if (!TrySpawnPartner()) SetRender(player);
@@ -54,11 +58,15 @@ public class PufferballPlayer : NetworkBehaviour
                 // Spawn the object across the network
                 spawnedObject.GetComponent<NetworkObject>().Spawn();
 
-                GetComponent<NetworkTransform>().Teleport(new Vector3(0, 2, -2), Quaternion.Euler(Vector3.back), Vector3.one);
+                Quaternion forwardRotation = Quaternion.LookRotation(Vector3.forward);
+
+                networkTransform.Teleport(new Vector3(0, 2, -4), forwardRotation, Vector3.one);
             }
             else
             {
-                GetComponent<NetworkTransform>().Teleport(new Vector3(0, 2, 2), Quaternion.Euler(Vector3.forward), Vector3.one);
+                Quaternion backRotation = Quaternion.LookRotation(Vector3.back);
+
+                networkTransform.Teleport(new Vector3(0, 2, 4), backRotation, Vector3.one);
             }
 
             OnLocalPlayerSpawned?.Invoke(transform);
