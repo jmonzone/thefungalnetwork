@@ -17,6 +17,11 @@ public class PufferballController : NetworkBehaviour
         Rigidbody.velocity = Vector3.zero;
         Rigidbody.rotation = Quaternion.identity;
         gameObject.SetActive(true);
+    }
 
+    public void OnCaught()
+    {
+        Rigidbody.isKinematic = false;
+        Rigidbody.useGravity = false;
     }
 }

@@ -9,10 +9,68 @@ public class PufferballPlayer : NetworkBehaviour
     [SerializeField] private FungalCollection fungalCollection;
     [SerializeField] private PufferballController pufferballPrefab;
 
+    [SerializeField] private PufferballController pufferball;
     private NetworkTransform networkTransform;
 
     public static UnityAction<Transform> OnLocalPlayerSpawned;
     public static UnityAction<Transform> OnRemotePlayerSpawned;
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+
+        if (IsOwner)
+        {
+            networkTransform = GetComponent<NetworkTransform>();
+
+            // This is the local player
+            Debug.Log("Local player spawned: " + gameObject.name);
+            if (!TrySpawnPartner()) SetRender(player);
+
+            if (IsServer)
+            {
+                var spawnPosition = new Vector3(0 , 2, 0);
+                // Instantiate the object only on the server
+                pufferball = Instantiate(pufferballPrefab, spawnPosition, Quaternion.identity);
+                // Spawn the object across the network
+                pufferball.GetComponent<NetworkObject>().Spawn();
+
+                Quaternion forwardRotation = Quaternion.LookRotation(Vector3.forward);
+
+                networkTransform.Teleport(new Vector3(0, 2, -4), forwardRotation, Vector3.one);
+            }
+            else
+            {
+                Quaternion backRotation = Quaternion.LookRotation(Vector3.back);
+
+                networkTransform.Teleport(new Vector3(0, 2, 4), backRotation, Vector3.one);
+            }
+
+            OnLocalPlayerSpawned?.Invoke(transform);
+        }
+        else
+        {
+            // This is a remote player
+            Debug.Log("Remote player spawned: " + gameObject.name);
+            SetRender(player);
+            OnRemotePlayerSpawned?.Invoke(transform);
+        }
+    }
+
+    private void Update()
+    {
+        if (Input.GetKey(KeyCode.Space))
+        {
+            CatchBall();
+        }
+
+    }
+
+    private void CatchBall()
+    {
+        pufferball.transform.position = transform.position + Vector3.up * 2;
+
+    }
 
     private bool TrySpawnPartner()
     {
@@ -37,49 +95,6 @@ public class PufferballPlayer : NetworkBehaviour
         return false;
     }
 
-    public override void OnNetworkSpawn()
-    {
-        base.OnNetworkSpawn();
-
-
-        if (IsOwner)
-        {
-            networkTransform = GetComponent<NetworkTransform>();
-
-            // This is the local player
-            Debug.Log("Local player spawned: " + gameObject.name);
-            if (!TrySpawnPartner()) SetRender(player);
-
-            if (IsServer)
-            {
-                var spawnPosition = new Vector3(0 , 2, 0);
-                // Instantiate the object only on the server
-                var spawnedObject = Instantiate(pufferballPrefab, spawnPosition, Quaternion.identity);
-                // Spawn the object across the network
-                spawnedObject.GetComponent<NetworkObject>().Spawn();
-
-                Quaternion forwardRotation = Quaternion.LookRotation(Vector3.forward);
-
-                networkTransform.Teleport(new Vector3(0, 2, -4), forwardRotation, Vector3.one);
-            }
-            else
-            {
-                Quaternion backRotation = Quaternion.LookRotation(Vector3.back);
-
-                networkTransform.Teleport(new Vector3(0, 2, 4), backRotation, Vector3.one);
-            }
-
-            OnLocalPlayerSpawned?.Invoke(transform);
-        }
-        else
-        {
-            // This is a remote player
-            Debug.Log("Remote player spawned: " + gameObject.name);
-            SetRender(player);
-            OnRemotePlayerSpawned?.Invoke(transform);
-        }
-    }
-
     private void SetRender(GameObject render)
     {
         Debug.Log("setting render");
@@ -96,6 +111,5 @@ public class PufferballPlayer : NetworkBehaviour
         ownerNetworkAnimator.Animator = animator;
 
         Debug.Log("getting ownerNetworkAnimator");
-
     }
 }
