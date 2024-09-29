@@ -8,12 +8,26 @@ public class PufferballPlayer : NetworkBehaviour
     [SerializeField] private GameObject player;
     [SerializeField] private FungalCollection fungalCollection;
     [SerializeField] private PufferballController pufferballPrefab;
-
     [SerializeField] private PufferballController pufferball;
+
+    public bool HasPufferball { get; private set; }
+
     private NetworkTransform networkTransform;
 
     public static UnityAction<Transform> OnLocalPlayerSpawned;
     public static UnityAction<Transform> OnRemotePlayerSpawned;
+
+    private void Awake()
+    {
+        var detectCollider = GetComponent<DetectCollider>();
+        detectCollider.OnColliderDetected += collider =>
+        {
+            if (!HasPufferball)
+            {
+                CatchBall();
+            }
+        };
+    }
 
     public override void OnNetworkSpawn()
     {
@@ -59,17 +73,23 @@ public class PufferballPlayer : NetworkBehaviour
 
     private void Update()
     {
-        if (Input.GetKey(KeyCode.Space))
+        if (HasPufferball)
         {
-            CatchBall();
+            pufferball.transform.position = transform.position + Vector3.up * 2;
         }
-
     }
 
     private void CatchBall()
     {
-        pufferball.transform.position = transform.position + Vector3.up * 2;
+        HasPufferball = true;
+        pufferball.TogglePhysics(false);
+    }
 
+    public void LaunchBall()
+    {
+        HasPufferball = false;
+        pufferball.TogglePhysics(true);
+        pufferball.Rigidbody.AddForce(1000f * transform.forward.normalized);
     }
 
     private bool TrySpawnPartner()

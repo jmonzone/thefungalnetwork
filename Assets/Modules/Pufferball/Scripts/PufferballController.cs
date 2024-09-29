@@ -19,9 +19,9 @@ public class PufferballController : NetworkBehaviour
         gameObject.SetActive(true);
     }
 
-    public void OnCaught()
+    public void TogglePhysics(bool value)
     {
-        Rigidbody.isKinematic = false;
-        Rigidbody.useGravity = false;
+        Rigidbody.isKinematic = !value;
+        Rigidbody.useGravity = value;
     }
 }

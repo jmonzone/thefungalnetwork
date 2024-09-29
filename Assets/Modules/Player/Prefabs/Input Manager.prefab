@@ -49,6 +49,8 @@ MonoBehaviour:
   movementController: {fileID: 0}
   virtualJoystick: {fileID: 3229456022467209642}
   cameraController: {fileID: 6797692508388846733}
+  proximityInteraction: {fileID: 0}
+  interactionButton: {fileID: 1309342458305006428}
 --- !u!1001 &2737463753883108798
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -107,11 +109,24 @@ PrefabInstance:
       propertyPath: playerController
       value: 
       objectReference: {fileID: 7252481751095348867}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7595936298974982142, guid: d234a41ded6f64a1d8230b0f5c8f9c7f, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d234a41ded6f64a1d8230b0f5c8f9c7f, type: 3}
+--- !u!114 &1309342458305006428 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4023637240871554786, guid: d234a41ded6f64a1d8230b0f5c8f9c7f,
+    type: 3}
+  m_PrefabInstance: {fileID: 2737463753883108798}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &3229456022467209642 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 660966894975757332, guid: d234a41ded6f64a1d8230b0f5c8f9c7f,
@@ -166,17 +181,17 @@ PrefabInstance:
     - target: {fileID: 7184580336127186895, guid: 44cfcdf81f0074e5b844e37940278904,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7184580336127186895, guid: 44cfcdf81f0074e5b844e37940278904,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7184580336127186895, guid: 44cfcdf81f0074e5b844e37940278904,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7184580336127186895, guid: 44cfcdf81f0074e5b844e37940278904,
         type: 3}
@@ -192,6 +207,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7187620391847687279, guid: 44cfcdf81f0074e5b844e37940278904,
+        type: 3}
+      propertyPath: m_Lens.FieldOfView
+      value: 70
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
