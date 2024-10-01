@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 7388423204026949560}
   - component: {fileID: 6414378916723748511}
   - component: {fileID: 7745105099117016027}
+  - component: {fileID: 4924218463715685937}
   - component: {fileID: 4346559293957235424}
   m_Layer: 10
   m_Name: Pufferball Player
@@ -51,7 +52,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3861058667
+  GlobalObjectIdHash: 2955629473
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -171,6 +172,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4924218463715685937
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2941250707292126303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f615d816479b40ff8a493d32b1876aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 1.25
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!114 &4346559293957235424
 MonoBehaviour:
   m_ObjectHideFlags: 0

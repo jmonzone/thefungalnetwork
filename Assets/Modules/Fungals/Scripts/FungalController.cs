@@ -9,7 +9,7 @@ public enum FungalState
 }
 
 [RequireComponent(typeof(ProximityAction))]
-public class FungalController : MonoBehaviour
+public class FungalController : MonoBehaviour, IGroveControllable
 {
     [Header("References")]
     [SerializeField] private MovementController movement;
@@ -17,12 +17,18 @@ public class FungalController : MonoBehaviour
 
     public FungalModel Model { get; private set; }
     public GameObject Render { get; private set; }
+    public ProximityInteraction Interactions { get; private set; }
     public MovementController Movement => movement;
     public bool IsFollowing { get; set; }
 
     public Camera SpotlightCamera => spotlightCamera;
 
     public event UnityAction OnInteractionStarted;
+
+    private void Awake()
+    {
+        Interactions = GetComponent<ProximityInteraction>();
+    }
 
     public void Initialize(FungalModel model, Collider bounds)
     {

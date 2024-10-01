@@ -13,6 +13,10 @@ public class GroveManager : MonoBehaviour
     [SerializeField] private Transform rabbitHolePosition;
     [SerializeField] private Collider fungalBounds;
 
+    private InputManager inputManager;
+    private IGroveControllable groveControllable;
+    private AstralProjection astralProjection;
+
     public List<FungalController> FungalControllers { get; private set; } = new List<FungalController>();
 
     public event UnityAction OnPlayerSpawned;
@@ -20,6 +24,16 @@ public class GroveManager : MonoBehaviour
 
     private void Start()
     {
+        astralProjection = GetComponent<AstralProjection>();
+        astralProjection.OnControllerChanged += controller => SetControllable(controller);
+
+        inputManager = GetComponentInChildren<InputManager>();
+
+        inputManager.OnInteractionButtonClicked += () =>
+        {
+            groveControllable.Interactions.TargetAction.Use();
+        };
+
         if (GameManager.Instance.Fungals.Count == 0) {
             var randomIndex = Random.Range(0, fungalCollection.Data.Count);
             var randomFungal = fungalCollection.Data[randomIndex];
@@ -30,25 +44,46 @@ public class GroveManager : MonoBehaviour
         SpawnPlayer();
     }
 
+    private ProximityAction previousAction;
+
+    private void Update()
+    {
+        var targetAction = groveControllable.Interactions.TargetAction;
+
+        if (previousAction && previousAction != targetAction) previousAction.SetInteractable(false);
+        previousAction = targetAction;
+
+        if (targetAction) targetAction.SetInteractable(true);
+        inputManager.CanInteract(targetAction);
+    }
+
     private void SpawnPlayer()
     {
-        var inputManager = GetComponentInChildren<InputManager>();
         var player = GetComponentInChildren<PlayerController>();
+
+        player.Interaction.OnUse += () => astralProjection.ReturnToTheBody();
 
         var partner = GameManager.Instance.GetPartner();
         var targetFungal = FungalControllers.Find(fungal => fungal.Model == partner);
         if (targetFungal)
         {
             targetFungal.transform.position = rabbitHolePosition.position;
-            inputManager.SetMovementController(targetFungal.Movement);
+            SetControllable(targetFungal);
         }
         else
         {
             player.transform.position = rabbitHolePosition.position;
-            inputManager.SetMovementController(player.Movement);
+            SetControllable(player);
         }
 
         OnPlayerSpawned?.Invoke();
+    }
+
+    private void SetControllable(IGroveControllable controllable)
+    {
+        groveControllable = controllable;
+        inputManager.SetControllable(controllable);
+        GameManager.Instance.SetPartner(controllable is FungalController fungal ? fungal : null);
     }
 
     private void SpawnFungals()
@@ -68,7 +103,10 @@ public class GroveManager : MonoBehaviour
         fungalController.Initialize(fungal, fungalBounds);
         fungalController.transform.forward = Utility.RandomXZVector;
         FungalControllers.Add(fungalController);
-        fungalController.OnInteractionStarted += () => OnFungalInteracted?.Invoke(fungalController);
+        fungalController.OnInteractionStarted += () =>
+        {
+            astralProjection.PossessFungal(fungalController);
+        };
     }
 
     private void SpawnEgg(FungalData fungal)
@@ -89,4 +127,5 @@ public class GroveManager : MonoBehaviour
         GameManager.Instance.AddFungal(fungal);
         SpawnFungal(fungal, egg.transform.position);
     }
+
 }

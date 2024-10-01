@@ -4,12 +4,11 @@ using UnityEngine.UI;
 
 public class InputManager : MonoBehaviour
 {
-    [SerializeField] private MovementController movementController;
     [SerializeField] private VirtualJoystick virtualJoystick;
     [SerializeField] private CameraController cameraController;
     [SerializeField] private Button interactionButton;
 
-    public MovementController Movement => movementController;
+    public IControllable Controllable { get; private set; }
 
     public event UnityAction<MovementController> OnMovementChanged;
     public event UnityAction OnInteractionButtonClicked;
@@ -18,29 +17,27 @@ public class InputManager : MonoBehaviour
     {
         interactionButton.onClick.AddListener(() => OnInteractionButtonClicked?.Invoke());
 
-        if (movementController) SetMovementController(movementController);
-
         virtualJoystick.OnJoystickEnd += () =>
         {
-            if (!movementController) return;
-            movementController.Stop();
+            if (Controllable == null) return;
+            Controllable.Movement.Stop();
         };
 
         virtualJoystick.OnJoystickUpdate += input =>
         {
-            if (!movementController) return;
+            if (Controllable == null) return;
             var direction = new Vector3(input.x, 0, input.y);
             direction = Quaternion.Euler(0, cameraController.transform.GetChild(0).eulerAngles.y, 0) * direction;
-            movementController.SetDirection(direction);
+            Controllable.Movement.SetDirection(direction);
         };
     }
 
-    public void SetMovementController(MovementController movement)
+    public void SetControllable(IControllable controller)
     {
-        movementController = movement;
-        movement.Stop();
-        cameraController.Target = movement.transform;
-        OnMovementChanged?.Invoke(movement);
+        Controllable = controller;
+        Controllable.Movement.Stop();
+        cameraController.Target = Controllable.Movement.transform;
+        OnMovementChanged?.Invoke(Controllable.Movement);
     }
 
     public void CanInteract(bool value)

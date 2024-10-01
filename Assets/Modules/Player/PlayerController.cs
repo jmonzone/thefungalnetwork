@@ -1,11 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IGroveControllable
 {
     private Animator animator;
     public ProximityAction Interaction { get; private set; }
+    public ProximityInteraction Interactions { get; private set; }
     public MovementController Movement { get; private set; }
 
     private void Awake()
@@ -13,6 +12,7 @@ public class PlayerController : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
 
         Interaction = GetComponent<ProximityAction>();
+        Interactions = GetComponent<ProximityInteraction>();
         Movement = GetComponent<MovementController>();
     }
 

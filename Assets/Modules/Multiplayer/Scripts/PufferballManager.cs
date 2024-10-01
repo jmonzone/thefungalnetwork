@@ -7,13 +7,20 @@ public class PufferballManager : MonoBehaviour
 {
     [Header("Gameplay References")]
     [SerializeField] private MultiplayerManager multiplayerManager;
-    [SerializeField] private InputManager playerController;
+    [SerializeField] private InputManager inputManager;
     [SerializeField] private PufferballController pufferballPrefab;
 
     [Header("UI References")]
     [SerializeField] private ConnectionUI connectionUI;
     [SerializeField] private GameObject inputUI;
     [SerializeField] private Button exitButton;
+
+    private PufferballPlayer player;
+
+
+    private List<string> firstNames = new List<string> { "Hollow", "Sharon", "Jesus", "Charmander", "Feni" };
+    private List<string> lastNames = new List<string> { "Zozo", "Venga", "Lotus", "Atari", "Bagus" };
+
 
     private void Start()
     {  
@@ -27,8 +34,9 @@ public class PufferballManager : MonoBehaviour
 
         PufferballPlayer.OnLocalPlayerSpawned += player =>
         {
-            var movementController = player.GetComponent<MovementController>();
-            playerController.SetMovementController(movementController);
+            this.player = player;
+            inputManager.SetControllable(player);
+            inputManager.OnInteractionButtonClicked += () => player.LaunchBall();
         };
 
         exitButton.onClick.AddListener(() =>
@@ -39,6 +47,13 @@ public class PufferballManager : MonoBehaviour
             Utility.LoadScene("Grove");
         });
     }
+
+
+    private void Update()
+    {
+        if (player) inputManager.CanInteract(player.HasPufferball);
+    }
+
 
     private IEnumerator RefreshLobbyList()
     {
@@ -51,17 +66,12 @@ public class PufferballManager : MonoBehaviour
 
     private void UpdateLobbyList()
     {
+
         multiplayerManager.ListLobbies(lobbies =>
         {
             connectionUI.SetLobbies(lobbies);
         });
     }
-
-
-    private List<string> firstNames = new List<string> { "Konan", "Zayleen", "Danti", "Stony", "Feni" };
-    private List<string> lastNames = new List<string> { "Zonzo", "Varden", "Vunza", "Starita", "Bagnay" };
-
-
 
     // Method to generate a random name
     public string GenerateRandomName()

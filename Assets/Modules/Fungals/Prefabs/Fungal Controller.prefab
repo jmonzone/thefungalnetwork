@@ -141,6 +141,7 @@ GameObject:
   - component: {fileID: 5190689289194876585}
   - component: {fileID: 5489956285008662036}
   - component: {fileID: 3789866209769910685}
+  - component: {fileID: 2787874893420004333}
   m_Layer: 0
   m_Name: Fungal Controller
   m_TagString: Untagged
@@ -203,9 +204,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47a3fda79a53a4b9e9ab1b8cf9d8acb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 0
   speed: 2
-  faceForward: 1
+  lerpRotation: 1
   lockXZ: 0
+  useDrag: 0
   positionAnchor:
     anchor: {fileID: 0}
     bounds: {fileID: 0}
@@ -230,6 +233,18 @@ MonoBehaviour:
   movementController: {fileID: 5489956285008662036}
   animator: {fileID: 0}
   animationSpeed: 1
+--- !u!114 &2787874893420004333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4710098450848900613}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d798f27f9a994a34be8309c1c2e377f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2562995384339588117
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -6,8 +6,7 @@ public class AstralProjection : MonoBehaviour
     private PlayerController player;
     private InputManager inputManager;
 
-    public event UnityAction<FungalController> OnFungalPossessed;
-    public event UnityAction OnReturnedToBody;
+    public event UnityAction<IGroveControllable> OnControllerChanged;
 
     private void Awake()
     {
@@ -18,21 +17,14 @@ public class AstralProjection : MonoBehaviour
         var groveManager = GetComponent<GroveManager>();
         groveManager.OnPlayerSpawned += () =>
         {
-            if (inputManager.Movement != player.Movement)
+            if (inputManager.Controllable.Movement != player.Movement)
             {
                 player.PlayLeaveBodyAnimation();
             }
         };
     }
 
-    private void Start()
-    {
-        var groveManager = GetComponent<GroveManager>();
-        groveManager.OnFungalInteracted += PossessFungal;
-        player.Interaction.OnUse += ReturnToTheBody;
-    }
-
-    private void PossessFungal(FungalController fungal)
+    public void PossessFungal(FungalController fungal)
     {
         if (IsLeavingTheBody)
         {
@@ -43,25 +35,23 @@ public class AstralProjection : MonoBehaviour
             LeaveFungal();
         }
 
-        inputManager.SetMovementController(fungal.Movement);
-        GameManager.Instance.SetPartner(fungal);
+        OnControllerChanged?.Invoke(fungal);
     }
 
-    private void ReturnToTheBody()
+    public void ReturnToTheBody()
     {
         LeaveFungal();
 
         player.PlayReturnToBodyAnimation();
 
-        inputManager.SetMovementController(player.Movement);
-        GameManager.Instance.SetPartner(null);
+        OnControllerChanged?.Invoke(player);
     }
 
     private void LeaveFungal()
     {
-        var fungal = inputManager.Movement;
+        var fungal = inputManager.Controllable.Movement;
         fungal.StartRandomMovement();
     }
 
-    private bool IsLeavingTheBody => inputManager.Movement.transform == player.transform;
+    private bool IsLeavingTheBody => inputManager.Controllable.Movement.transform == player.transform;
 }

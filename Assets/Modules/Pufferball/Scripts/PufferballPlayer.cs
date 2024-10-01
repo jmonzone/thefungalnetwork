@@ -3,7 +3,7 @@ using Unity.Netcode.Components;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class PufferballPlayer : NetworkBehaviour
+public class PufferballPlayer : NetworkBehaviour, IControllable
 {
     [SerializeField] private GameObject player;
     [SerializeField] private FungalCollection fungalCollection;
@@ -12,36 +12,41 @@ public class PufferballPlayer : NetworkBehaviour
 
     public bool HasPufferball { get; private set; }
 
+    public MovementController Movement { get; private set; }
+
     private NetworkTransform networkTransform;
 
-    public static UnityAction<Transform> OnLocalPlayerSpawned;
-    public static UnityAction<Transform> OnRemotePlayerSpawned;
-
-    private void Awake()
-    {
-        var detectCollider = GetComponent<DetectCollider>();
-        detectCollider.OnColliderDetected += collider =>
-        {
-            if (!HasPufferball)
-            {
-                CatchBall();
-            }
-        };
-    }
+    public static UnityAction<PufferballPlayer> OnLocalPlayerSpawned;
+    public static UnityAction<PufferballPlayer> OnRemotePlayerSpawned;
 
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
 
+        Movement = GetComponent<MovementController>();
+
         if (IsOwner)
         {
+            Debug.Log("initifgh");
             networkTransform = GetComponent<NetworkTransform>();
+
+            var detectCollider = GetComponent<DetectCollider>();
+            detectCollider.OnColliderDetected += collider =>
+            {
+                Debug.Log($"HasPufferball {HasPufferball}");
+
+                if (!HasPufferball)
+                {
+                    pufferball = collider.GetComponentInParent<PufferballController>();
+                    CatchBall();
+                }
+            };
 
             // This is the local player
             Debug.Log("Local player spawned: " + gameObject.name);
             if (!TrySpawnPartner()) SetRender(player);
 
-            if (IsServer)
+            if (IsHost)
             {
                 var spawnPosition = new Vector3(0 , 2, 0);
                 // Instantiate the object only on the server
@@ -60,36 +65,38 @@ public class PufferballPlayer : NetworkBehaviour
                 networkTransform.Teleport(new Vector3(0, 2, 4), backRotation, Vector3.one);
             }
 
-            OnLocalPlayerSpawned?.Invoke(transform);
+
+
+            OnLocalPlayerSpawned?.Invoke(this);
         }
         else
         {
             // This is a remote player
             Debug.Log("Remote player spawned: " + gameObject.name);
             SetRender(player);
-            OnRemotePlayerSpawned?.Invoke(transform);
+            OnRemotePlayerSpawned?.Invoke(this);
         }
     }
 
     private void Update()
     {
-        if (HasPufferball)
+        if (HasPufferball && IsOwner)
         {
-            pufferball.transform.position = transform.position + Vector3.up * 2;
+            var targetPosition = transform.position + Vector3.up * 2;
+            pufferball.MoveObjectServerRpc(targetPosition);
         }
     }
 
     private void CatchBall()
     {
         HasPufferball = true;
-        pufferball.TogglePhysics(false);
+        pufferball.TogglePhysicsServerRpc(false);
     }
 
     public void LaunchBall()
     {
         HasPufferball = false;
-        pufferball.TogglePhysics(true);
-        pufferball.Rigidbody.AddForce(1000f * transform.forward.normalized);
+        pufferball.LaunchServerRpc(transform.forward);
     }
 
     private bool TrySpawnPartner()
@@ -117,19 +124,14 @@ public class PufferballPlayer : NetworkBehaviour
 
     private void SetRender(GameObject render)
     {
-        Debug.Log("setting render");
         render.SetActive(true);
 
         var animator = render.GetComponent<Animator>();
-        Debug.Log("getting animator");
 
         var movementAnimations = GetComponent<MovementAnimations>();
         movementAnimations.SetAnimatior(animator);
-        Debug.Log("getting movementAnimations");
 
         var ownerNetworkAnimator = render.GetComponent<OwnerNetworkAnimator>();
         ownerNetworkAnimator.Animator = animator;
-
-        Debug.Log("getting ownerNetworkAnimator");
     }
 }
