@@ -15,6 +15,7 @@ public class DayNightController : MonoBehaviour
     private void Update()
     {
         var time = (debug ? hour : DateTime.Now.Hour) / 24f;
+        if (!debug) hour = DateTime.Now.Hour;
 
         if (time < 0.5)
         {

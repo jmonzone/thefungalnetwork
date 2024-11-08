@@ -14,7 +14,7 @@ public class VirtualJoystick : MonoBehaviour
     public event UnityAction<Vector3> OnJoystickUpdate;
     public event UnityAction OnJoystickEnd;
 
-    private const float JOYSTICK_LENGTH = 250f;
+    private const float JOYSTICK_LENGTH = 100f;
 
     private Vector3 defaultPosition;
     private Vector3 startPosition;
@@ -23,7 +23,7 @@ public class VirtualJoystick : MonoBehaviour
 
     private void Start()
     {
-        defaultPosition = rect.position;
+        defaultPosition = rect.anchoredPosition;
     }
 
     private void Update()
@@ -31,8 +31,8 @@ public class VirtualJoystick : MonoBehaviour
         if (IsActive && Input.GetMouseButtonUp(0))
         {
             IsActive = false;
-            rect.position = defaultPosition;
-            joystickRect.localPosition = Vector3.zero;
+            rect.anchoredPosition = defaultPosition;
+            joystickRect.anchoredPosition = Vector3.zero;
             OnJoystickEnd?.Invoke();
         }
 
