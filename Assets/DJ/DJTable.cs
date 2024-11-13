@@ -6,7 +6,7 @@ public class DJTable : MonoBehaviour
 {
     [SerializeField] private InputManager inputManager;
     private AudioSource audioSource;
-
+    private Animator animator;
     private Slider pitchSlider;
 
     [Header("Transition References")]
@@ -20,9 +20,14 @@ public class DJTable : MonoBehaviour
     private void Awake()
     {
         audioSource = GetComponentInChildren<AudioSource>();
+        animator = GetComponentInChildren<Animator>();
 
         pitchSlider = GetComponentInChildren<Slider>();
-        pitchSlider.onValueChanged.AddListener(value => audioSource.pitch = value);
+        pitchSlider.onValueChanged.AddListener(value =>
+        {
+            audioSource.pitch = value;
+            animator.speed = Mathf.Pow(value - 0.5f, 3) * 9 + 1;
+        });
 
         overheadInteraction = GetComponentInChildren<OverheadInteractionIndicator>();
         virtualCamera = GetComponentInChildren<CinemachineVirtualCamera>();
