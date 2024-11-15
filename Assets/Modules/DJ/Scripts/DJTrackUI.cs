@@ -10,6 +10,7 @@ namespace TheFungalNetwork.DJ
         [SerializeField] private TextMeshProUGUI trackText;
         [SerializeField] private TextMeshProUGUI bpmText;
         [SerializeField] private Button swapButton;
+        [SerializeField] private Toggle toggle;
         [SerializeField] private Button syncButton;
         [SerializeField] private Slider volumeSlider;
         [SerializeField] private Slider pitchSlider;
@@ -18,25 +19,29 @@ namespace TheFungalNetwork.DJ
 
         public event UnityAction OnSwapButtonClicked;
         public event UnityAction OnSyncButtonClicked;
+        public event UnityAction<bool> OnToggle;
+        public event UnityAction<float> OnVolumeSliderChanged;
 
         private void Awake()
         {
             swapButton.onClick.AddListener(() => OnSwapButtonClicked?.Invoke());
             syncButton.onClick.AddListener(() => OnSyncButtonClicked?.Invoke());
+            toggle.onValueChanged.AddListener(value => OnToggle?.Invoke(value));
         }
 
         public void Initialize(Track track, bool playImmediately)
         {
             this.track = track;
-            track.audioSource.volume = playImmediately ? 1 : 0;
             track.audioSource.pitch = 1;
+
+            toggle.isOn = playImmediately;
 
             volumeSlider.minValue = 0;
             volumeSlider.maxValue = 1;
-            volumeSlider.value = track.audioSource.volume;
+            volumeSlider.value = playImmediately ? 1 : 0;
             volumeSlider.onValueChanged.AddListener(value =>
             {
-                track.audioSource.volume = value;
+                OnVolumeSliderChanged?.Invoke(value);
             });
 
             pitchSlider.minValue = 0;
@@ -55,6 +60,7 @@ namespace TheFungalNetwork.DJ
                 UpdateBPMText();
             };
 
+            trackText.text = track.Data.TrackName;
             UpdateBPMText();
         }
 

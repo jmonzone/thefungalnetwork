@@ -2,14 +2,26 @@ using System;
 using System.Collections.Generic;
 using Cinemachine;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace TheFungalNetwork.DJ
 {
+    public static class AudioMixerExtensions
+    {
+        public static void SetVolume(this AudioMixer audioMixer, string groupId, float linearVolume)
+        {
+            float decibalVolume = Mathf.Log10(Mathf.Clamp(linearVolume, 0.0001f, 1f)) * 20f;
+            audioMixer.SetFloat($"Volume{groupId}", decibalVolume);
+        }
+    }
+
     [Serializable]
     public class Track
     {
+        [SerializeField] private string groupId;
+
         public int index;
         private DJTrackData data;
         public DJTrackUI UI;
@@ -20,6 +32,12 @@ namespace TheFungalNetwork.DJ
 
         public event UnityAction OnTrackChanged;
 
+        public void Initialize(float volume)
+        {
+            SetVolume(volume);
+            UI.OnVolumeSliderChanged += SetVolume;
+        }
+
         public void SetData(DJTrackData data, bool playImmediately)
         {
             this.data = data;
@@ -27,16 +45,24 @@ namespace TheFungalNetwork.DJ
             if (playImmediately) audioSource.Play();
             OnTrackChanged?.Invoke();
         }
+
+        private void SetVolume(float linearVolume)
+        {
+            Debug.Log($"setting volume {groupId} {linearVolume}");
+            audioSource.outputAudioMixerGroup.audioMixer.SetVolume(groupId, linearVolume);
+        }
     }
 
     public class DJTable : MonoBehaviour
     {
         [SerializeField] private InputManager inputManager;
 
-        [Header("UI References")]
+        [Header("Audio References")]
+        [SerializeField] private AudioMixer audioMixer;
         [SerializeField] private List<DJTrackData> tracks;
         [SerializeField] private Track track1;
         [SerializeField] private Track track2;
+
 
         [Header("Transition References")]
         [SerializeField] private GameObject inputCanvas;
@@ -66,6 +92,7 @@ namespace TheFungalNetwork.DJ
 
         private void InitializeTrack(Track track, Track syncTrack, bool playImmediately)
         {
+            track.Initialize(playImmediately ? 1 : 0);
             track.index %= tracks.Count;
             track.SetData(tracks[track.index], playImmediately);
 
@@ -81,6 +108,12 @@ namespace TheFungalNetwork.DJ
                 Debug.Log($"Syncing {track.Data.Bpm} {syncTrack.Data.Bpm} {track.Bpm} {syncTrack.Bpm}");
                 track.UI.SetBpm(syncTrack.Bpm);
             };
+
+            track.UI.OnToggle += value =>
+            {
+                if (value) track.audioSource.Play();
+                else track.audioSource.Stop();
+            };
         }
 
         private void Update()
@@ -88,19 +121,19 @@ namespace TheFungalNetwork.DJ
             var loudestTrack = track1.audioSource.volume >= track2.audioSource.volume ? track1 : track2;
             visualsAnimator.speed = tracks[loudestTrack.index].Bpm * loudestTrack.audioSource.pitch / 30;
 
-            //float distance = Vector3.Distance(inputManager.Controllable.Movement.transform.position, transform.position);
-            //float maxDistance = 15f; // Adjust this value to control the range for volume falloff
-            //float minDistance = 3f;  // Range within which volume will be 1
+            float distance = Vector3.Distance(inputManager.Controllable.Movement.transform.position, transform.position);
+            float maxDistance = 10f; // Adjust this value to control the range for volume falloff
+            float minDistance = 3f;  // Range within which volume will be 1
 
-            //    if (distance <= minDistance)
-            //    {
-            //        audioSource.volume = 1f;
-            //    }
-            //    else
-            //    {
-            //        float volume = Mathf.Clamp01(1 - Mathf.Log10(distance - minDistance + 1) / Mathf.Log10(maxDistance - minDistance + 1));
-            //        audioSource.volume = volume;
-            //    }
+            if (distance <= minDistance)
+            {
+                audioMixer.SetVolume("Master", 1f);
+            }
+            else
+            {
+                float volume = Mathf.Clamp01(1 - Mathf.Log10(distance - minDistance + 1) / Mathf.Log10(maxDistance - minDistance + 1));
+                audioMixer.SetVolume("Master", volume);
+            }
         }
 
         private void Use()
