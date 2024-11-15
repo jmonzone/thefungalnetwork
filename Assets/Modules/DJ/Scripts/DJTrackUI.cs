@@ -9,63 +9,65 @@ namespace TheFungalNetwork.DJ
     {
         [SerializeField] private TextMeshProUGUI trackText;
         [SerializeField] private TextMeshProUGUI bpmText;
+        [SerializeField] private Button swapButton;
+        [SerializeField] private Button syncButton;
         [SerializeField] private Slider volumeSlider;
         [SerializeField] private Slider pitchSlider;
 
-        private DJTrackData track;
-        private AudioSource audioSource;
+        private Track track;
 
         public event UnityAction OnSwapButtonClicked;
+        public event UnityAction OnSyncButtonClicked;
 
         private void Awake()
         {
-            var swapButton = GetComponentInChildren<Button>();
             swapButton.onClick.AddListener(() => OnSwapButtonClicked?.Invoke());
+            syncButton.onClick.AddListener(() => OnSyncButtonClicked?.Invoke());
         }
 
-        public void Initialize(AudioSource audioSource, DJTrackData track, bool playImmediately)
+        public void Initialize(Track track, bool playImmediately)
         {
-            this.audioSource = audioSource;
-            audioSource.volume = playImmediately ? 1 : 0;
-            audioSource.pitch = 1;
+            this.track = track;
+            track.audioSource.volume = playImmediately ? 1 : 0;
+            track.audioSource.pitch = 1;
 
             volumeSlider.minValue = 0;
             volumeSlider.maxValue = 1;
-            volumeSlider.value = audioSource.volume;
+            volumeSlider.value = track.audioSource.volume;
             volumeSlider.onValueChanged.AddListener(value =>
             {
-                audioSource.volume = value;
+                track.audioSource.volume = value;
             });
 
             pitchSlider.minValue = 0;
             pitchSlider.maxValue = 2;
-            pitchSlider.value = audioSource.pitch;
+            pitchSlider.value = track.audioSource.pitch;
             pitchSlider.onValueChanged.AddListener(value =>
             {
-                audioSource.pitch = value;
+                track.audioSource.pitch = value;
                 UpdateBPMText();
             });
 
-            SetTrack(track);
-        }
 
-        public void SetTrack(DJTrackData track)
-        {
-            this.track = track;
+            track.OnTrackChanged += () =>
+            {
+                trackText.text = track.Data.TrackName;
+                UpdateBPMText();
+            };
 
-            audioSource.clip = track.AudioClip;
-            audioSource.Play();
-
-            trackText.text = track.TrackName;
             UpdateBPMText();
         }
 
+        public void SetBpm(float bpm)
+        {
+            pitchSlider.value = bpm / track.Data.Bpm;
+        }
+
+
         private void UpdateBPMText()
         {
-            if (!track) return;
-
-            var bpm = Mathf.RoundToInt(track.Bpm * audioSource.pitch);
-            bpmText.text = $"{bpm} bpm";
+            var roundedBpm = Mathf.RoundToInt(track.Bpm);
+            bpmText.text = $"{roundedBpm} bpm";
         }
     }
 }

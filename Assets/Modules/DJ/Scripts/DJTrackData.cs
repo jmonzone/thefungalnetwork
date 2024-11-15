@@ -5,7 +5,7 @@ namespace TheFungalNetwork.DJ
     [CreateAssetMenu]
     public class DJTrackData : ScriptableObject
     {
-        [SerializeField] private string name;
+        [SerializeField] private new string name;
         [SerializeField] private AudioClip audioClip;
         [SerializeField] private int bpm;
 
