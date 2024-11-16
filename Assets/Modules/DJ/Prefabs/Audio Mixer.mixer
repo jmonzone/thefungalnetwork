@@ -1,5 +1,49 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!244 &-6978942396249114735
+AudioMixerEffectController:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_EffectID: 7e4aa5296e1524cad9a46f8eacd45911
+  m_EffectName: Pitch Shifter
+  m_MixLevel: 98c6de9528b264277951280afcf2683a
+  m_Parameters:
+  - m_ParameterName: Pitch
+    m_GUID: 97578367591504efc9502430cbfd2aa3
+  - m_ParameterName: FFT size
+    m_GUID: 003316664b0eb4def8033d40d90ecff0
+  - m_ParameterName: Overlap
+    m_GUID: 2502e2d79b49b45b8ab56949329de91f
+  - m_ParameterName: Max channels
+    m_GUID: a47e569e30d5d4f9e9bc45ead5ed8a91
+  m_SendTarget: {fileID: 0}
+  m_EnableWetMix: 0
+  m_Bypass: 0
+--- !u!244 &-4703339741227267856
+AudioMixerEffectController:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_EffectID: bcf9c5a6aafc34edfaa668f2bba42ef6
+  m_EffectName: Pitch Shifter
+  m_MixLevel: 010b1c55d543e451d9708505785522e6
+  m_Parameters:
+  - m_ParameterName: Pitch
+    m_GUID: 26590230e7b2a46638fd77e2bbc21b73
+  - m_ParameterName: FFT size
+    m_GUID: 2b26da884679a4ad7a16a1010574c8be
+  - m_ParameterName: Overlap
+    m_GUID: b3b0405ba023c4968b8c4a2cf171180b
+  - m_ParameterName: Max channels
+    m_GUID: 612210551068a4c9a86df7c408c8716f
+  m_SendTarget: {fileID: 0}
+  m_EnableWetMix: 0
+  m_Bypass: 0
 --- !u!244 &-4048499040890455335
 AudioMixerEffectController:
   m_ObjectHideFlags: 3
@@ -29,6 +73,7 @@ AudioMixerGroupController:
   m_Send: 00000000000000000000000000000000
   m_Effects:
   - {fileID: -4048499040890455335}
+  - {fileID: -4703339741227267856}
   m_UserColorIndex: 0
   m_Mute: 0
   m_Solo: 0
@@ -51,8 +96,12 @@ AudioMixerController:
   m_ExposedParameters:
   - guid: c9ec2d113749f46bd8eb52d5790c57e0
     name: VolumeA
+  - guid: 26590230e7b2a46638fd77e2bbc21b73
+    name: PitchA
   - guid: 5427eb955d2eb458798dffd48d4f79b6
     name: VolumeB
+  - guid: 97578367591504efc9502430cbfd2aa3
+    name: PitchB
   - guid: 0f4609183ba6b491a9375dd1bcc6fa90
     name: VolumeMaster
   m_AudioMixerGroupViews:
@@ -108,9 +157,11 @@ AudioMixerSnapshotController:
   m_AudioMixer: {fileID: 24100000}
   m_SnapshotID: 5abd5e156d0d545e987842e6f5b01c17
   m_FloatValues:
+    26590230e7b2a46638fd77e2bbc21b73: 0.5
     02d5e590f62bf43c8bc76dfab0860286: 1
     92acf047533b64c23a74b2e47d709a3f: 13.3
     0f4609183ba6b491a9375dd1bcc6fa90: 1.6
+    b3b0405ba023c4968b8c4a2cf171180b: 23.2
     41e8691c9793344fdbe8e64a67a60f36: 1
   m_TransitionOverrides: {}
 --- !u!244 &1009215357737876605
@@ -142,6 +193,7 @@ AudioMixerGroupController:
   m_Send: 00000000000000000000000000000000
   m_Effects:
   - {fileID: 1009215357737876605}
+  - {fileID: -6978942396249114735}
   m_UserColorIndex: 0
   m_Mute: 0
   m_Solo: 0

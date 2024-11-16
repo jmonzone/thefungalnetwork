@@ -1,9 +1,7 @@
-using System;
 using System.Collections.Generic;
 using Cinemachine;
 using UnityEngine;
 using UnityEngine.Audio;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace TheFungalNetwork.DJ
@@ -17,42 +15,6 @@ namespace TheFungalNetwork.DJ
         }
     }
 
-    [Serializable]
-    public class Track
-    {
-        [SerializeField] private string groupId;
-
-        public int index;
-        private DJTrackData data;
-        public DJTrackUI UI;
-        public AudioSource audioSource;
-
-        public DJTrackData Data => data;
-        public float Bpm => data.Bpm * audioSource.pitch;
-
-        public event UnityAction OnTrackChanged;
-
-        public void Initialize(float volume)
-        {
-            SetVolume(volume);
-            UI.OnVolumeSliderChanged += SetVolume;
-        }
-
-        public void SetData(DJTrackData data, bool playImmediately)
-        {
-            this.data = data;
-            audioSource.clip = data.AudioClip;
-            if (playImmediately) audioSource.Play();
-            OnTrackChanged?.Invoke();
-        }
-
-        private void SetVolume(float linearVolume)
-        {
-            Debug.Log($"setting volume {groupId} {linearVolume}");
-            audioSource.outputAudioMixerGroup.audioMixer.SetVolume(groupId, linearVolume);
-        }
-    }
-
     public class DJTable : MonoBehaviour
     {
         [SerializeField] private InputManager inputManager;
@@ -60,8 +22,8 @@ namespace TheFungalNetwork.DJ
         [Header("Audio References")]
         [SerializeField] private AudioMixer audioMixer;
         [SerializeField] private List<DJTrackData> tracks;
-        [SerializeField] private Track track1;
-        [SerializeField] private Track track2;
+        [SerializeField] private DJTrack track1;
+        [SerializeField] private DJTrack track2;
 
 
         [Header("Transition References")]
@@ -85,41 +47,60 @@ namespace TheFungalNetwork.DJ
             exitButton.onClick.AddListener(Exit);
 
             ToggleView(false);
+        }
 
+        private void Start()
+        {
             InitializeTrack(track1, track2, true);
             InitializeTrack(track2, track1, false);
         }
 
-        private void InitializeTrack(Track track, Track syncTrack, bool playImmediately)
+        private void InitializeTrack(DJTrack track, DJTrack syncTrack, bool playImmediately)
         {
-            track.Initialize(playImmediately ? 1 : 0);
-            track.index %= tracks.Count;
-            track.SetData(tracks[track.index], playImmediately);
+            track.trackIndex %= tracks.Count;
+            track.SetData(tracks[track.trackIndex], playImmediately);
 
             track.UI.Initialize(track, playImmediately);
             track.UI.OnSwapButtonClicked += () =>
             {
-                track.index = (track.index + 1) % tracks.Count;
-                track.SetData(tracks[track.index], true);
-            };
-
-            track.UI.OnSyncButtonClicked += () =>
-            {
-                Debug.Log($"Syncing {track.Data.Bpm} {syncTrack.Data.Bpm} {track.Bpm} {syncTrack.Bpm}");
-                track.UI.SetBpm(syncTrack.Bpm);
-            };
-
-            track.UI.OnToggle += value =>
-            {
-                if (value) track.audioSource.Play();
-                else track.audioSource.Stop();
+                track.trackIndex = (track.trackIndex + 1) % tracks.Count;
+                track.SetData(tracks[track.trackIndex], true);
             };
         }
 
         private void Update()
         {
-            var loudestTrack = track1.audioSource.volume >= track2.audioSource.volume ? track1 : track2;
-            visualsAnimator.speed = tracks[loudestTrack.index].Bpm * loudestTrack.audioSource.pitch / 30;
+            bool isTrack1Playing = track1.AudioSource.isPlaying && track1.Volume > 0.1f;
+            bool isTrack2Playing = track2.AudioSource.isPlaying && track2.Volume > 0.1f;
+
+            if (isTrack1Playing || isTrack2Playing)
+            {
+                // Determine the loudest active track
+                DJTrack targetTrack;
+
+                if (isTrack1Playing && isTrack2Playing)
+                {
+                    targetTrack = track1.Volume >= track2.Volume ? track1 : track2;
+                }
+                else if (isTrack1Playing)
+                {
+                    targetTrack = track1;
+                }
+                else
+                {
+                    targetTrack = track2;
+                }
+
+                // Update visuals animator speed based on the active track's BPM and pitch
+                visualsAnimator.speed = (tracks[targetTrack.trackIndex].Bpm * targetTrack.AudioSource.pitch) / 30;
+            }
+            else
+            {
+                visualsAnimator.speed = 0;
+            }
+
+
+
 
             float distance = Vector3.Distance(inputManager.Controllable.Movement.transform.position, transform.position);
             float maxDistance = 10f; // Adjust this value to control the range for volume falloff

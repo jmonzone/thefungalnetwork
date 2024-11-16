@@ -11,28 +11,34 @@ namespace TheFungalNetwork.DJ
         [SerializeField] private TextMeshProUGUI bpmText;
         [SerializeField] private Button swapButton;
         [SerializeField] private Toggle toggle;
-        [SerializeField] private Button syncButton;
+        [SerializeField] private Button syncTempoButton;
+        [SerializeField] private Button syncPitchButton;
+
         [SerializeField] private Slider volumeSlider;
+        [SerializeField] private Slider tempoSlider;
         [SerializeField] private Slider pitchSlider;
 
-        private Track track;
+        private DJTrack track;
 
         public event UnityAction OnSwapButtonClicked;
-        public event UnityAction OnSyncButtonClicked;
+        public event UnityAction OnSyncTempoButtonClicked;
+
         public event UnityAction<bool> OnToggle;
         public event UnityAction<float> OnVolumeSliderChanged;
+        public event UnityAction<float> OnTempoSliderChanged;
+        public event UnityAction<float> OnPitchSliderChanged;
 
         private void Awake()
         {
             swapButton.onClick.AddListener(() => OnSwapButtonClicked?.Invoke());
-            syncButton.onClick.AddListener(() => OnSyncButtonClicked?.Invoke());
+            syncTempoButton.onClick.AddListener(() => OnSyncTempoButtonClicked?.Invoke());
             toggle.onValueChanged.AddListener(value => OnToggle?.Invoke(value));
+            syncPitchButton.onClick.AddListener(() => track.SyncPitch());
         }
 
-        public void Initialize(Track track, bool playImmediately)
+        public void Initialize(DJTrack track, bool playImmediately)
         {
             this.track = track;
-            track.audioSource.pitch = 1;
 
             toggle.isOn = playImmediately;
 
@@ -44,15 +50,22 @@ namespace TheFungalNetwork.DJ
                 OnVolumeSliderChanged?.Invoke(value);
             });
 
-            pitchSlider.minValue = 0;
-            pitchSlider.maxValue = 2;
-            pitchSlider.value = track.audioSource.pitch;
-            pitchSlider.onValueChanged.AddListener(value =>
+            tempoSlider.minValue = 0;
+            tempoSlider.maxValue = 2;
+            tempoSlider.value = 1;
+            tempoSlider.onValueChanged.AddListener(value =>
             {
-                track.audioSource.pitch = value;
+                OnTempoSliderChanged?.Invoke(value);
                 UpdateBPMText();
             });
 
+            pitchSlider.minValue = 0;
+            pitchSlider.maxValue = 2;
+            pitchSlider.value = 1;
+            pitchSlider.onValueChanged.AddListener(value =>
+            {
+                OnPitchSliderChanged?.Invoke(value);
+            });
 
             track.OnTrackChanged += () =>
             {
@@ -66,7 +79,7 @@ namespace TheFungalNetwork.DJ
 
         public void SetBpm(float bpm)
         {
-            pitchSlider.value = bpm / track.Data.Bpm;
+            tempoSlider.value = bpm / track.Data.Bpm;
         }
 
 
