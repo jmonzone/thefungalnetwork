@@ -23,7 +23,7 @@ namespace TheFungalNetwork.DJ
         public DJTrackUI UI;
 
         public DJTrackData Data => data;
-        public float Bpm => data.Bpm * audioSource.pitch;
+        public float Bpm => data.Bpm * tempo;
 
         public event UnityAction OnTrackChanged;
 
@@ -55,6 +55,8 @@ namespace TheFungalNetwork.DJ
             this.data = data;
             audioSource.clip = data.AudioClip;
             if (playImmediately) audioSource.Play();
+            else SetVolume(0);
+
             OnTrackChanged?.Invoke();
         }
 

@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using Cinemachine;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
+using UnityEngine.Video;
 
 namespace TheFungalNetwork.DJ
 {
@@ -25,37 +25,27 @@ namespace TheFungalNetwork.DJ
         [SerializeField] private DJTrack track1;
         [SerializeField] private DJTrack track2;
 
+        [Header("Visual Refrences")]
+        [SerializeField] private VideoPlayer visualsVideoPlayer;
+        [SerializeField] private GameObject fullscreenVisuals;
+        [SerializeField] private Button openVisualsButton;
+        [SerializeField] private Button closeVisualsButton;
 
-        [Header("Transition References")]
-        [SerializeField] private GameObject inputCanvas;
-        [SerializeField] private GameObject djCanvas;
-        [SerializeField] private Button exitButton;
-        [SerializeField] private AudioSource backgroundMusic;
-        [SerializeField] private Animator visualsAnimator;
-
-        private OverheadInteractionIndicator overheadInteraction;
-        private CinemachineVirtualCamera virtualCamera;
 
         private void Awake()
         {
-            overheadInteraction = GetComponentInChildren<OverheadInteractionIndicator>();
-            virtualCamera = GetComponentInChildren<CinemachineVirtualCamera>();
-
-            var proximityAction = GetComponentInChildren<ProximityAction>();
-            proximityAction.OnUse += Use;
-
-            exitButton.onClick.AddListener(Exit);
-
-            ToggleView(false);
+            openVisualsButton.onClick.AddListener(() => fullscreenVisuals.SetActive(true));
+            closeVisualsButton.onClick.AddListener(() => fullscreenVisuals.SetActive(false));
         }
 
         private void Start()
         {
-            InitializeTrack(track1, track2, true);
-            InitializeTrack(track2, track1, false);
+            InitializeTrack(track1, true);
+            InitializeTrack(track2, false);
         }
 
-        private void InitializeTrack(DJTrack track, DJTrack syncTrack, bool playImmediately)
+        //todo: centralize initialization track into DJTrack
+        private void InitializeTrack(DJTrack track, bool playImmediately)
         {
             track.trackIndex %= tracks.Count;
             track.SetData(tracks[track.trackIndex], playImmediately);
@@ -92,48 +82,12 @@ namespace TheFungalNetwork.DJ
                 }
 
                 // Update visuals animator speed based on the active track's BPM and pitch
-                visualsAnimator.speed = (tracks[targetTrack.trackIndex].Bpm * targetTrack.AudioSource.pitch) / 30;
+                visualsVideoPlayer.playbackSpeed = targetTrack.Bpm / 120;
             }
             else
             {
-                visualsAnimator.speed = 0;
+                visualsVideoPlayer.playbackSpeed = 0;
             }
-
-
-
-
-            float distance = Vector3.Distance(inputManager.Controllable.Movement.transform.position, transform.position);
-            float maxDistance = 10f; // Adjust this value to control the range for volume falloff
-            float minDistance = 3f;  // Range within which volume will be 1
-
-            if (distance <= minDistance)
-            {
-                audioMixer.SetVolume("Master", 1f);
-            }
-            else
-            {
-                float volume = Mathf.Clamp01(1 - Mathf.Log10(distance - minDistance + 1) / Mathf.Log10(maxDistance - minDistance + 1));
-                audioMixer.SetVolume("Master", volume);
-            }
-        }
-
-        private void Use()
-        {
-            ToggleView(true);
-            backgroundMusic.Stop();
-        }
-        private void Exit()
-        {
-            ToggleView(false);
-            backgroundMusic.Play();
-        }
-
-        private void ToggleView(bool value)
-        {
-            djCanvas.SetActive(value);
-            inputCanvas.SetActive(!value);
-            overheadInteraction.gameObject.SetActive(!value);
-            virtualCamera.Priority = value ? 2 : 0;
         }
     }
 }
