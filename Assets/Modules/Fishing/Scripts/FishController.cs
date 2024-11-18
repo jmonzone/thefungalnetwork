@@ -31,6 +31,7 @@ public class FishController : MonoBehaviour
     {
         this.data = data;
         movement.SetBounds(bounds);
+        movement.StartRandomMovement();
     }
 
     private void OnEnable()
