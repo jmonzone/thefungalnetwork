@@ -1,5 +1,6 @@
 using Cinemachine;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class ViewController : MonoBehaviour
@@ -10,6 +11,8 @@ public class ViewController : MonoBehaviour
 
     private OverheadInteractionIndicator overheadInteraction;
     private CinemachineVirtualCamera virtualCamera;
+
+    public event UnityAction<bool> OnViewToggled;
 
     private void Awake()
     {
@@ -32,5 +35,7 @@ public class ViewController : MonoBehaviour
 
         overheadInteraction.gameObject.SetActive(!value);
         virtualCamera.Priority = value ? 2 : 0;
+
+        OnViewToggled?.Invoke(value);
     }
 }
