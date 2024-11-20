@@ -8,15 +8,21 @@ public class ShruneTable : MonoBehaviour
     [SerializeField] private GameManager gameManager;
 
     //todo: create image button component maybe like Inventory slot
-    [SerializeField] private GameObject inventoryButton;
-    [SerializeField] private Image inventoryPreview;
+    [SerializeField] private GameObject majorItemButton;
+    [SerializeField] private Image majorItemPreview;
 
     [SerializeField] private GameObject mushroomButton;
     [SerializeField] private Image mushroomPreview;
 
+    [SerializeField] private GameObject shrunePrefab;
+    [SerializeField] private Transform shruneSpawnPosition;
+
     private Item targetItem;
     private GameObject spawnedItem;
     private Camera mainCamera;
+
+    private GameObject majorItem;
+    private List<GameObject> mushrooms = new List<GameObject>();
 
     private ItemInstance MushroomItem => gameManager.Inventory.Find(item => item.Data.name == "Mushroom");
     private List<ItemInstance> MajorItems => gameManager.Inventory.FindAll(item => item != MushroomItem).ToList();
@@ -39,34 +45,62 @@ public class ShruneTable : MonoBehaviour
             if (MajorItems.Count > 0)
             {
                 targetItem = MajorItems[0].Data;
-                inventoryPreview.enabled = true;
-                inventoryPreview.sprite = targetItem.Sprite;
+                majorItemPreview.enabled = true;
+                majorItemPreview.sprite = targetItem.Sprite;
             }
         }
     }
 
     public void SpawnMushroom()
     {
-        if (MushroomItem) SpawnItem(MushroomItem);
+        if (MushroomItem)
+        {
+            var mushroom = SpawnItem(MushroomItem);
+            mushrooms.Add(mushroom);
+        }
     }
 
     public void SpawnMajorItem()
     {
-        if (MajorItems.Count > 0) SpawnItem(MajorItems[0]);
+        if (MajorItems.Count > 0)
+        {
+            majorItem = SpawnItem(MajorItems[0]);
+        }
     }
 
-    private void SpawnItem(ItemInstance item)
+    private GameObject SpawnItem(ItemInstance item)
     {
         spawnedItem = Instantiate(item.Data.ItemPrefab);
-        inventoryButton.SetActive(false);
-        mushroomButton.SetActive(false);
+        UpdateView();
+        return spawnedItem;
     }
 
-    public void DropItem()
+    private void DropItem()
     {
         spawnedItem = null;
-        inventoryButton.SetActive(true);
-        mushroomButton.SetActive(true);
+        UpdateView();
+
+        if (majorItem && mushrooms.Count == 5)
+        {
+            Instantiate(shrunePrefab, shruneSpawnPosition.position, Quaternion.identity);
+
+            majorItem.SetActive(false);
+            majorItem = null;
+
+            foreach(var mushroom in mushrooms)
+            {
+                mushroom.SetActive(false);
+            }
+
+            mushrooms = new List<GameObject>();
+            UpdateView();
+        }
+    }
+
+    private void UpdateView()
+    {
+        majorItemButton.SetActive(!spawnedItem && !majorItem);
+        mushroomButton.SetActive(!spawnedItem && mushrooms.Count < 5);
     }
 
     private void Update()
