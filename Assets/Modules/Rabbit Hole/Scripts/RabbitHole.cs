@@ -1,3 +1,4 @@
+using Cinemachine;
 using UnityEngine;
 
 public class RabbitHole : MonoBehaviour
@@ -6,5 +7,11 @@ public class RabbitHole : MonoBehaviour
     {
         var proximityAction = GetComponent<ProximityAction>();
         proximityAction.OnUse += () => Utility.LoadScene("Pufferball");
+
+        var virtualCamera = GetComponentInChildren<CinemachineVirtualCamera>();
+        proximityAction.OnInRangeChanged += value =>
+        {
+            virtualCamera.Priority = value ? 1 : 0;
+        };
     }
 }

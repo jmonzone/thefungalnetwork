@@ -9,6 +9,7 @@ public class ProximityAction : MonoBehaviour
     public bool InRange { get; set; }
 
     public event UnityAction OnUse;
+    public event UnityAction<bool> OnInRangeChanged;
 
     public void Use()
     {
@@ -23,5 +24,6 @@ public class ProximityAction : MonoBehaviour
     public void SetInRange(bool value)
     {
         InRange = value;
+        OnInRangeChanged?.Invoke(value);
     }
 }
