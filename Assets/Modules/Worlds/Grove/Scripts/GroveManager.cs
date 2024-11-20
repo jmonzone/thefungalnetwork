@@ -50,11 +50,11 @@ public class GroveManager : MonoBehaviour
     {
         var targetAction = groveControllable.Interactions.TargetAction;
 
-        if (previousAction && previousAction != targetAction) previousAction.SetInteractable(false);
+        if (previousAction && previousAction != targetAction) previousAction.SetInRange(false);
         previousAction = targetAction;
 
-        if (targetAction) targetAction.SetInteractable(true);
-        inputManager.CanInteract(targetAction);
+        if (targetAction) targetAction.SetInRange(true);
+        inputManager.CanInteract(targetAction && targetAction.Interactable);
     }
 
     private void SpawnPlayer()

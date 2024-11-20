@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 public static class ConfigKeys
 {
@@ -49,6 +50,8 @@ public class GameManager : MonoBehaviour
     public JObject JsonFile { get; private set; }
     public List<FungalModel> Fungals => fungals;
     public List<ItemInstance> Inventory => inventory;
+
+    public event UnityAction<ItemInstance> OnItemAdded;
 
     private void Awake()
     {
@@ -97,6 +100,7 @@ public class GameManager : MonoBehaviour
         {
             // Update the count for the existing item
             existingItem.Count += amount;
+            OnItemAdded?.Invoke(existingItem);
             Debug.Log($"incrementing item {item.name} count to {existingItem.Count}");
         }
         else
@@ -106,6 +110,7 @@ public class GameManager : MonoBehaviour
             var itemInstance = ScriptableObject.CreateInstance<ItemInstance>();
             itemInstance.Initialize(item, amount);
             inventory.Add(itemInstance);
+            OnItemAdded?.Invoke(itemInstance);
         }
 
         var jsonInventory = JsonFile[ConfigKeys.INVENTORY_KEY] as JArray;

@@ -3,7 +3,10 @@ using UnityEngine.Events;
 
 public class ProximityAction : MonoBehaviour
 {
-    public bool Interactable { get; set; }
+    [SerializeField] private bool interactable = true;
+    public bool Interactable => interactable;
+
+    public bool InRange { get; set; }
 
     public event UnityAction OnUse;
 
@@ -14,6 +17,11 @@ public class ProximityAction : MonoBehaviour
 
     public void SetInteractable(bool value)
     {
-        Interactable = value;
+        interactable = value;
+    }
+
+    public void SetInRange(bool value)
+    {
+        InRange = value;
     }
 }

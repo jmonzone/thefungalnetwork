@@ -18,7 +18,7 @@ public class OverheadInteractionIndicator : MonoBehaviour
 
     private void Update()
     {
-        indicator.SetActive(proximityAction.Interactable);
+        indicator.SetActive(proximityAction.Interactable && proximityAction.InRange);
 
         var position = mainCamera.WorldToScreenPoint(proximityAction.transform.position);
         transform.position = position;

@@ -6,10 +6,12 @@ using UnityEngine.UI;
 public class GroveUI : MonoBehaviour
 {
     [SerializeField] private bool debug;
+    [SerializeField] private GameManager gameManager;
     [SerializeField] private GameObject inputUI;
     [SerializeField] private InventoryUI inventoryUI;
 
     [SerializeField] private Button inventoryButton;
+    [SerializeField] private Image inventoryPreview;
 
     private void Awake()
     {
@@ -19,6 +21,12 @@ public class GroveUI : MonoBehaviour
         });
 
         inventoryUI.OnCloseButtonClicked += () => ToggleUI(true);
+
+        gameManager.OnItemAdded += item =>
+        {
+            inventoryPreview.enabled = true;
+            inventoryPreview.sprite = item.Data.Sprite;
+        };
 
         if (!debug || !Application.isEditor)
         {

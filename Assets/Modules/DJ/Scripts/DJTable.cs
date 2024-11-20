@@ -83,6 +83,20 @@ namespace TheFungalNetwork.DJ
 
                 // Update visuals animator speed based on the active track's BPM and pitch
                 visualsVideoPlayer.playbackSpeed = targetTrack.Bpm / 120;
+
+                float distance = Vector3.Distance(inputManager.Controllable.Movement.transform.position, transform.position);
+                float maxDistance = 25f; // Adjust this value to control the range for volume falloff
+                float minDistance = 3f;  // Range within which volume will be 1
+
+                if (distance <= minDistance)
+                {
+                    audioMixer.SetVolume("Master", 1f);
+                }
+                else
+                {
+                    float volume = Mathf.Clamp01(1 - Mathf.Log10(distance - minDistance + 1) / Mathf.Log10(maxDistance - minDistance + 1));
+                    audioMixer.SetVolume("Master", volume);
+                }
             }
             else
             {
