@@ -82,7 +82,7 @@ namespace TheFungalNetwork.DJ
         private void UpdatePitch()
         {
             audioSource.pitch = tempo;
-            audioSource.outputAudioMixerGroup.audioMixer.SetFloat($"Pitch{groupId}", pitch / tempo);
+            //audioSource.outputAudioMixerGroup.audioMixer.SetFloat($"Pitch{groupId}", pitch / tempo);
         }
 
         public void SyncPitch()

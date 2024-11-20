@@ -1,13 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ShruneTable : MonoBehaviour
 {
     [SerializeField] private GameManager gameManager;
-    [SerializeField] private GameObject prefab;
-    [SerializeField] private LayerMask planePoint;
+    [SerializeField] private GameObject inventoryButton;
+    [SerializeField] private Image inventoryPreview;
 
+    private Item targetItem;
     private GameObject item;
     private Camera mainCamera;
 
@@ -16,14 +16,26 @@ public class ShruneTable : MonoBehaviour
         mainCamera = Camera.main;
     }
 
+    private void Start()
+    {
+        if (gameManager.Inventory.Count > 0)
+        {
+            targetItem = gameManager.Inventory[0].Data;
+            inventoryPreview.enabled = true;
+            inventoryPreview.sprite = targetItem.Sprite;
+        }
+    }
+
     public void SpawnItem()
     {
-        item = Instantiate(prefab);
+        item = Instantiate(targetItem.ItemPrefab);
+        inventoryButton.SetActive(false);
     }
 
     public void DropItem()
     {
         item = null;
+        inventoryButton.SetActive(true);
     }
 
     private void Update()
