@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(ProximityAction))]
 public class ViewController : MonoBehaviour
 {
     [SerializeField] private GameObject currentUI;
