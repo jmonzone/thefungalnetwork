@@ -23,9 +23,6 @@ public class ViewController : MonoBehaviour
         proximityAction.OnUse += () => ToggleView(true);
 
         exitButton.onClick.AddListener(() => ToggleView(false));
-
-        ToggleView(false);
-
     }
 
     private void ToggleView(bool value)
