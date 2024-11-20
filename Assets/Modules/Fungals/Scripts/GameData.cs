@@ -4,10 +4,7 @@ using UnityEngine.Events;
 
 public class Item : ScriptableObject
 {
-    [SerializeField] private new string name;
     [SerializeField] private Sprite sprite;
-
-    public string Name => name;
     public Sprite Sprite => sprite;
 }
 
@@ -15,14 +12,21 @@ public class Item : ScriptableObject
 public class ItemInstance : ScriptableObject
 {
     [SerializeField] private Item item;
+    [SerializeField] private int count;
 
     public Item Data => item;
+    public int Count
+    {
+        get => count;
+        set => count = value;
+    }
 
     public event UnityAction OnConsumed;
 
-    public void Initialize(Item item)
+    public void Initialize(Item item, int count)
     {
         this.item = item;
+        this.count = count;
     }
 
     public void Consume()

@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
-using UnityEngine.Events;
 
 public static class ConfigKeys
 {
@@ -87,33 +86,64 @@ public class GameManager : MonoBehaviour
     }
     #region Protected Methods
 
-    public void AddToInventory(ItemInstance item)
+    public void AddToInventory(Item item, int amount)
     {
         if (inventory.Count >= 8) return;
-        Debug.Log($"adding item {item.Data.name} {JsonFile}");
-        inventory.Add(item);
-        (JsonFile[ConfigKeys.INVENTORY_KEY] as JArray).Add(item.Data.name);
-        File.WriteAllText(saveDataPath, JsonFile.ToString());
+        Debug.Log($"adding item {item.name} {JsonFile}");
+
+        // Find if the item already exists in the inventory
+        var existingItem = inventory.FirstOrDefault(i => i.Data.name == item.name);
+        if (existingItem != null)
+        {
+            // Update the count for the existing item
+            existingItem.Count += amount;
+            Debug.Log($"incrementing item {item.name} count to {existingItem.Count}");
+        }
+        else
+        {
+            // Add a new item if it doesn't exist
+            Debug.Log($"adding new item {item.name}");
+            var itemInstance = ScriptableObject.CreateInstance<ItemInstance>();
+            itemInstance.Initialize(item, amount);
+            inventory.Add(itemInstance);
+        }
+
+        var jsonInventory = JsonFile[ConfigKeys.INVENTORY_KEY] as JArray;
+        var jsonItem = jsonInventory
+               .OfType<JObject>()
+               .FirstOrDefault(j => j["name"]?.ToString() == item.name);
+
+        if (jsonItem != null)
+        {
+            // Increment the count for the existing item in JSON
+            jsonItem["count"] = (int)jsonItem["count"] + amount;
+        }
+        else
+        {
+            // Add a new entry in the JSON
+            jsonInventory?.Add(new JObject
+            {
+                ["name"] = item.name,
+                ["count"] = amount
+            });
+        }
+
+        SaveData();
     }
 
-    protected void RemoveFromInventory(ItemInstance item)
+    public int GetItemCount(Item item) => inventory.FirstOrDefault(i => i.Data == item)?.Count ?? 0;
+
+    protected void RemoveFromInventory(Item item)
     {
-        if (inventory.Contains(item))
+        var existingItem = inventory.FirstOrDefault(i => i.Data.name == item.name);
+        if (existingItem && existingItem.Count > 0)
         {
-            inventory.Remove(item);
-            var jarray = JsonFile[ConfigKeys.INVENTORY_KEY] as JArray;
+            existingItem.Count--;
 
-            var itemIndex = -1;
+            var jsonInventory = JsonFile[ConfigKeys.INVENTORY_KEY] as JArray;
+            var jsonItem = jsonInventory?.FirstOrDefault(j => j?["name"]?.ToString() == item.name);
 
-            for (var i = 0; i < jarray.Count; i++)
-            {
-                if (jarray[i].ToString() == item.Data.name)
-                {
-                    itemIndex = i;
-                    break;
-                }
-            }
-            jarray.RemoveAt(itemIndex);
+            if (jsonItem != null) jsonItem["count"] = existingItem.Count;
 
             SaveData();
         }
@@ -196,14 +226,19 @@ public class GameManager : MonoBehaviour
 
         if (JsonFile.ContainsKey(ConfigKeys.INVENTORY_KEY))
         {
-            foreach (var itemName in JsonFile[ConfigKeys.INVENTORY_KEY] as JArray)
+            foreach (var item in JsonFile[ConfigKeys.INVENTORY_KEY] as JArray)
             {
-                var itemData = gameData.Items.Find(item => item.Name == itemName.ToString());
-                var item = ScriptableObject.CreateInstance<ItemInstance>();
-                item.Initialize(itemData);
-                item.OnConsumed += () => RemoveFromInventory(item);
-                if (itemData) inventory.Add(item);
-                else Debug.LogWarning($"Item {itemName} not found in game data");
+                if (item is JObject itemJson) {
+                    var itemData = gameData.Items.Find(item => item.name == itemJson["name"].ToString());
+                    var itemInstance = ScriptableObject.CreateInstance<ItemInstance>();
+                    itemInstance.Initialize(itemData, (int)itemJson["count"]);
+                    itemInstance.OnConsumed += () => RemoveFromInventory(itemData);
+                    if (itemData) inventory.Add(itemInstance);
+                    else Debug.LogWarning($"Item {itemJson} not found in game data");
+                };
+
+
+                
             }
         }
         else

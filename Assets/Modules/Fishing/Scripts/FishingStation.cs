@@ -115,9 +115,5 @@ public class FishingStation : JobStation
             textPopup.ShowText($"+{fish.Data.Experience}");
             Fungal.Model.Experience += fish.Data.Experience;
         }
-
-        var item = ScriptableObject.CreateInstance<ItemInstance>();
-        item.Initialize(fish.Data);
-        GameManager.Instance.AddToInventory(item);
     }
 }

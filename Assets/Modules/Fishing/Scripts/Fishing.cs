@@ -18,7 +18,8 @@ public class Fishing : MonoBehaviour
     [SerializeField] private Transform netStartPosition;
     [SerializeField] private float duration;
 
-    private int fishCaught;
+    [Header("Game References")]
+    [SerializeField] private FishData fishData;
 
     private void Awake()
     {
@@ -31,6 +32,11 @@ public class Fishing : MonoBehaviour
             reticle.position = reticleStartPosition.transform.position;
             reticle.gameObject.SetActive(value);
         };
+    }
+
+    private void Start()
+    {
+        inventoryText.text = GameManager.Instance.GetItemCount(fishData).ToString();
     }
 
     private void Joystick_OnJoystickUpdate(Vector3 direction)
@@ -81,15 +87,15 @@ public class Fishing : MonoBehaviour
         net.transform.position = end;
 
         var sphereCast = Physics.OverlapSphere(reticle.transform.position, reticle.transform.localScale.x);
-        var fishControllers = sphereCast.Select(collider => collider.GetComponentInParent<FishController>()).OfType<FishController>();
+        var fishControllers = sphereCast.Select(collider => collider.GetComponentInParent<FishController>()).OfType<FishController>().ToList();
         foreach (var fish in fishControllers)
         {
-            Debug.Log(fish.gameObject.name);
             fish.gameObject.SetActive(false);
-            fishCaught++;
         }
 
-        inventoryText.text = fishCaught.ToString();
+        GameManager.Instance.AddToInventory(fishData, fishControllers.Count);
+
+        inventoryText.text = GameManager.Instance.GetItemCount(fishData).ToString();
         yield return new WaitForSeconds(0.25f);
 
         interactionButton.interactable = true;
