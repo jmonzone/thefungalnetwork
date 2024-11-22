@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class InventoryButton : MonoBehaviour
@@ -16,5 +17,18 @@ public class InventoryButton : MonoBehaviour
             inventoryPreview.enabled = true;
             inventoryPreview.sprite = item.Data.Sprite;
         };
+    }
+
+    private void OnEnable()
+    {
+        if (inventoryService.Inventory.Count > 0)
+        {
+            inventoryPreview.enabled = true;
+            inventoryPreview.sprite = inventoryService.Inventory.Last().Data.Sprite;
+        }
+        else
+        {
+            inventoryPreview.enabled = false;
+        }
     }
 }
