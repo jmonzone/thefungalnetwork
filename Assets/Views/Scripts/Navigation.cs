@@ -26,7 +26,6 @@ public class Navigation : ScriptableObject
             {
                 view.OnOpened += () =>
                 {
-                    Debug.Log("Opening");
                     currentView.Close();
                     SetCurrentView(view);
                 };

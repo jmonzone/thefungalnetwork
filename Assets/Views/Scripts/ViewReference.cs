@@ -9,7 +9,6 @@ public class ViewReference : ScriptableObject
 
     public void Open()
     {
-        Debug.Log($"Opening {name}");
         OnOpened?.Invoke();
     }
 
