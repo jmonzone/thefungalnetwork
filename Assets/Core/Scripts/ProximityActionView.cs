@@ -4,6 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(ProximityAction))]
 public class ProximityActionView : MonoBehaviour
 {
+    [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference viewReference;
 
     private OverheadInteractionIndicator overheadInteraction;
@@ -17,13 +18,13 @@ public class ProximityActionView : MonoBehaviour
         var proximityAction = GetComponentInChildren<ProximityAction>();
         proximityAction.OnUse += () => viewReference.Open();
 
-        viewReference.OnOpened += () => OnViewToggled(true);
-        viewReference.OnClosed += () => OnViewToggled(false);
+        navigation.OnNavigated += () => OnNavigated();
     }
 
-    private void OnViewToggled(bool value)
+    private void OnNavigated()
     {
-        overheadInteraction.gameObject.SetActive(!value);
-        virtualCamera.Priority = value ? 2 : 0;
+        var usingView = navigation.History.Contains(viewReference);
+        overheadInteraction.gameObject.SetActive(!usingView);
+        virtualCamera.Priority = usingView ? 2 : 0;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 [CreateAssetMenu]
 public class Navigation : ScriptableObject
@@ -7,6 +8,9 @@ public class Navigation : ScriptableObject
     [SerializeField] private List<ViewReference> views;
 
     private Stack<ViewReference> history;
+    public Stack<ViewReference> History => history;
+
+    public event UnityAction OnNavigated;
 
     private ViewReference currentView;
 
@@ -34,11 +38,11 @@ public class Navigation : ScriptableObject
     {
         currentView = view;
         history.Push(view);
+        OnNavigated?.Invoke();
     }
 
     public void GoBack()
     {
-        Debug.Log("Closing");
         history.Pop();
         var targetView = history.Pop();
         targetView.Open();
