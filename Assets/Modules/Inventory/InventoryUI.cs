@@ -7,17 +7,20 @@ using UnityEngine.UI;
 
 public class InventoryUI : MonoBehaviour
 {
-    [SerializeField] private GameManager gameManager;
+    [SerializeField] private InventoryService inventoryService;
+    [SerializeField] private GameObject view;
     [SerializeField] private Button closeButton;
 
     private List<InventorySlot> inventorySlots;
 
-    public event UnityAction OnCloseButtonClicked;
 
     private void Awake()
     {
         inventorySlots = GetComponentsInChildren<InventorySlot>(includeInactive: true).ToList();
-        closeButton.onClick.AddListener(() => OnCloseButtonClicked?.Invoke());
+        closeButton.onClick.AddListener(() => inventoryService.CloseInventory());
+
+        inventoryService.OnInventoryOpened += () => view.SetActive(true);
+        inventoryService.OnInventoryClosed += () => view.SetActive(false);
     }
 
     private void OnEnable()
@@ -35,9 +38,9 @@ public class InventoryUI : MonoBehaviour
         int i = 0;
         foreach (var slot in inventorySlots)
         {
-            if (i < gameManager.Inventory.Count)
+            if (i < inventoryService.Inventory.Count)
             {
-                slot.SetItem(gameManager.Inventory[i]);
+                slot.SetItem(inventoryService.Inventory[i]);
             }
             else
             {

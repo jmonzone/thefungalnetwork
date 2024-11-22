@@ -7,12 +7,9 @@ public class ShruneTable : MonoBehaviour
 {
     [SerializeField] private GameManager gameManager;
 
-    //todo: create image button component maybe like Inventory slot
-    [SerializeField] private GameObject majorItemButton;
-    [SerializeField] private Image majorItemPreview;
-
-    [SerializeField] private GameObject mushroomButton;
-    [SerializeField] private Image mushroomPreview;
+    [SerializeField] private InventoryService inventoryService;
+    [SerializeField] private InventoryButton majorItemButton;
+    [SerializeField] private InventoryButton minorItemButton;
 
     [SerializeField] private GameObject shrunePrefab;
     [SerializeField] private Transform shruneSpawnPosition;
@@ -24,32 +21,32 @@ public class ShruneTable : MonoBehaviour
     private GameObject majorItem;
     private List<GameObject> mushrooms = new List<GameObject>();
 
-    private ItemInstance MushroomItem => gameManager.Inventory.Find(item => item.Data.name == "Mushroom");
-    private List<ItemInstance> MajorItems => gameManager.Inventory.FindAll(item => item != MushroomItem).ToList();
+    private ItemInstance MushroomItem => inventoryService.Inventory.Find(item => item.Data.name == "Mushroom");
+    private List<ItemInstance> MajorItems => inventoryService.Inventory.FindAll(item => item != MushroomItem).ToList();
 
     private void Awake()
     {
         mainCamera = Camera.main;
     }
 
-    private void Start()
-    {
-        if (gameManager.Inventory.Count > 0)
-        {
-            if (MushroomItem)
-            {
-                mushroomPreview.enabled = true;
-                mushroomPreview.sprite = MushroomItem.Data.Sprite;
-            }
+    //private void Start()
+    //{
+    //    if (inventoryService.Inventory.Count > 0)
+    //    {
+    //        if (MushroomItem)
+    //        {
+    //            mushroomPreview.enabled = true;
+    //            mushroomPreview.sprite = MushroomItem.Data.Sprite;
+    //        }
 
-            if (MajorItems.Count > 0)
-            {
-                targetItem = MajorItems[0].Data;
-                majorItemPreview.enabled = true;
-                majorItemPreview.sprite = targetItem.Sprite;
-            }
-        }
-    }
+    //        if (MajorItems.Count > 0)
+    //        {
+    //            targetItem = MajorItems[0].Data;
+    //            majorItemPreview.enabled = true;
+    //            majorItemPreview.sprite = targetItem.Sprite;
+    //        }
+    //    }
+    //}
 
     public void SpawnMushroom()
     {
@@ -99,8 +96,8 @@ public class ShruneTable : MonoBehaviour
 
     private void UpdateView()
     {
-        majorItemButton.SetActive(!spawnedItem && !majorItem);
-        mushroomButton.SetActive(!spawnedItem && mushrooms.Count < 5);
+        majorItemButton.gameObject.SetActive(!spawnedItem && !majorItem);
+        minorItemButton.gameObject.SetActive(!spawnedItem && mushrooms.Count < 5);
     }
 
     private void Update()

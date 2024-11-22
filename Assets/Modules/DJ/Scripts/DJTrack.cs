@@ -63,7 +63,7 @@ namespace TheFungalNetwork.DJ
         private void SetVolume(float linearVolume)
         {
             volume = linearVolume;
-            Debug.Log($"setting volume {groupId} {linearVolume}");
+            //Debug.Log($"setting volume {groupId} {linearVolume}");
             audioSource.outputAudioMixerGroup.audioMixer.SetVolume(groupId, linearVolume);
         }
 

@@ -10295,8 +10295,9 @@ GameObject:
   m_Component:
   - component: {fileID: 535733274}
   - component: {fileID: 535733275}
+  - component: {fileID: 535733276}
   m_Layer: 5
-  m_Name: Mushroom Button
+  m_Name: Minor Item Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10352,6 +10353,21 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+--- !u!114 &535733276
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 535733273}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ff0589bdcabe4c248a6496f131ff360, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inventoryService: {fileID: 11400000, guid: b0534c2b759264d94ad364617da988b3, type: 2}
+  inventoryButton: {fileID: 0}
+  inventoryPreview: {fileID: 1914038799}
 --- !u!1001 &537664236
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12389,30 +12405,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 608584193}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &608584195 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 202370347248769603, guid: 33fcf1c21d92947ceb6d4ff8cafdf92c,
-    type: 3}
-  m_PrefabInstance: {fileID: 608584193}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &608584196 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7391008571819457086, guid: 33fcf1c21d92947ceb6d4ff8cafdf92c,
-    type: 3}
-  m_PrefabInstance: {fileID: 608584193}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &610605779
 GameObject:
   m_ObjectHideFlags: 0
@@ -12486,7 +12478,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &613079125
 RectTransform:
   m_ObjectHideFlags: 0
@@ -18299,6 +18291,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86de0710620c24fa18165b123fb3604b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  possesionService: {fileID: 11400000, guid: 2733aad4d1436406fb3b8878be90ba62, type: 2}
+  fungalService: {fileID: 11400000, guid: c2d8b29caee5b440ca0269f2f27fa2b3, type: 2}
   fungalCollection: {fileID: 11400000, guid: 1d49e170120fe4ab1befd22e62e1ea65, type: 2}
   fungalControllerPrefab: {fileID: 173026516737802164, guid: 9e5e876e58a73433bbb5be4472984e7e,
     type: 3}
@@ -18331,11 +18325,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debug: 0
-  gameManager: {fileID: 1696251349}
   inputUI: {fileID: 155687304}
-  inventoryUI: {fileID: 1460198556}
-  inventoryButton: {fileID: 608584196}
-  inventoryPreview: {fileID: 608584195}
+  inventoryService: {fileID: 11400000, guid: b0534c2b759264d94ad364617da988b3, type: 2}
 --- !u!1001 &911018590
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -25058,6 +25049,7 @@ MonoBehaviour:
   netStartPosition: {fileID: 1690836116}
   duration: 1
   fishData: {fileID: 11400000, guid: 259ca4af75d8b4b03802dec6e194fd09, type: 2}
+  inventoryService: {fileID: 11400000, guid: b0534c2b759264d94ad364617da988b3, type: 2}
 --- !u!114 &1276839548
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27565,12 +27557,12 @@ GameObject:
   - component: {fileID: 1460198555}
   - component: {fileID: 1460198556}
   m_Layer: 0
-  m_Name: Inventory
+  m_Name: Inventory UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1460198555
 Transform:
   m_ObjectHideFlags: 0
@@ -27599,7 +27591,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a24c293b153464131b2339b5cd8e3943, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameManager: {fileID: 1696251349}
+  inventoryService: {fileID: 11400000, guid: b0534c2b759264d94ad364617da988b3, type: 2}
+  view: {fileID: 613079124}
   closeButton: {fileID: 1656758281}
 --- !u!1 &1460645289
 GameObject:
@@ -30674,6 +30667,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1675513861}
   - component: {fileID: 1675513862}
+  - component: {fileID: 1675513863}
   m_Layer: 5
   m_Name: Major Item Button
   m_TagString: Untagged
@@ -30731,6 +30725,21 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+--- !u!114 &1675513863
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1675513860}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ff0589bdcabe4c248a6496f131ff360, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inventoryService: {fileID: 11400000, guid: b0534c2b759264d94ad364617da988b3, type: 2}
+  inventoryButton: {fileID: 0}
+  inventoryPreview: {fileID: 1239351362}
 --- !u!1001 &1681109029
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -34098,7 +34107,7 @@ GameObject:
   - component: {fileID: 1914038800}
   - component: {fileID: 1914038799}
   m_Layer: 5
-  m_Name: Mushroom Preview
+  m_Name: Minor Item Preview
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -37110,10 +37119,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 1696251349}
-  majorItemButton: {fileID: 1675513860}
-  majorItemPreview: {fileID: 1239351362}
-  mushroomButton: {fileID: 1914038797}
-  mushroomPreview: {fileID: 1914038799}
+  inventoryService: {fileID: 11400000, guid: b0534c2b759264d94ad364617da988b3, type: 2}
+  majorItemButton: {fileID: 1675513863}
+  minorItemButton: {fileID: 535733276}
   shrunePrefab: {fileID: 2388176747084538712, guid: b7785a9e6e6c84c728fcb2227ad7b6ef,
     type: 3}
   shruneSpawnPosition: {fileID: 1599120760}
@@ -40311,6 +40319,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4377193916735545544, guid: f23314b20d06648f5ab783843339b5f6,
+        type: 3}
+      propertyPath: localDataService
+      value: 
+      objectReference: {fileID: 11400000, guid: 81d22df7435974c419891ceb2bc9e4ee,
+        type: 2}
     - target: {fileID: 8756789636704506592, guid: f23314b20d06648f5ab783843339b5f6,
         type: 3}
       propertyPath: m_Name

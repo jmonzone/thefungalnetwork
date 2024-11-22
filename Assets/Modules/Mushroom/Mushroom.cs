@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class Mushroom : MonoBehaviour
 {
+    [SerializeField] private InventoryService inventoryService;
     [SerializeField] private Item mushroomData;
 
     private ProximityAction proximityAction;
@@ -11,7 +12,7 @@ public class Mushroom : MonoBehaviour
         proximityAction = GetComponentInChildren<ProximityAction>();
         proximityAction.OnUse += () =>
         {
-            GameManager.Instance.AddToInventory(mushroomData, 1);
+            inventoryService.AddToInventory(mushroomData, 1);
             proximityAction.SetInteractable(false);
             transform.localScale = Vector3.one * 0.1f;
         };

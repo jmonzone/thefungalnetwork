@@ -20,6 +20,7 @@ public class Fishing : MonoBehaviour
 
     [Header("Game References")]
     [SerializeField] private FishData fishData;
+    [SerializeField] private InventoryService inventoryService;
 
     private void Awake()
     {
@@ -36,7 +37,7 @@ public class Fishing : MonoBehaviour
 
     private void Start()
     {
-        inventoryText.text = GameManager.Instance.GetItemCount(fishData).ToString();
+        inventoryText.text = inventoryService.GetItemCount(fishData).ToString();
     }
 
     private void Joystick_OnJoystickUpdate(Vector3 direction)
@@ -93,9 +94,9 @@ public class Fishing : MonoBehaviour
             fish.gameObject.SetActive(false);
         }
 
-        GameManager.Instance.AddToInventory(fishData, fishControllers.Count);
+        inventoryService.AddToInventory(fishData, fishControllers.Count);
 
-        inventoryText.text = GameManager.Instance.GetItemCount(fishData).ToString();
+        inventoryText.text = inventoryService.GetItemCount(fishData).ToString();
         yield return new WaitForSeconds(0.25f);
 
         interactionButton.interactable = true;

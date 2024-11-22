@@ -9,6 +9,7 @@ public class PufferballPlayer : NetworkBehaviour, IControllable
     [SerializeField] private FungalCollection fungalCollection;
     [SerializeField] private PufferballController pufferballPrefab;
     [SerializeField] private PufferballController pufferball;
+    [SerializeField] private PossesionService possesionService;
 
     public bool HasPufferball { get; private set; }
 
@@ -101,11 +102,11 @@ public class PufferballPlayer : NetworkBehaviour, IControllable
 
     private bool TrySpawnPartner()
     {
-        var partner = GameManager.Instance.GetPartner();
+        var partner = possesionService.PossessedFungal;
 
         if (partner)
         {
-            var targetFungal = fungalCollection.Data.Find(fungal => fungal.Id == partner?.Data.Id);
+            var targetFungal = fungalCollection.Data.Find(fungal => fungal.Id == partner.Data.Id);
 
             if (targetFungal)
             {

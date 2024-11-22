@@ -5,6 +5,8 @@ using UnityEngine.Events;
 public class GroveManager : MonoBehaviour
 {
     [Header("Prefab References")]
+    [SerializeField] private PossesionService possesionService;
+    [SerializeField] private FungalService fungalService;
     [SerializeField] private FungalCollection fungalCollection;
     [SerializeField] private FungalController fungalControllerPrefab;
     [SerializeField] private EggController eggControllerPrefab;
@@ -34,7 +36,8 @@ public class GroveManager : MonoBehaviour
             groveControllable.Interactions.TargetAction.Use();
         };
 
-        if (GameManager.Instance.Fungals.Count == 0) {
+        if (fungalService.Fungals.Count == 0)
+        {
             var randomIndex = Random.Range(0, fungalCollection.Data.Count);
             var randomFungal = fungalCollection.Data[randomIndex];
             SpawnEgg(randomFungal);
@@ -63,7 +66,7 @@ public class GroveManager : MonoBehaviour
 
         player.Interaction.OnUse += () => astralProjection.ReturnToTheBody();
 
-        var partner = GameManager.Instance.GetPartner();
+        var partner = possesionService.PossessedFungal;
         var targetFungal = FungalControllers.Find(fungal => fungal.Model == partner);
         if (targetFungal)
         {
@@ -83,14 +86,14 @@ public class GroveManager : MonoBehaviour
     {
         groveControllable = controllable;
         inputManager.SetControllable(controllable);
-        GameManager.Instance.SetPartner(controllable is FungalController fungal ? fungal : null);
+        possesionService.SetPossession(controllable is FungalController fungal ? fungal.Model: null);
     }
 
     private void SpawnFungals()
     {
         Debug.Log("spawning fungals");
 
-        foreach (var fungal in GameManager.Instance.Fungals)
+        foreach (var fungal in fungalService.Fungals)
         {
             var randomPosition = fungalBounds.GetRandomXZPosition();
             SpawnFungal(fungal, randomPosition);
@@ -124,7 +127,7 @@ public class GroveManager : MonoBehaviour
     {
         var fungal = ScriptableObject.CreateInstance<FungalModel>();
         fungal.Initialize(egg.Fungal);
-        GameManager.Instance.AddFungal(fungal);
+        fungalService.AddFungal(fungal);
         SpawnFungal(fungal, egg.transform.position);
     }
 

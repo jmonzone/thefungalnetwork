@@ -5,7 +5,6 @@ using UnityEngine.Events;
 public class FungalModel : ScriptableObject
 {
     [SerializeField] private FungalData data;
-    [SerializeField] private int index;
     [SerializeField] private float hunger;
     [SerializeField] private int level;
     [SerializeField] private float experience;
@@ -21,7 +20,6 @@ public class FungalModel : ScriptableObject
     public event UnityAction<int> OnLevelChanged;
     public event UnityAction OnLevelUp;
 
-    public int Index => index;
     public FungalData Data => data;
 
     public JObject Json => new JObject
@@ -52,10 +50,8 @@ public class FungalModel : ScriptableObject
         power = 0;
     }
 
-    public void Initialize(int index, FungalData pet, JObject json)
+    public void Initialize(FungalData pet, JObject json)
     {
-        this.index = index;
-
         name = pet.Id;
         data = pet;
         level = (int)json[ConfigKeys.LEVEL_KEY];
