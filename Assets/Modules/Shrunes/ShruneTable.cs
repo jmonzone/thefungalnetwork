@@ -14,36 +14,31 @@ public class ShruneTable : MonoBehaviour
     [SerializeField] private GameObject shrunePrefab;
     [SerializeField] private Transform shruneSpawnPosition;
 
-    private Item targetItem;
-    private GameObject spawnedItem;
     private Camera mainCamera;
 
+    private GameObject spawnedItem;
     private GameObject majorItem;
-    private List<GameObject> mushrooms = new List<GameObject>();
-
-    private ItemInstance MushroomItem => inventoryService.Items.Find(item => item.Data.name == "Mushroom");
-    private List<ItemInstance> MajorItems => inventoryService.Items.FindAll(item => item != MushroomItem).ToList();
+    private List<GameObject> minorItems = new List<GameObject>();
+    private GameObject shrune;
 
     private void Awake()
     {
         mainCamera = Camera.main;
+        minorItemButton.OnDragStart += () => SpawnMinorItem();
+        majorItemButton.OnDragStart += () => SpawnMajorItem();
+        majorItemButton.ApplyFilter(item => item.Data.name != "Mushroom");
+        minorItemButton.ApplyFilter(item => item.Data.name == "Mushroom");
     }
 
-    public void SpawnMushroom()
+    public void SpawnMinorItem()
     {
-        if (MushroomItem)
-        {
-            var mushroom = SpawnItem(MushroomItem);
-            mushrooms.Add(mushroom);
-        }
+        var mushroom = SpawnItem(minorItemButton.PreviewItem);
+        minorItems.Add(mushroom);
     }
 
     public void SpawnMajorItem()
     {
-        if (MajorItems.Count > 0)
-        {
-            majorItem = SpawnItem(MajorItems[0]);
-        }
+        majorItem = SpawnItem(majorItemButton.PreviewItem);
     }
 
     private GameObject SpawnItem(ItemInstance item)
@@ -58,35 +53,34 @@ public class ShruneTable : MonoBehaviour
         spawnedItem = null;
         UpdateView();
 
-        if (majorItem && mushrooms.Count == 5)
+        if (majorItem && minorItems.Count == 5)
         {
-            Instantiate(shrunePrefab, shruneSpawnPosition.position, Quaternion.identity);
+            shrune = Instantiate(shrunePrefab, shruneSpawnPosition.position, Quaternion.identity);
 
             majorItem.SetActive(false);
             majorItem = null;
 
-            foreach(var mushroom in mushrooms)
+            foreach(var mushroom in minorItems)
             {
                 mushroom.SetActive(false);
             }
 
-            mushrooms = new List<GameObject>();
+            minorItems = new List<GameObject>();
             UpdateView();
         }
     }
 
     private void UpdateView()
     {
-        majorItemButton.gameObject.SetActive(!spawnedItem && !majorItem);
-        minorItemButton.gameObject.SetActive(!spawnedItem && mushrooms.Count < 5);
+        majorItemButton.Button.interactable = !spawnedItem && !majorItem;
+        minorItemButton.Button.interactable = !spawnedItem && minorItems.Count < 5;
     }
 
     private void Update()
     {
         if (spawnedItem)
         {
-            var ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit, 10f))
+            if (TryRaycast(out RaycastHit hit))
             {
                 spawnedItem.transform.position = hit.point;
             }
@@ -96,5 +90,22 @@ public class ShruneTable : MonoBehaviour
                 DropItem();
             }
         }
+        else if (shrune)
+        {
+            if (TryRaycast(out RaycastHit hit))
+            {
+                if (hit.transform.GetComponentInParent<Transform>() == shrune.transform)
+                {
+                    shrune.SetActive(false);
+                    shrune = null;
+                }
+            }
+        }
+    }
+
+    private bool TryRaycast(out RaycastHit hit)
+    {
+        var ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        return Physics.Raycast(ray, out hit, 10f);
     }
 }

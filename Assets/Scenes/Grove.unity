@@ -10290,7 +10290,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 535733274}
-  - component: {fileID: 535733275}
   - component: {fileID: 535733276}
   - component: {fileID: 535733277}
   m_Layer: 5
@@ -10321,35 +10320,6 @@ RectTransform:
   m_AnchoredPosition: {x: -75, y: -100}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &535733275
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 535733273}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 13
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 2068897804}
-          m_TargetAssemblyTypeName: ShruneTable, Assembly-CSharp
-          m_MethodName: SpawnMushroom
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
 --- !u!114 &535733276
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20317,14 +20287,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1011163977}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.91531146, z: -0.4027467, w: 0}
+  m_LocalRotation: {x: 0, y: 0.92387956, z: -0.38268343, w: 0}
   m_LocalPosition: {x: 0, y: 2.5, z: 1.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 467473357}
   m_Father: {fileID: 2068897801}
-  m_LocalEulerAnglesHint: {x: 47.5, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 45, y: 180, z: 0}
 --- !u!114 &1011163979
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30912,7 +30882,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1675513861}
-  - component: {fileID: 1675513862}
   - component: {fileID: 1675513863}
   - component: {fileID: 1675513864}
   m_Layer: 5
@@ -30943,35 +30912,6 @@ RectTransform:
   m_AnchoredPosition: {x: 75, y: -100}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1675513862
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1675513860}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 13
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 2068897804}
-          m_TargetAssemblyTypeName: ShruneTable, Assembly-CSharp
-          m_MethodName: SpawnMajorItem
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
 --- !u!114 &1675513863
 MonoBehaviour:
   m_ObjectHideFlags: 0
