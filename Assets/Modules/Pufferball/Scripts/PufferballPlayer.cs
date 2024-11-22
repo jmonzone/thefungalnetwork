@@ -9,7 +9,7 @@ public class PufferballPlayer : NetworkBehaviour, IControllable
     [SerializeField] private FungalCollection fungalCollection;
     [SerializeField] private PufferballController pufferballPrefab;
     [SerializeField] private PufferballController pufferball;
-    [SerializeField] private PossesionService possesionService;
+    [SerializeField] private Possession possesionService;
 
     public bool HasPufferball { get; private set; }
 
@@ -102,7 +102,7 @@ public class PufferballPlayer : NetworkBehaviour, IControllable
 
     private bool TrySpawnPartner()
     {
-        var partner = possesionService.PossessedFungal;
+        var partner = possesionService.Fungal;
 
         if (partner)
         {

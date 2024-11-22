@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour
     private static GameManager instance;
 
     [SerializeField] private LocalDataService localDataService;
+    [SerializeField] private Navigation uiStateService;
 
     private void Awake()
     {
@@ -39,6 +40,7 @@ public class GameManager : MonoBehaviour
         {
             instance = this;
             localDataService.Initialize();
+            uiStateService.Initialize();
             DontDestroyOnLoad(instance);
         }
     }

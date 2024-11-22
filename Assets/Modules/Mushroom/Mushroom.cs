@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Mushroom : MonoBehaviour
 {
-    [SerializeField] private InventoryService inventoryService;
+    [SerializeField] private ItemInventory inventoryService;
     [SerializeField] private Item mushroomData;
 
     private ProximityAction proximityAction;

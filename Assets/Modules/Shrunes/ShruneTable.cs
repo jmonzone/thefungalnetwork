@@ -7,7 +7,7 @@ public class ShruneTable : MonoBehaviour
 {
     [SerializeField] private GameManager gameManager;
 
-    [SerializeField] private InventoryService inventoryService;
+    [SerializeField] private ItemInventory inventoryService;
     [SerializeField] private InventoryButton majorItemButton;
     [SerializeField] private InventoryButton minorItemButton;
 
@@ -21,32 +21,13 @@ public class ShruneTable : MonoBehaviour
     private GameObject majorItem;
     private List<GameObject> mushrooms = new List<GameObject>();
 
-    private ItemInstance MushroomItem => inventoryService.Inventory.Find(item => item.Data.name == "Mushroom");
-    private List<ItemInstance> MajorItems => inventoryService.Inventory.FindAll(item => item != MushroomItem).ToList();
+    private ItemInstance MushroomItem => inventoryService.Items.Find(item => item.Data.name == "Mushroom");
+    private List<ItemInstance> MajorItems => inventoryService.Items.FindAll(item => item != MushroomItem).ToList();
 
     private void Awake()
     {
         mainCamera = Camera.main;
     }
-
-    //private void Start()
-    //{
-    //    if (inventoryService.Inventory.Count > 0)
-    //    {
-    //        if (MushroomItem)
-    //        {
-    //            mushroomPreview.enabled = true;
-    //            mushroomPreview.sprite = MushroomItem.Data.Sprite;
-    //        }
-
-    //        if (MajorItems.Count > 0)
-    //        {
-    //            targetItem = MajorItems[0].Data;
-    //            majorItemPreview.enabled = true;
-    //            majorItemPreview.sprite = targetItem.Sprite;
-    //        }
-    //    }
-    //}
 
     public void SpawnMushroom()
     {

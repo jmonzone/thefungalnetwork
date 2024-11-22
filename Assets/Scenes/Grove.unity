@@ -3245,12 +3245,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 149241088}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &155687304 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1887894191452907872, guid: 3e21d2aa76abe4e3c91aec5273a7a706,
-    type: 3}
-  m_PrefabInstance: {fileID: 7861241290770310243}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &162377495
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6647,18 +6641,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 373839693}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &373839695 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3054132252699154334, guid: 310f1d23000ce4454979e624c7dd7fff,
-    type: 3}
-  m_PrefabInstance: {fileID: 373839693}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &375630455 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4458032547626594, guid: 8ae7718c33e89b042b204b36902c7745,
@@ -7114,6 +7096,7 @@ GameObject:
   - component: {fileID: 416328645}
   - component: {fileID: 416328644}
   - component: {fileID: 416328646}
+  - component: {fileID: 416328647}
   m_Layer: 0
   m_Name: DJ Table
   m_TagString: Untagged
@@ -7193,12 +7176,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 416328639}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10865d376bf64417e890991537b9276b, type: 3}
+  m_Script: {fileID: 11500000, guid: 5d54d66a718a0460d8a00784e309d92c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentUI: {fileID: 155687304}
-  targetUI: {fileID: 214110967339324324}
-  exitButton: {fileID: 373839695}
+  viewReference: {fileID: 11400000, guid: 2ff4f75f17a734b849afcd4f11258494, type: 2}
+--- !u!114 &416328647
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 416328639}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f1fd7c6939e24f41a8feb1146673522, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewReference: {fileID: 11400000, guid: 2ff4f75f17a734b849afcd4f11258494, type: 2}
+  canvas: {fileID: 214110967339324324}
 --- !u!1001 &416926703
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10366,9 +10361,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff0589bdcabe4c248a6496f131ff360, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventoryService: {fileID: 11400000, guid: b0534c2b759264d94ad364617da988b3, type: 2}
-  inventoryButton: {fileID: 535733277}
-  inventoryPreview: {fileID: 1914038799}
+  view: {fileID: 11400000, guid: 8b7c25a127d9b494ebf93f64f5dc8a6f, type: 2}
+  inventory: {fileID: 11400000, guid: b0534c2b759264d94ad364617da988b3, type: 2}
+  button: {fileID: 535733277}
+  preview: {fileID: 1914038799}
 --- !u!114 &535733277
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11403,7 +11399,7 @@ GameObject:
   - component: {fileID: 566906934}
   - component: {fileID: 566906933}
   m_Layer: 5
-  m_Name: Activity Canvas
+  m_Name: Shrune Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16779,6 +16775,42 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3054132252699154334, guid: 310f1d23000ce4454979e624c7dd7fff,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3054132252699154334, guid: 310f1d23000ce4454979e624c7dd7fff,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3054132252699154334, guid: 310f1d23000ce4454979e624c7dd7fff,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 11400000, guid: 7af35f01730a846d692adda4734cddd3,
+        type: 2}
+    - target: {fileID: 3054132252699154334, guid: 310f1d23000ce4454979e624c7dd7fff,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3054132252699154334, guid: 310f1d23000ce4454979e624c7dd7fff,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: GoBack
+      objectReference: {fileID: 0}
+    - target: {fileID: 3054132252699154334, guid: 310f1d23000ce4454979e624c7dd7fff,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Navigation, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 3054132252699154334, guid: 310f1d23000ce4454979e624c7dd7fff,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 7488444702202500444, guid: 310f1d23000ce4454979e624c7dd7fff,
         type: 3}
       propertyPath: m_Name
@@ -16795,18 +16827,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 840683423}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &840683425 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3054132252699154334, guid: 310f1d23000ce4454979e624c7dd7fff,
-    type: 3}
-  m_PrefabInstance: {fileID: 840683423}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &843471330
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18293,7 +18313,6 @@ GameObject:
   m_Component:
   - component: {fileID: 905641444}
   - component: {fileID: 905641445}
-  - component: {fileID: 905641447}
   - component: {fileID: 905641446}
   m_Layer: 0
   m_Name: Grove Manager
@@ -18337,7 +18356,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   possesionService: {fileID: 11400000, guid: 2733aad4d1436406fb3b8878be90ba62, type: 2}
-  fungalService: {fileID: 11400000, guid: c2d8b29caee5b440ca0269f2f27fa2b3, type: 2}
+  fungalInventory: {fileID: 11400000, guid: c2d8b29caee5b440ca0269f2f27fa2b3, type: 2}
   fungalCollection: {fileID: 11400000, guid: 1d49e170120fe4ab1befd22e62e1ea65, type: 2}
   fungalControllerPrefab: {fileID: 173026516737802164, guid: 9e5e876e58a73433bbb5be4472984e7e,
     type: 3}
@@ -18357,21 +18376,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 897f2e96f7f2b4b02b5e1f3a1afabe65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &905641447
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 905641442}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ade7acadaa96c4913afa1183b1ea2e7e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  debug: 0
-  inputUI: {fileID: 155687304}
-  inventoryService: {fileID: 11400000, guid: b0534c2b759264d94ad364617da988b3, type: 2}
 --- !u!1001 &911018590
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -25013,6 +25017,7 @@ GameObject:
   - component: {fileID: 1276839546}
   - component: {fileID: 1276839545}
   - component: {fileID: 1276839548}
+  - component: {fileID: 1276839549}
   m_Layer: 0
   m_Name: Fishing Spot
   m_TagString: Untagged
@@ -25067,12 +25072,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1276839543}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10865d376bf64417e890991537b9276b, type: 3}
+  m_Script: {fileID: 11500000, guid: 5d54d66a718a0460d8a00784e309d92c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentUI: {fileID: 155687304}
-  targetUI: {fileID: 1025037756}
-  exitButton: {fileID: 840683425}
+  viewReference: {fileID: 11400000, guid: 2a259ecc8baea40298fb1f58cdbead2b, type: 2}
 --- !u!114 &1276839547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25095,6 +25098,7 @@ MonoBehaviour:
   duration: 1
   fishData: {fileID: 11400000, guid: 259ca4af75d8b4b03802dec6e194fd09, type: 2}
   inventoryService: {fileID: 11400000, guid: b0534c2b759264d94ad364617da988b3, type: 2}
+  fishingView: {fileID: 11400000, guid: 2a259ecc8baea40298fb1f58cdbead2b, type: 2}
 --- !u!114 &1276839548
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25113,6 +25117,20 @@ MonoBehaviour:
     anchor: {fileID: 72909330}
     bounds: {fileID: 376389067}
   defaultFish: {fileID: 11400000, guid: 259ca4af75d8b4b03802dec6e194fd09, type: 2}
+--- !u!114 &1276839549
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1276839543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f1fd7c6939e24f41a8feb1146673522, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewReference: {fileID: 11400000, guid: 2a259ecc8baea40298fb1f58cdbead2b, type: 2}
+  canvas: {fileID: 1025037756}
 --- !u!1 &1277780419
 GameObject:
   m_ObjectHideFlags: 0
@@ -27601,6 +27619,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1460198555}
   - component: {fileID: 1460198556}
+  - component: {fileID: 1460198557}
   m_Layer: 0
   m_Name: Inventory UI
   m_TagString: Untagged
@@ -27636,9 +27655,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a24c293b153464131b2339b5cd8e3943, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventoryService: {fileID: 11400000, guid: b0534c2b759264d94ad364617da988b3, type: 2}
-  view: {fileID: 613079124}
-  closeButton: {fileID: 1656758281}
+  inventory: {fileID: 11400000, guid: b0534c2b759264d94ad364617da988b3, type: 2}
+  inventoryView: {fileID: 11400000, guid: 0b27a153cb8b143eb99c83d96f0a621b, type: 2}
+  navigationService: {fileID: 11400000, guid: 7af35f01730a846d692adda4734cddd3, type: 2}
+--- !u!114 &1460198557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1460198554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f1fd7c6939e24f41a8feb1146673522, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewReference: {fileID: 11400000, guid: 0b27a153cb8b143eb99c83d96f0a621b, type: 2}
+  canvas: {fileID: 613079124}
 --- !u!1 &1460645289
 GameObject:
   m_ObjectHideFlags: 0
@@ -29436,6 +29469,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 856669950}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1605655707 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 307079635344528395, guid: 3e21d2aa76abe4e3c91aec5273a7a706,
+    type: 3}
+  m_PrefabInstance: {fileID: 7861241290770310243}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1606252327 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7602105618067009026, guid: 3e21d2aa76abe4e3c91aec5273a7a706,
+    type: 3}
+  m_PrefabInstance: {fileID: 7861241290770310243}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &1606252328 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8864958489181703232, guid: 3e21d2aa76abe4e3c91aec5273a7a706,
@@ -30032,12 +30077,26 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 7861241290770310243}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1605655707}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8dda1dba4a0304c8a97d1b0497dc61fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1639580484
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1605655707}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f1fd7c6939e24f41a8feb1146673522, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewReference: {fileID: 11400000, guid: 8b7c25a127d9b494ebf93f64f5dc8a6f, type: 2}
+  canvas: {fileID: 1606252327}
 --- !u!1 &1640586005
 GameObject:
   m_ObjectHideFlags: 0
@@ -30345,8 +30404,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1656758280}
   - component: {fileID: 1656758281}
+  - component: {fileID: 1656758282}
   m_Layer: 5
-  m_Name: Inventory Button
+  m_Name: Close Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30416,6 +30476,20 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1656758282
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1656758279}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41eb25a0620cc439bad05b1db8cfd4bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  navigation: {fileID: 11400000, guid: 7af35f01730a846d692adda4734cddd3, type: 2}
+  closeButton: {fileID: 1656758281}
 --- !u!1001 &1658361466
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -30783,9 +30857,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff0589bdcabe4c248a6496f131ff360, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventoryService: {fileID: 11400000, guid: b0534c2b759264d94ad364617da988b3, type: 2}
-  inventoryButton: {fileID: 1675513864}
-  inventoryPreview: {fileID: 1239351362}
+  view: {fileID: 11400000, guid: 8b7c25a127d9b494ebf93f64f5dc8a6f, type: 2}
+  inventory: {fileID: 11400000, guid: b0534c2b759264d94ad364617da988b3, type: 2}
+  button: {fileID: 1675513864}
+  preview: {fileID: 1239351362}
 --- !u!114 &1675513864
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -34089,18 +34164,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1910085649}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1910085651 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3054132252699154334, guid: 310f1d23000ce4454979e624c7dd7fff,
-    type: 3}
-  m_PrefabInstance: {fileID: 1910085649}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1913645054
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -37142,6 +37205,7 @@ GameObject:
   - component: {fileID: 2068897804}
   - component: {fileID: 2068897802}
   - component: {fileID: 2068897803}
+  - component: {fileID: 2068897805}
   m_Layer: 0
   m_Name: Shrune Table
   m_TagString: Untagged
@@ -37177,12 +37241,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2068897800}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10865d376bf64417e890991537b9276b, type: 3}
+  m_Script: {fileID: 11500000, guid: 5d54d66a718a0460d8a00784e309d92c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentUI: {fileID: 155687304}
-  targetUI: {fileID: 566906931}
-  exitButton: {fileID: 1910085651}
+  viewReference: {fileID: 11400000, guid: 8a379ad0527384ebd9ab819ef251e3e8, type: 2}
 --- !u!114 &2068897803
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37215,6 +37277,20 @@ MonoBehaviour:
   shrunePrefab: {fileID: 2388176747084538712, guid: b7785a9e6e6c84c728fcb2227ad7b6ef,
     type: 3}
   shruneSpawnPosition: {fileID: 1599120760}
+--- !u!114 &2068897805
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2068897800}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f1fd7c6939e24f41a8feb1146673522, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewReference: {fileID: 11400000, guid: 8a379ad0527384ebd9ab819ef251e3e8, type: 2}
+  canvas: {fileID: 566906931}
 --- !u!1001 &2072661921
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -40411,6 +40487,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4377193916735545544, guid: f23314b20d06648f5ab783843339b5f6,
         type: 3}
+      propertyPath: uiStateService
+      value: 
+      objectReference: {fileID: 11400000, guid: 7af35f01730a846d692adda4734cddd3,
+        type: 2}
+    - target: {fileID: 4377193916735545544, guid: f23314b20d06648f5ab783843339b5f6,
+        type: 3}
       propertyPath: localDataService
       value: 
       objectReference: {fileID: 11400000, guid: 81d22df7435974c419891ceb2bc9e4ee,
@@ -40610,7 +40692,11 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 608584194}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 307079635344528395, guid: 3e21d2aa76abe4e3c91aec5273a7a706,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1639580484}
   m_SourcePrefab: {fileID: 100100000, guid: 3e21d2aa76abe4e3c91aec5273a7a706, type: 3}
 --- !u!114 &8420320987623680512
 MonoBehaviour:

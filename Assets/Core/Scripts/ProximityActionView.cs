@@ -1,19 +1,13 @@
 using Cinemachine;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.UI;
 
 [RequireComponent(typeof(ProximityAction))]
-public class ViewController : MonoBehaviour
+public class ProximityActionView : MonoBehaviour
 {
-    [SerializeField] private GameObject currentUI;
-    [SerializeField] private GameObject targetUI;
-    [SerializeField] private Button exitButton;
+    [SerializeField] private ViewReference viewReference;
 
     private OverheadInteractionIndicator overheadInteraction;
     private CinemachineVirtualCamera virtualCamera;
-
-    public event UnityAction<bool> OnViewToggled;
 
     private void Awake()
     {
@@ -21,19 +15,15 @@ public class ViewController : MonoBehaviour
         virtualCamera = GetComponentInChildren<CinemachineVirtualCamera>();
 
         var proximityAction = GetComponentInChildren<ProximityAction>();
-        proximityAction.OnUse += () => ToggleView(true);
+        proximityAction.OnUse += () => viewReference.Open();
 
-        exitButton.onClick.AddListener(() => ToggleView(false));
+        viewReference.OnOpened += () => OnViewToggled(true);
+        viewReference.OnClosed += () => OnViewToggled(false);
     }
 
-    private void ToggleView(bool value)
+    private void OnViewToggled(bool value)
     {
-        currentUI.SetActive(!value);
-        targetUI.SetActive(value);
-
         overheadInteraction.gameObject.SetActive(!value);
         virtualCamera.Priority = value ? 2 : 0;
-
-        OnViewToggled?.Invoke(value);
     }
 }

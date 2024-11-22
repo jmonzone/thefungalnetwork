@@ -20,18 +20,23 @@ public class Fishing : MonoBehaviour
 
     [Header("Game References")]
     [SerializeField] private FishData fishData;
-    [SerializeField] private InventoryService inventoryService;
+    [SerializeField] private ItemInventory inventoryService;
+    [SerializeField] private ViewReference fishingView;
 
     private void Awake()
     {
         joystick.OnJoystickUpdate += Joystick_OnJoystickUpdate;
         interactionButton.onClick.AddListener(() => StartCoroutine(ThrowNet()));
 
-        var viewController = GetComponent<ViewController>();
-        viewController.OnViewToggled += value =>
+        fishingView.OnOpened += () =>
         {
             reticle.position = reticleStartPosition.transform.position;
-            reticle.gameObject.SetActive(value);
+            reticle.gameObject.SetActive(true);
+        };
+
+        fishingView.OnClosed += () =>
+        {
+            reticle.gameObject.SetActive(false);
         };
     }
 

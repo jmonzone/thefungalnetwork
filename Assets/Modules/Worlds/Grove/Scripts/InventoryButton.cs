@@ -4,31 +4,32 @@ using UnityEngine.UI;
 
 public class InventoryButton : MonoBehaviour
 {
-    [SerializeField] private InventoryService inventoryService;
-    [SerializeField] private Button inventoryButton;
-    [SerializeField] private Image inventoryPreview;
+    [SerializeField] private ViewReference view;
+    [SerializeField] private ItemInventory inventory;
+    [SerializeField] private Button button;
+    [SerializeField] private Image preview;
 
     private void Awake()
     {
-        if (inventoryButton) inventoryButton.onClick.AddListener(() => inventoryService.OpenInventory());
+        if (button) button.onClick.AddListener(() => view.Open());
 
-        inventoryService.OnItemAdded += item =>
+        inventory.OnItemAdded += item =>
         {
-            inventoryPreview.enabled = true;
-            inventoryPreview.sprite = item.Data.Sprite;
+            preview.enabled = true;
+            preview.sprite = item.Data.Sprite;
         };
     }
 
-    private void OnEnable()
+    private void Start()
     {
-        if (inventoryService.Inventory.Count > 0)
+        if (inventory.Items.Count > 0)
         {
-            inventoryPreview.enabled = true;
-            inventoryPreview.sprite = inventoryService.Inventory.Last().Data.Sprite;
+            preview.enabled = true;
+            preview.sprite = inventory.Items.Last().Data.Sprite;
         }
         else
         {
-            inventoryPreview.enabled = false;
+            preview.enabled = false;
         }
     }
 }

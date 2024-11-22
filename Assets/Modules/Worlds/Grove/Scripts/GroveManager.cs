@@ -5,8 +5,8 @@ using UnityEngine.Events;
 public class GroveManager : MonoBehaviour
 {
     [Header("Prefab References")]
-    [SerializeField] private PossesionService possesionService;
-    [SerializeField] private FungalService fungalService;
+    [SerializeField] private Possession possesionService;
+    [SerializeField] private FungalInventory fungalInventory;
     [SerializeField] private FungalCollection fungalCollection;
     [SerializeField] private FungalController fungalControllerPrefab;
     [SerializeField] private EggController eggControllerPrefab;
@@ -36,7 +36,7 @@ public class GroveManager : MonoBehaviour
             groveControllable.Interactions.TargetAction.Use();
         };
 
-        if (fungalService.Fungals.Count == 0)
+        if (fungalInventory.Fungals.Count == 0)
         {
             var randomIndex = Random.Range(0, fungalCollection.Data.Count);
             var randomFungal = fungalCollection.Data[randomIndex];
@@ -62,19 +62,23 @@ public class GroveManager : MonoBehaviour
 
     private void SpawnPlayer()
     {
+        Debug.Log("spawning player");
+
         var player = GetComponentInChildren<PlayerController>();
 
         player.Interaction.OnUse += () => astralProjection.ReturnToTheBody();
 
-        var partner = possesionService.PossessedFungal;
+        var partner = possesionService.Fungal;
         var targetFungal = FungalControllers.Find(fungal => fungal.Model == partner);
         if (targetFungal)
         {
+            Debug.Log("Setting fungal controller");
             targetFungal.transform.position = rabbitHolePosition.position;
             SetControllable(targetFungal);
         }
         else
         {
+            Debug.Log("Setting player controller");
             player.transform.position = rabbitHolePosition.position;
             SetControllable(player);
         }
@@ -93,7 +97,7 @@ public class GroveManager : MonoBehaviour
     {
         Debug.Log("spawning fungals");
 
-        foreach (var fungal in fungalService.Fungals)
+        foreach (var fungal in fungalInventory.Fungals)
         {
             var randomPosition = fungalBounds.GetRandomXZPosition();
             SpawnFungal(fungal, randomPosition);
@@ -127,7 +131,7 @@ public class GroveManager : MonoBehaviour
     {
         var fungal = ScriptableObject.CreateInstance<FungalModel>();
         fungal.Initialize(egg.Fungal);
-        fungalService.AddFungal(fungal);
+        fungalInventory.AddFungal(fungal);
         SpawnFungal(fungal, egg.transform.position);
     }
 

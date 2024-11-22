@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [CreateAssetMenu]
-public class FungalService : ScriptableObject
+public class FungalInventory : ScriptableObject
 {
     [SerializeField] private GameData gameData;
     [SerializeField] private List<FungalModel> fungals;

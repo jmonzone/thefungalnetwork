@@ -7,9 +7,9 @@ using UnityEngine;
 public class LocalDataService : ScriptableObject
 {
     [SerializeField] private GameData gameData;
-    [SerializeField] private InventoryService inventoryService;
-    [SerializeField] private FungalService fungalService;
-    [SerializeField] private PossesionService possesionService;
+    [SerializeField] private ItemInventory inventoryService;
+    [SerializeField] private FungalInventory fungalService;
+    [SerializeField] private Possession possesionService;
     [SerializeField] private bool resetDataOnAwake;
     [SerializeField] private string saveDataPath;
 

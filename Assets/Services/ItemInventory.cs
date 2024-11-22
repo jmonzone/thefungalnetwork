@@ -5,35 +5,23 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [CreateAssetMenu]
-public class InventoryService : ScriptableObject
+public class ItemInventory : ScriptableObject
 {
     [SerializeField] private GameData gameData;
-    [SerializeField] private List<ItemInstance> inventory;
-    public List<ItemInstance> Inventory => inventory;
+    [SerializeField] private List<ItemInstance> items;
+    public List<ItemInstance> Items => items;
 
-    public event UnityAction OnInventoryOpened;
-    public event UnityAction OnInventoryClosed;
     public event UnityAction OnInventoryUpdated;
 
     public event UnityAction<ItemInstance> OnItemAdded;
 
     private const string INVENTORY_KEY = "inventory";
 
-    public void OpenInventory()
-    {
-        OnInventoryOpened?.Invoke();
-    }
-
-    public void CloseInventory()
-    {
-        OnInventoryClosed?.Invoke();
-    }
-
-    public int GetItemCount(Item item) => inventory.FirstOrDefault(i => i.Data == item)?.Count ?? 0;
+    public int GetItemCount(Item item) => items.FirstOrDefault(i => i.Data == item)?.Count ?? 0;
 
     public void Initialize(JObject jsonFile)
     {
-        inventory = new List<ItemInstance>();
+        items = new List<ItemInstance>();
 
         if (jsonFile.ContainsKey(INVENTORY_KEY))
         {
@@ -53,7 +41,7 @@ public class InventoryService : ScriptableObject
     {
         var inventoryJson = new JArray();
 
-        foreach (var item in Inventory)
+        foreach (var item in Items)
         {
             inventoryJson.Add(new JObject
             {
@@ -67,11 +55,11 @@ public class InventoryService : ScriptableObject
 
     public void AddToInventory(Item item, int amount)
     {
-        if (inventory.Count >= 8) return;
+        if (items.Count >= 8) return;
         Debug.Log($"adding item {item.name} {amount}");
 
         // Find if the item already exists in the inventory
-        var existingItem = inventory.FirstOrDefault(i => i.Data.name == item.name);
+        var existingItem = items.FirstOrDefault(i => i.Data.name == item.name);
         if (existingItem != null)
         {
             // Update the count for the existing item
@@ -85,7 +73,7 @@ public class InventoryService : ScriptableObject
             Debug.Log($"adding new item {item.name}");
             var targetItem = CreateInstance<ItemInstance>();
             targetItem.Initialize(item, amount);
-            inventory.Add(targetItem);
+            items.Add(targetItem);
             OnItemAdded?.Invoke(targetItem);
         }
 
@@ -94,7 +82,7 @@ public class InventoryService : ScriptableObject
 
     protected void RemoveFromInventory(Item item)
     {
-        var existingItem = inventory.FirstOrDefault(i => i.Data.name == item.name);
+        var existingItem = items.FirstOrDefault(i => i.Data.name == item.name);
         if (existingItem && existingItem.Count > 0)
         {
             existingItem.Count--;
