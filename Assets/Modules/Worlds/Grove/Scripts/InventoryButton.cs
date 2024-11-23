@@ -10,16 +10,18 @@ public class InventoryButton : MonoBehaviour, IBeginDragHandler, IDragHandler
     [SerializeField] private InventoryViewReference inventory;
     [SerializeField] private Button button;
     [SerializeField] private Image preview;
+    [SerializeField] private ItemTags itemTags;
 
     public Button Button => button;
     public ItemInstance PreviewItem { get; private set; }
 
-    private Predicate<ItemInstance> filter;
     public event UnityAction OnDragStart;
+
+    public bool ItemFilter(ItemInstance item) => item.Data.HasTags(itemTags);
 
     private void Awake()
     {
-        if (button) button.onClick.AddListener(() => inventory.Open(filter));
+        if (button) button.onClick.AddListener(() => inventory.Open(ItemFilter));
 
         inventory.OnInventoryUpdated += () => UpdatePreview();
     }
@@ -31,7 +33,7 @@ public class InventoryButton : MonoBehaviour, IBeginDragHandler, IDragHandler
 
     private void UpdatePreview()
     {
-        var filteredItems = inventory.GetFilteredItems(filter);
+        var filteredItems = inventory.GetFilteredItems(ItemFilter);
 
         if (filteredItems.Count > 0)
         {
@@ -45,11 +47,6 @@ public class InventoryButton : MonoBehaviour, IBeginDragHandler, IDragHandler
             PreviewItem = null;
             preview.enabled = false;
         }
-    }
-
-    public void ApplyFilter(Predicate<ItemInstance> filter)
-    {
-        this.filter = filter;
     }
 
     void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)

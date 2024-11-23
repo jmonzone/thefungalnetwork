@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -15,10 +14,11 @@ public class Navigation : ScriptableObject
 
     private ViewReference currentView;
 
-    public void Initialize(IEnumerable<ViewReference> initialViews)
+    public void Initialize(List<ViewReference> initialViews = null)
     {
-        history = new Stack<ViewReference>(initialViews);
-        PopulateViews();
+        history = new Stack<ViewReference>(initialViews ?? new List<ViewReference>());
+
+        views = Utility.LoadAssets<ViewReference>();
 
         if (views.Count > 0)
         {
@@ -33,22 +33,22 @@ public class Navigation : ScriptableObject
         }
     }
 
-    private void PopulateViews()
-    {
-        views = new List<ViewReference>();
-        string[] guids = AssetDatabase.FindAssets($"t:{nameof(ViewReference)}");
-        foreach (string guid in guids)
-        {
-            string path = AssetDatabase.GUIDToAssetPath(guid);
-            var view = AssetDatabase.LoadAssetAtPath<ViewReference>(path);
-            if (view != null)
-            {
-                views.Add(view);
-            }
-        }
+    //private void PopulateViews()
+    //{
+    //    views = new List<ViewReference>();
+    //    string[] guids = AssetDatabase.FindAssets($"t:{nameof(ViewReference)}");
+    //    foreach (string guid in guids)
+    //    {
+    //        string path = AssetDatabase.GUIDToAssetPath(guid);
+    //        var view = AssetDatabase.LoadAssetAtPath<ViewReference>(path);
+    //        if (view != null)
+    //        {
+    //            views.Add(view);
+    //        }
+    //    }
 
-        Debug.Log($"Populated {views.Count} ViewReference assets into {name}");
-    }
+    //    Debug.Log($"Populated {views.Count} ViewReference assets into {name}");
+    //}
 
     private void SetCurrentView(ViewReference view)
     {

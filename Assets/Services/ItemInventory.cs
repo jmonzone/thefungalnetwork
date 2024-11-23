@@ -7,9 +7,9 @@ using UnityEngine.Events;
 [CreateAssetMenu]
 public class ItemInventory : ScriptableObject
 {
-    [SerializeField] private GameData gameData;
     [SerializeField] private List<ItemInstance> items;
-    public List<ItemInstance> Items => items;
+
+    public List<ItemInstance> Items => items.Where(item => item.Count > 0).ToList();
 
     public event UnityAction OnInventoryUpdated;
 
@@ -23,13 +23,15 @@ public class ItemInventory : ScriptableObject
     {
         items = new List<ItemInstance>();
 
+        var gameItems = Utility.LoadAssets<Item>();
+
         if (jsonFile.ContainsKey(INVENTORY_KEY))
         {
             foreach (var item in jsonFile[INVENTORY_KEY] as JArray)
             {
                 if (item is JObject itemJson)
                 {
-                    var itemData = gameData.Items.Find(item => item.name == itemJson["name"].ToString());
+                    var itemData = gameItems.Find(item => item.name == itemJson["name"].ToString());
                     if (itemData) AddToInventory(itemData, (int)itemJson["count"]);
                     else Debug.LogWarning($"Item {itemJson} not found in game data");
                 };
@@ -55,7 +57,6 @@ public class ItemInventory : ScriptableObject
 
     public void AddToInventory(Item item, int amount)
     {
-        if (items.Count >= 8) return;
         //Debug.Log($"adding item {item.name} {amount}");
 
         // Find if the item already exists in the inventory
@@ -80,12 +81,12 @@ public class ItemInventory : ScriptableObject
         OnInventoryUpdated?.Invoke();
     }
 
-    protected void RemoveFromInventory(Item item)
+    public void RemoveFromInventory(Item item, int amount)
     {
         var existingItem = items.FirstOrDefault(i => i.Data.name == item.name);
-        if (existingItem && existingItem.Count > 0)
+        if (existingItem && existingItem.Count >= amount)
         {
-            existingItem.Count--;
+            existingItem.Count -= amount;
             OnInventoryUpdated?.Invoke();
         }
         else

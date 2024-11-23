@@ -17,11 +17,6 @@ public static class ConfigKeys
     public const string POWER_KEY = "power";
 }
 
-public static class SceneParameters
-{
-    public static int FungalIndex = 0;
-}
-
 // handles persistent data across the game and provides an API to the save data
 public class GameManager : MonoBehaviour
 {
@@ -33,7 +28,10 @@ public class GameManager : MonoBehaviour
 
     [Header("Debug")]
     [SerializeField] private ViewReference initialView;
-    [SerializeField] private List<ViewReference> initialViewHistory;
+    [SerializeField] private ViewReference debugView;
+    [SerializeField] private List<ViewReference> debugViewHistory;
+
+    private bool IsDebug => debugView && Application.isEditor;
 
     private void Awake()
     {
@@ -46,13 +44,15 @@ public class GameManager : MonoBehaviour
         {
             instance = this;
             localData.Initialize();
-            navigation.Initialize(initialViewHistory);
+            if (IsDebug) navigation.Initialize(debugViewHistory);
+            else navigation.Initialize();
             DontDestroyOnLoad(instance);
         }
     }
 
     private void Start()
     {
+        if (IsDebug) initialView = debugView;
         initialView.Open();
     }
 }

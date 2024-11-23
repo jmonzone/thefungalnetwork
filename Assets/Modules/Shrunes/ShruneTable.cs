@@ -1,24 +1,24 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class ShruneTable : MonoBehaviour
 {
     [SerializeField] private GameManager gameManager;
 
-    [SerializeField] private ItemInventory inventoryService;
+    [SerializeField] private ItemInventory inventory;
     [SerializeField] private InventoryButton majorItemButton;
     [SerializeField] private InventoryButton minorItemButton;
 
-    [SerializeField] private GameObject shrunePrefab;
+    [SerializeField] private Item shruneItem;
     [SerializeField] private Transform shruneSpawnPosition;
+    [SerializeField] private ViewReference viewReference;
 
     private Camera mainCamera;
 
-    private GameObject spawnedItem;
-    private GameObject majorItem;
-    private List<GameObject> minorItems = new List<GameObject>();
+    private GameObject selectedItem;
+    private GameObject majorItemObject;
+    private List<GameObject> minorItemObjects = new List<GameObject>();
+
     private GameObject shrune;
     private bool shrunePickedUp;
 
@@ -27,63 +27,72 @@ public class ShruneTable : MonoBehaviour
         mainCamera = Camera.main;
         minorItemButton.OnDragStart += () => SpawnMinorItem();
         majorItemButton.OnDragStart += () => SpawnMajorItem();
-        majorItemButton.ApplyFilter(item => item.Data.name != "Mushroom");
-        minorItemButton.ApplyFilter(item => item.Data.name == "Mushroom");
+
+        viewReference.OnOpened += UpdateView;
     }
 
     public void SpawnMinorItem()
     {
-        var mushroom = SpawnItem(minorItemButton.PreviewItem);
-        minorItems.Add(mushroom);
+        var item = SpawnItem(minorItemButton.PreviewItem);
+        minorItemObjects.Add(item);
     }
 
     public void SpawnMajorItem()
     {
-        majorItem = SpawnItem(majorItemButton.PreviewItem);
+        majorItemObject = SpawnItem(majorItemButton.PreviewItem);
     }
 
     private GameObject SpawnItem(ItemInstance item)
     {
-        spawnedItem = Instantiate(item.Data.ItemPrefab);
+        inventory.RemoveFromInventory(item.Data, 1);
+        selectedItem = Instantiate(item.Data.ItemPrefab);
         UpdateView();
-        return spawnedItem;
+        return selectedItem;
     }
 
     private void DropItem()
     {
-        spawnedItem = null;
-        UpdateView();
+        selectedItem = null;
 
-        if (majorItem && minorItems.Count == 5)
+        if (majorItemObject && minorItemObjects.Count == 5)
         {
-            shrune = Instantiate(shrunePrefab, shruneSpawnPosition.position, Quaternion.identity);
+            SpawnShrune();
 
-            majorItem.SetActive(false);
-            majorItem = null;
-
-            foreach(var mushroom in minorItems)
-            {
-                mushroom.SetActive(false);
-            }
-
-            minorItems = new List<GameObject>();
-            UpdateView();
+            
         }
+
+        UpdateView();
+    }
+
+    private void SpawnShrune()
+    {
+        shrune = Instantiate(shruneItem.ItemPrefab, shruneSpawnPosition.position, Quaternion.identity);
+
+        majorItemObject.SetActive(false);
+        majorItemObject = null;
+
+        foreach (var item in minorItemObjects)
+        {
+            item.SetActive(false);
+        }
+
+        minorItemObjects = new List<GameObject>();
+
     }
 
     private void UpdateView()
     {
-        majorItemButton.Button.interactable = !spawnedItem && !majorItem;
-        minorItemButton.Button.interactable = !spawnedItem && minorItems.Count < 5;
+        majorItemButton.Button.interactable = !selectedItem && !majorItemObject && majorItemButton.PreviewItem;
+        minorItemButton.Button.interactable = !selectedItem && minorItemObjects.Count < 5 && minorItemButton.PreviewItem;
     }
 
     private void Update()
     {
-        if (spawnedItem)
+        if (selectedItem)
         {
             if (TryRaycast(out RaycastHit hit))
             {
-                spawnedItem.transform.position = hit.point;
+                selectedItem.transform.position = hit.point;
             }
 
             if (Input.GetMouseButtonUp(0))
@@ -106,6 +115,7 @@ public class ShruneTable : MonoBehaviour
 
     private void HideShrune()
     {
+        inventory.AddToInventory(shruneItem, 1);
         shrune.SetActive(false);
         shrune = null;
         shrunePickedUp = false;

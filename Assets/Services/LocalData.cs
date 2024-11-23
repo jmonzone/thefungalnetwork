@@ -5,7 +5,6 @@ using UnityEngine;
 [CreateAssetMenu]
 public class LocalData : ScriptableObject
 {
-    [SerializeField] private GameData gameData;
     [SerializeField] private ItemInventory inventoryService;
     [SerializeField] private FungalInventory fungalService;
     [SerializeField] private Possession possesionService;
