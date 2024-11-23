@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -14,14 +15,13 @@ public class Navigation : ScriptableObject
 
     private ViewReference currentView;
 
-    public void Initialize()
+    public void Initialize(IEnumerable<ViewReference> initialViews)
     {
-        history = new Stack<ViewReference>();
+        history = new Stack<ViewReference>(initialViews);
+        PopulateViews();
 
         if (views.Count > 0)
         {
-            SetCurrentView(views[0]);
-
             foreach (var view in views)
             {
                 view.OnOpened += () =>
@@ -31,6 +31,23 @@ public class Navigation : ScriptableObject
                 };
             }
         }
+    }
+
+    private void PopulateViews()
+    {
+        views = new List<ViewReference>();
+        string[] guids = AssetDatabase.FindAssets($"t:{nameof(ViewReference)}");
+        foreach (string guid in guids)
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guid);
+            var view = AssetDatabase.LoadAssetAtPath<ViewReference>(path);
+            if (view != null)
+            {
+                views.Add(view);
+            }
+        }
+
+        Debug.Log($"Populated {views.Count} ViewReference assets into {name}");
     }
 
     private void SetCurrentView(ViewReference view)

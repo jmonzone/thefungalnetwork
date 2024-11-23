@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public static class ConfigKeys
 {
@@ -26,8 +27,13 @@ public class GameManager : MonoBehaviour
 {
     private static GameManager instance;
 
-    [SerializeField] private LocalDataService localDataService;
-    [SerializeField] private Navigation uiStateService;
+    [Header("Services")]
+    [SerializeField] private LocalData localData;
+    [SerializeField] private Navigation navigation;
+
+    [Header("Debug")]
+    [SerializeField] private ViewReference initialView;
+    [SerializeField] private List<ViewReference> initialViewHistory;
 
     private void Awake()
     {
@@ -39,9 +45,14 @@ public class GameManager : MonoBehaviour
         else
         {
             instance = this;
-            localDataService.Initialize();
-            uiStateService.Initialize();
+            localData.Initialize();
+            navigation.Initialize(initialViewHistory);
             DontDestroyOnLoad(instance);
         }
+    }
+
+    private void Start()
+    {
+        initialView.Open();
     }
 }

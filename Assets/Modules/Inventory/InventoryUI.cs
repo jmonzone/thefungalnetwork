@@ -4,9 +4,7 @@ using UnityEngine;
 
 public class InventoryUI : MonoBehaviour
 {
-    [SerializeField] private ItemInventory inventory;
-    [SerializeField] private ViewReference inventoryView;
-    [SerializeField] private Navigation navigationService;
+    [SerializeField] private InventoryViewReference inventory;
 
     private List<InventorySlot> inventorySlots;
 
@@ -14,17 +12,20 @@ public class InventoryUI : MonoBehaviour
     {
         inventorySlots = GetComponentsInChildren<InventorySlot>(includeInactive: true).ToList();
 
-        inventoryView.OnOpened += () => UpdateInventorySlots();
+        inventory.OnOpened += () => UpdateInventorySlots();
     }
 
     private void UpdateInventorySlots()
     {
+        var items = inventory.GetFilteredItems();
+
         int i = 0;
+
         foreach (var slot in inventorySlots)
         {
-            if (i < inventory.Items.Count)
+            if (i < items.Count)
             {
-                slot.SetItem(inventory.Items[i]);
+                slot.SetItem(items[i]);
             }
             else
             {

@@ -25,9 +25,9 @@ public class InventorySlot : MonoBehaviour
         {
             itemImage.sprite = item.Data.Sprite;
             itemAmountText.text = item.Count.ToString();
-            itemAmountText.gameObject.SetActive(item.Count > 1);
         }
 
         itemImage.gameObject.SetActive(item);
+        itemAmountText.gameObject.SetActive(item && item.Count > 1);
     }
 }

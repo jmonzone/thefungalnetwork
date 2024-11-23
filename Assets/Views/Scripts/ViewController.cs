@@ -17,5 +17,7 @@ public class ViewController : MonoBehaviour
         {
             canvas.SetActive(false);
         };
+
+        canvas.SetActive(false);
     }
 }

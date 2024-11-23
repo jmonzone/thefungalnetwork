@@ -7,8 +7,7 @@ using UnityEngine.UI;
 
 public class InventoryButton : MonoBehaviour, IBeginDragHandler, IDragHandler
 {
-    [SerializeField] private ViewReference view;
-    [SerializeField] private ItemInventory inventory;
+    [SerializeField] private InventoryViewReference inventory;
     [SerializeField] private Button button;
     [SerializeField] private Image preview;
 
@@ -16,12 +15,11 @@ public class InventoryButton : MonoBehaviour, IBeginDragHandler, IDragHandler
     public ItemInstance PreviewItem { get; private set; }
 
     private Predicate<ItemInstance> filter;
-
     public event UnityAction OnDragStart;
 
     private void Awake()
     {
-        if (button) button.onClick.AddListener(() => view.Open());
+        if (button) button.onClick.AddListener(() => inventory.Open(filter));
 
         inventory.OnInventoryUpdated += () => UpdatePreview();
     }
@@ -33,13 +31,12 @@ public class InventoryButton : MonoBehaviour, IBeginDragHandler, IDragHandler
 
     private void UpdatePreview()
     {
-        var items = filter != null ? inventory.Items.FindAll(filter) : inventory.Items;
+        var filteredItems = inventory.GetFilteredItems(filter);
 
-        Debug.Log($"filter {name} {items.Count}");
-
-        if (items.Count > 0)
+        if (filteredItems.Count > 0)
         {
-            PreviewItem = items.Last();
+            PreviewItem = filteredItems.Last();
+            Debug.Log(filteredItems.Count);
             preview.enabled = true;
             preview.sprite = PreviewItem.Data.Sprite;
         }

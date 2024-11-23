@@ -56,7 +56,7 @@ public class ItemInventory : ScriptableObject
     public void AddToInventory(Item item, int amount)
     {
         if (items.Count >= 8) return;
-        Debug.Log($"adding item {item.name} {amount}");
+        //Debug.Log($"adding item {item.name} {amount}");
 
         // Find if the item already exists in the inventory
         var existingItem = items.FirstOrDefault(i => i.Data.name == item.name);
@@ -65,12 +65,12 @@ public class ItemInventory : ScriptableObject
             // Update the count for the existing item
             existingItem.Count += amount;
             OnItemAdded?.Invoke(existingItem);
-            Debug.Log($"incrementing item {item.name} count to {existingItem.Count}");
+            //Debug.Log($"incrementing item {item.name} count to {existingItem.Count}");
         }
         else
         {
             // Add a new item if it doesn't exist
-            Debug.Log($"adding new item {item.name}");
+            //Debug.Log($"adding new item {item.name}");
             var targetItem = CreateInstance<ItemInstance>();
             targetItem.Initialize(item, amount);
             items.Add(targetItem);

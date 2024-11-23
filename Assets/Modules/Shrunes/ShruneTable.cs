@@ -20,6 +20,7 @@ public class ShruneTable : MonoBehaviour
     private GameObject majorItem;
     private List<GameObject> minorItems = new List<GameObject>();
     private GameObject shrune;
+    private bool shrunePickedUp;
 
     private void Awake()
     {
@@ -90,17 +91,24 @@ public class ShruneTable : MonoBehaviour
                 DropItem();
             }
         }
-        else if (shrune)
+        else if (shrune && !shrunePickedUp)
         {
             if (TryRaycast(out RaycastHit hit))
             {
                 if (hit.transform.GetComponentInParent<Transform>() == shrune.transform)
                 {
-                    shrune.SetActive(false);
-                    shrune = null;
+                    shrunePickedUp = true;
+                    Invoke(nameof(HideShrune), 2f);
                 }
             }
         }
+    }
+
+    private void HideShrune()
+    {
+        shrune.SetActive(false);
+        shrune = null;
+        shrunePickedUp = false;
     }
 
     private bool TryRaycast(out RaycastHit hit)

@@ -1,10 +1,9 @@
 ﻿using System.IO;
-using System.Linq;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
 [CreateAssetMenu]
-public class LocalDataService : ScriptableObject
+public class LocalData : ScriptableObject
 {
     [SerializeField] private GameData gameData;
     [SerializeField] private ItemInventory inventoryService;
