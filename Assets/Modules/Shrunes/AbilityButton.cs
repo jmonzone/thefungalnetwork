@@ -31,9 +31,10 @@ public class AbilityButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
      {
         controller.SetAnimation();
 
-        yield return new WaitForSeconds(0.5f);
+        //yield return new WaitForSeconds(0.5f);
+        yield return null;
 
-        var projectile = Instantiate(projectilePrefab, controller.Movement.transform.position + Vector3.up, Quaternion.identity);
+        var projectile = Instantiate(projectilePrefab, controller.Movement.transform.position + Vector3.up + direction.normalized * 1f, Quaternion.identity);
         direction.z = direction.y;
         direction.y = 0f;
 
