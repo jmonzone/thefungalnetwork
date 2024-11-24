@@ -44,7 +44,6 @@ public class MovementController : MonoBehaviour
     public Vector3 Direction { get; private set; }
 
     public float Speed => speed;
-    public float DistanceThreshold => distanceThreshold;
     public bool FaceForward => lerpRotation;
 
     public bool IsAtDestination => Vector3.Distance(transform.position, TargetPosition) < 0.1f;
@@ -117,11 +116,6 @@ public class MovementController : MonoBehaviour
         var direction = target.position - transform.position;
         direction.y = 0;
         transform.forward = direction;
-    }
-
-    public void SetDistanceThreshold(float distanceThreshold)
-    {
-        this.distanceThreshold = distanceThreshold;
     }
     #endregion
 

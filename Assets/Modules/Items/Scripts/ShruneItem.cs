@@ -3,7 +3,7 @@
 [CreateAssetMenu]
 public class ShruneItem : Item
 {
-    [SerializeField] private MovementController spellPrefab;
+    [SerializeField] private Projectile projectilePrefab;
 
-    public MovementController SpellPrefab => spellPrefab;
+    public Projectile ProjectilePrefab => projectilePrefab;
 }

@@ -8025,9 +8025,14 @@ MonoBehaviour:
   experienceContainer: {fileID: 0}
   levelText: {fileID: 0}
   experienceSlider: {fileID: 0}
+  <Fungal>k__BackingField: {fileID: 0}
   fishManager: {fileID: 1043662375}
   fishingRod: {fileID: 988718706}
   textPopup: {fileID: 8549871383944191608}
+  fishingTimer: 0
+  baseDistanceThreshold: 0
+  state: 0
+  targetFish: {fileID: 0}
 --- !u!114 &441051993
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -34621,7 +34626,7 @@ PrefabInstance:
     - target: {fileID: 7769229628474652380, guid: 4b71e246e23244ff991586daf5ff4cea,
         type: 3}
       propertyPath: m_Name
-      value: Spellcast Button
+      value: Ability Button
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -34659,7 +34664,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1858628859}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77164d572a2214b5fae4194497846a80, type: 3}
+  m_Script: {fileID: 11500000, guid: ee523e9f281aa4bf09d431d003fcc77b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
