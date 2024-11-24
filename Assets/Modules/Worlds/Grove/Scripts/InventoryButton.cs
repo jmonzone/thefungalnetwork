@@ -13,7 +13,7 @@ public class InventoryButton : MonoBehaviour, IBeginDragHandler, IDragHandler
     [SerializeField] private ItemTags itemTags;
 
     public Button Button => button;
-    public ItemInstance PreviewItem { get; private set; }
+    public ItemInstance PreviewItem => inventory.GetFilteredItems(ItemFilter).LastOrDefault();
 
     public event UnityAction OnDragStart;
 
@@ -26,25 +26,20 @@ public class InventoryButton : MonoBehaviour, IBeginDragHandler, IDragHandler
         inventory.OnInventoryUpdated += () => UpdatePreview();
     }
 
-    private void Start()
+    private void OnEnable()
     {
         UpdatePreview();
     }
 
     private void UpdatePreview()
     {
-        var filteredItems = inventory.GetFilteredItems(ItemFilter);
-
-        if (filteredItems.Count > 0)
+        if (PreviewItem)
         {
-            PreviewItem = filteredItems.Last();
-            Debug.Log(filteredItems.Count);
             preview.enabled = true;
             preview.sprite = PreviewItem.Data.Sprite;
         }
         else
         {
-            PreviewItem = null;
             preview.enabled = false;
         }
     }

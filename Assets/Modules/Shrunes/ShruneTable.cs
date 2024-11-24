@@ -31,6 +31,11 @@ public class ShruneTable : MonoBehaviour
         viewReference.OnOpened += UpdateView;
     }
 
+    private void Start()
+    {
+        UpdateView();
+    }
+
     public void SpawnMinorItem()
     {
         var item = SpawnItem(minorItemButton.PreviewItem);
@@ -57,8 +62,6 @@ public class ShruneTable : MonoBehaviour
         if (majorItemObject && minorItemObjects.Count == 5)
         {
             SpawnShrune();
-
-            
         }
 
         UpdateView();

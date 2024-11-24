@@ -28,10 +28,6 @@ public class GameManager : MonoBehaviour
 
     [Header("Debug")]
     [SerializeField] private ViewReference initialView;
-    [SerializeField] private ViewReference debugView;
-    [SerializeField] private List<ViewReference> debugViewHistory;
-
-    private bool IsDebug => debugView && Application.isEditor;
 
     private void Awake()
     {
@@ -44,15 +40,13 @@ public class GameManager : MonoBehaviour
         {
             instance = this;
             localData.Initialize();
-            if (IsDebug) navigation.Initialize(debugViewHistory);
-            else navigation.Initialize();
+            navigation.Initialize(initialView);
             DontDestroyOnLoad(instance);
         }
     }
 
     private void Start()
     {
-        if (IsDebug) initialView = debugView;
-        initialView.Open();
+        //initialView.Open();
     }
 }

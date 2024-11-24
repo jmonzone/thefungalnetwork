@@ -5,6 +5,7 @@ using UnityEngine.Events;
 [CreateAssetMenu]
 public class Navigation : ScriptableObject
 {
+    [SerializeField] private ViewReference currentView;
     [SerializeField] private List<ViewReference> views;
 
     private Stack<ViewReference> history;
@@ -12,43 +13,22 @@ public class Navigation : ScriptableObject
 
     public event UnityAction OnNavigated;
 
-    private ViewReference currentView;
 
-    public void Initialize(List<ViewReference> initialViews = null)
+    public void Initialize(ViewReference initialView)
     {
-        history = new Stack<ViewReference>(initialViews ?? new List<ViewReference>());
+        history = new Stack<ViewReference>();
+        SetCurrentView(initialView);
 
-        views = Utility.LoadAssets<ViewReference>();
-
-        if (views.Count > 0)
+        foreach (var view in views)
         {
-            foreach (var view in views)
+            view.OnOpened += () =>
             {
-                view.OnOpened += () =>
-                {
-                    currentView.Close();
-                    SetCurrentView(view);
-                };
-            }
+                currentView.Close();
+                SetCurrentView(view);
+            };
         }
     }
 
-    //private void PopulateViews()
-    //{
-    //    views = new List<ViewReference>();
-    //    string[] guids = AssetDatabase.FindAssets($"t:{nameof(ViewReference)}");
-    //    foreach (string guid in guids)
-    //    {
-    //        string path = AssetDatabase.GUIDToAssetPath(guid);
-    //        var view = AssetDatabase.LoadAssetAtPath<ViewReference>(path);
-    //        if (view != null)
-    //        {
-    //            views.Add(view);
-    //        }
-    //    }
-
-    //    Debug.Log($"Populated {views.Count} ViewReference assets into {name}");
-    //}
 
     private void SetCurrentView(ViewReference view)
     {

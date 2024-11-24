@@ -7,6 +7,7 @@ using UnityEngine.Events;
 [CreateAssetMenu]
 public class ItemInventory : ScriptableObject
 {
+    [SerializeField] private GameData gameData;
     [SerializeField] private List<ItemInstance> items;
 
     public List<ItemInstance> Items => items.Where(item => item.Count > 0).ToList();
@@ -23,15 +24,13 @@ public class ItemInventory : ScriptableObject
     {
         items = new List<ItemInstance>();
 
-        var gameItems = Utility.LoadAssets<Item>();
-
         if (jsonFile.ContainsKey(INVENTORY_KEY))
         {
             foreach (var item in jsonFile[INVENTORY_KEY] as JArray)
             {
                 if (item is JObject itemJson)
                 {
-                    var itemData = gameItems.Find(item => item.name == itemJson["name"].ToString());
+                    var itemData = gameData.Items.Find(item => item.name == itemJson["name"].ToString());
                     if (itemData) AddToInventory(itemData, (int)itemJson["count"]);
                     else Debug.LogWarning($"Item {itemJson} not found in game data");
                 };

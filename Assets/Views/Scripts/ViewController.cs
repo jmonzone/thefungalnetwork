@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 public class ViewController : MonoBehaviour
 {
@@ -17,7 +16,5 @@ public class ViewController : MonoBehaviour
         {
             canvas.SetActive(false);
         };
-
-        canvas.SetActive(false);
     }
 }

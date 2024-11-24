@@ -82,24 +82,4 @@ public static class Utility
 
         onComplete?.Invoke();
     }
-
-    public static List<T> LoadAssets<T>() where T : ScriptableObject
-    {
-        var assets = new List<T>();
-        string[] guids = AssetDatabase.FindAssets($"t:{typeof(T).Name}");
-        foreach (string guid in guids)
-        {
-            string path = AssetDatabase.GUIDToAssetPath(guid);
-            var asset = AssetDatabase.LoadAssetAtPath<T>(path);
-            if (asset != null)
-            {
-                assets.Add(asset);
-            }
-        }
-
-        Debug.Log($"Loaded {assets.Count} {typeof(T).Name} assets");
-
-        return assets;
-
-    }
 }
