@@ -9,4 +9,10 @@ public class Controller : ScriptableObject
     {
         Movement = movement;
     }
+
+    public void SetAnimation()
+    {
+        var animator = Movement.GetComponent<MovementAnimations>().Animator;
+        animator.SetTrigger("attack");
+    }
 }

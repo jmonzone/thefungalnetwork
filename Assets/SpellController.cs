@@ -22,6 +22,7 @@ public class SpellController : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         var direction = Input.mousePosition - mousePosition;
         if (spellButton.PreviewItem && spellButton.PreviewItem.Data is ShruneItem shrune)
         {
+            controller.SetAnimation();
             var spell = Instantiate(shrune.SpellPrefab, controller.Movement.transform.position + Vector3.up, Quaternion.identity);
             direction.z = direction.y;
             direction.y = 0f;

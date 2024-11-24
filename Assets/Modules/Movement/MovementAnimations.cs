@@ -8,6 +8,8 @@ public class MovementAnimations : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private float animationSpeed = 1;
 
+    public Animator Animator => animator;
+
     private void Awake()
     {
         if (!animator) enabled = false;
