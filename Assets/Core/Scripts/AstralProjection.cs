@@ -4,14 +4,12 @@ using UnityEngine.Events;
 public class AstralProjection : MonoBehaviour
 {
     private PlayerController player;
-    private InputManager inputManager;
+    [SerializeField] private InputManager inputManager;
 
     public event UnityAction<IGroveControllable> OnControllerChanged;
 
     private void Awake()
     {
-        inputManager = GetComponentInChildren<InputManager>();
-
         player = GetComponentInChildren<PlayerController>();
 
         var groveManager = GetComponent<GroveManager>();

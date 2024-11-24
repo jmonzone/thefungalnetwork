@@ -7,6 +7,7 @@ public enum ItemTags
     None = 0,
     MinorIngredient = 1 << 0,
     MajorIngredient = 1 << 1,
+    Shrune = 1 << 2
 }
 
 [CreateAssetMenu]

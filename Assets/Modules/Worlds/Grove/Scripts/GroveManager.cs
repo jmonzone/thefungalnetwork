@@ -15,7 +15,7 @@ public class GroveManager : MonoBehaviour
     [SerializeField] private Transform rabbitHolePosition;
     [SerializeField] private Collider fungalBounds;
 
-    private InputManager inputManager;
+    [SerializeField] private InputManager inputManager;
     private IGroveControllable groveControllable;
     private AstralProjection astralProjection;
 
@@ -28,8 +28,6 @@ public class GroveManager : MonoBehaviour
     {
         astralProjection = GetComponent<AstralProjection>();
         astralProjection.OnControllerChanged += controller => SetControllable(controller);
-
-        inputManager = GetComponentInChildren<InputManager>();
 
         inputManager.OnInteractionButtonClicked += () =>
         {

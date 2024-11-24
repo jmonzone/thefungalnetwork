@@ -7,6 +7,7 @@ public class InputManager : MonoBehaviour
     [SerializeField] private VirtualJoystick virtualJoystick;
     [SerializeField] private CameraController cameraController;
     [SerializeField] private Button interactionButton;
+    [SerializeField] private Controller controller;
 
     public IControllable Controllable { get; private set; }
 
@@ -34,6 +35,7 @@ public class InputManager : MonoBehaviour
 
     public void SetControllable(IControllable controller)
     {
+        this.controller.SetMovement(controller.Movement);
         Controllable = controller;
         Controllable.Movement.Stop();
         cameraController.Target = Controllable.Movement.transform;
