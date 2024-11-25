@@ -34393,15 +34393,15 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 4502315523065724852, guid: 83ec29fb6681a46aba463fbc37fd9fb7,
-        type: 3}
-      propertyPath: InitialModule.startSize.scalar
-      value: 1.25
-      objectReference: {fileID: 0}
     - target: {fileID: 6165345701350824834, guid: 83ec29fb6681a46aba463fbc37fd9fb7,
         type: 3}
       propertyPath: m_Name
       value: Projectile
+      objectReference: {fileID: 0}
+    - target: {fileID: 6165345701350824834, guid: 83ec29fb6681a46aba463fbc37fd9fb7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8537208440602104035, guid: 83ec29fb6681a46aba463fbc37fd9fb7,
         type: 3}
@@ -34716,6 +34716,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   controller: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
   spellButton: {fileID: 1932848304}
+--- !u!114 &1934903656 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8447182714217787990, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
+    type: 3}
+  m_PrefabInstance: {fileID: 3366425643034586402}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1938481786
 GameObject:
   m_ObjectHideFlags: 0
@@ -40859,6 +40871,11 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 175
       objectReference: {fileID: 0}
+    - target: {fileID: 7252481751095348867, guid: 3e21d2aa76abe4e3c91aec5273a7a706,
+        type: 3}
+      propertyPath: volume
+      value: 
+      objectReference: {fileID: 1934903656}
     - target: {fileID: 7252481751095348867, guid: 3e21d2aa76abe4e3c91aec5273a7a706,
         type: 3}
       propertyPath: controller

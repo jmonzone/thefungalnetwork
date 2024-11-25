@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public class InputManager : MonoBehaviour
@@ -8,6 +9,7 @@ public class InputManager : MonoBehaviour
     [SerializeField] private CameraController cameraController;
     [SerializeField] private Button interactionButton;
     [SerializeField] private Controller controller;
+    [SerializeField] private Volume volume;
 
     public IControllable Controllable { get; private set; }
 
@@ -31,6 +33,8 @@ public class InputManager : MonoBehaviour
             direction = Quaternion.Euler(0, cameraController.transform.GetChild(0).eulerAngles.y, 0) * direction;
             Controllable.Movement.SetDirection(direction);
         };
+
+        controller.Volume = volume;
     }
 
     public void SetControllable(IControllable controller)

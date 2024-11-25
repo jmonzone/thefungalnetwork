@@ -1,5 +1,7 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 public class Projectile : MonoBehaviour
 {
@@ -8,6 +10,7 @@ public class Projectile : MonoBehaviour
     [SerializeField] private ParticleSystem projectileParticles;
     [SerializeField] private ParticleSystem dissipateParticles;
     [SerializeField] private Light light;
+    [SerializeField] private Controller controller;
 
     
 
@@ -121,6 +124,14 @@ public class Projectile : MonoBehaviour
 
         elapsedTime = 0f; // Reset for shrink and bounce phase
 
+        var volume = controller.Volume;
+
+        // Add Bloom effect if not already present
+        if (!volume.profile.TryGet(out Bloom bloom))
+        {
+            bloom = volume.profile.Add<Bloom>(true);
+        }
+
         // Shrink and bounce phase
         while (elapsedTime < animationDuration)
         {
@@ -131,6 +142,10 @@ public class Projectile : MonoBehaviour
             transform.localScale = originalScale * Mathf.Clamp(scaleValue, 0.01f, growthMultiplier);
             light.intensity = scaleValue;
 
+            // Set Bloom intensity
+            bloom.intensity.value = scaleValue * 5f;
+            bloom.intensity.overrideState = true;
+
             // Bounce with a diminishing sine wave
             float bounceValue = Mathf.Sin(normalizedTime * Mathf.PI) * bounceHeight * (1 - normalizedTime);
             transform.position = originalPosition + Vector3.up * bounceValue;
@@ -138,6 +153,8 @@ public class Projectile : MonoBehaviour
             elapsedTime += Time.deltaTime;
             yield return null;
         }
+
+
 
         // End of animation cleanup
         dissipateParticles.Stop();

@@ -4940,9 +4940,9 @@ SphereCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4217745871802535916
 GameObject:
@@ -5153,6 +5153,7 @@ MonoBehaviour:
   projectileParticles: {fileID: 4502315523065724852}
   dissipateParticles: {fileID: 8810316923315185707}
   light: {fileID: 8599563843007064422}
+  controller: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
 --- !u!114 &1405260385642583641
 MonoBehaviour:
   m_ObjectHideFlags: 0
