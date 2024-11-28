@@ -4,6 +4,7 @@ using UnityEngine.Events;
 public class ProximityAction : MonoBehaviour
 {
     [SerializeField] private bool interactable = true;
+
     public bool Interactable => interactable;
 
     public bool InRange { get; set; }
