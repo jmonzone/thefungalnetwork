@@ -24,7 +24,7 @@ public class ProximityActionView : MonoBehaviour
     private void OnNavigated()
     {
         var usingView = navigation.History.Contains(viewReference);
-        overheadInteraction.gameObject.SetActive(!usingView);
+        if (overheadInteraction) overheadInteraction.gameObject.SetActive(!usingView);
         virtualCamera.Priority = usingView ? 2 : 0;
     }
 }

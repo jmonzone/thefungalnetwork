@@ -37,6 +37,8 @@ public class Navigation : ScriptableObject
     {
         currentView = view;
         history.Push(view);
+
+        //todo: if this fails, undo change
         OnNavigated?.Invoke();
     }
 
