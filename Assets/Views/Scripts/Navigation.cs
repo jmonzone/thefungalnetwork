@@ -1,12 +1,15 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 [CreateAssetMenu]
 public class Navigation : ScriptableObject
 {
     [SerializeField] private ViewReference currentView;
     [SerializeField] private List<ViewReference> views;
+
+    private int buildIndex = 0;
 
     private Stack<ViewReference> history;
     public Stack<ViewReference> History => history;
@@ -39,8 +42,16 @@ public class Navigation : ScriptableObject
 
     public void GoBack()
     {
-        history.Pop();
-        var targetView = history.Pop();
-        targetView.Open();
+        if (history.Count > 1)
+        {
+            history.Pop();
+            var targetView = history.Pop();
+            targetView.Open();
+        }
+        else
+        {
+            SceneManager.LoadScene(buildIndex);
+        }
+
     }
 }
