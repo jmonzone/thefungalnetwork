@@ -11,8 +11,17 @@ public class InventoryUI : MonoBehaviour
     private void Awake()
     {
         inventorySlots = GetComponentsInChildren<InventorySlot>(includeInactive: true).ToList();
+    }
 
-        inventory.OnOpened += () => UpdateInventorySlots();
+    private void OnEnable()
+    {
+        inventory.OnOpened += UpdateInventorySlots;
+
+    }
+
+    private void OnDisable()
+    {
+        inventory.OnOpened -= UpdateInventorySlots;
     }
 
     private void UpdateInventorySlots()

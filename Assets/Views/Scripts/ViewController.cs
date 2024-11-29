@@ -5,16 +5,25 @@ public class ViewController : MonoBehaviour
     [SerializeField] private ViewReference viewReference;
     [SerializeField] private GameObject canvas;
 
-    private void Awake()
+    private void OnEnable()
     {
-        viewReference.OnOpened += () =>
-        {
-            canvas.SetActive(true);
-        };
+        viewReference.OnOpened += Show;
+        viewReference.OnClosed += Hide;
+    }
 
-        viewReference.OnClosed += () =>
-        {
-            canvas.SetActive(false);
-        };
+    private void OnDisable()
+    {
+        viewReference.OnOpened -= Show;
+        viewReference.OnClosed -= Hide;
+    }
+
+    private void Show()
+    {
+        canvas.SetActive(true);
+    }
+
+    private void Hide()
+    {
+        canvas.SetActive(false);
     }
 }
