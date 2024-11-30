@@ -5,6 +5,11 @@ using UnityEngine.UI;
 
 public class PufferballManager : MonoBehaviour
 {
+    [Header("Arena References")]
+    [SerializeField] private MultiplayerArena arena;
+    [SerializeField] private Transform spawnAnchor1;
+    [SerializeField] private Transform spawnAnchor2;
+
     [Header("Gameplay References")]
     [SerializeField] private MultiplayerManager multiplayerManager;
     [SerializeField] private InputManager inputManager;
@@ -17,10 +22,13 @@ public class PufferballManager : MonoBehaviour
 
     private PufferballPlayer player;
 
-
     private List<string> firstNames = new List<string> { "Hollow", "Sharon", "Jesus", "Charmander", "Feni" };
     private List<string> lastNames = new List<string> { "Zozo", "Venga", "Lotus", "Atari", "Bagus" };
 
+    private void Awake()
+    {
+        arena.Initialize(spawnAnchor1.position, spawnAnchor2.position);
+    }
 
     private void Start()
     {  

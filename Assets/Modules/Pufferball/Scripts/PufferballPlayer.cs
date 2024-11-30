@@ -5,6 +5,7 @@ using UnityEngine.Events;
 
 public class PufferballPlayer : NetworkBehaviour, IControllable
 {
+    [SerializeField] private MultiplayerArena arena;
     [SerializeField] private GameObject player;
     [SerializeField] private FungalCollection fungalCollection;
     [SerializeField] private PufferballController pufferballPrefab;
@@ -57,13 +58,13 @@ public class PufferballPlayer : NetworkBehaviour, IControllable
 
                 Quaternion forwardRotation = Quaternion.LookRotation(Vector3.forward);
 
-                networkTransform.Teleport(new Vector3(0, 2, -4), forwardRotation, Vector3.one);
+                networkTransform.Teleport(arena.SpawnPosition1, forwardRotation, Vector3.one);
             }
             else
             {
                 Quaternion backRotation = Quaternion.LookRotation(Vector3.back);
 
-                networkTransform.Teleport(new Vector3(0, 2, 4), backRotation, Vector3.one);
+                networkTransform.Teleport(arena.SpawnPosition2, backRotation, Vector3.one);
             }
 
 
