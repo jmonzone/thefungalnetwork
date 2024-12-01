@@ -9,6 +9,7 @@ public class PufferballManager : MonoBehaviour
     [SerializeField] private MultiplayerArena arena;
     [SerializeField] private Transform spawnAnchor1;
     [SerializeField] private Transform spawnAnchor2;
+    [SerializeField] private Transform cameraController;
 
     [Header("Gameplay References")]
     [SerializeField] private MultiplayerManager multiplayerManager;
@@ -45,6 +46,9 @@ public class PufferballManager : MonoBehaviour
             this.player = player;
             inputManager.SetControllable(player);
             inputManager.OnInteractionButtonClicked += () => player.LaunchBall();
+
+            var targetRotation = new Vector3(0, this.player.IsHost ? 45 : 45 + 180, 0);
+            cameraController.transform.eulerAngles = targetRotation;
         };
 
         exitButton.onClick.AddListener(() =>

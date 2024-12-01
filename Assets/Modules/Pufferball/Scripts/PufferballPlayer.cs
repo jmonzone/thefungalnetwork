@@ -18,6 +18,7 @@ public class PufferballPlayer : NetworkBehaviour, IControllable
 
     private NetworkTransform networkTransform;
 
+    //todo: remove static events use scriptable object reference
     public static UnityAction<PufferballPlayer> OnLocalPlayerSpawned;
     public static UnityAction<PufferballPlayer> OnRemotePlayerSpawned;
 
