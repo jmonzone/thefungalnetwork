@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
 public class Projectile : MonoBehaviour
@@ -12,9 +11,7 @@ public class Projectile : MonoBehaviour
     [SerializeField] private Light light;
     [SerializeField] private Controller controller;
 
-    
-
-    public void Shoot(Vector3 direction)
+    public void Shoot(Vector3 direction, float maxDistance)
     {
         gameObject.SetActive(true);
         transform.localScale = Vector3.one;
@@ -24,7 +21,7 @@ public class Projectile : MonoBehaviour
         projectileParticles.Play();
         dissipateParticles.Stop();
 
-        StartCoroutine(WhispySpiralMotion(direction, 3f, 5f));
+        StartCoroutine(WhispySpiralMotion(direction, 3f, maxDistance));
     }
 
     private IEnumerator WhispySpiralMotion(Vector3 direction, float speed, float maxDistance)

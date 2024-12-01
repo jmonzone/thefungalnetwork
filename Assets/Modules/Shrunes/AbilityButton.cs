@@ -1,29 +1,27 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class AbilityButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     [SerializeField] private Controller controller;
+    [SerializeField] private AbilityCast abilityCast;
     [SerializeField] private InventoryButton spellButton;
 
     private Vector3 mousePosition;
 
     void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
     {
-        mousePosition = Input.mousePosition;
+        if (spellButton.PreviewItem && spellButton.PreviewItem.Data is ShruneItem shrune)
+        {
+            abilityCast.StartCast(controller.Movement.transform, shrune.MaxDistance);
+            mousePosition = Input.mousePosition;
+        }
     }
 
     void IDragHandler.OnDrag(PointerEventData eventData)
     {
-    }
-
-    void IEndDragHandler.OnEndDrag(PointerEventData eventData)
-    {
-        if (spellButton.PreviewItem && spellButton.PreviewItem.Data is ShruneItem shrune)
+        if (spellButton.PreviewItem && spellButton.PreviewItem.Data is ShruneItem)
         {
-            controller.SetAnimation();
-
             // Get the direction from the mouse position relative to the screen space
             Vector3 mouseDirection = Input.mousePosition - mousePosition;
             mouseDirection.z = mouseDirection.y;
@@ -35,11 +33,24 @@ public class AbilityButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             // Rotate the mouse direction by the camera's rotation
             Vector3 rotatedMouseDirection = cameraRotation * mouseDirection.normalized;
 
-            var projectile = Instantiate(shrune.ProjectilePrefab, controller.Movement.transform.position + Vector3.up + rotatedMouseDirection.normalized * 1f, Quaternion.identity);
+            abilityCast.UpdateCast(rotatedMouseDirection);
+        }
+    }
+
+    void IEndDragHandler.OnEndDrag(PointerEventData eventData)
+    {
+        if (spellButton.PreviewItem && spellButton.PreviewItem.Data is ShruneItem shrune)
+        {
+            controller.SetAnimation();
+            abilityCast.EndCast();
+
+            var direction = abilityCast.Direction;
+
+            var projectile = Instantiate(shrune.ProjectilePrefab, controller.Movement.transform.position + Vector3.up + direction.normalized * 1f, Quaternion.identity);
             
             // Apply the rotated direction to the projectile
-            projectile.transform.rotation = Quaternion.LookRotation(rotatedMouseDirection);
-            projectile.Shoot(rotatedMouseDirection);
+            projectile.transform.rotation = Quaternion.LookRotation(direction);
+            projectile.Shoot(direction, shrune.MaxDistance);
         }
     }
 
