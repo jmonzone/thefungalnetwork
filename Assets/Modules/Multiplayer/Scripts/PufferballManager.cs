@@ -34,7 +34,8 @@ public class PufferballManager : MonoBehaviour
     private void Start()
     {  
         var username = GenerateRandomName();
-        multiplayerManager.SignIn(username, () => StartCoroutine(RefreshLobbyList()));
+        //multiplayerManager.SignIn(username, () => StartCoroutine(RefreshLobbyList()));
+        multiplayerManager.SignIn(username, () => StartCoroutine(AutoJoinBogRoom()));
 
         connectionUI.gameObject.SetActive(true);
         connectionUI.OnCreateButtonClicked += () => CreateGame();
@@ -66,6 +67,23 @@ public class PufferballManager : MonoBehaviour
         if (player) inputManager.CanInteract(player.HasPufferball);
     }
 
+    private IEnumerator AutoJoinBogRoom()
+    {
+        yield return new WaitForSeconds(2f);
+
+        multiplayerManager.ListLobbies(lobbies =>
+        {
+            Debug.Log(lobbies.Count);
+            if (lobbies.Count > 0)
+            {
+                JoinGame(lobbies[0].Id);
+            }
+            else
+            {
+                CreateGame();
+            }
+        });
+    }
 
     private IEnumerator RefreshLobbyList()
     {
@@ -78,7 +96,6 @@ public class PufferballManager : MonoBehaviour
 
     private void UpdateLobbyList()
     {
-
         multiplayerManager.ListLobbies(lobbies =>
         {
             connectionUI.SetLobbies(lobbies);
