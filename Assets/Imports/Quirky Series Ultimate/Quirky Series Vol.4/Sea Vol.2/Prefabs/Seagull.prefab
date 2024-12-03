@@ -392,7 +392,8 @@ GameObject:
   - component: {fileID: 5671637318396879659}
   - component: {fileID: 5671637318396879660}
   - component: {fileID: -4822123770597495997}
-  - component: {fileID: 7020685846671251796}
+  - component: {fileID: 2776079552084648196}
+  - component: {fileID: -3535693171668902992}
   m_Layer: 0
   m_Name: Seagull
   m_TagString: Untagged
@@ -495,7 +496,7 @@ CapsuleCollider:
   m_Height: 0.6337421
   m_Direction: 1
   m_Center: {x: 0, y: 0.44474185, z: 0.094583124}
---- !u!114 &7020685846671251796
+--- !u!114 &2776079552084648196
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -504,11 +505,33 @@ MonoBehaviour:
   m_GameObject: {fileID: 5671637318396879657}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7cbae5ea9fca343e0b70ed469e30d3c3, type: 3}
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TransitionStateInfoList: []
-  m_Animator: {fileID: 5671637318396879660}
+  GlobalObjectIdHash: 2788434988
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+--- !u!114 &-3535693171668902992
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5671637318396879657}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7511a942fc4cf4dcaa3d6d403a4ec0d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementController: {fileID: 0}
+  animator: {fileID: 5671637318396879660}
+  animationSpeed: 1
 --- !u!1 &6880397048857659904
 GameObject:
   m_ObjectHideFlags: 0

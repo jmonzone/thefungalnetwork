@@ -928,7 +928,8 @@ GameObject:
   - component: {fileID: 5474140052504510614}
   - component: {fileID: 5474140052504510613}
   - component: {fileID: 6174521547947686949}
-  - component: {fileID: 8780619360659437590}
+  - component: {fileID: 3002012034738380279}
+  - component: {fileID: -741981641665157637}
   m_Layer: 0
   m_Name: Octopus
   m_TagString: Untagged
@@ -1031,7 +1032,7 @@ CapsuleCollider:
   m_Height: 0.7705855
   m_Direction: 2
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &8780619360659437590
+--- !u!114 &3002012034738380279
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1040,11 +1041,33 @@ MonoBehaviour:
   m_GameObject: {fileID: 5474140052504510616}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7cbae5ea9fca343e0b70ed469e30d3c3, type: 3}
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TransitionStateInfoList: []
-  m_Animator: {fileID: 5474140052504510613}
+  GlobalObjectIdHash: 3615310530
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+--- !u!114 &-741981641665157637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5474140052504510616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7511a942fc4cf4dcaa3d6d403a4ec0d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementController: {fileID: 0}
+  animator: {fileID: 5474140052504510613}
+  animationSpeed: 1
 --- !u!1 &5474140052648310178
 GameObject:
   m_ObjectHideFlags: 0

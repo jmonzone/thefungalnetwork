@@ -59,6 +59,8 @@ public class InputManager : MonoBehaviour
 
     private void Update()
     {
+        if (!controller.Interactions) return;
+
         var targetAction = controller.Interactions.TargetAction;
 
         if (previousAction && previousAction != targetAction) previousAction.SetInRange(false);

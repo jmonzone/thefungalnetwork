@@ -48,9 +48,6 @@ public class FungalController : MonoBehaviour, IGroveControllable
             var animator = Render.GetComponentInChildren<Animator>();
             animator.speed = 0.25f;
 
-            var movementAnimations = GetComponent<MovementAnimations>();
-            movementAnimations.SetAnimatior(animator);
-
             Movement.SetBounds(bounds);
             Movement.StartRandomMovement();
         }

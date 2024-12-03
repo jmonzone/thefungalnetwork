@@ -83,10 +83,10 @@ public class PufferballPlayer : NetworkBehaviour, IControllable
 
         var animator = render.GetComponent<Animator>();
 
-        var movementAnimations = GetComponent<MovementAnimations>();
-        movementAnimations.SetAnimatior(animator);
+        //var movementAnimations = GetComponent<MovementAnimations>();
+        //movementAnimations.SetAnimatior(animator);
 
-        var ownerNetworkAnimator = render.GetComponent<OwnerNetworkAnimator>();
-        ownerNetworkAnimator.Animator = animator;
+        //var ownerNetworkAnimator = render.GetComponent<OwnerNetworkAnimator>();
+        //ownerNetworkAnimator.Animator = animator;
     }
 }
