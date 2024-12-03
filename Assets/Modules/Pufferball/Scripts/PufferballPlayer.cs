@@ -11,10 +11,12 @@ public class PufferballPlayer : NetworkBehaviour, IControllable
     [SerializeField] private PufferballController pufferballPrefab;
     [SerializeField] private PufferballController pufferball;
     [SerializeField] private Possession possesionService;
+    [SerializeField] private ProximityInteraction proximityInteraction;
 
     public bool HasPufferball { get; private set; }
 
     public MovementController Movement { get; private set; }
+    public ProximityInteraction Interactions => proximityInteraction;
 
     private NetworkTransform networkTransform;
 
@@ -30,7 +32,7 @@ public class PufferballPlayer : NetworkBehaviour, IControllable
 
         if (IsOwner)
         {
-            Debug.Log("initifgh");
+            Debug.Log("init player");
             networkTransform = GetComponent<NetworkTransform>();
 
             var detectCollider = GetComponent<DetectCollider>();

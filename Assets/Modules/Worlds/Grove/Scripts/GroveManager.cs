@@ -29,11 +29,6 @@ public class GroveManager : MonoBehaviour
         astralProjection = GetComponent<AstralProjection>();
         astralProjection.OnControllerChanged += controller => SetControllable(controller);
 
-        inputManager.OnInteractionButtonClicked += () =>
-        {
-            groveControllable.Interactions.TargetAction.Use();
-        };
-
         if (fungalInventory.Fungals.Count == 0)
         {
             var randomIndex = Random.Range(0, fungalCollection.Data.Count);
@@ -45,18 +40,6 @@ public class GroveManager : MonoBehaviour
         SpawnPlayer();
     }
 
-    private ProximityAction previousAction;
-
-    private void Update()
-    {
-        var targetAction = groveControllable.Interactions.TargetAction;
-
-        if (previousAction && previousAction != targetAction) previousAction.SetInRange(false);
-        previousAction = targetAction;
-
-        if (targetAction) targetAction.SetInRange(true);
-        inputManager.CanInteract(targetAction && targetAction.Interactable);
-    }
 
     private void SpawnPlayer()
     {
@@ -87,7 +70,7 @@ public class GroveManager : MonoBehaviour
     private void SetControllable(IGroveControllable controllable)
     {
         groveControllable = controllable;
-        inputManager.SetControllable(controllable);
+        inputManager.SetControllable(controllable, controllable.Interactions);
         possesionService.SetPossession(controllable is FungalController fungal ? fungal.Model: null);
     }
 

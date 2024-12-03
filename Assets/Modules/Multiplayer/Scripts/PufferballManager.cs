@@ -45,8 +45,8 @@ public class PufferballManager : MonoBehaviour
         PufferballPlayer.OnLocalPlayerSpawned += player =>
         {
             this.player = player;
-            inputManager.SetControllable(player);
-            inputManager.OnInteractionButtonClicked += () => player.LaunchBall();
+            //inputManager.SetControllable(player);
+            //inputManager.OnInteractionButtonClicked += () => player.LaunchBall();
 
             var targetRotation = new Vector3(0, this.player.IsHost ? 45 : 45 + 180, 0);
             cameraController.transform.eulerAngles = targetRotation;

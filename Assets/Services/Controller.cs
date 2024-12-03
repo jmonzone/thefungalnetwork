@@ -5,6 +5,8 @@ using UnityEngine.Rendering;
 public class Controller : ScriptableObject
 {
     public MovementController Movement { get; private set; }
+    public ProximityInteraction Interactions { get; private set; }
+
     public Volume Volume { get; set; }
 
     public void Initialize(Volume volume)
@@ -12,9 +14,10 @@ public class Controller : ScriptableObject
         Volume = volume;
     }
 
-    public void SetMovement(MovementController movement)
+    public void SetController(MovementController movement, ProximityInteraction interaction)
     {
         Movement = movement;
+        Interactions = interaction;
     }
 
     public void SetAnimation()

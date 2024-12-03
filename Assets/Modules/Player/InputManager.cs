@@ -14,11 +14,14 @@ public class InputManager : MonoBehaviour
     public IControllable Controllable { get; private set; }
 
     public event UnityAction<MovementController> OnMovementChanged;
-    public event UnityAction OnInteractionButtonClicked;
 
     private void Awake()
     {
-        interactionButton.onClick.AddListener(() => OnInteractionButtonClicked?.Invoke());
+        interactionButton.onClick.AddListener(() =>
+        {
+            controller.Interactions.TargetAction.Use();
+        });
+
 
         virtualJoystick.OnJoystickEnd += () =>
         {
@@ -37,9 +40,9 @@ public class InputManager : MonoBehaviour
         controller.Volume = volume;
     }
 
-    public void SetControllable(IControllable controller)
+    public void SetControllable(IControllable controller, ProximityInteraction interaction)
     {
-        this.controller.SetMovement(controller.Movement);
+        this.controller.SetController(controller.Movement, interaction);
         Controllable = controller;
         Controllable.Movement.Stop();
         cameraController.Target = Controllable.Movement.transform;
@@ -49,5 +52,19 @@ public class InputManager : MonoBehaviour
     public void CanInteract(bool value)
     {
         interactionButton.interactable = value;
+    }
+
+
+    private ProximityAction previousAction;
+
+    private void Update()
+    {
+        var targetAction = controller.Interactions.TargetAction;
+
+        if (previousAction && previousAction != targetAction) previousAction.SetInRange(false);
+        previousAction = targetAction;
+
+        if (targetAction) targetAction.SetInRange(true);
+        CanInteract(targetAction && targetAction.Interactable);
     }
 }

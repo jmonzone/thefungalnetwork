@@ -25,8 +25,7 @@ public class AutoConnect : MonoBehaviour
 
         PufferballPlayer.OnLocalPlayerSpawned += player =>
         {
-            inputManager.SetControllable(player);
-            inputManager.OnInteractionButtonClicked += () => player.LaunchBall();
+            inputManager.SetControllable(player, player.Interactions);
         };
     }
 

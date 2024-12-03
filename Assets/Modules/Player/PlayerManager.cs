@@ -9,12 +9,7 @@ public class PlayerManager : MonoBehaviour
 
     private void Awake()
     {
-        inputManager.SetControllable(playerController);
-
-        inputManager.OnInteractionButtonClicked += () =>
-        {
-            playerController.Interactions.TargetAction.Use();
-        };
+        inputManager.SetControllable(playerController, playerController.Interactions);
     }
 
     private void Update()

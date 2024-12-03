@@ -7,11 +7,11 @@ public class PufferballTest : MonoBehaviour
 
     private void Awake()
     {
-        inputManager.OnInteractionButtonClicked += () =>
-        {
-            Debug.Log("Launching");
-            player.LaunchBall();
-        };
+        //inputManager.OnInteractionButtonClicked += () =>
+        //{
+        //    Debug.Log("Launching");
+        //    player.LaunchBall();
+        //};
     }
 
     private void Update()
