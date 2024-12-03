@@ -31,7 +31,7 @@ public static class Utility
     {
         var x = UnityEngine.Random.Range(collider.bounds.min.x, collider.bounds.max.x);
         var z = UnityEngine.Random.Range(collider.bounds.min.z, collider.bounds.max.z);
-        return new Vector3(x, 0, z);
+        return new Vector3(x, collider.transform.position.y, z);
     }
 
     public static Vector3 RandomXZVector

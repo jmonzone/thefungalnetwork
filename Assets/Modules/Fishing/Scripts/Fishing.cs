@@ -51,6 +51,9 @@ public class Fishing : MonoBehaviour
         translation.z = direction.y;
         translation.y = 0;
 
+
+        translation = Quaternion.Euler(0, transform.eulerAngles.y, 0) * translation;
+
         reticle.transform.position += translation;
     }
 
