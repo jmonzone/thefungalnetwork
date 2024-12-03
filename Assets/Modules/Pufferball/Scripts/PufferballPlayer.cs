@@ -8,12 +8,8 @@ public class PufferballPlayer : NetworkBehaviour, IControllable
     [SerializeField] private MultiplayerArena arena;
     [SerializeField] private GameObject player;
     [SerializeField] private FungalCollection fungalCollection;
-    [SerializeField] private PufferballController pufferballPrefab;
-    [SerializeField] private PufferballController pufferball;
     [SerializeField] private Possession possesionService;
     [SerializeField] private ProximityInteraction proximityInteraction;
-
-    public bool HasPufferball { get; private set; }
 
     public MovementController Movement { get; private set; }
     public ProximityInteraction Interactions => proximityInteraction;
@@ -35,42 +31,17 @@ public class PufferballPlayer : NetworkBehaviour, IControllable
             Debug.Log("init player");
             networkTransform = GetComponent<NetworkTransform>();
 
-            var detectCollider = GetComponent<DetectCollider>();
-            detectCollider.OnColliderDetected += collider =>
-            {
-                Debug.Log($"HasPufferball {HasPufferball}");
-
-                if (!HasPufferball)
-                {
-                    pufferball = collider.GetComponentInParent<PufferballController>();
-                    CatchBall();
-                }
-            };
-
             // This is the local player
             Debug.Log("Local player spawned: " + gameObject.name);
             if (!TrySpawnPartner()) SetRender(player);
 
-            if (IsHost)
-            {
-                var spawnPosition = new Vector3(0 , 2, 0);
-                // Instantiate the object only on the server
-                pufferball = Instantiate(pufferballPrefab, spawnPosition, Quaternion.identity);
-                // Spawn the object across the network
-                pufferball.GetComponent<NetworkObject>().Spawn();
+            Quaternion forwardRotation = Quaternion.LookRotation(Vector3.forward);
 
-                Quaternion forwardRotation = Quaternion.LookRotation(Vector3.forward);
+            var randomPosition = Random.insideUnitSphere.normalized;
+            randomPosition.y = 0;
 
-                networkTransform.Teleport(arena.SpawnPosition1, forwardRotation, Vector3.one);
-            }
-            else
-            {
-                Quaternion backRotation = Quaternion.LookRotation(Vector3.back);
-
-                networkTransform.Teleport(arena.SpawnPosition2, backRotation, Vector3.one);
-            }
-
-
+            var spawnPosition = arena.SpawnPosition1 + randomPosition;
+            networkTransform.Teleport(spawnPosition, forwardRotation, Vector3.one);
 
             OnLocalPlayerSpawned?.Invoke(this);
         }
@@ -81,27 +52,6 @@ public class PufferballPlayer : NetworkBehaviour, IControllable
             SetRender(player);
             OnRemotePlayerSpawned?.Invoke(this);
         }
-    }
-
-    private void Update()
-    {
-        if (HasPufferball && IsOwner)
-        {
-            var targetPosition = transform.position + Vector3.up * 2;
-            pufferball.MoveObjectServerRpc(targetPosition);
-        }
-    }
-
-    private void CatchBall()
-    {
-        HasPufferball = true;
-        pufferball.TogglePhysicsServerRpc(false);
-    }
-
-    public void LaunchBall()
-    {
-        HasPufferball = false;
-        pufferball.LaunchServerRpc(transform.forward);
     }
 
     private bool TrySpawnPartner()

@@ -61,12 +61,6 @@ public class PufferballManager : MonoBehaviour
         });
     }
 
-
-    private void Update()
-    {
-        if (player) inputManager.CanInteract(player.HasPufferball);
-    }
-
     private IEnumerator AutoJoinBogRoom()
     {
         yield return new WaitForSeconds(2f);
