@@ -8,15 +8,16 @@ public class GroveManager : MonoBehaviour
     [SerializeField] private Possession possesionService;
     [SerializeField] private FungalInventory fungalInventory;
     [SerializeField] private FungalCollection fungalCollection;
-    [SerializeField] private FungalController fungalControllerPrefab;
+    [SerializeField] private FungalControllerSpawner fungalControllerSpawner;
     [SerializeField] private EggController eggControllerPrefab;
+    [SerializeField] private Controllable player;
 
     [Header("Position References")]
     [SerializeField] private Transform rabbitHolePosition;
     [SerializeField] private Collider fungalBounds;
 
     [SerializeField] private InputManager inputManager;
-    private IGroveControllable groveControllable;
+    [SerializeField] private Controller controller;
     private AstralProjection astralProjection;
 
     public List<FungalController> FungalControllers { get; private set; } = new List<FungalController>();
@@ -26,9 +27,6 @@ public class GroveManager : MonoBehaviour
 
     private void Start()
     {
-        astralProjection = GetComponent<AstralProjection>();
-        astralProjection.OnControllerChanged += controller => SetControllable(controller);
-
         if (fungalInventory.Fungals.Count == 0)
         {
             var randomIndex = Random.Range(0, fungalCollection.Data.Count);
@@ -45,33 +43,22 @@ public class GroveManager : MonoBehaviour
     {
         Debug.Log("spawning player");
 
-        var player = GetComponentInChildren<PlayerController>();
-
-        player.Interaction.OnUse += () => astralProjection.ReturnToTheBody();
-
         var partner = possesionService.Fungal;
         var targetFungal = FungalControllers.Find(fungal => fungal.Model == partner);
         if (targetFungal)
         {
             Debug.Log("Setting fungal controller");
             targetFungal.transform.position = rabbitHolePosition.position;
-            SetControllable(targetFungal);
+            controller.SetController(targetFungal.Controllable);
         }
         else
         {
             Debug.Log("Setting player controller");
             player.transform.position = rabbitHolePosition.position;
-            SetControllable(player);
+            controller.SetController(player);
         }
 
         OnPlayerSpawned?.Invoke();
-    }
-
-    private void SetControllable(IGroveControllable controllable)
-    {
-        groveControllable = controllable;
-        inputManager.SetControllable(controllable, controllable.Interactions);
-        possesionService.SetPossession(controllable is FungalController fungal ? fungal.Model: null);
     }
 
     private void SpawnFungals()
@@ -83,18 +70,6 @@ public class GroveManager : MonoBehaviour
             var randomPosition = fungalBounds.GetRandomXZPosition();
             SpawnFungal(fungal, randomPosition);
         }
-    }
-
-    private void SpawnFungal(FungalModel fungal, Vector3 spawnPosition)
-    {
-        var fungalController = Instantiate(fungalControllerPrefab, spawnPosition, Quaternion.identity);
-        fungalController.Initialize(fungal, fungalBounds);
-        fungalController.transform.forward = Utility.RandomXZVector;
-        FungalControllers.Add(fungalController);
-        fungalController.OnInteractionStarted += () =>
-        {
-            astralProjection.PossessFungal(fungalController);
-        };
     }
 
     private void SpawnEgg(FungalData fungal)
@@ -116,4 +91,10 @@ public class GroveManager : MonoBehaviour
         SpawnFungal(fungal, egg.transform.position);
     }
 
+    private void SpawnFungal(FungalModel fungal, Vector3 position)
+    {
+        var controller= fungalControllerSpawner.SpawnFungal(fungal, position);
+        FungalControllers.Add(controller);
+        controller.Controllable.Movement.SetBounds(fungalBounds);
+    }
 }

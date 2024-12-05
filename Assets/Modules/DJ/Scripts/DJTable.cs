@@ -17,7 +17,7 @@ namespace TheFungalNetwork.DJ
 
     public class DJTable : MonoBehaviour
     {
-        [SerializeField] private InputManager inputManager;
+        [SerializeField] private Controller controller;
 
         [Header("Audio References")]
         [SerializeField] private AudioMixer audioMixer;
@@ -84,7 +84,7 @@ namespace TheFungalNetwork.DJ
                 // Update visuals animator speed based on the active track's BPM and pitch
                 visualsVideoPlayer.playbackSpeed = targetTrack.Bpm / 120;
 
-                float distance = Vector3.Distance(inputManager.Controllable.Movement.transform.position, transform.position);
+                float distance = Vector3.Distance(controller.Movement.transform.position, transform.position);
                 float maxDistance = 25f; // Adjust this value to control the range for volume falloff
                 float minDistance = 3f;  // Range within which volume will be 1
 

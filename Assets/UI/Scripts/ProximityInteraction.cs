@@ -1,17 +1,6 @@
 using System.Linq;
 using UnityEngine;
 
-
-public interface IControllable
-{
-    MovementController Movement { get; }
-}
-
-public interface IGroveControllable : IControllable
-{
-    ProximityInteraction Interactions { get; }
-}
-
 public class ProximityInteraction : MonoBehaviour
 {
     private const float MAXIMUM_PROXIMITY_DISTANCE = 3f;

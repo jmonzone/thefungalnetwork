@@ -21,7 +21,7 @@ public class PufferballManager : MonoBehaviour
     [SerializeField] private GameObject inputUI;
     [SerializeField] private Button exitButton;
 
-    private PufferballPlayer player;
+    private NetworkPlayer player;
 
     private List<string> firstNames = new List<string> { "Hollow", "Sharon", "Jesus", "Charmander", "Feni" };
     private List<string> lastNames = new List<string> { "Zozo", "Venga", "Lotus", "Atari", "Bagus" };
@@ -42,7 +42,7 @@ public class PufferballManager : MonoBehaviour
         connectionUI.OnRefreshButtonClicked += () => UpdateLobbyList();
         connectionUI.OnLobbyJoinButtonClicked += lobby => JoinGame(lobby.Id);
 
-        PufferballPlayer.OnLocalPlayerSpawned += player =>
+        NetworkPlayer.OnLocalPlayerSpawned += player =>
         {
             this.player = player;
             //inputManager.SetControllable(player);

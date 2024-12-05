@@ -1,28 +1,34 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Rendering;
 
 [CreateAssetMenu]
 public class Controller : ScriptableObject
 {
-    public MovementController Movement { get; private set; }
-    public ProximityInteraction Interactions { get; private set; }
+    public Controllable Controllable { get; private set; }
+    public MovementController Movement => Controllable?.Movement;
+    public ProximityInteraction Interactions => Controllable?.Interactions;
 
     public Volume Volume { get; set; }
+
+    public event UnityAction OnUpdate;
 
     public void Initialize(Volume volume)
     {
         Volume = volume;
     }
 
-    public void SetController(MovementController movement, ProximityInteraction interaction)
+    public void SetController(Controllable controller)
     {
-        Movement = movement;
-        Interactions = interaction;
+        if (Movement != null ) Movement.Stop();
+        Controllable = controller;
+        controller.Movement.Stop();
+        OnUpdate?.Invoke();
     }
 
     public void SetAnimation()
     {
         var animator = Movement.GetComponent<MovementAnimations>().Animator;
-        animator.SetTrigger("attack");
+        if (animator) animator.SetTrigger("attack");
     }
 }

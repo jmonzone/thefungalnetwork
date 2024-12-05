@@ -4,9 +4,7 @@ using UnityEngine.Events;
 public class AstralProjection : MonoBehaviour
 {
     private PlayerController player;
-    [SerializeField] private InputManager inputManager;
-
-    public event UnityAction<IGroveControllable> OnControllerChanged;
+    [SerializeField] private Controller controller;
 
     private void Awake()
     {
@@ -15,11 +13,13 @@ public class AstralProjection : MonoBehaviour
         var groveManager = GetComponent<GroveManager>();
         groveManager.OnPlayerSpawned += () =>
         {
-            if (inputManager.Controllable.Movement != player.Movement)
+            if (controller.Controllable != player.Controllable)
             {
                 player.PlayLeaveBodyAnimation();
             }
         };
+
+        player.Interaction.OnUse += () => ReturnToTheBody();
     }
 
     public void PossessFungal(FungalController fungal)
@@ -33,7 +33,7 @@ public class AstralProjection : MonoBehaviour
             LeaveFungal();
         }
 
-        OnControllerChanged?.Invoke(fungal);
+        controller.SetController(fungal.Controllable);
     }
 
     public void ReturnToTheBody()
@@ -42,14 +42,14 @@ public class AstralProjection : MonoBehaviour
 
         player.PlayReturnToBodyAnimation();
 
-        OnControllerChanged?.Invoke(player);
+        controller.SetController(player.Controllable);
     }
 
     private void LeaveFungal()
     {
-        var fungal = inputManager.Controllable.Movement;
+        var fungal = controller.Movement;
         fungal.StartRandomMovement();
     }
 
-    private bool IsLeavingTheBody => inputManager.Controllable.Movement.transform == player.transform;
+    private bool IsLeavingTheBody => controller.Movement.transform == player.transform;
 }

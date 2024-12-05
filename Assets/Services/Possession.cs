@@ -7,6 +7,7 @@ public class Possession : ScriptableObject
 {
     [SerializeField] private FungalInventory fungalService;
     [SerializeField] private FungalModel fungal;
+    [SerializeField] private Controller controller;
 
     public FungalModel Fungal => fungal;
 
@@ -18,6 +19,12 @@ public class Possession : ScriptableObject
         var posessionName = jsonFile[POSSESSION_KEY] ?? "";
         var posession = fungalService.Fungals.Find(fungal => fungal.Data.name == posessionName.ToString());
         SetPossession(posession);
+
+        controller.OnUpdate += () =>
+        {
+            var fungalController = controller.Controllable.GetComponent<FungalController>();
+            SetPossession(fungalController ? fungalController.Model : null);
+        };
     }
 
     public void SaveData(JObject jsonFile)

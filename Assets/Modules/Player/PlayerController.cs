@@ -1,19 +1,17 @@
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour, IGroveControllable
+public class PlayerController : MonoBehaviour
 {
     private Animator animator;
     public ProximityAction Interaction { get; private set; }
-    public ProximityInteraction Interactions { get; private set; }
-    public MovementController Movement { get; private set; }
+    public Controllable Controllable { get; private set; }
 
     private void Awake()
     {
         animator = GetComponentInChildren<Animator>();
 
+        Controllable = GetComponent<Controllable>();
         Interaction = GetComponent<ProximityAction>();
-        Interactions = GetComponent<ProximityInteraction>();
-        Movement = GetComponent<MovementController>();
     }
 
     public void PlayLeaveBodyAnimation()

@@ -11,11 +11,10 @@ GameObject:
   - component: {fileID: 5839182076126366316}
   - component: {fileID: 3449474008776659110}
   - component: {fileID: 5322548769462966456}
-  - component: {fileID: 6159668842421071460}
   - component: {fileID: 6414378916723748511}
   - component: {fileID: 7745105099117016027}
   - component: {fileID: 4346559293957235424}
-  - component: {fileID: -8434470391141983321}
+  - component: {fileID: 6788233562493705746}
   m_Layer: 10
   m_Name: Networked Player
   m_TagString: Untagged
@@ -91,32 +90,6 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &6159668842421071460
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2941250707292126303}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47a3fda79a53a4b9e9ab1b8cf9d8acb6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  type: 0
-  speed: 2.5
-  lerpRotation: 1
-  lockXZ: 1
-  useDrag: 0
-  positionAnchor:
-    anchor: {fileID: 0}
-    bounds: {fileID: 0}
-  distanceThreshold: 2
-  startIdle: 0
-  minIdleDuration: 2
-  maxIdleDuration: 5
-  radius: 4
-  radialSpeed: 0.25
 --- !u!54 &6414378916723748511
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -165,15 +138,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 2941250707292126303}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ee19171643684418a9c43ee19722a679, type: 3}
+  m_Script: {fileID: 11500000, guid: 7db6a3837cc824775a008f38a96bb3a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   arena: {fileID: 11400000, guid: 24582879ca0914ce48009bfa1a0c10ae, type: 2}
-  player: {fileID: 898919474902629366}
-  fungalCollection: {fileID: 11400000, guid: 1d49e170120fe4ab1befd22e62e1ea65, type: 2}
+  player: {fileID: 2244496514478197485}
+  fungalInventory: {fileID: 11400000, guid: c2d8b29caee5b440ca0269f2f27fa2b3, type: 2}
   possesionService: {fileID: 11400000, guid: 2733aad4d1436406fb3b8878be90ba62, type: 2}
-  proximityInteraction: {fileID: -8434470391141983321}
---- !u!114 &-8434470391141983321
+  fungalControllerSpawner: {fileID: 6788233562493705746}
+--- !u!114 &6788233562493705746
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -182,9 +155,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2941250707292126303}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d798f27f9a994a34be8309c1c2e377f, type: 3}
+  m_Script: {fileID: 11500000, guid: 6616d8e1ed9424bbb8a2a82e02db4d2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  prefab: {fileID: 173026516737802164, guid: 9e5e876e58a73433bbb5be4472984e7e, type: 3}
 --- !u!1 &6814824685785830954
 GameObject:
   m_ObjectHideFlags: 0
@@ -195,6 +169,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4194916601408308339}
   - component: {fileID: 1299953068945779711}
+  - component: {fileID: 6744944910970479304}
+  - component: {fileID: 6970304833020265915}
+  - component: {fileID: 2244496514478197485}
   m_Layer: 10
   m_Name: Human Player
   m_TagString: Untagged
@@ -230,9 +207,59 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7511a942fc4cf4dcaa3d6d403a4ec0d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementController: {fileID: 6159668842421071460}
+  movementController: {fileID: 6744944910970479304}
   animator: {fileID: 52059324521320405}
   animationSpeed: 1
+--- !u!114 &6744944910970479304
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6814824685785830954}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47a3fda79a53a4b9e9ab1b8cf9d8acb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 0
+  speed: 2.5
+  lerpRotation: 1
+  lockXZ: 1
+  useDrag: 0
+  positionAnchor:
+    anchor: {fileID: 0}
+    bounds: {fileID: 0}
+  distanceThreshold: 2
+  startIdle: 0
+  minIdleDuration: 2
+  maxIdleDuration: 5
+  radius: 4
+  radialSpeed: 0.25
+--- !u!114 &6970304833020265915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6814824685785830954}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d798f27f9a994a34be8309c1c2e377f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2244496514478197485
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6814824685785830954}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 165c27a50bfdb44019a1d7a2acaaf813, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &8865560489301305484
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1569,7 +1596,7 @@ PrefabInstance:
     - target: {fileID: 8606755148461151098, guid: 9e89634fe9474125ab42aefdc22a787d,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8671317795877960478, guid: 9e89634fe9474125ab42aefdc22a787d,
         type: 3}

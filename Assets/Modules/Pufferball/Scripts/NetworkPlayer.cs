@@ -3,28 +3,25 @@ using Unity.Netcode.Components;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class PufferballPlayer : NetworkBehaviour, IControllable
+public class NetworkPlayer : NetworkBehaviour
 {
     [SerializeField] private MultiplayerArena arena;
-    [SerializeField] private GameObject player;
-    [SerializeField] private FungalCollection fungalCollection;
+    [SerializeField] private Controllable player;
+    [SerializeField] private FungalInventory fungalInventory;
     [SerializeField] private Possession possesionService;
-    [SerializeField] private ProximityInteraction proximityInteraction;
+    [SerializeField] private FungalControllerSpawner fungalControllerSpawner;
 
-    public MovementController Movement { get; private set; }
-    public ProximityInteraction Interactions => proximityInteraction;
+    public Controllable Controllable { get; private set; }
 
     private NetworkTransform networkTransform;
 
     //todo: remove static events use scriptable object reference
-    public static UnityAction<PufferballPlayer> OnLocalPlayerSpawned;
-    public static UnityAction<PufferballPlayer> OnRemotePlayerSpawned;
+    public static UnityAction<NetworkPlayer> OnLocalPlayerSpawned;
+    public static UnityAction<NetworkPlayer> OnRemotePlayerSpawned;
 
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-
-        Movement = GetComponent<MovementController>();
 
         if (IsOwner)
         {
@@ -33,7 +30,15 @@ public class PufferballPlayer : NetworkBehaviour, IControllable
 
             // This is the local player
             Debug.Log("Local player spawned: " + gameObject.name);
-            if (!TrySpawnPartner()) SetRender(player);
+            if (!TrySpawnPartner())
+            {
+                Controllable = player;
+                player.gameObject.SetActive(true);
+            }
+            else
+            {
+                player.gameObject.SetActive(false);
+            }
 
             Quaternion forwardRotation = Quaternion.LookRotation(Vector3.forward);
 
@@ -43,13 +48,15 @@ public class PufferballPlayer : NetworkBehaviour, IControllable
             var spawnPosition = arena.SpawnPosition1 + randomPosition;
             networkTransform.Teleport(spawnPosition, forwardRotation, Vector3.one);
 
+            Debug.Log("event");
             OnLocalPlayerSpawned?.Invoke(this);
         }
         else
         {
             // This is a remote player
             Debug.Log("Remote player spawned: " + gameObject.name);
-            SetRender(player);
+            player.gameObject.SetActive(true);
+            //todo: spawn remote fungal if existing
             OnRemotePlayerSpawned?.Invoke(this);
         }
     }
@@ -60,13 +67,13 @@ public class PufferballPlayer : NetworkBehaviour, IControllable
 
         if (partner)
         {
-            var targetFungal = fungalCollection.Data.Find(fungal => fungal.Id == partner.Data.Id);
+            var targetFungal = fungalInventory.Fungals.Find(fungal => fungal.Data.Id == partner.Data.Id);
 
             if (targetFungal)
             {
                 Debug.Log("target found");
-                var render = Instantiate(targetFungal.Prefab, transform);
-                SetRender(render);
+                var fungalController = fungalControllerSpawner.SpawnFungal(targetFungal, transform.position);
+                Controllable = fungalController.Controllable;
                 return true;
             }
 
@@ -75,18 +82,5 @@ public class PufferballPlayer : NetworkBehaviour, IControllable
         }
 
         return false;
-    }
-
-    private void SetRender(GameObject render)
-    {
-        render.SetActive(true);
-
-        var animator = render.GetComponent<Animator>();
-
-        //var movementAnimations = GetComponent<MovementAnimations>();
-        //movementAnimations.SetAnimatior(animator);
-
-        //var ownerNetworkAnimator = render.GetComponent<OwnerNetworkAnimator>();
-        //ownerNetworkAnimator.Animator = animator;
     }
 }
