@@ -6,18 +6,14 @@ using UnityEngine.Events;
 public class NetworkPlayer : NetworkBehaviour
 {
     [SerializeField] private MultiplayerArena arena;
-    [SerializeField] private Controllable player;
     [SerializeField] private FungalInventory fungalInventory;
     [SerializeField] private Possession possesionService;
-    [SerializeField] private FungalControllerSpawner fungalControllerSpawner;
-
-    public Controllable Controllable { get; private set; }
+    [SerializeField] private NetworkObject networkAvatarPrefab;
+    [SerializeField] private NetworkFungal networkFungalPrefab;
+    [SerializeField] private Controller controller;
 
     private NetworkTransform networkTransform;
 
-    //todo: remove static events use scriptable object reference
-    public static UnityAction<NetworkPlayer> OnLocalPlayerSpawned;
-    public static UnityAction<NetworkPlayer> OnRemotePlayerSpawned;
 
     public override void OnNetworkSpawn()
     {
@@ -32,12 +28,16 @@ public class NetworkPlayer : NetworkBehaviour
             Debug.Log("Local player spawned: " + gameObject.name);
             if (!TrySpawnPartner())
             {
-                Controllable = player;
-                player.gameObject.SetActive(true);
-            }
-            else
-            {
-                player.gameObject.SetActive(false);
+                if (IsClient && !IsServer)
+                {
+                    RequestSpawnAvatarServerRpc(NetworkManager.Singleton.LocalClientId);
+                }
+                else
+                {
+                    var avatar = SpawnAvater();
+                    controller.SetController(avatar.GetComponent<Controllable>());
+                }
+                
             }
 
             Quaternion forwardRotation = Quaternion.LookRotation(Vector3.forward);
@@ -47,18 +47,50 @@ public class NetworkPlayer : NetworkBehaviour
 
             var spawnPosition = arena.SpawnPosition1 + randomPosition;
             networkTransform.Teleport(spawnPosition, forwardRotation, Vector3.one);
+        }
+    }
 
-            Debug.Log("event");
-            OnLocalPlayerSpawned?.Invoke(this);
-        }
-        else
+    [ServerRpc(RequireOwnership = false)]
+    public void RequestSpawnAvatarServerRpc(ulong clientId)
+    {
+        // Only the server will execute this logic
+        var avatar = Instantiate(networkAvatarPrefab, arena.SpawnPosition1, Quaternion.identity, transform);
+
+        // Optionally, you can send information back to the requesting client if needed.
+        var networkAvatar = avatar.GetComponent<NetworkObject>();
+        networkAvatar.SpawnWithOwnership(clientId);
+
+        // Send the NetworkObject ID to the client
+        SendAvatarInfoClientRpc(clientId, networkAvatar.NetworkObjectId);
+    }
+
+    [ClientRpc]
+    private void SendAvatarInfoClientRpc(ulong clientId, ulong networkObjectId)
+    {
+        if (NetworkManager.Singleton.LocalClientId == clientId)
         {
-            // This is a remote player
-            Debug.Log("Remote player spawned: " + gameObject.name);
-            player.gameObject.SetActive(true);
-            //todo: spawn remote fungal if existing
-            OnRemotePlayerSpawned?.Invoke(this);
+            // Retrieve the spawned object on the client using the NetworkObjectId
+            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out var networkObject))
+            {
+                // Get the desired component
+                var controllable = networkObject.GetComponent<Controllable>();
+                Debug.Log("Received Controllable component on the client!");
+
+                controller.SetController(controllable);
+            }
+            else
+            {
+                Debug.LogError("Failed to find the spawned object on the client.");
+            }
         }
+    }
+
+
+    private GameObject SpawnAvater()
+    {
+        var spawnedAvatar = Instantiate(networkAvatarPrefab, arena.SpawnPosition1, Quaternion.identity, transform);
+        spawnedAvatar.Spawn();
+        return spawnedAvatar.gameObject;
     }
 
     private bool TrySpawnPartner()
@@ -72,8 +104,9 @@ public class NetworkPlayer : NetworkBehaviour
             if (targetFungal)
             {
                 Debug.Log("target found");
-                var fungalController = fungalControllerSpawner.SpawnFungal(targetFungal, transform.position);
-                Controllable = fungalController.Controllable;
+                var spawnedFungal = Instantiate(networkFungalPrefab, arena.SpawnPosition1, Quaternion.identity, transform);
+                spawnedFungal.NetworkObject.Spawn();
+                spawnedFungal.Initialize(targetFungal.Data);
                 return true;
             }
 

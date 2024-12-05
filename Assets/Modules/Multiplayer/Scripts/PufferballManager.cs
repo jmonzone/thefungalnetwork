@@ -42,15 +42,15 @@ public class PufferballManager : MonoBehaviour
         connectionUI.OnRefreshButtonClicked += () => UpdateLobbyList();
         connectionUI.OnLobbyJoinButtonClicked += lobby => JoinGame(lobby.Id);
 
-        NetworkPlayer.OnLocalPlayerSpawned += player =>
-        {
-            this.player = player;
-            //inputManager.SetControllable(player);
-            //inputManager.OnInteractionButtonClicked += () => player.LaunchBall();
+        //NetworkPlayer.OnLocalPlayerSpawned += player =>
+        //{
+        //    this.player = player;
+        //    //inputManager.SetControllable(player);
+        //    //inputManager.OnInteractionButtonClicked += () => player.LaunchBall();
 
-            var targetRotation = new Vector3(0, this.player.IsHost ? 45 : 45 + 180, 0);
-            cameraController.transform.eulerAngles = targetRotation;
-        };
+        //    var targetRotation = new Vector3(0, this.player.IsHost ? 45 : 45 + 180, 0);
+        //    cameraController.transform.eulerAngles = targetRotation;
+        //};
 
         exitButton.onClick.AddListener(() =>
         {

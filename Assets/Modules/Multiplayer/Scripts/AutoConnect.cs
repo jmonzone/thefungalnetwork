@@ -6,7 +6,6 @@ public class AutoConnect : MonoBehaviour
 {
     [SerializeField] private MultiplayerArena arena;
     [SerializeField] private MultiplayerManager multiplayerManager;
-    [SerializeField] private Controller controller;
     [SerializeField] private Transform spawnAnchor1;
     //[SerializeField] private Button exitButton;
 
@@ -16,12 +15,6 @@ public class AutoConnect : MonoBehaviour
     private void Awake()
     {
         arena.Initialize(spawnAnchor1.position, spawnAnchor1.position);
-
-        NetworkPlayer.OnLocalPlayerSpawned += player =>
-        {
-            Debug.Log($"local player spawned {player} {player.Controllable != null} {player.Controllable.name != null}");
-            controller.SetController(player.Controllable);
-        };
     }
 
     private void Start()
