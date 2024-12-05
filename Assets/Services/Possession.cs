@@ -22,8 +22,17 @@ public class Possession : ScriptableObject
 
         controller.OnUpdate += () =>
         {
-            var fungalController = controller.Controllable.GetComponent<FungalController>();
-            SetPossession(fungalController ? fungalController.Model : null);
+            //todo: consolidate
+            var networkFungal = controller.Controllable.GetComponent<NetworkFungal>();
+            if (networkFungal)
+            {
+                SetPossession(networkFungal.Fungal);
+            }
+            else
+            {
+                var fungalController = controller.Controllable.GetComponent<FungalController>();
+                SetPossession(fungalController ? fungalController.Model : null);
+            }
         };
     }
 
@@ -33,7 +42,7 @@ public class Possession : ScriptableObject
         jsonFile[POSSESSION_KEY] = possession;
     }
 
-    public void SetPossession(FungalModel fungal)
+    private void SetPossession(FungalModel fungal)
     {
         this.fungal = fungal;
         OnPossessionChanged?.Invoke();

@@ -28,7 +28,7 @@ public class Controller : ScriptableObject
 
     public void SetAnimation()
     {
-        var animator = Movement.GetComponent<MovementAnimations>().Animator;
+        var animator = Movement?.GetComponent<MovementAnimations>()?.Animator;
         if (animator) animator.SetTrigger("attack");
     }
 }
