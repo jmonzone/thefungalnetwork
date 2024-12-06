@@ -22,13 +22,18 @@ public class InventoryButton : MonoBehaviour, IBeginDragHandler, IDragHandler
     private void Awake()
     {
         if (button) button.onClick.AddListener(() => inventory.Open(ItemFilter));
-
-        inventory.OnInventoryUpdated += () => UpdatePreview();
     }
 
     private void OnEnable()
     {
         UpdatePreview();
+        inventory.OnInventoryUpdated += UpdatePreview;
+    }
+
+    private void OnDisable()
+    {
+        inventory.OnInventoryUpdated -= UpdatePreview;
+
     }
 
     private void UpdatePreview()
