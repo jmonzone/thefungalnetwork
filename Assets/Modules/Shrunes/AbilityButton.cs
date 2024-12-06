@@ -6,12 +6,21 @@ using UnityEngine.UI;
 // this script is used to trigger events on ability cast
 public class AbilityButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
+    [SerializeField] private Button button;
     [SerializeField] private Controller controller;
     [SerializeField] private AbilityCast abilityCast;
     [SerializeField] private Image preview;
     [SerializeField] private GameObject render;
 
     private Vector3 mousePosition;
+
+    private void Awake()
+    {
+        button.onClick.AddListener(() =>
+        {
+            abilityCast.CastImmediate(controller.Movement.transform, controller.Movement.transform.forward);
+        });
+    }
 
     private void OnEnable()
     {

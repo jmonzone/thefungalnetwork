@@ -47,4 +47,11 @@ public class AbilityCast : ScriptableObject
     {
         OnComplete?.Invoke();
     }
+
+    public void CastImmediate(Transform origin, Vector3 direction)
+    {
+        this.origin = origin;
+        Direction = direction;
+        OnComplete?.Invoke();
+    }
 }
