@@ -12,11 +12,12 @@ public class InputManager : MonoBehaviour
 
     private void Awake()
     {
+        var mainCamera = Camera.main;
+
         interactionButton.onClick.AddListener(() =>
         {
             controller.Interactions.TargetAction.Use();
         });
-
 
         virtualJoystick.OnJoystickEnd += () =>
         {
@@ -28,7 +29,7 @@ public class InputManager : MonoBehaviour
         {
             if (controller == null) return;
             var direction = new Vector3(input.x, 0, input.y);
-            direction = Quaternion.Euler(0, cameraController.transform.GetChild(0).eulerAngles.y, 0) * direction;
+            direction = Quaternion.Euler(0, mainCamera.transform.eulerAngles.y, 0) * direction;
             controller.Movement.SetDirection(direction);
         };
 
