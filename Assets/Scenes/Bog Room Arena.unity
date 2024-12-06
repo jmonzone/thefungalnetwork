@@ -658,6 +658,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d67b8d0abbb2448ebffa1f7366472fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  leaveButton: {fileID: 0}
 --- !u!114 &212457554
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8774,10 +8775,47 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: -4829912103508549978, guid: 011f23e42f8dc4b3c9fcc255966232e8, type: 3}
+    - {fileID: 5368139794498612494, guid: 011f23e42f8dc4b3c9fcc255966232e8, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1240775542196648064, guid: 011f23e42f8dc4b3c9fcc255966232e8,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7154940921552157278}
   m_SourcePrefab: {fileID: 100100000, guid: 011f23e42f8dc4b3c9fcc255966232e8, type: 3}
+--- !u!1 &7154940921552157276 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1240775542196648064, guid: 011f23e42f8dc4b3c9fcc255966232e8,
+    type: 3}
+  m_PrefabInstance: {fileID: 7154940921552157275}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7154940921552157277 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6680570072009964098, guid: 011f23e42f8dc4b3c9fcc255966232e8,
+    type: 3}
+  m_PrefabInstance: {fileID: 7154940921552157275}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7154940921552157276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7154940921552157278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7154940921552157276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a61f02b2996643f4bf1d764c46b3b69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  multiplayerManager: {fileID: 212457553}
+  button: {fileID: 7154940921552157277}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -11,11 +11,13 @@ using Unity.Services.Relay;
 using Unity.Services.Relay.Models;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class MultiplayerManager : MonoBehaviour
 {
-    public string PlayerName { get; private set; }
+    [SerializeField] private Button leaveButton;
 
+    public string PlayerName { get; private set; }
 
     private Lobby joinedLobby;
     public Lobby JoinedLobby
