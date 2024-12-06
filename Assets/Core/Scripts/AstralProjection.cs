@@ -1,15 +1,12 @@
 using UnityEngine;
-using UnityEngine.Events;
 
 public class AstralProjection : MonoBehaviour
 {
-    private PlayerController player;
+    [SerializeField] private PlayerController player;
     [SerializeField] private Controller controller;
 
     private void Awake()
     {
-        player = GetComponentInChildren<PlayerController>();
-
         var groveManager = GetComponent<GroveManager>();
         groveManager.OnPlayerSpawned += () =>
         {
@@ -19,6 +16,15 @@ public class AstralProjection : MonoBehaviour
             }
         };
 
+        groveManager.OnFungalSpawned += fungal =>
+        {
+            var action = fungal.GetComponent<ProximityAction>();
+            action.OnUse += () => PossessFungal(fungal);
+        };
+   }
+
+    private void Start()
+    {
         player.Interaction.OnUse += () => ReturnToTheBody();
     }
 

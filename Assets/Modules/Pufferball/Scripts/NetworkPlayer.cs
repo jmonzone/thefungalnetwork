@@ -8,6 +8,7 @@ public class NetworkPlayer : NetworkBehaviour
     [SerializeField] private MultiplayerArena arena;
     [SerializeField] private Possession possesionService;
     [SerializeField] private Controller controller;
+    [SerializeField] private ViewReference inputView;
 
     [SerializeField] private FungalInventory fungalInventory;
     [SerializeField] private FungalCollection fungalCollection;
@@ -63,6 +64,8 @@ public class NetworkPlayer : NetworkBehaviour
             {
                 RequestAbilityCastServerRpc(NetworkManager.Singleton.LocalClientId, abilityCast.ShruneId, abilityCast.StartPosition, abilityCast.Direction);
             };
+
+            inputView.Open();
         }
     }
 

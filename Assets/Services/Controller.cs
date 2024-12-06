@@ -26,7 +26,6 @@ public class Controller : ScriptableObject
         Controllable = controller;
         controller.Movement.Stop();
         OnUpdate?.Invoke();
-        inputView.Open();
     }
 
     public void SetAnimation()

@@ -18,12 +18,12 @@ public class GroveManager : MonoBehaviour
 
     [SerializeField] private InputManager inputManager;
     [SerializeField] private Controller controller;
-    private AstralProjection astralProjection;
+    [SerializeField] private ViewReference inputView;
 
     public List<FungalController> FungalControllers { get; private set; } = new List<FungalController>();
 
     public event UnityAction OnPlayerSpawned;
-    public event UnityAction<FungalController> OnFungalInteracted;
+    public event UnityAction<FungalController> OnFungalSpawned;
 
     private void Start()
     {
@@ -36,6 +36,8 @@ public class GroveManager : MonoBehaviour
 
         SpawnFungals();
         SpawnPlayer();
+
+        inputView.Open();
     }
 
 
@@ -93,8 +95,9 @@ public class GroveManager : MonoBehaviour
 
     private void SpawnFungal(FungalModel fungal, Vector3 position)
     {
-        var controller= fungalControllerSpawner.SpawnFungal(fungal, position);
-        FungalControllers.Add(controller);
-        controller.Controllable.Movement.SetBounds(fungalBounds);
+        var fungalController = fungalControllerSpawner.SpawnFungal(fungal, position);
+        OnFungalSpawned?.Invoke(fungalController);
+        FungalControllers.Add(fungalController);
+        fungalController.Controllable.Movement.SetBounds(fungalBounds);
     }
 }

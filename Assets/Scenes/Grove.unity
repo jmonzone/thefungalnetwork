@@ -6608,7 +6608,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c14f8fab08e3c49f8b77c7357c56efa2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputManager: {fileID: 1639580483}
+  controller: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
   audioMixer: {fileID: 24100000, guid: 2898466051179406981ad8ac9595fa73, type: 2}
   tracks:
   - {fileID: 11400000, guid: f4fcdd987612d4d06bff256aa0c68077, type: 2}
@@ -16309,6 +16309,7 @@ GameObject:
   - component: {fileID: 905641444}
   - component: {fileID: 905641445}
   - component: {fileID: 905641446}
+  - component: {fileID: 905641447}
   m_Layer: 0
   m_Name: Grove Manager
   m_TagString: Untagged
@@ -16352,13 +16353,15 @@ MonoBehaviour:
   possesionService: {fileID: 11400000, guid: 2733aad4d1436406fb3b8878be90ba62, type: 2}
   fungalInventory: {fileID: 11400000, guid: c2d8b29caee5b440ca0269f2f27fa2b3, type: 2}
   fungalCollection: {fileID: 11400000, guid: 1d49e170120fe4ab1befd22e62e1ea65, type: 2}
-  fungalControllerPrefab: {fileID: 173026516737802164, guid: 9e5e876e58a73433bbb5be4472984e7e,
-    type: 3}
+  fungalControllerSpawner: {fileID: 905641447}
   eggControllerPrefab: {fileID: 5952156050388943029, guid: d86fdc00fde0f4b9e958c056b6c0a95a,
     type: 3}
+  player: {fileID: 1807222593}
   rabbitHolePosition: {fileID: 2013120932}
   fungalBounds: {fileID: 128919072}
   inputManager: {fileID: 1639580483}
+  controller: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
+  inputView: {fileID: 11400000, guid: 8b7c25a127d9b494ebf93f64f5dc8a6f, type: 2}
 --- !u!114 &905641446
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16371,7 +16374,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 897f2e96f7f2b4b02b5e1f3a1afabe65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputManager: {fileID: 1639580483}
+  player: {fileID: 1807222583}
+  controller: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
+--- !u!114 &905641447
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 905641442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6616d8e1ed9424bbb8a2a82e02db4d2c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 173026516737802164, guid: 9e5e876e58a73433bbb5be4472984e7e, type: 3}
 --- !u!1001 &911018590
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -29378,6 +29395,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1807222584}
+    - targetCorrespondingSourceObject: {fileID: 648279433478719632, guid: 0e73bedbc214640f68cd2550f4651719,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1807222593}
     - targetCorrespondingSourceObject: {fileID: 6257279277187782547, guid: 0e73bedbc214640f68cd2550f4651719,
         type: 3}
       insertIndex: -1
@@ -29452,6 +29473,18 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+--- !u!114 &1807222593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1807222582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 165c27a50bfdb44019a1d7a2acaaf813, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1813230700
 PrefabInstance:
   m_ObjectHideFlags: 0
