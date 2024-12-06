@@ -1,32 +1,34 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 
 [CreateAssetMenu]
 public class Navigation : ScriptableObject
 {
-    [SerializeField] private ViewReference currentView;
     [SerializeField] private List<ViewReference> views;
 
+    //todo: keep track of scene for scene level navigation
     private int buildIndex = 0;
 
+    private ViewReference currentView;
     private Stack<ViewReference> history;
+
     public Stack<ViewReference> History => history;
 
     public event UnityAction OnNavigated;
 
-
-    public void Initialize(ViewReference initialView)
+    public void Initialize()
     {
+        currentView = null;
         history = new Stack<ViewReference>();
-        SetCurrentView(initialView);
 
         foreach (var view in views)
         {
             view.OnOpened += () =>
             {
-                currentView.Close();
+                if (currentView) currentView.Close();
                 SetCurrentView(view);
             };
         }
@@ -38,7 +40,7 @@ public class Navigation : ScriptableObject
         currentView = view;
         history.Push(view);
 
-        //todo: if this fails, undo change
+        //todo: if this fails, undo logic
         OnNavigated?.Invoke();
     }
 

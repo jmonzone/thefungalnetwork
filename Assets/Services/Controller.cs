@@ -5,6 +5,8 @@ using UnityEngine.Rendering;
 [CreateAssetMenu]
 public class Controller : ScriptableObject
 {
+    [SerializeField] private ViewReference inputView;
+
     public Controllable Controllable { get; private set; }
     public MovementController Movement => Controllable?.Movement;
     public ProximityInteraction Interactions => Controllable?.Interactions;
@@ -24,6 +26,7 @@ public class Controller : ScriptableObject
         Controllable = controller;
         controller.Movement.Stop();
         OnUpdate?.Invoke();
+        inputView.Open();
     }
 
     public void SetAnimation()

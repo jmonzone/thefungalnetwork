@@ -26,9 +26,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private LocalData localData;
     [SerializeField] private Navigation navigation;
 
-    [Header("Debug")]
-    [SerializeField] private ViewReference initialView;
-
     private void Awake()
     {
         if (instance)
@@ -40,7 +37,7 @@ public class GameManager : MonoBehaviour
         {
             instance = this;
             localData.Initialize();
-            navigation.Initialize(initialView);
+            navigation.Initialize();
             DontDestroyOnLoad(instance);
         }
     }
