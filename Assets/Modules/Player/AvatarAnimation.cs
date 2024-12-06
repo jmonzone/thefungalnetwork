@@ -1,17 +1,12 @@
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class AvatarAnimation : MonoBehaviour
 {
     private Animator animator;
-    public ProximityAction Interaction { get; private set; }
-    public Controllable Controllable { get; private set; }
 
     private void Awake()
     {
         animator = GetComponentInChildren<Animator>();
-
-        Controllable = GetComponent<Controllable>();
-        Interaction = GetComponent<ProximityAction>();
     }
 
     public void PlayLeaveBodyAnimation()

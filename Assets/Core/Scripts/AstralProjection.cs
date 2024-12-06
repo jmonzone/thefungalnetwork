@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class AstralProjection : MonoBehaviour
 {
-    [SerializeField] private PlayerController player;
+    [SerializeField] private AvatarAnimation avatar;
+    [SerializeField] private Controllable avatarControllable;
     [SerializeField] private Controller controller;
 
     private void Awake()
@@ -10,9 +11,9 @@ public class AstralProjection : MonoBehaviour
         var groveManager = GetComponent<GroveManager>();
         groveManager.OnPlayerSpawned += () =>
         {
-            if (controller.Controllable != player.Controllable)
+            if (controller.Controllable != avatarControllable)
             {
-                player.PlayLeaveBodyAnimation();
+                avatar.PlayLeaveBodyAnimation();
             }
         };
 
@@ -25,14 +26,14 @@ public class AstralProjection : MonoBehaviour
 
     private void Start()
     {
-        player.Interaction.OnUse += () => ReturnToTheBody();
+        avatarControllable.GetComponent<ProximityAction>().OnUse += () => ReturnToTheBody();
     }
 
     public void PossessFungal(FungalController fungal)
     {
         if (IsLeavingTheBody)
         {
-            player.PlayLeaveBodyAnimation();
+            avatar.PlayLeaveBodyAnimation();
         }
         else
         {
@@ -46,9 +47,9 @@ public class AstralProjection : MonoBehaviour
     {
         LeaveFungal();
 
-        player.PlayReturnToBodyAnimation();
+        avatar.PlayReturnToBodyAnimation();
 
-        controller.SetController(player.Controllable);
+        controller.SetController(avatarControllable);
     }
 
     private void LeaveFungal()
@@ -57,5 +58,5 @@ public class AstralProjection : MonoBehaviour
         fungal.StartRandomMovement();
     }
 
-    private bool IsLeavingTheBody => controller.Movement.transform == player.transform;
+    private bool IsLeavingTheBody => controller.Movement.transform == avatar.transform;
 }

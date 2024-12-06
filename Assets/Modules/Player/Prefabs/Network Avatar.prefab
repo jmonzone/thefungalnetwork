@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 4169913313290650215}
   - component: {fileID: 7322171032363600019}
   - component: {fileID: 2534743849430354334}
+  - component: {fileID: 1870643691452310714}
   m_Layer: 10
   m_Name: Network Avatar
   m_TagString: Untagged
@@ -193,9 +194,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7511a942fc4cf4dcaa3d6d403a4ec0d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementController: {fileID: 0}
+  movementController: {fileID: 5009224904557198983}
   animator: {fileID: 5364523025196450535}
   animationSpeed: 1
+--- !u!114 &1870643691452310714
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2941250707292126303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3df2c912b10648969491ca60a4521ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animations: {fileID: 2534743849430354334}
 --- !u!1001 &3585607068949734846
 PrefabInstance:
   m_ObjectHideFlags: 0

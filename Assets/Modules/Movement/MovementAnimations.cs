@@ -1,7 +1,7 @@
 using Unity.Netcode;
 using UnityEngine;
 
-public class MovementAnimations : NetworkBehaviour
+public class MovementAnimations : MonoBehaviour
 {
     [SerializeField] private MovementController movementController;
     [SerializeField] private Animator animator;
@@ -9,8 +9,9 @@ public class MovementAnimations : NetworkBehaviour
 
     public Animator Animator => animator;
 
-    private NetworkVariable<bool> isMovingNetwork = new NetworkVariable<bool>();
-    private NetworkVariable<float> directionMagnitudeNetwork = new NetworkVariable<float>();
+    public bool IsMoving { get; private set; }
+    public float DirectionMagnitude { get; private set; }
+    public float AnimationSpeed => animationSpeed;
 
     private void Awake()
     {
@@ -18,53 +19,14 @@ public class MovementAnimations : NetworkBehaviour
         movementController = GetComponentInParent<MovementController>();
     }
 
-    private bool IsOffline()
+    public void Update()
     {
-        // Check if the networking system is inactive
-        return NetworkManager.Singleton == null || !NetworkManager.Singleton.IsListening;
-    }
-
-
-    private void Update()
-    {
-        if (IsOwner || IsOffline())
-        {
-            UpdateAnimationParameters();
-        }
-        else
-        {
-            SyncAnimations();
-        }
-    }
-
-    private void UpdateAnimationParameters()
-    {
-        // Calculate local animation parameters
-        var isMoving = !movementController.IsAtDestination;
-        var directionMagnitude = movementController.Direction.magnitude;
+        IsMoving = !movementController.IsAtDestination;
+        DirectionMagnitude = movementController.Direction.magnitude;
 
         // Set parameters locally
-        animator.SetBool("isMoving", isMoving);
+        animator.SetBool("isMoving", IsMoving);
         animator.speed = animationSpeed;
-        if (isMoving) animator.speed *= directionMagnitude / 1.5f;
-
-        // Sync parameters to other clients
-        UpdateAnimationStateServerRpc(isMoving, directionMagnitude);
-    }
-
-    private void SyncAnimations()
-    {
-        animator.SetBool("isMoving", isMovingNetwork.Value);
-        animator.speed = animationSpeed;
-        if (isMovingNetwork.Value)
-            animator.speed *= directionMagnitudeNetwork.Value / 1.5f;
-    }
-
-    [ServerRpc]
-    private void UpdateAnimationStateServerRpc(bool isMoving, float directionMagnitude)
-    {
-        // Update network variables
-        isMovingNetwork.Value = isMoving;
-        directionMagnitudeNetwork.Value = directionMagnitude;
+        if (IsMoving) animator.speed *= DirectionMagnitude / 1.5f;
     }
 }
