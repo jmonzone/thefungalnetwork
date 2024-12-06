@@ -26,51 +26,99 @@ public class VirtualJoystick : MonoBehaviour
         defaultPosition = rect.anchoredPosition;
     }
 
+    private int activeTouchIndex = -1; // Tracks the touch index (-1 for mouse)
+    private bool IsTouch => activeTouchIndex >= 0;
+
     private void Update()
     {
-        if (IsActive && Input.GetMouseButtonUp(0))
+        // Handle joystick release
+        if (IsActive && IsInputReleased())
         {
             IsActive = false;
+            activeTouchIndex = -1;
             rect.anchoredPosition = defaultPosition;
             joystickRect.anchoredPosition = Vector3.zero;
             OnJoystickEnd?.Invoke();
         }
 
-        if (IsPointerOverTarget && Input.GetMouseButtonDown(0))
+        // Handle joystick start
+        if (!IsActive && IsPointerOverTarget && IsInputPressed(out int touchIndex))
         {
             IsActive = true;
-            startPosition = Input.mousePosition;
+            activeTouchIndex = touchIndex;
+            startPosition = GetInputPosition();
             rect.position = startPosition;
             OnJoystickStart?.Invoke(startPosition);
         }
 
-        if (IsActive && Input.GetMouseButton(0))
+        // Handle joystick movement
+        if (IsActive && IsInputHeld())
         {
-            var direction = Vector3.ClampMagnitude(Input.mousePosition - startPosition, JOYSTICK_LENGTH);
+            var direction = Vector3.ClampMagnitude(GetInputPosition() - startPosition, JOYSTICK_LENGTH);
             joystickRect.position = rect.position + direction;
             OnJoystickUpdate?.Invoke(direction * sensitivity);
         }
+    }
+
+    // Get input position for the active touch or mouse
+    private Vector3 GetInputPosition()
+    {
+        if (IsTouch && activeTouchIndex < Input.touchCount)
+            return Input.GetTouch(activeTouchIndex).position;
+        return Input.mousePosition;
+    }
+
+    // Check if any input has been pressed, return touch index or -1 for mouse
+    private bool IsInputPressed(out int touchIndex)
+    {
+        for (int i = 0; i < Input.touchCount; i++)
+        {
+            if (Input.GetTouch(i).phase == TouchPhase.Began)
+            {
+                touchIndex = i;
+                return true;
+            }
+        }
+
+        touchIndex = -1;
+        return Input.GetMouseButtonDown(0);
+    }
+
+    // Check if the active input is being held
+    private bool IsInputHeld()
+    {
+        if (IsTouch && activeTouchIndex < Input.touchCount)
+        {
+            var phase = Input.GetTouch(activeTouchIndex).phase;
+            return phase == TouchPhase.Moved || phase == TouchPhase.Stationary;
+        }
+        return Input.GetMouseButton(0);
+    }
+
+    // Check if the active input has been released
+    private bool IsInputReleased()
+    {
+        if (IsTouch && activeTouchIndex < Input.touchCount)
+        {
+            return Input.GetTouch(activeTouchIndex).phase == TouchPhase.Ended;
+        }
+        return Input.GetMouseButtonUp(0);
     }
 
     public bool IsPointerOverTarget
     {
         get
         {
-            // Create a new PointerEventData
             PointerEventData pointerEventData = new PointerEventData(EventSystem.current)
             {
-                // Set the pointer position
-                position = Input.mousePosition
+                position = GetInputPosition()
             };
 
-            // Raycast to all UI elements under the pointer position
             List<RaycastResult> results = new List<RaycastResult>();
             EventSystem.current.RaycastAll(pointerEventData, results);
 
-            if (!target) return true;
-            else if (results.Count > 0 && results[0].gameObject == target) return true;
-            else return false;
+            return !target || (results.Count > 0 && results[0].gameObject == target);
         }
-           
     }
+
 }
