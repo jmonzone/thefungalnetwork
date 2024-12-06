@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -8,6 +9,7 @@ public class AbilityButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     [SerializeField] private Controller controller;
     [SerializeField] private AbilityCast abilityCast;
     [SerializeField] private Image preview;
+    [SerializeField] private GameObject render;
 
     private Vector3 mousePosition;
 
@@ -25,6 +27,8 @@ public class AbilityButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     private void UpdatePreview()
     {
+        render.SetActive(abilityCast.Shrune);
+
         if (abilityCast.Shrune)
         {
             preview.enabled = true;
