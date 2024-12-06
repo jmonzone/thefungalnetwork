@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Rendering.Universal;
 
 public class Projectile : MonoBehaviour
@@ -10,6 +11,8 @@ public class Projectile : MonoBehaviour
     [SerializeField] private ParticleSystem dissipateParticles;
     [SerializeField] private Light light;
     [SerializeField] private Controller controller;
+
+    public event UnityAction OnComplete;
 
     public void Shoot(Vector3 direction, float maxDistance)
     {
@@ -153,14 +156,26 @@ public class Projectile : MonoBehaviour
 
 
 
-        // End of animation cleanup
-        dissipateParticles.Stop();
         transform.localScale = Vector3.zero;
         transform.position = originalPosition;
 
-        // Wait briefly before deactivating the object
-        yield return new WaitForSeconds(1f);
+        EndAnimation();
+    }
+
+    public void EndAnimation()
+    {
+        Debug.Log("ending animation");
+        // End of animation cleanup
+        dissipateParticles.Stop();
+        OnComplete?.Invoke();
+
+        Invoke(nameof(Hide), 1f);
+    }
+
+    private void Hide()
+    {
         gameObject.SetActive(false);
+
     }
 
 }
