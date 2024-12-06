@@ -102,6 +102,7 @@ public class NetworkPlayer : NetworkBehaviour
         SendFungalInfoClientRpc(clientId, networkFungal.NetworkObjectId, fungalId);
     }
 
+    //todo: consolidate with sendavatar info
     [ClientRpc]
     private void SendFungalInfoClientRpc(ulong clientId, ulong networkObjectId, string fungalName)
     {
