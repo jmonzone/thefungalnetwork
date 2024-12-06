@@ -11,10 +11,16 @@ public class AbilityCastIndicator : MonoBehaviour
 
         abilityCast.OnUpdate += () =>
         {
+            var position1 = abilityCast.StartPosition;
+            position1.y = 0.1f;
+
+            var position2 = abilityCast.StartPosition + abilityCast.Direction * abilityCast.MaxDistance;
+            position2.y = 0.1f;
+
             lineRenderer.SetPositions(new Vector3[]
             {
-                abilityCast.StartPosition,
-                abilityCast.StartPosition + abilityCast.Direction * abilityCast.MaxDistance
+                position1,
+                position2
             });
         };
 

@@ -3,12 +3,17 @@ using UnityEngine;
 
 public class NetworkPlayer : NetworkBehaviour
 {
-    [SerializeField] private MultiplayerArena arena;
-    [SerializeField] private FungalCollection fungalCollection;
-    [SerializeField] private FungalInventory fungalInventory;
-    [SerializeField] private Possession possesionService;
     [SerializeField] private NetworkObject networkAvatarPrefab;
+
+    [SerializeField] private MultiplayerArena arena;
+    [SerializeField] private Possession possesionService;
     [SerializeField] private Controller controller;
+
+    [SerializeField] private FungalInventory fungalInventory;
+    [SerializeField] private FungalCollection fungalCollection;
+
+    [SerializeField] private AbilityCast abilityCast;
+    [SerializeField] private ShruneCollection shruneCollection;
 
     public override void OnNetworkSpawn()
     {
@@ -53,7 +58,26 @@ public class NetworkPlayer : NetworkBehaviour
                     RequestSpawnAvatarServerRpc(NetworkManager.Singleton.LocalClientId);
                 }
             }
+
+            abilityCast.OnComplete += () =>
+            {
+                RequestAbilityCastServerRpc(NetworkManager.Singleton.LocalClientId, abilityCast.ShruneId, abilityCast.StartPosition, abilityCast.Direction);
+            };
         }
+    }
+
+    [ServerRpc()]
+    public void RequestAbilityCastServerRpc(ulong clientId, string shruneId, Vector3 spawnPosition, Vector3 direction)
+    {
+        var targetShrune = shruneCollection.Data.Find(shrune => shrune.name == shruneId);
+        if (!targetShrune) return;
+
+        // Only the server will execute this logic
+        var networkProjectile = Instantiate(targetShrune.NetworkPrefab, spawnPosition, Quaternion.LookRotation(direction), transform);
+        networkProjectile.SpawnWithOwnership(clientId);
+
+        // Apply the rotated direction to the projectile
+        networkProjectile.GetComponent<Projectile>().Shoot(direction, abilityCast.MaxDistance);
     }
 
     [ServerRpc(RequireOwnership = false)]

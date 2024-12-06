@@ -13,7 +13,7 @@ public class AbilityButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     {
         if (spellButton.PreviewItem && spellButton.PreviewItem.Data is ShruneItem shrune)
         {
-            abilityCast.StartCast(controller.Movement.transform, shrune.MaxDistance);
+            abilityCast.StartCast(controller.Movement.transform, shrune);
             mousePosition = Input.mousePosition;
         }
     }
@@ -43,14 +43,6 @@ public class AbilityButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         {
             controller.SetAnimation();
             abilityCast.EndCast();
-
-            var direction = abilityCast.Direction;
-
-            var projectile = Instantiate(shrune.ProjectilePrefab, controller.Movement.transform.position + Vector3.up + direction.normalized * 1f, Quaternion.identity);
-            
-            // Apply the rotated direction to the projectile
-            projectile.transform.rotation = Quaternion.LookRotation(direction);
-            projectile.Shoot(direction, shrune.MaxDistance);
         }
     }
 

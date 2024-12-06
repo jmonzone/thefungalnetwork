@@ -4,21 +4,23 @@ using UnityEngine.Events;
 [CreateAssetMenu]
 public class AbilityCast : ScriptableObject
 {
-    private Transform origin;
+    [SerializeField] private ShruneItem shrune;
+    [SerializeField] private Transform origin;
 
-    public Vector3 StartPosition => origin.position;
+    public string ShruneId => shrune.name;
+    public Vector3 StartPosition => origin.position + Vector3.up + Direction.normalized;
     public Vector3 Direction { get; private set; }
+    public float MaxDistance => shrune.MaxDistance;
 
-    public float MaxDistance { get; private set; }
 
     public event UnityAction OnStart;
     public event UnityAction OnUpdate;
     public event UnityAction OnComplete;
 
-    public void StartCast(Transform origin, float maxDistance)
+    public void StartCast(Transform origin, ShruneItem shrune)
     {
         this.origin = origin;
-        MaxDistance = maxDistance;
+        this.shrune = shrune;
         OnStart?.Invoke();
     }
 
