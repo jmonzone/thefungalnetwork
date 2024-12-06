@@ -38,8 +38,8 @@ public class AutoConnect : MonoBehaviour
         multiplayerManager.ListLobbies(async lobbies =>
         {
             // Check if the player is already in a lobby
-            var rejoined = await multiplayerManager.TryRejoinLobby();
-            if (rejoined) return;
+            //var rejoined = await multiplayerManager.TryRejoinLobby();
+            //if (rejoined) return;
 
             if (lobbies.Count > 0)
             {

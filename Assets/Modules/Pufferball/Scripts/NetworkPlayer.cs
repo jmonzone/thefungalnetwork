@@ -76,8 +76,26 @@ public class NetworkPlayer : NetworkBehaviour
         var networkProjectile = Instantiate(targetShrune.NetworkPrefab, spawnPosition, Quaternion.LookRotation(direction), transform);
         networkProjectile.SpawnWithOwnership(clientId);
 
-        // Apply the rotated direction to the projectile
-        networkProjectile.GetComponent<Projectile>().Shoot(direction, abilityCast.MaxDistance);
+        SendAbilityInfoClientRpc(clientId, networkProjectile.NetworkObjectId, direction);
+
+    }
+
+    [ClientRpc]
+    private void SendAbilityInfoClientRpc(ulong clientId, ulong networkObjectId, Vector3 direction)
+    {
+        if (NetworkManager.Singleton.LocalClientId == clientId)
+        {
+            // Retrieve the spawned object on the client using the NetworkObjectId
+            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out var networkObject))
+            {
+                // Apply the rotated direction to the projectile
+                networkObject.GetComponent<Projectile>().Shoot(direction, abilityCast.MaxDistance);
+            }
+            else
+            {
+                Debug.LogError("Failed to find the spawned object on the client.");
+            }
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]
