@@ -59,14 +59,28 @@ public class NetworkPlayer : NetworkBehaviour
                     RequestSpawnAvatarServerRpc(NetworkManager.Singleton.LocalClientId);
                 }
             }
-
-            abilityCast.OnComplete += () =>
-            {
-                RequestAbilityCastServerRpc(NetworkManager.Singleton.LocalClientId, abilityCast.ShruneId, abilityCast.StartPosition, abilityCast.Direction);
-            };
-
             inputView.Open();
         }
+
+        if (IsOwner)
+        {
+            abilityCast.OnComplete += OnAbilityCast;
+        }
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+
+        if (IsOwner)
+        {
+            abilityCast.OnComplete -= OnAbilityCast;
+        }
+    }
+
+    private void OnAbilityCast()
+    {
+        RequestAbilityCastServerRpc(NetworkManager.Singleton.LocalClientId, abilityCast.ShruneId, abilityCast.StartPosition, abilityCast.Direction);
     }
 
     [ServerRpc()]
