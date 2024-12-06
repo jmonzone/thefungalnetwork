@@ -1,49 +1,67 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
+// this script is used to trigger events on ability cast
 public class AbilityButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     [SerializeField] private Controller controller;
     [SerializeField] private AbilityCast abilityCast;
-    [SerializeField] private InventoryButton spellButton;
+    [SerializeField] private Image preview;
 
     private Vector3 mousePosition;
 
+    private void OnEnable()
+    {
+        UpdatePreview();
+        abilityCast.OnShruneChanged += UpdatePreview;
+    }
+
+    private void OnDisable()
+    {
+        abilityCast.OnShruneChanged -= UpdatePreview;
+
+    }
+
+    private void UpdatePreview()
+    {
+        if (abilityCast.Shrune)
+        {
+            preview.enabled = true;
+            preview.sprite = abilityCast.Shrune.Sprite;
+        }
+        else
+        {
+            preview.enabled = false;
+        }
+    }
+
     void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
     {
-        if (spellButton.PreviewItem && spellButton.PreviewItem.Data is ShruneItem shrune)
-        {
-            abilityCast.StartCast(controller.Movement.transform, shrune);
-            mousePosition = Input.mousePosition;
-        }
+        abilityCast.StartCast(controller.Movement.transform);
+        mousePosition = Input.mousePosition;
     }
 
     void IDragHandler.OnDrag(PointerEventData eventData)
     {
-        if (spellButton.PreviewItem && spellButton.PreviewItem.Data is ShruneItem)
-        {
-            // Get the direction from the mouse position relative to the screen space
-            Vector3 mouseDirection = Input.mousePosition - mousePosition;
-            mouseDirection.z = mouseDirection.y;
-            mouseDirection.y = 0f; // Ignore vertical difference for XZ plane direction
+        // Get the direction from the mouse position relative to the screen space
+        Vector3 mouseDirection = Input.mousePosition - mousePosition;
+        mouseDirection.z = mouseDirection.y;
+        mouseDirection.y = 0f; // Ignore vertical difference for XZ plane direction
 
-            // Get the camera's forward rotation, but only around the Y axis (XZ plane)
-            Quaternion cameraRotation = Quaternion.Euler(0f, Camera.main.transform.rotation.eulerAngles.y, 0f);
+        // Get the camera's forward rotation, but only around the Y axis (XZ plane)
+        Quaternion cameraRotation = Quaternion.Euler(0f, Camera.main.transform.rotation.eulerAngles.y, 0f);
 
-            // Rotate the mouse direction by the camera's rotation
-            Vector3 rotatedMouseDirection = cameraRotation * mouseDirection.normalized;
+        // Rotate the mouse direction by the camera's rotation
+        Vector3 rotatedMouseDirection = cameraRotation * mouseDirection.normalized;
 
-            abilityCast.UpdateCast(rotatedMouseDirection);
-        }
+        abilityCast.UpdateCast(rotatedMouseDirection);
     }
 
     void IEndDragHandler.OnEndDrag(PointerEventData eventData)
     {
-        if (spellButton.PreviewItem && spellButton.PreviewItem.Data is ShruneItem shrune)
-        {
-            controller.SetAnimation();
-            abilityCast.EndCast();
-        }
+        controller.SetAnimation();
+        abilityCast.EndCast();
     }
 
 

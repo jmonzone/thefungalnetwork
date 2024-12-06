@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
     [Header("Services")]
     [SerializeField] private LocalData localData;
     [SerializeField] private Navigation navigation;
+    [SerializeField] private AbilityCast abilityCast;
 
     private void Awake()
     {
@@ -36,6 +37,12 @@ public class GameManager : MonoBehaviour
         else
         {
             instance = this;
+
+            // order of initialization matters here, ability cast as of now
+            // needs to be initialized before localdata.inventory does
+            // or else there is unexpeted behaviour
+            abilityCast.Reset();
+
             localData.Initialize();
             navigation.Initialize();
             DontDestroyOnLoad(instance);

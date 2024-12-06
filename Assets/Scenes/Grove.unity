@@ -11643,6 +11643,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 624970980}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &629881055 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8568544085389353252, guid: 3e21d2aa76abe4e3c91aec5273a7a706,
+    type: 3}
+  m_PrefabInstance: {fileID: 7861241290770310243}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &633581122
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -26874,6 +26886,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   abilityCast: {fileID: 11400000, guid: f64dcda4d45144cc990412b55614233d, type: 2}
   shruneCollection: {fileID: 11400000, guid: d0a9cb364f3084797aeec675e133cf6d, type: 2}
+  itemInventory: {fileID: 11400000, guid: b0534c2b759264d94ad364617da988b3, type: 2}
 --- !u!4 &1608370956
 Transform:
   m_ObjectHideFlags: 0
@@ -36965,6 +36978,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4377193916735545544, guid: f23314b20d06648f5ab783843339b5f6,
+        type: 3}
+      propertyPath: abilityCast
+      value: 
+      objectReference: {fileID: 11400000, guid: f64dcda4d45144cc990412b55614233d,
+        type: 2}
     - target: {fileID: 8756789636704506592, guid: f23314b20d06648f5ab783843339b5f6,
         type: 3}
       propertyPath: m_Name
@@ -37062,6 +37081,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Input Manager
       objectReference: {fileID: 0}
+    - target: {fileID: 918332402370453742, guid: 3e21d2aa76abe4e3c91aec5273a7a706,
+        type: 3}
+      propertyPath: preview
+      value: 
+      objectReference: {fileID: 629881055}
     - target: {fileID: 1021674304043943559, guid: 3e21d2aa76abe4e3c91aec5273a7a706,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -37122,7 +37146,8 @@ PrefabInstance:
       propertyPath: cameraController
       value: 
       objectReference: {fileID: 605316911}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1116981829200988006, guid: 3e21d2aa76abe4e3c91aec5273a7a706, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

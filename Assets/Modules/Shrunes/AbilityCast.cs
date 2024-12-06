@@ -1,26 +1,39 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 
+// this scripts is used as a reference asset to handle ability casts
 [CreateAssetMenu]
 public class AbilityCast : ScriptableObject
 {
     [SerializeField] private ShruneItem shrune;
     [SerializeField] private Transform origin;
 
+    public ShruneItem Shrune => shrune;
     public string ShruneId => shrune.name;
     public Vector3 StartPosition => origin.position + Vector3.up + Direction.normalized;
     public Vector3 Direction { get; private set; }
     public float MaxDistance => shrune.MaxDistance;
 
 
+    public event UnityAction OnShruneChanged;
     public event UnityAction OnStart;
     public event UnityAction OnUpdate;
     public event UnityAction OnComplete;
 
-    public void StartCast(Transform origin, ShruneItem shrune)
+    public void Reset()
+    {
+        shrune = null;
+    }
+
+    public void SetShrune(ShruneItem shrune)
+    {
+        this.shrune = shrune;
+        OnShruneChanged?.Invoke();
+    }
+
+    public void StartCast(Transform origin)
     {
         this.origin = origin;
-        this.shrune = shrune;
         OnStart?.Invoke();
     }
 
