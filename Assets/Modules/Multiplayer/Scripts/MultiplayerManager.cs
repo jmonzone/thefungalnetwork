@@ -223,6 +223,45 @@ public class MultiplayerManager : MonoBehaviour
         }
     }
 
+    public async Task<bool> TryRejoinLobby()
+    {
+        try
+        {
+            string playerId = AuthenticationService.Instance.PlayerId;
+
+            // Fetch the current lobby for this player
+            var joinedLobbies = await LobbyService.Instance.GetJoinedLobbiesAsync();
+
+            Debug.Log($"rejoinabl lobby: {joinedLobbies.Count}");
+
+            if (joinedLobbies.Count > 0)
+            {
+                var lobby = await LobbyService.Instance.GetLobbyAsync(joinedLobbies[0]);
+                player = lobby.Players.Find(p => p.Id == playerId);
+                JoinedLobby = lobby;
+
+                foreach (var dataEntry in JoinedLobby.Data)
+                {
+                    Debug.Log($"Key: {dataEntry.Key}, Value: {dataEntry.Value.Value}");
+                }
+                Debug.Log($"Rejoined lobby: {lobby}");
+                // Update the player's status or proceed to the game
+                return true;
+            }
+            else
+            {
+                Debug.Log("Player is not part of any active lobbies.");
+                // Prompt to create or join a new lobby
+                return false;
+            }
+        }
+        catch (LobbyServiceException ex)
+        {
+            Debug.LogError($"Failed to fetch joined lobbies: {ex.Message}");
+            return false;
+        }
+    }
+
     public async Task JoinLobbyById(string lobbyId)
     {
         try
