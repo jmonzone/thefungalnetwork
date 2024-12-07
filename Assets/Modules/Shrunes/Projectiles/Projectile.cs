@@ -86,9 +86,14 @@ public class Projectile : MonoBehaviour
         yield return Dissipate();
     }
 
-    public void StartDisspate()
+    public void HideProjectileParticles()
     {
         projectileParticles.Stop();
+    }
+
+    public void StartDisspate()
+    {
+        HideProjectileParticles();
         dissipateParticles.gameObject.SetActive(true);
         dissipateParticles.Play();
     }

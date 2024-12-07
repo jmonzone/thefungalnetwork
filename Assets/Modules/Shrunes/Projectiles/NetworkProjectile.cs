@@ -5,13 +5,22 @@ public class NetworkProjectile : NetworkBehaviour
 {
     [SerializeField] private Projectile projectile;
 
+    private NetworkVariable<bool> dissapatedNetwork = new NetworkVariable<bool>(true);
+
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
         if (IsOwner)
         {
-            projectile.OnDissipate += () => OnProjectileDissipateClientRpc();
+            projectile.OnDissipate += () => OnProjectileDissipateServerRpc();
             projectile.OnComplete += () => OnProjectileCompleteServerRpc();
+        }
+        else
+        {
+            if (!dissapatedNetwork.Value)
+            {
+                projectile.HideProjectileParticles();
+            }
         }
     }
 
@@ -21,23 +30,28 @@ public class NetworkProjectile : NetworkBehaviour
     }
 
     [ServerRpc]
+    private void OnProjectileDissipateServerRpc()
+    {
+        dissapatedNetwork.Value = false;
+        OnProjectileDissipateClientRpc();
+    }
+
+    [ClientRpc]
+    private void OnProjectileDissipateClientRpc()
+    {
+        if (!IsOwner) projectile.StartDisspate();
+    }
+
+    [ServerRpc]
     private void OnProjectileCompleteServerRpc()
     {
-        Debug.Log("network projectile server rpc");
+        dissapatedNetwork.Value = false;
         OnProjectileCompleteClientRpc();
     }
 
     [ClientRpc]
     private void OnProjectileCompleteClientRpc()
     {
-        Debug.Log("network projectile client rpc");
         if (!IsOwner) projectile.EndAnimation();
-    }
-
-    [ClientRpc]
-    private void OnProjectileDissipateClientRpc()
-    {
-        Debug.Log("network projectile dissapate client rpc");
-        if (!IsOwner) projectile.StartDisspate();
     }
 }
