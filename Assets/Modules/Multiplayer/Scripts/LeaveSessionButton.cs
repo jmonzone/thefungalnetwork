@@ -6,6 +6,7 @@ public class LeaveSessionButton : MonoBehaviour
 {
     [SerializeField] private MultiplayerManager multiplayerManager;
     [SerializeField] private Button button;
+    [SerializeField] private SceneNavigation sceneNavigation;
 
     private void Awake()
     {
@@ -13,7 +14,7 @@ public class LeaveSessionButton : MonoBehaviour
         {
             multiplayerManager.LeaveLobby();
             multiplayerManager.DisconnectRelay();
-            SceneManager.LoadScene(2);
+            sceneNavigation.NavigateToScene(2);
         });
     }
 }

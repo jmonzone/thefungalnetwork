@@ -68,10 +68,6 @@ public class Navigation : ScriptableObject
             var targetView = history.Pop();
             targetView.RequestShow();
         }
-        else
-        {
-            SceneManager.LoadScene(buildIndex);
-        }
 
     }
 }
