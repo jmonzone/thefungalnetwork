@@ -308,7 +308,7 @@ GameObject:
   - component: {fileID: 231318627}
   - component: {fileID: 231318628}
   m_Layer: 5
-  m_Name: Question
+  m_Name: Name Prompt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -459,10 +459,12 @@ MonoBehaviour:
   inputField: {fileID: 1162615497}
   submitButton: {fileID: 1251298902}
   displayName: {fileID: 11400000, guid: 70aa9925b762e422089c41437a664eeb, type: 2}
-  prompt: {fileID: 231318628}
+  namePrompt: {fileID: 231318628}
   mainMenu: {fileID: 622030945}
   localData: {fileID: 11400000, guid: 81d22df7435974c419891ceb2bc9e4ee, type: 2}
   transitionDuration: 1
+  newGameButton: {fileID: 1311892842}
+  continueButton: {fileID: 1573408983}
 --- !u!4 &348372914
 Transform:
   m_ObjectHideFlags: 0
@@ -671,20 +673,18 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &622030945
-MonoBehaviour:
+--- !u!225 &622030945
+CanvasGroup:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 622030942}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 89c4f4e27336b4d9ab870760db99d794, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tutorialButton: {fileID: 1311892842}
-  groveButton: {fileID: 1573408983}
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &674911529
 GameObject:
   m_ObjectHideFlags: 0

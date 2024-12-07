@@ -12,10 +12,12 @@ public class Launcher : MonoBehaviour
     [SerializeField] private TMP_InputField inputField;
     [SerializeField] private Button submitButton;
     [SerializeField] private DisplayName displayName;
-    [SerializeField] private CanvasGroup prompt;
-    [SerializeField] private MainMenuUI mainMenu;
+    [SerializeField] private CanvasGroup namePrompt;
+    [SerializeField] private CanvasGroup mainMenu;
     [SerializeField] private LocalData localData;
     [SerializeField] private float transitionDuration = 2f;
+    [SerializeField] private Button newGameButton;
+    [SerializeField] private Button continueButton;
 
     private Camera mainCamera;
 
@@ -29,55 +31,66 @@ public class Launcher : MonoBehaviour
     {
         mainCamera = Camera.main;
 
-        prompt.gameObject.SetActive(false);
+        namePrompt.gameObject.SetActive(false);
+        mainMenu.gameObject.SetActive(false);
 
-        if (tutorial.IsCompleted)
-        {
-            mainMenu.OnTutorialButtonClicked += () =>
-            {
-                localData.ResetData();
-                SetState(State.NAME_PROMPT);
-            };
+        inputField.onValueChanged.AddListener(value => submitButton.interactable = value.Length > 2);
 
-            SetState(State.MENU);
-        }
-        else
-        {
-            SetState(State.NAME_PROMPT);
-        }
+        submitButton.interactable = false;
 
         submitButton.onClick.AddListener(() =>
         {
             StartCoroutine(OnSubmitButtonClicked());
         });
 
-        submitButton.interactable = false;
-        inputField.onValueChanged.AddListener(value => submitButton.interactable = value.Length > 2);
-    }
-
-    private void SetState(State state)
-    {
-        mainMenu.gameObject.SetActive(state == State.MENU);
-
-        switch (state)
+        newGameButton.onClick.AddListener(() =>
         {
-            case State.NAME_PROMPT:
-                ShowNamePrompt();
-                break;
+            StartCoroutine(OnNewGaneButtonClicked());
+        });
+
+        continueButton.onClick.AddListener(() => SceneManager.LoadScene(2));
+
+        if (tutorial.IsCompleted)
+        {
+            SetState(State.MENU);
+        }
+        else
+        {
+            SetState(State.NAME_PROMPT);
         }
     }
 
-    private void ShowNamePrompt()
+    private IEnumerator OnNewGaneButtonClicked()
     {
-        // Start the fade-in coroutine
-        StartCoroutine(FadeCanvasGroup(prompt, 0f, 1f, transitionDuration));
+        localData.ResetData();
+        yield return FadeCanvasGroup(mainMenu, 1f, 0f, transitionDuration);
+        SetState(State.NAME_PROMPT);
     }
 
     private IEnumerator OnSubmitButtonClicked()
     {
         displayName.SetValue(inputField.text);
-        yield return FadeCanvasGroup(prompt, 1f, 0f, transitionDuration);
+        yield return FadeCanvasGroup(namePrompt, 1f, 0f, transitionDuration);
         SceneManager.LoadScene(1);
+    }
+
+    private void SetState(State state)
+    {
+        switch (state)
+        {
+            case State.MENU:
+                FadeInCanvasGroup(mainMenu);
+                break;
+            case State.NAME_PROMPT:
+                FadeInCanvasGroup(namePrompt);
+                break;
+        }
+    }
+
+    private void FadeInCanvasGroup(CanvasGroup canvasGroup)
+    {
+        // Start the fade-in coroutine
+        StartCoroutine(FadeCanvasGroup(canvasGroup, 0f, 1f, transitionDuration));
     }
 
     private IEnumerator FadeCanvasGroup(CanvasGroup canvasGroup, float startAlpha, float endAlpha, float duration)
