@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public static class ConfigKeys
 {
@@ -24,11 +25,15 @@ public class GameManager : MonoBehaviour
     [SerializeField] private LocalData localData;
     [SerializeField] private Tutorial tutorial;
     [SerializeField] private Navigation navigation;
+    [SerializeField] private SceneNavigation sceneNavigation;
+    [SerializeField] private FadeCanvasGroup screenFade;
+
     [SerializeField] private AbilityCast abilityCast;
     [SerializeField] private DisplayName displayName;
     [SerializeField] private ItemInventory itemInventory;
     [SerializeField] private FungalInventory fungalInventory;
     [SerializeField] private Possession possession;
+
 
     private void Awake()
     {
@@ -49,7 +54,7 @@ public class GameManager : MonoBehaviour
             localData.Initialize();
             
             navigation.Initialize();
-
+;
             tutorial.Initialize();
             displayName.Initialize();
 
@@ -69,7 +74,20 @@ public class GameManager : MonoBehaviour
                 fungalInventory.Initialize();
                 possession.Initialize();
             };
+
+            sceneNavigation.OnSceneNavigationRequest += () =>
+            {
+                StartCoroutine(sceneNavigation.NavigateToSceneRoutine(screenFade));
+            };
         }
+    }
+
+    private IEnumerator Start()
+    {
+        screenFade.gameObject.SetActive(true);
+        yield return new WaitForSeconds(2f);
+        yield return screenFade.FadeOut();
+        sceneNavigation.LoadScene();
     }
 
     private void ItemInventory_OnInventoryUpdated()
