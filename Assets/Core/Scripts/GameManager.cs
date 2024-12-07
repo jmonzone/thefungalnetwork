@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
     [Header("Services")]
     [SerializeField] private LocalData localData;
     [SerializeField] private Tutorial tutorial;
-    [SerializeField] private Navigation navigation;
+    [SerializeField] private Navigation uiNavigation;
     [SerializeField] private SceneNavigation sceneNavigation;
     [SerializeField] private FadeCanvasGroup screenFade;
 
@@ -53,7 +53,7 @@ public class GameManager : MonoBehaviour
 
             localData.Initialize();
             
-            navigation.Initialize();
+            uiNavigation.Initialize();
 ;
             tutorial.Initialize();
             displayName.Initialize();
@@ -77,6 +77,7 @@ public class GameManager : MonoBehaviour
 
             sceneNavigation.OnSceneNavigationRequest += () =>
             {
+                uiNavigation.Reset();
                 StartCoroutine(sceneNavigation.NavigateToSceneRoutine(screenFade));
             };
         }

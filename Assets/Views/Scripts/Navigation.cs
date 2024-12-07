@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 
 [CreateAssetMenu]
@@ -19,11 +18,15 @@ public class Navigation : ScriptableObject
 
     public event UnityAction OnNavigated;
 
-    public void Initialize()
+    public void Reset()
     {
         currentView = null;
         history = new Stack<ViewReference>();
+    }
 
+    public void Initialize()
+    {
+        Reset();
         foreach (var view in views)
         {
             view.OnRequestShow += () =>

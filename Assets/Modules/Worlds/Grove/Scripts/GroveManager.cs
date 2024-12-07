@@ -18,7 +18,6 @@ public class GroveManager : MonoBehaviour
 
     [SerializeField] private InputManager inputManager;
     [SerializeField] private Controller controller;
-    [SerializeField] private ViewReference inputView;
 
     public List<FungalController> FungalControllers { get; private set; } = new List<FungalController>();
 
@@ -36,8 +35,6 @@ public class GroveManager : MonoBehaviour
 
         SpawnFungals();
         SpawnPlayer();
-
-        inputView.RequestShow();
     }
 
 
