@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 [CreateAssetMenu]
 public class LocalData : ScriptableObject
@@ -11,7 +12,9 @@ public class LocalData : ScriptableObject
     [SerializeField] private bool resetDataOnAwake;
     [SerializeField] private string saveDataPath;
 
-    private JObject jsonFile;
+    public JObject JsonFile { get; private set; }
+
+    public event UnityAction OnInitialized;
 
     public void Initialize()
     {
@@ -19,36 +22,42 @@ public class LocalData : ScriptableObject
 
         if (Application.isEditor && resetDataOnAwake) ResetData();
 
-        if (!File.Exists(saveDataPath)) jsonFile = new JObject();
+        if (!File.Exists(saveDataPath)) JsonFile = new JObject();
         else
         {
             try
             {
                 var configFile = File.ReadAllText(saveDataPath);
-                jsonFile = JObject.Parse(configFile);
+                JsonFile = JObject.Parse(configFile);
             }
             catch
             {
-                jsonFile = new JObject();
+                JsonFile = new JObject();
             }
         }
 
-        inventoryService.Initialize(jsonFile);
-        fungalService.Initialize(jsonFile);
-        possesionService.Initialize(jsonFile);
-        inventoryService.OnInventoryUpdated += SaveData;
-        fungalService.OnFungalsUpdated += SaveData;
-        possesionService.OnPossessionChanged += SaveData;
+        inventoryService.Initialize(JsonFile);
+        fungalService.Initialize(JsonFile);
+        possesionService.Initialize(JsonFile);
+        OnInitialized?.Invoke();
+        inventoryService.OnInventoryUpdated += OnUpdated;
+        fungalService.OnFungalsUpdated += OnUpdated;
+        possesionService.OnPossessionChanged += OnUpdated;
     }
 
 
-    private void SaveData()
+    private void OnUpdated()
     {
-        inventoryService.SaveData(jsonFile);
-        fungalService.SaveData(jsonFile);
-        possesionService.SaveData(jsonFile);
+        inventoryService.SaveData(JsonFile);
+        fungalService.SaveData(JsonFile);
+        possesionService.SaveData(JsonFile);
+        File.WriteAllText(saveDataPath, JsonFile.ToString());
+    }
 
-        File.WriteAllText(saveDataPath, jsonFile.ToString());
+    public void SaveData(string key, JToken value)
+    {
+        JsonFile[key] = value;
+        File.WriteAllText(saveDataPath, JsonFile.ToString());
     }
 
     private void ResetData()
@@ -58,6 +67,6 @@ public class LocalData : ScriptableObject
             File.Delete(saveDataPath);
         }
 
-        jsonFile = new JObject();
+        JsonFile = new JObject();
     }
 }

@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private LocalData localData;
     [SerializeField] private Navigation navigation;
     [SerializeField] private AbilityCast abilityCast;
+    [SerializeField] private DisplayName displayName;
 
     private void Awake()
     {
@@ -45,6 +46,8 @@ public class GameManager : MonoBehaviour
 
             localData.Initialize();
             navigation.Initialize();
+
+            displayName.Initialize();
             DontDestroyOnLoad(instance);
         }
     }
