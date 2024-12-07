@@ -42,7 +42,7 @@ public class Launcher : MonoBehaviour
 
         continueButton.onClick.AddListener(() =>
         {
-            sceneNavigation.NavigateToScene(2);
+            StartCoroutine(OnContinueButtonClicked());
         });
     }
 
@@ -83,6 +83,12 @@ public class Launcher : MonoBehaviour
     {
         yield return new WaitForSeconds(2f);
         yield return namePrompt.FadeIn();
+    }
+
+    private IEnumerator OnContinueButtonClicked()
+    {
+        yield return mainMenu.FadeOut();
+        sceneNavigation.NavigateToScene(2);
     }
 
     private IEnumerator OnNewGameButtonClicked()

@@ -24,6 +24,8 @@ namespace TheFungalNetwork.DJ
         [SerializeField] private List<DJTrackData> tracks;
         [SerializeField] private DJTrack track1;
         [SerializeField] private DJTrack track2;
+        [SerializeField] private float maxDistance = 10f; // Adjust this value to control the range for volume falloff
+        [SerializeField] private float minDistance = 4f;  // Range within which volume will be 1
 
         [Header("Visual Refrences")]
         [SerializeField] private VideoPlayer visualsVideoPlayer;
@@ -85,8 +87,7 @@ namespace TheFungalNetwork.DJ
                 visualsVideoPlayer.playbackSpeed = targetTrack.Bpm / 120;
 
                 float distance = Vector3.Distance(controller.Movement.transform.position, transform.position);
-                float maxDistance = 15f; // Adjust this value to control the range for volume falloff
-                float minDistance = 3f;  // Range within which volume will be 1
+
 
                 if (distance <= minDistance)
                 {

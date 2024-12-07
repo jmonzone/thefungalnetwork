@@ -5,7 +5,6 @@ using UnityEngine.EventSystems;
 public class CameraController : MonoBehaviour
 {
     [SerializeField] private Transform target; // The target to rotate around
-    [SerializeField] private Transform lookTarget;
     [SerializeField] private float rotationSpeed = 0.1f; // Adjust the rotation speed
     [SerializeField] private float movementSpeed = 3f;
     [SerializeField] private float minVerticalAngle = -30f; // Minimum vertical angle
@@ -37,12 +36,6 @@ public class CameraController : MonoBehaviour
 
     private void HandleRotateCamera()
     {
-        if (lookTarget)
-        {
-            Vector3 targetPosition = new Vector3(lookTarget.position.x, transform.position.y, lookTarget.position.z);
-            transform.LookAt(targetPosition);
-        }
-
         // Check for touch input
         if (Input.touchCount > 0)
         {

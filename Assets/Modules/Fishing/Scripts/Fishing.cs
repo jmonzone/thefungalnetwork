@@ -28,23 +28,39 @@ public class Fishing : MonoBehaviour
         joystick.OnJoystickUpdate += Joystick_OnJoystickUpdate;
         interactionButton.onClick.AddListener(() => StartCoroutine(ThrowNet()));
 
-        fishingView.OnRequestShow += () =>
-        {
-            reticle.position = reticleStartPosition.transform.position;
-            reticle.gameObject.SetActive(true);
-        };
-
-        fishingView.OnRequestHide += () =>
-        {
-            reticle.gameObject.SetActive(false);
-        };
-
-        inventory.OnInventoryUpdated += () =>
-        {
-            inventoryText.text = inventory.GetItemCount(fishData).ToString();
-        };
+        
     }
 
+    private void OnEnable()
+    {
+        fishingView.OnShow += ShowFishingView;
+        fishingView.OnRequestHide += HideFishingView;
+        inventory.OnInventoryUpdated += UpdateInventoryText;
+    }
+
+    private void OnDisable()
+    {
+        fishingView.OnShow -= ShowFishingView;
+        fishingView.OnRequestHide -= HideFishingView;
+        inventory.OnInventoryUpdated -= UpdateInventoryText;
+    }
+
+    private void ShowFishingView()
+    {
+        reticle.position = reticleStartPosition.transform.position;
+        reticle.gameObject.SetActive(true);
+    }
+
+    private void HideFishingView()
+    {
+        reticle.gameObject.SetActive(false);
+    }
+
+    private void UpdateInventoryText()
+    {
+        inventoryText.text = inventory.GetItemCount(fishData).ToString();
+
+    }
     private void Joystick_OnJoystickUpdate(Vector3 direction)
     {
         var translation = direction;
