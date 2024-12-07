@@ -322,6 +322,7 @@ MonoBehaviour:
   avatar: {fileID: 1973031060}
   controller: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
   inputView: {fileID: 11400000, guid: 8b7c25a127d9b494ebf93f64f5dc8a6f, type: 2}
+  sceneNavigation: {fileID: 11400000, guid: 5c885c9a984a3470684bef7e76ca5c2a, type: 2}
   proximityAction: {fileID: 512045460}
   tutorial: {fileID: 11400000, guid: efdd5f0cddba44a8aa359bce2c9bf5d3, type: 2}
 --- !u!1 &512045458
@@ -604,6 +605,11 @@ PrefabInstance:
       propertyPath: lookTarget
       value: 
       objectReference: {fileID: 1660943761}
+    - target: {fileID: 1496710922116336965, guid: 44cfcdf81f0074e5b844e37940278904,
+        type: 3}
+      propertyPath: rotateCamera
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3460427230498625851, guid: 44cfcdf81f0074e5b844e37940278904,
         type: 3}
       propertyPath: m_Name
@@ -1836,25 +1842,10 @@ PrefabInstance:
       propertyPath: field of view
       value: 25
       objectReference: {fileID: 0}
-    - target: {fileID: 6620322597985885908, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
-        type: 3}
-      propertyPath: m_Color.b
-      value: 0.48584908
-      objectReference: {fileID: 0}
-    - target: {fileID: 6620322597985885908, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
-        type: 3}
-      propertyPath: m_Color.g
-      value: 0.48584908
-      objectReference: {fileID: 0}
-    - target: {fileID: 6620322597985885908, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
-        type: 3}
-      propertyPath: m_Color.r
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7056817435211226390, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2065,6 +2056,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5225214373211428254, guid: 3e21d2aa76abe4e3c91aec5273a7a706,
+        type: 3}
+      propertyPath: canvas
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 7252481751095348867, guid: 3e21d2aa76abe4e3c91aec5273a7a706,
         type: 3}
       propertyPath: volume
@@ -2075,6 +2071,11 @@ PrefabInstance:
       propertyPath: cameraController
       value: 
       objectReference: {fileID: 605316911}
+    - target: {fileID: 7602105618067009026, guid: 3e21d2aa76abe4e3c91aec5273a7a706,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

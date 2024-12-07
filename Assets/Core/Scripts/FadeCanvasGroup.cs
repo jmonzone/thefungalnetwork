@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 using UnityEngine;
 
+[RequireComponent(typeof(CanvasGroup))]
 public class FadeCanvasGroup : MonoBehaviour
 {
-    [SerializeField] private CanvasGroup canvasGroup;
-
+    private CanvasGroup canvasGroup;
     private float transitionDuration = 2f;
 
     public IEnumerator FadeIn() => Fade(0f, 1f);
@@ -13,6 +13,8 @@ public class FadeCanvasGroup : MonoBehaviour
 
     private IEnumerator Fade(float startAlpha, float endAlpha)
     {
+        if (!canvasGroup) canvasGroup = GetComponent<CanvasGroup>();
+
         canvasGroup.alpha = startAlpha;
         canvasGroup.blocksRaycasts = startAlpha > 0; // Disable interaction if starting from invisible
         canvasGroup.gameObject.SetActive(true);

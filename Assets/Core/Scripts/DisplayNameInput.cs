@@ -6,7 +6,7 @@ public class DisplayNameInput : MonoBehaviour
     [SerializeField] private DisplayName displayName;
     [SerializeField] private TMP_InputField inputField;
 
-    private void Awake()
+    private void Start()
     {
         inputField.onValueChanged.AddListener(value => displayName.SetValue(value));
     }

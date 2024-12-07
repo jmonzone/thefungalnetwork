@@ -1,10 +1,15 @@
 using UnityEngine;
 
+[RequireComponent(typeof(FadeCanvasGroup))]
 public class ViewController : MonoBehaviour
 {
     [SerializeField] private ViewReference viewReference;
-    [SerializeField] private GameObject canvas;
+    private FadeCanvasGroup canvas;
 
+    private void Awake()
+    {
+        canvas = GetComponent<FadeCanvasGroup>();
+    }
     private void OnEnable()
     {
         viewReference.OnOpened += Show;
@@ -19,11 +24,11 @@ public class ViewController : MonoBehaviour
 
     private void Show()
     {
-        canvas.SetActive(true);
+        StartCoroutine(canvas.FadeIn());
     }
 
     private void Hide()
     {
-        canvas.SetActive(false);
+        StartCoroutine(canvas.FadeOut());
     }
 }

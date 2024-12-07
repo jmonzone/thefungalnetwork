@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 1021674304043943559}
   - component: {fileID: 7252481751095348867}
   - component: {fileID: 5225214373211428254}
+  - component: {fileID: 861894555234777680}
+  - component: {fileID: 4117164264053479945}
   m_Layer: 0
   m_Name: Input Manager
   m_TagString: Untagged
@@ -64,7 +66,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewReference: {fileID: 11400000, guid: 8b7c25a127d9b494ebf93f64f5dc8a6f, type: 2}
-  canvas: {fileID: 7602105618067009026}
+--- !u!225 &861894555234777680
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 307079635344528395}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &4117164264053479945
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 307079635344528395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6830e4b21d8854d7dac9573cb944041a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2836426732875040067
 GameObject:
   m_ObjectHideFlags: 0
