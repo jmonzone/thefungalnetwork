@@ -14,6 +14,7 @@ public class Launcher : MonoBehaviour
     [SerializeField] private DisplayName displayName;
     [SerializeField] private CanvasGroup namePrompt;
     [SerializeField] private CanvasGroup mainMenu;
+    [SerializeField] private CanvasGroup screenFade;
     [SerializeField] private LocalData localData;
     [SerializeField] private float transitionDuration = 2f;
     [SerializeField] private Button newGameButton;
@@ -21,18 +22,13 @@ public class Launcher : MonoBehaviour
 
     private Camera mainCamera;
 
-    private enum State
-    {
-        MENU,
-        NAME_PROMPT
-    }
-
-    private void Start()
+    private void Awake()
     {
         mainCamera = Camera.main;
 
         namePrompt.gameObject.SetActive(false);
         mainMenu.gameObject.SetActive(false);
+        screenFade.gameObject.SetActive(false);
 
         inputField.onValueChanged.AddListener(value => submitButton.interactable = value.Length > 2);
 
@@ -45,61 +41,89 @@ public class Launcher : MonoBehaviour
 
         newGameButton.onClick.AddListener(() =>
         {
-            StartCoroutine(OnNewGaneButtonClicked());
+            StartCoroutine(OnNewGameButtonClicked());
         });
 
-        continueButton.onClick.AddListener(() => SceneManager.LoadScene(2));
+        continueButton.onClick.AddListener(() =>
+        {
+            StartCoroutine(NavigateToScene(2));
+        });
+    }
+
+    private IEnumerator Start()
+    {
+        screenFade.gameObject.SetActive(true);
+        yield return new WaitForSeconds(2f);
+
+        yield return FadeOut(screenFade);
 
         if (tutorial.IsCompleted)
         {
-            SetState(State.MENU);
+            yield return ShowMainMenu();
         }
         else
         {
-            SetState(State.NAME_PROMPT);
+            yield return ShowNamePrompt();
         }
     }
 
-    private IEnumerator OnNewGaneButtonClicked()
+    private void Update()
+    {
+        mainCamera.transform.Rotate(axis, rotationSpeed * Time.deltaTime);
+    }
+
+    private IEnumerator ShowMainMenu()
+    {
+        yield return new WaitForSeconds(1f);
+        yield return FadeIn(mainMenu);
+    }
+
+    private IEnumerator ShowNamePrompt()
+    {
+        yield return new WaitForSeconds(2f);
+        yield return FadeIn(namePrompt);
+    }
+
+    private IEnumerator OnNewGameButtonClicked()
     {
         localData.ResetData();
-        yield return FadeCanvasGroup(mainMenu, 1f, 0f, transitionDuration);
-        SetState(State.NAME_PROMPT);
+        yield return FadeOut(mainMenu);
+        yield return ShowNamePrompt();
     }
 
     private IEnumerator OnSubmitButtonClicked()
     {
         displayName.SetValue(inputField.text);
-        yield return FadeCanvasGroup(namePrompt, 1f, 0f, transitionDuration);
-        SceneManager.LoadScene(1);
+        yield return FadeOut(namePrompt);
+        yield return NavigateToScene(1);
     }
 
-    private void SetState(State state)
+    // todo: centralize scene navigation
+    private IEnumerator NavigateToScene(int buildIndex)
     {
-        switch (state)
-        {
-            case State.MENU:
-                FadeInCanvasGroup(mainMenu);
-                break;
-            case State.NAME_PROMPT:
-                FadeInCanvasGroup(namePrompt);
-                break;
-        }
+        yield return FadeIn(screenFade);
+        SceneManager.LoadScene(buildIndex);
     }
 
-    private void FadeInCanvasGroup(CanvasGroup canvasGroup)
+    //todo: handle in separate fade component
+    private IEnumerator FadeIn(CanvasGroup canvasGroup)
     {
-        // Start the fade-in coroutine
-        StartCoroutine(FadeCanvasGroup(canvasGroup, 0f, 1f, transitionDuration));
+        yield return FadeCanvasGroup(canvasGroup, 0f, 1f);
     }
 
-    private IEnumerator FadeCanvasGroup(CanvasGroup canvasGroup, float startAlpha, float endAlpha, float duration)
+    private IEnumerator FadeOut(CanvasGroup canvasGroup)
+    {
+        yield return FadeCanvasGroup(canvasGroup, 1f, 0);
+    }
+
+    private IEnumerator FadeCanvasGroup(CanvasGroup canvasGroup, float startAlpha, float endAlpha)
     {
         canvasGroup.alpha = startAlpha;
         canvasGroup.blocksRaycasts = startAlpha > 0; // Disable interaction if starting from invisible
         canvasGroup.gameObject.SetActive(true);
 
         float elapsedTime = 0f;
+        var duration = transitionDuration;
 
         while (elapsedTime < duration)
         {
@@ -121,10 +145,5 @@ public class Launcher : MonoBehaviour
             // Fully visible: enable interaction
             canvasGroup.blocksRaycasts = true;
         }
-    }
-
-    private void Update()
-    {
-        mainCamera.transform.Rotate(axis, rotationSpeed * Time.deltaTime);
     }
 }
