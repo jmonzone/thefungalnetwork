@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -11,45 +12,102 @@ public class Launcher : MonoBehaviour
     [SerializeField] private TMP_InputField inputField;
     [SerializeField] private Button submitButton;
     [SerializeField] private DisplayName displayName;
-    [SerializeField] private GameObject prompt;
+    [SerializeField] private CanvasGroup prompt;
     [SerializeField] private MainMenuUI mainMenu;
     [SerializeField] private LocalData localData;
+    [SerializeField] private float transitionDuration = 2f;
 
     private Camera mainCamera;
+
+    private enum State
+    {
+        MENU,
+        NAME_PROMPT
+    }
 
     private void Start()
     {
         mainCamera = Camera.main;
+
+        prompt.gameObject.SetActive(false);
 
         if (tutorial.IsCompleted)
         {
             mainMenu.OnTutorialButtonClicked += () =>
             {
                 localData.ResetData();
-                ToggleMenu(false);
+                SetState(State.NAME_PROMPT);
             };
 
-            ToggleMenu(true);
+            SetState(State.MENU);
         }
         else
         {
-            ToggleMenu(false);
+            SetState(State.NAME_PROMPT);
         }
 
         submitButton.onClick.AddListener(() =>
         {
-            displayName.SetValue(inputField.text);
-            SceneManager.LoadScene(1);
+            StartCoroutine(OnSubmitButtonClicked());
         });
 
         submitButton.interactable = false;
         inputField.onValueChanged.AddListener(value => submitButton.interactable = value.Length > 2);
     }
 
-    private void ToggleMenu(bool value)
+    private void SetState(State state)
     {
-        prompt.SetActive(!value);
-        mainMenu.gameObject.SetActive(value);
+        mainMenu.gameObject.SetActive(state == State.MENU);
+
+        switch (state)
+        {
+            case State.NAME_PROMPT:
+                ShowNamePrompt();
+                break;
+        }
+    }
+
+    private void ShowNamePrompt()
+    {
+        // Start the fade-in coroutine
+        StartCoroutine(FadeCanvasGroup(prompt, 0f, 1f, transitionDuration));
+    }
+
+    private IEnumerator OnSubmitButtonClicked()
+    {
+        displayName.SetValue(inputField.text);
+        yield return FadeCanvasGroup(prompt, 1f, 0f, transitionDuration);
+        SceneManager.LoadScene(1);
+    }
+
+    private IEnumerator FadeCanvasGroup(CanvasGroup canvasGroup, float startAlpha, float endAlpha, float duration)
+    {
+        canvasGroup.alpha = startAlpha;
+        canvasGroup.blocksRaycasts = startAlpha > 0; // Disable interaction if starting from invisible
+        canvasGroup.gameObject.SetActive(true);
+
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            canvasGroup.alpha = Mathf.Lerp(startAlpha, endAlpha, elapsedTime / duration);
+            yield return null;
+        }
+
+        canvasGroup.alpha = endAlpha;
+
+        if (endAlpha == 0)
+        {
+            // Fully faded out: make the UI non-interactive and optionally hide the object
+            canvasGroup.blocksRaycasts = false;
+            canvasGroup.gameObject.SetActive(false);
+        }
+        else
+        {
+            // Fully visible: enable interaction
+            canvasGroup.blocksRaycasts = true;
+        }
     }
 
     private void Update()
