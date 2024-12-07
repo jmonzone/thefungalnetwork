@@ -36,6 +36,8 @@ public class Fishing : MonoBehaviour
         fishingView.OnShow += ShowFishingView;
         fishingView.OnRequestHide += HideFishingView;
         inventory.OnInventoryUpdated += UpdateInventoryText;
+
+        UpdateInventoryText();
     }
 
     private void OnDisable()
