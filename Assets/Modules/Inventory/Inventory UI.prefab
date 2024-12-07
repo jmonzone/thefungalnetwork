@@ -75,8 +75,6 @@ GameObject:
   - component: {fileID: 1185135485942334111}
   - component: {fileID: 9151258099571333226}
   - component: {fileID: 1386978813959256163}
-  - component: {fileID: 5057118940345785459}
-  - component: {fileID: 6867584401709417393}
   m_Layer: 0
   m_Name: Inventory UI
   m_TagString: Untagged
@@ -126,30 +124,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewReference: {fileID: 11400000, guid: b9bc47d890e0e408fac237fba6ea3255, type: 2}
---- !u!225 &5057118940345785459
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 688690205493272435}
-  m_Enabled: 1
-  m_Alpha: 0
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
---- !u!114 &6867584401709417393
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 688690205493272435}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6830e4b21d8854d7dac9573cb944041a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &985767894747340641
 GameObject:
   m_ObjectHideFlags: 0
@@ -1057,6 +1031,8 @@ GameObject:
   - component: {fileID: 2641971690600384904}
   - component: {fileID: 3760272592913538318}
   - component: {fileID: 7690544575918332637}
+  - component: {fileID: 3114986608090521866}
+  - component: {fileID: 7705543236952329401}
   m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
@@ -1147,6 +1123,30 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!225 &3114986608090521866
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9048288861149672407}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
+--- !u!114 &7705543236952329401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9048288861149672407}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6830e4b21d8854d7dac9573cb944041a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &806023108275497639
 PrefabInstance:
   m_ObjectHideFlags: 0

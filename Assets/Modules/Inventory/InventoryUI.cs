@@ -15,13 +15,13 @@ public class InventoryUI : MonoBehaviour
 
     private void OnEnable()
     {
-        inventory.OnOpened += UpdateInventorySlots;
+        inventory.OnRequestShow += UpdateInventorySlots;
 
     }
 
     private void OnDisable()
     {
-        inventory.OnOpened -= UpdateInventorySlots;
+        inventory.OnRequestShow -= UpdateInventorySlots;
     }
 
     private void UpdateInventorySlots()

@@ -59,7 +59,7 @@ public class NetworkPlayer : NetworkBehaviour
                     RequestSpawnAvatarServerRpc(NetworkManager.Singleton.LocalClientId);
                 }
             }
-            inputView.Open();
+            inputView.RequestShow();
         }
 
         if (IsOwner)

@@ -28,13 +28,13 @@ public class Fishing : MonoBehaviour
         joystick.OnJoystickUpdate += Joystick_OnJoystickUpdate;
         interactionButton.onClick.AddListener(() => StartCoroutine(ThrowNet()));
 
-        fishingView.OnOpened += () =>
+        fishingView.OnRequestShow += () =>
         {
             reticle.position = reticleStartPosition.transform.position;
             reticle.gameObject.SetActive(true);
         };
 
-        fishingView.OnClosed += () =>
+        fishingView.OnRequestHide += () =>
         {
             reticle.gameObject.SetActive(false);
         };

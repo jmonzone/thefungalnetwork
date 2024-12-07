@@ -1,34 +1,37 @@
+using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(FadeCanvasGroup))]
 public class ViewController : MonoBehaviour
 {
     [SerializeField] private ViewReference viewReference;
     private FadeCanvasGroup canvas;
 
+    private float transitionDuration = 0.25f;
+
     private void Awake()
     {
-        canvas = GetComponent<FadeCanvasGroup>();
+        canvas = GetComponentInChildren<FadeCanvasGroup>(includeInactive: true);
     }
+
     private void OnEnable()
     {
-        viewReference.OnOpened += Show;
-        viewReference.OnClosed += Hide;
+        viewReference.OnShow += Show;
+        viewReference.OnRequestHide += Hide;
     }
 
     private void OnDisable()
     {
-        viewReference.OnOpened -= Show;
-        viewReference.OnClosed -= Hide;
+        viewReference.OnShow -= Show;
+        viewReference.OnRequestHide -= Hide;
     }
 
     private void Show()
     {
-        StartCoroutine(canvas.FadeIn());
+        StartCoroutine(canvas.FadeIn(transitionDuration));
     }
 
     private void Hide()
     {
-        StartCoroutine(canvas.FadeOut());
+        StartCoroutine(canvas.FadeOut(transitionDuration, viewReference.OnViewHidden));
     }
 }

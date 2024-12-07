@@ -20,7 +20,7 @@ public class InventoryViewReference : ViewReference
     public void Open(Predicate<ItemInstance> filter)
     {
         cachedFilter = filter;
-        Open();
+        RequestShow();
     }
 
     public List<ItemInstance> GetFilteredItems(Predicate<ItemInstance> filter = null)

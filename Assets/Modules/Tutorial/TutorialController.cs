@@ -18,7 +18,7 @@ public class TutorialController : MonoBehaviour
 
         sceneNavigation.OnSceneLoaded += () =>
         {
-            inputView.Open();
+            inputView.RequestShow();
         };
     }
 

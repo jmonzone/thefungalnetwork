@@ -24,7 +24,7 @@ public class SceneNavigation : ScriptableObject
 
     public IEnumerator NavigateToSceneRoutine(FadeCanvasGroup screenFade)
     {
-        yield return screenFade.FadeIn();
+        yield return screenFade.FadeIn(2f);
 
         Debug.Log("loading scene");
         // Load the scene asynchronously
@@ -38,7 +38,7 @@ public class SceneNavigation : ScriptableObject
 
         Debug.Log("scene loaded");
 
-        yield return screenFade.FadeOut();
+        yield return screenFade.FadeOut(2f);
     }
 
 }

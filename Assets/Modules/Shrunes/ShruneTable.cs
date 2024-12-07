@@ -28,7 +28,7 @@ public class ShruneTable : MonoBehaviour
         minorItemButton.OnDragStart += () => SpawnMinorItem();
         majorItemButton.OnDragStart += () => SpawnMajorItem();
 
-        viewReference.OnOpened += UpdateView;
+        viewReference.OnRequestShow += UpdateView;
     }
 
     private void Start()

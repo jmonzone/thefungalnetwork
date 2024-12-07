@@ -26,10 +26,26 @@ public class Navigation : ScriptableObject
 
         foreach (var view in views)
         {
-            view.OnOpened += () =>
+            view.OnRequestShow += () =>
             {
-                if (currentView) currentView.Close();
+                var previousView = currentView;
                 SetCurrentView(view);
+
+                if (previousView)
+                {
+                    previousView.RequestHide();
+                }
+                else
+                {
+                    currentView.Show();
+                }
+
+            };
+
+            view.OnHidden += () =>
+            {
+                currentView.Show();
+                OnNavigated?.Invoke();
             };
         }
     }
@@ -39,9 +55,6 @@ public class Navigation : ScriptableObject
     {
         currentView = view;
         history.Push(view);
-
-        //todo: if this fails, undo logic
-        OnNavigated?.Invoke();
     }
 
     public void GoBack()
@@ -50,7 +63,7 @@ public class Navigation : ScriptableObject
         {
             history.Pop();
             var targetView = history.Pop();
-            targetView.Open();
+            targetView.RequestShow();
         }
         else
         {

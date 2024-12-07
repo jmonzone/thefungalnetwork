@@ -1,26 +1,24 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(CanvasGroup))]
 public class FadeCanvasGroup : MonoBehaviour
 {
     private CanvasGroup canvasGroup;
-    private float transitionDuration = 2f;
+    public IEnumerator FadeIn(float duration = 1f) => Fade(0f, 1f, duration);
 
-    public IEnumerator FadeIn() => Fade(0f, 1f);
+    public IEnumerator FadeOut(float duration = 1f, UnityAction onComplete = null) => Fade(1f, 0, duration, onComplete);
 
-    public IEnumerator FadeOut() => Fade(1f, 0);
-
-    private IEnumerator Fade(float startAlpha, float endAlpha)
+    private IEnumerator Fade(float startAlpha, float endAlpha, float duration = 1f, UnityAction onComplete = null)
     {
         if (!canvasGroup) canvasGroup = GetComponent<CanvasGroup>();
 
         canvasGroup.alpha = startAlpha;
-        canvasGroup.blocksRaycasts = startAlpha > 0; // Disable interaction if starting from invisible
+        canvasGroup.blocksRaycasts = false;
         canvasGroup.gameObject.SetActive(true);
 
         float elapsedTime = 0f;
-        var duration = transitionDuration;
 
         while (elapsedTime < duration)
         {
@@ -42,5 +40,7 @@ public class FadeCanvasGroup : MonoBehaviour
             // Fully visible: enable interaction
             canvasGroup.blocksRaycasts = true;
         }
+
+        onComplete?.Invoke();
     }
 }

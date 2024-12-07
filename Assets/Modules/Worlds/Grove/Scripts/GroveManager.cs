@@ -37,7 +37,7 @@ public class GroveManager : MonoBehaviour
         SpawnFungals();
         SpawnPlayer();
 
-        inputView.Open();
+        inputView.RequestShow();
     }
 
 
