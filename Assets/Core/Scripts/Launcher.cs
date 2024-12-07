@@ -44,18 +44,28 @@ public class Launcher : MonoBehaviour
         {
             sceneNavigation.NavigateToScene(2);
         });
+    }
 
-        sceneNavigation.OnSceneLoaded += () =>
+    private void OnEnable()
+    {
+        sceneNavigation.OnSceneLoaded += ShowInitialView;
+    }
+
+    private void OnDisable()
+    {
+        sceneNavigation.OnSceneLoaded -= ShowInitialView;
+    }
+
+    private void ShowInitialView()
+    {
+        if (tutorial.IsCompleted)
         {
-            if (tutorial.IsCompleted)
-            {
-                StartCoroutine(ShowMainMenu());
-            }
-            else
-            {
-                StartCoroutine(ShowNamePrompt());
-            }
-        };
+            StartCoroutine(ShowMainMenu());
+        }
+        else
+        {
+            StartCoroutine(ShowNamePrompt());
+        }
     }
 
     private void Update()

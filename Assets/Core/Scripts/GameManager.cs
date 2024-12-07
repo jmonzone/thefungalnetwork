@@ -87,7 +87,7 @@ public class GameManager : MonoBehaviour
         screenFade.gameObject.SetActive(true);
         yield return new WaitForSeconds(2f);
         yield return screenFade.FadeOut();
-        sceneNavigation.LoadScene();
+        sceneNavigation.Initialize();
     }
 
     private void ItemInventory_OnInventoryUpdated()

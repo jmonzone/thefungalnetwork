@@ -11,7 +11,7 @@ public class SceneNavigation : ScriptableObject
     public event UnityAction OnSceneLoaded;
     public event UnityAction OnSceneNavigationRequest;
 
-    public void LoadScene()
+    public void Initialize()
     {
         OnSceneLoaded?.Invoke();
     }
@@ -39,6 +39,7 @@ public class SceneNavigation : ScriptableObject
         Debug.Log("scene loaded");
 
         yield return screenFade.FadeOut(2f);
+        OnSceneLoaded?.Invoke();
     }
 
 }
