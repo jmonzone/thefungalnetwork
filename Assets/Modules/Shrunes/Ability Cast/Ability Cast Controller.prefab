@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &8756789636704506592
+--- !u!1 &875328027847226193
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,22 +8,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2275327749610400236}
-  - component: {fileID: 4377193916735545544}
+  - component: {fileID: 9033453555029039834}
+  - component: {fileID: 47517366768302068}
   m_Layer: 0
-  m_Name: GameManager
+  m_Name: Ability Cast Controller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2275327749610400236
+--- !u!4 &9033453555029039834
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8756789636704506592}
+  m_GameObject: {fileID: 875328027847226193}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -32,20 +32,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4377193916735545544
+--- !u!114 &47517366768302068
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8756789636704506592}
+  m_GameObject: {fileID: 875328027847226193}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac2f4a4fcf3a744b5bbecc7e5dd8097a, type: 3}
+  m_Script: {fileID: 11500000, guid: 0486c6275facb465a8dc5236b5236666, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  localData: {fileID: 11400000, guid: 81d22df7435974c419891ceb2bc9e4ee, type: 2}
-  navigation: {fileID: 11400000, guid: 7af35f01730a846d692adda4734cddd3, type: 2}
   abilityCast: {fileID: 11400000, guid: f64dcda4d45144cc990412b55614233d, type: 2}
-  displayName: {fileID: 11400000, guid: 70aa9925b762e422089c41437a664eeb, type: 2}
+  shruneCollection: {fileID: 11400000, guid: d0a9cb364f3084797aeec675e133cf6d, type: 2}
   itemInventory: {fileID: 11400000, guid: b0534c2b759264d94ad364617da988b3, type: 2}

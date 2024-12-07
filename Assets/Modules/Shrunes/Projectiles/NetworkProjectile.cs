@@ -10,6 +10,7 @@ public class NetworkProjectile : NetworkBehaviour
         base.OnNetworkSpawn();
         if (IsOwner)
         {
+            projectile.OnDissipate += () => OnProjectileDissipateClientRpc();
             projectile.OnComplete += () => OnProjectileCompleteServerRpc();
         }
     }
@@ -31,5 +32,12 @@ public class NetworkProjectile : NetworkBehaviour
     {
         Debug.Log("network projectile client rpc");
         if (!IsOwner) projectile.EndAnimation();
+    }
+
+    [ClientRpc]
+    private void OnProjectileDissipateClientRpc()
+    {
+        Debug.Log("network projectile dissapate client rpc");
+        if (!IsOwner) projectile.StartDisspate();
     }
 }

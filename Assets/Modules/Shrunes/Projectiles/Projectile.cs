@@ -12,17 +12,13 @@ public class Projectile : MonoBehaviour
     [SerializeField] private Light light;
     [SerializeField] private Controller controller;
 
+    public event UnityAction OnDissipate;
     public event UnityAction OnComplete;
 
     public void Shoot(Vector3 direction, float maxDistance)
     {
         gameObject.SetActive(true);
         transform.localScale = Vector3.one;
-        projectileParticles.gameObject.SetActive(true);
-        dissipateParticles.gameObject.SetActive(true);
-
-        projectileParticles.Play();
-        dissipateParticles.Stop();
 
         StartCoroutine(WhispySpiralMotion(direction, 3f, maxDistance));
     }
@@ -90,13 +86,17 @@ public class Projectile : MonoBehaviour
         yield return Dissipate();
     }
 
+    public void StartDisspate()
+    {
+        projectileParticles.Stop();
+        dissipateParticles.gameObject.SetActive(true);
+        dissipateParticles.Play();
+    }
 
     private IEnumerator Dissipate()
     {
-
-        // Stop the projectile particles and start dissipation particles
-        projectileParticles.Stop();
-        dissipateParticles.Play();
+        StartDisspate();
+        OnDissipate?.Invoke();
 
         float elapsedTime = 0f;
         float quickGrowthDuration = 0.75f;    // Time for the quick growth phase

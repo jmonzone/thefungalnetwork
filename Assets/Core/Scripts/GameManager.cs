@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Navigation navigation;
     [SerializeField] private AbilityCast abilityCast;
     [SerializeField] private DisplayName displayName;
+    [SerializeField] private ItemInventory itemInventory;
 
     private void Awake()
     {
@@ -49,11 +50,18 @@ public class GameManager : MonoBehaviour
 
             displayName.Initialize();
             DontDestroyOnLoad(instance);
+
+            itemInventory.OnInventoryUpdated += ItemInventory_OnInventoryUpdated;
+            ItemInventory_OnInventoryUpdated();
         }
     }
 
-    private void Start()
+    private void ItemInventory_OnInventoryUpdated()
     {
-        //initialView.Open();
+        if (!abilityCast.Shrune)
+        {
+            var shrune = itemInventory.Items.Find(item => item.Data is ShruneItem);
+            if (shrune) abilityCast.SetShrune(shrune.Data as ShruneItem);
+        }
     }
 }
