@@ -13,6 +13,7 @@ public class Launcher : MonoBehaviour
     [SerializeField] private DisplayName displayName;
     [SerializeField] private GameObject prompt;
     [SerializeField] private MainMenuUI mainMenu;
+    [SerializeField] private LocalData localData;
 
     private Camera mainCamera;
 
@@ -22,24 +23,33 @@ public class Launcher : MonoBehaviour
 
         if (tutorial.IsCompleted)
         {
-            mainMenu.gameObject.SetActive(true);
-            prompt.SetActive(false);
+            mainMenu.OnTutorialButtonClicked += () =>
+            {
+                localData.ResetData();
+                ToggleMenu(false);
+            };
+
+            ToggleMenu(true);
         }
         else
         {
-            submitButton.onClick.AddListener(() =>
-            {
-                displayName.SetValue(inputField.text);
-                SceneManager.LoadScene(1);
-            });
-
-            submitButton.interactable = false;
-            inputField.onValueChanged.AddListener(value => submitButton.interactable = value.Length > 2);
-
-            prompt.SetActive(true);
-            mainMenu.gameObject.SetActive(false);
+            ToggleMenu(false);
         }
 
+        submitButton.onClick.AddListener(() =>
+        {
+            displayName.SetValue(inputField.text);
+            SceneManager.LoadScene(1);
+        });
+
+        submitButton.interactable = false;
+        inputField.onValueChanged.AddListener(value => submitButton.interactable = value.Length > 2);
+    }
+
+    private void ToggleMenu(bool value)
+    {
+        prompt.SetActive(!value);
+        mainMenu.gameObject.SetActive(value);
     }
 
     private void Update()

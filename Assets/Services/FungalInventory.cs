@@ -7,6 +7,7 @@ using UnityEngine.Events;
 [CreateAssetMenu]
 public class FungalInventory : ScriptableObject
 {
+    [SerializeField] private LocalData localData;
     [SerializeField] private GameData gameData;
     [SerializeField] private List<FungalModel> fungals;
     public List<FungalModel> Fungals => fungals;
@@ -15,22 +16,22 @@ public class FungalInventory : ScriptableObject
 
     private const string FUNGALS_KEY = "fungals";
 
-    public void Initialize(JObject jsonFile)
+    public void Initialize()
     {
         fungals = new List<FungalModel>();
-        if (jsonFile.ContainsKey(FUNGALS_KEY) && jsonFile[FUNGALS_KEY] is JArray fungalArray)
+        if (localData.JsonFile.ContainsKey(FUNGALS_KEY) && localData.JsonFile[FUNGALS_KEY] is JArray fungalArray)
         {
             foreach (JObject fungalJson in fungalArray)
             {
                 var fungal = CreateInstance<FungalModel>();
                 var fungalData = gameData.Fungals.FirstOrDefault(fungal => fungal.Id == fungalJson["name"].ToString());
                 fungal.Initialize(fungalData, fungalJson);
-                AddFungal(fungal);
+                AddFungalToList(fungal);
             }
         }
     }
 
-    public void SaveData(JObject jsonFile)
+    public void SaveData()
     {
         var fungalJson = new JArray();
 
@@ -39,12 +40,19 @@ public class FungalInventory : ScriptableObject
             fungalJson.Add(fungal.Json);
         }
 
-        jsonFile[FUNGALS_KEY] = fungalJson;
+        localData.SaveData(FUNGALS_KEY, fungalJson);
+
+    }
+
+    private void AddFungalToList(FungalModel fungal)
+    {
+        fungals.Add(fungal);
+        OnFungalsUpdated?.Invoke();
     }
 
     public void AddFungal(FungalModel fungal)
     {
-        fungals.Add(fungal);
-        OnFungalsUpdated?.Invoke();
+        AddFungalToList(fungal);
+        SaveData();
     }
 }

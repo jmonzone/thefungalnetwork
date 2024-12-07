@@ -5,20 +5,20 @@ using UnityEngine.Events;
 [CreateAssetMenu]
 public class Possession : ScriptableObject
 {
-    [SerializeField] private FungalInventory fungalService;
+    [SerializeField] private LocalData localData;
+    [SerializeField] private FungalInventory fungalInventory;
     [SerializeField] private FungalModel fungal;
     [SerializeField] private Controller controller;
 
     public FungalModel Fungal => fungal;
 
-    public event UnityAction OnPossessionChanged;
     private const string POSSESSION_KEY = "partner";
 
-    public void Initialize(JObject jsonFile)
+    public void Initialize()
     {
-        var posessionName = jsonFile[POSSESSION_KEY] ?? "";
-        var posession = fungalService.Fungals.Find(fungal => fungal.Data.name == posessionName.ToString());
-        SetPossession(posession);
+        var posessionName = localData.JsonFile[POSSESSION_KEY] ?? "";
+        var posession = fungalInventory.Fungals.Find(fungal => fungal.Data.name == posessionName.ToString());
+        this.fungal = posession;
 
         controller.OnUpdate += () =>
         {
@@ -36,15 +36,10 @@ public class Possession : ScriptableObject
         };
     }
 
-    public void SaveData(JObject jsonFile)
-    {
-        var possession = Fungal?.Data.Id ?? "";
-        jsonFile[POSSESSION_KEY] = possession;
-    }
-
     private void SetPossession(FungalModel fungal)
     {
         this.fungal = fungal;
-        OnPossessionChanged?.Invoke();
+        var possession = fungal?.Data.Id ?? "";
+        localData.SaveData(POSSESSION_KEY, possession);
     }
 }

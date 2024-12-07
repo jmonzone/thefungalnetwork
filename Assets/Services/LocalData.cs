@@ -6,15 +6,12 @@ using UnityEngine.Events;
 [CreateAssetMenu]
 public class LocalData : ScriptableObject
 {
-    [SerializeField] private ItemInventory inventoryService;
-    [SerializeField] private FungalInventory fungalService;
-    [SerializeField] private Possession possesionService;
     [SerializeField] private bool resetDataOnAwake;
     [SerializeField] private string saveDataPath;
 
     public JObject JsonFile { get; private set; }
 
-    public event UnityAction OnInitialized;
+    public event UnityAction OnReset;
 
     public void Initialize()
     {
@@ -35,23 +32,6 @@ public class LocalData : ScriptableObject
                 JsonFile = new JObject();
             }
         }
-
-        inventoryService.Initialize(JsonFile);
-        fungalService.Initialize(JsonFile);
-        possesionService.Initialize(JsonFile);
-        OnInitialized?.Invoke();
-        inventoryService.OnInventoryUpdated += OnUpdated;
-        fungalService.OnFungalsUpdated += OnUpdated;
-        possesionService.OnPossessionChanged += OnUpdated;
-    }
-
-
-    private void OnUpdated()
-    {
-        inventoryService.SaveData(JsonFile);
-        fungalService.SaveData(JsonFile);
-        possesionService.SaveData(JsonFile);
-        File.WriteAllText(saveDataPath, JsonFile.ToString());
     }
 
     public void SaveData(string key, JToken value)
@@ -60,13 +40,10 @@ public class LocalData : ScriptableObject
         File.WriteAllText(saveDataPath, JsonFile.ToString());
     }
 
-    private void ResetData()
+    public void ResetData()
     {
-        if (File.Exists(saveDataPath))
-        {
-            File.Delete(saveDataPath);
-        }
-
         JsonFile = new JObject();
+        File.WriteAllText(saveDataPath, JsonFile.ToString());
+        OnReset?.Invoke();
     }
 }

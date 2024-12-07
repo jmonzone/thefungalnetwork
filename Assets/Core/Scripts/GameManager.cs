@@ -27,6 +27,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private AbilityCast abilityCast;
     [SerializeField] private DisplayName displayName;
     [SerializeField] private ItemInventory itemInventory;
+    [SerializeField] private FungalInventory fungalInventory;
+    [SerializeField] private Possession possession;
 
     private void Awake()
     {
@@ -45,15 +47,28 @@ public class GameManager : MonoBehaviour
             abilityCast.Reset();
 
             localData.Initialize();
+            
             navigation.Initialize();
 
             tutorial.Initialize();
             displayName.Initialize();
 
+            itemInventory.Initialize();
+            fungalInventory.Initialize();
+            possession.Initialize();
+
             DontDestroyOnLoad(instance);
 
             itemInventory.OnInventoryUpdated += ItemInventory_OnInventoryUpdated;
             ItemInventory_OnInventoryUpdated();
+
+            localData.OnReset += () =>
+            {
+                abilityCast.Reset();
+                itemInventory.Initialize();
+                fungalInventory.Initialize();
+                possession.Initialize();
+            };
         }
     }
 

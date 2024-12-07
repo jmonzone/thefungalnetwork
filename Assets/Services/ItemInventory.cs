@@ -7,6 +7,7 @@ using UnityEngine.Events;
 [CreateAssetMenu]
 public class ItemInventory : ScriptableObject
 {
+    [SerializeField] private LocalData localData;
     [SerializeField] private GameData gameData;
     [SerializeField] private List<ItemInstance> items;
 
@@ -20,13 +21,13 @@ public class ItemInventory : ScriptableObject
 
     public int GetItemCount(Item item) => items.FirstOrDefault(i => i.Data == item)?.Count ?? 0;
 
-    public void Initialize(JObject jsonFile)
+    public void Initialize()
     {
         items = new List<ItemInstance>();
 
-        if (jsonFile.ContainsKey(INVENTORY_KEY))
+        if (localData.JsonFile.ContainsKey(INVENTORY_KEY))
         {
-            foreach (var item in jsonFile[INVENTORY_KEY] as JArray)
+            foreach (var item in localData.JsonFile[INVENTORY_KEY] as JArray)
             {
                 if (item is JObject itemJson)
                 {
@@ -38,7 +39,7 @@ public class ItemInventory : ScriptableObject
         }
     }
 
-    public void SaveData(JObject jsonFile)
+    private void SaveData()
     {
         var inventoryJson = new JArray();
 
@@ -51,7 +52,7 @@ public class ItemInventory : ScriptableObject
             });
         }
 
-        jsonFile[INVENTORY_KEY] = inventoryJson;
+        localData.SaveData(INVENTORY_KEY, inventoryJson);
     }
 
     public void AddToInventory(Item item, int amount)
@@ -77,6 +78,7 @@ public class ItemInventory : ScriptableObject
             OnItemAdded?.Invoke(targetItem);
         }
 
+        SaveData();
         OnInventoryUpdated?.Invoke();
     }
 
@@ -86,6 +88,7 @@ public class ItemInventory : ScriptableObject
         if (existingItem && existingItem.Count >= amount)
         {
             existingItem.Count -= amount;
+            SaveData();
             OnInventoryUpdated?.Invoke();
         }
         else
