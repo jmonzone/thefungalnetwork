@@ -12,9 +12,6 @@ public class NetworkFungal : NetworkBehaviour
 
     public void Initialize(string name)
     {
-        Debug.Log(name);
         Fungal = fungalInventory.Fungals.Find(fungal => fungal.Data.name == name);
-        Debug.Log(Fungal);
-        if (Fungal) Instantiate(Fungal.Data.Prefab, transform);
     }
 }
