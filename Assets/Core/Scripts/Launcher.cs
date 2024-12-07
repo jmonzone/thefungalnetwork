@@ -12,6 +12,7 @@ public class Launcher : MonoBehaviour
     [SerializeField] private Button submitButton;
     [SerializeField] private DisplayName displayName;
     [SerializeField] private GameObject prompt;
+    [SerializeField] private MainMenuUI mainMenu;
 
     private Camera mainCamera;
 
@@ -21,7 +22,8 @@ public class Launcher : MonoBehaviour
 
         if (tutorial.IsCompleted)
         {
-            SceneManager.LoadScene(2);
+            mainMenu.gameObject.SetActive(true);
+            prompt.SetActive(false);
         }
         else
         {
@@ -35,8 +37,9 @@ public class Launcher : MonoBehaviour
             inputField.onValueChanged.AddListener(value => submitButton.interactable = value.Length > 2);
 
             prompt.SetActive(true);
+            mainMenu.gameObject.SetActive(false);
         }
-        
+
     }
 
     private void Update()
