@@ -85,17 +85,20 @@ namespace TheFungalNetwork.DJ
                 visualsVideoPlayer.playbackSpeed = targetTrack.Bpm / 120;
 
                 float distance = Vector3.Distance(controller.Movement.transform.position, transform.position);
-                float maxDistance = 25f; // Adjust this value to control the range for volume falloff
+                float maxDistance = 15f; // Adjust this value to control the range for volume falloff
                 float minDistance = 3f;  // Range within which volume will be 1
 
                 if (distance <= minDistance)
                 {
-                    audioMixer.SetVolume("Master", 1f);
+                    audioMixer.SetVolume("Background", 0f);
+                    audioMixer.SetVolume("DJ Table", 1f);
                 }
                 else
                 {
                     float volume = Mathf.Clamp01(1 - Mathf.Log10(distance - minDistance + 1) / Mathf.Log10(maxDistance - minDistance + 1));
-                    audioMixer.SetVolume("Master", volume);
+                    audioMixer.SetVolume("DJ Table", volume);
+                    audioMixer.SetVolume("Background", 1 - volume);
+
                 }
             }
             else
