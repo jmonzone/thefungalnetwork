@@ -1,11 +1,19 @@
 using UnityEngine;
 
 // todo: see if initalizing controller logic can be shared with GroveManager
-public class Tutorial : MonoBehaviour
+public class TutorialController : MonoBehaviour
 {
     [SerializeField] private Controllable avatar;
     [SerializeField] private Controller controller;
     [SerializeField] private ViewReference inputView;
+
+    [SerializeField] private ProximityAction proximityAction;
+    [SerializeField] private Tutorial tutorial;
+
+    private void Awake()
+    {
+        proximityAction.OnUse += () => tutorial.SetIsCompletd(true);
+    }
 
     private void Start()
     {

@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public static class ConfigKeys
 {
-    public const string CURRENT_PET_KEY = "currentPet";
     public const string LEVEL_KEY = "level";
     public const string EXPERIENCE_KEY = "experience";
     public const string HUNGER_KEY = "hunger";
@@ -24,6 +22,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Services")]
     [SerializeField] private LocalData localData;
+    [SerializeField] private Tutorial tutorial;
     [SerializeField] private Navigation navigation;
     [SerializeField] private AbilityCast abilityCast;
     [SerializeField] private DisplayName displayName;
@@ -48,7 +47,9 @@ public class GameManager : MonoBehaviour
             localData.Initialize();
             navigation.Initialize();
 
+            tutorial.Initialize();
             displayName.Initialize();
+
             DontDestroyOnLoad(instance);
 
             itemInventory.OnInventoryUpdated += ItemInventory_OnInventoryUpdated;
