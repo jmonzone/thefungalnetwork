@@ -10,7 +10,7 @@ public class GroveManager : MonoBehaviour
     [SerializeField] private FungalCollection fungalCollection;
     [SerializeField] private FungalControllerSpawner fungalControllerSpawner;
     [SerializeField] private EggController eggControllerPrefab;
-    [SerializeField] private Controllable player;
+    [SerializeField] private Controllable avatar;
 
     [Header("Position References")]
     [SerializeField] private Transform rabbitHolePosition;
@@ -56,8 +56,8 @@ public class GroveManager : MonoBehaviour
         else
         {
             Debug.Log("Setting player controller");
-            player.transform.position = rabbitHolePosition.position;
-            controller.SetController(player);
+            avatar.transform.position = rabbitHolePosition.position;
+            controller.SetController(avatar);
         }
 
         OnPlayerSpawned?.Invoke();
