@@ -1,9 +1,10 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class InventorySlot : MonoBehaviour
+public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler
 {
     [SerializeField] private Image itemImage;
     [SerializeField] private Button itemButton;
@@ -11,6 +12,7 @@ public class InventorySlot : MonoBehaviour
 
     public ItemInstance Item { get; private set; }
     public event UnityAction OnItemSelected;
+    public event UnityAction OnItemDragged;
 
     private void Awake()
     {
@@ -29,5 +31,14 @@ public class InventorySlot : MonoBehaviour
 
         itemImage.gameObject.SetActive(item);
         itemAmountText.gameObject.SetActive(item && item.Count > 1);
+    }
+
+    void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
+    {
+        OnItemDragged?.Invoke();
+    }
+
+    void IDragHandler.OnDrag(PointerEventData eventData)
+    {
     }
 }

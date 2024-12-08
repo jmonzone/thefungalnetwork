@@ -1,11 +1,8 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class InventoryButton : MonoBehaviour, IBeginDragHandler, IDragHandler
+public class InventoryButton : MonoBehaviour
 {
     [SerializeField] private InventoryViewReference inventory;
     [SerializeField] private Button button;
@@ -14,8 +11,6 @@ public class InventoryButton : MonoBehaviour, IBeginDragHandler, IDragHandler
 
     public Button Button => button;
     public ItemInstance PreviewItem => inventory.GetFilteredItems(ItemFilter).LastOrDefault();
-
-    public event UnityAction OnDragStart;
 
     public bool ItemFilter(ItemInstance item) => item.Data.HasTags(itemTags);
 
@@ -49,15 +44,4 @@ public class InventoryButton : MonoBehaviour, IBeginDragHandler, IDragHandler
         }
     }
 
-    void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
-    {
-        if (button.interactable)
-        {
-            OnDragStart?.Invoke();
-        }
-    }
-
-    void IDragHandler.OnDrag(PointerEventData eventData)
-    {
-    }
 }

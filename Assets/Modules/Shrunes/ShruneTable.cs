@@ -6,18 +6,15 @@ public class ShruneTable : MonoBehaviour
     [SerializeField] private GameManager gameManager;
 
     [SerializeField] private ItemInventory inventory;
-    [SerializeField] private InventoryButton majorItemButton;
-    [SerializeField] private InventoryButton minorItemButton;
+    [SerializeField] private InventoryUI inventoryUI;
 
     [SerializeField] private Item shruneItem;
     [SerializeField] private Transform shruneSpawnPosition;
-    [SerializeField] private ViewReference viewReference;
 
     private Camera mainCamera;
 
     private GameObject selectedItem;
-    private GameObject majorItemObject;
-    private List<GameObject> minorItemObjects = new List<GameObject>();
+    private List<GameObject> spawnedItems = new List<GameObject>();
 
     private GameObject shrune;
     private bool shrunePickedUp;
@@ -25,33 +22,16 @@ public class ShruneTable : MonoBehaviour
     private void Awake()
     {
         mainCamera = Camera.main;
-        minorItemButton.OnDragStart += () => SpawnMinorItem();
-        majorItemButton.OnDragStart += () => SpawnMajorItem();
 
-        viewReference.OnRequestShow += UpdateView;
-    }
-
-    private void Start()
-    {
-        UpdateView();
-    }
-
-    public void SpawnMinorItem()
-    {
-        var item = SpawnItem(minorItemButton.PreviewItem);
-        minorItemObjects.Add(item);
-    }
-
-    public void SpawnMajorItem()
-    {
-        majorItemObject = SpawnItem(majorItemButton.PreviewItem);
+        inventoryUI.OnItemDragged += slot => SpawnItem(slot.Item);
     }
 
     private GameObject SpawnItem(ItemInstance item)
     {
         inventory.RemoveFromInventory(item.Data, 1);
         selectedItem = Instantiate(item.Data.ItemPrefab);
-        UpdateView();
+        spawnedItems.Add(selectedItem);
+
         return selectedItem;
     }
 
@@ -59,34 +39,23 @@ public class ShruneTable : MonoBehaviour
     {
         selectedItem = null;
 
-        if (majorItemObject && minorItemObjects.Count == 5)
+        if (spawnedItems.Count == 5)
         {
             SpawnShrune();
         }
-
-        UpdateView();
     }
 
     private void SpawnShrune()
     {
         shrune = Instantiate(shruneItem.ItemPrefab, shruneSpawnPosition.position, Quaternion.identity);
 
-        majorItemObject.SetActive(false);
-        majorItemObject = null;
-
-        foreach (var item in minorItemObjects)
+        foreach (var item in spawnedItems)
         {
             item.SetActive(false);
         }
 
-        minorItemObjects = new List<GameObject>();
+        spawnedItems = new List<GameObject>();
 
-    }
-
-    private void UpdateView()
-    {
-        majorItemButton.Button.interactable = !selectedItem && !majorItemObject && majorItemButton.PreviewItem;
-        minorItemButton.Button.interactable = !selectedItem && minorItemObjects.Count < 5 && minorItemButton.PreviewItem;
     }
 
     private void Update()

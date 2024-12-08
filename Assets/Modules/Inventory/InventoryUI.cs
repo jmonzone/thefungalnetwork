@@ -1,32 +1,40 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class InventoryUI : MonoBehaviour
 {
-    [SerializeField] private InventoryViewReference inventory;
+    [SerializeField] private ItemInventory inventory;
 
     private List<InventorySlot> inventorySlots;
+
+    public event UnityAction<InventorySlot> OnItemDragged;
 
     private void Awake()
     {
         inventorySlots = GetComponentsInChildren<InventorySlot>(includeInactive: true).ToList();
+        foreach(var slot in inventorySlots)
+        {
+            slot.OnItemDragged += () => OnItemDragged?.Invoke(slot);
+        }
     }
 
     private void OnEnable()
     {
-        inventory.OnRequestShow += UpdateInventorySlots;
+        UpdateInventorySlots();
+        inventory.OnInventoryUpdated += UpdateInventorySlots;
 
     }
 
     private void OnDisable()
     {
-        inventory.OnRequestShow -= UpdateInventorySlots;
+        inventory.OnInventoryUpdated -= UpdateInventorySlots;
     }
 
     private void UpdateInventorySlots()
     {
-        var items = inventory.GetFilteredItems();
+        var items = inventory.Items;
 
         int i = 0;
 
