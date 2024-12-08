@@ -26,20 +26,18 @@ public class ShruneTable : MonoBehaviour
         inventoryUI.OnItemDragged += slot => SpawnItem(slot.Item);
     }
 
-    private GameObject SpawnItem(ItemInstance item)
+    private void SpawnItem(ItemInstance item)
     {
         inventory.RemoveFromInventory(item.Data, 1);
         selectedItem = Instantiate(item.Data.ItemPrefab);
         spawnedItems.Add(selectedItem);
-
-        return selectedItem;
     }
 
     private void DropItem()
     {
         selectedItem = null;
 
-        if (spawnedItems.Count == 5)
+        if (spawnedItems.Count == 6)
         {
             SpawnShrune();
         }

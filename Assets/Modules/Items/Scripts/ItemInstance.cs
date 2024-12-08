@@ -17,6 +17,7 @@ public class ItemInstance : ScriptableObject
 
     public void Initialize(Item item, int count)
     {
+        name = item.name;
         this.item = item;
         this.count = count;
     }
