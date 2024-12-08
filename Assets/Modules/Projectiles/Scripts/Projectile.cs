@@ -12,7 +12,8 @@ public class Projectile : MonoBehaviour
     [SerializeField] private Light light;
     [SerializeField] private Controller controller;
 
-    public event UnityAction OnDissipate;
+    public event UnityAction OnDissipateStart;
+    public event UnityAction<float> OnDissipateUpdate;
     public event UnityAction OnComplete;
 
     public void Shoot(Vector3 direction, float maxDistance)
@@ -101,7 +102,7 @@ public class Projectile : MonoBehaviour
     private IEnumerator Dissipate()
     {
         StartDisspate();
-        OnDissipate?.Invoke();
+        OnDissipateStart?.Invoke();
 
         float elapsedTime = 0f;
         float quickGrowthDuration = 0.75f;    // Time for the quick growth phase
@@ -156,6 +157,8 @@ public class Projectile : MonoBehaviour
             transform.position = originalPosition + Vector3.up * bounceValue;
 
             elapsedTime += Time.deltaTime;
+            OnDissipateUpdate?.Invoke(elapsedTime);
+
             yield return null;
         }
 
@@ -174,7 +177,7 @@ public class Projectile : MonoBehaviour
         dissipateParticles.Stop();
         OnComplete?.Invoke();
 
-        Invoke(nameof(Hide), 3f);
+        Invoke(nameof(Hide), 2f);
     }
 
     private void Hide()

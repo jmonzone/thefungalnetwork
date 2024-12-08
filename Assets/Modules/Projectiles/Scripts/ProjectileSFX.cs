@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Projectile))]
 [RequireComponent(typeof(AudioSource))]
 public class ProjectileSFX : MonoBehaviour
 {
@@ -22,5 +23,11 @@ public class ProjectileSFX : MonoBehaviour
         audioSource.clip = randomSound.audioClip;
         audioSource.pitch = randomSound.pitch;
         audioSource.Play();
+
+        var projectile = GetComponent<Projectile>();
+        projectile.OnDissipateUpdate += time =>
+        {
+            audioSource.volume -= Time.deltaTime;
+        };
     }
 }

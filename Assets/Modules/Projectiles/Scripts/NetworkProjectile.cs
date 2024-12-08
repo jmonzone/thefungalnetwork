@@ -12,7 +12,7 @@ public class NetworkProjectile : NetworkBehaviour
         base.OnNetworkSpawn();
         if (IsOwner)
         {
-            projectile.OnDissipate += () => OnProjectileDissipateServerRpc();
+            projectile.OnDissipateStart += () => OnProjectileDissipateServerRpc();
             projectile.OnComplete += () => OnProjectileCompleteServerRpc();
         }
         else
