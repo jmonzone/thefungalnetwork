@@ -4,19 +4,17 @@ using UnityEngine.UI;
 
 public class InventoryButton : MonoBehaviour
 {
-    [SerializeField] private InventoryViewReference inventory;
+    [SerializeField] private ItemInventory inventory;
+    [SerializeField] private ViewReference inventoryView;
     [SerializeField] private Button button;
     [SerializeField] private Image preview;
-    [SerializeField] private ItemTags itemTags;
 
     public Button Button => button;
-    public ItemInstance PreviewItem => inventory.GetFilteredItems(ItemFilter).LastOrDefault();
-
-    public bool ItemFilter(ItemInstance item) => item.Data.HasTags(itemTags);
+    public ItemInstance PreviewItem => inventory.Items.LastOrDefault();
 
     private void Awake()
     {
-        if (button) button.onClick.AddListener(() => inventory.Open(ItemFilter));
+        if (button) button.onClick.AddListener(() => inventoryView.RequestShow());
     }
 
     private void OnEnable()

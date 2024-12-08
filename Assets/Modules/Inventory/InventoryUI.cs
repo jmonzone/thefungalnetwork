@@ -6,9 +6,11 @@ using UnityEngine.Events;
 public class InventoryUI : MonoBehaviour
 {
     [SerializeField] private ItemInventory inventory;
+    [SerializeField] private ItemTags itemTags;
 
     private List<InventorySlot> inventorySlots;
 
+    public bool ItemFilter(ItemInstance item) => item.Data.HasOneOfTag(itemTags);
     public event UnityAction<InventorySlot> OnItemDragged;
 
     private void Awake()
@@ -34,7 +36,8 @@ public class InventoryUI : MonoBehaviour
 
     private void UpdateInventorySlots()
     {
-        var items = inventory.Items;
+        var items = inventory.GetFilteredItems(ItemFilter);
+
 
         int i = 0;
 

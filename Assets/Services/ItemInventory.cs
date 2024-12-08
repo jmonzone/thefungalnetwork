@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
@@ -94,6 +95,18 @@ public class ItemInventory : ScriptableObject
         else
         {
             Debug.LogWarning("item does not exist in inventory");
+        }
+    }
+
+    public List<ItemInstance> GetFilteredItems(Predicate<ItemInstance> filter = null)
+    {
+        if (filter == null)
+        {
+            return Items;
+        }
+        else
+        {
+            return Items.FindAll(filter).ToList();
         }
     }
 }

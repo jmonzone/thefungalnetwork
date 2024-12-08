@@ -5,9 +5,8 @@ using UnityEngine;
 public enum ItemTags
 {
     None = 0,
-    MinorIngredient = 1 << 0,
-    MajorIngredient = 1 << 1,
-    Shrune = 1 << 2
+    Ingredient = 1 << 0,
+    Shrune = 1 << 1
 }
 
 [CreateAssetMenu]
@@ -20,8 +19,13 @@ public class Item : ScriptableObject
     public Sprite Sprite => sprite;
     public GameObject ItemPrefab => itemPrefab;
 
-    public bool HasTags(ItemTags requiredTags)
+    public bool HasAllTags(ItemTags requiredTags)
     {
         return (itemTags & requiredTags) == requiredTags;
+    }
+
+    public bool HasOneOfTag(ItemTags requiredTags)
+    {
+        return (itemTags & requiredTags) != 0;
     }
 }
