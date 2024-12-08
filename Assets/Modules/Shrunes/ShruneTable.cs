@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ShruneTable : MonoBehaviour
 {
@@ -7,6 +8,7 @@ public class ShruneTable : MonoBehaviour
 
     [SerializeField] private ItemInventory inventory;
     [SerializeField] private InventoryUI inventoryUI;
+    [SerializeField] private Button resetButton;
 
     [SerializeField] private Item shruneItem;
     [SerializeField] private Transform shruneSpawnPosition;
@@ -14,7 +16,7 @@ public class ShruneTable : MonoBehaviour
     private Camera mainCamera;
 
     private GameObject selectedItem;
-    private List<GameObject> spawnedItems = new List<GameObject>();
+    private Dictionary<GameObject, ItemInstance> itemObjectsMap = new Dictionary<GameObject, ItemInstance>();
 
     private GameObject shrune;
     private bool shrunePickedUp;
@@ -24,20 +26,29 @@ public class ShruneTable : MonoBehaviour
         mainCamera = Camera.main;
 
         inventoryUI.OnItemDragged += slot => SpawnItem(slot.Item);
+        resetButton.onClick.AddListener(() =>
+        {
+            foreach (var obj in itemObjectsMap.Keys)
+            {
+                inventory.AddToInventory(itemObjectsMap[obj].Data, 1);
+            }
+
+            ResetItems();
+        });
     }
 
     private void SpawnItem(ItemInstance item)
     {
         inventory.RemoveFromInventory(item.Data, 1);
         selectedItem = Instantiate(item.Data.ItemPrefab);
-        spawnedItems.Add(selectedItem);
+        itemObjectsMap.Add(selectedItem, item);
     }
 
     private void DropItem()
     {
         selectedItem = null;
 
-        if (spawnedItems.Count == 6)
+        if (itemObjectsMap.Count == 6)
         {
             SpawnShrune();
         }
@@ -47,13 +58,18 @@ public class ShruneTable : MonoBehaviour
     {
         shrune = Instantiate(shruneItem.ItemPrefab, shruneSpawnPosition.position, Quaternion.identity);
 
-        foreach (var item in spawnedItems)
+        ResetItems();
+
+    }
+
+    private void ResetItems()
+    {
+        foreach(var obj in itemObjectsMap.Keys)
         {
-            item.SetActive(false);
+            obj.SetActive(false);
         }
 
-        spawnedItems = new List<GameObject>();
-
+        itemObjectsMap = new Dictionary<GameObject, ItemInstance>();
     }
 
     private void Update()

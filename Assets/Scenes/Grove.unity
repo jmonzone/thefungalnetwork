@@ -4438,6 +4438,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 233354138}
+  - component: {fileID: 233354139}
   m_Layer: 0
   m_Name: Reset Button
   m_TagString: Untagged
@@ -4466,6 +4467,50 @@ RectTransform:
   m_AnchoredPosition: {x: -25, y: 25}
   m_SizeDelta: {x: 75, y: 50}
   m_Pivot: {x: 1, y: 0}
+--- !u!114 &233354139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 233354137}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 1204990014}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &234263095
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17629,7 +17674,7 @@ MonoBehaviour:
   - m_Script
   m_LockStageInInspector: 
   m_StreamingVersion: 20170927
-  m_Priority: 0
+  m_Priority: 2
   m_StandbyUpdate: 2
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
@@ -26356,6 +26401,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SNature_MossRocks2 (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 1731474200146382, guid: 68e8c0f1e23f3f74781154a91fcce3aa, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4392154634456770, guid: 68e8c0f1e23f3f74781154a91fcce3aa, type: 3}
       propertyPath: m_LocalScale.x
       value: 1.65
@@ -27576,6 +27625,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Size.x
       value: 4.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4696357460549852019, guid: 571fddfa4a0c30543815e196fbf20d4b,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 4696357460549852019, guid: 571fddfa4a0c30543815e196fbf20d4b,
         type: 3}
@@ -32614,6 +32668,7 @@ MonoBehaviour:
   gameManager: {fileID: 1696251349}
   inventory: {fileID: 11400000, guid: b0534c2b759264d94ad364617da988b3, type: 2}
   inventoryUI: {fileID: 985512192}
+  resetButton: {fileID: 233354139}
   shruneItem: {fileID: 11400000, guid: 9d2ba073b1e894816aa99f775d4e6af5, type: 2}
   shruneSpawnPosition: {fileID: 1599120760}
 --- !u!114 &2068897805
@@ -35015,37 +35070,37 @@ PrefabInstance:
     - target: {fileID: 1576384917746520769, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.08
+      value: -3.5205414
       objectReference: {fileID: 0}
     - target: {fileID: 1576384917746520769, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 7.5
+      value: -2
       objectReference: {fileID: 0}
     - target: {fileID: 1576384917746520769, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -13.18
+      value: 9.098518
       objectReference: {fileID: 0}
     - target: {fileID: 1576384917746520769, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.96802825
+      value: -0.90719634
       objectReference: {fileID: 0}
     - target: {fileID: 1576384917746520769, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.25084135
+      value: -0.375773
       objectReference: {fileID: 0}
     - target: {fileID: 1576384917746520769, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0.17478064
       objectReference: {fileID: 0}
     - target: {fileID: 1576384917746520769, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: -0.07239651
       objectReference: {fileID: 0}
     - target: {fileID: 3170229602314632740, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
         type: 3}
@@ -35105,7 +35160,7 @@ PrefabInstance:
     - target: {fileID: 5923498429617885966, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
         type: 3}
       propertyPath: field of view
-      value: 25
+      value: 16.578762
       objectReference: {fileID: 0}
     - target: {fileID: 5923498429617885966, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
         type: 3}
@@ -35115,7 +35170,7 @@ PrefabInstance:
     - target: {fileID: 5923498429617885966, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
         type: 3}
       propertyPath: orthographic size
-      value: 5.9
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 6072722289089673609, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
         type: 3}
