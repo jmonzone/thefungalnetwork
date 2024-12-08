@@ -174,7 +174,7 @@ public class Projectile : MonoBehaviour
         dissipateParticles.Stop();
         OnComplete?.Invoke();
 
-        Invoke(nameof(Hide), 1f);
+        Invoke(nameof(Hide), 3f);
     }
 
     private void Hide()
