@@ -35,9 +35,10 @@ public class Projectile : MonoBehaviour
                 var crocodile = collider.GetComponentInParent<Crocodile>();
                 if (crocodile)
                 {
-                    Debug.Log("hit");
                     if (whispySpiralMotionCoroutine != null)
                     {
+                        Debug.Log("hit");
+
                         StopCoroutine(whispySpiralMotionCoroutine);
                         StartCoroutine(Dissipate());
                     }
