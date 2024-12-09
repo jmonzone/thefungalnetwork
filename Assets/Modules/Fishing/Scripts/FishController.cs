@@ -31,10 +31,7 @@ public class FishController : MonoBehaviour
     {
         this.data = data;
         movement.SetBounds(bounds);
-    }
 
-    private void OnEnable()
-    {
         if (movement.FaceForward) transform.forward = Utility.RandomXZVector;
         transform.localScale = Vector3.zero;
 

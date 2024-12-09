@@ -2,6 +2,7 @@ using System.Collections;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class Fishing : MonoBehaviour
@@ -23,12 +24,12 @@ public class Fishing : MonoBehaviour
     [SerializeField] private ItemInventory inventory;
     [SerializeField] private ViewReference fishingView;
 
+    public UnityAction OnFishCaught;
+
     private void Awake()
     {
         joystick.OnJoystickUpdate += Joystick_OnJoystickUpdate;
         interactionButton.onClick.AddListener(() => StartCoroutine(ThrowNet()));
-
-        
     }
 
     private void OnEnable()
@@ -118,6 +119,7 @@ public class Fishing : MonoBehaviour
         foreach (var fish in fishControllers)
         {
             fish.gameObject.SetActive(false);
+            OnFishCaught?.Invoke();
         }
 
         inventory.AddToInventory(fishData, fishControllers.Count);

@@ -1572,9 +1572,9 @@ GameObject:
   m_Component:
   - component: {fileID: 7573481324152621122}
   - component: {fileID: 5950920852047314481}
+  - component: {fileID: 7158919993593594655}
   - component: {fileID: 7662758719934889316}
   - component: {fileID: 1153247190734033714}
-  - component: {fileID: 7158919993593594655}
   - component: {fileID: 6975896155982066032}
   m_Layer: 0
   m_Name: Fishing Spot
@@ -1631,6 +1631,25 @@ MonoBehaviour:
   fishData: {fileID: 11400000, guid: 259ca4af75d8b4b03802dec6e194fd09, type: 2}
   inventory: {fileID: 11400000, guid: b0534c2b759264d94ad364617da988b3, type: 2}
   fishingView: {fileID: 11400000, guid: 2a259ecc8baea40298fb1f58cdbead2b, type: 2}
+--- !u!114 &7158919993593594655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6403461409993537512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9c1321d84a924d6bb9c746c72420ade, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  normalFish: {fileID: 11400000, guid: 259ca4af75d8b4b03802dec6e194fd09, type: 2}
+  fastFish: {fileID: 11400000, guid: ccfda4bf5791a45849164dc62f4783c4, type: 2}
+  frequency: 1
+  maxObjectCount: 3
+  spawnPosition:
+    anchor: {fileID: 7459714163361046032}
+    bounds: {fileID: 339265641682814303}
 --- !u!114 &7662758719934889316
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1658,24 +1677,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactable: 1
---- !u!114 &7158919993593594655
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6403461409993537512}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a9c1321d84a924d6bb9c746c72420ade, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  frequency: 1
-  maxObjects: 3
-  spawnPosition:
-    anchor: {fileID: 7459714163361046032}
-    bounds: {fileID: 339265641682814303}
-  defaultFish: {fileID: 11400000, guid: 259ca4af75d8b4b03802dec6e194fd09, type: 2}
 --- !u!114 &6975896155982066032
 MonoBehaviour:
   m_ObjectHideFlags: 0

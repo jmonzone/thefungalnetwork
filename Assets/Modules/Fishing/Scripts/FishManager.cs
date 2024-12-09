@@ -1,27 +1,39 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FishManager : ObjectPoolManager<FishController>
+public class FishSpawner : MonoBehaviour
 {
-    [SerializeField] private FishData defaultFish;
+    [SerializeField] private FishData normalFish;
+    [SerializeField] private FishData fastFish;
 
-    protected override List<FishController> Prefabs => new List<FishController>
-    {
-        defaultFish.Prefab,
-    };
+    [SerializeField] private float frequency;
+    [SerializeField] private int maxObjectCount;
+    [SerializeField] protected PositionAnchor spawnPosition;
+    private float timer;
 
-    protected override ObjectPool<FishController> GetTargetPool(Dictionary<FishController, ObjectPool<FishController>> pools)
+    private int objectCount;
+
+    private void Awake()
     {
-        return pools[defaultFish.Prefab];
+        var fishingSpot = GetComponent<Fishing>();
+        fishingSpot.OnFishCaught += () => objectCount--;
     }
 
-    protected override void OnInstantiate(FishController fish)
+    private void Update()
     {
-        fish.Initialize(defaultFish, spawnPosition.Bounds);
+        if (objectCount >= maxObjectCount) return;
+
+        if (timer > frequency)
+        {
+            var fish = Instantiate(normalFish.Prefab, spawnPosition.Position, Quaternion.identity, transform);
+            fish.Initialize(normalFish, spawnPosition.Bounds);
+            objectCount++;
+
+            timer = 0;
+        }
+
+        timer += Time.deltaTime;
     }
 
-    protected override void OnSpawn(FishController obj)
-    {
-    }
 }
 
