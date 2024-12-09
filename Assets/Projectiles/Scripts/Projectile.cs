@@ -12,16 +12,38 @@ public class Projectile : MonoBehaviour
     [SerializeField] private Light light;
     [SerializeField] private Controller controller;
 
+    private Coroutine whispySpiralMotionCoroutine;
+
     public event UnityAction OnDissipateStart;
     public event UnityAction<float> OnDissipateUpdate;
     public event UnityAction OnComplete;
-
     public void Shoot(Vector3 direction, float maxDistance)
     {
         gameObject.SetActive(true);
         transform.localScale = Vector3.one;
+        whispySpiralMotionCoroutine = StartCoroutine(WhispySpiralMotion(direction, 3f, maxDistance));
+    }
 
-        StartCoroutine(WhispySpiralMotion(direction, 3f, maxDistance));
+    private void Update()
+    {
+        var colliders = Physics.OverlapSphere(transform.position, 0.5f);
+
+        if (colliders.Length > 0)
+        {
+            foreach(var collider in colliders)
+            {
+                var crocodile = collider.GetComponentInParent<Crocodile>();
+                if (crocodile)
+                {
+                    Debug.Log("hit");
+                    if (whispySpiralMotionCoroutine != null)
+                    {
+                        StopCoroutine(whispySpiralMotionCoroutine);
+                        StartCoroutine(Dissipate());
+                    }
+                }
+            }
+        }
     }
 
     private IEnumerator WhispySpiralMotion(Vector3 direction, float speed, float maxDistance)
@@ -61,16 +83,16 @@ public class Projectile : MonoBehaviour
         while (Vector3.Distance(startPosition, transform.position) < maxDistance)
         {
             // Linear motion
-            transform.position += direction.normalized * speed * Time.deltaTime;
+            transform.position += speed * Time.deltaTime * direction.normalized;
 
             // Spiral motion
             float spiralX = Mathf.Cos(elapsedTime * spiralSpeed) * spiralRadius;
             float spiralZ = Mathf.Sin(elapsedTime * spiralSpeed) * spiralRadius;
-            transform.position += new Vector3(spiralX, 0f, spiralZ) * Time.deltaTime;
+            transform.position += speed * Time.deltaTime * new Vector3(spiralX, 0f, spiralZ);
 
             // Whispy oscillation (up/down motion)
             float offsetY = Mathf.Sin(elapsedTime * oscillationFrequency) * oscillationAmplitude;
-            transform.position += Vector3.up * offsetY * Time.deltaTime;
+            transform.position += offsetY * Time.deltaTime * Vector3.up ;
 
             // Scale pulsing
             float scaleFactor = 1 + Mathf.Sin(elapsedTime * oscillationFrequency * 2) * scaleVariation;
@@ -101,6 +123,8 @@ public class Projectile : MonoBehaviour
 
     private IEnumerator Dissipate()
     {
+        whispySpiralMotionCoroutine = null;
+
         StartDisspate();
         OnDissipateStart?.Invoke();
 
@@ -109,7 +133,6 @@ public class Projectile : MonoBehaviour
         float growthMultiplier = 1.5f;       // Maximum growth factor
         float animationDuration = 0.25f;      // Total time for the animation
         float bounceHeight = 0.5f;           // Maximum bounce height
-
 
         Vector3 originalScale = transform.localScale; // Initial scale
         Vector3 originalPosition = transform.position; // Initial position
@@ -162,8 +185,6 @@ public class Projectile : MonoBehaviour
             yield return null;
         }
 
-
-
         transform.localScale = Vector3.zero;
         transform.position = originalPosition;
 
@@ -183,7 +204,5 @@ public class Projectile : MonoBehaviour
     private void Hide()
     {
         gameObject.SetActive(false);
-
     }
-
 }

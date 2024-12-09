@@ -10,7 +10,7 @@ public class AbilityCast : ScriptableObject
 
     public ShruneItem Shrune => shrune;
     public string ShruneId => shrune.name;
-    public Vector3 StartPosition => origin.position + Vector3.up + Direction.normalized;
+    public Vector3 StartPosition => origin.position + Direction.normalized;
     public Vector3 Direction { get; private set; }
     public float MaxDistance => shrune.MaxDistance;
 

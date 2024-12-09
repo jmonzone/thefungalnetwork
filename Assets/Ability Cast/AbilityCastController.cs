@@ -20,7 +20,7 @@ public class AbilityCastController : MonoBehaviour
     {
         if (shruneCollection.TryGetShruneById(abilityCast.ShruneId, out ShruneItem shrune))
         {
-            var projectile = Instantiate(shrune.ProjectilePrefab, abilityCast.StartPosition, Quaternion.LookRotation(abilityCast.Direction), transform);
+            var projectile = Instantiate(shrune.ProjectilePrefab, abilityCast.StartPosition + Vector3.up * 0.5f, Quaternion.LookRotation(abilityCast.Direction), transform);
             projectile.Shoot(abilityCast.Direction, abilityCast.MaxDistance);
         }
     }
