@@ -175,11 +175,14 @@ public class MovementController : MonoBehaviour
     {
         if (IsAtDestination) return;
 
-        if (type == MovementType.POSITION) Direction = (TargetPosition - transform.position).normalized;
+        if (type == MovementType.POSITION || type == MovementType.TARGET) Direction = (TargetPosition - transform.position).normalized;
 
         if (lerpRotation && Direction != Vector3.zero)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(Direction, Vector3.up);
+            //todo: clean up this logic
+            var lookDirection = Direction;
+            if (type == MovementType.TARGET) lookDirection = target.position - transform.position;
+            Quaternion targetRotation = Quaternion.LookRotation(lookDirection, Vector3.up);
             if (lockXZ) targetRotation = Quaternion.Euler(0, targetRotation.eulerAngles.y, 0); // Keep only y-axis rotation
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 1000 * Time.deltaTime);
         }

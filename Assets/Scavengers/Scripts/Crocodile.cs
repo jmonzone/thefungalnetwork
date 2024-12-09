@@ -7,7 +7,9 @@ public class Crocodile : MonoBehaviour
     [SerializeField] private Gradient hitColor;
     [SerializeField] private float hitColorDuration = 2f;
     [SerializeField] private float flashDuration = 0.5f; // Time for flash to complete
+    [SerializeField] private Transform target;
 
+    private MovementController movementController;
     private ParticleColorManager particleColorManager;
     private MaterialFlasher materialFlasher;
     private Gradient defaultColor;
@@ -17,6 +19,9 @@ public class Crocodile : MonoBehaviour
     private void Awake()
     {
         overheadUI.SetActive(true);
+
+        movementController = GetComponent<MovementController>();
+        movementController.SetTarget(target);
 
         healthSlider = GetComponentInChildren<HealthSlider>(includeInactive: true);
 
@@ -35,6 +40,7 @@ public class Crocodile : MonoBehaviour
         if (healthSlider.Value == 0)
         {
             GetComponentInChildren<Animator>().Play("Death");
+            movementController.Stop();
         }
 
         particleColorManager.ChangeColor(hitColor, hitColorDuration, () =>
