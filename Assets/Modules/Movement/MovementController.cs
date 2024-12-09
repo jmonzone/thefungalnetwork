@@ -23,6 +23,13 @@ public class MovementController : MonoBehaviour
     [SerializeField] private float radius = 4f;
     [SerializeField] private float radialSpeed = 0.25f;
 
+
+    [Header("Jump Movement")]
+    [SerializeField] private int maxJumpCount = 1;
+
+    private int jumpCount = 0;
+    private Rigidbody rb;
+
     private enum MovementType
     {
         IDLE,
@@ -40,8 +47,6 @@ public class MovementController : MonoBehaviour
     private Vector3 position;
     private Vector3 origin;
     private float angle;
-
-    private Rigidbody rigidbody;
 
     public Vector3 Direction { get; private set; }
 
@@ -120,22 +125,24 @@ public class MovementController : MonoBehaviour
         transform.forward = direction;
     }
 
-    private int jumpCount = 0;
-    private int maxJumpCount = 2;
-
     public bool CanJump => jumpCount < maxJumpCount;
 
     public void Jump()
     {
         if (!CanJump) return;
         jumpCount++;
-        rigidbody.AddForce(Vector3.up * 250f);
+        rb.AddForce(Vector3.up * 250f);
+    }
+
+    public void SetMaxJumpCount(int maxJumpCount)
+    {
+        this.maxJumpCount = maxJumpCount;
     }
     #endregion
 
     private void Awake()
     {
-        rigidbody = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
     }
 
     private void OnCollisionEnter(Collision collision)

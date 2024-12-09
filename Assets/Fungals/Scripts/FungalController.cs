@@ -32,6 +32,9 @@ public class FungalController : MonoBehaviour
             var animator = Render.GetComponentInChildren<Animator>();
             animator.speed = 0.25f;
 
+            //todo: centralize with fungalController
+            var movement = GetComponentInChildren<MovementController>();
+            movement.SetMaxJumpCount(model.Data.Type == FungalType.SKY ? 2 : 1);
             controllable.Movement.StartRandomMovement();
         }
     }

@@ -13,5 +13,9 @@ public class NetworkFungal : NetworkBehaviour
     public void Initialize(string name)
     {
         Fungal = fungalInventory.Fungals.Find(fungal => fungal.Data.name == name);
+
+        //todo: centralize with FungalController
+        var movement = GetComponent<MovementController>();
+        movement.SetMaxJumpCount(Fungal.Data.Type == FungalType.SKY ? 2 : 1);
     }
 }
