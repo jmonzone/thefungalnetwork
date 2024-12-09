@@ -123,9 +123,11 @@ public class MovementController : MonoBehaviour
     private int jumpCount = 0;
     private int maxJumpCount = 2;
 
+    public bool CanJump => jumpCount < maxJumpCount;
+
     public void Jump()
     {
-        if (jumpCount >= maxJumpCount) return;
+        if (!CanJump) return;
         jumpCount++;
         rigidbody.AddForce(Vector3.up * 250f);
     }

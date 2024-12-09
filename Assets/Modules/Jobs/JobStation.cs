@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public abstract class JobStation : MonoBehaviour
 {
     [Header("Job References")]
-    [SerializeField] private InputManager playerController;
+    [SerializeField] private PlayerInput playerController;
     [SerializeField] private CinemachineVirtualCamera virtualCamera;
     [SerializeField] private Transform playerPositionAnchor;
     [SerializeField] private Transform playerLookTarget;

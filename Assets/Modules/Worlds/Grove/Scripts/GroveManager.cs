@@ -16,7 +16,7 @@ public class GroveManager : MonoBehaviour
     [SerializeField] private Transform rabbitHolePosition;
     [SerializeField] private Collider fungalBounds;
 
-    [SerializeField] private InputManager inputManager;
+    [SerializeField] private PlayerInput inputManager;
     [SerializeField] private Controller controller;
 
     public List<FungalController> FungalControllers { get; private set; } = new List<FungalController>();

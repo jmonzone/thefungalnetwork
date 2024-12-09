@@ -2,11 +2,12 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
 
-public class InputManager : MonoBehaviour
+public class PlayerInput : MonoBehaviour
 {
     [SerializeField] private VirtualJoystick virtualJoystick;
     [SerializeField] private CameraController cameraController;
-    [SerializeField] private Button interactionButton;
+    //[SerializeField] private Button interactionButton;
+    [SerializeField] private Button primaryButton;
     [SerializeField] private Controller controller;
     [SerializeField] private Volume volume;
 
@@ -16,9 +17,10 @@ public class InputManager : MonoBehaviour
     {
         mainCamera = Camera.main;
 
-        interactionButton.onClick.AddListener(() =>
+        primaryButton.onClick.AddListener(() =>
         {
-            controller.Interactions.TargetAction.Use();
+            if (controller.Interactions.TargetAction) controller.Interactions.TargetAction.Use();
+            else controller.Movement.Jump();
         });
 
         virtualJoystick.OnJoystickEnd += () =>
@@ -34,7 +36,8 @@ public class InputManager : MonoBehaviour
             ApplyDirection(direction);
         };
 
-        controller.Volume = volume;
+        //todo: have this initialized in GameManager
+        controller.Initialize(volume);
        
     }
 
@@ -55,7 +58,7 @@ public class InputManager : MonoBehaviour
 
     public void CanInteract(bool value)
     {
-        interactionButton.interactable = value;
+        primaryButton.interactable = value;
     }
 
 
@@ -66,6 +69,9 @@ public class InputManager : MonoBehaviour
     {
         UpdateWASDMovment();
         UpdateProximityActions();
+
+        var interaction = controller.Interactions && controller.Interactions.TargetAction && controller.Interactions.TargetAction.Interactable;
+        CanInteract(interaction || controller.Movement.CanJump);
     }
 
     private void UpdateWASDMovment()
@@ -124,6 +130,5 @@ public class InputManager : MonoBehaviour
         previousAction = targetAction;
 
         if (targetAction) targetAction.SetInRange(true);
-        CanInteract(targetAction && targetAction.Interactable);
     }
 }

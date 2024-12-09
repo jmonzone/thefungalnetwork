@@ -11,7 +11,7 @@ public class Controller : ScriptableObject
     public MovementController Movement => Controllable?.Movement;
     public ProximityInteraction Interactions => Controllable?.Interactions;
 
-    public Volume Volume { get; set; }
+    public Volume Volume { get; private set; }
 
     public event UnityAction OnUpdate;
 

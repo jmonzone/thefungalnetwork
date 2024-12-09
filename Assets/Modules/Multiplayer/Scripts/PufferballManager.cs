@@ -13,7 +13,7 @@ public class PufferballManager : MonoBehaviour
 
     [Header("Gameplay References")]
     [SerializeField] private MultiplayerManager multiplayerManager;
-    [SerializeField] private InputManager inputManager;
+    [SerializeField] private PlayerInput inputManager;
     [SerializeField] private PufferballController pufferballPrefab;
 
     [Header("UI References")]
