@@ -1640,11 +1640,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 6403461409993537512}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a9c1321d84a924d6bb9c746c72420ade, type: 3}
+  m_Script: {fileID: 11500000, guid: 2cdc5a2081f654b5ab05bc5ff6856a36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalFish: {fileID: 11400000, guid: 259ca4af75d8b4b03802dec6e194fd09, type: 2}
-  fastFish: {fileID: 11400000, guid: ccfda4bf5791a45849164dc62f4783c4, type: 2}
+  fish:
+  - fishData: {fileID: 11400000, guid: 259ca4af75d8b4b03802dec6e194fd09, type: 2}
+    weight: 2
+  - fishData: {fileID: 11400000, guid: ccfda4bf5791a45849164dc62f4783c4, type: 2}
+    weight: 1
   frequency: 1
   maxObjectCount: 3
   spawnPosition:

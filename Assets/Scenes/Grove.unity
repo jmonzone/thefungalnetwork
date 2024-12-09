@@ -11389,11 +11389,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fdea13a0be954e08840cc09976e85fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  frequency: 1
-  maxObjects: 10
-  spawnPosition:
-    anchor: {fileID: 1038761319}
-    bounds: {fileID: 0}
   prefab: {fileID: 9173131824021314546, guid: 564d87d99cd2d414fb8d8f20682f90c7, type: 3}
   maxLaunchForce: 400
   minLaunchForce: 350
@@ -18290,12 +18285,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9c1321d84a924d6bb9c746c72420ade, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  normalFish: {fileID: 0}
+  fastFish: {fileID: 0}
   frequency: 2
-  maxObjects: 5
-  spawnPosition:
-    anchor: {fileID: 1043662376}
-    bounds: {fileID: 1331387107}
-  defaultFish: {fileID: 11400000, guid: 259ca4af75d8b4b03802dec6e194fd09, type: 2}
+  maxObjectCount: 0
+  spawnPosition: {anchor: {fileID: 1043662376}, bounds: {fileID: 1331387107}}
+  timer: 0
+  objectCount: 0
 --- !u!4 &1043662376
 Transform:
   m_ObjectHideFlags: 0
@@ -36089,11 +36085,6 @@ PrefabInstance:
       propertyPath: cameraController
       value: 
       objectReference: {fileID: 605316911}
-    - target: {fileID: 7602105618067009026, guid: 3e21d2aa76abe4e3c91aec5273a7a706,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7687460834133408141, guid: 3e21d2aa76abe4e3c91aec5273a7a706,
         type: 3}
       propertyPath: m_SizeDelta.x

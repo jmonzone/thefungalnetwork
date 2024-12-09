@@ -59,18 +59,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47a3fda79a53a4b9e9ab1b8cf9d8acb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2
-  faceForward: 1
+  type: 0
+  speed: 4
+  lerpRotation: 1
   lockXZ: 0
+  useDrag: 0
   positionAnchor:
     anchor: {fileID: 0}
     bounds: {fileID: 0}
   distanceThreshold: 2
   startIdle: 0
-  minIdleDuration: 2
-  maxIdleDuration: 5
+  minIdleDuration: 0.5
+  maxIdleDuration: 1.5
   radius: 4
   radialSpeed: 0.25
+  maxJumpCount: 1
 --- !u!1001 &450373414579174310
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -184,6 +187,18 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4036406035427534, guid: 925bc3fd925fd0c4c80d7e83b67ba239, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 4036406035427534, guid: 925bc3fd925fd0c4c80d7e83b67ba239, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 4036406035427534, guid: 925bc3fd925fd0c4c80d7e83b67ba239, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 4036406035427534, guid: 925bc3fd925fd0c4c80d7e83b67ba239, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -222,6 +237,10 @@ PrefabInstance:
     - target: {fileID: 4036406035427534, guid: 925bc3fd925fd0c4c80d7e83b67ba239, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4036406035427534, guid: 925bc3fd925fd0c4c80d7e83b67ba239, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
