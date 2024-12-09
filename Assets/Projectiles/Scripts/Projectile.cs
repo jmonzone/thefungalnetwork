@@ -24,8 +24,12 @@ public class Projectile : MonoBehaviour
         whispySpiralMotionCoroutine = StartCoroutine(WhispySpiralMotion(direction, 3f, maxDistance));
     }
 
+    private int hitCount = 0;
+
     private void Update()
     {
+        if (hitCount > 0) return;
+
         var colliders = Physics.OverlapSphere(transform.position, 0.5f);
 
         if (colliders.Length > 0)
@@ -35,10 +39,11 @@ public class Projectile : MonoBehaviour
                 var crocodile = collider.GetComponentInParent<Crocodile>();
                 if (crocodile)
                 {
+                    hitCount++;
+                    crocodile.Damage();
+
                     if (whispySpiralMotionCoroutine != null)
                     {
-                        Debug.Log("hit");
-
                         StopCoroutine(whispySpiralMotionCoroutine);
                         StartCoroutine(Dissipate());
                     }
