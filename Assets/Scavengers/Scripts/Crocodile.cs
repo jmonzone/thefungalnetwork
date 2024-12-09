@@ -32,14 +32,16 @@ public class Crocodile : MonoBehaviour
         materialFlasher = GetComponent<MaterialFlasher>();
     }
 
-    private float hitCooldown = 1.5f;
+    private float hitCooldown = 3f;
     private float hitTimer = 0;
 
     private void Update()
     {
+        if (healthSlider.Value == 0) return;
+
         if (movementController.IsAtDestination && hitTimer > hitCooldown)
         {
-            GetComponentInChildren<Animator>().Play("Hit");
+            GetComponentInChildren<Animator>().Play("Attack");
             hitTimer = 0;
         }
 
@@ -55,6 +57,10 @@ public class Crocodile : MonoBehaviour
         {
             GetComponentInChildren<Animator>().Play("Death");
             movementController.Stop();
+        }
+        else
+        {
+            GetComponentInChildren<Animator>().Play("Hit");
         }
 
         particleColorManager.ChangeColor(hitColor, hitColorDuration, () =>
