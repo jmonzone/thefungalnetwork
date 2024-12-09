@@ -41,6 +41,8 @@ public class MovementController : MonoBehaviour
     private Vector3 origin;
     private float angle;
 
+    private Rigidbody rigidbody;
+
     public Vector3 Direction { get; private set; }
 
     public float Speed => speed;
@@ -117,10 +119,16 @@ public class MovementController : MonoBehaviour
         direction.y = 0;
         transform.forward = direction;
     }
+
+    public void Jump()
+    {
+        rigidbody.AddForce(Vector3.up * 500f);
+    }
     #endregion
 
     private void Awake()
     {
+        rigidbody = GetComponent<Rigidbody>();
     }
 
     private void Update()
