@@ -79,20 +79,25 @@ public class InputManager : MonoBehaviour
         // Create movement direction based on input
         var direction = new Vector3(horizontal, 0, vertical).normalized;
 
-        // Stop movement if no input is detected
-        if (direction == Vector3.zero && usingWASD)
+        if (usingWASD)
         {
-            controller.Movement.Stop();
-            usingWASD = false;
-            return;
+            // Stop movement if no input is detected
+            if (direction == Vector3.zero)
+            {
+                controller.Movement.Stop();
+                usingWASD = false;
+                return;
+            }
+            else
+            {
+                ApplyDirection(direction);
+            }
         }
-
-        if (direction != Vector3.zero)
+        else if (direction != Vector3.zero)
         {
             usingWASD = true;
         }
 
-        ApplyDirection(direction);
 
         if (Input.GetKeyDown(KeyCode.Space))
         {

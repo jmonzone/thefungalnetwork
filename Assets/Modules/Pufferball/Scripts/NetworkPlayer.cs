@@ -80,7 +80,8 @@ public class NetworkPlayer : NetworkBehaviour
 
     private void OnAbilityCast()
     {
-        RequestAbilityCastServerRpc(NetworkManager.Singleton.LocalClientId, abilityCast.ShruneId, abilityCast.StartPosition, abilityCast.Direction);
+        //todo: centralize logic with AbilityCastController
+        RequestAbilityCastServerRpc(NetworkManager.Singleton.LocalClientId, abilityCast.ShruneId, abilityCast.StartPosition + Vector3.up * 0.5f, abilityCast.Direction);
     }
 
     [ServerRpc()]
