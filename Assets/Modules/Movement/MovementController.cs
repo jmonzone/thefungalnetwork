@@ -120,15 +120,25 @@ public class MovementController : MonoBehaviour
         transform.forward = direction;
     }
 
+    private int jumpCount = 0;
+    private int maxJumpCount = 2;
+
     public void Jump()
     {
-        rigidbody.AddForce(Vector3.up * 500f);
+        if (jumpCount >= maxJumpCount) return;
+        jumpCount++;
+        rigidbody.AddForce(Vector3.up * 250f);
     }
     #endregion
 
     private void Awake()
     {
         rigidbody = GetComponent<Rigidbody>();
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        jumpCount = 0;
     }
 
     private void Update()
@@ -176,8 +186,6 @@ public class MovementController : MonoBehaviour
             if (speed > 0.05f) speed *= 1 - Time.deltaTime * 0.1f;
             else speed = 0;
         }
-
-
     }
 
     private IEnumerator WaitUntilDestinationReached(UnityAction onComplete)

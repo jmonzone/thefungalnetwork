@@ -35,10 +35,22 @@ public class InputManager : MonoBehaviour
         };
 
         controller.Volume = volume;
-        controller.OnUpdate += () =>
-        {
-            cameraController.Target = controller.Movement.transform;
-        };
+       
+    }
+
+    private void OnEnable()
+    {
+        controller.OnUpdate += UpdateCameraController;
+    }
+
+    private void OnDisable()
+    {
+        controller.OnUpdate -= UpdateCameraController;
+    }
+
+    private void UpdateCameraController()
+    {
+        cameraController.Target = controller.Movement.transform;
     }
 
     public void CanInteract(bool value)
@@ -58,7 +70,7 @@ public class InputManager : MonoBehaviour
 
     private void UpdateWASDMovment()
     {
-        if (controller == null || mainCamera == null) return;
+        if (controller.Movement == null) return;
 
         // Read WASD or Arrow Key input
         float horizontal = Input.GetAxis("Horizontal"); // A/D or Left/Right Arrow
@@ -81,6 +93,11 @@ public class InputManager : MonoBehaviour
         }
 
         ApplyDirection(direction);
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            controller.Movement.Jump();
+        }
     }
 
     private void ApplyDirection(Vector3 direction)
