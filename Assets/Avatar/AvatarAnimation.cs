@@ -19,9 +19,10 @@ public class AvatarAnimation : MonoBehaviour
     //private Material originalMaterial;
     private Coroutine possessionCoroutine;
 
-    public void PossessFungal(Transform target, UnityAction onComplete)
+    public void PossessFungal(FungalController fungal, UnityAction onComplete)
     {
-        this.target = target;
+        fungal.Controllable.Movement.Stop();
+        target = fungal.transform;
         Debug.Log("Starting possession animation...");
         animator.Play("Jump");
 

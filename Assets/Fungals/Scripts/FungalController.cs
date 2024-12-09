@@ -22,12 +22,12 @@ public class FungalController : MonoBehaviour
 
     private void OnEnable()
     {
-        controller.OnUpdate += () => healthSlider.gameObject.SetActive(controllable == controller.Controllable);
+        //controller.OnUpdate += () => healthSlider.gameObject.SetActive(controllable == controller.Controllable);
     }
 
     private void OnDisable()
     {
-        controller.OnUpdate -= () => healthSlider.gameObject.SetActive(controllable == controller.Controllable);
+        //controller.OnUpdate -= () => healthSlider.gameObject.SetActive(controllable == controller.Controllable);
     }
 
     public void Initialize(FungalModel model)

@@ -37,7 +37,7 @@ public class AstralProjection : MonoBehaviour
     {
         if (IsLeavingTheBody)
         {
-            avatar.PossessFungal(fungal.transform, () =>
+            avatar.PossessFungal(fungal, () =>
             {
                 controller.SetController(fungal.Controllable);
             });
