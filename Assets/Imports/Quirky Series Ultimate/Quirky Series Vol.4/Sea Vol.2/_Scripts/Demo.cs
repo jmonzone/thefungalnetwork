@@ -5,93 +5,108 @@ using System.Collections.Generic;
 
 public class Demo : MonoBehaviour {
 
-	private GameObject[] animal;
+	private GameObject[] animals;
 	private int animalIndex;
-	private List<string> animationList = new List<string> {
-															  "Attack",
-															  "Bounce",
-															  "Clicked",
-															  "Death",
-															  "Eat",
-															  "Fear",
-															  "Fly",
-															  "Hit",
-															  "Idle_A", "Idle_B", "Idle_C",
-															  "Jump",
-															  "Roll",
-															  "Run",
-															  "Sit",
-															  "Spin/Splash",
-															  "Swim",
-															  "Walk"
-															};
-	private List<string> facialExpList = new List<string> {
-															  "Eyes_Annoyed",
-															  "Eyes_Blink",
-															  "Eyes_Cry",
-															  "Eyes_Dead",
-															  "Eyes_Excited",
-															  "Eyes_Happy",
-															  "Eyes_LookDown",
-															  "Eyes_LookIn",
-															  "Eyes_LookOut",
-															  "Eyes_LookUp",
-															  "Eyes_Rabid",
-															  "Eyes_Sad",
-															  "Eyes_Shrink",
-															  "Eyes_Sleep",
-															  "Eyes_Spin",
-															  "Eyes_Squint",
-															  "Eyes_Trauma",
-															  "Sweat_L",
-															  "Sweat_R",
-															  "Teardrop_L",
-															  "Teardrop_R"
-															};
+	private List<string> animationList = new List<string> 
+											{	"Attack",
+												"Bounce",
+												"Clicked",
+												"Death",
+												"Eat",
+												"Fear",
+												"Fly",
+												"Hit",
+												"Idle_A", "Idle_B", "Idle_C",
+												"Jump",
+												"Roll",
+												"Run",
+												"Sit",
+												"Spin/Splash",
+												"Swim",
+												"Walk"
+											};
+	private List<string> shapekeyList = new List<string>
+											{	"Eyes_Annoyed",
+												"Eyes_Blink",
+												"Eyes_Cry",
+												"Eyes_Dead",
+												"Eyes_Excited",
+												"Eyes_Happy",
+												"Eyes_LookDown",
+												"Eyes_LookIn",
+												"Eyes_LookOut",
+												"Eyes_LookUp",
+												"Eyes_Rabid",
+												"Eyes_Sad",
+												"Eyes_Shrink",
+												"Eyes_Sleep",
+												"Eyes_Spin",
+												"Eyes_Squint",
+												"Eyes_Trauma",
+												"Sweat_L",
+												"Sweat_R",
+												"Teardrop_L",
+												"Teardrop_R"
+											};
 
 	[Space(10)]
-	[Tooltip("Assign: the game object where the animal are parented to")]
-	public Transform animal_parent;
-	public Dropdown dropdownAnimal;
-	public Dropdown dropdownAnimation;
-	public Dropdown dropdownFacialExp;
+	Transform animal_parent;
+	Dropdown dropdownAnimal;
+	Dropdown dropdownAnimation;
+	Dropdown dropdownShapekey;
 
 	void Start() {
 
+		animal_parent = GameObject.Find("Animals").transform;
+		Transform canvas = GameObject.Find("Canvas").transform;
+		dropdownAnimal = canvas.Find("Animal").Find("Dropdown").GetComponent<Dropdown>();
+		dropdownAnimation = canvas.Find("Animation").Find("Dropdown").GetComponent<Dropdown>();
+		dropdownShapekey = canvas.Find("Shapekey").Find("Dropdown").GetComponent<Dropdown>();
+
+
 		int count = animal_parent.childCount;
-		animal = new GameObject[count];
+		animals = new GameObject[count];
 		List<string> animalList = new List<string>();
 
 		for(int i = 0; i< count; i++)
 		{
-			animal[i] = animal_parent.GetChild(i).gameObject;
+			animals[i] = animal_parent.GetChild(i).gameObject;
 			string n = animal_parent.GetChild(i).name;
 			animalList.Add(n);
 			// animalList.Add(n.Substring(0, n.IndexOf("_")));
 
-			if(i==0) animal[i].SetActive(true);
-			else animal[i].SetActive(false);
+			if(i==0) animals[i].SetActive(true);
+			else animals[i].SetActive(false);
 		}
+
 		dropdownAnimal.AddOptions(animalList);
 		dropdownAnimation.AddOptions(animationList);
-		dropdownFacialExp.AddOptions(facialExpList);
-		dropdownFacialExp.value = 1;
-		ChangeExpression();
+		dropdownShapekey.AddOptions(shapekeyList);
+		
+		// Set to eyes_blink
+		dropdownShapekey.value = 1;
+		ChangeShapekey();
 
-		// Bounds b = animal[0].transform.GetChild(0).GetChild(0).GetComponent<Renderer>().bounds;
+		// Bounds b = animals[0].transform.GetChild(0).GetChild(0).GetComponent<Renderer>().bounds;
 	}
 
-	void Update() {
-
+	void Update()
+	{
 		if(Input.GetKeyDown("up")) { PrevAnimal(); }
 		else if(Input.GetKeyDown("down")) { NextAnimal(); }
+		else if(Input.GetKeyDown("right")
+			&& (Input.GetKey(KeyCode.LeftControl)
+			|| Input.GetKey(KeyCode.RightControl))) { NextShapekey(); }
+		else if(Input.GetKeyDown("left") 
+			&& (Input.GetKey(KeyCode.LeftControl)
+			|| Input.GetKey(KeyCode.RightControl))) { PrevShapekey(); }
 		else if(Input.GetKeyDown("right")) { NextAnimation(); }
 		else if(Input.GetKeyDown("left")) { PrevAnimation(); }
 	}
 
 
-	public void NextAnimal() {
-
+	public void NextAnimal()
+	{
 		if(dropdownAnimal.value >= dropdownAnimal.options.Count - 1)
 			dropdownAnimal.value = 0;
 		else
@@ -100,8 +115,8 @@ public class Demo : MonoBehaviour {
 		ChangeAnimal();
 	}
 
-	public void PrevAnimal() {
-
+	public void PrevAnimal()
+	{
 		if(dropdownAnimal.value<= 0)
 			dropdownAnimal.value = dropdownAnimal.options.Count - 1;
 		else
@@ -110,18 +125,18 @@ public class Demo : MonoBehaviour {
 		ChangeAnimal();
 	}
 
-	public void ChangeAnimal() {
-
-		animal[animalIndex].SetActive(false);
-		animal[dropdownAnimal.value].SetActive(true);
+	public void ChangeAnimal()
+	{
+		animals[animalIndex].SetActive(false);
+		animals[dropdownAnimal.value].SetActive(true);
 		animalIndex = dropdownAnimal.value;
 
 		ChangeAnimation();
-		ChangeExpression();
+		ChangeShapekey();
 	}
 
-	public void NextAnimation() {
-
+	public void NextAnimation()
+	{
 		if(dropdownAnimation.value >= dropdownAnimation.options.Count - 1)
 			dropdownAnimation.value = 0;
 		else
@@ -131,8 +146,8 @@ public class Demo : MonoBehaviour {
 	}
 
 
-	public void PrevAnimation() {
-
+	public void PrevAnimation()
+	{
 		if(dropdownAnimation.value<= 0)
 			dropdownAnimation.value = dropdownAnimation.options.Count - 1;
 		else
@@ -141,64 +156,65 @@ public class Demo : MonoBehaviour {
 		ChangeAnimation();
 	}
 
-	public void ChangeAnimation() {
-
-		GameObject a = animal[dropdownAnimal.value];
-
-		int count = a.transform.childCount;
-		for(int i = 0; i< count; i++)
+	public void ChangeAnimation()
+	{
+		Animator animator = animals[dropdownAnimal.value].GetComponent<Animator>();
+		if(animator != null)
 		{
-			if(a.GetComponent<Animator>() != null)
+			int index = dropdownAnimation.value;
+			
+			// If Spin/Splash animation
+			if(index == 15)
 			{
-				a.GetComponent<Animator>().Play(dropdownAnimation.options[dropdownAnimation.value].text);
+				if(animator.HasState(0, Animator.StringToHash("Spin")))
+				{
+					animator.Play("Spin");
+					// dropdownAnimation.options[index] = new Dropdown.OptionData("Spin");
+				}
+				else if(animator.HasState(0, Animator.StringToHash("Splash")))
+				{
+					animator.Play("Splash");
+					// dropdownAnimation.options[index] = new Dropdown.OptionData("Splash");
+				}
 			}
-			else if(a.transform.GetChild(i).GetComponent<Animator>() != null)
+			else
 			{
-				a.transform.GetChild(i).GetComponent<Animator>().Play(dropdownAnimation.options[dropdownAnimation.value].text);
+				animator.Play(dropdownAnimation.options[index].text);
 			}
 		}
 	}
 
-	public void NextExpression() {
-
-		if(dropdownFacialExp.value >= dropdownFacialExp.options.Count - 1)
-			dropdownFacialExp.value = 0;
+	public void NextShapekey()
+	{
+		if(dropdownShapekey.value >= dropdownShapekey.options.Count - 1)
+			dropdownShapekey.value = 0;
 		else
-			dropdownFacialExp.value++;
+			dropdownShapekey.value++;
 
-		ChangeExpression();
+		ChangeShapekey();
 	}
 
-	public void PrevExpression() {
-
-		if(dropdownFacialExp.value<= 0)
-			dropdownFacialExp.value = dropdownFacialExp.options.Count - 1;
+	public void PrevShapekey()
+	{
+		if(dropdownShapekey.value<= 0)
+			dropdownShapekey.value = dropdownShapekey.options.Count - 1;
 		else
-			dropdownFacialExp.value--;
+			dropdownShapekey.value--;
 		
-		ChangeExpression();
+		ChangeShapekey();
 	}
 
-	public void ChangeExpression() {
-
-		GameObject a = animal[dropdownAnimal.value];
-
-		int count = a.transform.childCount;
-		for(int i = 0; i< count; i++)
+	public void ChangeShapekey()
+	{
+		Animator animator = animals[dropdownAnimal.value].GetComponent<Animator>();
+		if(animator != null)
 		{
-			if(a.GetComponent<Animator>() != null)
-			{
-				a.GetComponent<Animator>().Play(dropdownFacialExp.options[dropdownFacialExp.value].text);
-			}
-			else if(a.transform.GetChild(i).GetComponent<Animator>() != null)
-			{
-				a.transform.GetChild(i).GetComponent<Animator>().Play(dropdownFacialExp.options[dropdownFacialExp.value].text);
-			}
+			animator.Play(dropdownShapekey.options[dropdownShapekey.value].text);
 		}
 	}
 
-	public void GoToWebsite(string URL) {
-
+	public void GoToWebsite(string URL)
+	{
 		Application.OpenURL(URL);
 	}
 }
