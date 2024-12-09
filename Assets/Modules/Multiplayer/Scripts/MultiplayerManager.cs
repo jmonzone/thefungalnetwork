@@ -15,8 +15,6 @@ using UnityEngine.UI;
 
 public class MultiplayerManager : MonoBehaviour
 {
-    [SerializeField] private Button leaveButton;
-
     public string PlayerName { get; private set; }
 
     private Lobby joinedLobby;

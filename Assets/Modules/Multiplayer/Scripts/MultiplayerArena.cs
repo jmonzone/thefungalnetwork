@@ -3,12 +3,12 @@
 [CreateAssetMenu]
 public class MultiplayerArena : ScriptableObject
 {
-    public Vector3 SpawnPosition1 { get; private set; }
-    public Vector3 SpawnPosition2 { get; private set; }
+    public Vector3 PlayerSpawnPosition { get; private set; }
+    public Vector3 CrocodileSpawnPosition { get; private set; }
 
-    public void Initialize(Vector3 spawnPosition1, Vector3 spawnPosition2)
+    public void Initialize(Vector3 playerSpawnPosition, Vector3 crocodileSpawnPosition)
     {
-        SpawnPosition1 = spawnPosition1;
-        SpawnPosition2 = spawnPosition2;
+        PlayerSpawnPosition = playerSpawnPosition;
+        CrocodileSpawnPosition = crocodileSpawnPosition;
     }
 }

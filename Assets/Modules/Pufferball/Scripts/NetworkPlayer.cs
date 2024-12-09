@@ -4,6 +4,7 @@ using UnityEngine;
 public class NetworkPlayer : NetworkBehaviour
 {
     [SerializeField] private NetworkObject networkAvatarPrefab;
+    [SerializeField] private NetworkObject networkCrocdilePrefab;
 
     [SerializeField] private MultiplayerArena arena;
     [SerializeField] private Possession possesionService;
@@ -22,8 +23,6 @@ public class NetworkPlayer : NetworkBehaviour
 
         if (IsOwner)
         {
-            Debug.Log("init player");
-
             // This is the local player
             Debug.Log("Local player spawned: " + gameObject.name);
 
@@ -36,16 +35,23 @@ public class NetworkPlayer : NetworkBehaviour
             {
                 if (targetFungal)
                 {
-                    var spawnedFungal = Instantiate(targetFungal.Data.NetworkPrefab, arena.SpawnPosition1, forwardRotation, transform);
+                    var spawnedFungal = Instantiate(targetFungal.Data.NetworkPrefab, arena.PlayerSpawnPosition, forwardRotation, transform);
                     spawnedFungal.NetworkObject.Spawn();
                     spawnedFungal.Initialize(targetFungal.Data.Id);
                     controller.SetController(spawnedFungal.GetComponent<Controllable>());
                 }
                 else
                 {
-                    var spawnedAvatar = Instantiate(networkAvatarPrefab, arena.SpawnPosition1, forwardRotation, transform);
+                    var randomOffset = Random.insideUnitSphere;
+                    randomOffset.y = 0;
+
+                    var avatarSpawnPosition = arena.PlayerSpawnPosition + randomOffset.normalized * 2f;
+                    var spawnedAvatar = Instantiate(networkAvatarPrefab, avatarSpawnPosition, forwardRotation, transform);
                     spawnedAvatar.Spawn();
                     controller.SetController(spawnedAvatar.GetComponent<Controllable>());
+
+                    var spawnedCrocodile = Instantiate(networkCrocdilePrefab, arena.CrocodileSpawnPosition, forwardRotation, transform);
+                    spawnedCrocodile.Spawn();
                 }
             }
             else
@@ -120,7 +126,7 @@ public class NetworkPlayer : NetworkBehaviour
     public void RequestSpawnAvatarServerRpc(ulong clientId)
     {
         // Only the server will execute this logic
-        var networkAvatar = Instantiate(networkAvatarPrefab, arena.SpawnPosition1, Quaternion.identity, transform);
+        var networkAvatar = Instantiate(networkAvatarPrefab, arena.PlayerSpawnPosition, Quaternion.identity, transform);
         networkAvatar.SpawnWithOwnership(clientId);
 
         // Send the NetworkObject ID to the client
@@ -154,7 +160,7 @@ public class NetworkPlayer : NetworkBehaviour
         var data = fungalCollection.Data.Find(fungal => fungal.Id == fungalId);
         if (!data) return;
         // Only the server will execute this logic
-        var networkFungal = Instantiate(data.NetworkPrefab, arena.SpawnPosition1, Quaternion.identity, transform);
+        var networkFungal = Instantiate(data.NetworkPrefab, arena.PlayerSpawnPosition, Quaternion.identity, transform);
 
         networkFungal.NetworkObject.SpawnWithOwnership(clientId);
 
