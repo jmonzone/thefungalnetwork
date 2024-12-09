@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public enum FungalState
 {
@@ -11,11 +12,23 @@ public enum FungalState
 public class FungalController : MonoBehaviour
 {
     [Header("References")]
+    [SerializeField] private Controller controller;
     [SerializeField] private Controllable controllable;
+    [SerializeField] private HealthSlider healthSlider;
 
     public FungalModel Model { get; private set; }
     public GameObject Render { get; private set; }
     public Controllable Controllable => controllable;
+
+    private void OnEnable()
+    {
+        controller.OnUpdate += () => healthSlider.gameObject.SetActive(controllable == controller.Controllable);
+    }
+
+    private void OnDisable()
+    {
+        controller.OnUpdate -= () => healthSlider.gameObject.SetActive(controllable == controller.Controllable);
+    }
 
     public void Initialize(FungalModel model)
     {

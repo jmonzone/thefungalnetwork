@@ -9,8 +9,8 @@ public class Crocodile : MonoBehaviour
     [SerializeField] private Gradient hitColor;
     [SerializeField] private float hitColorDuration = 2f;
     [SerializeField] private float flashDuration = 0.5f; // Time for flash to complete
-    [SerializeField] private float maxHealth = 3f;
-    private Slider slider;
+
+    private HealthSlider healthSlider;
 
     private Gradient defaultColor;
     private ParticleSystem particles;
@@ -27,15 +27,13 @@ public class Crocodile : MonoBehaviour
     {
         overheadUI.SetActive(true);
 
-        slider = GetComponentInChildren<Slider>(includeInactive: true);
-        slider.maxValue = maxHealth;
-        slider.minValue = 0;
-        slider.value = maxHealth;
 
         particles = GetComponentInChildren<ParticleSystem>();
         defaultColor = particles.colorOverLifetime.color.gradient;
 
         animator = GetComponentInChildren<Animator>();
+
+        healthSlider = GetComponent<HealthSlider>();
     }
 
     void Start()
@@ -85,12 +83,8 @@ public class Crocodile : MonoBehaviour
 
     public void Damage()
     {
-        slider.value--;
-
-        if (slider.value == 0)
-        {
-            animator.Play("Death");
-        }
+        healthSlider.Damage();
+        if (healthSlider.Value == 0) animator.Play("Death");
 
         // Stop any ongoing color transition to avoid conflicts
         if (colorChangeCoroutine != null)

@@ -48,6 +48,8 @@ public class GroveManager : MonoBehaviour
         {
             Debug.Log("Setting fungal controller");
             targetFungal.transform.position = rabbitHolePosition.position;
+
+            //todo: centralize logic with AstralProjection
             controller.SetController(targetFungal.Controllable);
         }
         else
