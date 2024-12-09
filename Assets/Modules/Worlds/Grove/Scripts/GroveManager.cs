@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+//todo: make separate fungal management script
 public class GroveManager : MonoBehaviour
 {
     [Header("Prefab References")]
@@ -22,7 +23,7 @@ public class GroveManager : MonoBehaviour
     public List<FungalController> FungalControllers { get; private set; } = new List<FungalController>();
 
     public event UnityAction OnPlayerSpawned;
-    public event UnityAction<FungalController> OnFungalSpawned;
+    public event UnityAction<FungalController> OnFungalInteraction;
 
     private void Start()
     {
@@ -95,7 +96,7 @@ public class GroveManager : MonoBehaviour
     private void SpawnFungal(FungalModel fungal, Vector3 position)
     {
         var fungalController = fungalControllerSpawner.SpawnFungal(fungal, position);
-        OnFungalSpawned?.Invoke(fungalController);
+        fungalController.GetComponent<ProximityAction>().OnUse += () => OnFungalInteraction?.Invoke(fungalController);
         FungalControllers.Add(fungalController);
         fungalController.Controllable.Movement.SetBounds(fungalBounds);
     }

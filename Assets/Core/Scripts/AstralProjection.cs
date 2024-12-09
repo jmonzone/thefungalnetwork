@@ -11,17 +11,13 @@ public class AstralProjection : MonoBehaviour
         var groveManager = GetComponent<GroveManager>();
         groveManager.OnPlayerSpawned += () =>
         {
-            if (controller.Controllable != avatarControllable)
-            {
-                avatar.PlayLeaveBodyAnimation();
-            }
+            //if (controller.Controllable != avatarControllable)
+            //{
+            //    avatar.PlayLeaveBodyAnimation();
+            //}
         };
 
-        groveManager.OnFungalSpawned += fungal =>
-        {
-            var action = fungal.GetComponent<ProximityAction>();
-            action.OnUse += () => PossessFungal(fungal);
-        };
+        groveManager.OnFungalInteraction += PossessFungal;
    }
 
     private void Start()
@@ -29,18 +25,29 @@ public class AstralProjection : MonoBehaviour
         avatarControllable.GetComponent<ProximityAction>().OnUse += () => ReturnToTheBody();
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            ReturnToTheBody();
+        }
+    }
+
     public void PossessFungal(FungalController fungal)
     {
         if (IsLeavingTheBody)
         {
-            avatar.PlayLeaveBodyAnimation();
+            avatar.PossessFungal(fungal.transform, () =>
+            {
+                controller.SetController(fungal.Controllable);
+            });
         }
         else
         {
             LeaveFungal();
+            controller.SetController(fungal.Controllable);
         }
 
-        controller.SetController(fungal.Controllable);
     }
 
     public void ReturnToTheBody()
