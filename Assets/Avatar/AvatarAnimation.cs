@@ -45,6 +45,7 @@ public class AvatarAnimation : MonoBehaviour
 
         transform.localScale = Vector3.zero; // Ensure fully shrunk
         transform.position = target.position; // Ensure exact positioning
+        target.GetComponentInChildren<MaterialFlasher>().FlashWhite();
 
         // Invoke completion callback
         onComplete?.Invoke();
