@@ -32,6 +32,20 @@ public class Crocodile : MonoBehaviour
         materialFlasher = GetComponent<MaterialFlasher>();
     }
 
+    private float hitCooldown = 1.5f;
+    private float hitTimer = 0;
+
+    private void Update()
+    {
+        if (movementController.IsAtDestination && hitTimer > hitCooldown)
+        {
+            GetComponentInChildren<Animator>().Play("Hit");
+            hitTimer = 0;
+        }
+
+        hitTimer += Time.deltaTime;
+        
+    }
 
     public void Damage()
     {
