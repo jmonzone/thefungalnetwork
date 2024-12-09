@@ -17,6 +17,7 @@ public class MovementAnimations : MonoBehaviour
     {
         if (!animator) enabled = false;
         movementController = GetComponentInParent<MovementController>();
+        movementController.OnJump += () => animator.Play("Jump");
     }
 
     public void Update()

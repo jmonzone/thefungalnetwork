@@ -64,6 +64,8 @@ public class MovementController : MonoBehaviour
         _ => position,
     };
 
+    public event UnityAction OnJump;
+
     #region Public Methods
     public void SetTarget(Transform target)
     {
@@ -132,6 +134,7 @@ public class MovementController : MonoBehaviour
         if (!CanJump) return;
         jumpCount++;
         rb.AddForce(Vector3.up * 250f);
+        OnJump?.Invoke();
     }
 
     public void SetMaxJumpCount(int maxJumpCount)

@@ -66,6 +66,7 @@ MonoBehaviour:
   maxIdleDuration: 5
   radius: 4
   radialSpeed: 0.25
+  maxJumpCount: 1
 --- !u!114 &3613689344659375908
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -165,11 +166,31 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6168625135647016280}
     m_Modifications:
+    - target: {fileID: 876015265289327089, guid: 9e89634fe9474125ab42aefdc22a787d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2364977855752419471, guid: 9e89634fe9474125ab42aefdc22a787d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2706990786035198946, guid: 9e89634fe9474125ab42aefdc22a787d,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 806224b540ec7465496fd51b01d3f02f, type: 2}
     - target: {fileID: 8606755148461151098, guid: 9e89634fe9474125ab42aefdc22a787d,
         type: 3}
       propertyPath: m_Name
       value: MC02
       objectReference: {fileID: 0}
+    - target: {fileID: 8907300813736130153, guid: 9e89634fe9474125ab42aefdc22a787d,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 806224b540ec7465496fd51b01d3f02f, type: 2}
     - target: {fileID: 8951615198464756160, guid: 9e89634fe9474125ab42aefdc22a787d,
         type: 3}
       propertyPath: m_LocalPosition.x
