@@ -18,14 +18,11 @@ public class Launcher : MonoBehaviour
     [SerializeField] private LocalData localData;
     [SerializeField] private Button newGameButton;
     [SerializeField] private Button continueButton;
+    [SerializeField] private Button bossButton;
     [SerializeField] private Transform skyBox;
-
-    private Camera mainCamera;
 
     private void Awake()
     {
-        mainCamera = Camera.main;
-
         title.gameObject.SetActive(false);
         namePrompt.gameObject.SetActive(false);
         mainMenu.gameObject.SetActive(false);
@@ -47,6 +44,11 @@ public class Launcher : MonoBehaviour
         continueButton.onClick.AddListener(() =>
         {
             StartCoroutine(OnContinueButtonClicked());
+        });
+
+        bossButton.onClick.AddListener(() =>
+        {
+            StartCoroutine(OnBossButtonClicked());
         });
     }
 
@@ -105,17 +107,23 @@ public class Launcher : MonoBehaviour
         yield return namePrompt.FadeIn();
     }
 
+    private IEnumerator OnNewGameButtonClicked()
+    {
+        localData.ResetData();
+        yield return mainMenu.FadeOut();
+        yield return ShowNamePrompt();
+    }
+
     private IEnumerator OnContinueButtonClicked()
     {
         yield return mainMenu.FadeOut();
         sceneNavigation.NavigateToScene(2);
     }
 
-    private IEnumerator OnNewGameButtonClicked()
+    private IEnumerator OnBossButtonClicked()
     {
-        localData.ResetData();
         yield return mainMenu.FadeOut();
-        yield return ShowNamePrompt();
+        sceneNavigation.NavigateToScene(4);
     }
 
     private IEnumerator OnSubmitButtonClicked()
