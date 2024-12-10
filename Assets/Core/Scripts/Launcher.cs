@@ -2,6 +2,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+
 public class Launcher : MonoBehaviour
 {
     [SerializeField] private Tutorial tutorial;
@@ -16,6 +17,7 @@ public class Launcher : MonoBehaviour
     [SerializeField] private LocalData localData;
     [SerializeField] private Button newGameButton;
     [SerializeField] private Button continueButton;
+    [SerializeField] private Transform skyBox;
 
     private Camera mainCamera;
 
@@ -70,7 +72,7 @@ public class Launcher : MonoBehaviour
 
     private void Update()
     {
-        mainCamera.transform.Rotate(axis, rotationSpeed * Time.deltaTime);
+        skyBox.Rotate(axis, rotationSpeed * Time.deltaTime);
     }
 
     private IEnumerator ShowMainMenu()
