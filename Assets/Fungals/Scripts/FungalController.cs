@@ -52,6 +52,9 @@ public class FungalController : MonoBehaviour
 
             var movementAnimations = GetComponentInChildren<MovementAnimations>();
             movementAnimations.Initalize();
+
+            var attackable = GetComponent<Attackable>();
+            attackable.OnCurrentHealthChanged += () => healthSlider.gameObject.SetActive(true);
         }
     }
 }

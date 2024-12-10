@@ -8,6 +8,7 @@ public class Crocodile : MonoBehaviour
     [SerializeField] private float hitColorDuration = 2f;
     [SerializeField] private float flashDuration = 0.5f; // Time for flash to complete
 
+    private Attackable attackable;
     private MovementController movementController;
     private ParticleColorManager particleColorManager;
     private MaterialFlasher materialFlasher;
@@ -30,11 +31,12 @@ public class Crocodile : MonoBehaviour
         materialFlasher = GetComponent<MaterialFlasher>();
     }
 
+    // todo: attack attackable, crocodile listens
     public void Damage()
     {
-        healthSlider.Damage();
+        attackable.Damage();
 
-        if (healthSlider.Value == 0)
+        if (attackable.CurrentHealth == 0)
         {
             GetComponentInChildren<Animator>().Play("Death");
             movementController.Stop();

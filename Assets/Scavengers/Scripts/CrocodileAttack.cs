@@ -69,4 +69,15 @@ public class CrocodileAttack : MonoBehaviour
         transform.forward = Vector3.back;
         hitTimer = 0;
     }
+
+
+    private void OnTriggerEnter(Collider other)
+    {
+        var attackable = other.transform.GetComponentInParent<Attackable>();
+        if (attackable)
+        {
+            Debug.Log($"Collided {other.transform.name}");
+            attackable.Damage();
+        }
+    }
 }

@@ -3,22 +3,22 @@ using UnityEngine.UI;
 
 public class HealthSlider : MonoBehaviour
 {
-    [SerializeField] private float maxHealth = 3f;
-
-    private Slider slider;
-
-    public float Value => slider.value;
-
     private void Awake()
     {
-        slider = GetComponentInChildren<Slider>(includeInactive: true);
-        slider.maxValue = maxHealth;
-        slider.minValue = 0;
-        slider.value = maxHealth;
-    }
+        var slider = GetComponentInChildren<Slider>();
+        var attackable = GetComponentInParent<Attackable>();
 
-    public void Damage()
-    {
-        slider.value--;
+        attackable.OnCurrentHealthChanged += () =>
+        {
+            slider.value = attackable.CurrentHealth;
+            gameObject.SetActive(true);
+        };
+
+        slider.maxValue = attackable.MaxHealth;
+        slider.minValue = 0;
+        slider.value = attackable.CurrentHealth;
+
+        gameObject.SetActive(false);
+        Debug.Log("hiding");
     }
 }
