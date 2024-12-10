@@ -213,7 +213,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
@@ -257,7 +257,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 0
   speed: 2
-  lerpRotation: 1
+  lerpRotation: 0
   lockXZ: 1
   useDrag: 0
   positionAnchor:
@@ -282,7 +282,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0584be89b59f0474eada4b2beab08ac4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
+  target: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
   direction: {x: 0, y: 0, z: 0}
   hitCooldown: 3
   hitTimer: 0

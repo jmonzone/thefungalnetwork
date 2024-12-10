@@ -15,13 +15,21 @@ public class MovementAnimations : MonoBehaviour
 
     private void Awake()
     {
-        if (!animator) enabled = false;
-        movementController = GetComponentInParent<MovementController>();
+        Initalize();
+    }
+
+    public void Initalize()
+    {
+        animator = GetComponentInChildren<Animator>();
+
+        movementController = GetComponent<MovementController>();
         movementController.OnJump += () => animator.Play("Jump");
     }
 
     public void Update()
     {
+        if (!animator) return;
+
         IsMoving = !movementController.IsAtDestination;
         DirectionMagnitude = movementController.Direction.magnitude;
 

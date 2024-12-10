@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class CrocodileAttack : MonoBehaviour
 {
-    [SerializeField] private Transform target;
+    [SerializeField] private Controller target;
     [SerializeField] private Vector3 direction;
     [SerializeField] private float hitCooldown = 3f;
     [SerializeField] private float hitTimer = 0;
@@ -43,7 +43,7 @@ public class CrocodileAttack : MonoBehaviour
         var elapsedTime = 0f;
         while (elapsedTime < 2)
         {
-            direction = target.position - movementController.transform.position;
+            direction = target.Movement.transform.position - transform.position;
             direction.y = 0;
             abilityCast.UpdateCast(direction.normalized);
             elapsedTime += Time.deltaTime;
