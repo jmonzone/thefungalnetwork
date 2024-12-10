@@ -59,6 +59,7 @@ public class CrocodileAttack : MonoBehaviour
         var targetPosition = abilityCast.StartPosition + abilityCast.Direction * chargeDistance;
         movementController.SetPosition(targetPosition);
         yield return new WaitUntil(() => movementController.IsAtDestination);
+        movementController.SetSpeed(chargeSpeed * 0.75f);
         movementController.SetPosition(startPosition);
 
         yield return new WaitUntil(() => movementController.IsAtDestination);
