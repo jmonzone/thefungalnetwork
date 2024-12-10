@@ -39,6 +39,7 @@ public class GroveManager : MonoBehaviour
     }
 
 
+    //todo: centralize logic with InitialController
     private void SpawnPlayer()
     {
         Debug.Log("spawning player");
