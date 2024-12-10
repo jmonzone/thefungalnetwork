@@ -7,12 +7,13 @@ public class AbilityCast : ScriptableObject
 {
     [SerializeField] private ShruneItem shrune;
     [SerializeField] private Transform origin;
+    [SerializeField] private float maxDistance;
 
     public ShruneItem Shrune => shrune;
     public string ShruneId => shrune.name;
     public Vector3 StartPosition => origin.position + Direction.normalized;
     public Vector3 Direction { get; private set; }
-    public float MaxDistance => shrune.MaxDistance;
+    public float MaxDistance => maxDistance;
 
 
     public event UnityAction OnShruneChanged;
@@ -28,6 +29,7 @@ public class AbilityCast : ScriptableObject
     public void SetShrune(ShruneItem shrune)
     {
         this.shrune = shrune;
+        maxDistance = shrune.MaxDistance;
         OnShruneChanged?.Invoke();
     }
 

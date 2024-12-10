@@ -8,6 +8,7 @@ public class CrocodileAttack : MonoBehaviour
     [SerializeField] private Vector3 direction;
     [SerializeField] private float hitCooldown = 3f;
     [SerializeField] private float hitTimer = 0;
+    [SerializeField] private AbilityCast abilityCast;
 
     private MovementController movementController;
 
@@ -15,7 +16,7 @@ public class CrocodileAttack : MonoBehaviour
     void Start()
     {
         movementController = GetComponent<MovementController>();
-        //movementController.SetTarget(target);
+        abilityCast.StartCast(transform);
     }
 
     // Update is called once per frame
@@ -25,8 +26,11 @@ public class CrocodileAttack : MonoBehaviour
         {
             GetComponentInChildren<Animator>().Play("Attack");
             hitTimer = 0;
-            direction = target.transform.position - movementController.transform.position;
         }
+
+        direction = target.position - movementController.transform.position;
+        direction.y = 0;
+        abilityCast.UpdateCast(direction.normalized);
 
         hitTimer += Time.deltaTime;
     }
