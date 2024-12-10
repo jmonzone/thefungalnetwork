@@ -11,6 +11,7 @@ public class Launcher : MonoBehaviour
     [SerializeField] private TMP_InputField inputField;
     [SerializeField] private Button submitButton;
     [SerializeField] private DisplayName displayName;
+    [SerializeField] private FadeCanvasGroup title;
     [SerializeField] private FadeCanvasGroup namePrompt;
     [SerializeField] private FadeCanvasGroup mainMenu;
     [SerializeField] private SceneNavigation sceneNavigation;
@@ -25,6 +26,7 @@ public class Launcher : MonoBehaviour
     {
         mainCamera = Camera.main;
 
+        title.gameObject.SetActive(false);
         namePrompt.gameObject.SetActive(false);
         mainMenu.gameObject.SetActive(false);
 
@@ -60,6 +62,27 @@ public class Launcher : MonoBehaviour
 
     private void ShowInitialView()
     {
+        StartCoroutine(ShowTitle());
+    }
+
+    private void Update()
+    {
+        skyBox.Rotate(axis, rotationSpeed * Time.deltaTime);
+    }
+
+    private IEnumerator ShowTitle()
+    {
+        yield return new WaitForSeconds(1f);
+        yield return title.FadeIn();
+
+        Debug.Log("Waiting for input");
+
+        yield return new WaitUntil(() => Input.GetMouseButtonDown(0));
+
+        yield return title.FadeOut();
+
+        Debug.Log("got for input");
+
         if (tutorial.IsCompleted)
         {
             StartCoroutine(ShowMainMenu());
@@ -68,11 +91,6 @@ public class Launcher : MonoBehaviour
         {
             StartCoroutine(ShowNamePrompt());
         }
-    }
-
-    private void Update()
-    {
-        skyBox.Rotate(axis, rotationSpeed * Time.deltaTime);
     }
 
     private IEnumerator ShowMainMenu()
