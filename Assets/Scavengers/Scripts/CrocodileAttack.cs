@@ -8,35 +8,36 @@ public class CrocodileAttack : MonoBehaviour
     [SerializeField] private float hitCooldown = 3f;
     [SerializeField] private float hitTimer = 0;
     [SerializeField] private AbilityCast abilityCast;
+    [SerializeField] private float chargeSpeed = 10f;
+    [SerializeField] private float chargeDistance = 10f;
 
+    private Vector3 startPosition;
     private MovementController movementController;
 
     // Start is called before the first frame update
     private void Start()
     {
+        startPosition = transform.position;
         movementController = GetComponent<MovementController>();
-        StartCoroutine(AttackRoutine());
+        StartCoroutine(AttackTimer());
     }
 
-    // Update is called once per frame
-    private void Update()
-    {
-        hitTimer += Time.deltaTime;
-    }
-
-    private IEnumerator AttackRoutine()
+    private IEnumerator AttackTimer()
     {
         while (gameObject.activeSelf)
         {
-            yield return Attack();
+            yield return new WaitUntil(() =>
+            {
+                hitTimer += Time.deltaTime;
+                return hitTimer > hitCooldown;
+            });
+            yield return new WaitUntil(() => movementController.IsAtDestination);
+            yield return AimAttack();
         }
     }
 
-    private IEnumerator Attack()
+    private IEnumerator AimAttack()
     {
-        yield return new WaitUntil(() => hitTimer > hitCooldown);
-        yield return new WaitUntil(() => movementController.IsAtDestination);
-
         abilityCast.StartCast(transform);
 
         var elapsedTime = 0f;
@@ -49,8 +50,22 @@ public class CrocodileAttack : MonoBehaviour
             yield return null;
         }
 
+        yield return new WaitForSeconds(0.5f);
+
         abilityCast.EndCast();
         GetComponentInChildren<Animator>().Play("Attack");
+
+        movementController.SetSpeed(chargeSpeed);
+        var targetPosition = abilityCast.StartPosition + abilityCast.Direction * chargeDistance;
+        movementController.SetPosition(targetPosition);
+        yield return new WaitUntil(() => movementController.IsAtDestination);
+        movementController.SetPosition(startPosition);
+
+        yield return new WaitUntil(() => movementController.IsAtDestination);
+        movementController.Stop();
+
+        transform.position = startPosition;
+        transform.forward = Vector3.back;
         hitTimer = 0;
     }
 }

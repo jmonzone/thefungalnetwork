@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 
+//todo: remove ability cast from shurne logic, maybe
 // this scripts is used as a reference asset to handle ability casts
 [CreateAssetMenu]
 public class AbilityCast : ScriptableObject
@@ -14,7 +15,6 @@ public class AbilityCast : ScriptableObject
     public Vector3 StartPosition => origin.position + Direction.normalized;
     public Vector3 Direction { get; private set; }
     public float MaxDistance => maxDistance;
-
 
     public event UnityAction OnShruneChanged;
     public event UnityAction OnStart;

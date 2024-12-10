@@ -53,7 +53,7 @@ public class MovementController : MonoBehaviour
     public float Speed => speed;
     public bool FaceForward => lerpRotation;
 
-    public bool IsAtDestination => Vector3.Distance(transform.position, TargetPosition) < 0.1f;
+    public bool IsAtDestination => Vector3.Distance(transform.position, TargetPosition) < distanceThreshold;
 
     public Vector3 TargetPosition => type switch
     {

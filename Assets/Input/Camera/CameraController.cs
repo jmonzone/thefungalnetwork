@@ -11,6 +11,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float maxVerticalAngle = 60f; // Maximum vertical angle
 
     [SerializeField] private bool rotateCamera = true;
+    [SerializeField] private Transform lookTarget;
 
     private Vector2 lastInputPosition;
     private bool isDragging = false;
@@ -20,6 +21,13 @@ public class CameraController : MonoBehaviour
 
     private void Update()
     {
+        if (lookTarget)
+        {
+            Vector3 lookDirection = new Vector3(lookTarget.position.x, transform.position.y, lookTarget.position.z);
+            transform.LookAt(lookDirection);
+        }
+
+
         if (rotateCamera) HandleRotateCamera();
 
         if (!target) return;
