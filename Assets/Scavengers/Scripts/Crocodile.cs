@@ -21,7 +21,7 @@ public class Crocodile : MonoBehaviour
         overheadUI.SetActive(true);
 
         movementController = GetComponent<MovementController>();
-        movementController.SetTarget(target);
+        //movementController.SetTarget(target);
 
         healthSlider = GetComponentInChildren<HealthSlider>(includeInactive: true);
 

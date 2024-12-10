@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MaterialFlasher : MonoBehaviour
@@ -9,18 +10,34 @@ public class MaterialFlasher : MonoBehaviour
 
     [SerializeField] private float flashDuration = 2f;
     [SerializeField] private Color targetColor;
+
     private void Start()
     {
         renderers = GetComponentsInChildren<Renderer>();
-        originalMaterials = new Material[renderers.Length];
-        childMaterials = new Material[renderers.Length];
 
-        for (int i = 0; i < renderers.Length; i++)
+        // Use lists to store only valid materials
+        List<Material> validOriginalMaterials = new List<Material>();
+        List<Material> validChildMaterials = new List<Material>();
+
+        foreach (var renderer in renderers)
         {
-            originalMaterials[i] = renderers[i].material;
-            childMaterials[i] = new Material(originalMaterials[i]);
-            renderers[i].material = childMaterials[i];
+            var material = renderer.material;
+
+            // Skip materials that don't use the SoftSurfaceGraph shader
+            if (!material.shader.name.Contains("SoftSurfaceGraph"))
+                continue;
+
+            // Add the valid materials to the lists
+            validOriginalMaterials.Add(material);
+            validChildMaterials.Add(new Material(material));
+
+            // Set the new material to the renderer
+            renderer.material = validChildMaterials[validChildMaterials.Count - 1];
         }
+
+        // Convert the lists back to arrays if you need them as arrays elsewhere
+        originalMaterials = validOriginalMaterials.ToArray();
+        childMaterials = validChildMaterials.ToArray();
     }
 
     private void Update()
