@@ -70,6 +70,7 @@ public class PlayerInput : MonoBehaviour
         UpdateWASDMovment();
         UpdateProximityActions();
 
+        if (controller.Movement == null) return;
         var interaction = controller.Interactions && controller.Interactions.TargetAction && controller.Interactions.TargetAction.Interactable;
         CanInteract(interaction || controller.Movement.CanJump);
     }
