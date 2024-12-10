@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CrocodileAttack : MonoBehaviour
@@ -13,25 +12,45 @@ public class CrocodileAttack : MonoBehaviour
     private MovementController movementController;
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         movementController = GetComponent<MovementController>();
-        abilityCast.StartCast(transform);
+        StartCoroutine(AttackRoutine());
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        if (movementController.IsAtDestination && hitTimer > hitCooldown)
+        hitTimer += Time.deltaTime;
+    }
+
+    private IEnumerator AttackRoutine()
+    {
+        while (gameObject.activeSelf)
         {
-            GetComponentInChildren<Animator>().Play("Attack");
-            hitTimer = 0;
+            yield return Attack();
+        }
+    }
+
+    private IEnumerator Attack()
+    {
+        yield return new WaitUntil(() => hitTimer > hitCooldown);
+        yield return new WaitUntil(() => movementController.IsAtDestination);
+
+        abilityCast.StartCast(transform);
+
+        var elapsedTime = 0f;
+        while (elapsedTime < 2)
+        {
+            direction = target.position - movementController.transform.position;
+            direction.y = 0;
+            abilityCast.UpdateCast(direction.normalized);
+            elapsedTime += Time.deltaTime;
+            yield return null;
         }
 
-        direction = target.position - movementController.transform.position;
-        direction.y = 0;
-        abilityCast.UpdateCast(direction.normalized);
-
-        hitTimer += Time.deltaTime;
+        abilityCast.EndCast();
+        GetComponentInChildren<Animator>().Play("Attack");
+        hitTimer = 0;
     }
 }

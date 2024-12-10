@@ -7,6 +7,7 @@ public class AbilityCastIndicator : MonoBehaviour
 
     private void OnEnable()
     {
+        HideIndicator();
         abilityCast.OnStart += ShowIndicator;
         abilityCast.OnUpdate += UpdateIndicator;
         abilityCast.OnComplete += HideIndicator;
