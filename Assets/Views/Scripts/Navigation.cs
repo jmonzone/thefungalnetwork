@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 public class Navigation : ScriptableObject
 {
     [SerializeField] private List<ViewReference> views;
+    [SerializeField] private SceneNavigation sceneNavigation;
 
     //todo: keep track of scene for scene level navigation
     private int buildIndex = 0;
@@ -27,6 +28,11 @@ public class Navigation : ScriptableObject
     public void Initialize()
     {
         Reset();
+        sceneNavigation.OnSceneNavigationRequest += () =>
+        {
+            if (currentView) currentView.RequestHide();
+        };
+
         foreach (var view in views)
         {
             view.OnRequestShow += () =>
@@ -47,7 +53,7 @@ public class Navigation : ScriptableObject
 
             view.OnHidden += () =>
             {
-                currentView.Show();
+                if (currentView) currentView.Show();
                 OnNavigated?.Invoke();
             };
         }
