@@ -19,6 +19,7 @@ GameObject:
   - component: {fileID: 2534743849430354334}
   - component: {fileID: 1870643691452310714}
   - component: {fileID: 8977806111571086731}
+  - component: {fileID: 6684470817496597513}
   m_Layer: 10
   m_Name: Network Avatar
   m_TagString: Untagged
@@ -133,6 +134,7 @@ MonoBehaviour:
   maxIdleDuration: 5
   radius: 4
   radialSpeed: 0.25
+  maxJumpCount: 1
 --- !u!114 &8750829282863345101
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -226,6 +228,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: {fileID: 11400000, guid: 70aa9925b762e422089c41437a664eeb, type: 2}
   displayNameText: {fileID: 275607809384612097}
+--- !u!114 &6684470817496597513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2941250707292126303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 912c82f9007e044cd938c070a0a9fc89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 3
 --- !u!1001 &2883013564976802051
 PrefabInstance:
   m_ObjectHideFlags: 0

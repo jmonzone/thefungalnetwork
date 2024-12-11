@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 2646061618894710123}
   - component: {fileID: 1791356587795800662}
   - component: {fileID: 141054866766668978}
+  - component: {fileID: 5194851058651066309}
   m_Layer: 0
   m_Name: Avatar
   m_TagString: Untagged
@@ -60,7 +61,7 @@ MonoBehaviour:
   positionAnchor:
     anchor: {fileID: 0}
     bounds: {fileID: 0}
-  distanceThreshold: 2
+  distanceThreshold: 0.1
   startIdle: 0
   minIdleDuration: 2
   maxIdleDuration: 5
@@ -158,6 +159,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2183d1ceef39a4e7da86ef70988934ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shrinkSpeed: 2
+  flashDuration: 0.2
+  rotationSpeed: 360
+--- !u!114 &5194851058651066309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2642620313493082604}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 912c82f9007e044cd938c070a0a9fc89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 3
 --- !u!1001 &1005529720805531029
 PrefabInstance:
   m_ObjectHideFlags: 0
