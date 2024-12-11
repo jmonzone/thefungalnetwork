@@ -1,12 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class Attackable : MonoBehaviour
 {
     [SerializeField] private float maxHealth = 3f;
-
 
     public float CurrentHealth { get; private set; }
     public float MaxHealth => maxHealth;
@@ -20,7 +17,10 @@ public class Attackable : MonoBehaviour
 
     public void Damage()
     {
-        CurrentHealth--;
-        OnCurrentHealthChanged?.Invoke();
+        if (CurrentHealth > 0)
+        {
+            CurrentHealth--;
+            OnCurrentHealthChanged?.Invoke();
+        }
     }
 }

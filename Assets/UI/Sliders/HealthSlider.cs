@@ -11,7 +11,7 @@ public class HealthSlider : MonoBehaviour
         attackable.OnCurrentHealthChanged += () =>
         {
             slider.value = attackable.CurrentHealth;
-            gameObject.SetActive(true);
+            gameObject.SetActive(attackable.CurrentHealth > 0);
         };
 
         slider.maxValue = attackable.MaxHealth;
@@ -19,6 +19,5 @@ public class HealthSlider : MonoBehaviour
         slider.value = attackable.CurrentHealth;
 
         gameObject.SetActive(false);
-        Debug.Log("hiding");
     }
 }

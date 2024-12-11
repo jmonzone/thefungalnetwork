@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class MaterialFlasher : MonoBehaviour
 {
+    [SerializeField] private float flashDuration = 2f;
+    [SerializeField] private Color targetColor;
+
     private Material[] originalMaterials;
     private Material[] childMaterials;
     private Renderer[] renderers;
-
-    [SerializeField] private float flashDuration = 2f;
-    [SerializeField] private Color targetColor;
+    private Coroutine coroutine;
 
     private void Start()
     {
@@ -51,8 +52,8 @@ public class MaterialFlasher : MonoBehaviour
 
     public void FlashWhite()
     {
-
-        StartCoroutine(FlashCoroutine());
+        if (coroutine != null) StopCoroutine(coroutine);
+        coroutine = StartCoroutine(FlashCoroutine());
     }
 
     private IEnumerator FlashCoroutine()
@@ -64,6 +65,7 @@ public class MaterialFlasher : MonoBehaviour
         // Set target color for the flash effect
         Color originalColor = childMaterials[0].GetColor("_Color"); // Assuming all child materials share the same original emission color
 
+        Debug.Log(originalColor);
         // Flash duration control (time to go from min to max and back to min)
         float halfDuration = flashDuration / 2f;  // Half of the duration for smooth in/out
 

@@ -8,6 +8,8 @@ public class Controller : ScriptableObject
     [SerializeField] private ViewReference inputView;
 
     public Controllable Controllable { get; private set; }
+
+    public Attackable Attackable { get; private set; }
     public MovementController Movement => Controllable?.Movement;
     public ProximityInteraction Interactions => Controllable?.Interactions;
 
@@ -23,7 +25,10 @@ public class Controller : ScriptableObject
     public void SetController(Controllable controller)
     {
         if (Movement != null ) Movement.Stop();
+
         Controllable = controller;
+        Attackable = controller.Movement.GetComponent<Attackable>();
+
         controller.Movement.Stop();
         OnUpdate?.Invoke();
     }

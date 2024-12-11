@@ -36,11 +36,11 @@ public class Projectile : MonoBehaviour
         {
             foreach(var collider in colliders)
             {
-                var crocodile = collider.GetComponentInParent<Crocodile>();
-                if (crocodile)
+                var attackable = collider.GetComponentInParent<Attackable>();
+                if (attackable)
                 {
                     hitCount++;
-                    crocodile.Damage();
+                    attackable.Damage();
 
                     if (whispySpiralMotionCoroutine != null)
                     {

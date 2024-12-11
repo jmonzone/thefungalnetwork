@@ -114,13 +114,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6228169022195851406}
-  - component: {fileID: 2167960469553239855}
   - component: {fileID: 3149471867308357906}
   - component: {fileID: 4099868245457224918}
   - component: {fileID: 8521286082058163821}
   - component: {fileID: 760468183822507038}
   - component: {fileID: 4922996098477504940}
   - component: {fileID: 233472190970575125}
+  - component: {fileID: 4469671233377470357}
   m_Layer: 0
   m_Name: Crocodile
   m_TagString: Untagged
@@ -146,51 +146,6 @@ Transform:
   - {fileID: 3561684078686298492}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -71, z: 0}
---- !u!114 &2167960469553239855
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4624336733102921167}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f65fda836ad0b42afa40e7612a1b66d2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  overheadUI: {fileID: 374599624256904999}
-  hitColor:
-    serializedVersion: 2
-    key0: {r: 0.5411765, g: 0.80784315, b: 0, a: 0}
-    key1: {r: 1, g: 1, b: 1, a: 1}
-    key2: {r: 1, g: 1, b: 1, a: 0}
-    key3: {r: 0, g: 0, b: 0, a: 0}
-    key4: {r: 0, g: 0, b: 0, a: 0}
-    key5: {r: 0, g: 0, b: 0, a: 0}
-    key6: {r: 0, g: 0, b: 0, a: 0}
-    key7: {r: 0, g: 0, b: 0, a: 0}
-    ctime0: 0
-    ctime1: 15035
-    ctime2: 65535
-    ctime3: 0
-    ctime4: 0
-    ctime5: 0
-    ctime6: 0
-    ctime7: 0
-    atime0: 0
-    atime1: 20817
-    atime2: 65535
-    atime3: 0
-    atime4: 0
-    atime5: 0
-    atime6: 0
-    atime7: 0
-    m_Mode: 0
-    m_ColorSpace: -1
-    m_NumColorKeys: 3
-    m_NumAlphaKeys: 3
-  hitColorDuration: 0.5
-  flashDuration: 0.9
 --- !u!54 &3149471867308357906
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -303,6 +258,50 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 3
+--- !u!114 &4469671233377470357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4624336733102921167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94ca04fb8f4fe4e89ab2584ad1386d72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitColor:
+    serializedVersion: 2
+    key0: {r: 0.5411765, g: 0.80784315, b: 0, a: 0}
+    key1: {r: 1, g: 1, b: 1, a: 1}
+    key2: {r: 1, g: 1, b: 1, a: 0}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 15035
+    ctime2: 65535
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 20817
+    atime2: 65535
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_ColorSpace: -1
+    m_NumColorKeys: 3
+    m_NumAlphaKeys: 3
+  hitColorDuration: 0.5
+  flashDuration: 0.9
 --- !u!1 &7601811829485068537
 GameObject:
   m_ObjectHideFlags: 0
@@ -5781,12 +5780,12 @@ PrefabInstance:
     - target: {fileID: 7732016213237245412, guid: 4f9713a3f44e044c2b1c3f11b13d33f7,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7732016213237245412, guid: 4f9713a3f44e044c2b1c3f11b13d33f7,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5815,7 +5814,7 @@ PrefabInstance:
     - target: {fileID: 3581972095181777363, guid: 72ab144d5c0ff415aa11d3e80517f61c,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3
+      value: 4.5
       objectReference: {fileID: 0}
     - target: {fileID: 3581972095181777363, guid: 72ab144d5c0ff415aa11d3e80517f61c,
         type: 3}
@@ -5877,12 +5876,6 @@ PrefabInstance:
       addedObject: {fileID: 8703144190619465011}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 72ab144d5c0ff415aa11d3e80517f61c, type: 3}
---- !u!1 &374599624256904999 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7687623159291066859, guid: 72ab144d5c0ff415aa11d3e80517f61c,
-    type: 3}
-  m_PrefabInstance: {fileID: 8042642611742172876}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &4454278412259834631 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5930662685120126411, guid: 72ab144d5c0ff415aa11d3e80517f61c,

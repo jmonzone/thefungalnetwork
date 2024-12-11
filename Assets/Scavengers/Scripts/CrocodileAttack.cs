@@ -58,7 +58,9 @@ public class CrocodileAttack : MonoBehaviour
         movementController.SetSpeed(chargeSpeed);
         var targetPosition = abilityCast.StartPosition + abilityCast.Direction * chargeDistance;
         movementController.SetPosition(targetPosition);
+        isAttacking = true;
         yield return new WaitUntil(() => movementController.IsAtDestination);
+        isAttacking = false;
         movementController.SetSpeed(chargeSpeed * 0.75f);
         movementController.SetPosition(startPosition);
 
@@ -70,9 +72,12 @@ public class CrocodileAttack : MonoBehaviour
         hitTimer = 0;
     }
 
+    private bool isAttacking = false;
 
     private void OnTriggerEnter(Collider other)
     {
+        if (!isAttacking) return;
+
         var attackable = other.transform.GetComponentInParent<Attackable>();
         if (attackable)
         {
