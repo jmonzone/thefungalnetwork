@@ -3,9 +3,10 @@ using UnityEngine.Events;
 
 public class Attackable : MonoBehaviour
 {
+    [SerializeField] private float currentHealth = 3f;
     [SerializeField] private float maxHealth = 3f;
 
-    public float CurrentHealth { get; private set; }
+    public float CurrentHealth => currentHealth;
     public float MaxHealth => maxHealth;
 
     public event UnityAction OnCurrentHealthChanged;
@@ -13,18 +14,22 @@ public class Attackable : MonoBehaviour
 
     private void Awake()
     {
-        CurrentHealth = maxHealth;
+        currentHealth = maxHealth;
     }
 
     public void Damage()
     {
         if (CurrentHealth > 0)
         {
-            CurrentHealth--;
+            currentHealth--;
             OnCurrentHealthChanged?.Invoke();
 
-            if (CurrentHealth == 0)
+            Debug.Log($"OnAttack {currentHealth}");
+
+            if (CurrentHealth == 0f)
             {
+                Debug.Log($"OnDeath {currentHealth}");
+
                 OnDeath?.Invoke();
             }
         }

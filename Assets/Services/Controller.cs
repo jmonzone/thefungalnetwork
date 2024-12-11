@@ -22,6 +22,7 @@ public class Controller : ScriptableObject
     public event UnityAction OnUpdate;
     public event UnityAction OnPossessionStart;
     public event UnityAction OnReleaseStart;
+    public event UnityAction OnDeath;
 
     public void Initialize(Volume volume)
     {
@@ -31,10 +32,12 @@ public class Controller : ScriptableObject
 
     public void SetController(Controllable controller)
     {
+        if (Attackable) Attackable.OnDeath -= OnDeath;
         if (Movement != null ) Movement.Stop();
 
         Controllable = controller;
         Attackable = controller.Movement.GetComponent<Attackable>();
+        if (Attackable) Attackable.OnDeath += OnDeath;
 
         controller.Movement.Stop();
         OnUpdate?.Invoke();

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class BossRoom : MonoBehaviour
@@ -13,17 +14,22 @@ public class BossRoom : MonoBehaviour
 
     private void OnEnable()
     {
-        playerReference.Attackable.OnDeath += ShowResults;
+        playerReference.OnDeath += ShowResults;
     }
 
     private void OnDisable()
     {
-        playerReference.Attackable.OnDeath -= ShowResults;
+        playerReference.OnDeath -= ShowResults;
     }
 
     private void ShowResults()
     {
-        Debug.Log("OnAttack");
+        StartCoroutine(WaitToShowResults());
+    }
+
+    private IEnumerator WaitToShowResults()
+    {
+        yield return new WaitForSeconds(2f);
         resultView.RequestShow();
     }
 }
