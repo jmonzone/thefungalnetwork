@@ -4,25 +4,32 @@ using UnityEngine.Events;
 
 public class AvatarAnimation : MonoBehaviour
 {
+    public float shrinkSpeed = 2f;
+    public float flashDuration = 0.2f;
+    public float rotationSpeed = 360f; // Degrees per second.
+
     private Animator animator;
     private Transform target;
+    private Coroutine possessionCoroutine;
 
     private void Awake()
     {
         animator = GetComponentInChildren<Animator>();
     }
 
-    public float shrinkSpeed = 2f;
-    public float flashDuration = 0.2f;
-    public float rotationSpeed = 360f; // Degrees per second.
-
-    //private Material originalMaterial;
-    private Coroutine possessionCoroutine;
+    // this is used to allow the avatar to be preset with a fungal
+    public void PresetFungal(Transform target)
+    {
+        this.target = target;
+        transform.localScale = Vector3.zero; // Ensure fully shrunk
+        transform.position = target.position; // Ensure exact positioning
+    }
 
     public void PossessFungal(FungalController fungal, UnityAction onComplete)
     {
         fungal.Controllable.Movement.Stop();
         target = fungal.transform;
+
         Debug.Log("Starting possession animation...");
         animator.Play("Jump");
 

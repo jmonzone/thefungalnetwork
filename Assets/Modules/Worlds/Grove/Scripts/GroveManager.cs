@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+//todo: use InitalController script to handle player managerment
 //todo: make separate fungal management script
 public class GroveManager : MonoBehaviour
 {
@@ -53,6 +54,7 @@ public class GroveManager : MonoBehaviour
 
             //todo: centralize logic with AstralProjection
             controller.SetController(targetFungal.Controllable);
+            avatar.GetComponent<AvatarAnimation>().PresetFungal(targetFungal.transform);
         }
         else
         {
