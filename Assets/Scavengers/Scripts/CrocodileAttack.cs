@@ -13,27 +13,32 @@ public class CrocodileAttack : MonoBehaviour
 
     private Vector3 startPosition;
     private MovementController movementController;
+    private Attackable attackable;
 
     // Start is called before the first frame update
     private void Start()
     {
         startPosition = transform.position;
         movementController = GetComponent<MovementController>();
+        attackable = GetComponent<Attackable>();
+
         StartCoroutine(AttackTimer());
     }
 
     private IEnumerator AttackTimer()
     {
-        while (gameObject.activeSelf)
+        do
         {
             yield return new WaitUntil(() =>
             {
                 hitTimer += Time.deltaTime;
                 return hitTimer > hitCooldown;
             });
+
             yield return new WaitUntil(() => movementController.IsAtDestination);
             yield return AimAttack();
         }
+        while (attackable.CurrentHealth > 0 && target.Attackable.CurrentHealth > 0);
     }
 
     private IEnumerator AimAttack()
@@ -50,7 +55,8 @@ public class CrocodileAttack : MonoBehaviour
             yield return null;
         }
 
-        yield return new WaitForSeconds(0.5f);
+        // give the player a chance to react
+        yield return new WaitForSeconds(0.75f);
 
         abilityCast.Cast();
         GetComponentInChildren<Animator>().Play("Attack");

@@ -64,7 +64,6 @@ public class MaterialFlasher : MonoBehaviour
         // Set target color for the flash effect
         Color originalColor = childMaterials[0].GetColor("_Color"); // Assuming all child materials share the same original emission color
 
-        Debug.Log(originalColor);
         // Flash duration control (time to go from min to max and back to min)
         float halfDuration = flashDuration / 2f;  // Half of the duration for smooth in/out
 

@@ -11,13 +11,15 @@ public class HealthSlider : MonoBehaviour
         attackable.OnCurrentHealthChanged += () =>
         {
             slider.value = attackable.CurrentHealth;
-            gameObject.SetActive(attackable.CurrentHealth > 0);
+        };
+
+        attackable.OnDeath += () =>
+        {
+            gameObject.SetActive(false);
         };
 
         slider.maxValue = attackable.MaxHealth;
         slider.minValue = 0;
         slider.value = attackable.CurrentHealth;
-
-        gameObject.SetActive(false);
     }
 }

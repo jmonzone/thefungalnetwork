@@ -9,6 +9,7 @@ public class Attackable : MonoBehaviour
     public float MaxHealth => maxHealth;
 
     public event UnityAction OnCurrentHealthChanged;
+    public event UnityAction OnDeath;
 
     private void Awake()
     {
@@ -21,6 +22,11 @@ public class Attackable : MonoBehaviour
         {
             CurrentHealth--;
             OnCurrentHealthChanged?.Invoke();
+
+            if (CurrentHealth == 0)
+            {
+                OnDeath?.Invoke();
+            }
         }
     }
 }
