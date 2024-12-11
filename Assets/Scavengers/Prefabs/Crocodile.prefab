@@ -186,7 +186,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flashDuration: 1
-  targetColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!114 &8521286082058163821
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -243,7 +242,7 @@ MonoBehaviour:
   hitCooldown: 3
   hitTimer: 0
   abilityCast: {fileID: 11400000, guid: 47cdf05b101d649a79ac9aa9cb66416b, type: 2}
-  chargeSpeed: 20
+  chargeSpeed: 17.5
   chargeDistance: 15
 --- !u!114 &233472190970575125
 MonoBehaviour:
@@ -257,7 +256,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 912c82f9007e044cd938c070a0a9fc89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 3
+  maxHealth: 10
 --- !u!114 &4469671233377470357
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -270,6 +269,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94ca04fb8f4fe4e89ab2584ad1386d72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  materialFlashColor: {r: 0, g: 0, b: 0, a: 0}
   hitColor:
     serializedVersion: 2
     key0: {r: 0.5411765, g: 0.80784315, b: 0, a: 0}
@@ -5451,7 +5451,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.5, y: 0.5, z: 1}
+  m_Size: {x: 0.4, y: 0.5, z: 1}
   m_Center: {x: 0, y: 0.25, z: 0}
 --- !u!4 &7659066650302953141 stripped
 Transform:

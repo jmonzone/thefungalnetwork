@@ -14,6 +14,7 @@ public class CrocodileAttack : MonoBehaviour
     private Vector3 startPosition;
     private MovementController movementController;
     private Attackable attackable;
+    private Coroutine attackCoroutine;
 
     // Start is called before the first frame update
     private void Start()
@@ -21,8 +22,9 @@ public class CrocodileAttack : MonoBehaviour
         startPosition = transform.position;
         movementController = GetComponent<MovementController>();
         attackable = GetComponent<Attackable>();
+        attackable.OnDeath += () => StopCoroutine(attackCoroutine);
 
-        StartCoroutine(AttackTimer());
+        attackCoroutine = StartCoroutine(AttackTimer());
     }
 
     private IEnumerator AttackTimer()

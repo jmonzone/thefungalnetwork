@@ -73,7 +73,7 @@ public class AbilityButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     void IEndDragHandler.OnEndDrag(PointerEventData eventData)
     {
-        controller.SetAnimation();
+        //controller.SetAnimation();
         abilityCast.Cast();
     }
 

@@ -5,17 +5,18 @@ public class HealthSlider : MonoBehaviour
 {
     private void Awake()
     {
-        var slider = GetComponentInChildren<Slider>();
+        var slider = GetComponentInChildren<Slider>(includeInactive: true);
         var attackable = GetComponentInParent<Attackable>();
 
         attackable.OnCurrentHealthChanged += () =>
         {
             slider.value = attackable.CurrentHealth;
+            slider.gameObject.SetActive(true);
         };
 
         attackable.OnDeath += () =>
         {
-            gameObject.SetActive(false);
+            slider.gameObject.SetActive(false);
         };
 
         slider.maxValue = attackable.MaxHealth;
