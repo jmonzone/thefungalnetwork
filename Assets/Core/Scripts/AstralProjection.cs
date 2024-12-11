@@ -22,28 +22,27 @@ public class AstralProjection : MonoBehaviour
 
     private void OnEnable()
     {
-        controller.OnRelease += ReleaseFungal;
+        controller.OnReleaseStart += ReleaseFungal;
     }
 
     private void OnDisable()
     {
-        controller.OnRelease -= ReleaseFungal;
+        controller.OnReleaseStart -= ReleaseFungal;
     }
 
     private void PossessFungal(FungalController fungal)
     {
-        avatar.PossessFungal(fungal, () =>
-        {
-            controller.SetController(fungal.Controllable);
-            fungal.GetComponentInChildren<Possessable>().OnPossess();
-        });
+        fungal.Controllable.Movement.Stop();
+        controller.StartPossession(fungal.GetComponent<Possessable>());
     }
 
     private void ReleaseFungal()
     {
         var fungal = controller.Movement;
         fungal.StartRandomMovement();
-        avatar.PlayReturnToBodyAnimation();
+        avatar.StartReleaseAnimation();
+
+        //todo: provide controller with avatar so it can handle
         controller.SetController(avatarControllable);
     }
 }

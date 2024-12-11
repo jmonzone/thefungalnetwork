@@ -54,7 +54,7 @@ public class GroveManager : MonoBehaviour
 
             //todo: centralize logic with AstralProjection
             controller.SetController(targetFungal.Controllable);
-            avatar.GetComponent<AvatarAnimation>().PresetFungal(targetFungal.transform);
+            controller.InitalizePosessable(targetFungal.GetComponent<Possessable>());
         }
         else
         {

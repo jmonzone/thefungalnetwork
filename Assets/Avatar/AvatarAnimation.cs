@@ -4,43 +4,46 @@ using UnityEngine.Events;
 
 public class AvatarAnimation : MonoBehaviour
 {
+    [SerializeField] private Controller controller;
+
     public float shrinkSpeed = 2f;
     public float flashDuration = 0.2f;
     public float rotationSpeed = 360f; // Degrees per second.
 
     private Animator animator;
-    private Transform target;
     private Coroutine possessionCoroutine;
 
     private void Awake()
     {
         animator = GetComponentInChildren<Animator>();
+
     }
 
-    // this is used to allow the avatar to be preset with a fungal
-    public void PresetFungal(Transform target)
+    private void OnEnable()
     {
-        this.target = target;
-        transform.localScale = Vector3.zero; // Ensure fully shrunk
-        transform.position = target.position; // Ensure exact positioning
+        controller.OnPossessionStart += StartPossessionAnimation;
     }
 
-    public void PossessFungal(FungalController fungal, UnityAction onComplete)
+    private void OnDisable()
     {
-        fungal.Controllable.Movement.Stop();
-        target = fungal.transform;
+        controller.OnPossessionStart -= StartPossessionAnimation;
+    }
 
+    private void StartPossessionAnimation()
+    {
         Debug.Log("Starting possession animation...");
         animator.Play("Jump");
 
         if (possessionCoroutine != null)
             StopCoroutine(possessionCoroutine);
 
-        possessionCoroutine = StartCoroutine(PossessionAnimation(target, onComplete));
+        possessionCoroutine = StartCoroutine(PossessionAnimation());
     }
 
-    private IEnumerator PossessionAnimation(Transform target, UnityAction onComplete)
+    private IEnumerator PossessionAnimation()
     {
+        var target = controller.Possessable.transform;
+
         // Move towards target while shrinking
         while (Vector3.Distance(transform.position, target.position) > 0.1f)
         {
@@ -54,18 +57,16 @@ public class AvatarAnimation : MonoBehaviour
         transform.position = target.position; // Ensure exact positioning
 
         // Invoke completion callback
-        onComplete?.Invoke();
+        controller.CompletePossession();
     }
 
-    public void PlayReturnToBodyAnimation()
+    public void StartReleaseAnimation()
     {
         Debug.Log("Starting reverse possession animation...");
 
-        if (possessionCoroutine != null)
-            StopCoroutine(possessionCoroutine);
+        if (possessionCoroutine != null) StopCoroutine(possessionCoroutine);
 
-        // Store the original position of the avatar (target position)
-        Vector3 originalPosition = transform.position;
+        var target = controller.Possessable.transform;
 
         // Randomly offset the position within a 2-unit radius, ignoring the y-axis for horizontal movement
         var randomOffset = Random.insideUnitSphere.normalized * 2f;
@@ -73,6 +74,9 @@ public class AvatarAnimation : MonoBehaviour
 
         // Add the offset to the target position to get the new position
         Vector3 randomPosition = target.position + randomOffset;
+
+        transform.localScale = Vector3.zero; // Ensure fully shrunk
+        transform.position = controller.Possessable.transform.position; // Ensure exact positioning
 
         // Start the reverse possession animation coroutine
         possessionCoroutine = StartCoroutine(ReversePossessionAnimation(randomPosition));
@@ -91,7 +95,6 @@ public class AvatarAnimation : MonoBehaviour
         // Jump parameters
         float jumpHeight = 2f; // How high the avatar jumps
         float jumpDuration = 0.3f; // How long the jump takes
-        float jumpStartTime = 0f;
 
         // Animate the movement, scaling, and rotation
         while (timeElapsed < moveDuration)
@@ -129,6 +132,9 @@ public class AvatarAnimation : MonoBehaviour
         transform.position = targetPosition;
         transform.localScale = Vector3.one;
         transform.rotation = Quaternion.LookRotation(targetPosition - transform.position); // Optional for better rotation control
+
+        controller.CompleteRelease();
+
     }
 
 
