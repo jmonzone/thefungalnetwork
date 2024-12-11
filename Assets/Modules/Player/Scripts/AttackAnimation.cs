@@ -3,6 +3,7 @@
 [RequireComponent(typeof(Attackable))]
 public class AttackAnimation : MonoBehaviour
 {
+    [SerializeField] private Color materialFlashColor;
     [SerializeField] private Gradient hitColor;
     [SerializeField] private float hitColorDuration = 2f;
     [SerializeField] private float flashDuration = 0.5f; // Time for flash to complete
@@ -43,7 +44,7 @@ public class AttackAnimation : MonoBehaviour
                 GetComponentInChildren<Animator>().Play("Hit");
             }
 
-            materialFlasher.FlashWhite();
+            materialFlasher.FlashColor(materialFlashColor);
         };
     }
 }

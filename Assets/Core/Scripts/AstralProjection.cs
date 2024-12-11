@@ -9,61 +9,41 @@ public class AstralProjection : MonoBehaviour
     private void Awake()
     {
         var groveManager = GetComponent<GroveManager>();
-        groveManager.OnPlayerSpawned += () =>
-        {
-            //if (controller.Controllable != avatarControllable)
-            //{
-            //    avatar.PlayLeaveBodyAnimation();
-            //}
-        };
-
         groveManager.OnFungalInteraction += PossessFungal;
    }
-
-    private void Start()
-    {
-        avatarControllable.GetComponent<ProximityAction>().OnUse += () => ReturnToTheBody();
-    }
 
     private void Update()
     {
         if (Input.GetKeyUp(KeyCode.Escape))
         {
-            ReturnToTheBody();
+            ReleaseFungal();
         }
     }
 
-    public void PossessFungal(FungalController fungal)
+    private void OnEnable()
     {
-        if (IsLeavingTheBody)
+        controller.OnRelease += ReleaseFungal;
+    }
+
+    private void OnDisable()
+    {
+        controller.OnRelease -= ReleaseFungal;
+    }
+
+    private void PossessFungal(FungalController fungal)
+    {
+        avatar.PossessFungal(fungal, () =>
         {
-            avatar.PossessFungal(fungal, () =>
-            {
-                controller.SetController(fungal.Controllable);
-            });
-        }
-        else
-        {
-            LeaveFungal();
             controller.SetController(fungal.Controllable);
-        }
-
+            fungal.GetComponentInChildren<Possessable>().OnPossess();
+        });
     }
 
-    public void ReturnToTheBody()
-    {
-        LeaveFungal();
-
-        avatar.PlayReturnToBodyAnimation();
-
-        controller.SetController(avatarControllable);
-    }
-
-    private void LeaveFungal()
+    private void ReleaseFungal()
     {
         var fungal = controller.Movement;
         fungal.StartRandomMovement();
+        avatar.PlayReturnToBodyAnimation();
+        controller.SetController(avatarControllable);
     }
-
-    private bool IsLeavingTheBody => controller.Movement.transform == avatar.transform;
 }

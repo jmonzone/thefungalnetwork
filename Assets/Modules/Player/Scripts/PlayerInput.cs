@@ -6,8 +6,8 @@ public class PlayerInput : MonoBehaviour
 {
     [SerializeField] private VirtualJoystick virtualJoystick;
     [SerializeField] private CameraController cameraController;
-    //[SerializeField] private Button interactionButton;
     [SerializeField] private Button primaryButton;
+    [SerializeField] private Button releaseButton;
     [SerializeField] private Controller controller;
     [SerializeField] private Volume volume;
 
@@ -21,6 +21,11 @@ public class PlayerInput : MonoBehaviour
         {
             if (controller.Interactions.TargetAction) controller.Interactions.TargetAction.Use();
             else controller.Movement.Jump();
+        });
+
+        releaseButton.onClick.AddListener(() =>
+        {
+            controller.ReleasePossession();
         });
 
         virtualJoystick.OnJoystickEnd += () =>
@@ -38,22 +43,22 @@ public class PlayerInput : MonoBehaviour
 
         //todo: have this initialized in GameManager
         controller.Initialize(volume);
-       
     }
 
     private void OnEnable()
     {
-        controller.OnUpdate += UpdateCameraController;
+        controller.OnUpdate += OnControllerUpdated;
     }
 
     private void OnDisable()
     {
-        controller.OnUpdate -= UpdateCameraController;
+        controller.OnUpdate -= OnControllerUpdated;
     }
 
-    private void UpdateCameraController()
+    private void OnControllerUpdated()
     {
         cameraController.Target = controller.Movement.transform;
+        releaseButton.gameObject.SetActive(controller.Movement.GetComponent<FungalController>());
     }
 
     public void CanInteract(bool value)

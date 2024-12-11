@@ -16,6 +16,7 @@ public class Controller : ScriptableObject
     public Volume Volume { get; private set; }
 
     public event UnityAction OnUpdate;
+    public event UnityAction OnRelease;
 
     public void Initialize(Volume volume)
     {
@@ -31,6 +32,11 @@ public class Controller : ScriptableObject
 
         controller.Movement.Stop();
         OnUpdate?.Invoke();
+    }
+
+    public void ReleasePossession()
+    {
+        OnRelease?.Invoke();
     }
 
     public void SetAnimation()

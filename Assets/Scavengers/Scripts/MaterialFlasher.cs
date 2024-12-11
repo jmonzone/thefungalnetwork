@@ -5,7 +5,6 @@ using UnityEngine;
 public class MaterialFlasher : MonoBehaviour
 {
     [SerializeField] private float flashDuration = 2f;
-    [SerializeField] private Color targetColor;
 
     private Material[] originalMaterials;
     private Material[] childMaterials;
@@ -45,18 +44,18 @@ public class MaterialFlasher : MonoBehaviour
     {
         if (Input.GetKeyUp(KeyCode.F))
         {
-            FlashWhite();
+            FlashColor(Color.white);
             Debug.Log("hello");
         }
     }
 
-    public void FlashWhite()
+    public void FlashColor(Color targetColor)
     {
         if (coroutine != null) StopCoroutine(coroutine);
-        coroutine = StartCoroutine(FlashCoroutine());
+        coroutine = StartCoroutine(FlashCoroutine(targetColor));
     }
 
-    private IEnumerator FlashCoroutine()
+    private IEnumerator FlashCoroutine(Color targetColor)
     {
         // Set the target emission intensity values
         float maxEmission = 10f;  // Max intensity for the flash (glowing)
