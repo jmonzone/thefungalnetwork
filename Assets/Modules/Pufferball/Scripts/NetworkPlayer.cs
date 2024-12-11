@@ -113,7 +113,7 @@ public class NetworkPlayer : NetworkBehaviour
             if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out var networkObject))
             {
                 // Apply the rotated direction to the projectile
-                networkObject.GetComponent<NetworkProjectile>().Shoot(direction, abilityCast.MaxDistance);
+                networkObject.GetComponent<NetworkProjectile>().Shoot(direction, abilityCast.MaxDistance, attackable => attackable != controller.Attackable );
             }
             else
             {

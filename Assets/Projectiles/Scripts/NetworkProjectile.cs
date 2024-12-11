@@ -1,4 +1,5 @@
-﻿using Unity.Netcode;
+﻿using System;
+using Unity.Netcode;
 using UnityEngine;
 
 public class NetworkProjectile : NetworkBehaviour
@@ -24,9 +25,9 @@ public class NetworkProjectile : NetworkBehaviour
         }
     }
 
-    public void Shoot(Vector3 direction, float maxDistance)
+    public void Shoot(Vector3 direction, float maxDistance, Func<Attackable, bool> isValidTarget)
     {
-        projectile.Shoot(direction, maxDistance);
+        projectile.Shoot(direction, maxDistance, isValidTarget);
     }
 
     [ServerRpc]

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Events;
 
 //todo: remove ability cast from shurne logic, maybe
@@ -9,12 +10,14 @@ public class AbilityCast : ScriptableObject
     [SerializeField] private ShruneItem shrune;
     [SerializeField] private Transform origin;
     [SerializeField] private float maxDistance;
+    [SerializeField] private ShruneCollection shruneCollection;
 
     public ShruneItem Shrune => shrune;
     public string ShruneId => shrune.name;
     public Vector3 StartPosition => origin.position + Direction.normalized;
     public Vector3 Direction { get; private set; }
     public float MaxDistance => maxDistance;
+    public Func<Attackable, bool> IsValidTarget { get; private set; }
 
     public event UnityAction OnShruneChanged;
     public event UnityAction OnStart;
@@ -33,9 +36,11 @@ public class AbilityCast : ScriptableObject
         OnShruneChanged?.Invoke();
     }
 
-    public void StartCast(Transform origin)
+    //todo: parameters should be optional and dependent on the ability type
+    public void StartCast(Transform origin, Func<Attackable,bool> isValidTarget)
     {
         this.origin = origin;
+        IsValidTarget = isValidTarget;
         OnStart?.Invoke();
     }
 
@@ -45,15 +50,22 @@ public class AbilityCast : ScriptableObject
         OnUpdate?.Invoke();
     }
 
-    public void EndCast()
+
+    public void Cast()
     {
+        if (this.shrune && shruneCollection.TryGetShruneById(ShruneId, out ShruneItem shrune))
+        {
+            var projectile = Instantiate(shrune.ProjectilePrefab, StartPosition + Vector3.up * 0.5f, Quaternion.LookRotation(Direction));
+            projectile.Shoot(Direction, MaxDistance, IsValidTarget);
+        }
+
         OnComplete?.Invoke();
     }
 
-    public void CastImmediate(Transform origin, Vector3 direction)
+    public void Cast(Transform origin, Vector3 direction)
     {
         this.origin = origin;
         Direction = direction;
-        OnComplete?.Invoke();
+        Cast();
     }
 }

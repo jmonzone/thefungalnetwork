@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
@@ -17,12 +18,6 @@ public class Projectile : MonoBehaviour
     public event UnityAction OnDissipateStart;
     public event UnityAction<float> OnDissipateUpdate;
     public event UnityAction OnComplete;
-    public void Shoot(Vector3 direction, float maxDistance)
-    {
-        gameObject.SetActive(true);
-        transform.localScale = Vector3.one;
-        whispySpiralMotionCoroutine = StartCoroutine(WhispySpiralMotion(direction, 3f, maxDistance));
-    }
 
     private int hitCount = 0;
 
@@ -37,7 +32,7 @@ public class Projectile : MonoBehaviour
             foreach(var collider in colliders)
             {
                 var attackable = collider.GetComponentInParent<Attackable>();
-                if (attackable)
+                if (attackable && isValidTarget != null && isValidTarget(attackable))
                 {
                     hitCount++;
                     attackable.Damage();
@@ -50,6 +45,16 @@ public class Projectile : MonoBehaviour
                 }
             }
         }
+    }
+
+    private Func<Attackable, bool> isValidTarget;
+
+    public void Shoot(Vector3 direction, float maxDistance, Func<Attackable, bool> isValidTarget)
+    {
+        this.isValidTarget = isValidTarget;
+        transform.localScale = Vector3.one;
+        gameObject.SetActive(true);
+        whispySpiralMotionCoroutine = StartCoroutine(WhispySpiralMotion(direction, 3f, maxDistance));
     }
 
     private IEnumerator WhispySpiralMotion(Vector3 direction, float speed, float maxDistance)

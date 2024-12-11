@@ -18,7 +18,7 @@ public class AbilityButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     {
         button.onClick.AddListener(() =>
         {
-            abilityCast.CastImmediate(controller.Movement.transform, controller.Movement.transform.forward);
+            abilityCast.Cast(controller.Movement.transform, controller.Movement.transform.forward);
         });
     }
 
@@ -51,7 +51,7 @@ public class AbilityButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
     {
-        abilityCast.StartCast(controller.Movement.transform);
+        abilityCast.StartCast(controller.Movement.transform, attackable => attackable != controller.Attackable);
         mousePosition = Input.mousePosition;
     }
 
@@ -74,7 +74,7 @@ public class AbilityButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     void IEndDragHandler.OnEndDrag(PointerEventData eventData)
     {
         controller.SetAnimation();
-        abilityCast.EndCast();
+        abilityCast.Cast();
     }
 
 

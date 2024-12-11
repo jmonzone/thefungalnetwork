@@ -38,7 +38,7 @@ public class CrocodileAttack : MonoBehaviour
 
     private IEnumerator AimAttack()
     {
-        abilityCast.StartCast(transform);
+        abilityCast.StartCast(transform, attackable => true);
 
         var elapsedTime = 0f;
         while (elapsedTime < 2)
@@ -52,7 +52,7 @@ public class CrocodileAttack : MonoBehaviour
 
         yield return new WaitForSeconds(0.5f);
 
-        abilityCast.EndCast();
+        abilityCast.Cast();
         GetComponentInChildren<Animator>().Play("Attack");
 
         movementController.SetSpeed(chargeSpeed);
