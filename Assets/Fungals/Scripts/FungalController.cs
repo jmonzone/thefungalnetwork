@@ -46,6 +46,7 @@ public class FungalController : MonoBehaviour
             animator.speed = 0.25f;
 
             var movement = GetComponentInChildren<MovementController>();
+            movement.OnJump += () => animator.Play("Jump");
             movement.SetMaxJumpCount(model.Data.Type == FungalType.SKY ? 2 : 1);
             controllable.Movement.StartRandomMovement();
 
