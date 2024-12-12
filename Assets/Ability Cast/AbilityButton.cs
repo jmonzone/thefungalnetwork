@@ -14,6 +14,7 @@ public class AbilityButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     [SerializeField] private Image abilityImage;
     [SerializeField] private Image cooldownImage;
     [SerializeField] private TextMeshProUGUI cooldownText;
+    [SerializeField] private Gradient cooldownTextGradient;
 
     private Vector3 mousePosition;
     private float abilityTimer;
@@ -42,8 +43,11 @@ public class AbilityButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     private void SetAbilityTimer(float timer)
     {
         cooldownImage.fillAmount = timer / abilityCooldown;
+        cooldownText.text = Mathf.CeilToInt(timer).ToString();
+        cooldownText.color = cooldownTextGradient.Evaluate(1 - timer / abilityCooldown);
         abilityTimer = timer;
         button.interactable = timer == 0;
+        cooldownText.enabled = timer > 0;
     }
 
     private void OnEnable()
