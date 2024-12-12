@@ -49,10 +49,11 @@ public class NetworkPlayer : NetworkBehaviour
                     var spawnedAvatar = Instantiate(networkAvatarPrefab, avatarSpawnPosition, forwardRotation, transform);
                     spawnedAvatar.Spawn();
                     controller.SetController(spawnedAvatar.GetComponent<Controllable>());
-
-                    var spawnedCrocodile = Instantiate(networkCrocdilePrefab, arena.CrocodileSpawnPosition, forwardRotation, transform);
-                    spawnedCrocodile.Spawn();
                 }
+
+
+                var spawnedCrocodile = Instantiate(networkCrocdilePrefab, arena.CrocodileSpawnPosition, forwardRotation, transform);
+                spawnedCrocodile.Spawn();
             }
             else
             {

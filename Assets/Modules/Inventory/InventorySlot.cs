@@ -29,6 +29,7 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler
             itemAmountText.text = item.Count.ToString();
         }
 
+        itemImage.enabled = item;
         itemImage.gameObject.SetActive(item);
         itemAmountText.gameObject.SetActive(item && item.Count > 1);
     }
