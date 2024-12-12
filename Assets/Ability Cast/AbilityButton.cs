@@ -1,3 +1,4 @@
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -9,12 +10,14 @@ public class AbilityButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     [SerializeField] private Button button;
     [SerializeField] private Controller controller;
     [SerializeField] private AbilityCast abilityCast;
-    [SerializeField] private Image preview;
     [SerializeField] private GameObject render;
+    [SerializeField] private Image abilityImage;
+    [SerializeField] private Image cooldownImage;
+    [SerializeField] private TextMeshProUGUI cooldownText;
 
     private Vector3 mousePosition;
     private float abilityTimer;
-    private float abilityCooldown = 2.5f;
+    private float abilityCooldown = 5f;
 
     private void Awake()
     {
@@ -26,14 +29,21 @@ public class AbilityButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     private void Update()
     {
-        if (abilityTimer > abilityCooldown)
+        if (abilityTimer > 0)
         {
-            button.interactable = true;
+            SetAbilityTimer(abilityTimer - Time.deltaTime);
         }
         else
         {
-            abilityTimer += Time.deltaTime;
+            SetAbilityTimer(0);
         }
+    }
+
+    private void SetAbilityTimer(float timer)
+    {
+        cooldownImage.fillAmount = timer / abilityCooldown;
+        abilityTimer = timer;
+        button.interactable = timer == 0;
     }
 
     private void OnEnable()
@@ -51,8 +61,7 @@ public class AbilityButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     private void AbilityCast_OnComplete()
     {
-        abilityTimer = 0;
-        button.interactable = false;
+        SetAbilityTimer(abilityCooldown);
     }
 
     private void UpdatePreview()
@@ -61,12 +70,12 @@ public class AbilityButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
         if (abilityCast.Shrune)
         {
-            preview.enabled = true;
-            preview.sprite = abilityCast.Shrune.Sprite;
+            abilityImage.enabled = true;
+            abilityImage.sprite = abilityCast.Shrune.Sprite;
         }
         else
         {
-            preview.enabled = false;
+            abilityImage.enabled = false;
         }
     }
 
