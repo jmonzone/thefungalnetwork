@@ -4,17 +4,17 @@ using UnityEngine.Events;
 //todo: name something more like PlayerHandler or PlayerController
 public class InitialController : MonoBehaviour
 {
-    //todo: reorder fields
+    [SerializeField] private Controller controller;
     [SerializeField] private Possession possession;
     [SerializeField] private FungalInventory fungalInventory;
     [SerializeField] private FungalControllerSpawner fungalControllerSpawner;
-    [SerializeField] private FungalModel initalFungal;
     [SerializeField] private Controllable avatarPrefab;
-    [SerializeField] private Controller controller;
-
-    public FungalModel InitalFungal => initalFungal;
+    [SerializeField] private bool forceSpawnAvatar;
 
     private Controllable avatar;
+    private FungalModel initalFungal;
+
+    public FungalModel InitalFungal => initalFungal;
 
     public event UnityAction OnControllerInitialized;
 
@@ -28,7 +28,7 @@ public class InitialController : MonoBehaviour
 
     private void Start()
     {
-        SpawnPlayer(transform.position);
+        SpawnPlayer();
     }
 
     private void Update()
@@ -49,23 +49,26 @@ public class InitialController : MonoBehaviour
         controller.OnReleaseStart -= ReleaseFungal;
     }
 
-    private void SpawnPlayer(Vector3 spawnPosition)
+    private void SpawnPlayer()
     {
-        Debug.Log("spawning player");
-
+        Debug.Log("spawning avatar");
         var partner = possession.Fungal;
         initalFungal = fungalInventory.Fungals.Find(fungal => fungal == partner);
-        if (initalFungal)
+
+        avatar = Instantiate(avatarPrefab, transform.position, Quaternion.identity);
+
+        if (initalFungal && !forceSpawnAvatar)
         {
-            var fungalController = fungalControllerSpawner.SpawnFungal(initalFungal, spawnPosition);
+            var fungalController = fungalControllerSpawner.SpawnFungal(initalFungal, transform.position);
             Debug.Log("Setting fungal controller");
             controller.SetController(fungalController.Controllable);
             controller.InitalizePosessable(fungalController.GetComponent<Possessable>());
+
+            avatar.transform.localScale = Vector3.zero;
         }
         else
         {
             Debug.Log("Setting player controller");
-            avatar = Instantiate(avatarPrefab, spawnPosition, Quaternion.identity);
             controller.SetController(avatar);
         }
 
@@ -82,9 +85,8 @@ public class InitialController : MonoBehaviour
     {
         var fungal = controller.Movement;
         fungal.StartRandomMovement();
-        avatar.GetComponent<AvatarAnimation>().StartReleaseAnimation();
 
-        //todo: provide controller with avatar so it can handle
+        avatar.GetComponent<AvatarAnimation>().StartReleaseAnimation();
         controller.SetController(avatar);
     }
 }
