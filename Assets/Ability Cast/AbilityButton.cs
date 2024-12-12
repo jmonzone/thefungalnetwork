@@ -16,7 +16,7 @@ public class AbilityButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     [SerializeField] private TextMeshProUGUI cooldownText;
     [SerializeField] private Gradient cooldownTextGradient;
 
-    private Vector3 mousePosition;
+    private Vector3 initialTouchPosition;
     private float abilityTimer;
     private float abilityCooldown = 5f;
 
@@ -87,29 +87,35 @@ public class AbilityButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
     {
+        // Start casting ability
         abilityCast.StartCast(controller.Movement.transform, IsValidTarget);
-        mousePosition = Input.mousePosition;
+
+        // Record the initial touch position
+        initialTouchPosition = eventData.position;
     }
 
     void IDragHandler.OnDrag(PointerEventData eventData)
     {
-        // Get the direction from the mouse position relative to the screen space
-        Vector3 mouseDirection = Input.mousePosition - mousePosition;
-        mouseDirection.z = mouseDirection.y;
-        mouseDirection.y = 0f; // Ignore vertical difference for XZ plane direction
+        // Calculate the direction from the initial touch position
+        Vector3 dragDirection = (Vector3)eventData.position - initialTouchPosition;
+
+        // Convert to XZ plane direction
+        dragDirection.z = dragDirection.y;
+        dragDirection.y = 0f; // Ignore vertical difference for XZ plane direction
 
         // Get the camera's forward rotation, but only around the Y axis (XZ plane)
         Quaternion cameraRotation = Quaternion.Euler(0f, Camera.main.transform.rotation.eulerAngles.y, 0f);
 
-        // Rotate the mouse direction by the camera's rotation
-        Vector3 rotatedMouseDirection = cameraRotation * mouseDirection.normalized;
+        // Rotate the drag direction by the camera's rotation
+        Vector3 rotatedDragDirection = cameraRotation * dragDirection.normalized;
 
-        abilityCast.UpdateCast(rotatedMouseDirection);
+        // Update the ability cast with the rotated direction
+        abilityCast.UpdateCast(rotatedDragDirection);
     }
 
     void IEndDragHandler.OnEndDrag(PointerEventData eventData)
     {
-        //controller.SetAnimation();
+        // Complete the ability cast
         abilityCast.Cast();
     }
 
