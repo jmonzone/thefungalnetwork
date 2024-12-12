@@ -6,8 +6,9 @@ public class PlayerInput : MonoBehaviour
 {
     [SerializeField] private VirtualJoystick virtualJoystick;
     [SerializeField] private CameraController cameraController;
-    [SerializeField] private Button primaryButton;
-    [SerializeField] private Button releaseButton;
+    [SerializeField] private Button jumpButton;
+    [SerializeField] private Button possessionButton;
+    [SerializeField] private Button interactionButton;
     [SerializeField] private Controller controller;
     [SerializeField] private Volume volume;
 
@@ -17,15 +18,20 @@ public class PlayerInput : MonoBehaviour
     {
         mainCamera = Camera.main;
 
-        primaryButton.onClick.AddListener(() =>
+        jumpButton.onClick.AddListener(() =>
         {
-            if (controller.Interactions.TargetAction) controller.Interactions.TargetAction.Use();
-            else controller.Movement.Jump();
+            controller.Movement.Jump();
         });
 
-        releaseButton.onClick.AddListener(() =>
+        interactionButton.onClick.AddListener(() =>
         {
-            controller.ReleasePossession();
+            if (controller.Interactions.TargetAction) controller.Interactions.TargetAction.Use();
+        });
+
+        possessionButton.onClick.AddListener(() =>
+        {
+            if (controller.Possessable) controller.ReleasePossession();
+            else controller.Interactions.TargetAction.Use();
         });
 
         virtualJoystick.OnJoystickEnd += () =>
@@ -60,12 +66,12 @@ public class PlayerInput : MonoBehaviour
     private void OnControllerUpdated()
     {
         cameraController.Target = controller.Movement.transform;
-        releaseButton.gameObject.SetActive(controller.Movement.GetComponent<FungalController>());
+        if (controller.IsFungal) possessionButton.gameObject.SetActive(true);
     }
 
     public void CanInteract(bool value)
     {
-        primaryButton.interactable = value;
+        interactionButton.gameObject.SetActive(value);
     }
 
 
@@ -78,8 +84,14 @@ public class PlayerInput : MonoBehaviour
         UpdateProximityActions();
 
         if (controller.Movement == null) return;
-        var interaction = controller.Interactions && controller.Interactions.TargetAction && controller.Interactions.TargetAction.Interactable;
-        CanInteract(interaction || controller.Movement.CanJump);
+        var interactions = controller.Interactions;
+        var interaction = interactions && interactions.TargetAction && interactions.TargetAction.Interactable && !interactions.TargetAction.GetComponent<FungalController>();
+        CanInteract(interaction);
+
+        if (!controller.IsFungal)
+        {
+            possessionButton.gameObject.SetActive(interactions?.TargetAction?.GetComponent<FungalController>());
+        }
     }
 
     private void UpdateWASDMovment()

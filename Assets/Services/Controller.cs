@@ -7,8 +7,10 @@ public class Controller : ScriptableObject
 {
     [SerializeField] private ViewReference inputView;
     [SerializeField] private Controllable controllable;
+    [SerializeField] private bool isFungal;
 
     public Controllable Controllable => controllable;
+    public bool IsFungal => isFungal;
 
     public Attackable Attackable { get; private set; }
     public MovementController Movement => Controllable?.Movement;
@@ -39,6 +41,8 @@ public class Controller : ScriptableObject
         this.controllable = controllable;
         Attackable = controllable.Movement.GetComponent<Attackable>();
         if (Attackable) Attackable.OnDeath += OnDeath;
+
+        isFungal = controllable.GetComponent<FungalController>();
 
         controllable.Movement.Stop();
         OnUpdate?.Invoke();
