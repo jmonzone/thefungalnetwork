@@ -13,6 +13,8 @@ public class AbilityButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     [SerializeField] private GameObject render;
 
     private Vector3 mousePosition;
+    private float abilityTimer;
+    private float abilityCooldown = 2.5f;
 
     private void Awake()
     {
@@ -22,16 +24,35 @@ public class AbilityButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         });
     }
 
+    private void Update()
+    {
+        if (abilityTimer > abilityCooldown)
+        {
+            button.interactable = true;
+        }
+        else
+        {
+            abilityTimer += Time.deltaTime;
+        }
+    }
+
     private void OnEnable()
     {
         UpdatePreview();
         abilityCast.OnShruneChanged += UpdatePreview;
+        abilityCast.OnComplete += AbilityCast_OnComplete;
     }
 
     private void OnDisable()
     {
         abilityCast.OnShruneChanged -= UpdatePreview;
+        abilityCast.OnComplete -= AbilityCast_OnComplete;
+    }
 
+    private void AbilityCast_OnComplete()
+    {
+        abilityTimer = 0;
+        button.interactable = false;
     }
 
     private void UpdatePreview()

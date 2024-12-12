@@ -50,7 +50,6 @@ public class AbilityCast : ScriptableObject
         OnUpdate?.Invoke();
     }
 
-
     public void Cast()
     {
         if (this.shrune && shruneCollection.TryGetShruneById(ShruneId, out ShruneItem shrune))
