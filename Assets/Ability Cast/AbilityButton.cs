@@ -1,5 +1,4 @@
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -19,6 +18,8 @@ public class AbilityButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     private Vector3 initialTouchPosition;
     private float abilityTimer;
     private float abilityCooldown = 5f;
+    private bool canCast = false;
+    private bool castStarted = false;
 
     private void Awake()
     {
@@ -46,8 +47,10 @@ public class AbilityButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         cooldownText.text = Mathf.CeilToInt(timer).ToString();
         cooldownText.color = cooldownTextGradient.Evaluate(1 - timer / abilityCooldown);
         abilityTimer = timer;
-        button.interactable = timer == 0;
-        cooldownText.enabled = timer > 0;
+
+        canCast = timer == 0;
+        button.interactable = canCast;
+        cooldownText.enabled = !canCast;
     }
 
     private void OnEnable()
@@ -87,6 +90,10 @@ public class AbilityButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
     {
+        if (!canCast) return;
+
+        castStarted = true;
+
         // Start casting ability
         abilityCast.StartCast(controller.Movement.transform, IsValidTarget);
 
@@ -96,6 +103,8 @@ public class AbilityButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     void IDragHandler.OnDrag(PointerEventData eventData)
     {
+        if (!castStarted) return;
+
         // Calculate the direction from the initial touch position
         Vector3 dragDirection = (Vector3)eventData.position - initialTouchPosition;
 
@@ -115,6 +124,9 @@ public class AbilityButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     void IEndDragHandler.OnEndDrag(PointerEventData eventData)
     {
+        if (!castStarted) return;
+        castStarted = false;
+
         // Complete the ability cast
         abilityCast.Cast();
     }

@@ -1,6 +1,5 @@
 using UnityEngine;
 
-// todo: see if initalizing controller logic can be shared with GroveManager
 public class TutorialController : MonoBehaviour
 {
     [SerializeField] private ProximityAction proximityAction;
@@ -10,5 +9,4 @@ public class TutorialController : MonoBehaviour
     {
         proximityAction.OnUse += () => tutorial.SetIsCompletd(true);
     }
-
 }

@@ -9,15 +9,18 @@ public class AbilityCastIndicator : MonoBehaviour
     {
         HideIndicator();
         abilityCast.OnStart += ShowIndicator;
-        abilityCast.OnUpdate += UpdateIndicator;
         abilityCast.OnComplete += HideIndicator;
     }
 
     private void OnDisable()
     {
         abilityCast.OnStart -= ShowIndicator;
-        abilityCast.OnUpdate -= UpdateIndicator;
         abilityCast.OnComplete -= HideIndicator;
+    }
+
+    private void Update()
+    {
+        UpdateIndicator();
     }
 
     private void ShowIndicator()
@@ -27,6 +30,8 @@ public class AbilityCastIndicator : MonoBehaviour
 
     private void UpdateIndicator()
     {
+        if (!lineRenderer.gameObject.activeSelf) return;
+
         var position1 = abilityCast.StartPosition;
         position1.y += 0.1f;
 

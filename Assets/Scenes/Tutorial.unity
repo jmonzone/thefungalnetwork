@@ -413,7 +413,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 430717247}
-  - component: {fileID: 430717249}
+  - component: {fileID: 430717248}
   m_Layer: 0
   m_Name: 'Tutorial '
   m_TagString: Untagged
@@ -436,7 +436,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &430717249
+--- !u!114 &430717248
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -445,11 +445,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 430717245}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a5d5eb202edb648ec968651a102e1078, type: 3}
+  m_Script: {fileID: 11500000, guid: 6a8596f5947ab4d3289bd67fc3e11636, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneNavigation: {fileID: 11400000, guid: 5c885c9a984a3470684bef7e76ca5c2a, type: 2}
-  initalUI: {fileID: 11400000, guid: 8b7c25a127d9b494ebf93f64f5dc8a6f, type: 2}
+  proximityAction: {fileID: 512045460}
+  tutorial: {fileID: 11400000, guid: efdd5f0cddba44a8aa359bce2c9bf5d3, type: 2}
 --- !u!1 &512045458
 GameObject:
   m_ObjectHideFlags: 0
@@ -8606,7 +8606,7 @@ PrefabInstance:
     - target: {fileID: 307079635344528395, guid: 3e21d2aa76abe4e3c91aec5273a7a706,
         type: 3}
       propertyPath: m_Name
-      value: Input Manager
+      value: Player Input
       objectReference: {fileID: 0}
     - target: {fileID: 1021674304043943559, guid: 3e21d2aa76abe4e3c91aec5273a7a706,
         type: 3}
