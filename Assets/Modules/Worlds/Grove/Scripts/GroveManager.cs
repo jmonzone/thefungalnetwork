@@ -1,30 +1,26 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-//todo: use InitalController script to handle player managerment
-//todo: make separate fungal management script
+// todo: make separate fungal management script
+// this script handles spawning fungals in the garden and eggs if needed
 public class GroveManager : MonoBehaviour
 {
-    [Header("Prefab References")]
-    [SerializeField] private Possession possesionService;
+    [SerializeField] private InitialController initialController;
     [SerializeField] private FungalInventory fungalInventory;
     [SerializeField] private FungalCollection fungalCollection;
     [SerializeField] private FungalControllerSpawner fungalControllerSpawner;
     [SerializeField] private EggController eggControllerPrefab;
-    [SerializeField] private Controllable avatar;
-
-    [Header("Position References")]
-    [SerializeField] private Transform rabbitHolePosition;
     [SerializeField] private Collider fungalBounds;
 
-    [SerializeField] private PlayerInput inputManager;
-    [SerializeField] private Controller controller;
-    [SerializeField] private AstralProjection astralProjection;
-
-    public List<FungalController> FungalControllers { get; private set; } = new List<FungalController>();
-
-    public event UnityAction OnPlayerSpawned;
+    private void Awake()
+    {
+        initialController.OnControllerInitialized += () =>
+        {
+            SpawnFungals();
+        };
+    }
 
     private void Start()
     {
@@ -34,43 +30,17 @@ public class GroveManager : MonoBehaviour
             var randomFungal = fungalCollection.Data[randomIndex];
             SpawnEgg(randomFungal);
         }
-
-        SpawnFungals();
-        SpawnPlayer();
-    }
-
-
-    //todo: centralize logic with InitialController
-    private void SpawnPlayer()
-    {
-        Debug.Log("spawning player");
-
-        var partner = possesionService.Fungal;
-        var targetFungal = FungalControllers.Find(fungal => fungal.Model == partner);
-        if (targetFungal)
-        {
-            Debug.Log("Setting fungal controller");
-            targetFungal.transform.position = rabbitHolePosition.position;
-
-            //todo: centralize logic with AstralProjection
-            controller.SetController(targetFungal.Controllable);
-            controller.InitalizePosessable(targetFungal.GetComponent<Possessable>());
-        }
-        else
-        {
-            Debug.Log("Setting player controller");
-            avatar.transform.position = rabbitHolePosition.position;
-            controller.SetController(avatar);
-        }
-
-        OnPlayerSpawned?.Invoke();
     }
 
     private void SpawnFungals()
     {
         Debug.Log("spawning fungals");
 
-        foreach (var fungal in fungalInventory.Fungals)
+        // skip the initialController fungal
+        var filteredFungals = new List<FungalModel>(fungalInventory.Fungals);
+        filteredFungals.Remove(initialController.InitalFungal);
+
+        foreach (var fungal in filteredFungals)
         {
             var randomPosition = fungalBounds.GetRandomXZPosition();
             SpawnFungal(fungal, randomPosition);
@@ -99,7 +69,6 @@ public class GroveManager : MonoBehaviour
     private void SpawnFungal(FungalModel fungal, Vector3 position)
     {
         var fungalController = fungalControllerSpawner.SpawnFungal(fungal, position);
-        FungalControllers.Add(fungalController);
         fungalController.Controllable.Movement.SetBounds(fungalBounds);
     }
 }
