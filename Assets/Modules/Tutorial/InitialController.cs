@@ -26,8 +26,10 @@ public class InitialController : MonoBehaviour
         {
             var fungalController = fungalControllerSpawner.SpawnFungal(targetFungal, spawnPosition);
             Debug.Log("Setting fungal controller");
+
             //todo: centralize logic with AstralProjection
             controller.SetController(fungalController.Controllable);
+            controller.InitalizePosessable(fungalController.GetComponent<Possessable>());
         }
         else
         {

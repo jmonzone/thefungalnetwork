@@ -20,6 +20,8 @@ GameObject:
   - component: {fileID: 8821585516455993616}
   - component: {fileID: 8461473984528146846}
   - component: {fileID: 3436941995303846099}
+  - component: {fileID: 1499096027966364394}
+  - component: {fileID: -2858922290880019235}
   m_Layer: 10
   m_Name: Network Seagull
   m_TagString: Untagged
@@ -155,12 +157,13 @@ MonoBehaviour:
   positionAnchor:
     anchor: {fileID: 0}
     bounds: {fileID: 0}
-  distanceThreshold: 2
+  distanceThreshold: 0.1
   startIdle: 0
   minIdleDuration: 2
   maxIdleDuration: 5
   radius: 4
   radialSpeed: 0.25
+  maxJumpCount: 1
 --- !u!114 &8750829282863345101
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -185,7 +188,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3df2c912b10648969491ca60a4521ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animations: {fileID: 6560101873981381001}
+  animations: {fileID: 1499096027966364394}
 --- !u!114 &8821585516455993616
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -239,6 +242,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1499096027966364394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2941250707292126303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7511a942fc4cf4dcaa3d6d403a4ec0d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementController: {fileID: 5009224904557198983, guid: b9918fde894b04738b80e5675d3a8524,
+    type: 3}
+  animator: {fileID: 6580089157027848469}
+  animationSpeed: 1
+--- !u!114 &-2858922290880019235
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2941250707292126303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 912c82f9007e044cd938c070a0a9fc89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentHealth: 3
+  maxHealth: 3
 --- !u!1001 &1577553096361263673
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -312,21 +345,15 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 149ee12057ca19049bb96dbfe3295cd5, type: 3}
---- !u!114 &6560101873981381001 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: -3535693171668902992, guid: 149ee12057ca19049bb96dbfe3295cd5,
-    type: 3}
-  m_PrefabInstance: {fileID: 1577553096361263673}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7511a942fc4cf4dcaa3d6d403a4ec0d1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &6580089157027848467 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5671637318396879658, guid: 149ee12057ca19049bb96dbfe3295cd5,
+    type: 3}
+  m_PrefabInstance: {fileID: 1577553096361263673}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &6580089157027848469 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5671637318396879660, guid: 149ee12057ca19049bb96dbfe3295cd5,
     type: 3}
   m_PrefabInstance: {fileID: 1577553096361263673}
   m_PrefabAsset: {fileID: 0}

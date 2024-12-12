@@ -6,8 +6,9 @@ using UnityEngine.Rendering;
 public class Controller : ScriptableObject
 {
     [SerializeField] private ViewReference inputView;
+    [SerializeField] private Controllable controllable;
 
-    public Controllable Controllable { get; private set; }
+    public Controllable Controllable => controllable;
 
     public Attackable Attackable { get; private set; }
     public MovementController Movement => Controllable?.Movement;
@@ -30,16 +31,16 @@ public class Controller : ScriptableObject
         IsPossessing = false;
     }
 
-    public void SetController(Controllable controller)
+    public void SetController(Controllable controllable)
     {
         if (Attackable) Attackable.OnDeath -= OnDeath;
         if (Movement != null ) Movement.Stop();
 
-        Controllable = controller;
-        Attackable = controller.Movement.GetComponent<Attackable>();
+        this.controllable = controllable;
+        Attackable = controllable.Movement.GetComponent<Attackable>();
         if (Attackable) Attackable.OnDeath += OnDeath;
 
-        controller.Movement.Stop();
+        controllable.Movement.Stop();
         OnUpdate?.Invoke();
     }
 
@@ -50,7 +51,7 @@ public class Controller : ScriptableObject
 
     public void StartPossession(Possessable possessable)
     {
-        Movement.Stop();
+        if (Movement) Movement.Stop();
         IsPossessing = true;
         Possessable = possessable;
         OnPossessionStart?.Invoke();

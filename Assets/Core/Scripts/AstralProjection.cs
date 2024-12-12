@@ -5,11 +5,14 @@ public class AstralProjection : MonoBehaviour
     [SerializeField] private AvatarAnimation avatar;
     [SerializeField] private Controllable avatarControllable;
     [SerializeField] private Controller controller;
+    [SerializeField] private FungalControllerSpawner fungalSpawner;
 
     private void Awake()
     {
-        var groveManager = GetComponent<GroveManager>();
-        groveManager.OnFungalInteraction += PossessFungal;
+        fungalSpawner.OnFungalSpawned += fungal =>
+        {
+            fungal.GetComponent<ProximityAction>().OnUse += () => PossessFungal(fungal);
+        };
    }
 
     private void Update()
