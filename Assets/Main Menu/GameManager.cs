@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public static class ConfigKeys
@@ -34,6 +35,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private FungalInventory fungalInventory;
     [SerializeField] private Possession possession;
 
+    [SerializeField] private AudioSource audioSource;
+
+    [SerializeField] private AudioClip defaultAudioClip;
+    [SerializeField] private List<AudioClip> audioClips;
 
     private void Awake()
     {
@@ -54,7 +59,7 @@ public class GameManager : MonoBehaviour
             localData.Initialize();
             
             uiNavigation.Initialize();
-;
+
             tutorial.Initialize();
             displayName.Initialize();
 
@@ -80,7 +85,53 @@ public class GameManager : MonoBehaviour
                 uiNavigation.Reset();
                 StartCoroutine(sceneNavigation.NavigateToSceneRoutine(screenFade));
             };
+
+            sceneNavigation.OnSceneFadeOut += () =>
+            {
+                var targetClip = audioClips[sceneNavigation.BuildIndex] != null ? audioClips[sceneNavigation.BuildIndex] : defaultAudioClip;
+
+                if (audioSource.clip != targetClip)
+                {
+                    // Start fading out the volume
+                    StartCoroutine(FadeVolume(0f, 1f)); // Adjust duration as needed
+                }
+            };
+
+            sceneNavigation.OnSceneLoaded += () =>
+            {
+                var targetClip = audioClips[sceneNavigation.BuildIndex] != null ? audioClips[sceneNavigation.BuildIndex] : defaultAudioClip;
+
+                if (audioSource.clip != targetClip)
+                {
+                    audioSource.clip = targetClip;
+                    audioSource.Play();
+                }
+            };
+
+            sceneNavigation.OnSceneFadeIn += () =>
+            {
+                // Start fading in the volume
+                StartCoroutine(FadeVolume(1f, 1f)); // Adjust duration as needed
+            };
+
+            audioSource.volume = 0;
+            StartCoroutine(FadeVolume(1f, 1f)); // Adjust duration as needed
         }
+    }
+
+    private IEnumerator FadeVolume(float targetVolume, float duration)
+    {
+        float startVolume = audioSource.volume;
+        float elapsedTime = 0;
+
+        while (elapsedTime < duration)
+        {
+            audioSource.volume = Mathf.Lerp(startVolume, targetVolume, elapsedTime / duration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        audioSource.volume = targetVolume;
     }
 
     private IEnumerator Start()

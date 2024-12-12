@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -6,14 +7,18 @@ using UnityEngine.SceneManagement;
 [CreateAssetMenu]
 public class SceneNavigation : ScriptableObject
 {
-    private int buildIndex;
+    [SerializeField] private int buildIndex;
+    public int BuildIndex => buildIndex;
 
+    public event UnityAction OnSceneFadeOut;
+    public event UnityAction OnSceneFadeIn;
     public event UnityAction OnSceneLoaded;
     public event UnityAction OnSceneNavigationRequest;
 
     public void Initialize()
     {
-        OnSceneLoaded?.Invoke();
+        this.buildIndex = SceneManager.GetActiveScene().buildIndex;
+        OnSceneFadeIn?.Invoke();
     }
 
     public void NavigateToScene(int buildIndex)
@@ -24,6 +29,7 @@ public class SceneNavigation : ScriptableObject
 
     public IEnumerator NavigateToSceneRoutine(FadeCanvasGroup screenFade)
     {
+        OnSceneFadeOut?.Invoke();
         yield return screenFade.FadeIn(2f);
 
         Debug.Log("loading scene");
@@ -37,9 +43,10 @@ public class SceneNavigation : ScriptableObject
         }
 
         Debug.Log("scene loaded");
+        OnSceneLoaded?.Invoke();
 
         yield return screenFade.FadeOut(2f);
-        OnSceneLoaded?.Invoke();
+        OnSceneFadeIn?.Invoke();
     }
 
 }

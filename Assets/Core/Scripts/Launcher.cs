@@ -54,12 +54,12 @@ public class Launcher : MonoBehaviour
 
     private void OnEnable()
     {
-        sceneNavigation.OnSceneLoaded += ShowInitialView;
+        sceneNavigation.OnSceneFadeIn += ShowInitialView;
     }
 
     private void OnDisable()
     {
-        sceneNavigation.OnSceneLoaded -= ShowInitialView;
+        sceneNavigation.OnSceneFadeIn -= ShowInitialView;
     }
 
     private void ShowInitialView()

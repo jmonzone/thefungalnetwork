@@ -7,12 +7,12 @@ public class InitialUI : MonoBehaviour
 
     private void OnEnable()
     {
-        sceneNavigation.OnSceneLoaded += ShowInitialUI;
+        sceneNavigation.OnSceneFadeIn += ShowInitialUI;
     }
 
     private void OnDisable()
     {
-        sceneNavigation.OnSceneLoaded -= ShowInitialUI;
+        sceneNavigation.OnSceneFadeIn -= ShowInitialUI;
     }
 
     private void ShowInitialUI()
