@@ -62,10 +62,11 @@ public class AbilityCast : ScriptableObject
         OnComplete?.Invoke();
     }
 
-    public void Cast(Transform origin, Vector3 direction)
+    public void Cast(Transform origin, Vector3 direction, Func<Attackable, bool> isValidTarget)
     {
         this.origin = origin;
         Direction = direction;
+        IsValidTarget = isValidTarget;
         Cast();
     }
 }

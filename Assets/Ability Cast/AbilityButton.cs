@@ -18,7 +18,7 @@ public class AbilityButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     {
         button.onClick.AddListener(() =>
         {
-            abilityCast.Cast(controller.Movement.transform, controller.Movement.transform.forward);
+            abilityCast.Cast(controller.Movement.transform, controller.Movement.transform.forward, IsValidTarget);
         });
     }
 
@@ -49,9 +49,11 @@ public class AbilityButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         }
     }
 
+    bool IsValidTarget(Attackable attackable) => attackable != controller.Attackable;
+
     void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
     {
-        abilityCast.StartCast(controller.Movement.transform, attackable => attackable != controller.Attackable);
+        abilityCast.StartCast(controller.Movement.transform, IsValidTarget);
         mousePosition = Input.mousePosition;
     }
 

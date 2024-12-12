@@ -30,6 +30,7 @@ public class BossRoom : MonoBehaviour
     private IEnumerator WaitToShowResults()
     {
         yield return new WaitForSeconds(2f);
+        playerReference.Movement.Stop();
         resultView.RequestShow();
     }
 }
