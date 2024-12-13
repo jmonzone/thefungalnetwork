@@ -9,9 +9,11 @@ public class AbilityCast : ScriptableObject
 {
     [SerializeField] private ShruneItem shrune;
     [SerializeField] private Transform origin;
+    [SerializeField] private Transform target;
     [SerializeField] private float maxDistance;
     [SerializeField] private ShruneCollection shruneCollection;
 
+    public Transform Target => target;
     public ShruneItem Shrune => shrune;
     public string ShruneId => shrune.name;
     public Vector3 StartPosition => origin.position + Direction.normalized;
@@ -42,6 +44,13 @@ public class AbilityCast : ScriptableObject
         this.origin = origin;
         IsValidTarget = isValidTarget;
         OnStart?.Invoke();
+    }
+
+    //todo: parameters should be optional and dependent on the ability type
+    public void StartCast(Transform origin, Transform target, Func<Attackable, bool> isValidTarget)
+    {
+        this.target = target;
+        StartCast(origin, isValidTarget);
     }
 
     public void UpdateCast(Vector3 direction)

@@ -63,7 +63,7 @@ public class CrocodileAttack : MonoBehaviour
 
     private IEnumerator AimAttack()
     {
-        abilityCast.StartCast(transform, attackable => true);
+        abilityCast.StartCast(transform, target.Movement.transform, attackable => true);
 
         var elapsedTime = 0f;
         while (elapsedTime < 2)
