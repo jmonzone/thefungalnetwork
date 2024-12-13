@@ -65,6 +65,7 @@ public class AbilityCast : ScriptableObject
         OnUpdate?.Invoke();
     }
 
+    // todo: move ability cast logic onto component to disable for network pattern
     public void Cast()
     {
         if (this.shrune && shruneCollection.TryGetShruneById(ShruneId, out ShruneItem shrune))

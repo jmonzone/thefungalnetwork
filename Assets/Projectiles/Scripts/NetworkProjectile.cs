@@ -18,6 +18,7 @@ public class NetworkProjectile : NetworkBehaviour
         }
         else
         {
+            projectile.enabled = false;
             if (!dissapatedNetwork.Value)
             {
                 projectile.HideProjectileParticles();
