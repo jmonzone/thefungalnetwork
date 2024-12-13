@@ -13,6 +13,12 @@ public class Projectile : MonoBehaviour
     [SerializeField] private Light light;
     [SerializeField] private Controller controller;
 
+    [SerializeField] private float oscillationAmplitude = 1f; // Amplitude of the up-and-down motion
+    [SerializeField] private float oscillationFrequency = 5f;   // Speed of the up-and-down motion
+    [SerializeField] private float spiralRadius = 2f;         // Radius of the spiral motion
+    [SerializeField] private float spiralSpeed = 5f;            // Speed of the spiral rotation
+    [SerializeField] private float scaleVariation = 0.1f;       // Scale pulsing variation
+
     private Coroutine whispySpiralMotionCoroutine;
 
     public event UnityAction OnDissipateStart;
@@ -49,12 +55,12 @@ public class Projectile : MonoBehaviour
 
     private Func<Attackable, bool> isValidTarget;
 
-    public void Shoot(Vector3 direction, float maxDistance, Func<Attackable, bool> isValidTarget)
+    public void Shoot(Vector3 direction, float maxDistance, float speed, Func<Attackable, bool> isValidTarget)
     {
         this.isValidTarget = isValidTarget;
         transform.localScale = Vector3.one;
         gameObject.SetActive(true);
-        whispySpiralMotionCoroutine = StartCoroutine(WhispySpiralMotion(direction, 3f, maxDistance));
+        whispySpiralMotionCoroutine = StartCoroutine(WhispySpiralMotion(direction, speed, maxDistance));
     }
 
     private IEnumerator WhispySpiralMotion(Vector3 direction, float speed, float maxDistance)
@@ -85,11 +91,7 @@ public class Projectile : MonoBehaviour
         elapsedTime = 0f;
 
         // Parameters for motion
-        float oscillationAmplitude = 1f; // Amplitude of the up-and-down motion
-        float oscillationFrequency = 5f;   // Speed of the up-and-down motion
-        float spiralRadius = 2f;         // Radius of the spiral motion
-        float spiralSpeed = 5f;            // Speed of the spiral rotation
-        float scaleVariation = 0.1f;       // Scale pulsing variation
+        
 
         while (Vector3.Distance(startPosition, transform.position) < maxDistance)
         {

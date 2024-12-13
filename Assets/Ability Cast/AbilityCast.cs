@@ -55,7 +55,7 @@ public class AbilityCast : ScriptableObject
         if (this.shrune && shruneCollection.TryGetShruneById(ShruneId, out ShruneItem shrune))
         {
             var projectile = Instantiate(shrune.ProjectilePrefab, StartPosition + Vector3.up * 0.5f, Quaternion.LookRotation(Direction));
-            projectile.Shoot(Direction, MaxDistance, IsValidTarget);
+            projectile.Shoot(Direction, shrune.MaxDistance, shrune.Speed, IsValidTarget);
         }
 
         OnComplete?.Invoke();

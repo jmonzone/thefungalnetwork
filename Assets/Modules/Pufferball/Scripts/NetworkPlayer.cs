@@ -101,12 +101,12 @@ public class NetworkPlayer : NetworkBehaviour
         var networkProjectile = Instantiate(targetShrune.NetworkPrefab, spawnPosition, Quaternion.LookRotation(direction), transform);
         networkProjectile.SpawnWithOwnership(clientId);
 
-        SendAbilityInfoClientRpc(clientId, networkProjectile.NetworkObjectId, direction);
+        SendAbilityInfoClientRpc(clientId, networkProjectile.NetworkObjectId, direction, targetShrune.Speed);
 
     }
 
     [ClientRpc]
-    private void SendAbilityInfoClientRpc(ulong clientId, ulong networkObjectId, Vector3 direction)
+    private void SendAbilityInfoClientRpc(ulong clientId, ulong networkObjectId, Vector3 direction, float speed)
     {
         if (NetworkManager.Singleton.LocalClientId == clientId)
         {
@@ -114,7 +114,7 @@ public class NetworkPlayer : NetworkBehaviour
             if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out var networkObject))
             {
                 // Apply the rotated direction to the projectile
-                networkObject.GetComponent<NetworkProjectile>().Shoot(direction, abilityCast.MaxDistance, attackable => attackable != controller.Attackable );
+                networkObject.GetComponent<NetworkProjectile>().Shoot(direction, abilityCast.MaxDistance, speed, attackable => attackable != controller.Attackable );
             }
             else
             {

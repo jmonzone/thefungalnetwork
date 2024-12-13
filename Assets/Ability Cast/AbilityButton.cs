@@ -17,7 +17,7 @@ public class AbilityButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     private Vector3 initialTouchPosition;
     private float abilityTimer;
-    private float abilityCooldown = 5f;
+    private float abilityCooldown => abilityCast.Shrune.Cooldown;
     private bool canCast = false;
     private bool castStarted = false;
 

@@ -25,9 +25,9 @@ public class NetworkProjectile : NetworkBehaviour
         }
     }
 
-    public void Shoot(Vector3 direction, float maxDistance, Func<Attackable, bool> isValidTarget)
+    public void Shoot(Vector3 direction, float maxDistance, float speed, Func<Attackable, bool> isValidTarget)
     {
-        projectile.Shoot(direction, maxDistance, isValidTarget);
+        projectile.Shoot(direction, maxDistance, speed, isValidTarget);
     }
 
     [ServerRpc]

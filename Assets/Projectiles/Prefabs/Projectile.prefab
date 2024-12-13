@@ -5156,6 +5156,11 @@ MonoBehaviour:
   dissipateParticles: {fileID: 8810316923315185707}
   light: {fileID: 8599563843007064422}
   controller: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
+  oscillationAmplitude: 1
+  oscillationFrequency: 2.5
+  spiralRadius: 0.5
+  spiralSpeed: 5
+  scaleVariation: 0.25
 --- !u!114 &1405260385642583641
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5182,6 +5187,7 @@ MonoBehaviour:
   maxIdleDuration: 5
   radius: 4
   radialSpeed: 0.25
+  maxJumpCount: 1
 --- !u!82 &4904470711253674077
 AudioSource:
   m_ObjectHideFlags: 0
