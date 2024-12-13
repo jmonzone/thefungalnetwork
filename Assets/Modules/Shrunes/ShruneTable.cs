@@ -4,8 +4,6 @@ using UnityEngine.UI;
 
 public class ShruneTable : MonoBehaviour
 {
-    [SerializeField] private GameManager gameManager;
-
     [SerializeField] private ItemInventory inventory;
     [SerializeField] private InventoryUI inventoryUI;
     [SerializeField] private Button resetButton;

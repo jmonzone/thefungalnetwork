@@ -74,7 +74,6 @@ public class GameManager : MonoBehaviour
 
             localData.OnReset += () =>
             {
-                abilityCast.Reset();
                 itemInventory.Initialize();
                 fungalInventory.Initialize();
                 possession.Initialize();

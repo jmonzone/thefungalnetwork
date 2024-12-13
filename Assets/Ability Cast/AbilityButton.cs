@@ -73,6 +73,9 @@ public class AbilityButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     private void UpdatePreview()
     {
+        Debug.Log(render);
+        Debug.Log(abilityCast);
+        Debug.Log(abilityCast.Shrune);
         render.SetActive(abilityCast.Shrune);
 
         if (abilityCast.Shrune)
