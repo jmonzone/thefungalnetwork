@@ -27283,18 +27283,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1694503300}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1696251349 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4377193916735545544, guid: f23314b20d06648f5ab783843339b5f6,
-    type: 3}
-  m_PrefabInstance: {fileID: 7525622806234987020}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac2f4a4fcf3a744b5bbecc7e5dd8097a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1700652020
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -32929,7 +32917,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac3f68720a389481ebc1f93b3ebb3db6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameManager: {fileID: 1696251349}
   inventory: {fileID: 11400000, guid: b0534c2b759264d94ad364617da988b3, type: 2}
   inventoryUI: {fileID: 985512192}
   resetButton: {fileID: 233354139}
@@ -35578,6 +35565,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5170361696167434605, guid: f702ebea349664f5a961ed19a73d9240,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6403461409993537512, guid: f702ebea349664f5a961ed19a73d9240,
         type: 3}
       propertyPath: m_Name
@@ -36127,6 +36119,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4117694265631229153, guid: 3e21d2aa76abe4e3c91aec5273a7a706,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6527414516695022958, guid: 3e21d2aa76abe4e3c91aec5273a7a706,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7252481751095348867, guid: 3e21d2aa76abe4e3c91aec5273a7a706,
         type: 3}
       propertyPath: volume
@@ -36137,6 +36139,11 @@ PrefabInstance:
       propertyPath: cameraController
       value: 
       objectReference: {fileID: 605316911}
+    - target: {fileID: 7602105618067009026, guid: 3e21d2aa76abe4e3c91aec5273a7a706,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -13,9 +13,7 @@ GameObject:
   - component: {fileID: 5322548769462966456}
   - component: {fileID: 6788233562493705746}
   - component: {fileID: 936509440355627948}
-  - component: {fileID: 7859479290288717486}
   - component: {fileID: 5009224904557198983}
-  - component: {fileID: 8750829282863345101}
   - component: {fileID: 3350449182185438809}
   - component: {fileID: 8821585516455993616}
   - component: {fileID: 8461473984528146846}
@@ -58,7 +56,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3373508946
+  GlobalObjectIdHash: 3804801626
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -111,6 +109,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 173026516737802164, guid: 9e5e876e58a73433bbb5be4472984e7e, type: 3}
+  fungals: []
 --- !u!114 &936509440355627948
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -124,19 +123,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fungalInventory: {fileID: 11400000, guid: c2d8b29caee5b440ca0269f2f27fa2b3, type: 2}
-  controllable: {fileID: 7859479290288717486}
---- !u!114 &7859479290288717486
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2941250707292126303}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 165c27a50bfdb44019a1d7a2acaaf813, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  movement: {fileID: 5009224904557198983}
 --- !u!114 &5009224904557198983
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -164,18 +151,6 @@ MonoBehaviour:
   radius: 4
   radialSpeed: 0.25
   maxJumpCount: 1
---- !u!114 &8750829282863345101
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2941250707292126303}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d798f27f9a994a34be8309c1c2e377f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &3350449182185438809
 MonoBehaviour:
   m_ObjectHideFlags: 0

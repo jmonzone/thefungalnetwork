@@ -47,7 +47,6 @@ public class CameraController : MonoBehaviour
         // Check for touch input
         if (Input.touchCount > 0)
         {
-            Debug.Log("touching");
             Touch touch = Input.GetTouch(0);
 
             switch (touch.phase)

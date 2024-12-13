@@ -28,14 +28,14 @@ public class BossRoom : MonoBehaviour
 
     private void OnBossDeath()
     {
-        resultHeader.text = "Totally Bogged";
+        resultHeader.text = "Bog Unclogged!";
         resultHeader.color = winResultColor;
         ShowResults();
     }
 
     private void OnPlayerDeath()
     {
-        resultHeader.text = "Bog Unclogged";
+        resultHeader.text = "Bogged Down?";
         resultHeader.color = loseResultColor;
         ShowResults();
     }
