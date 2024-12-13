@@ -17,7 +17,7 @@ public class NetworkDisplayName : NetworkBehaviour
         Debug.Log($"Spawned IsOwner:{IsOwner}");
         if (IsOwner)
         {
-            displayNameText.gameObject.SetActive(false);
+            //displayNameText.gameObject.SetActive(false);
             displayNameText.text = displayName.Value;
             UpdateDisplayNameServerRpc(new FixedString64Bytes(displayName.Value));
         }

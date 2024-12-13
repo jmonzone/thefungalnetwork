@@ -41,13 +41,14 @@ public class BossRoom : MonoBehaviour
     }
     private void ShowResults()
     {
+        playerReference.Movement.Stop();
+        playerReference.Movement.enabled = false;
         StartCoroutine(WaitToShowResults());
     }
 
     private IEnumerator WaitToShowResults()
     {
         yield return new WaitForSeconds(2f);
-        playerReference.Movement.Stop();
         resultView.RequestShow();
     }
 }
