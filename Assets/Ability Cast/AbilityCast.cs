@@ -53,6 +53,12 @@ public class AbilityCast : ScriptableObject
         StartCast(origin, isValidTarget);
     }
 
+    //todo: create aimed ability vs targeted ability
+    public void UpdateCast()
+    {
+        OnUpdate?.Invoke();
+    }
+
     public void UpdateCast(Vector3 direction)
     {
         Direction = direction;

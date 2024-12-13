@@ -39,12 +39,15 @@ public class NetworkCrocodile : NetworkBehaviour
     {
         Debug.Log("on ability Start");
         var targetClientId = abilityCast.Target.GetComponent<NetworkObject>();
-        SendAbilityInfoClientRpc(NetworkManager.Singleton.LocalClientId, targetClientId.NetworkObjectId);
+        OnAbilityStartClientRpc(NetworkManager.Singleton.LocalClientId, targetClientId.NetworkObjectId);
     }
 
 
+    //todo: handle in AbilityCast 
+    private bool isCasting = false;
+
     [ClientRpc]
-    private void SendAbilityInfoClientRpc(ulong clientId, ulong networkObjectId)
+    private void OnAbilityStartClientRpc(ulong clientId, ulong networkObjectId)
     {
         if (NetworkManager.Singleton.LocalClientId == clientId) return;
         
@@ -56,6 +59,7 @@ public class NetworkCrocodile : NetworkBehaviour
             // Apply the rotated direction to the projectile
             //todo: remove third param
             abilityCast.StartCast(transform, networkObject.transform, attackable => true);
+            isCasting = true;
         }
         else
         {
@@ -63,11 +67,31 @@ public class NetworkCrocodile : NetworkBehaviour
         }
     }
 
+    private void Update()
+    {
+        if (isCasting)
+        {
+            abilityCast.UpdateCast();
+        }
+    }
 
 
     private void OnAbilityCast()
     {
         //todo: centralize logic with AbilityCastController
-        //RequestAbilityCastServerRpc(NetworkManager.Singleton.LocalClientId, abilityCast.Direction);
+        OnAbilityCastClientRpc(NetworkManager.Singleton.LocalClientId);
+    }
+
+    [ClientRpc]
+    private void OnAbilityCastClientRpc(ulong clientId)
+    {
+        if (NetworkManager.Singleton.LocalClientId == clientId) return;
+
+        Debug.Log("on ability Start client RPC");
+
+        abilityCast.Cast();
+
+        //todo: handle in abilityCast on cast()
+        isCasting = false;
     }
 }
