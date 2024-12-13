@@ -72,9 +72,10 @@ public class Launcher : MonoBehaviour
         skyBox.Rotate(axis, rotationSpeed * Time.deltaTime);
     }
 
+    private float tranistionDelay = 0.25f;
     private IEnumerator ShowTitle()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(tranistionDelay);
         yield return title.FadeIn();
 
         Debug.Log("Waiting for input");
@@ -97,13 +98,13 @@ public class Launcher : MonoBehaviour
 
     private IEnumerator ShowMainMenu()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(tranistionDelay);
         yield return mainMenu.FadeIn();
     }
 
     private IEnumerator ShowNamePrompt()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(tranistionDelay);
         yield return namePrompt.FadeIn();
     }
 
