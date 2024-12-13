@@ -69,6 +69,6 @@ public class GroveManager : MonoBehaviour
     private void SpawnFungal(FungalModel fungal, Vector3 position)
     {
         var fungalController = fungalControllerSpawner.SpawnFungal(fungal, position);
-        fungalController.Controllable.Movement.SetBounds(fungalBounds);
+        fungalController.Movement.SetBounds(fungalBounds);
     }
 }

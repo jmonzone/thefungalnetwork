@@ -38,7 +38,7 @@ public class NetworkPlayer : NetworkBehaviour
                     var spawnedFungal = Instantiate(targetFungal.Data.NetworkPrefab, arena.PlayerSpawnPosition, forwardRotation, transform);
                     spawnedFungal.NetworkObject.Spawn();
                     spawnedFungal.Initialize(targetFungal.Data.Id);
-                    controller.SetController(spawnedFungal.GetComponent<Controllable>());
+                    controller.SetMovement(spawnedFungal.GetComponent<MovementController>());
                 }
                 else
                 {
@@ -48,7 +48,7 @@ public class NetworkPlayer : NetworkBehaviour
                     var avatarSpawnPosition = arena.PlayerSpawnPosition + randomOffset.normalized * 2f;
                     var spawnedAvatar = Instantiate(networkAvatarPrefab, avatarSpawnPosition, forwardRotation, transform);
                     spawnedAvatar.Spawn();
-                    controller.SetController(spawnedAvatar.GetComponent<Controllable>());
+                    controller.SetMovement(spawnedAvatar.GetComponent<MovementController>());
                 }
 
 
@@ -143,10 +143,10 @@ public class NetworkPlayer : NetworkBehaviour
             if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out var networkObject))
             {
                 // Get the desired component
-                var controllable = networkObject.GetComponent<Controllable>();
+                var controllable = networkObject.GetComponent<MovementController>();
                 Debug.Log("Received Controllable component on the client!");
 
-                controller.SetController(controllable);
+                controller.SetMovement(controllable);
             }
             else
             {
@@ -181,7 +181,7 @@ public class NetworkPlayer : NetworkBehaviour
                 var networkFungal = networkObject.GetComponent<NetworkFungal>();
                 Debug.Log("Received Controllable component on the client!");
                 networkFungal.Initialize(fungalName);
-                controller.SetController(networkFungal.Controllable);
+                controller.SetMovement(networkFungal.Movement);
             }
             else
             {

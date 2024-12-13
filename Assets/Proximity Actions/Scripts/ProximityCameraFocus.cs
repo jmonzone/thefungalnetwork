@@ -8,7 +8,7 @@ public class ProximityCameraFocus : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.GetComponentInParent<Controllable>() == controller.Controllable)
+        if (other.GetComponentInParent<MovementController>() == controller.Movement)
         {
             virtualCamera.Priority = 2;
         }
@@ -16,7 +16,7 @@ public class ProximityCameraFocus : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.GetComponentInParent<Controllable>() == controller.Controllable)
+        if (other.GetComponentInParent<MovementController>() == controller.Movement)
         {
             virtualCamera.Priority = 0;
         }

@@ -12,6 +12,7 @@ public class ItemInventory : ScriptableObject
     [SerializeField] private GameData gameData;
     [SerializeField] private List<ItemInstance> items;
 
+    public ItemInstance LatestItem { get; private set; }
     public List<ItemInstance> Items => items.Where(item => item.Count > 0).ToList();
 
     public event UnityAction OnInventoryUpdated;
@@ -66,6 +67,7 @@ public class ItemInventory : ScriptableObject
         {
             // Update the count for the existing item
             existingItem.Count += amount;
+            LatestItem = existingItem;
             OnItemAdded?.Invoke(existingItem);
             //Debug.Log($"incrementing item {item.name} count to {existingItem.Count}");
         }
@@ -76,8 +78,10 @@ public class ItemInventory : ScriptableObject
             var targetItem = CreateInstance<ItemInstance>();
             targetItem.Initialize(item, amount);
             items.Add(targetItem);
+            LatestItem = targetItem;
             OnItemAdded?.Invoke(targetItem);
         }
+
 
         SaveData();
         OnInventoryUpdated?.Invoke();

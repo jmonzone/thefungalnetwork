@@ -7,8 +7,10 @@ public class ShruneItem : Item
     [SerializeField] private Projectile projectilePrefab;
     [SerializeField] private NetworkObject networkPrefab;
     [SerializeField] private float maxDistance;
+    [SerializeField] private Sprite abilityIcon;
 
     public Projectile ProjectilePrefab => projectilePrefab;
     public NetworkObject NetworkPrefab => networkPrefab;
     public float MaxDistance => maxDistance;
+    public Sprite AbilityIcon => abilityIcon;
 }

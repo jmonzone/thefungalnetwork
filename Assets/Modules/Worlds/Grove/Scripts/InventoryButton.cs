@@ -10,7 +10,6 @@ public class InventoryButton : MonoBehaviour
     [SerializeField] private Image preview;
 
     public Button Button => button;
-    public ItemInstance PreviewItem => inventory.Items.LastOrDefault();
 
     private void Awake()
     {
@@ -31,10 +30,12 @@ public class InventoryButton : MonoBehaviour
 
     private void UpdatePreview()
     {
-        if (PreviewItem)
+        var previewItem = inventory.LatestItem;
+
+        if (previewItem)
         {
             preview.enabled = true;
-            preview.sprite = PreviewItem.Data.Sprite;
+            preview.sprite = previewItem.Data.Sprite;
         }
         else
         {

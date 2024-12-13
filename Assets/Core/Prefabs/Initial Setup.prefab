@@ -60,12 +60,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cba2da31b0f7b48dfbaf442ef6dc8d6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  controller: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
   possession: {fileID: 11400000, guid: 2733aad4d1436406fb3b8878be90ba62, type: 2}
   fungalInventory: {fileID: 11400000, guid: c2d8b29caee5b440ca0269f2f27fa2b3, type: 2}
   fungalControllerSpawner: {fileID: 6870399213337447583}
-  avatarPrefab: {fileID: 1779196646971515076, guid: ae08e3c05ce564ad6b6e3c59589b4d06,
+  avatarPrefab: {fileID: 8068630682061274872, guid: ae08e3c05ce564ad6b6e3c59589b4d06,
     type: 3}
-  controller: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
+  forceSpawnAvatar: 0
 --- !u!114 &6870399213337447583
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -79,3 +80,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 173026516737802164, guid: 9e5e876e58a73433bbb5be4472984e7e, type: 3}
+  fungals: []

@@ -18,9 +18,9 @@ public class CookingStation : JobStation
     {
         if (fungal)
         {
-            fungal.Controllable.Movement.SetPosition(fungalPositionAnchor.position, () =>
+            fungal.Movement.SetPosition(fungalPositionAnchor.position, () =>
             {
-                fungal.Controllable.Movement.SetLookTarget(fungalLookTarget);
+                fungal.Movement.SetLookTarget(fungalLookTarget);
             });
         }
     }

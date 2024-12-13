@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
 
-public class Controllable : MonoBehaviour
-{
-    public MovementController Movement { get; private set; }
-    public ProximityInteraction Interactions { get; private set; }
+//public class Controllable : MonoBehaviour
+//{
+//    public MovementController Movement { get; private set; }
+//    //public ProximityInteraction Interactions { get; private set; }
 
-    private void Awake()
-    {
-        Interactions = GetComponent<ProximityInteraction>();
-        Movement = GetComponent<MovementController>();
-    }
-}
+//    private void Awake()
+//    {
+//        //Interactions = GetComponent<ProximityInteraction>();
+//        Movement = GetComponent<MovementController>();
+//    }
+//}

@@ -8,10 +8,10 @@ public class InitialController : MonoBehaviour
     [SerializeField] private Possession possession;
     [SerializeField] private FungalInventory fungalInventory;
     [SerializeField] private FungalControllerSpawner fungalControllerSpawner;
-    [SerializeField] private Controllable avatarPrefab;
+    [SerializeField] private MovementController avatarPrefab;
     [SerializeField] private bool forceSpawnAvatar;
 
-    private Controllable avatar;
+    private MovementController avatar;
     private FungalModel initalFungal;
 
     public FungalModel InitalFungal => initalFungal;
@@ -22,7 +22,8 @@ public class InitialController : MonoBehaviour
     {
         fungalControllerSpawner.OnFungalSpawned += fungal =>
         {
-            fungal.GetComponent<ProximityAction>().OnUse += () => PossessFungal(fungal);
+            var fungalAction = fungal.GetComponent<ProximityAction>();
+            fungalAction.OnUse += () =>  PossessFungal(fungal);
         };
     }
 
@@ -61,7 +62,7 @@ public class InitialController : MonoBehaviour
         {
             var fungalController = fungalControllerSpawner.SpawnFungal(initalFungal, transform.position);
             Debug.Log("Setting fungal controller");
-            controller.SetController(fungalController.Controllable);
+            controller.SetMovement(fungalController.Movement);
             controller.InitalizePosessable(fungalController.GetComponent<Possessable>());
 
             avatar.transform.localScale = Vector3.zero;
@@ -69,7 +70,7 @@ public class InitialController : MonoBehaviour
         else
         {
             Debug.Log("Setting player controller");
-            controller.SetController(avatar);
+            controller.SetMovement(avatar);
         }
 
         OnControllerInitialized?.Invoke();
@@ -77,7 +78,7 @@ public class InitialController : MonoBehaviour
 
     private void PossessFungal(FungalController fungal)
     {
-        fungal.Controllable.Movement.Stop();
+        fungal.Movement.Stop();
         controller.StartPossession(fungal.GetComponent<Possessable>());
     }
 
@@ -87,6 +88,6 @@ public class InitialController : MonoBehaviour
         fungal.StartRandomMovement();
 
         avatar.GetComponent<AvatarAnimation>().StartReleaseAnimation();
-        controller.SetController(avatar);
+        controller.SetMovement(avatar);
     }
 }

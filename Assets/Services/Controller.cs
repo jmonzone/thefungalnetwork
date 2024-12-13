@@ -6,15 +6,13 @@ using UnityEngine.Rendering;
 public class Controller : ScriptableObject
 {
     [SerializeField] private ViewReference inputView;
-    [SerializeField] private Controllable controllable;
-    [SerializeField] private bool isFungal;
+    [SerializeField] private FungalData fungal;
+    [SerializeField] private MovementController movement;
 
-    public Controllable Controllable => controllable;
-    public bool IsFungal => isFungal;
+    public FungalData Fungal => fungal;
 
     public Attackable Attackable { get; private set; }
-    public MovementController Movement => Controllable?.Movement;
-    public ProximityInteraction Interactions => Controllable?.Interactions;
+    public MovementController Movement => movement;
 
     public Volume Volume { get; private set; }
 
@@ -26,25 +24,32 @@ public class Controller : ScriptableObject
     public event UnityAction OnPossessionStart;
     public event UnityAction OnReleaseStart;
     public event UnityAction OnDeath;
+    public event UnityAction OnIsPossessingChanged;
 
     public void Initialize(Volume volume)
     {
         Volume = volume;
-        IsPossessing = false;
+        SetIsPossessing(false);
     }
 
-    public void SetController(Controllable controllable)
+
+    private void SetIsPossessing(bool value)
+    {
+        IsPossessing = value;
+        OnIsPossessingChanged?.Invoke();
+    }
+    public void SetMovement(MovementController movement)
     {
         if (Attackable) Attackable.OnDeath -= OnDeath;
         if (Movement != null ) Movement.Stop();
 
-        this.controllable = controllable;
-        Attackable = controllable.Movement.GetComponent<Attackable>();
+        this.movement = movement;
+        Attackable = movement.GetComponent<Attackable>();
         if (Attackable) Attackable.OnDeath += OnDeath;
 
-        isFungal = controllable.GetComponent<FungalController>();
+        fungal = movement.GetComponent<FungalController>()?.Model.Data;
 
-        controllable.Movement.Stop();
+        movement.Stop();
         OnUpdate?.Invoke();
     }
 
@@ -56,21 +61,21 @@ public class Controller : ScriptableObject
     public void StartPossession(Possessable possessable)
     {
         if (Movement) Movement.Stop();
-        IsPossessing = true;
+        SetIsPossessing(true);
         Possessable = possessable;
         OnPossessionStart?.Invoke();
     }
 
     public void CompletePossession()
     {
-        SetController(Possessable.GetComponent<Controllable>());
-        IsPossessing = false;
+        SetMovement(Possessable.GetComponent<MovementController>());
+        SetIsPossessing(false);
         Possessable.OnPossess();
     }
 
     public void ReleasePossession()
     {
-        IsPossessing = true;
+        SetIsPossessing(true);
         Movement.Stop();
         OnReleaseStart?.Invoke();
         Possessable = null;
@@ -78,7 +83,7 @@ public class Controller : ScriptableObject
 
     public void CompleteRelease()
     {
-        IsPossessing = false;
+        SetIsPossessing(false);
     }
 
 

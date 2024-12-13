@@ -78,7 +78,7 @@ public class AbilityButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         if (abilityCast.Shrune)
         {
             abilityImage.enabled = true;
-            abilityImage.sprite = abilityCast.Shrune.Sprite;
+            abilityImage.sprite = abilityCast.Shrune.AbilityIcon;
         }
         else
         {

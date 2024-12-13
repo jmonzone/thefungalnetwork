@@ -1,18 +1,23 @@
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public class PlayerInput : MonoBehaviour
 {
-    [SerializeField] private VirtualJoystick virtualJoystick;
-    [SerializeField] private CameraController cameraController;
-    [SerializeField] private Button jumpButton;
-    [SerializeField] private Button possessionButton;
-    [SerializeField] private Button interactionButton;
     [SerializeField] private Controller controller;
+
+    [SerializeField] private CameraController cameraController;
     [SerializeField] private Volume volume;
 
+    [SerializeField] private VirtualJoystick virtualJoystick;
+    [SerializeField] private Button jumpButton;
+    [SerializeField] private Button releaseButton;
+    [SerializeField] private Button interactionButton;
+
     private Camera mainCamera;
+
+    private ProximityAction interactionAction;
 
     private void Awake()
     {
@@ -25,13 +30,12 @@ public class PlayerInput : MonoBehaviour
 
         interactionButton.onClick.AddListener(() =>
         {
-            if (controller.Interactions.TargetAction) controller.Interactions.TargetAction.Use();
+            if (interactionAction) interactionAction.Use();
         });
 
-        possessionButton.onClick.AddListener(() =>
+        releaseButton.onClick.AddListener(() =>
         {
-            if (controller.Possessable) controller.ReleasePossession();
-            else controller.Interactions.TargetAction.Use();
+            controller.ReleasePossession();
         });
 
         virtualJoystick.OnJoystickEnd += () =>
@@ -66,32 +70,38 @@ public class PlayerInput : MonoBehaviour
     private void OnControllerUpdated()
     {
         cameraController.Target = controller.Movement.transform;
-        if (controller.IsFungal) possessionButton.gameObject.SetActive(true);
+
+        if (controller.Fungal)
+        {
+            releaseButton.interactable = true;
+        }
     }
 
-    public void CanInteract(bool value)
-    {
-        interactionButton.gameObject.SetActive(value);
-    }
-
-
-    private ProximityAction previousAction;
     private bool usingWASD;
+
+    private const float MAXIMUM_PROXIMITY_DISTANCE = 3f;
 
     private void Update()
     {
         UpdateWASDMovment();
-        UpdateProximityActions();
 
         if (controller.Movement == null) return;
-        var interactions = controller.Interactions;
-        var interaction = interactions && interactions.TargetAction && interactions.TargetAction.Interactable && !interactions.TargetAction.GetComponent<FungalController>();
-        CanInteract(interaction);
 
-        if (!controller.IsFungal)
-        {
-            possessionButton.gameObject.SetActive(interactions?.TargetAction?.GetComponent<FungalController>());
-        }
+        var targetActions = Physics.OverlapSphere(controller.Movement.transform.position, MAXIMUM_PROXIMITY_DISTANCE)
+           .Where(collider => !collider.isTrigger)
+           .Select(collider => collider.GetComponentInParent<ProximityAction>())
+           .Where(action => action && action.transform != controller.Movement.transform)
+           .OrderBy(entity => Vector3.Distance(controller.Movement.transform.position, entity.transform.position))
+           .ToList();
+
+        var interactionAction = targetActions.FirstOrDefault();
+
+        if (this.interactionAction && this.interactionAction != interactionAction) this.interactionAction.SetInRange(false);
+        this.interactionAction = interactionAction;
+        if (interactionAction) this.interactionAction.SetInRange(true);
+
+        interactionButton.gameObject.SetActive(interactionAction && interactionAction.Interactable);
+        releaseButton.gameObject.SetActive(controller.Fungal && !controller.IsPossessing);
     }
 
     private void UpdateWASDMovment()
@@ -143,17 +153,5 @@ public class PlayerInput : MonoBehaviour
             // Set the movement direction
             controller.Movement.SetDirection(direction);
         }
-    }
-
-    private void UpdateProximityActions()
-    {
-        if (!controller.Interactions) return;
-
-        var targetAction = controller.Interactions.TargetAction;
-
-        if (previousAction && previousAction != targetAction) previousAction.SetInRange(false);
-        previousAction = targetAction;
-
-        if (targetAction) targetAction.SetInRange(true);
     }
 }

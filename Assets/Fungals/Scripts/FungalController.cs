@@ -13,21 +13,30 @@ public class FungalController : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Controller controller;
-    [SerializeField] private Controllable controllable;
+    [SerializeField] private ProximityAction proximityAction;
+    [SerializeField] private MovementController movement;
     [SerializeField] private HealthSlider healthSlider;
+    [SerializeField] private Image interactionOutline;
+    [SerializeField] private Image interactionBackground;
+    [SerializeField] private Image interactionImage;
 
     public FungalModel Model { get; private set; }
     public GameObject Render { get; private set; }
-    public Controllable Controllable => controllable;
+    public MovementController Movement => movement;
 
     private void OnEnable()
     {
-        //controller.OnUpdate += () => healthSlider.gameObject.SetActive(controllable == controller.Controllable);
+        controller.OnIsPossessingChanged += Controller_OnIsPossessingChanged;
+    }
+
+    private void Controller_OnIsPossessingChanged()
+    {
+        proximityAction.SetInteractable(!controller.IsPossessing && !controller.Fungal);
     }
 
     private void OnDisable()
     {
-        //controller.OnUpdate -= () => healthSlider.gameObject.SetActive(controllable == controller.Controllable);
+        controller.OnIsPossessingChanged -= Controller_OnIsPossessingChanged;
     }
 
     public void Initialize(FungalModel model)
@@ -45,13 +54,16 @@ public class FungalController : MonoBehaviour
             var animator = Render.GetComponentInChildren<Animator>();
             animator.speed = 0.25f;
 
-            var movement = GetComponentInChildren<MovementController>();
             movement.OnJump += () => animator.Play("Jump");
             movement.SetMaxJumpCount(model.Data.Type == FungalType.SKY ? 2 : 1);
-            controllable.Movement.StartRandomMovement();
+            this.movement.StartRandomMovement();
 
             var movementAnimations = GetComponentInChildren<MovementAnimations>();
             movementAnimations.Initalize();
+
+            //interactionOutline.color = model.Data.EggColor;
+            //interactionBackground.color = model.Data.ActionColor;
+            //interactionImage.sprite = model.Data.ActionImage;
         }
     }
 }

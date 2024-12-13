@@ -23,14 +23,14 @@ public class Possession : ScriptableObject
         controller.OnUpdate += () =>
         {
             //todo: consolidate
-            var networkFungal = controller.Controllable.GetComponent<NetworkFungal>();
+            var networkFungal = controller.Movement.GetComponent<NetworkFungal>();
             if (networkFungal)
             {
                 SetPossession(networkFungal.Fungal);
             }
             else
             {
-                var fungalController = controller.Controllable.GetComponent<FungalController>();
+                var fungalController = controller.Movement.GetComponent<FungalController>();
                 SetPossession(fungalController ? fungalController.Model : null);
             }
         };
