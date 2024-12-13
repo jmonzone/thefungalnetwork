@@ -61,6 +61,8 @@ public class InitialController : MonoBehaviour
         if (initalFungal && !forceSpawnAvatar)
         {
             var fungalController = fungalControllerSpawner.SpawnFungal(initalFungal, transform.position);
+            fungalController.GetComponent<AbilityCastView>().enabled = true;
+
             Debug.Log("Setting fungal controller");
             controller.SetMovement(fungalController.Movement);
             controller.InitalizePosessable(fungalController.GetComponent<Possessable>());
@@ -71,6 +73,8 @@ public class InitialController : MonoBehaviour
         {
             Debug.Log("Setting player controller");
             controller.SetMovement(avatar);
+
+            avatar.GetComponent<AbilityCastView>().enabled = true;
         }
 
         OnControllerInitialized?.Invoke();
@@ -79,13 +83,21 @@ public class InitialController : MonoBehaviour
     private void PossessFungal(FungalController fungal)
     {
         fungal.Movement.Stop();
-        controller.StartPossession(fungal.GetComponent<Possessable>());
+
+        var possessable = fungal.GetComponent<Possessable>();
+        controller.StartPossession(possessable);
+
+        fungal.GetComponent<AbilityCastView>().enabled = true;
+        avatar.GetComponent<AbilityCastView>().enabled = false;
     }
 
     private void ReleaseFungal()
     {
         var fungal = controller.Movement;
         fungal.StartRandomMovement();
+
+        fungal.GetComponent<AbilityCastView>().enabled = false;
+        avatar.GetComponent<AbilityCastView>().enabled = true;
 
         avatar.GetComponent<AvatarAnimation>().StartReleaseAnimation();
         controller.SetMovement(avatar);

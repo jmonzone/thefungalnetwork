@@ -81,7 +81,7 @@ public class NetworkPlayer : NetworkBehaviour
 
         if (IsOwner)
         {
-            abilityCast.OnComplete += OnAbilityCast;
+            abilityCast.OnCast += OnAbilityCast;
         }
     }
 
@@ -91,7 +91,7 @@ public class NetworkPlayer : NetworkBehaviour
 
         if (IsOwner)
         {
-            abilityCast.OnComplete -= OnAbilityCast;
+            abilityCast.OnCast -= OnAbilityCast;
         }
     }
 

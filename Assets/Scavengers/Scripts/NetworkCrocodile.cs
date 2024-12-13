@@ -20,7 +20,7 @@ public class NetworkCrocodile : NetworkBehaviour
         {
             attack.enabled = true;
             abilityCast.OnStart += OnAbilityStart;
-            abilityCast.OnComplete += OnAbilityCast;
+            abilityCast.OnCast += OnAbilityCast;
         }
     }
 
@@ -31,7 +31,7 @@ public class NetworkCrocodile : NetworkBehaviour
         if (IsOwner)
         {
             abilityCast.OnStart -= OnAbilityStart;
-            abilityCast.OnComplete -= OnAbilityCast;
+            abilityCast.OnCast -= OnAbilityCast;
         }
     }
 

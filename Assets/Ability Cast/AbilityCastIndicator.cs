@@ -9,13 +9,13 @@ public class AbilityCastIndicator : MonoBehaviour
     {
         HideIndicator();
         abilityCast.OnStart += ShowIndicator;
-        abilityCast.OnComplete += HideIndicator;
+        abilityCast.OnCast += HideIndicator;
     }
 
     private void OnDisable()
     {
         abilityCast.OnStart -= ShowIndicator;
-        abilityCast.OnComplete -= HideIndicator;
+        abilityCast.OnCast -= HideIndicator;
     }
 
     private void Update()

@@ -24,7 +24,7 @@ public class AbilityCast : ScriptableObject
     public event UnityAction OnShruneChanged;
     public event UnityAction OnStart;
     public event UnityAction OnUpdate;
-    public event UnityAction OnComplete;
+    public event UnityAction OnCast;
 
     public void Reset()
     {
@@ -65,16 +65,9 @@ public class AbilityCast : ScriptableObject
         OnUpdate?.Invoke();
     }
 
-    // todo: move ability cast logic onto component to disable for network pattern
     public void Cast()
     {
-        if (this.shrune && shruneCollection.TryGetShruneById(ShruneId, out ShruneItem shrune))
-        {
-            var projectile = Instantiate(shrune.ProjectilePrefab, StartPosition + Vector3.up * 0.5f, Quaternion.LookRotation(Direction));
-            projectile.Shoot(Direction, shrune.MaxDistance, shrune.Speed, IsValidTarget);
-        }
-
-        OnComplete?.Invoke();
+        OnCast?.Invoke();
     }
 
     public void Cast(Transform origin, Vector3 direction, Func<Attackable, bool> isValidTarget)
