@@ -104,6 +104,7 @@ public class CrocodileAttack : MonoBehaviour
     {
         if (!isAttacking) return;
 
+        Debug.Log("onTriggerEnter");
         var attackable = other.transform.GetComponentInParent<Attackable>();
         if (attackable)
         {

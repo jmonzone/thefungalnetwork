@@ -9,6 +9,7 @@ public class Attackable : MonoBehaviour
     public float CurrentHealth => currentHealth;
     public float MaxHealth => maxHealth;
 
+    public event UnityAction OnDamaged;
     public event UnityAction OnCurrentHealthChanged;
     public event UnityAction OnDeath;
 
@@ -21,23 +22,23 @@ public class Attackable : MonoBehaviour
     {
         currentHealth = health;
         OnCurrentHealthChanged?.Invoke();
+
+        if (CurrentHealth == 0f)
+        {
+            Debug.Log($"OnDeath {currentHealth}");
+
+            OnDeath?.Invoke();
+        }
     }
 
     public void Damage()
     {
         if (CurrentHealth > 0)
         {
-            currentHealth--;
-            OnCurrentHealthChanged?.Invoke();
-
-            Debug.Log($"OnAttack {currentHealth}");
-
-            if (CurrentHealth == 0f)
-            {
-                Debug.Log($"OnDeath {currentHealth}");
-
-                OnDeath?.Invoke();
-            }
+            SetHealth(currentHealth - 1);
+            OnDamaged?.Invoke();
         }
     }
+
+
 }

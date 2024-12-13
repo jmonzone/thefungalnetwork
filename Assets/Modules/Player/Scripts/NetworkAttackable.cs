@@ -4,7 +4,7 @@ using UnityEngine;
 public class NetworkAttackable : NetworkBehaviour
 {
     private Attackable attackable;
-    public NetworkVariable<float> CurrentHealth = new NetworkVariable<float>(0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<float> CurrentHealth = new NetworkVariable<float>(0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
     public override void OnNetworkSpawn()
     {
@@ -16,15 +16,6 @@ public class NetworkAttackable : NetworkBehaviour
             // Initialize health only on the server
             CurrentHealth.Value = attackable.CurrentHealth; // Initial value
         }
-
-        // Owner-specific logic
-        if (IsOwner)
-        {
-            attackable.OnCurrentHealthChanged += () =>
-            {
-                CurrentHealth.Value = attackable.CurrentHealth;
-            };
-        }
         else
         {
             // Update health locally when CurrentHealth changes
@@ -33,6 +24,21 @@ public class NetworkAttackable : NetworkBehaviour
                 Debug.Log($"Health updated from {oldValue} to {newValue}");
                 attackable.SetHealth(newValue);
             };
+
+            attackable.SetHealth(CurrentHealth.Value);
         }
+
+        attackable.OnDamaged += () =>
+        {
+            SyncHealthServerRpc(attackable.CurrentHealth);
+        };
+
+        
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void SyncHealthServerRpc(float health)
+    {
+        CurrentHealth.Value = health;
     }
 }
