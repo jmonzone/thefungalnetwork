@@ -244,6 +244,7 @@ MonoBehaviour:
   abilityCast: {fileID: 11400000, guid: 47cdf05b101d649a79ac9aa9cb66416b, type: 2}
   chargeSpeed: 17.5
   chargeDistance: 15
+  sceneNavigation: {fileID: 11400000, guid: 5c885c9a984a3470684bef7e76ca5c2a, type: 2}
 --- !u!114 &233472190970575125
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -257,7 +258,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentHealth: 3
-  maxHealth: 5
+  maxHealth: 15
 --- !u!114 &4469671233377470357
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5706,7 +5707,7 @@ PrefabInstance:
     - target: {fileID: 1240036407979802158, guid: 4f9713a3f44e044c2b1c3f11b13d33f7,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 160
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 1240036407979802158, guid: 4f9713a3f44e044c2b1c3f11b13d33f7,
         type: 3}
@@ -5815,7 +5816,7 @@ PrefabInstance:
     - target: {fileID: 3581972095181777363, guid: 72ab144d5c0ff415aa11d3e80517f61c,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4.5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3581972095181777363, guid: 72ab144d5c0ff415aa11d3e80517f61c,
         type: 3}
@@ -5865,7 +5866,7 @@ PrefabInstance:
     - target: {fileID: 7687623159291066859, guid: 72ab144d5c0ff415aa11d3e80517f61c,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:

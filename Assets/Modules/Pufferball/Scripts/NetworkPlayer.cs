@@ -4,7 +4,7 @@ using UnityEngine;
 public class NetworkPlayer : NetworkBehaviour
 {
     [SerializeField] private NetworkObject networkAvatarPrefab;
-    [SerializeField] private NetworkObject networkCrocdilePrefab;
+    [SerializeField] private NetworkCrocodile networkCrocdilePrefab;
 
     [SerializeField] private MultiplayerArena arena;
     [SerializeField] private Possession possesionService;
@@ -52,8 +52,8 @@ public class NetworkPlayer : NetworkBehaviour
                 }
 
 
-                //var spawnedCrocodile = Instantiate(networkCrocdilePrefab, arena.CrocodileSpawnPosition, forwardRotation, transform);
-                //spawnedCrocodile.Spawn();
+                var spawnedCrocodile = Instantiate(networkCrocdilePrefab, arena.CrocodileSpawnPosition, Quaternion.LookRotation(Vector3.back), transform);
+                spawnedCrocodile.NetworkObject.Spawn();
             }
             else
             {

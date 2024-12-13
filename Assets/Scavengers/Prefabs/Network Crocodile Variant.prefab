@@ -8,25 +8,20 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3149471867308357906, guid: c723cd605f9c944d29cae414c591489b,
+        type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3149471867308357906, guid: c723cd605f9c944d29cae414c591489b,
+        type: 3}
+      propertyPath: m_IsKinematic
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4624336733102921167, guid: c723cd605f9c944d29cae414c591489b,
         type: 3}
       propertyPath: m_Name
       value: Network Crocodile Variant
-      objectReference: {fileID: 0}
-    - target: {fileID: 5207614161322603692, guid: c723cd605f9c944d29cae414c591489b,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5207614161322603692, guid: c723cd605f9c944d29cae414c591489b,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5207614161322603692, guid: c723cd605f9c944d29cae414c591489b,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6228169022195851406, guid: c723cd605f9c944d29cae414c591489b,
         type: 3}
@@ -94,6 +89,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 5137704272159293536}
+    - targetCorrespondingSourceObject: {fileID: 4624336733102921167, guid: c723cd605f9c944d29cae414c591489b,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3987532745744668405}
   m_SourcePrefab: {fileID: 100100000, guid: c723cd605f9c944d29cae414c591489b, type: 3}
 --- !u!1 &7923459195698454035 stripped
 GameObject:
@@ -113,8 +112,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3884755072
-  InScenePlacedSourceGlobalObjectIdHash: 0
+  GlobalObjectIdHash: 4241419079
+  InScenePlacedSourceGlobalObjectIdHash: 4241419079
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
@@ -163,5 +162,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3987532745744668405
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7923459195698454035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15fa74e486b374a2b8de78941a42d385, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

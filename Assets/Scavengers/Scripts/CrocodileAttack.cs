@@ -21,6 +21,7 @@ public class CrocodileAttack : MonoBehaviour
     {
         sceneNavigation.OnSceneNavigationRequest += StopAllCoroutines;
         target.OnUpdate += Target_OnUpdate;
+        if (target.Movement) Target_OnUpdate();
     }
 
     private void OnDisable()
