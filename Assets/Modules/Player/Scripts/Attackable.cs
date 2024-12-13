@@ -17,6 +17,12 @@ public class Attackable : MonoBehaviour
         currentHealth = maxHealth;
     }
 
+    public void SetHealth(float health)
+    {
+        currentHealth = health;
+        OnCurrentHealthChanged?.Invoke();
+    }
+
     public void Damage()
     {
         if (CurrentHealth > 0)
