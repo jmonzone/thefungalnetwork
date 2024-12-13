@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+//todo: centralize  
 public class LeaveSessionButton : MonoBehaviour
 {
     [SerializeField] private MultiplayerManager multiplayerManager;
@@ -12,9 +13,12 @@ public class LeaveSessionButton : MonoBehaviour
     {
         button.onClick.AddListener(() =>
         {
-            multiplayerManager.LeaveLobby();
-            multiplayerManager.DisconnectRelay();
-            sceneNavigation.NavigateToScene(2);
+            if (multiplayerManager)
+            {
+                multiplayerManager.LeaveLobby();
+                multiplayerManager.DisconnectRelay();
+                sceneNavigation.NavigateToScene(2);
+            }
         });
     }
 }

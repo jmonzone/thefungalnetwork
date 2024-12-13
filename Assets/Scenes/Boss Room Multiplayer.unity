@@ -556,6 +556,11 @@ PrefabInstance:
       propertyPath: cameraController
       value: 
       objectReference: {fileID: 1700882044}
+    - target: {fileID: 7602105618067009026, guid: 3e21d2aa76abe4e3c91aec5273a7a706,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -750,17 +755,17 @@ PrefabInstance:
     - target: {fileID: 1576384917746520769, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.14521313
+      value: 0.14521314
       objectReference: {fileID: 0}
     - target: {fileID: 1576384917746520769, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.000000032966827
+      value: 5.1799038e-15
       objectReference: {fileID: 0}
     - target: {fileID: 1576384917746520769, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.0000000048385016
+      value: -7.130392e-16
       objectReference: {fileID: 0}
     - target: {fileID: 3170229602314632740, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
         type: 3}
@@ -4559,8 +4564,45 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 576707838605581170, guid: e82e52d19ee104dc08199d879d1e5e52,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1510852531}
   m_SourcePrefab: {fileID: 100100000, guid: e82e52d19ee104dc08199d879d1e5e52, type: 3}
+--- !u!1 &1510852529 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 576707838605581170, guid: e82e52d19ee104dc08199d879d1e5e52,
+    type: 3}
+  m_PrefabInstance: {fileID: 1510852528}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1510852530 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3451913249805396234, guid: e82e52d19ee104dc08199d879d1e5e52,
+    type: 3}
+  m_PrefabInstance: {fileID: 1510852528}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1510852529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1510852531
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1510852529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a61f02b2996643f4bf1d764c46b3b69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  multiplayerManager: {fileID: 1984636434}
+  button: {fileID: 1510852530}
+  sceneNavigation: {fileID: 11400000, guid: 5c885c9a984a3470684bef7e76ca5c2a, type: 2}
 --- !u!1001 &1529377536
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5212,17 +5254,17 @@ PrefabInstance:
     - target: {fileID: 2612740834622465615, guid: 44cfcdf81f0074e5b844e37940278904,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.14521313
+      value: 0.14521314
       objectReference: {fileID: 0}
     - target: {fileID: 2612740834622465615, guid: 44cfcdf81f0074e5b844e37940278904,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.000000032966827
+      value: 5.1799038e-15
       objectReference: {fileID: 0}
     - target: {fileID: 2612740834622465615, guid: 44cfcdf81f0074e5b844e37940278904,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.0000000048385016
+      value: -7.130392e-16
       objectReference: {fileID: 0}
     - target: {fileID: 3460427230498625851, guid: 44cfcdf81f0074e5b844e37940278904,
         type: 3}
@@ -6779,6 +6821,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Crocodile
       objectReference: {fileID: 0}
+    - target: {fileID: 4922996098477504940, guid: c723cd605f9c944d29cae414c591489b,
+        type: 3}
+      propertyPath: sceneNavigation
+      value: 
+      objectReference: {fileID: 11400000, guid: 5c885c9a984a3470684bef7e76ca5c2a,
+        type: 2}
     - target: {fileID: 6228169022195851406, guid: c723cd605f9c944d29cae414c591489b,
         type: 3}
       propertyPath: m_LocalPosition.x

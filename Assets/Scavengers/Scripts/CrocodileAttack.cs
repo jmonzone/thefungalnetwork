@@ -10,11 +10,22 @@ public class CrocodileAttack : MonoBehaviour
     [SerializeField] private AbilityCast abilityCast;
     [SerializeField] private float chargeSpeed = 10f;
     [SerializeField] private float chargeDistance = 10f;
+    [SerializeField] private SceneNavigation sceneNavigation;
 
     private Vector3 startPosition;
     private MovementController movementController;
     private Attackable attackable;
     private Coroutine attackCoroutine;
+
+    private void OnEnable()
+    {
+        sceneNavigation.OnSceneNavigationRequest += StopAllCoroutines;
+    }
+
+    private void OnDisable()
+    {
+        sceneNavigation.OnSceneNavigationRequest -= StopAllCoroutines;
+    }
 
     // Start is called before the first frame update
     private void Start()
