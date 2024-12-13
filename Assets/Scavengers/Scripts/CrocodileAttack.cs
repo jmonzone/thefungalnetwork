@@ -100,15 +100,15 @@ public class CrocodileAttack : MonoBehaviour
 
     private bool isAttacking = false;
 
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision collision)
     {
         if (!isAttacking) return;
 
         Debug.Log("onTriggerEnter");
-        var attackable = other.transform.GetComponentInParent<Attackable>();
+        var attackable = collision.transform.GetComponentInParent<Attackable>();
         if (attackable)
         {
-            Debug.Log($"Collided {other.transform.name}");
+            Debug.Log($"Collided {collision.transform.name}");
             attackable.Damage();
         }
     }

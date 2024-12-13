@@ -10,11 +10,6 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3149471867308357906, guid: c723cd605f9c944d29cae414c591489b,
         type: 3}
-      propertyPath: m_UseGravity
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3149471867308357906, guid: c723cd605f9c944d29cae414c591489b,
-        type: 3}
       propertyPath: m_IsKinematic
       value: 0
       objectReference: {fileID: 0}
@@ -71,6 +66,11 @@ PrefabInstance:
     - target: {fileID: 6228169022195851406, guid: c723cd605f9c944d29cae414c591489b,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8817130977073344404, guid: c723cd605f9c944d29cae414c591489b,
+        type: 3}
+      propertyPath: m_IsTrigger
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -193,3 +193,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4612bbac67e5475fa17b61caa9e78ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CurrentHealth:
+    m_InternalValue: 0
