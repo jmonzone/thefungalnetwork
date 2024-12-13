@@ -20,22 +20,28 @@ public class CrocodileAttack : MonoBehaviour
     private void OnEnable()
     {
         sceneNavigation.OnSceneNavigationRequest += StopAllCoroutines;
+        target.OnUpdate += Target_OnUpdate;
     }
 
     private void OnDisable()
     {
         sceneNavigation.OnSceneNavigationRequest -= StopAllCoroutines;
+        target.OnUpdate -= Target_OnUpdate;
+    }
+
+    private void Target_OnUpdate()
+    {
+        StopAllCoroutines();
+        attackCoroutine = StartCoroutine(AttackTimer());
     }
 
     // Start is called before the first frame update
-    private void Start()
+    private void Awake()
     {
         startPosition = transform.position;
         movementController = GetComponent<MovementController>();
         attackable = GetComponent<Attackable>();
-        attackable.OnDeath += () => StopCoroutine(attackCoroutine);
-
-        attackCoroutine = StartCoroutine(AttackTimer());
+        attackable.OnDeath += StopAllCoroutines;
     }
 
     private IEnumerator AttackTimer()
