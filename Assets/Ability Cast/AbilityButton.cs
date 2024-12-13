@@ -17,7 +17,7 @@ public class AbilityButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     private Vector3 initialTouchPosition;
     private float abilityTimer;
-    private float abilityCooldown => abilityCast.Shrune.Cooldown;
+    private float AbilityCooldown => abilityCast.Shrune.Cooldown;
     private bool canCast = false;
     private bool castStarted = false;
 
@@ -31,6 +31,8 @@ public class AbilityButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     private void Update()
     {
+        if (!abilityCast.Shrune) return;
+
         if (abilityTimer > 0)
         {
             SetAbilityTimer(abilityTimer - Time.deltaTime);
@@ -43,9 +45,9 @@ public class AbilityButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     private void SetAbilityTimer(float timer)
     {
-        cooldownImage.fillAmount = timer / abilityCooldown;
+        cooldownImage.fillAmount = timer / AbilityCooldown;
         cooldownText.text = Mathf.CeilToInt(timer).ToString();
-        cooldownText.color = cooldownTextGradient.Evaluate(1 - timer / abilityCooldown);
+        cooldownText.color = cooldownTextGradient.Evaluate(1 - timer / AbilityCooldown);
         abilityTimer = timer;
 
         canCast = timer == 0;
@@ -68,14 +70,11 @@ public class AbilityButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     private void AbilityCast_OnComplete()
     {
-        SetAbilityTimer(abilityCooldown);
+        SetAbilityTimer(AbilityCooldown);
     }
 
     private void UpdatePreview()
     {
-        Debug.Log(render);
-        Debug.Log(abilityCast);
-        Debug.Log(abilityCast.Shrune);
         render.SetActive(abilityCast.Shrune);
 
         if (abilityCast.Shrune)
