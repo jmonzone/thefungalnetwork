@@ -17,7 +17,7 @@ public class LeaveSessionButton : MonoBehaviour
             {
                 multiplayerManager.LeaveLobby();
                 multiplayerManager.DisconnectRelay();
-                sceneNavigation.NavigateToScene(2);
+                sceneNavigation.NavigateToScene(0);
             }
         });
     }

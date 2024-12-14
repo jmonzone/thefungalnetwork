@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+// todo: break up
 public class Launcher : MonoBehaviour
 {
     [SerializeField] private Tutorial tutorial;
@@ -21,6 +22,13 @@ public class Launcher : MonoBehaviour
     [SerializeField] private Button bossButton;
     [SerializeField] private Transform skyBox;
     [SerializeField] private GameObject egg;
+    [SerializeField] private FungalInventory fungalInventory;
+    [SerializeField] private FungalCollection fungalCollection;
+    [SerializeField] private FungalController fungalPrefab;
+    [SerializeField] private Transform fungalSpawnPosition;
+    [SerializeField] private Controller controller;
+
+    private GameObject currentFungal;
 
     private void Awake()
     {
@@ -63,9 +71,26 @@ public class Launcher : MonoBehaviour
         sceneNavigation.OnSceneFadeIn -= ShowInitialView;
     }
 
+    private static bool initalViewShown = false;
+
     private void ShowInitialView()
     {
-        StartCoroutine(ShowTitle());
+        if (initalViewShown)
+        {
+            if (fungalInventory.Fungals.Count > 0)
+            {
+                StartCoroutine(ShowMainMenu());
+            }
+            else
+            {
+                StartCoroutine(ShowNamePrompt());
+            }
+        }
+        else
+        {
+            initalViewShown = true;
+            StartCoroutine(ShowTitle());
+        }
     }
 
     private void Update()
@@ -87,7 +112,7 @@ public class Launcher : MonoBehaviour
 
         Debug.Log("got for input");
 
-        if (tutorial.IsCompleted)
+        if (fungalInventory.Fungals.Count > 0)
         {
             StartCoroutine(ShowMainMenu());
         }
@@ -100,6 +125,12 @@ public class Launcher : MonoBehaviour
     private IEnumerator ShowMainMenu()
     {
         yield return new WaitForSeconds(tranistionDelay);
+        var fungal = Instantiate(fungalPrefab, fungalSpawnPosition.position, Quaternion.LookRotation(Vector3.back + Vector3.right));
+        fungal.Initialize(fungalInventory.Fungals[0], isGrove: false);
+        currentFungal = fungal.gameObject;
+
+        // todo: shouldn't need to reference controller
+        controller.SetMovement(fungal.Movement);
         yield return mainMenu.FadeIn();
     }
 
@@ -112,6 +143,7 @@ public class Launcher : MonoBehaviour
     private IEnumerator OnNewGameButtonClicked()
     {
         localData.ResetData();
+        if (currentFungal) Destroy(currentFungal);
         yield return mainMenu.FadeOut();
         yield return ShowNamePrompt();
     }
@@ -119,7 +151,14 @@ public class Launcher : MonoBehaviour
     private IEnumerator OnContinueButtonClicked()
     {
         yield return mainMenu.FadeOut();
-        sceneNavigation.NavigateToScene(2);
+        if (tutorial.IsCompleted)
+        {
+            sceneNavigation.NavigateToScene(2);
+        }
+        else
+        {
+            sceneNavigation.NavigateToScene(1);
+        }
     }
 
     private IEnumerator OnBossButtonClicked()
@@ -132,10 +171,20 @@ public class Launcher : MonoBehaviour
     {
         displayName.SetValue(inputField.text);
         yield return namePrompt.FadeOut();
+
+        var randomIndex = Random.Range(0, fungalCollection.Data.Count);
+        var randomFungal = fungalCollection.Data[randomIndex];
+        var fungal = ScriptableObject.CreateInstance<FungalModel>();
+        fungal.Initialize(randomFungal);
+        fungalInventory.AddFungal(fungal);
+
+
         egg.SetActive(true);
         yield return new WaitUntil(() => Input.GetMouseButtonDown(0));
         egg.SetActive(false);
-        yield return mainMenu.FadeIn();
+
+
+        yield return ShowMainMenu();
     }
 
 

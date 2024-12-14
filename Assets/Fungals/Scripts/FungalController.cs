@@ -39,7 +39,8 @@ public class FungalController : MonoBehaviour
         controller.OnIsPossessingChanged -= Controller_OnIsPossessingChanged;
     }
 
-    public void Initialize(FungalModel model)
+    //todo: centralize between GroveManager and Launcher
+    public void Initialize(FungalModel model, bool isGrove = true)
     {
         Debug.Log($"initializing fungal controller {model}");
 
@@ -54,16 +55,15 @@ public class FungalController : MonoBehaviour
             var animator = Render.GetComponentInChildren<Animator>();
             animator.speed = 0.25f;
 
-            movement.OnJump += () => animator.Play("Jump");
-            movement.SetMaxJumpCount(model.Data.Type == FungalType.SKY ? 2 : 1);
-            this.movement.StartRandomMovement();
+            if (isGrove)
+            {
+                movement.OnJump += () => animator.Play("Jump");
+                movement.SetMaxJumpCount(model.Data.Type == FungalType.SKY ? 2 : 1);
+                movement.StartRandomMovement();
+            }
 
             var movementAnimations = GetComponentInChildren<MovementAnimations>();
             movementAnimations.Initalize();
-
-            //interactionOutline.color = model.Data.EggColor;
-            //interactionBackground.color = model.Data.ActionColor;
-            //interactionImage.sprite = model.Data.ActionImage;
         }
     }
 }

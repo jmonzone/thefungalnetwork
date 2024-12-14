@@ -350,7 +350,7 @@ GameObject:
   - component: {fileID: 95260765}
   - component: {fileID: 95260764}
   m_Layer: 0
-  m_Name: Sphere
+  m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1032,6 +1032,12 @@ MonoBehaviour:
   bossButton: {fileID: 1311892842}
   skyBox: {fileID: 95260767}
   egg: {fileID: 7971683107541514765}
+  fungalInventory: {fileID: 11400000, guid: c2d8b29caee5b440ca0269f2f27fa2b3, type: 2}
+  fungalCollection: {fileID: 11400000, guid: 1d49e170120fe4ab1befd22e62e1ea65, type: 2}
+  fungalPrefab: {fileID: 82615528087012675, guid: 05fc50576ee5142e89bbd5a38c86410a,
+    type: 3}
+  fungalSpawnPosition: {fileID: 585340045}
+  controller: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
 --- !u!4 &348372914
 Transform:
   m_ObjectHideFlags: 0
@@ -1312,6 +1318,37 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!1 &585340044
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 585340045}
+  m_Layer: 0
+  m_Name: Fungal Spawn Position
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &585340045
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 585340044}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.75, y: 0, z: 2.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &622030942
 GameObject:
   m_ObjectHideFlags: 0
@@ -3593,7 +3630,7 @@ PrefabInstance:
     - target: {fileID: 1576384917746520769, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1576384917746520769, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
         type: 3}
@@ -3787,7 +3824,7 @@ Transform:
   m_GameObject: {fileID: 7971683107541514765}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 2.5}
+  m_LocalPosition: {x: 0, y: 1, z: 2.5}
   m_LocalScale: {x: 1, y: 0.87, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4020,3 +4057,4 @@ SceneRoots:
   - {fileID: 1266948893}
   - {fileID: 95260767}
   - {fileID: 7201975522113825339}
+  - {fileID: 585340045}

@@ -22,7 +22,7 @@ public class Possession : ScriptableObject
 
         controller.OnUpdate += () =>
         {
-            //todo: consolidate
+            //todo: centralize
             var networkFungal = controller.Movement.GetComponent<NetworkFungal>();
             if (networkFungal)
             {
