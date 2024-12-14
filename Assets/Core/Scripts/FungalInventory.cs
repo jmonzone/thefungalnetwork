@@ -8,7 +8,7 @@ using UnityEngine.Events;
 public class FungalInventory : ScriptableObject
 {
     [SerializeField] private LocalData localData;
-    [SerializeField] private GameData gameData;
+    [SerializeField] private FungalCollection fungalCollection;
     [SerializeField] private List<FungalModel> fungals;
     public List<FungalModel> Fungals => fungals;
 
@@ -24,7 +24,7 @@ public class FungalInventory : ScriptableObject
             foreach (JObject fungalJson in fungalArray)
             {
                 var fungal = CreateInstance<FungalModel>();
-                var fungalData = gameData.Fungals.FirstOrDefault(fungal => fungal.Id == fungalJson["name"].ToString());
+                var fungalData = fungalCollection.Fungals.FirstOrDefault(fungal => fungal.Id == fungalJson["name"].ToString());
                 fungal.Initialize(fungalData, fungalJson);
                 AddFungalToList(fungal);
             }

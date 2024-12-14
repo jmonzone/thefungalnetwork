@@ -172,8 +172,8 @@ public class MainMenu : MonoBehaviour
         displayName.SetValue(inputField.text);
         yield return namePrompt.FadeOut();
 
-        var randomIndex = Random.Range(0, fungalCollection.Data.Count);
-        var randomFungal = fungalCollection.Data[randomIndex];
+        var randomIndex = Random.Range(0, fungalCollection.Fungals.Count);
+        var randomFungal = fungalCollection.Fungals[randomIndex];
         var fungal = ScriptableObject.CreateInstance<FungalModel>();
         fungal.Initialize(randomFungal);
         fungalInventory.AddFungal(fungal);

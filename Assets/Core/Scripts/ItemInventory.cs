@@ -9,7 +9,7 @@ using UnityEngine.Events;
 public class ItemInventory : ScriptableObject
 {
     [SerializeField] private LocalData localData;
-    [SerializeField] private GameData gameData;
+    [SerializeField] private ItemCollection itemCollection;
     [SerializeField] private List<ItemInstance> items;
 
     public ItemInstance LatestItem { get; private set; }
@@ -33,7 +33,7 @@ public class ItemInventory : ScriptableObject
             {
                 if (item is JObject itemJson)
                 {
-                    var itemData = gameData.Items.Find(item => item.name == itemJson["name"].ToString());
+                    var itemData = itemCollection.Items.Find(item => item.name == itemJson["name"].ToString());
                     if (itemData) AddToInventory(itemData, (int)itemJson["count"]);
                     else Debug.LogWarning($"Item {itemJson} not found in game data");
                 };

@@ -26,8 +26,8 @@ public class GroveManager : MonoBehaviour
     {
         if (fungalInventory.Fungals.Count == 0)
         {
-            var randomIndex = Random.Range(0, fungalCollection.Data.Count);
-            var randomFungal = fungalCollection.Data[randomIndex];
+            var randomIndex = Random.Range(0, fungalCollection.Fungals.Count);
+            var randomFungal = fungalCollection.Fungals[randomIndex];
             SpawnEgg(randomFungal);
         }
     }

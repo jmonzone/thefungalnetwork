@@ -2,12 +2,10 @@
 using UnityEngine;
 
 [CreateAssetMenu]
-public class GameData : ScriptableObject
+public class ItemCollection : ScriptableObject
 {
-    [SerializeField] private List<FungalData> fungals;
     [SerializeField] private List<Item> items;
 
-    public List<FungalData> Fungals => fungals;
     public List<Item> Items => items;
 
 }

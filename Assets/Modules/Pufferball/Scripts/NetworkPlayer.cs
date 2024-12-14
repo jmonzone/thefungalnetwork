@@ -168,7 +168,7 @@ public class NetworkPlayer : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void RequestSpawnFungalServerRpc(ulong clientId, string fungalId)
     {
-        var data = fungalCollection.Data.Find(fungal => fungal.Id == fungalId);
+        var data = fungalCollection.Fungals.Find(fungal => fungal.Id == fungalId);
         if (!data) return;
         // Only the server will execute this logic
         var networkFungal = Instantiate(data.NetworkPrefab, arena.PlayerSpawnPosition, Quaternion.identity, transform);
