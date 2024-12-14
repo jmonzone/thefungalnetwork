@@ -20,6 +20,7 @@ public class Launcher : MonoBehaviour
     [SerializeField] private Button continueButton;
     [SerializeField] private Button bossButton;
     [SerializeField] private Transform skyBox;
+    [SerializeField] private GameObject egg;
 
     private void Awake()
     {
@@ -131,7 +132,10 @@ public class Launcher : MonoBehaviour
     {
         displayName.SetValue(inputField.text);
         yield return namePrompt.FadeOut();
-        sceneNavigation.NavigateToScene(1);
+        egg.SetActive(true);
+        yield return new WaitUntil(() => Input.GetMouseButtonDown(0));
+        egg.SetActive(false);
+        yield return mainMenu.FadeIn();
     }
 
 
