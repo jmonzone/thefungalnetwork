@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 // this script is used to trigger events on ability cast
-public class AbilityButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class AbilityCastButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     [SerializeField] private Button button;
     [SerializeField] private Controller controller;
