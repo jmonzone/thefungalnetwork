@@ -2,11 +2,10 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-//todo: remove ability cast from shurne logic, maybe
-// this scripts is used as a reference asset to handle ability casts
 [CreateAssetMenu]
-public class AbilityCast : ScriptableObject
+public class AbilityCastReference : ScriptableObject
 {
+    //todo: remove shrune logic from ability cast
     [SerializeField] private ShruneItem shrune;
     [SerializeField] private Transform origin;
     [SerializeField] private Transform target;

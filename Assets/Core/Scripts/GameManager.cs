@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private SceneNavigation sceneNavigation;
     [SerializeField] private FadeCanvasGroup screenFade;
 
-    [SerializeField] private AbilityCast abilityCast;
+    [SerializeField] private AbilityCastReference abilityCast;
     [SerializeField] private DisplayName displayName;
     [SerializeField] private ItemInventory itemInventory;
     [SerializeField] private FungalInventory fungalInventory;

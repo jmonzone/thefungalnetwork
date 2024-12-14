@@ -14,7 +14,7 @@ public class NetworkPlayer : NetworkBehaviour
     [SerializeField] private FungalInventory fungalInventory;
     [SerializeField] private FungalCollection fungalCollection;
 
-    [SerializeField] private AbilityCast abilityCast;
+    [SerializeField] private AbilityCastReference abilityCast;
     [SerializeField] private ShruneCollection shruneCollection;
 
     public NetworkVariable<Vector3> PlayerPosition = new NetworkVariable<Vector3>(Vector3.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);

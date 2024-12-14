@@ -7,7 +7,7 @@ public class CrocodileAttack : MonoBehaviour
     [SerializeField] private Vector3 direction;
     [SerializeField] private float hitCooldown = 3f;
     [SerializeField] private float hitTimer = 0;
-    [SerializeField] private AbilityCast abilityCast;
+    [SerializeField] private AbilityCastReference abilityCast;
     [SerializeField] private float chargeSpeed = 10f;
     [SerializeField] private float chargeDistance = 10f;
     [SerializeField] private SceneNavigation sceneNavigation;

@@ -4,7 +4,7 @@ using UnityEngine;
 public class NetworkCrocodile : NetworkBehaviour
 {
     private CrocodileAttack attack;
-    [SerializeField] private AbilityCast abilityCast;
+    [SerializeField] private AbilityCastReference abilityCast;
 
     private void Awake()
     {

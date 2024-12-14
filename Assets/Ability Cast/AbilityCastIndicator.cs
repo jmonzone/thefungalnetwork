@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class AbilityCastIndicator : MonoBehaviour
 {
-    [SerializeField] private AbilityCast abilityCast;
+    [SerializeField] private AbilityCastReference abilityCast;
     [SerializeField] private LineRenderer lineRenderer;
 
     private void OnEnable()

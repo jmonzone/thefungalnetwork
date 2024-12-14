@@ -8,7 +8,7 @@ public class AbilityButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 {
     [SerializeField] private Button button;
     [SerializeField] private Controller controller;
-    [SerializeField] private AbilityCast abilityCast;
+    [SerializeField] private AbilityCastReference abilityCast;
     [SerializeField] private GameObject render;
     [SerializeField] private Image abilityImage;
     [SerializeField] private Image cooldownImage;
