@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 // todo: break up
-public class Launcher : MonoBehaviour
+public class MainMenu : MonoBehaviour
 {
     [SerializeField] private Tutorial tutorial;
     [SerializeField] private Vector3 axis;
