@@ -169,6 +169,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6945272657625525232}
+  - component: {fileID: 9155656698092698763}
   - component: {fileID: 492124124634115273}
   m_Layer: 0
   m_Name: Background Music
@@ -192,6 +193,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2275327749610400236}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9155656698092698763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5390462256646413056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e427730fa26ee4629b5e2206fae5886b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  backgroundMusicDelegate: {fileID: 11400000, guid: ecea86fa0a5654e3382edfbc94e2dc9e,
+    type: 2}
+  sceneNavigation: {fileID: 11400000, guid: 5c885c9a984a3470684bef7e76ca5c2a, type: 2}
 --- !u!82 &492124124634115273
 AudioSource:
   m_ObjectHideFlags: 0
@@ -203,8 +219,8 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: -1633758956048679645, guid: 2898466051179406981ad8ac9595fa73,
     type: 2}
-  m_audioClip: {fileID: 8300000, guid: fc5ab7a6145f84cffabb60f314f01ce0, type: 3}
-  m_PlayOnAwake: 1
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
   m_Volume: 0.5
   m_Pitch: 1
   Loop: 1
@@ -420,11 +436,3 @@ MonoBehaviour:
   itemInventory: {fileID: 11400000, guid: b0534c2b759264d94ad364617da988b3, type: 2}
   fungalInventory: {fileID: 11400000, guid: c2d8b29caee5b440ca0269f2f27fa2b3, type: 2}
   possession: {fileID: 11400000, guid: 2733aad4d1436406fb3b8878be90ba62, type: 2}
-  audioSource: {fileID: 492124124634115273}
-  defaultAudioClip: {fileID: 8300000, guid: fc5ab7a6145f84cffabb60f314f01ce0, type: 3}
-  audioClips:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 8300000, guid: 7f5148fb592264502b61dbc857abb3bf, type: 3}
