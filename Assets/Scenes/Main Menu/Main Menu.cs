@@ -9,7 +9,6 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private Tutorial tutorial;
     [SerializeField] private TMP_InputField inputField;
     [SerializeField] private Button submitButton;
-    [SerializeField] private MainMenuTitle title;
     [SerializeField] private FadeCanvasGroup namePrompt;
     [SerializeField] private FadeCanvasGroup mainMenu;
     [SerializeField] private SceneNavigation sceneNavigation;
@@ -66,7 +65,7 @@ public class MainMenu : MonoBehaviour
             StartCoroutine(OnBossButtonClicked());
         });
 
-        title.OnComplete += () => GoToFirstScene();
+        //title.OnComplete += () => GoToFirstScene();
     }
 
     private void OnEnable()
@@ -95,23 +94,23 @@ public class MainMenu : MonoBehaviour
 
     private void ShowInitialView()
     {
-        if (initalViewShown)
-        {
-            GoToFirstScene();
-        }
-        else
-        {
-            initalViewShown = true;
+        //if (initalViewShown)
+        //{
+        //    GoToFirstScene();
+        //}
+        //else
+        //{
+        //    initalViewShown = true;
 
-            if (Application.isEditor)
-            {
-                StartCoroutine(SetUIState(initialState));
-            }
-            else
-            {
-                StartCoroutine(SetUIState(MainMenuUIState.TITLE));
-            }
-        }
+        //    if (Application.isEditor)
+        //    {
+        //        StartCoroutine(SetUIState(initialState));
+        //    }
+        //    else
+        //    {
+        //        StartCoroutine(SetUIState(MainMenuUIState.TITLE));
+        //    }
+        //}
     }
 
     private const float MENU_TRANSITION_DELAY = 0.25f;
@@ -123,7 +122,7 @@ public class MainMenu : MonoBehaviour
         switch (state)
         {
             case MainMenuUIState.TITLE:
-                yield return title.ShowTitle();
+                //yield return title.ShowTitle();
                 break;
             case MainMenuUIState.MENU:
                 var fungal = Instantiate(fungalPrefab, fungalSpawnPosition.position, Quaternion.LookRotation(Vector3.back + Vector3.right));
@@ -168,7 +167,7 @@ public class MainMenu : MonoBehaviour
     private IEnumerator OnBossButtonClicked()
     {
         yield return mainMenu.FadeOut();
-        SetUIState(MainMenuUIState.MATCHMAKING);
+        StartCoroutine(SetUIState(MainMenuUIState.MATCHMAKING));
     }
 
     private IEnumerator OnSubmitButtonClicked()

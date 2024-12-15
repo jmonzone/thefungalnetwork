@@ -1,45 +1,58 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class MainMenuTitle : MonoBehaviour
 {
-    [SerializeField] private FadeCanvasGroup canvasGroup;
+    [SerializeField] private Navigation navigation;
+    [SerializeField] private ViewController titleViewController;
+    [SerializeField] private ViewReference mainMenuViewReference;
+    [SerializeField] private ViewReference namePromptViewReference;
     [SerializeField] private FadeCanvasGroup tapToContinueText;
     [SerializeField] private AudioSource audioSource;
+    [SerializeField] private FungalInventory fungalInventory;
 
-    public event UnityAction OnComplete;
+    private Coroutine fadeInCoroutine;
 
     private void Awake()
     {
-        canvasGroup.gameObject.SetActive(false);
-        tapToContinueText.gameObject.SetActive(false);
+        titleViewController.OnViewShowComplete += () =>
+        {
+            tapToContinueText.gameObject.SetActive(false);
+            StartCoroutine(ShowTitle());
+        };
     }
 
-    public IEnumerator ShowTitle()
+    private IEnumerator ShowTitle()
     {
-        yield return canvasGroup.FadeIn();
-
         var elapsedTime = 0f;
-        var fadingIn = false;
         while (true)
         {
             elapsedTime += Time.deltaTime;
 
-            if (elapsedTime > 2 && !fadingIn)
+            if (elapsedTime > 2 && fadeInCoroutine == null)
             {
-                fadingIn = true;
-                StartCoroutine(tapToContinueText.FadeIn());
+                fadeInCoroutine = StartCoroutine(tapToContinueText.FadeIn());
             }
+
             if (Input.GetMouseButtonDown(0)) break;
             yield return null;
         }
 
         audioSource.Play();
 
-        StopAllCoroutines();
-        yield return canvasGroup.FadeOut();
-        yield return tapToContinueText.FadeOut();
-        OnComplete?.Invoke();
+        if (fadeInCoroutine != null)
+        {
+            StopCoroutine(fadeInCoroutine);
+            fadeInCoroutine = null;
+        }
+
+        if (fungalInventory.Fungals.Count > 0)
+        {
+            navigation.Navigate(mainMenuViewReference);
+        }
+        else
+        {
+            navigation.Navigate(namePromptViewReference);
+        }
     }
 }

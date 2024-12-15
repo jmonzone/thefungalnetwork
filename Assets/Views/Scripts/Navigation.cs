@@ -47,6 +47,8 @@ public class Navigation : ScriptableObject
 
         if (previousView)
         {
+            Debug.Log(previousView.name);
+
             previousView.RequestHide();
         }
 

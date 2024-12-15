@@ -24,6 +24,7 @@ public class FadeCanvasGroup : MonoBehaviour
         {
             elapsedTime += Time.deltaTime;
             canvasGroup.alpha = Mathf.Lerp(startAlpha, endAlpha, elapsedTime / duration);
+            Debug.Log(canvasGroup.alpha);
             yield return null;
         }
 

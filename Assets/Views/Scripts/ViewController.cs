@@ -1,4 +1,6 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ViewController : MonoBehaviour
 {
@@ -6,6 +8,7 @@ public class ViewController : MonoBehaviour
     private FadeCanvasGroup canvas;
 
     private const float FADE_TRANSITION_DURATION = 0.25f;
+    public event UnityAction OnViewShowComplete;
 
     private void Awake()
     {
@@ -26,7 +29,13 @@ public class ViewController : MonoBehaviour
 
     private void Show()
     {
-        StartCoroutine(canvas.FadeIn(FADE_TRANSITION_DURATION));
+        StartCoroutine(ShowRoutine());
+    }
+
+    private IEnumerator ShowRoutine()
+    {
+        yield return canvas.FadeIn(FADE_TRANSITION_DURATION);
+        OnViewShowComplete?.Invoke();
     }
 
     private void Hide()

@@ -194,8 +194,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -50, y: 175}
-  m_SizeDelta: {x: 2500, y: 700}
+  m_AnchoredPosition: {x: 0, y: 61}
+  m_SizeDelta: {x: 600, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &5108949
 MonoBehaviour:
@@ -270,10 +270,10 @@ RectTransform:
   - {fileID: 130722996}
   m_Father: {fileID: 1633266764}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 2612, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &57315339
 MonoBehaviour:
@@ -665,8 +665,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 50}
-  m_SizeDelta: {x: 2500, y: 100}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 400, y: 75}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &130722997
 MonoBehaviour:
@@ -715,8 +715,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 40
-  m_fontSizeBase: 40
+  m_fontSize: 15
+  m_fontSizeBase: 15
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1075,6 +1075,7 @@ GameObject:
   m_Component:
   - component: {fileID: 348372914}
   - component: {fileID: 348372913}
+  - component: {fileID: 348372915}
   m_Layer: 0
   m_Name: Main Menu
   m_TagString: Untagged
@@ -1097,7 +1098,6 @@ MonoBehaviour:
   tutorial: {fileID: 11400000, guid: efdd5f0cddba44a8aa359bce2c9bf5d3, type: 2}
   inputField: {fileID: 1162615497}
   submitButton: {fileID: 1251298902}
-  title: {fileID: 1633266765}
   namePrompt: {fileID: 231318629}
   mainMenu: {fileID: 622030946}
   sceneNavigation: {fileID: 11400000, guid: 5c885c9a984a3470684bef7e76ca5c2a, type: 2}
@@ -1130,6 +1130,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &348372915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 348372912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5d5eb202edb648ec968651a102e1078, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneNavigation: {fileID: 11400000, guid: 5c885c9a984a3470684bef7e76ca5c2a, type: 2}
+  navigation: {fileID: 11400000, guid: 7af35f01730a846d692adda4734cddd3, type: 2}
+  initalUI: {fileID: 11400000, guid: b86ddb01fef7a4a6084e84263caffbc7, type: 2}
 --- !u!1 &372109730
 GameObject:
   m_ObjectHideFlags: 0
@@ -2079,8 +2094,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -200}
-  m_SizeDelta: {x: 2500, y: 150}
+  m_AnchoredPosition: {x: 0, y: -50}
+  m_SizeDelta: {x: 400, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &968588612
 MonoBehaviour:
@@ -2129,8 +2144,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 74.7
-  m_fontSizeBase: 74.7
+  m_fontSize: 20
+  m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -3190,6 +3205,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1633266764}
   - component: {fileID: 1633266765}
+  - component: {fileID: 1633266767}
   - component: {fileID: 1633266766}
   m_Layer: 5
   m_Name: Main Menu Title
@@ -3230,9 +3246,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bc0eedbbccc5408f87695ca2eb6d36a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canvasGroup: {fileID: 57315339}
+  navigation: {fileID: 11400000, guid: 7af35f01730a846d692adda4734cddd3, type: 2}
+  titleViewController: {fileID: 1633266767}
+  mainMenuViewReference: {fileID: 11400000, guid: 339f9ee73ca634822a468818994740fd,
+    type: 2}
+  namePromptViewReference: {fileID: 11400000, guid: cc9e751163b524d2f9e41df1fe395212,
+    type: 2}
   tapToContinueText: {fileID: 130722999}
   audioSource: {fileID: 1633266766}
+  fungalInventory: {fileID: 11400000, guid: c2d8b29caee5b440ca0269f2f27fa2b3, type: 2}
 --- !u!82 &1633266766
 AudioSource:
   m_ObjectHideFlags: 0
@@ -3329,6 +3351,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1633266767
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1633266763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f1fd7c6939e24f41a8feb1146673522, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewReference: {fileID: 11400000, guid: b86ddb01fef7a4a6084e84263caffbc7, type: 2}
 --- !u!1 &1680873300
 GameObject:
   m_ObjectHideFlags: 0
