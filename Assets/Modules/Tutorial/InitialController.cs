@@ -7,9 +7,9 @@ public class InitialController : MonoBehaviour
     [SerializeField] private Controller controller;
     [SerializeField] private Possession possession;
     [SerializeField] private FungalInventory fungalInventory;
-    [SerializeField] private FungalControllerSpawner fungalControllerSpawner;
     [SerializeField] private MovementController avatarPrefab;
     [SerializeField] private bool forceSpawnAvatar;
+    [SerializeField] private FungalController fungalPrefab;
 
     private MovementController avatar;
     private FungalModel initalFungal;
@@ -17,15 +17,6 @@ public class InitialController : MonoBehaviour
     public FungalModel InitalFungal => initalFungal;
 
     public event UnityAction OnControllerInitialized;
-
-    private void Awake()
-    {
-        fungalControllerSpawner.OnFungalSpawned += fungal =>
-        {
-            var fungalAction = fungal.GetComponent<ProximityAction>();
-            fungalAction.OnUse += () =>  PossessFungal(fungal);
-        };
-    }
 
     private void Start()
     {
@@ -60,8 +51,7 @@ public class InitialController : MonoBehaviour
 
         if (initalFungal && !forceSpawnAvatar)
         {
-            var fungalController = fungalControllerSpawner.SpawnFungal(initalFungal, transform.position);
-            fungalController.GetComponent<AbilityCastView>().enabled = true;
+            var fungalController = SpawnFungal(initalFungal, transform.position);
 
             Debug.Log("Setting fungal controller");
             controller.SetMovement(fungalController.Movement);
@@ -101,5 +91,18 @@ public class InitialController : MonoBehaviour
 
         avatar.GetComponent<AvatarAnimation>().StartReleaseAnimation();
         controller.SetMovement(avatar);
+    }
+
+    public FungalController SpawnFungal(FungalModel fungal, Vector3 spawnPosition)
+    {
+        var fungalController = Instantiate(fungalPrefab, spawnPosition, Quaternion.identity);
+        fungalController.transform.forward = Utility.RandomXZVector;
+        fungalController.Initialize(fungal);
+
+        var fungalAction = fungalController.GetComponent<ProximityAction>();
+        fungalAction.OnUse += () => PossessFungal(fungalController);
+
+        fungalController.GetComponent<AbilityCastView>().enabled = true;
+        return fungalController;
     }
 }
