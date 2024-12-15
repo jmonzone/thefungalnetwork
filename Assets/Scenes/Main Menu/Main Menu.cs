@@ -23,6 +23,7 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private FungalController fungalPrefab;
     [SerializeField] private Transform fungalSpawnPosition;
     [SerializeField] private Controller controller;
+    [SerializeField] private MainMenuMatchmaking matchmaking;
 
     private GameObject currentFungal;
 
@@ -147,7 +148,7 @@ public class MainMenu : MonoBehaviour
     private IEnumerator OnBossButtonClicked()
     {
         yield return mainMenu.FadeOut();
-        sceneNavigation.NavigateToScene(4);
+        yield return matchmaking.FadeIn();
     }
 
     private IEnumerator OnSubmitButtonClicked()

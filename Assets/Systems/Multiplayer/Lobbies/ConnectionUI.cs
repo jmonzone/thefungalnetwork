@@ -21,19 +21,19 @@ public class ConnectionUI : MonoBehaviour
     private void Awake()
     {
         createButton.onClick.AddListener(() => OnCreateButtonClicked?.Invoke());
-        refreshButton.onClick.AddListener(() =>
-        {
-            refreshButton.interactable = false;
-            OnRefreshButtonClicked?.Invoke();
+        //refreshButton.onClick.AddListener(() =>
+        //{
+        //    refreshButton.interactable = false;
+        //    OnRefreshButtonClicked?.Invoke();
 
-            IEnumerator RefreshButton()
-            {
-                yield return new WaitForSeconds(1f);
-                refreshButton.interactable = true;
-            }
+        //    IEnumerator RefreshButton()
+        //    {
+        //        yield return new WaitForSeconds(1f);
+        //        refreshButton.interactable = true;
+        //    }
 
-            StartCoroutine(RefreshButton());
-        });
+        //    StartCoroutine(RefreshButton());
+        //});
     }
 
     public void SetLobbies(List<Lobby> lobbies)
