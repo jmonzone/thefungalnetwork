@@ -32,27 +32,37 @@ public class Navigation : ScriptableObject
 
         foreach (var view in views)
         {
-            view.OnHidden += () =>
-            {
-                if (currentView) currentView.Show();
-                OnNavigated?.Invoke();
-            };
+            RegisterView(view);
         }
+    }
+
+    public void RegisterView(ViewReference view)
+    {
+        view.OnHidden += () =>
+        {
+            if (currentView) currentView.Show();
+            OnNavigated?.Invoke();
+        };
     }
 
     public void Navigate(ViewReference view)
     {
+        if (!views.Contains(view))
+        {
+            RegisterView(view);
+        }
+
         var previousView = currentView;
         SetCurrentView(view);
 
         if (previousView)
         {
-            Debug.Log(previousView.name);
-
             previousView.RequestHide();
         }
-
-        currentView.Show();
+        else
+        {
+            currentView.Show();
+        }
     }
 
 

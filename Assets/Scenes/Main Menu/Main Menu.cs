@@ -39,7 +39,6 @@ public class MainMenu : MonoBehaviour
     private void Awake()
     {
         namePrompt.gameObject.SetActive(false);
-        mainMenu.gameObject.SetActive(false);
 
         inputField.onValueChanged.AddListener(value => submitButton.interactable = value.Length > 2);
 
@@ -62,7 +61,7 @@ public class MainMenu : MonoBehaviour
 
         bossButton.onClick.AddListener(() =>
         {
-            StartCoroutine(OnBossButtonClicked());
+            navigation.Navigate(matchmaking);
         });
 
         //title.OnComplete += () => GoToFirstScene();
@@ -162,12 +161,6 @@ public class MainMenu : MonoBehaviour
         {
             sceneNavigation.NavigateToScene(1);
         }
-    }
-
-    private IEnumerator OnBossButtonClicked()
-    {
-        yield return mainMenu.FadeOut();
-        StartCoroutine(SetUIState(MainMenuUIState.MATCHMAKING));
     }
 
     private IEnumerator OnSubmitButtonClicked()

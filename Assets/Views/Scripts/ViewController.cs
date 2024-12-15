@@ -7,7 +7,7 @@ public class ViewController : MonoBehaviour
     [SerializeField] private ViewReference viewReference;
     private FadeCanvasGroup canvas;
 
-    private const float FADE_TRANSITION_DURATION = 0.25f;
+    private const float FADE_TRANSITION_DURATION = 0.5f;
     public event UnityAction OnViewShowComplete;
 
     private void Awake()
