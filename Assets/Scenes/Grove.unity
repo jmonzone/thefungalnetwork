@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 1
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: f1f52543b371349b2b8f5f198d29886a, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 016bff834f4484d0da86c67f8725fe3f, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,8 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 0.002
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.00014379925, g: 0.00007922356, b: 0.00017370551,
-    a: 0.002}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 0.002}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -11383,12 +11382,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fdea13a0be954e08840cc09976e85fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: 9173131824021314546, guid: 564d87d99cd2d414fb8d8f20682f90c7, type: 3}
-  maxLaunchForce: 400
-  minLaunchForce: 350
-  throwFrequency: 1
-  maxHorizontal: 1
-  maxLaunchAngle: 5
 --- !u!1001 &613435107
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16000,10 +15993,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   initialController: {fileID: 1123066767}
   fungalInventory: {fileID: 11400000, guid: c2d8b29caee5b440ca0269f2f27fa2b3, type: 2}
-  fungalCollection: {fileID: 11400000, guid: 1d49e170120fe4ab1befd22e62e1ea65, type: 2}
-  fungalControllerSpawner: {fileID: 1123066766}
-  eggControllerPrefab: {fileID: 5952156050388943029, guid: d86fdc00fde0f4b9e958c056b6c0a95a,
-    type: 3}
   fungalBounds: {fileID: 128919072}
 --- !u!1001 &911018590
 PrefabInstance:
@@ -17434,8 +17423,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 009fd4fa123ed48a2b906d03fe33b9a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sliceForce: 5
-  minVelocity: 15
 --- !u!1 &985512190
 GameObject:
   m_ObjectHideFlags: 0
@@ -19799,18 +19786,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1113522422}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1123066766 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6870399213337447583, guid: 233054a0bfa1b4028a28c9c24c708132,
-    type: 3}
-  m_PrefabInstance: {fileID: 2040692646}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6616d8e1ed9424bbb8a2a82e02db4d2c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1123066767 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4842550238454648532, guid: 233054a0bfa1b4028a28c9c24c708132,
@@ -25419,18 +25394,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bbb1414a78fb490990d382dfa8e5a19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerController: {fileID: 0}
-  virtualCamera: {fileID: 0}
-  playerPositionAnchor: {fileID: 55185953}
-  playerLookTarget: {fileID: 1038761319}
-  experienceContainer: {fileID: 0}
-  levelText: {fileID: 0}
-  experienceSlider: {fileID: 0}
-  ingredientManager: {fileID: 610605781}
-  bladeController: {fileID: 984605643}
-  background: {fileID: 460870816}
-  fungalPositionAnchor: {fileID: 1834893898}
-  fungalLookTarget: {fileID: 1038761319}
 --- !u!114 &1559030694
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32072,16 +32035,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Initial Setup
       objectReference: {fileID: 0}
-    - target: {fileID: 4135697706368410163, guid: 233054a0bfa1b4028a28c9c24c708132,
-        type: 3}
-      propertyPath: avatar
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 4135697706368410163, guid: 233054a0bfa1b4028a28c9c24c708132,
-        type: 3}
-      propertyPath: avatarControllable
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 4495622020864794826, guid: 233054a0bfa1b4028a28c9c24c708132,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -32131,11 +32084,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4842550238454648532, guid: 233054a0bfa1b4028a28c9c24c708132,
-        type: 3}
-      propertyPath: avatar
-      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
