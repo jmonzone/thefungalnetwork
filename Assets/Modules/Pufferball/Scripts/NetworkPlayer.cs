@@ -9,6 +9,7 @@ public class NetworkPlayer : NetworkBehaviour
     [SerializeField] private MultiplayerArena arena;
     [SerializeField] private Possession possesionService;
     [SerializeField] private Controller controller;
+    [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference inputView;
 
     [SerializeField] private FungalInventory fungalInventory;
@@ -76,7 +77,7 @@ public class NetworkPlayer : NetworkBehaviour
                     RequestSpawnAvatarServerRpc(NetworkManager.Singleton.LocalClientId);
                 }
             }
-            inputView.RequestShow();
+            navigation.Navigate(inputView);
         }
 
         if (IsOwner)

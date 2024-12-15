@@ -10,7 +10,6 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private TMP_InputField inputField;
     [SerializeField] private Button submitButton;
     [SerializeField] private MainMenuTitle title;
-    [SerializeField] private MainMenuMatchmaking matchmaking;
     [SerializeField] private FadeCanvasGroup namePrompt;
     [SerializeField] private FadeCanvasGroup mainMenu;
     [SerializeField] private SceneNavigation sceneNavigation;
@@ -25,6 +24,8 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private Transform fungalSpawnPosition;
     [SerializeField] private Controller controller;
     [SerializeField] private MainMenuUIState initialState;
+    [SerializeField] private ViewReference matchmaking;
+    [SerializeField] private Navigation navigation;
 
     private enum MainMenuUIState
     {
@@ -134,7 +135,7 @@ public class MainMenu : MonoBehaviour
                 yield return mainMenu.FadeIn();
                 break;
             case MainMenuUIState.MATCHMAKING:
-                yield return matchmaking.FadeIn();
+                navigation.Navigate(matchmaking);
                 break;
             case MainMenuUIState.NAME_PROMPT:
                 yield return namePrompt.FadeIn();
@@ -167,7 +168,7 @@ public class MainMenu : MonoBehaviour
     private IEnumerator OnBossButtonClicked()
     {
         yield return mainMenu.FadeOut();
-        yield return matchmaking.FadeIn();
+        SetUIState(MainMenuUIState.MATCHMAKING);
     }
 
     private IEnumerator OnSubmitButtonClicked()

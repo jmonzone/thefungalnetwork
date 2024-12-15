@@ -1,16 +1,13 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.SceneManagement;
 
+// todo: centralize with SceneNavigation
 [CreateAssetMenu]
 public class Navigation : ScriptableObject
 {
     [SerializeField] private List<ViewReference> views;
     [SerializeField] private SceneNavigation sceneNavigation;
-
-    //todo: keep track of scene for scene level navigation
-    private int buildIndex = 0;
 
     private ViewReference currentView;
     private Stack<ViewReference> history;
@@ -35,28 +32,25 @@ public class Navigation : ScriptableObject
 
         foreach (var view in views)
         {
-            view.OnRequestShow += () =>
-            {
-                var previousView = currentView;
-                SetCurrentView(view);
-
-                if (previousView)
-                {
-                    previousView.RequestHide();
-                }
-                else
-                {
-                    currentView.Show();
-                }
-
-            };
-
             view.OnHidden += () =>
             {
                 if (currentView) currentView.Show();
                 OnNavigated?.Invoke();
             };
         }
+    }
+
+    public void Navigate(ViewReference view)
+    {
+        var previousView = currentView;
+        SetCurrentView(view);
+
+        if (previousView)
+        {
+            previousView.RequestHide();
+        }
+
+        currentView.Show();
     }
 
 
@@ -72,7 +66,7 @@ public class Navigation : ScriptableObject
         {
             history.Pop();
             var targetView = history.Pop();
-            targetView.RequestShow();
+            Navigate(targetView);
         }
 
     }

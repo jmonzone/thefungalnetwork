@@ -3,22 +3,14 @@ using UnityEngine;
 
 public class MainMenuMatchmaking : MonoBehaviour
 {
-    [SerializeField] private FadeCanvasGroup canvasGroup;
     [SerializeField] private MultiplayerManager multiplayerManager;
     [SerializeField] private ConnectionUI connectionUI;
     [SerializeField] private DisplayName displayName;
+    [SerializeField] private ViewReference viewReference;
 
-    private void Awake()
-    {
-        canvasGroup.gameObject.SetActive(false);
-    }
-
-
-    public IEnumerator FadeIn()
+    private void FadeIn()
     {
         multiplayerManager.SignIn(displayName.name, () => StartCoroutine(RefreshLobbyList()));
-
-        yield return canvasGroup.FadeIn();
     }
 
     private IEnumerator RefreshLobbyList()

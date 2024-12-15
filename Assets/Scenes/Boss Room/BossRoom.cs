@@ -6,11 +6,11 @@ public class BossRoom : MonoBehaviour
 {
     [SerializeField] private Controller playerReference;
     [SerializeField] private Attackable boss;
+    [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference resultView;
     [SerializeField] private TextMeshProUGUI resultHeader;
     [SerializeField] private Color winResultColor;
     [SerializeField] private Color loseResultColor;
-
     private void Awake()
     {
         boss.OnDeath += OnBossDeath;
@@ -49,6 +49,6 @@ public class BossRoom : MonoBehaviour
     private IEnumerator WaitToShowResults()
     {
         yield return new WaitForSeconds(2f);
-        resultView.RequestShow();
+        navigation.Navigate(resultView);
     }
 }

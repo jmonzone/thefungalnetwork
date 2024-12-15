@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 public class ViewController : MonoBehaviour
@@ -6,7 +5,7 @@ public class ViewController : MonoBehaviour
     [SerializeField] private ViewReference viewReference;
     private FadeCanvasGroup canvas;
 
-    private float transitionDuration = 0.25f;
+    private const float FADE_TRANSITION_DURATION = 0.25f;
 
     private void Awake()
     {
@@ -27,11 +26,11 @@ public class ViewController : MonoBehaviour
 
     private void Show()
     {
-        StartCoroutine(canvas.FadeIn(transitionDuration));
+        StartCoroutine(canvas.FadeIn(FADE_TRANSITION_DURATION));
     }
 
     private void Hide()
     {
-        StartCoroutine(canvas.FadeOut(transitionDuration, viewReference.OnViewHidden));
+        StartCoroutine(canvas.FadeOut(FADE_TRANSITION_DURATION, viewReference.OnViewHidden));
     }
 }

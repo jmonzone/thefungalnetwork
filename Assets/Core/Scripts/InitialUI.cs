@@ -3,6 +3,7 @@
 public class InitialUI : MonoBehaviour
 {
     [SerializeField] private SceneNavigation sceneNavigation;
+    [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference initalUI;
 
     private void OnEnable()
@@ -18,6 +19,6 @@ public class InitialUI : MonoBehaviour
     private void ShowInitialUI()
     {
         Debug.Log("showing");
-        initalUI.RequestShow();
+        navigation.Navigate(initalUI);
     }
 }

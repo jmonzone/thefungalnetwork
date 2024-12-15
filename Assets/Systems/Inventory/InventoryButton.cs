@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class InventoryButton : MonoBehaviour
 {
     [SerializeField] private ItemInventory inventory;
+    [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference inventoryView;
     [SerializeField] private Button button;
     [SerializeField] private Image preview;
@@ -13,7 +14,7 @@ public class InventoryButton : MonoBehaviour
 
     private void Awake()
     {
-        if (button) button.onClick.AddListener(() => inventoryView.RequestShow());
+        if (button) button.onClick.AddListener(() => navigation.Navigate(inventoryView));
     }
 
     private void OnEnable()

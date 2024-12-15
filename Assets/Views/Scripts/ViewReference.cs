@@ -10,10 +10,10 @@ public class ViewReference : ScriptableObject
     public event UnityAction OnRequestHide;
     public event UnityAction OnHidden;
 
-    public void RequestShow()
-    {
-        OnRequestShow?.Invoke();
-    }
+    //public void RequestShow()
+    //{
+    //    OnRequestShow?.Invoke();
+    //}
 
     public void RequestHide()
     {

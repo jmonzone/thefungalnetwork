@@ -16,7 +16,7 @@ public class ProximityActionView : MonoBehaviour
         virtualCamera = GetComponentInChildren<CinemachineVirtualCamera>();
 
         var proximityAction = GetComponentInChildren<ProximityAction>();
-        proximityAction.OnUse += () => viewReference.RequestShow();
+        proximityAction.OnUse += () => navigation.Navigate(viewReference);
 
         navigation.OnNavigated += () => OnNavigated();
     }
