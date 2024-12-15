@@ -349,7 +349,7 @@ GameObject:
   - component: {fileID: 95260765}
   - component: {fileID: 95260764}
   m_Layer: 0
-  m_Name: Background
+  m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -436,10 +436,10 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.4592291, y: -0.4592291, z: -0.53768826, w: 0.53768826}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 157.1, y: 157.1, z: 157.1}
+  m_LocalScale: {x: 157.1, y: 157.1, z: 157.10002}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1680873302}
   m_LocalEulerAnglesHint: {x: 0, y: -81, z: -90}
 --- !u!1 &130722995
 GameObject:
@@ -1016,11 +1016,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tutorial: {fileID: 11400000, guid: efdd5f0cddba44a8aa359bce2c9bf5d3, type: 2}
-  axis: {x: 0.1, y: 0, z: 1}
-  rotationSpeed: 5
   inputField: {fileID: 1162615497}
   submitButton: {fileID: 1251298902}
-  displayName: {fileID: 11400000, guid: 70aa9925b762e422089c41437a664eeb, type: 2}
   title: {fileID: 1633266765}
   namePrompt: {fileID: 231318629}
   mainMenu: {fileID: 622030946}
@@ -1029,7 +1026,6 @@ MonoBehaviour:
   newGameButton: {fileID: 1843778334}
   continueButton: {fileID: 778746140}
   bossButton: {fileID: 1311892842}
-  skyBox: {fileID: 95260767}
   egg: {fileID: 7971683107541514765}
   fungalInventory: {fileID: 11400000, guid: c2d8b29caee5b440ca0269f2f27fa2b3, type: 2}
   fungalCollection: {fileID: 11400000, guid: 1d49e170120fe4ab1befd22e62e1ea65, type: 2}
@@ -2182,8 +2178,9 @@ GameObject:
   - component: {fileID: 1162615499}
   - component: {fileID: 1162615498}
   - component: {fileID: 1162615497}
+  - component: {fileID: 1162615500}
   m_Layer: 5
-  m_Name: InputField (TMP)
+  m_Name: Name Input Field
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2345,6 +2342,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1162615495}
   m_CullTransparentMesh: 1
+--- !u!114 &1162615500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1162615495}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 767aadae95c914ab1b09f9f0a5dc4850, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  displayName: {fileID: 11400000, guid: 70aa9925b762e422089c41437a664eeb, type: 2}
+  inputField: {fileID: 1162615497}
 --- !u!1 &1251298900
 GameObject:
   m_ObjectHideFlags: 0
@@ -3001,6 +3012,53 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!1 &1680873300
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1680873302}
+  - component: {fileID: 1680873301}
+  m_Layer: 0
+  m_Name: Skybox
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1680873301
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1680873300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bdad48e54ee84200abce591f61c0906, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  axis: {x: 0.1, y: 0, z: 1}
+  rotationSpeed: 5
+--- !u!4 &1680873302
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1680873300}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 95260767}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1716967435
 GameObject:
   m_ObjectHideFlags: 0
@@ -3755,6 +3813,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1135693640868867722, guid: f23314b20d06648f5ab783843339b5f6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2275327749610400236, guid: f23314b20d06648f5ab783843339b5f6,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3809,6 +3872,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6460744366629112224, guid: f23314b20d06648f5ab783843339b5f6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8756789636704506592, guid: f23314b20d06648f5ab783843339b5f6,
         type: 3}
@@ -3970,7 +4038,7 @@ SceneRoots:
   - {fileID: 348372914}
   - {fileID: 1438000746}
   - {fileID: 674911532}
-  - {fileID: 95260767}
+  - {fileID: 1680873302}
   - {fileID: 7201975522113825339}
   - {fileID: 585340045}
   - {fileID: 5776160007240760}

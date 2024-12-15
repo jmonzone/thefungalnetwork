@@ -7,11 +7,8 @@ using UnityEngine.UI;
 public class MainMenu : MonoBehaviour
 {
     [SerializeField] private Tutorial tutorial;
-    [SerializeField] private Vector3 axis;
-    [SerializeField] private float rotationSpeed = 50f;
     [SerializeField] private TMP_InputField inputField;
     [SerializeField] private Button submitButton;
-    [SerializeField] private DisplayName displayName;
     [SerializeField] private FadeCanvasGroup title;
     [SerializeField] private FadeCanvasGroup namePrompt;
     [SerializeField] private FadeCanvasGroup mainMenu;
@@ -20,7 +17,6 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private Button newGameButton;
     [SerializeField] private Button continueButton;
     [SerializeField] private Button bossButton;
-    [SerializeField] private Transform skyBox;
     [SerializeField] private GameObject egg;
     [SerializeField] private FungalInventory fungalInventory;
     [SerializeField] private FungalCollection fungalCollection;
@@ -91,11 +87,6 @@ public class MainMenu : MonoBehaviour
             initalViewShown = true;
             StartCoroutine(ShowTitle());
         }
-    }
-
-    private void Update()
-    {
-        skyBox.Rotate(axis, rotationSpeed * Time.deltaTime);
     }
 
     private float tranistionDelay = 0.25f;
@@ -169,7 +160,6 @@ public class MainMenu : MonoBehaviour
 
     private IEnumerator OnSubmitButtonClicked()
     {
-        displayName.SetValue(inputField.text);
         yield return namePrompt.FadeOut();
 
         var randomIndex = Random.Range(0, fungalCollection.Fungals.Count);
