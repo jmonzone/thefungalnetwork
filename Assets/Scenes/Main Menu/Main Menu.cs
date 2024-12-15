@@ -10,6 +10,7 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private TMP_InputField inputField;
     [SerializeField] private Button submitButton;
     [SerializeField] private MainMenuTitle title;
+    [SerializeField] private MainMenuMatchmaking matchmaking;
     [SerializeField] private FadeCanvasGroup namePrompt;
     [SerializeField] private FadeCanvasGroup mainMenu;
     [SerializeField] private SceneNavigation sceneNavigation;
@@ -23,7 +24,15 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private FungalController fungalPrefab;
     [SerializeField] private Transform fungalSpawnPosition;
     [SerializeField] private Controller controller;
-    [SerializeField] private MainMenuMatchmaking matchmaking;
+    [SerializeField] private MainMenuUIState initialState;
+
+    private enum MainMenuUIState
+    {
+        TITLE,
+        MENU,
+        MATCHMAKING,
+        NAME_PROMPT
+    }
 
     private GameObject currentFungal;
 
@@ -55,6 +64,8 @@ public class MainMenu : MonoBehaviour
         {
             StartCoroutine(OnBossButtonClicked());
         });
+
+        title.OnComplete += () => GoToFirstScene();
     }
 
     private void OnEnable()
@@ -69,59 +80,66 @@ public class MainMenu : MonoBehaviour
 
     private static bool initalViewShown = false;
 
+    private void GoToFirstScene()
+    {
+        if (fungalInventory.Fungals.Count > 0)
+        {
+            StartCoroutine(SetUIState(MainMenuUIState.MENU));
+        }
+        else
+        {
+            StartCoroutine(SetUIState(MainMenuUIState.NAME_PROMPT));
+        }
+    }
+
     private void ShowInitialView()
     {
         if (initalViewShown)
         {
-            if (fungalInventory.Fungals.Count > 0)
-            {
-                StartCoroutine(ShowMainMenu());
-            }
-            else
-            {
-                StartCoroutine(ShowNamePrompt());
-            }
+            GoToFirstScene();
         }
         else
         {
             initalViewShown = true;
-            StartCoroutine(ShowTitle());
+
+            if (Application.isEditor)
+            {
+                StartCoroutine(SetUIState(initialState));
+            }
+            else
+            {
+                StartCoroutine(SetUIState(MainMenuUIState.TITLE));
+            }
         }
     }
 
     private const float MENU_TRANSITION_DELAY = 0.25f;
 
-    public IEnumerator ShowTitle()
+    private IEnumerator SetUIState(MainMenuUIState state)
     {
         yield return new WaitForSeconds(MENU_TRANSITION_DELAY);
-        yield return title.ShowTitle();
 
-        if (fungalInventory.Fungals.Count > 0)
+        switch (state)
         {
-            StartCoroutine(ShowMainMenu());
+            case MainMenuUIState.TITLE:
+                yield return title.ShowTitle();
+                break;
+            case MainMenuUIState.MENU:
+                var fungal = Instantiate(fungalPrefab, fungalSpawnPosition.position, Quaternion.LookRotation(Vector3.back + Vector3.right));
+                fungal.Initialize(fungalInventory.Fungals[0], isGrove: false);
+                currentFungal = fungal.gameObject;
+
+                // todo: shouldn't need to reference controller
+                controller.SetMovement(fungal.Movement);
+                yield return mainMenu.FadeIn();
+                break;
+            case MainMenuUIState.MATCHMAKING:
+                yield return matchmaking.FadeIn();
+                break;
+            case MainMenuUIState.NAME_PROMPT:
+                yield return namePrompt.FadeIn();
+                break;
         }
-        else
-        {
-            StartCoroutine(ShowNamePrompt());
-        }
-    }
-
-    private IEnumerator ShowMainMenu()
-    {
-        yield return new WaitForSeconds(MENU_TRANSITION_DELAY);
-        var fungal = Instantiate(fungalPrefab, fungalSpawnPosition.position, Quaternion.LookRotation(Vector3.back + Vector3.right));
-        fungal.Initialize(fungalInventory.Fungals[0], isGrove: false);
-        currentFungal = fungal.gameObject;
-
-        // todo: shouldn't need to reference controller
-        controller.SetMovement(fungal.Movement);
-        yield return mainMenu.FadeIn();
-    }
-
-    private IEnumerator ShowNamePrompt()
-    {
-        yield return new WaitForSeconds(MENU_TRANSITION_DELAY);
-        yield return namePrompt.FadeIn();
     }
 
     private IEnumerator OnNewGameButtonClicked()
@@ -129,12 +147,13 @@ public class MainMenu : MonoBehaviour
         localData.ResetData();
         if (currentFungal) Destroy(currentFungal);
         yield return mainMenu.FadeOut();
-        yield return ShowNamePrompt();
+        GoToFirstScene();
     }
 
     private IEnumerator OnContinueButtonClicked()
     {
         yield return mainMenu.FadeOut();
+
         if (tutorial.IsCompleted)
         {
             sceneNavigation.NavigateToScene(2);
@@ -166,8 +185,7 @@ public class MainMenu : MonoBehaviour
         yield return new WaitUntil(() => Input.GetMouseButtonDown(0));
         egg.SetActive(false);
 
-
-        yield return ShowMainMenu();
+        yield return SetUIState(MainMenuUIState.MENU);
     }
 
 

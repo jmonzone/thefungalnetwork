@@ -1,11 +1,14 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class MainMenuTitle : MonoBehaviour
 {
     [SerializeField] private FadeCanvasGroup canvasGroup;
     [SerializeField] private FadeCanvasGroup tapToContinueText;
     [SerializeField] private AudioSource audioSource;
+
+    public event UnityAction OnComplete;
 
     private void Awake()
     {
@@ -37,5 +40,6 @@ public class MainMenuTitle : MonoBehaviour
         StopAllCoroutines();
         yield return canvasGroup.FadeOut();
         yield return tapToContinueText.FadeOut();
+        OnComplete?.Invoke();
     }
 }
