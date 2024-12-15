@@ -22,18 +22,30 @@ public class FungalModel : ScriptableObject
 
     public FungalData Data => data;
 
+    public const string LEVEL_KEY = "level";
+    public const string EXPERIENCE_KEY = "experience";
+    public const string HUNGER_KEY = "hunger";
+    public const string NAME_KEY = "name";
+
+    // stats
+    public const string STATS_KEY = "stats";
+    public const string BALANCE_KEY = "balance";
+    public const string STAMINA_KEY = "stamina";
+    public const string SPEED_KEY = "speed";
+    public const string POWER_KEY = "power";
+
     public JObject Json => new JObject
     {
-        [ConfigKeys.NAME_KEY] = Data.name,
-        [ConfigKeys.HUNGER_KEY] = Hunger,
-        [ConfigKeys.LEVEL_KEY] = Level,
-        [ConfigKeys.EXPERIENCE_KEY] = Experience,
-        [ConfigKeys.STATS_KEY] = new JObject
+        [NAME_KEY] = Data.name,
+        [HUNGER_KEY] = Hunger,
+        [LEVEL_KEY] = Level,
+        [EXPERIENCE_KEY] = Experience,
+        [STATS_KEY] = new JObject
         {
-            [ConfigKeys.BALANCE_KEY] = balance,
-            [ConfigKeys.SPEED_KEY] = speed,
-            [ConfigKeys.STAMINA_KEY] = stamina,
-            [ConfigKeys.POWER_KEY] = power,
+            [BALANCE_KEY] = balance,
+            [SPEED_KEY] = speed,
+            [STAMINA_KEY] = stamina,
+            [POWER_KEY] = power,
         }
     };
 
@@ -54,14 +66,13 @@ public class FungalModel : ScriptableObject
     {
         name = pet.Id;
         data = pet;
-        level = (int)json[ConfigKeys.LEVEL_KEY];
-        experience = (float)json[ConfigKeys.EXPERIENCE_KEY];
-        hunger = (float)json[ConfigKeys.HUNGER_KEY];
-        balance = (float)json[ConfigKeys.STATS_KEY][ConfigKeys.BALANCE_KEY];
-        speed = (float)json[ConfigKeys.STATS_KEY][ConfigKeys.SPEED_KEY];
-        stamina = (float)json[ConfigKeys.STATS_KEY][ConfigKeys.STAMINA_KEY];
-        power = (float)json[ConfigKeys.STATS_KEY][ConfigKeys.POWER_KEY];
-
+        level = (int)json[LEVEL_KEY];
+        experience = (float)json[EXPERIENCE_KEY];
+        hunger = (float)json[HUNGER_KEY];
+        balance = (float)json[STATS_KEY][BALANCE_KEY];
+        speed = (float)json[STATS_KEY][SPEED_KEY];
+        stamina = (float)json[STATS_KEY][STAMINA_KEY];
+        power = (float)json[STATS_KEY][POWER_KEY];
     }
 
     #region Properties
