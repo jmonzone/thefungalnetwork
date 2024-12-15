@@ -9,7 +9,7 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private Tutorial tutorial;
     [SerializeField] private TMP_InputField inputField;
     [SerializeField] private Button submitButton;
-    [SerializeField] private FadeCanvasGroup title;
+    [SerializeField] private MainMenuTitle title;
     [SerializeField] private FadeCanvasGroup namePrompt;
     [SerializeField] private FadeCanvasGroup mainMenu;
     [SerializeField] private SceneNavigation sceneNavigation;
@@ -28,7 +28,6 @@ public class MainMenu : MonoBehaviour
 
     private void Awake()
     {
-        title.gameObject.SetActive(false);
         namePrompt.gameObject.SetActive(false);
         mainMenu.gameObject.SetActive(false);
 
@@ -89,19 +88,12 @@ public class MainMenu : MonoBehaviour
         }
     }
 
-    private float tranistionDelay = 0.25f;
-    private IEnumerator ShowTitle()
+    private const float MENU_TRANSITION_DELAY = 0.25f;
+
+    public IEnumerator ShowTitle()
     {
-        yield return new WaitForSeconds(tranistionDelay);
-        yield return title.FadeIn();
-
-        Debug.Log("Waiting for input");
-
-        yield return new WaitUntil(() => Input.GetMouseButtonDown(0));
-
-        yield return title.FadeOut();
-
-        Debug.Log("got for input");
+        yield return new WaitForSeconds(MENU_TRANSITION_DELAY);
+        yield return title.ShowTitle();
 
         if (fungalInventory.Fungals.Count > 0)
         {
@@ -115,7 +107,7 @@ public class MainMenu : MonoBehaviour
 
     private IEnumerator ShowMainMenu()
     {
-        yield return new WaitForSeconds(tranistionDelay);
+        yield return new WaitForSeconds(MENU_TRANSITION_DELAY);
         var fungal = Instantiate(fungalPrefab, fungalSpawnPosition.position, Quaternion.LookRotation(Vector3.back + Vector3.right));
         fungal.Initialize(fungalInventory.Fungals[0], isGrove: false);
         currentFungal = fungal.gameObject;
@@ -127,7 +119,7 @@ public class MainMenu : MonoBehaviour
 
     private IEnumerator ShowNamePrompt()
     {
-        yield return new WaitForSeconds(tranistionDelay);
+        yield return new WaitForSeconds(MENU_TRANSITION_DELAY);
         yield return namePrompt.FadeIn();
     }
 

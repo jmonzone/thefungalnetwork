@@ -15,6 +15,8 @@ public class SceneNavigation : ScriptableObject
     public event UnityAction OnSceneLoaded;
     public event UnityAction OnSceneNavigationRequest;
 
+    private const float FADE_TRANSITION_DURATION = 0.5f;
+
     public void Initialize()
     {
         this.buildIndex = SceneManager.GetActiveScene().buildIndex;
@@ -30,7 +32,7 @@ public class SceneNavigation : ScriptableObject
     public IEnumerator NavigateToSceneRoutine(FadeCanvasGroup screenFade)
     {
         OnSceneFadeOut?.Invoke();
-        yield return screenFade.FadeIn(2f);
+        yield return screenFade.FadeIn(FADE_TRANSITION_DURATION);
 
         Debug.Log("loading scene");
         // Load the scene asynchronously
@@ -45,7 +47,7 @@ public class SceneNavigation : ScriptableObject
         Debug.Log("scene loaded");
         OnSceneLoaded?.Invoke();
 
-        yield return screenFade.FadeOut(2f);
+        yield return screenFade.FadeOut(FADE_TRANSITION_DURATION);
         OnSceneFadeIn?.Invoke();
     }
 
