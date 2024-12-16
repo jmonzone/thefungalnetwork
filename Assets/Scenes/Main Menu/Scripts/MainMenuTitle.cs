@@ -16,7 +16,7 @@ public class MainMenuTitle : MonoBehaviour
     private void Awake()
     {
         tapToContinueText.gameObject.SetActive(false);
-        titleViewController.OnViewShowComplete += () =>
+        titleViewController.OnFadeInComplete += () =>
         {
             StartCoroutine(ShowTitle());
         };

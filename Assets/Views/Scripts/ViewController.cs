@@ -8,7 +8,9 @@ public class ViewController : MonoBehaviour
     private FadeCanvasGroup canvas;
 
     private const float FADE_TRANSITION_DURATION = 0.5f;
-    public event UnityAction OnViewShowComplete;
+
+    public event UnityAction OnFadeInStart;
+    public event UnityAction OnFadeInComplete;
 
     private void Awake()
     {
@@ -29,13 +31,14 @@ public class ViewController : MonoBehaviour
 
     private void Show()
     {
-        StartCoroutine(ShowRoutine());
+        StartCoroutine(FadeInView());
     }
 
-    private IEnumerator ShowRoutine()
+    private IEnumerator FadeInView()
     {
+        OnFadeInStart?.Invoke();
         yield return canvas.FadeIn(FADE_TRANSITION_DURATION);
-        OnViewShowComplete?.Invoke();
+        OnFadeInComplete?.Invoke();
     }
 
     private void Hide()

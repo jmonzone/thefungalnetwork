@@ -5,7 +5,6 @@ using UnityEngine.Events;
 [CreateAssetMenu]
 public class ViewReference : ScriptableObject
 {
-    public event UnityAction OnRequestShow;
     public event UnityAction OnShow;
     public event UnityAction OnRequestHide;
     public event UnityAction OnHidden;
