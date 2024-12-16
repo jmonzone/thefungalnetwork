@@ -11,6 +11,7 @@ public class ViewController : MonoBehaviour
 
     public event UnityAction OnFadeInStart;
     public event UnityAction OnFadeInComplete;
+    public event UnityAction OnFadeOutComplete;
 
     private void Awake()
     {
@@ -43,6 +44,10 @@ public class ViewController : MonoBehaviour
 
     private void Hide()
     {
-        StartCoroutine(canvas.FadeOut(FADE_TRANSITION_DURATION, viewReference.OnViewHidden));
+        StartCoroutine(canvas.FadeOut(FADE_TRANSITION_DURATION, () =>
+        {
+            viewReference.OnViewHidden();
+            OnFadeOutComplete?.Invoke();
+        }));
     }
 }

@@ -34,6 +34,11 @@ public class MainMenuHome : MonoBehaviour
             controller.SetMovement(fungal.Movement);
         };
 
+        viewController.OnFadeOutComplete += () =>
+        {
+            if (currentFungal) Destroy(currentFungal);
+        };
+
         partyButton.onClick.AddListener(() =>
         {
             navigation.Navigate(matchmakingView);
@@ -54,7 +59,6 @@ public class MainMenuHome : MonoBehaviour
         resetButton.onClick.AddListener(() =>
         {
             localData.ResetData();
-            if (currentFungal) Destroy(currentFungal);
             navigation.Navigate(introView);
         });
     }
