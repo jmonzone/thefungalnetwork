@@ -20,24 +20,31 @@ public class Controller : ScriptableObject
     public Possessable Possessable { get; private set; }
     public bool IsPossessing { get; private set; }
 
+    public event UnityAction OnInitialize;
     public event UnityAction OnUpdate;
     public event UnityAction OnPossessionStart;
     public event UnityAction OnReleaseStart;
     public event UnityAction OnDeath;
     public event UnityAction OnIsPossessingChanged;
-
+    //todo: unneeded and misleading
     public void Initialize(Volume volume)
     {
         Volume = volume;
         SetIsPossessing(false);
     }
 
+    public void Initialize(MovementController movement)
+    {
+        SetMovement(movement);
+        OnInitialize?.Invoke();
+    }
 
     private void SetIsPossessing(bool value)
     {
         IsPossessing = value;
         OnIsPossessingChanged?.Invoke();
     }
+
     public void SetMovement(MovementController movement)
     {
         if (Attackable) Attackable.OnDeath -= OnDeath;

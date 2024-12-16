@@ -54,7 +54,7 @@ public class InitialController : MonoBehaviour
             var fungalController = SpawnFungal(initalFungal, transform.position);
 
             Debug.Log("Setting fungal controller");
-            controller.SetMovement(fungalController.Movement);
+            controller.Initialize(fungalController.Movement);
             controller.InitalizePosessable(fungalController.GetComponent<Possessable>());
 
             avatar.transform.localScale = Vector3.zero;
@@ -62,7 +62,7 @@ public class InitialController : MonoBehaviour
         else
         {
             Debug.Log("Setting player controller");
-            controller.SetMovement(avatar);
+            controller.Initialize(avatar);
 
             avatar.GetComponent<AbilityCastView>().enabled = true;
         }
