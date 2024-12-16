@@ -618,6 +618,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Background Music Request
       objectReference: {fileID: 0}
+    - target: {fileID: 1625189194653912955, guid: 3e2dbb057a8c44ffd84eddd1aa2fdbcc,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4380691009145969206, guid: 3e2dbb057a8c44ffd84eddd1aa2fdbcc,
         type: 3}
       propertyPath: audioClip
@@ -3308,6 +3313,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
+  audioSource: {fileID: 1206552220}
 --- !u!82 &1206552220
 AudioSource:
   m_ObjectHideFlags: 0
@@ -3318,11 +3324,11 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 7f5148fb592264502b61dbc857abb3bf, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
-  m_Pitch: 3
-  Loop: 0
+  m_Pitch: 1
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
