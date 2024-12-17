@@ -7,7 +7,9 @@ public class MainMenuPartyPrepare : MonoBehaviour
 {
     [SerializeField] private MultiplayerManager multiplayerManager;
     [SerializeField] private Transform playerListAnchor;
+    [SerializeField] private Button startButton;
     [SerializeField] private Button exitButton;
+    [SerializeField] private SceneNavigation sceneNavigation;
     [SerializeField] private Navigation navigation;
 
     private List<TextMeshProUGUI> playerList = new List<TextMeshProUGUI>();
@@ -15,13 +17,29 @@ public class MainMenuPartyPrepare : MonoBehaviour
     private void Awake()
     {
         playerListAnchor.GetComponentsInChildren(true, playerList);
-        multiplayerManager.OnLobbyPoll += MultiplayerManager_OnLobbyPoll;
+
+        startButton.onClick.AddListener(async () =>
+        {
+            await multiplayerManager.CreateRelay();
+            sceneNavigation.NavigateToScene(5);
+
+        });
 
         exitButton.onClick.AddListener(async () =>
         {
             await multiplayerManager.LeaveLobby();
             navigation.GoBack();
         });
+    }
+
+    private void OnEnable()
+    {
+        multiplayerManager.OnLobbyPoll += MultiplayerManager_OnLobbyPoll;
+    }
+
+    private void OnDisable()
+    {
+        multiplayerManager.OnLobbyPoll -= MultiplayerManager_OnLobbyPoll;
     }
 
     private void MultiplayerManager_OnLobbyPoll()

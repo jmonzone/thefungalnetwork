@@ -2644,7 +2644,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   multiplayerManager: {fileID: 7525622806234987022}
   playerListAnchor: {fileID: 2097149348}
+  startButton: {fileID: 1761933090}
   exitButton: {fileID: 1259554324}
+  sceneNavigation: {fileID: 11400000, guid: 5c885c9a984a3470684bef7e76ca5c2a, type: 2}
   navigation: {fileID: 11400000, guid: 7af35f01730a846d692adda4734cddd3, type: 2}
 --- !u!1 &333353437
 GameObject:
@@ -3624,7 +3626,7 @@ PrefabInstance:
     - target: {fileID: 8680201845920829135, guid: 8901b198e42e04a0c895ac101328e2ce,
         type: 3}
       propertyPath: m_Name
-      value: Create Party Button
+      value: Start Game Button
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4805,8 +4807,7 @@ MonoBehaviour:
   NetworkConfig:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 730987215}
-    PlayerPrefab: {fileID: 2941250707292126303, guid: e998e1e959a6e4aea8d236cb97e0dd26,
-      type: 3}
+    PlayerPrefab: {fileID: 0}
     Prefabs:
       NetworkPrefabsLists:
       - {fileID: 11400000, guid: e77de9c28b17b4d8dbff397542382e6a, type: 2}
@@ -11713,6 +11714,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1761933090 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8142101640044107070, guid: 8901b198e42e04a0c895ac101328e2ce,
+    type: 3}
+  m_PrefabInstance: {fileID: 526833240}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1762735950
 GameObject:
   m_ObjectHideFlags: 0

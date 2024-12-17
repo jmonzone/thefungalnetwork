@@ -38,7 +38,6 @@ public class MultiplayerManager : MonoBehaviour
 
     private bool joinedRelay;
 
-
     private float heartbeatTimer;
     private float lobbyUpdateTimer;
 
@@ -104,7 +103,7 @@ public class MultiplayerManager : MonoBehaviour
 
     }
 
-    private async Task<string> CreateRelay()
+    public async Task<string> CreateRelay()
     {
         try
         {
@@ -134,6 +133,8 @@ public class MultiplayerManager : MonoBehaviour
             };
 
             joinedRelay = true;
+
+            if (JoinedLobby != null) JoinedLobby.Data.Add("JoinCode", new DataObject(DataObject.VisibilityOptions.Member, joinCode));
 
             return joinCode;
 
