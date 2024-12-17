@@ -13,7 +13,7 @@ public class BossRoom : MonoBehaviour
     [SerializeField] private Color loseResultColor;
     private void Awake()
     {
-        boss.OnDeath += OnBossDeath;
+        boss.OnHealthDepleted += OnBossDeath;
     }
 
     private void OnEnable()

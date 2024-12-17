@@ -10,24 +10,27 @@ public class Attackable : MonoBehaviour
     public float MaxHealth => maxHealth;
 
     public event UnityAction OnDamaged;
-    public event UnityAction OnCurrentHealthChanged;
-    public event UnityAction OnDeath;
+    public event UnityAction OnHealthChanged;
+    public event UnityAction OnHealthDepleted;
 
     private void Awake()
     {
         currentHealth = maxHealth;
     }
 
+    public void Restore()
+    {
+        SetHealth(maxHealth);
+    }
+
     public void SetHealth(float health)
     {
         currentHealth = health;
-        OnCurrentHealthChanged?.Invoke();
+        OnHealthChanged?.Invoke();
 
         if (CurrentHealth == 0f)
         {
-            Debug.Log($"OnDeath {currentHealth}");
-
-            OnDeath?.Invoke();
+            OnHealthDepleted?.Invoke();
         }
     }
 

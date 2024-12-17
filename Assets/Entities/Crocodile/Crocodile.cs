@@ -42,7 +42,7 @@ public class Crocodile : MonoBehaviour
         startPosition = transform.position;
         movementController = GetComponent<MovementController>();
         attackable = GetComponent<Attackable>();
-        attackable.OnDeath += StopAllCoroutines;
+        attackable.OnHealthDepleted += StopAllCoroutines;
     }
 
     private IEnumerator AttackTimer()

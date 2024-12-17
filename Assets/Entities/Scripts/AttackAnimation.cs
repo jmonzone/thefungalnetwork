@@ -20,7 +20,7 @@ public class AttackAnimation : MonoBehaviour
             defaultColor = particles.colorOverLifetime.color.gradient;
             var particleColorManager = GetComponent<ParticleColorManager>();
 
-            attackable.OnCurrentHealthChanged += () =>
+            attackable.OnHealthChanged += () =>
             {
                 particleColorManager.ChangeColor(hitColor, hitColorDuration, () =>
                 {
@@ -32,7 +32,7 @@ public class AttackAnimation : MonoBehaviour
         var movementController = GetComponent<MovementController>();
         var materialFlasher = GetComponent<MaterialFlasher>();
 
-        attackable.OnCurrentHealthChanged += () =>
+        attackable.OnHealthChanged += () =>
         {
             if (attackable.CurrentHealth <= 0)
             {

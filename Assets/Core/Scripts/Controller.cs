@@ -47,12 +47,12 @@ public class Controller : ScriptableObject
 
     public void SetMovement(MovementController movement)
     {
-        if (Attackable) Attackable.OnDeath -= OnDeath;
+        if (Attackable) Attackable.OnHealthDepleted -= OnDeath;
         if (Movement != null ) Movement.Stop();
 
         this.movement = movement;
         Attackable = movement.GetComponent<Attackable>();
-        if (Attackable) Attackable.OnDeath += OnDeath;
+        if (Attackable) Attackable.OnHealthDepleted += OnDeath;
 
         fungal = movement.GetComponent<FungalController>()?.Model.Data;
 

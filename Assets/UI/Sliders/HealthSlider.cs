@@ -8,15 +8,10 @@ public class HealthSlider : MonoBehaviour
         var slider = GetComponentInChildren<Slider>(includeInactive: true);
         var attackable = GetComponentInParent<Attackable>();
 
-        attackable.OnCurrentHealthChanged += () =>
+        attackable.OnHealthChanged += () =>
         {
             slider.value = attackable.CurrentHealth;
-            slider.gameObject.SetActive(true);
-        };
-
-        attackable.OnDeath += () =>
-        {
-            slider.gameObject.SetActive(false);
+            slider.gameObject.SetActive(attackable.CurrentHealth != attackable.MaxHealth && attackable.CurrentHealth != 0);
         };
 
         slider.maxValue = attackable.MaxHealth;

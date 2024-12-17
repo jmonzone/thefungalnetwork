@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class FungalRace : MonoBehaviour
@@ -5,22 +6,37 @@ public class FungalRace : MonoBehaviour
     [SerializeField] private Controller controller;
     [SerializeField] private CameraController cameraController;
     [SerializeField] private Transform startPosition;
-    [SerializeField] private Transform obstacle;
+    [SerializeField] private List<Attackable> obstacles;
     [SerializeField] private Transform endPosition;
 
-    private bool isAttacking = false;
-    private float obstacleHealth;
+    private int obstacleIndex = 0;
+    private Attackable currentObstacle;
+    private float attackTimer = 0;
+    private float attackCooldown = 2f;
+
+    private void Awake()
+    {
+        foreach(var obstacle in obstacles)
+        {
+            obstacle.OnHealthDepleted += () =>
+            {
+                currentObstacle = null;
+                obstacleIndex++;
+                obstacle.gameObject.SetActive(false);
+                GoToObstacle();
+            };
+        }
+    }
 
     private void Update()
     {
-        if (isAttacking)
+        if (currentObstacle)
         {
-            obstacleHealth -= Time.deltaTime;
-            if (obstacleHealth <= 0)
+            attackTimer -= Time.deltaTime;
+            if (attackTimer <= 0)
             {
-                isAttacking = false;
-                obstacle.gameObject.SetActive(false);
-                GoToEndPosition();
+                currentObstacle.Damage();
+                attackTimer = attackCooldown;
             }
         }
     }
@@ -49,13 +65,22 @@ public class FungalRace : MonoBehaviour
 
     private void GoToObstacle()
     {
-        obstacle.gameObject.SetActive(true);
-        obstacleHealth = 10f;
-
-        controller.Movement.SetTarget(obstacle, () =>
+        if (obstacleIndex < obstacles.Count)
         {
-            isAttacking = true;
-        });
+            var targetObstacle = obstacles[obstacleIndex];
+            targetObstacle.gameObject.SetActive(true);
+            targetObstacle.Restore();
+
+            controller.Movement.SetTarget(targetObstacle.transform, () =>
+            {
+                currentObstacle = targetObstacle;
+            });
+        }
+        else
+        {
+            obstacleIndex = 0;
+            GoToEndPosition();
+        }
     }
 
     private void GoToEndPosition()
