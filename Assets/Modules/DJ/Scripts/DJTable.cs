@@ -33,7 +33,6 @@ namespace TheFungalNetwork.DJ
         [SerializeField] private Button openVisualsButton;
         [SerializeField] private Button closeVisualsButton;
 
-
         private void Awake()
         {
             openVisualsButton.onClick.AddListener(() => fullscreenVisuals.SetActive(true));
