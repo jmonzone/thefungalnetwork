@@ -1,12 +1,14 @@
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MainMenuPartyPrepare : MonoBehaviour
 {
     [SerializeField] private MultiplayerManager multiplayerManager;
     [SerializeField] private Transform playerListAnchor;
+    [SerializeField] private Button exitButton;
+    [SerializeField] private Navigation navigation;
 
     private List<TextMeshProUGUI> playerList = new List<TextMeshProUGUI>();
 
@@ -14,6 +16,12 @@ public class MainMenuPartyPrepare : MonoBehaviour
     {
         playerListAnchor.GetComponentsInChildren(true, playerList);
         multiplayerManager.OnLobbyPoll += MultiplayerManager_OnLobbyPoll;
+
+        exitButton.onClick.AddListener(async () =>
+        {
+            await multiplayerManager.LeaveLobby();
+            navigation.GoBack();
+        });
     }
 
     private void MultiplayerManager_OnLobbyPoll()

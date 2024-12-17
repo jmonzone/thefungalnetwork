@@ -2644,6 +2644,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   multiplayerManager: {fileID: 7525622806234987022}
   playerListAnchor: {fileID: 2097149348}
+  exitButton: {fileID: 1259554324}
+  navigation: {fileID: 11400000, guid: 7af35f01730a846d692adda4734cddd3, type: 2}
 --- !u!1 &333353437
 GameObject:
   m_ObjectHideFlags: 0
@@ -4327,7 +4329,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Exit Button
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4371628255175393490, guid: 310f1d23000ce4454979e624c7dd7fff, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -8935,6 +8938,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1259554324 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3054132252699154334, guid: 310f1d23000ce4454979e624c7dd7fff,
+    type: 3}
+  m_PrefabInstance: {fileID: 659101131}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1284511913
 GameObject:
   m_ObjectHideFlags: 0

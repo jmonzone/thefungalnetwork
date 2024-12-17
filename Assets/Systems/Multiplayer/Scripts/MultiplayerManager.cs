@@ -73,7 +73,7 @@ public class MultiplayerManager : MonoBehaviour
             JoinedLobby = lobby;
             OnLobbyPoll?.Invoke();
 
-            if (!joinedRelay)
+            if (!joinedRelay && JoinedLobby.Data.ContainsKey("JoinCode"))
             {
                 JoinRelay(JoinedLobby.Data["JoinCode"].Value);
                 joinedRelay = true;
@@ -175,7 +175,7 @@ public class MultiplayerManager : MonoBehaviour
     }
 
 
-    public async Task CreateLobby(string joinCode = "")
+    public async Task CreateLobby(string joinCode)
     {
         try
         {
@@ -190,6 +190,36 @@ public class MultiplayerManager : MonoBehaviour
                 Data = new Dictionary<string, DataObject>()
                 {
                     { "JoinCode", new DataObject(DataObject.VisibilityOptions.Member, joinCode) },
+                    { "HostName", new DataObject(DataObject.VisibilityOptions.Public, PlayerName)},
+                }
+            };
+
+            Lobby lobby = await LobbyService.Instance.CreateLobbyAsync("Test Lobby", maxPlayers, createLobbyOptions);
+            hostLobby = lobby;
+            JoinedLobby = lobby;
+
+            OnLobbyJoined?.Invoke();
+        }
+        catch (LobbyServiceException e)
+        {
+            Debug.Log(e);
+        }
+    }
+
+    public async Task CreateLobby()
+    {
+        try
+        {
+            player = CreatePlayer();
+            var clientId = NetworkManager.Singleton.LocalClientId;
+            player.Data["NetworkId"] = new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, clientId.ToString());
+
+            CreateLobbyOptions createLobbyOptions = new CreateLobbyOptions
+            {
+                IsPrivate = false,
+                Player = player,
+                Data = new Dictionary<string, DataObject>()
+                {
                     { "HostName", new DataObject(DataObject.VisibilityOptions.Public, PlayerName)},
                 }
             };
@@ -322,13 +352,15 @@ public class MultiplayerManager : MonoBehaviour
         }
     }
 
-    public async void LeaveLobby()
+    public async Task LeaveLobby()
     {
         if (joinedLobby == null) return;
 
         try
         {
-            var playerId = player.Data["NetworkId"].Value;
+            //var playerId = player.Data["NetworkId"].Value;
+            string playerId = AuthenticationService.Instance.PlayerId;
+
             // Remove the player from the lobby
             await LobbyService.Instance.RemovePlayerAsync(joinedLobby.Id, playerId);
             joinedLobby = null;

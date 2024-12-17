@@ -20,6 +20,7 @@ public class AutoConnect : MonoBehaviour
     {
         multiplayerManager.SignIn(displayName.name, () => StartCoroutine(AutoJoinBogRoom()));
     }
+
     private IEnumerator AutoJoinBogRoom()
     {
         yield return new WaitForSeconds(2f);
