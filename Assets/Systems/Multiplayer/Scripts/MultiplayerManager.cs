@@ -30,6 +30,7 @@ public class MultiplayerManager : MonoBehaviour
 
     public event UnityAction OnLobbyUpdated;
     public event UnityAction OnLobbyJoined;
+    public event UnityAction OnLobbyPoll;
 
     private int maxPlayers = 10;
 
@@ -70,6 +71,7 @@ public class MultiplayerManager : MonoBehaviour
             lobbyUpdateTimer = 1.1f;
             Lobby lobby = await LobbyService.Instance.GetLobbyAsync(JoinedLobby.Id);
             JoinedLobby = lobby;
+            OnLobbyPoll?.Invoke();
 
             if (!joinedRelay)
             {
@@ -173,7 +175,7 @@ public class MultiplayerManager : MonoBehaviour
     }
 
 
-    private async Task CreateLobby(string joinCode)
+    public async Task CreateLobby(string joinCode = "")
     {
         try
         {

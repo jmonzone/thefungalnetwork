@@ -77,8 +77,8 @@ public class FungalRaceUI : MonoBehaviour
                 charge -= highPitchEnergyRate * Time.deltaTime;
                 audioSource.pitch = maxPitch;
 
-                movementSpeed = baseMovementSpeed * sprintMultiplier * ((charge * 0.75f) + 0.25f);
-
+                if (charge > 0) movementSpeed = baseMovementSpeed * sprintMultiplier;
+                else movementSpeed = baseMovementSpeed * walkMultiplier;
             }
         }
 

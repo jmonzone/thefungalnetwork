@@ -1,16 +1,30 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MainMenuMatchmaking : MonoBehaviour
 {
-    [SerializeField] private MultiplayerManager multiplayerManager;
+    [SerializeField] private MultiplayerManager multiplayer;
     [SerializeField] private ConnectionUI connectionUI;
     [SerializeField] private DisplayName displayName;
-    [SerializeField] private ViewReference viewReference;
+    [SerializeField] private Navigation navigation;
+    [SerializeField] private ViewReference partyPrepareView;
 
-    private void FadeIn()
+    [SerializeField] private Button createPartyButton;
+
+    private void Awake()
     {
-        multiplayerManager.SignIn(displayName.name, () => StartCoroutine(RefreshLobbyList()));
+        createPartyButton.onClick.AddListener(async () =>
+        {
+            await multiplayer.CreateLobby();
+            navigation.Navigate(partyPrepareView);
+        });
+    }
+
+    private void Start()
+    {
+        //todo: should be handled by a global component
+        multiplayer.SignIn(displayName.Value, () => StartCoroutine(RefreshLobbyList()));
     }
 
     private IEnumerator RefreshLobbyList()
@@ -24,7 +38,7 @@ public class MainMenuMatchmaking : MonoBehaviour
 
     private void UpdateLobbyList()
     {
-        multiplayerManager.ListLobbies(lobbies =>
+        multiplayer.ListLobbies(lobbies =>
         {
             connectionUI.SetLobbies(lobbies);
         });
