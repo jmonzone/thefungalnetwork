@@ -17,6 +17,8 @@ public class MultiplayerManager : MonoBehaviour
 {
     public string PlayerName { get; private set; }
 
+    public static MultiplayerManager Instance { get; private set; }
+
     private Lobby joinedLobby;
     public Lobby JoinedLobby
     {
@@ -40,6 +42,19 @@ public class MultiplayerManager : MonoBehaviour
 
     private float heartbeatTimer;
     private float lobbyUpdateTimer;
+
+    private void Awake()
+    {
+        if (Instance)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
 
     private void Update()
     {

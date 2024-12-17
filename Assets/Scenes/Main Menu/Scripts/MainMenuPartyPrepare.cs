@@ -20,9 +20,7 @@ public class MainMenuPartyPrepare : MonoBehaviour
 
         startButton.onClick.AddListener(async () =>
         {
-            await multiplayerManager.CreateRelay();
             sceneNavigation.NavigateToScene(5);
-
         });
 
         exitButton.onClick.AddListener(async () =>
