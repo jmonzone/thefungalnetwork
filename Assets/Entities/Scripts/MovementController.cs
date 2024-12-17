@@ -67,10 +67,11 @@ public class MovementController : MonoBehaviour
     public event UnityAction OnJump;
 
     #region Public Methods
-    public void SetTarget(Transform target)
+    public void SetTarget(Transform target, UnityAction onComplete = null)
     {
         this.target = target;
         SetType(MovementType.TARGET);
+        positionReachedRoutine = StartCoroutine(WaitUntilDestinationReached(onComplete));
     }
 
     public void SetDirection(Vector3 direction)
