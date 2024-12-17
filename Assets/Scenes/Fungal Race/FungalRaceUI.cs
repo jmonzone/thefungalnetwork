@@ -1,7 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
+
+public enum AuraType
+{
+    LOW,
+    MEDIUM,
+    HIGH
+}
 
 public class FungalRaceUI : MonoBehaviour
 {
@@ -28,7 +36,13 @@ public class FungalRaceUI : MonoBehaviour
     [SerializeField] private float chargeRate;
     [SerializeField] private bool isBursting = false;
 
+    [SerializeField] private AuraType auraType;
+    public AuraType AuraType => auraType;
+
     private float burstStartCharge;
+
+    public event UnityAction OnAuraTypeChanged;
+
     private void Awake()
     {
         burstButton.onClick.AddListener(() =>
@@ -60,31 +74,47 @@ public class FungalRaceUI : MonoBehaviour
         {
             // Normalize the slider value to the range [0, 1]
             float normalizedValue = pitchSlider.value / pitchSlider.maxValue;
-            if (normalizedValue < 0.33f)
-            {
+            if (normalizedValue < 0.33f) SetAuraType(AuraType.LOW);
+            else if (normalizedValue < 0.66f) SetAuraType(AuraType.MEDIUM);
+            else SetAuraType(AuraType.HIGH);
+        }
+
+
+        charge = Mathf.Clamp(charge, 0f, 1f);
+        chargeSlider.value = charge;
+    }
+
+    private void SetAuraType(AuraType type)
+    {
+        var previousType = auraType;
+        auraType = type;
+
+        if (previousType != type) OnAuraTypeChanged?.Invoke();
+
+        float movementSpeed;
+
+        switch (type)
+        {
+            case AuraType.LOW:
                 movementSpeed = baseMovementSpeed * walkMultiplier;
                 charge += lowPitchChargeSpeed * Time.deltaTime;
                 audioSource.pitch = minPitch;
-            }
-            else if (normalizedValue < 0.66f)
-            {
+                break;
+            case AuraType.MEDIUM:
+            default:
                 charge += baseChargeSpeed * Time.deltaTime;
                 movementSpeed = baseMovementSpeed * ((charge * 0.25f) + 0.75f);
                 audioSource.pitch = 1f;
-            }
-            else
-            {
+                break;
+            case AuraType.HIGH:
                 charge -= highPitchEnergyRate * Time.deltaTime;
                 audioSource.pitch = maxPitch;
-
                 if (charge > 0) movementSpeed = baseMovementSpeed * sprintMultiplier;
                 else movementSpeed = baseMovementSpeed * walkMultiplier;
-            }
+                break;
         }
 
         controller.Movement.SetSpeed(movementSpeed);
 
-        charge = Mathf.Clamp(charge, 0f, 1f);
-        chargeSlider.value = charge;
     }
 }

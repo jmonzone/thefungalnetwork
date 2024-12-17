@@ -8,6 +8,13 @@ public class FungalRace : MonoBehaviour
     [SerializeField] private Transform startPosition;
     [SerializeField] private List<Attackable> obstacles;
     [SerializeField] private Transform endPosition;
+    [SerializeField] private FungalRaceUI fungalRaceUI;
+
+    [Header("Aura Attributes")]
+    [SerializeField] private float lowCooldown;
+    [SerializeField] private float mediumCooldown;
+    [SerializeField] private float highCooldown;
+
 
     private int obstacleIndex = 0;
     private Attackable currentObstacle;
@@ -26,6 +33,19 @@ public class FungalRace : MonoBehaviour
                 GoToObstacle();
             };
         }
+
+        fungalRaceUI.OnAuraTypeChanged += () =>
+        {
+            attackCooldown = fungalRaceUI.AuraType switch
+            {
+                AuraType.LOW => lowCooldown,
+                AuraType.MEDIUM => mediumCooldown,
+                AuraType.HIGH => highCooldown,
+                _ => mediumCooldown,
+            };
+
+            attackTimer = attackCooldown;
+        };
     }
 
     private void Update()
