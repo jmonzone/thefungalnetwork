@@ -32,6 +32,7 @@ public class FungalRaceUI : MonoBehaviour
 
     private float burstStartCharge;
 
+    public event UnityAction OnBurstButtonClicked;
     public event UnityAction OnAuraTypeChanged;
 
     private void Awake()
@@ -40,6 +41,7 @@ public class FungalRaceUI : MonoBehaviour
         {
             burstStartCharge = charge;
             isBursting = true;
+            OnBurstButtonClicked?.Invoke();
         });
 
         pitchSlider.onValueChanged.AddListener(_ =>
