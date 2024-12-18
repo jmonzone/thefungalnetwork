@@ -4,13 +4,6 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public enum AuraType
-{
-    LOW,
-    MEDIUM,
-    HIGH
-}
-
 public class FungalRaceUI : MonoBehaviour
 {
     [SerializeField] private Controller controller;
@@ -20,24 +13,22 @@ public class FungalRaceUI : MonoBehaviour
     [SerializeField] private Button burstButton;
     [SerializeField] private CanvasGroup canvasGroup;
 
-    [SerializeField] private float baseMovementSpeed = 3f; // Maximum movement speed at 100% pitch
-    [SerializeField] private float sprintMultiplier = 1.5f; // Maximum movement speed at 100% pitch
-    [SerializeField] private float burstSpeedMultiplier = 2f;
-    [SerializeField] private float burstEnergyDepletion = 1.5f;
-    [SerializeField] private float burstEnergyPrice = 0.5f;
-    [SerializeField] private float walkMultiplier = 0.5f; // Maximum movement speed at 100% pitch
-    [SerializeField] private float lowPitchChargeSpeed = 4f;    // Intensity of charge curve parabola
-    [SerializeField] private float baseChargeSpeed = 2f;
-    [SerializeField] private float highPitchEnergyRate = 4f;    // Intensity of charge curve parabola
+    [SerializeField] private float maxCharge = 0.05f;
+    [SerializeField] private float minCharge = 0.005f;
+    [SerializeField] private float maxSpeed = 5f;
+    [SerializeField] private float minSpeed = 1f;
     [SerializeField] private float maxPitch = 2f;
     [SerializeField] private float minPitch = 0.1f;
+    [SerializeField] private float burstEnergyCost;
+    [SerializeField] private float burstEnergyRate;
     
     [SerializeField] private float charge;
     [SerializeField] private float chargeRate;
     [SerializeField] private bool isBursting = false;
 
-    [SerializeField] private AuraType auraType;
-    public AuraType AuraType => auraType;
+    [SerializeField] private float auraValue = 0;
+
+    public float AuraValue => auraValue;
 
     private float burstStartCharge;
 
@@ -50,71 +41,46 @@ public class FungalRaceUI : MonoBehaviour
             burstStartCharge = charge;
             isBursting = true;
         });
+
+        pitchSlider.onValueChanged.AddListener(_ =>
+        {
+            OnAuraTypeChanged?.Invoke();
+        });
     }
 
     private void Update()
     {
         canvasGroup.interactable = !isBursting;
         canvasGroup.alpha = isBursting ? 0.75f : 1f;
-        burstButton.interactable = !isBursting && charge >= burstEnergyPrice;
+        burstButton.interactable = !isBursting && charge >= burstEnergyCost;
 
         float movementSpeed;
 
         if (isBursting)
         {
-            movementSpeed = baseMovementSpeed * burstSpeedMultiplier;
-            charge -= burstEnergyDepletion * Time.deltaTime;
+            movementSpeed = maxSpeed;
+            charge -= burstEnergyRate * Time.deltaTime;
             audioSource.pitch = maxPitch;
             controller.Movement.SetSpeed(movementSpeed);
 
-
-            if (burstStartCharge - charge > burstEnergyPrice) isBursting = false;
+            if (burstStartCharge - charge > burstEnergyCost) isBursting = false;
         }
         else
         {
             // Normalize the slider value to the range [0, 1]
-            float normalizedValue = pitchSlider.value / pitchSlider.maxValue;
-            if (normalizedValue < 0.33f) SetAuraType(AuraType.LOW);
-            else if (normalizedValue < 0.66f) SetAuraType(AuraType.MEDIUM);
-            else SetAuraType(AuraType.HIGH);
+            auraValue = pitchSlider.value / pitchSlider.maxValue;
+
+            audioSource.pitch = Mathf.Lerp(minPitch, maxPitch, auraValue);
+            movementSpeed = Mathf.Lerp(minSpeed, maxSpeed, auraValue);
+
+            chargeRate = Mathf.Lerp(minCharge, maxCharge, 1 - auraValue);
+
+            charge += chargeRate;
+            controller.Movement.SetSpeed(movementSpeed);
         }
 
 
         charge = Mathf.Clamp(charge, 0f, 1f);
         chargeSlider.value = charge;
-    }
-
-    private void SetAuraType(AuraType type)
-    {
-        var previousType = auraType;
-        auraType = type;
-
-        if (previousType != type) OnAuraTypeChanged?.Invoke();
-
-        float movementSpeed;
-
-        switch (type)
-        {
-            case AuraType.LOW:
-                movementSpeed = baseMovementSpeed * walkMultiplier;
-                charge += lowPitchChargeSpeed * Time.deltaTime;
-                audioSource.pitch = minPitch;
-                break;
-            case AuraType.MEDIUM:
-            default:
-                charge += baseChargeSpeed * Time.deltaTime;
-                movementSpeed = baseMovementSpeed * ((charge * 0.25f) + 0.75f);
-                audioSource.pitch = 1f;
-                break;
-            case AuraType.HIGH:
-                charge -= highPitchEnergyRate * Time.deltaTime;
-                audioSource.pitch = maxPitch;
-                if (charge > 0) movementSpeed = baseMovementSpeed * sprintMultiplier;
-                else movementSpeed = baseMovementSpeed * walkMultiplier;
-                break;
-        }
-
-        controller.Movement.SetSpeed(movementSpeed);
-
     }
 }

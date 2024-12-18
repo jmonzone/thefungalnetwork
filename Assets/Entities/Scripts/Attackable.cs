@@ -25,20 +25,20 @@ public class Attackable : MonoBehaviour
 
     public void SetHealth(float health)
     {
-        currentHealth = health;
+        currentHealth = Mathf.Max(health, 0);
         OnHealthChanged?.Invoke();
 
-        if (CurrentHealth == 0f)
+        if (CurrentHealth <= 0f)
         {
             OnHealthDepleted?.Invoke();
         }
     }
 
-    public void Damage()
+    public void Damage(float damage = 1)
     {
         if (CurrentHealth > 0)
         {
-            SetHealth(currentHealth - 1);
+            SetHealth(currentHealth - damage);
             OnDamaged?.Invoke();
         }
     }

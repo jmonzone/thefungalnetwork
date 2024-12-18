@@ -11,10 +11,11 @@ public class FungalRace : MonoBehaviour
     [SerializeField] private FungalRaceUI fungalRaceUI;
 
     [Header("Aura Attributes")]
-    [SerializeField] private float lowCooldown;
-    [SerializeField] private float mediumCooldown;
-    [SerializeField] private float highCooldown;
+    [SerializeField] private float minCooldown;
+    [SerializeField] private float maxCooldown;
 
+    [SerializeField] private float minDamage;
+    [SerializeField] private float maxDamage;
 
     private int obstacleIndex = 0;
     private Attackable currentObstacle;
@@ -36,14 +37,7 @@ public class FungalRace : MonoBehaviour
 
         fungalRaceUI.OnAuraTypeChanged += () =>
         {
-            attackCooldown = fungalRaceUI.AuraType switch
-            {
-                AuraType.LOW => lowCooldown,
-                AuraType.MEDIUM => mediumCooldown,
-                AuraType.HIGH => highCooldown,
-                _ => mediumCooldown,
-            };
-
+            attackCooldown = Mathf.Lerp(maxCooldown, minCooldown, fungalRaceUI.AuraValue);
             attackTimer = attackCooldown;
         };
     }
@@ -55,7 +49,8 @@ public class FungalRace : MonoBehaviour
             attackTimer -= Time.deltaTime;
             if (attackTimer <= 0)
             {
-                currentObstacle.Damage();
+                var damage = Mathf.Lerp(maxDamage, minDamage, fungalRaceUI.AuraValue);
+                currentObstacle.Damage(damage);
                 attackTimer = attackCooldown;
             }
         }
