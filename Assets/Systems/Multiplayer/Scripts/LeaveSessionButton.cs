@@ -1,24 +1,20 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 //todo: centralize  
 public class LeaveSessionButton : MonoBehaviour
 {
-    [SerializeField] private MultiplayerManager multiplayerManager;
+    [SerializeField] private MultiplayerManager multiplayer;
     [SerializeField] private Button button;
     [SerializeField] private SceneNavigation sceneNavigation;
 
     private void Awake()
     {
-        button.onClick.AddListener(() =>
+        button.onClick.AddListener(async() =>
         {
-            if (multiplayerManager)
-            {
-                multiplayerManager.LeaveLobby();
-                multiplayerManager.DisconnectRelay();
-                sceneNavigation.NavigateToScene(0);
-            }
+            multiplayer.DisconnectFromRelay();
+            await multiplayer.RemoveRelayFromLobbyData();
+            sceneNavigation.NavigateToScene(0);
         });
     }
 }

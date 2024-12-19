@@ -3,10 +3,16 @@ using UnityEngine;
 
 public class MainMenuTitle : MonoBehaviour
 {
+    [SerializeField] private MultiplayerManager multiplayer;
+    [SerializeField] private SceneNavigation sceneNavigation;
     [SerializeField] private Navigation navigation;
     [SerializeField] private ViewController titleViewController;
+    [SerializeField] private ViewReference titleViewReference;
     [SerializeField] private ViewReference mainMenuViewReference;
     [SerializeField] private ViewReference namePromptViewReference;
+    [SerializeField] private ViewReference matchmakingViewReference;
+    [SerializeField] private ViewReference partyViewReference;
+
     [SerializeField] private FadeCanvasGroup tapToContinueText;
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private FungalInventory fungalInventory;
@@ -20,6 +26,23 @@ public class MainMenuTitle : MonoBehaviour
         {
             StartCoroutine(ShowTitle());
         };
+    }
+
+    private void OnEnable()
+    {
+        sceneNavigation.OnSceneFadeIn += ShowInitialUI;
+    }
+
+    private void OnDisable()
+    {
+        sceneNavigation.OnSceneFadeIn -= ShowInitialUI;
+    }
+
+    private void ShowInitialUI()
+    {
+        var targetUI = titleViewReference;
+        if (multiplayer.JoinedLobby != null) targetUI = partyViewReference;
+        navigation.Navigate(targetUI);
     }
 
     private IEnumerator ShowTitle()

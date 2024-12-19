@@ -11,13 +11,13 @@ using Unity.Services.Relay;
 using Unity.Services.Relay.Models;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UI;
 
-public class MultiplayerManager : MonoBehaviour
+[CreateAssetMenu]
+public class MultiplayerManager : ScriptableObject
 {
-    public string PlayerName { get; private set; }
+    [SerializeField] private DisplayName displayName;
 
-    public static MultiplayerManager Instance { get; private set; }
+    public string PlayerName { get; private set; }
 
     private Lobby joinedLobby;
     public Lobby JoinedLobby
@@ -45,20 +45,13 @@ public class MultiplayerManager : MonoBehaviour
     private float heartbeatTimer;
     private float lobbyUpdateTimer;
 
-    private void Awake()
+    public void Initialize()
     {
-        if (Instance)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        else
-        {
-            Instance = this;
-        }
+        JoinedLobby = null;
+        SignIn(displayName.Value, () => { });
     }
 
-    private void Update()
+    public void DoUpdate()
     {
         HandleLobbyHeartbeat();
         HandleLobbyPollForUpdates();
@@ -84,6 +77,7 @@ public class MultiplayerManager : MonoBehaviour
         lobbyUpdateTimer -= Time.deltaTime;
         if (lobbyUpdateTimer < 0f)
         {
+            Debug.Log("poll");
             lobbyUpdateTimer = 1.1f;
             Lobby lobby = await LobbyService.Instance.GetLobbyAsync(JoinedLobby.Id);
             JoinedLobby = lobby;
@@ -126,32 +120,24 @@ public class MultiplayerManager : MonoBehaviour
 
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
             NetworkManager.Singleton.StartHost();
-            NetworkManager.Singleton.OnClientDisconnectCallback += async (clientId) =>
-            {
-                Debug.Log($"Client disconnected: {clientId}");
+            //NetworkManager.Singleton.OnClientDisconnectCallback += async (clientId) =>
+            //{
+            //    Debug.Log($"Client disconnected: {clientId}");
 
-                foreach(var player in joinedLobby.Players)
-                {
-                    Debug.Log($"player: {player.Data["NetworkId"].Value}");
+            //    foreach(var player in joinedLobby.Players)
+            //    {
+            //        Debug.Log($"player: {player.Data["NetworkId"].Value}");
 
-                    if (player.Data["NetworkId"].Value == clientId.ToString())
-                    {
-                        await LobbyService.Instance.RemovePlayerAsync(joinedLobby.Id, player.Id);
-                    }
-                }
+            //        if (player.Data["NetworkId"].Value == clientId.ToString())
+            //        {
+            //            await LobbyService.Instance.RemovePlayerAsync(joinedLobby.Id, player.Id);
+            //        }
+            //    }
 
 
-            };
+            //};
 
             JoinedRelay = true;
-
-            await LobbyService.Instance.UpdateLobbyAsync(JoinedLobby.Id, new UpdateLobbyOptions
-            {
-                Data = new Dictionary<string, DataObject>
-            {
-                { "JoinCode", new DataObject(DataObject.VisibilityOptions.Member, joinCode) }
-            }
-            });
 
             return joinCode;
 
@@ -162,6 +148,47 @@ public class MultiplayerManager : MonoBehaviour
             return null;
         }
 
+    }
+
+    public async Task AddRelayToLobby(string joinCode)
+    {
+        try
+        {
+            var data = JoinedLobby.Data;
+            data["JoinCode"] = new DataObject(DataObject.VisibilityOptions.Member, joinCode);
+            Lobby lobby = await LobbyService.Instance.UpdateLobbyAsync(JoinedLobby.Id, new UpdateLobbyOptions
+            {
+                Data = data
+            });
+
+            JoinedLobby = lobby;
+            OnLobbyPoll?.Invoke();
+        }
+        catch (RelayServiceException e)
+        {
+            Debug.Log(e);
+        }
+    }
+
+    public async Task RemoveRelayFromLobbyData()
+    {
+        try
+        {
+            var data = JoinedLobby.Data;
+            data["JoinCode"] = new DataObject(DataObject.VisibilityOptions.Member, null);
+            Lobby lobby = await LobbyService.Instance.UpdateLobbyAsync(JoinedLobby.Id, new UpdateLobbyOptions
+            {
+                Data = data
+            });
+
+            JoinedLobby = lobby;
+            OnLobbyPoll?.Invoke();
+
+        }
+        catch (RelayServiceException e)
+        {
+            Debug.Log(e);
+        }
     }
 
     public async void JoinRelay(string joinCode)
@@ -395,15 +422,11 @@ public class MultiplayerManager : MonoBehaviour
         }
     }
 
-    public void DisconnectRelay()
+    //// Separate method to disconnect from the relay server
+    public void DisconnectFromRelay()
     {
-        if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsClient)
-        {
-            NetworkManager.Singleton.Shutdown();
-            Debug.Log("Disconnected from relay.");
-        }
-
-        Destroy(NetworkManager.Singleton.gameObject);
+        NetworkManager.Singleton.GetComponent<UnityTransport>().DisconnectLocalClient();
+        NetworkManager.Singleton.Shutdown();
     }
 
     private Player player;

@@ -1,10 +1,11 @@
 using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class AutoConnect : MonoBehaviour
 {
     [SerializeField] private MultiplayerArena arena;
-    [SerializeField] private MultiplayerManager multiplayerManager;
+    [SerializeField] private MultiplayerManager multiplayer;
     [SerializeField] private Transform playerSpawnAnchor;
     [SerializeField] private Transform crocodileSpawnAnchor;
     [SerializeField] private DisplayName displayName;
@@ -14,46 +15,48 @@ public class AutoConnect : MonoBehaviour
         arena.Initialize(playerSpawnAnchor.position, crocodileSpawnAnchor.position);
     }
 
-    private void Start()
+    private IEnumerator Start()
     {
-        if (MultiplayerManager.Instance.JoinedLobby != null)
+        if (multiplayer.JoinedLobby != null)
         {
-            MultiplayerManager.Instance.CreateRelay();
+            yield return CreateRelay();
         }
         else
         {
-            multiplayerManager.SignIn(displayName.Value, () => StartCoroutine(AutoJoinBogRoom()));
+            yield return new WaitForSeconds(3f);
+
+            multiplayer.ListLobbies(async lobbies =>
+            {
+                // Check if the player is already in a lobby
+                //var rejoined = await multiplayerManager.TryRejoinLobby();
+                //if (rejoined) return;
+
+                if (lobbies.Count > 0)
+                {
+                    await multiplayer.JoinLobbyById(lobbies[0].Id);
+                }
+                else
+                {
+                    await multiplayer.CreateRelayAndLobby();
+                }
+            });
         }
     }
 
-    private void Update()
+    private async Task CreateRelay()
     {
-        if (!MultiplayerManager.Instance.JoinedRelay && MultiplayerManager.Instance.JoinedLobby.Data.ContainsKey("JoinCode"))
+        if (multiplayer.IsHost)
         {
-            Debug.Log("joining");
-            var joinCode = MultiplayerManager.Instance.JoinedLobby.Data["JoinCode"].Value;
-            MultiplayerManager.Instance.JoinRelay(joinCode);
+            var joinCode = await multiplayer.CreateRelay();
+            await multiplayer.AddRelayToLobby(joinCode);
         }
-    }
-
-    private IEnumerator AutoJoinBogRoom()
-    {
-        yield return new WaitForSeconds(2f);
-
-        multiplayerManager.ListLobbies(async lobbies =>
+        else
         {
-            // Check if the player is already in a lobby
-            //var rejoined = await multiplayerManager.TryRejoinLobby();
-            //if (rejoined) return;
-
-            if (lobbies.Count > 0)
+            if (multiplayer.JoinedLobby.Data.ContainsKey("JoinCode"))
             {
-                await multiplayerManager.JoinLobbyById(lobbies[0].Id);
+                var joinCode = multiplayer.JoinedLobby.Data["JoinCode"].Value;
+                multiplayer.JoinRelay(joinCode);
             }
-            else
-            {
-                await multiplayerManager.CreateRelayAndLobby();
-            }
-        });
+        }
     }
 }

@@ -23,18 +23,16 @@ public class MainMenuMatchmaking : MonoBehaviour
         });
     }
 
-    private void Start()
-    {
-        //todo: should be handled by a global component
-        multiplayer.SignIn(displayName.Value, () => StartCoroutine(RefreshLobbyList()));
-    }
+    private float updateTimer = 0f;
 
-    private IEnumerator RefreshLobbyList()
+    private void Update()
     {
-        while (gameObject)
+        updateTimer += Time.deltaTime;
+
+        if (updateTimer > 2)
         {
             UpdateLobbyList();
-            yield return new WaitForSeconds(2f);
+            updateTimer = 0;
         }
     }
 
@@ -47,7 +45,7 @@ public class MainMenuMatchmaking : MonoBehaviour
                 label = lobby.Data["HostName"].Value.Replace("_", " "),
                 onClick = async () =>
                 {
-                    await MultiplayerManager.Instance.JoinLobbyById(lobby.Id);
+                    await multiplayer.JoinLobbyById(lobby.Id);
                     navigation.Navigate(partyPrepareView);
                 }
             }).ToList();

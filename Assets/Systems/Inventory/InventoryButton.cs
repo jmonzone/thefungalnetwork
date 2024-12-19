@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using GURU;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,6 +10,8 @@ public class InventoryButton : MonoBehaviour
     [SerializeField] private ViewReference inventoryView;
     [SerializeField] private Button button;
     [SerializeField] private Image preview;
+    [SerializeField] private ListUI list;
+
 
     public Button Button => button;
 

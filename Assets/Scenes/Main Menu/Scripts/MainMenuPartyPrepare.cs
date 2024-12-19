@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class MainMenuPartyPrepare : MonoBehaviour
 {
-    [SerializeField] private MultiplayerManager multiplayerManager;
+    [SerializeField] private MultiplayerManager multiplayer;
     [SerializeField] private Transform playerListAnchor;
     [SerializeField] private Button startButton;
     [SerializeField] private Button exitButton;
@@ -25,26 +25,26 @@ public class MainMenuPartyPrepare : MonoBehaviour
 
         exitButton.onClick.AddListener(async () =>
         {
-            await multiplayerManager.LeaveLobby();
+            await multiplayer.LeaveLobby();
             navigation.GoBack();
         });
     }
 
     private void OnEnable()
     {
-        multiplayerManager.OnLobbyPoll += MultiplayerManager_OnLobbyPoll;
-        multiplayerManager.OnLobbyJoined += MultiplayerManager_OnLobbyJoined;
+        multiplayer.OnLobbyPoll += MultiplayerManager_OnLobbyPoll;
+        multiplayer.OnLobbyJoined += MultiplayerManager_OnLobbyJoined;
     }
 
     private void OnDisable()
     {
-        multiplayerManager.OnLobbyPoll -= MultiplayerManager_OnLobbyPoll;
-        multiplayerManager.OnLobbyJoined -= MultiplayerManager_OnLobbyJoined;
+        multiplayer.OnLobbyPoll -= MultiplayerManager_OnLobbyPoll;
+        multiplayer.OnLobbyJoined -= MultiplayerManager_OnLobbyJoined;
     }
 
     private void MultiplayerManager_OnLobbyPoll()
     {
-        var players = multiplayerManager.JoinedLobby.Players;
+        var players = multiplayer.JoinedLobby.Players;
         for(var i = 0; i < players.Count; i++)
         {
             playerList[i].text = players[i].Data["PlayerName"].Value;
@@ -56,7 +56,7 @@ public class MainMenuPartyPrepare : MonoBehaviour
             playerList[i].gameObject.SetActive(false);
         }
 
-        if (!joining && MultiplayerManager.Instance.JoinedLobby.Data.ContainsKey("JoinCode"))
+        if (!joining && multiplayer.JoinedLobby.Data.ContainsKey("JoinCode") && !string.IsNullOrEmpty(multiplayer.JoinedLobby.Data["JoinCode"].Value))
         {
             Debug.Log("joining");
             sceneNavigation.NavigateToScene(4);
@@ -68,6 +68,6 @@ public class MainMenuPartyPrepare : MonoBehaviour
 
     private void MultiplayerManager_OnLobbyJoined()
     {
-        startButton.gameObject.SetActive(MultiplayerManager.Instance.IsHost);
+        startButton.gameObject.SetActive(multiplayer.IsHost);
     }
 }

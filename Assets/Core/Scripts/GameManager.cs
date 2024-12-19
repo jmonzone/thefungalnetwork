@@ -13,12 +13,15 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Navigation uiNavigation;
     [SerializeField] private SceneNavigation sceneNavigation;
     [SerializeField] private FadeCanvasGroup screenFade;
+    [SerializeField] private MultiplayerManager multiplayer;
 
     [SerializeField] private AbilityCastReference abilityCast;
     [SerializeField] private DisplayName displayName;
     [SerializeField] private ItemInventory itemInventory;
     [SerializeField] private FungalInventory fungalInventory;
     [SerializeField] private Possession possession;
+
+
 
     private void Awake()
     {
@@ -36,6 +39,7 @@ public class GameManager : MonoBehaviour
             // or else there is unexpeted behaviour
             abilityCast.Reset();
 
+            multiplayer.Initialize();
             localData.Initialize();
             
             uiNavigation.Initialize();
@@ -73,6 +77,11 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(2f);
         yield return screenFade.FadeOut();
         sceneNavigation.Initialize();
+    }
+
+    private void Update()
+    {
+        multiplayer.DoUpdate();
     }
 
     private void ItemInventory_OnInventoryUpdated()

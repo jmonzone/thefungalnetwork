@@ -12,16 +12,26 @@ public class BackgroundMusicPlayer : MonoBehaviour
 
     private void Awake()
     {
-        backgroundMusicDelegate.OnMusicRequested += audioClip =>
-        {
-            if (audioSource.clip == audioClip) return;
-            StopAllCoroutines();
-            StartCoroutine(TransitionMusic(audioClip));
-        };
-
         audioSource = GetComponent<AudioSource>();
         audioSource.volume = 0;
         StartCoroutine(FadeVolume(1f));
+    }
+
+    private void OnEnable()
+    {
+        backgroundMusicDelegate.OnMusicRequested += BackgroundMusicDelegate_OnMusicRequested;
+    }
+
+    private void BackgroundMusicDelegate_OnMusicRequested(AudioClip audioClip)
+    {
+        if (audioSource.clip == audioClip) return;
+        StopAllCoroutines();
+        StartCoroutine(TransitionMusic(audioClip));
+    }
+
+    private void OnDisable()
+    {
+        backgroundMusicDelegate.OnMusicRequested -= BackgroundMusicDelegate_OnMusicRequested;
     }
 
     private IEnumerator TransitionMusic(AudioClip audioClip)
