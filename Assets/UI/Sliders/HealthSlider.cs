@@ -3,19 +3,26 @@ using UnityEngine.UI;
 
 public class HealthSlider : MonoBehaviour
 {
+    private Slider slider;
+    private Attackable attackable;
+
     private void Awake()
     {
-        var slider = GetComponentInChildren<Slider>(includeInactive: true);
-        var attackable = GetComponentInParent<Attackable>();
+        slider = GetComponentInChildren<Slider>(includeInactive: true);
+        attackable = GetComponentInParent<Attackable>();
 
-        attackable.OnHealthChanged += () =>
-        {
-            slider.value = attackable.CurrentHealth;
-            slider.gameObject.SetActive(attackable.CurrentHealth != attackable.MaxHealth && attackable.CurrentHealth != 0);
-        };
 
         slider.maxValue = attackable.MaxHealth;
         slider.minValue = 0;
         slider.value = attackable.CurrentHealth;
+
+        attackable.OnHealthChanged += UpdateView;
+        UpdateView();
+    }
+
+    private void UpdateView()
+    {
+        slider.value = attackable.CurrentHealth;
+        slider.gameObject.SetActive(attackable.CurrentHealth != attackable.MaxHealth && attackable.CurrentHealth != 0);
     }
 }
