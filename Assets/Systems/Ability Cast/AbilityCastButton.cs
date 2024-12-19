@@ -121,7 +121,7 @@ public class AbilityCastButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
         Vector3 rotatedDragDirection = cameraRotation * dragDirection.normalized;
 
         // Update the ability cast with the rotated direction
-        abilityCast.UpdateCast(rotatedDragDirection);
+        abilityCast.SetDirection(rotatedDragDirection);
     }
 
     void IEndDragHandler.OnEndDrag(PointerEventData eventData)

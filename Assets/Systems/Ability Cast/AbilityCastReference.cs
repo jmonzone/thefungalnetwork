@@ -28,6 +28,7 @@ public class AbilityCastReference : ScriptableObject
     public void Reset()
     {
         shrune = null;
+        target = null;
     }
 
     public void SetShrune(ShruneItem shrune)
@@ -58,7 +59,7 @@ public class AbilityCastReference : ScriptableObject
         OnUpdate?.Invoke();
     }
 
-    public void UpdateCast(Vector3 direction)
+    public void SetDirection(Vector3 direction)
     {
         Direction = direction;
         OnUpdate?.Invoke();

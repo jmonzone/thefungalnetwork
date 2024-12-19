@@ -38,49 +38,27 @@ public class NetworkCrocodile : NetworkBehaviour
     private void OnAbilityStart()
     {
         Debug.Log("on ability Start");
-        var targetClientId = abilityCast.Target.GetComponent<NetworkObject>();
-        OnAbilityStartClientRpc(NetworkManager.Singleton.LocalClientId, targetClientId.NetworkObjectId);
+        OnAbilityStartClientRpc(NetworkManager.Singleton.LocalClientId,abilityCast.Direction);
     }
 
-
-    //todo: handle in AbilityCast 
-    private bool isCasting = false;
-
     [ClientRpc]
-    private void OnAbilityStartClientRpc(ulong clientId, ulong networkObjectId)
+    private void OnAbilityStartClientRpc(ulong clientId, Vector3 direction)
     {
         if (NetworkManager.Singleton.LocalClientId == clientId) return;
         
             Debug.Log("on ability Start client RPC");
 
-        // Retrieve the spawned object on the client using the NetworkObjectId
-        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out var networkObject))
-        {
-            // Apply the rotated direction to the projectile
-            //todo: remove third param
-            abilityCast.StartCast(transform, networkObject.transform, attackable => true);
-            isCasting = true;
-        }
-        else
-        {
-            Debug.LogError("Failed to find the spawned object on the client.");
-        }
+        //todo: remove second param
+        abilityCast.StartCast(transform, attackable => true);
+        abilityCast.SetDirection(direction);
     }
-
-    private void Update()
-    {
-        if (isCasting)
-        {
-            abilityCast.UpdateCast();
-        }
-    }
-
 
     private void OnAbilityCast()
     {
         //todo: centralize logic with AbilityCastController
         OnAbilityCastClientRpc(NetworkManager.Singleton.LocalClientId);
     }
+
 
     [ClientRpc]
     private void OnAbilityCastClientRpc(ulong clientId)
@@ -90,8 +68,5 @@ public class NetworkCrocodile : NetworkBehaviour
         Debug.Log("on ability Start client RPC");
 
         abilityCast.Cast();
-
-        //todo: handle in abilityCast on cast()
-        isCasting = false;
     }
 }

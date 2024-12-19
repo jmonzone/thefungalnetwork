@@ -38,7 +38,7 @@ public class AbilityCastIndicator : MonoBehaviour
         // todo: handle between targeted ability and directional ability
         var position2 = abilityCast.StartPosition + abilityCast.Direction * abilityCast.MaxDistance;
         if (abilityCast.Target) position2 = abilityCast.Target.position;
-        position2.y += 0.1f;
+        position2.y = position1.y;
 
         lineRenderer.SetPositions(new Vector3[]
         {

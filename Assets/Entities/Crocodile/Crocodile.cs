@@ -63,20 +63,12 @@ public class Crocodile : MonoBehaviour
 
     private IEnumerator AimAttack()
     {
-        abilityCast.StartCast(transform, target.Movement.transform, attackable => true);
+        abilityCast.StartCast(transform, attackable => true);
+        direction = target.Movement.transform.position - transform.position;
+        direction.y = 0;
+        abilityCast.SetDirection(direction.normalized);
 
-        var elapsedTime = 0f;
-        while (elapsedTime < 2)
-        {
-            direction = target.Movement.transform.position - transform.position;
-            direction.y = 0;
-            abilityCast.UpdateCast(direction.normalized);
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
-
-        // give the player a chance to react
-        yield return new WaitForSeconds(0.75f);
+        yield return new WaitForSeconds(1.5f);
 
         abilityCast.Cast();
         GetComponentInChildren<Animator>().Play("Attack");
@@ -87,14 +79,7 @@ public class Crocodile : MonoBehaviour
         isAttacking = true;
         yield return new WaitUntil(() => movementController.IsAtDestination);
         isAttacking = false;
-        movementController.SetSpeed(chargeSpeed * 0.75f);
-        movementController.SetPosition(startPosition);
-
-        yield return new WaitUntil(() => movementController.IsAtDestination);
         movementController.Stop();
-
-        transform.position = startPosition;
-        transform.forward = Vector3.back;
         hitTimer = 0;
     }
 
