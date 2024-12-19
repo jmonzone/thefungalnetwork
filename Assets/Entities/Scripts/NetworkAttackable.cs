@@ -1,3 +1,4 @@
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -30,15 +31,14 @@ public class NetworkAttackable : NetworkBehaviour
 
         attackable.OnDamaged += () =>
         {
-            SyncHealthServerRpc(attackable.CurrentHealth);
+            SyncHealthToOthersClientRpc(NetworkManager.Singleton.LocalClientId);
         };
-
-        
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    public void SyncHealthServerRpc(float health)
+    [ClientRpc]
+    public void SyncHealthToOthersClientRpc(ulong clientId)
     {
-        CurrentHealth.Value = health;
+        if (NetworkManager.Singleton.LocalClientId == clientId) return;
+        attackable.Damage();
     }
 }

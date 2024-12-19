@@ -47,22 +47,15 @@ public class AbilityCastReference : ScriptableObject
     }
 
     //todo: parameters should be optional and dependent on the ability type
-    public void StartCast(Transform origin, Transform target, Func<Attackable, bool> isValidTarget)
+    public void StartCast(Transform origin, Vector3 direction, Func<Attackable, bool> isValidTarget)
     {
-        this.target = target;
+        Direction = direction;
         StartCast(origin, isValidTarget);
-    }
-
-    //todo: create aimed ability vs targeted ability
-    public void UpdateCast()
-    {
-        OnUpdate?.Invoke();
     }
 
     public void SetDirection(Vector3 direction)
     {
         Direction = direction;
-        OnUpdate?.Invoke();
     }
 
     public void Cast()

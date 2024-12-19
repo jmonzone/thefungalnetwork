@@ -42,6 +42,4 @@ public class Attackable : MonoBehaviour
             OnDamaged?.Invoke();
         }
     }
-
-
 }

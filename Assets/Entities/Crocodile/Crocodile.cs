@@ -64,10 +64,10 @@ public class Crocodile : MonoBehaviour
 
     private IEnumerator AimAttack()
     {
-        abilityCast.StartCast(transform, attackable => true);
+
         direction = target.Movement.transform.position - transform.position;
         direction.y = 0;
-        abilityCast.SetDirection(direction.normalized);
+        abilityCast.StartCast(transform, direction.normalized, attackable => true);
 
         yield return new WaitForSeconds(1.5f);
 

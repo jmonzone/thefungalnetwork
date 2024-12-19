@@ -39,13 +39,15 @@ public class GameManager : MonoBehaviour
             // or else there is unexpeted behaviour
             abilityCast.Reset();
 
-            multiplayer.Initialize();
             localData.Initialize();
             
             uiNavigation.Initialize();
 
             tutorial.Initialize();
             displayName.Initialize();
+
+            // displayName needs to be initalized before multiplayer;
+            multiplayer.Initialize();
 
             itemInventory.Initialize();
             fungalInventory.Initialize();

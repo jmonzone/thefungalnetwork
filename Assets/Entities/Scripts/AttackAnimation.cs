@@ -32,7 +32,7 @@ public class AttackAnimation : MonoBehaviour
         var movementController = GetComponent<MovementController>();
         var materialFlasher = GetComponent<MaterialFlasher>();
 
-        attackable.OnHealthChanged += () =>
+        attackable.OnDamaged += () =>
         {
             if (attackable.CurrentHealth <= 0)
             {

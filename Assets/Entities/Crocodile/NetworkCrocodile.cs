@@ -38,7 +38,7 @@ public class NetworkCrocodile : NetworkBehaviour
     private void OnAbilityStart()
     {
         Debug.Log("on ability Start");
-        OnAbilityStartClientRpc(NetworkManager.Singleton.LocalClientId,abilityCast.Direction);
+        OnAbilityStartClientRpc(NetworkManager.Singleton.LocalClientId, abilityCast.Direction);
     }
 
     [ClientRpc]
@@ -49,8 +49,7 @@ public class NetworkCrocodile : NetworkBehaviour
             Debug.Log("on ability Start client RPC");
 
         //todo: remove second param
-        abilityCast.StartCast(transform, attackable => true);
-        abilityCast.SetDirection(direction);
+        abilityCast.StartCast(transform, direction, attackable => true);
     }
 
     private void OnAbilityCast()

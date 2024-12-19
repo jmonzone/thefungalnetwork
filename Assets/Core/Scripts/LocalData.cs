@@ -16,6 +16,7 @@ public class LocalData : ScriptableObject
     public void Initialize()
     {
         saveDataPath = $"{Application.persistentDataPath}/data.json";
+        if (Application.isEditor) saveDataPath = $"{Application.persistentDataPath}/data-editor.json";
 
         if (Application.isEditor && resetDataOnAwake) ResetData();
 
