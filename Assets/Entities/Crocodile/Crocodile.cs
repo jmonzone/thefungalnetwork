@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Crocodile : MonoBehaviour
@@ -45,7 +46,6 @@ public class Crocodile : MonoBehaviour
 
     private IEnumerator AttackTimer()
     {
-        yield return new WaitUntil(() => arena.Players.Count > 0);
 
         do
         {
@@ -63,7 +63,11 @@ public class Crocodile : MonoBehaviour
 
     private IEnumerator AimAttack()
     {
-        var target = arena.Players[Random.Range(0, arena.Players.Count)];
+        yield return new WaitUntil(() => arena.Players.Count > 0);
+
+        var target = arena.Players
+            .OrderBy(player => Vector3.Distance(player.transform.position, transform.position))
+            .FirstOrDefault();
 
         direction = target.position - transform.position;
         direction.y = 0;
