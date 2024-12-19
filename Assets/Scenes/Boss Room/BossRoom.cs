@@ -11,10 +11,20 @@ public class BossRoom : MonoBehaviour
     [SerializeField] private TextMeshProUGUI resultHeader;
     [SerializeField] private Color winResultColor;
     [SerializeField] private Color loseResultColor;
+    [SerializeField] private ShruneItem defaultShrune;
+    [SerializeField] private ItemInventory itemInventory;
 
     private void Awake()
     {
         boss.OnHealthDepleted += OnBossDeath;
+    }
+
+    private void Start()
+    {
+        if (itemInventory.GetItemCount(defaultShrune) == 0)
+        {
+            itemInventory.AddToInventory(defaultShrune, 1);
+        }
     }
 
     private void OnEnable()

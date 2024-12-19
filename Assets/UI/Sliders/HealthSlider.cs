@@ -17,6 +17,10 @@ public class HealthSlider : MonoBehaviour
         slider.value = attackable.CurrentHealth;
 
         attackable.OnHealthChanged += UpdateView;
+    }
+
+    private void Start()
+    {
         UpdateView();
     }
 
