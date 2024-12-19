@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Crocodile : MonoBehaviour
@@ -79,11 +80,14 @@ public class Crocodile : MonoBehaviour
         isAttacking = true;
         yield return new WaitUntil(() => movementController.IsAtDestination);
         isAttacking = false;
+        attackables = new List<Attackable>();
         movementController.Stop();
         hitTimer = 0;
     }
 
     private bool isAttacking = false;
+
+    private List<Attackable> attackables = new List<Attackable>();
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -91,10 +95,11 @@ public class Crocodile : MonoBehaviour
 
         Debug.Log("onTriggerEnter");
         var attackable = collision.transform.GetComponentInParent<Attackable>();
-        if (attackable)
+        if (attackable && !attackables.Contains(attackable))
         {
             Debug.Log($"Collided {collision.transform.name}");
             attackable.Damage();
+            attackables.Add(attackable);
         }
     }
 }
