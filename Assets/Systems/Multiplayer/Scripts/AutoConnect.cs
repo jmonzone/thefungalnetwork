@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Threading.Tasks;
+using Unity.Netcode;
+using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 
-public class AutoConnect : MonoBehaviour
+public class AutoConnect : NetworkBehaviour
 {
     [SerializeField] private MultiplayerArena arena;
     [SerializeField] private MultiplayerManager multiplayer;
@@ -13,6 +15,28 @@ public class AutoConnect : MonoBehaviour
     private void Awake()
     {
         arena.Initialize(playerSpawnAnchor.position, crocodileSpawnAnchor.position);
+    }
+
+    private void OnEnable()
+    {
+        multiplayer.OnRelayDisconnect += Multiplayer_OnRelayDisconnect;
+    }
+
+    private void OnDisable()
+    {
+        multiplayer.OnRelayDisconnect -= Multiplayer_OnRelayDisconnect;
+    }
+
+    private void Multiplayer_OnRelayDisconnect()
+    {
+        NotifyClientsDisconnectClientRpc();
+    }
+
+    // RPC method to notify other clients about disconnection
+    [ClientRpc]
+    public void NotifyClientsDisconnectClientRpc()
+    {
+        multiplayer.DisconnectFromRelay();
     }
 
     private IEnumerator Start()

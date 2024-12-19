@@ -20,6 +20,13 @@ public class Navigation : ScriptableObject
     {
         currentView = null;
         history = new Stack<ViewReference>();
+
+        foreach (var view in views)
+        {
+            view.OnHidden -= View_OnHidden;
+        }
+
+        views = new List<ViewReference>();
     }
 
     public void Initialize()
@@ -29,21 +36,25 @@ public class Navigation : ScriptableObject
         {
             if (currentView) currentView.RequestHide();
         };
+    }
 
-        foreach (var view in views)
-        {
-            RegisterView(view);
-        }
+    public void InitalizeHistory(IEnumerable<ViewReference> initalViews)
+    {
+        history = new Stack<ViewReference>(initalViews);
     }
 
     public void RegisterView(ViewReference view)
     {
-        view.OnHidden += () =>
-        {
-            if (currentView) currentView.Show();
-            OnNavigated?.Invoke();
-        };
+        view.OnHidden += View_OnHidden;
+        views.Add(view);
     }
+
+    private void View_OnHidden()
+    {
+        if (currentView) currentView.Show();
+        OnNavigated?.Invoke();
+    }
+
 
     public void Navigate(ViewReference view)
     {
@@ -74,6 +85,7 @@ public class Navigation : ScriptableObject
 
     public void GoBack()
     {
+        Debug.Log("going back");
         if (history.Count > 1)
         {
             history.Pop();

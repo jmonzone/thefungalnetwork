@@ -36,7 +36,9 @@ public class MainMenuHome : MonoBehaviour
 
         viewController.OnFadeOutComplete += () =>
         {
+            Debug.Log("deleting");
             if (currentFungal) Destroy(currentFungal);
+            currentFungal = null;
         };
 
         partyButton.onClick.AddListener(() =>

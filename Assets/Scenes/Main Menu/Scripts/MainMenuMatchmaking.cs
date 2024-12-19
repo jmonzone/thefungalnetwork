@@ -13,6 +13,7 @@ public class MainMenuMatchmaking : MonoBehaviour
 
     [SerializeField] private Button createPartyButton;
     [SerializeField] private ListUI lobbyListUI;
+    [SerializeField] private Button exitButton;
 
     private void Awake()
     {
@@ -21,6 +22,18 @@ public class MainMenuMatchmaking : MonoBehaviour
             await multiplayer.CreateLobby();
             navigation.Navigate(partyPrepareView);
         });
+
+        exitButton.onClick.AddListener(() =>
+        {
+            enabled = false;
+            //await multiplayer.LeaveLobby();
+            navigation.GoBack();
+        });
+
+        GetComponent<ViewController>().OnFadeInStart += () =>
+        {
+            enabled = true;
+        };
     }
 
     private float updateTimer = 0f;

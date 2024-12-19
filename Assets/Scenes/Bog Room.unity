@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.07189962, g: 0.039581355, b: 0.08685275, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -969,7 +969,6 @@ GameObject:
   - component: {fileID: 212457552}
   - component: {fileID: 212457551}
   - component: {fileID: 212457550}
-  - component: {fileID: 212457553}
   - component: {fileID: 212457554}
   m_Layer: 0
   m_Name: Network Manager
@@ -1058,18 +1057,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &212457553
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 212457549}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9d67b8d0abbb2448ebffa1f7366472fe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &212457554
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1083,7 +1070,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   arena: {fileID: 11400000, guid: 24582879ca0914ce48009bfa1a0c10ae, type: 2}
-  multiplayerManager: {fileID: 212457553}
+  multiplayer: {fileID: 11400000, guid: 408255eed57604ff491c1da858247ecd, type: 2}
   playerSpawnAnchor: {fileID: 1679776972}
   crocodileSpawnAnchor: {fileID: 137748903}
   displayName: {fileID: 11400000, guid: 70aa9925b762e422089c41437a664eeb, type: 2}
@@ -1118,17 +1105,17 @@ PrefabInstance:
     - target: {fileID: 1576384917746520769, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.28651923
+      value: 0.2865192
       objectReference: {fileID: 0}
     - target: {fileID: 1576384917746520769, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.37700385
+      value: 0.37700388
       objectReference: {fileID: 0}
     - target: {fileID: 1576384917746520769, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.12387101
+      value: -0.123871
       objectReference: {fileID: 0}
     - target: {fileID: 3170229602314632740, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
         type: 3}
@@ -1538,7 +1525,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &318523856
@@ -12632,12 +12619,12 @@ PrefabInstance:
     - target: {fileID: 2612740834622465615, guid: 44cfcdf81f0074e5b844e37940278904,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.31211266
+      value: 0.3121126
       objectReference: {fileID: 0}
     - target: {fileID: 2612740834622465615, guid: 44cfcdf81f0074e5b844e37940278904,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.014595926
+      value: 0.014595956
       objectReference: {fileID: 0}
     - target: {fileID: 2612740834622465615, guid: 44cfcdf81f0074e5b844e37940278904,
         type: 3}
@@ -19688,7 +19675,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a61f02b2996643f4bf1d764c46b3b69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  multiplayerManager: {fileID: 212457553}
+  multiplayer: {fileID: 0}
   button: {fileID: 7154940921552157277}
   sceneNavigation: {fileID: 11400000, guid: 5c885c9a984a3470684bef7e76ca5c2a, type: 2}
 --- !u!224 &7154940921552157279 stripped

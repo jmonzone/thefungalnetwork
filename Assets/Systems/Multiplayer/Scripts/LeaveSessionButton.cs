@@ -10,11 +10,24 @@ public class LeaveSessionButton : MonoBehaviour
 
     private void Awake()
     {
-        button.onClick.AddListener(async() =>
+        button.onClick.AddListener(() =>
         {
-            multiplayer.DisconnectFromRelay();
-            await multiplayer.RemoveRelayFromLobbyData();
-            sceneNavigation.NavigateToScene(0);
+            multiplayer.RequestDisconnect();
         });
+    }
+
+    private void OnEnable()
+    {
+        multiplayer.OnRelayDisconnect += Multiplayer_OnRelayDisconnect;
+    }
+
+    private void OnDisable()
+    {
+        multiplayer.OnRelayDisconnect -= Multiplayer_OnRelayDisconnect;
+    }
+
+    private void Multiplayer_OnRelayDisconnect()
+    {
+        sceneNavigation.NavigateToScene(0);
     }
 }

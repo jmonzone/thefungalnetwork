@@ -11,7 +11,7 @@ public class MaterialFlasher : MonoBehaviour
     private Renderer[] renderers;
     private Coroutine coroutine;
 
-    private void Start()
+    private void Awake()
     {
         renderers = GetComponentsInChildren<Renderer>();
 

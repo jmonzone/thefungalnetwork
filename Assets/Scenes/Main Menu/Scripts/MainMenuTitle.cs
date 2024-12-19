@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MainMenuTitle : MonoBehaviour
@@ -41,7 +42,14 @@ public class MainMenuTitle : MonoBehaviour
     private void ShowInitialUI()
     {
         var targetUI = titleViewReference;
-        if (multiplayer.JoinedLobby != null) targetUI = partyViewReference;
+        if (multiplayer.JoinedLobby != null)
+        {
+            targetUI = partyViewReference;
+            navigation.InitalizeHistory(new List<ViewReference>
+            {
+                titleViewReference, mainMenuViewReference, matchmakingViewReference
+            });
+        }
         navigation.Navigate(targetUI);
     }
 

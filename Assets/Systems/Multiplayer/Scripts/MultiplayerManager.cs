@@ -387,7 +387,7 @@ public class MultiplayerManager : ScriptableObject
             QueryResponse lobbies = await LobbyService.Instance.QueryLobbiesAsync(options);
 
             // Display found lobbies
-            Debug.Log("Available Lobbies:");
+            //Debug.Log("Available Lobbies:");
             foreach (Lobby lobby in lobbies.Results)
             {
                 Debug.Log($"Lobby: {lobby.Id}, Players: {lobby.Players.Count}/{lobby.MaxPlayers}");
@@ -422,12 +422,23 @@ public class MultiplayerManager : ScriptableObject
         }
     }
 
+    public event UnityAction OnRelayDisconnectRequest;
+    public event UnityAction OnRelayDisconnect;
+
     //// Separate method to disconnect from the relay server
-    public void DisconnectFromRelay()
+    public void RequestDisconnect()
+    {
+        OnRelayDisconnect?.Invoke();
+    }
+
+    public async void DisconnectFromRelay()
     {
         NetworkManager.Singleton.GetComponent<UnityTransport>().DisconnectLocalClient();
         NetworkManager.Singleton.Shutdown();
+        await RemoveRelayFromLobbyData();
+        OnRelayDisconnect?.Invoke();
     }
+
 
     private Player player;
 
