@@ -16,6 +16,7 @@ using UnityEngine.Events;
 public class MultiplayerManager : ScriptableObject
 {
     [SerializeField] private DisplayName displayName;
+    [SerializeField] private SceneNavigation sceneNavigation;
 
     public string PlayerName { get; private set; }
 
@@ -422,23 +423,14 @@ public class MultiplayerManager : ScriptableObject
         }
     }
 
-    public event UnityAction OnRelayDisconnectRequest;
-    public event UnityAction OnRelayDisconnect;
-
-    //// Separate method to disconnect from the relay server
-    public void RequestDisconnect()
-    {
-        OnRelayDisconnect?.Invoke();
-    }
-
     public async void DisconnectFromRelay()
     {
+        if (IsHost) await RemoveRelayFromLobbyData();
+
         NetworkManager.Singleton.GetComponent<UnityTransport>().DisconnectLocalClient();
         NetworkManager.Singleton.Shutdown();
-        await RemoveRelayFromLobbyData();
-        OnRelayDisconnect?.Invoke();
+        sceneNavigation.NavigateToScene(0);
     }
-
 
     private Player player;
 

@@ -32,6 +32,7 @@ public class MainMenuPartyPrepare : MonoBehaviour
 
     private void OnEnable()
     {
+        MultiplayerManager_OnLobbyJoined();
         multiplayer.OnLobbyPoll += MultiplayerManager_OnLobbyPoll;
         multiplayer.OnLobbyJoined += MultiplayerManager_OnLobbyJoined;
     }

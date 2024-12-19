@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AutoConnect : NetworkBehaviour
 {
@@ -11,24 +12,23 @@ public class AutoConnect : NetworkBehaviour
     [SerializeField] private Transform playerSpawnAnchor;
     [SerializeField] private Transform crocodileSpawnAnchor;
     [SerializeField] private DisplayName displayName;
+    [SerializeField] private Button exitButton;
 
     private void Awake()
     {
         arena.Initialize(playerSpawnAnchor.position, crocodileSpawnAnchor.position);
+
+        exitButton.onClick.AddListener(() =>
+        {
+            Debug.Log("Disconnected");
+            NotifyClientsDisconnectServerRpc();
+        });
     }
 
-    private void OnEnable()
+    [ServerRpc(RequireOwnership=false)]
+    public void NotifyClientsDisconnectServerRpc()
     {
-        multiplayer.OnRelayDisconnect += Multiplayer_OnRelayDisconnect;
-    }
-
-    private void OnDisable()
-    {
-        multiplayer.OnRelayDisconnect -= Multiplayer_OnRelayDisconnect;
-    }
-
-    private void Multiplayer_OnRelayDisconnect()
-    {
+        Debug.Log("AutoConnect NotifyClientsDisconnectServerRpc");
         NotifyClientsDisconnectClientRpc();
     }
 
@@ -36,6 +36,7 @@ public class AutoConnect : NetworkBehaviour
     [ClientRpc]
     public void NotifyClientsDisconnectClientRpc()
     {
+        Debug.Log("AutoConnect NotifyClientsDisconnectClientRpc");
         multiplayer.DisconnectFromRelay();
     }
 
