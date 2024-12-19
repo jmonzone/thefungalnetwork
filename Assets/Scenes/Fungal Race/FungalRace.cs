@@ -35,19 +35,10 @@ public class FungalRace : MonoBehaviour
             };
         }
 
-        fungalRaceUI.OnAuraTypeChanged += () =>
+        fungalRaceUI.OnAuraChanged += () =>
         {
             attackCooldown = Mathf.Lerp(maxCooldown, minCooldown, fungalRaceUI.AuraValue);
             attackTimer = attackCooldown;
-        };
-
-        fungalRaceUI.OnBurstButtonClicked += () =>
-        {
-            if (currentObstacle)
-            {
-                currentObstacle.Damage(15f);
-                attackTimer = attackCooldown;
-            }
         };
     }
 

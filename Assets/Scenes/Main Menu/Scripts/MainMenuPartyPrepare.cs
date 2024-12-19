@@ -18,9 +18,9 @@ public class MainMenuPartyPrepare : MonoBehaviour
     {
         playerListAnchor.GetComponentsInChildren(true, playerList);
 
-        startButton.onClick.AddListener(async () =>
+        startButton.onClick.AddListener(() =>
         {
-            sceneNavigation.NavigateToScene(5);
+            sceneNavigation.NavigateToScene(4);
         });
 
         exitButton.onClick.AddListener(async () =>
@@ -33,11 +33,13 @@ public class MainMenuPartyPrepare : MonoBehaviour
     private void OnEnable()
     {
         multiplayerManager.OnLobbyPoll += MultiplayerManager_OnLobbyPoll;
+        multiplayerManager.OnLobbyJoined += MultiplayerManager_OnLobbyJoined;
     }
 
     private void OnDisable()
     {
         multiplayerManager.OnLobbyPoll -= MultiplayerManager_OnLobbyPoll;
+        multiplayerManager.OnLobbyJoined -= MultiplayerManager_OnLobbyJoined;
     }
 
     private void MultiplayerManager_OnLobbyPoll()
@@ -53,5 +55,19 @@ public class MainMenuPartyPrepare : MonoBehaviour
         {
             playerList[i].gameObject.SetActive(false);
         }
+
+        if (!joining && MultiplayerManager.Instance.JoinedLobby.Data.ContainsKey("JoinCode"))
+        {
+            Debug.Log("joining");
+            sceneNavigation.NavigateToScene(4);
+            joining = true;
+        }
+    }
+
+    private bool joining = false;
+
+    private void MultiplayerManager_OnLobbyJoined()
+    {
+        startButton.gameObject.SetActive(MultiplayerManager.Instance.IsHost);
     }
 }

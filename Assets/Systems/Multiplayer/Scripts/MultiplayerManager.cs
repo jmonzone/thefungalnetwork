@@ -38,7 +38,9 @@ public class MultiplayerManager : MonoBehaviour
 
     private Lobby hostLobby;
 
-    private bool joinedRelay;
+    public bool JoinedRelay { get; private set; }
+
+    public bool IsHost => JoinedLobby != null && JoinedLobby.HostId == AuthenticationService.Instance.PlayerId;
 
     private float heartbeatTimer;
     private float lobbyUpdateTimer;
@@ -86,12 +88,6 @@ public class MultiplayerManager : MonoBehaviour
             Lobby lobby = await LobbyService.Instance.GetLobbyAsync(JoinedLobby.Id);
             JoinedLobby = lobby;
             OnLobbyPoll?.Invoke();
-
-            if (!joinedRelay && JoinedLobby.Data.ContainsKey("JoinCode"))
-            {
-                JoinRelay(JoinedLobby.Data["JoinCode"].Value);
-                joinedRelay = true;
-            }
         }
     }
 
@@ -147,9 +143,15 @@ public class MultiplayerManager : MonoBehaviour
 
             };
 
-            joinedRelay = true;
+            JoinedRelay = true;
 
-            if (JoinedLobby != null) JoinedLobby.Data.Add("JoinCode", new DataObject(DataObject.VisibilityOptions.Member, joinCode));
+            await LobbyService.Instance.UpdateLobbyAsync(JoinedLobby.Id, new UpdateLobbyOptions
+            {
+                Data = new Dictionary<string, DataObject>
+            {
+                { "JoinCode", new DataObject(DataObject.VisibilityOptions.Member, joinCode) }
+            }
+            });
 
             return joinCode;
 
@@ -162,7 +164,7 @@ public class MultiplayerManager : MonoBehaviour
 
     }
 
-    private async void JoinRelay(string joinCode)
+    public async void JoinRelay(string joinCode)
     {
         try
         {
@@ -183,6 +185,8 @@ public class MultiplayerManager : MonoBehaviour
                 }
                 });
             };
+
+            JoinedRelay = true;
         }
         catch (RelayServiceException e)
         {
@@ -323,6 +327,8 @@ public class MultiplayerManager : MonoBehaviour
             // Join the lobby using its ID
             Lobby lobby = await LobbyService.Instance.JoinLobbyByIdAsync(lobbyId, joinLobbyByIdOptions);
             JoinedLobby = lobby;
+
+            OnLobbyJoined?.Invoke();
 
             // Confirm that the lobby has been joined
             Debug.Log($"Successfully joined lobby with ID: {lobby.Id}");

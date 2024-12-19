@@ -63,8 +63,8 @@ public class NetworkPlayer : NetworkBehaviour
                 }
 
 
-                var spawnedCrocodile = Instantiate(networkCrocdilePrefab, arena.CrocodileSpawnPosition, Quaternion.LookRotation(Vector3.back), transform);
-                spawnedCrocodile.NetworkObject.Spawn();
+                //var spawnedCrocodile = Instantiate(networkCrocdilePrefab, arena.CrocodileSpawnPosition, Quaternion.LookRotation(Vector3.back), transform);
+                //spawnedCrocodile.NetworkObject.Spawn();
             }
             else
             {

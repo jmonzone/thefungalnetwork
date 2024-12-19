@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.Services.Authentication;
 using UnityEngine;
 
 public class AutoConnect : MonoBehaviour
@@ -18,7 +16,24 @@ public class AutoConnect : MonoBehaviour
 
     private void Start()
     {
-        multiplayerManager.SignIn(displayName.name, () => StartCoroutine(AutoJoinBogRoom()));
+        if (MultiplayerManager.Instance.JoinedLobby != null)
+        {
+            MultiplayerManager.Instance.CreateRelay();
+        }
+        else
+        {
+            multiplayerManager.SignIn(displayName.Value, () => StartCoroutine(AutoJoinBogRoom()));
+        }
+    }
+
+    private void Update()
+    {
+        if (!MultiplayerManager.Instance.JoinedRelay && MultiplayerManager.Instance.JoinedLobby.Data.ContainsKey("JoinCode"))
+        {
+            Debug.Log("joining");
+            var joinCode = MultiplayerManager.Instance.JoinedLobby.Data["JoinCode"].Value;
+            MultiplayerManager.Instance.JoinRelay(joinCode);
+        }
     }
 
     private IEnumerator AutoJoinBogRoom()
