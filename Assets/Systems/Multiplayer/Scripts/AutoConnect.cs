@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Threading.Tasks;
 using Unity.Netcode;
-using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,12 +16,21 @@ public class AutoConnect : NetworkBehaviour
     private void Awake()
     {
         arena.Initialize(playerSpawnAnchor.position, crocodileSpawnAnchor.position);
+    }
 
-        exitButton.onClick.AddListener(() =>
-        {
-            Debug.Log("Disconnected");
-            NotifyClientsDisconnectServerRpc();
-        });
+    private void OnEnable()
+    {
+        multiplayer.OnDisconnectRequested += Multiplayer_OnDisconnectRequested;
+    }
+
+    private void OnDisable()
+    {
+        multiplayer.OnDisconnectRequested -= Multiplayer_OnDisconnectRequested;
+    }
+
+    private void Multiplayer_OnDisconnectRequested()
+    {
+        NotifyClientsDisconnectServerRpc();
     }
 
     [ServerRpc(RequireOwnership=false)]

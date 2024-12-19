@@ -423,6 +423,13 @@ public class MultiplayerManager : ScriptableObject
         }
     }
 
+    public event UnityAction OnDisconnectRequested;
+
+    public void RequestDisconnect()
+    {
+        OnDisconnectRequested?.Invoke();
+    }
+
     public async void DisconnectFromRelay()
     {
         if (IsHost) await RemoveRelayFromLobbyData();
