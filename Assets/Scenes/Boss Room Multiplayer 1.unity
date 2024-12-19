@@ -123,6 +123,24 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &20044679 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3378909535676723913, guid: b2b7c6c51c07f4c5eba12d82d29b6109,
+    type: 3}
+  m_PrefabInstance: {fileID: 760427814}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 912c82f9007e044cd938c070a0a9fc89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &20044685 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8914839523378604882, guid: b2b7c6c51c07f4c5eba12d82d29b6109,
+    type: 3}
+  m_PrefabInstance: {fileID: 760427814}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &21715326
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -823,7 +841,7 @@ PrefabInstance:
     - target: {fileID: 1576384917746520769, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.87467146
+      value: 0.8746715
       objectReference: {fileID: 0}
     - target: {fileID: 1576384917746520769, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
         type: 3}
@@ -833,12 +851,12 @@ PrefabInstance:
     - target: {fileID: 1576384917746520769, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.36230078
+      value: 0.36230075
       objectReference: {fileID: 0}
     - target: {fileID: 1576384917746520769, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.12322644
+      value: -0.12322642
       objectReference: {fileID: 0}
     - target: {fileID: 1576384917746520769, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
         type: 3}
@@ -5510,22 +5528,22 @@ PrefabInstance:
     - target: {fileID: 2612740834622465615, guid: 44cfcdf81f0074e5b844e37940278904,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.9467376
+      value: 0.9467375
       objectReference: {fileID: 0}
     - target: {fileID: 2612740834622465615, guid: 44cfcdf81f0074e5b844e37940278904,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.32200626
+      value: 0.3220062
       objectReference: {fileID: 0}
     - target: {fileID: 2612740834622465615, guid: 44cfcdf81f0074e5b844e37940278904,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: -0.000000029802319
       objectReference: {fileID: 0}
     - target: {fileID: 2612740834622465615, guid: 44cfcdf81f0074e5b844e37940278904,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.000000007450581
+      value: 0.000000029802319
       objectReference: {fileID: 0}
     - target: {fileID: 3460427230498625851, guid: 44cfcdf81f0074e5b844e37940278904,
         type: 3}
@@ -5631,7 +5649,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerReference: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
-  boss: {fileID: 0}
+  boss: {fileID: 20044679}
   navigation: {fileID: 11400000, guid: 7af35f01730a846d692adda4734cddd3, type: 2}
   resultView: {fileID: 11400000, guid: 0d3498889a9f44a1aa5c3c36fe4e32fd, type: 2}
   resultHeader: {fileID: 607414690}
@@ -5688,7 +5706,7 @@ MonoBehaviour:
   arena: {fileID: 11400000, guid: 24582879ca0914ce48009bfa1a0c10ae, type: 2}
   multiplayer: {fileID: 11400000, guid: 408255eed57604ff491c1da858247ecd, type: 2}
   playerSpawnAnchor: {fileID: 616004600}
-  crocodileSpawnAnchor: {fileID: 0}
+  crocodileSpawnAnchor: {fileID: 20044685}
   displayName: {fileID: 11400000, guid: 70aa9925b762e422089c41437a664eeb, type: 2}
   exitButton: {fileID: 1510852529}
 --- !u!1 &1923781919

@@ -11,6 +11,7 @@ public class BossRoom : MonoBehaviour
     [SerializeField] private TextMeshProUGUI resultHeader;
     [SerializeField] private Color winResultColor;
     [SerializeField] private Color loseResultColor;
+
     private void Awake()
     {
         boss.OnHealthDepleted += OnBossDeath;
