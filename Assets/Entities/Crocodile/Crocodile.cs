@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class Crocodile : MonoBehaviour
 {
-    [SerializeField] private Controller target;
+    [SerializeField] private Controller controller;
+    [SerializeField] private MultiplayerArena arena;
     [SerializeField] private Vector3 direction;
     [SerializeField] private float hitCooldown = 3f;
     [SerializeField] private float hitTimer = 0;
@@ -13,34 +14,30 @@ public class Crocodile : MonoBehaviour
     [SerializeField] private float chargeDistance = 10f;
     [SerializeField] private SceneNavigation sceneNavigation;
 
-    private Vector3 startPosition;
     private MovementController movementController;
     private Attackable attackable;
-    private Coroutine attackCoroutine;
 
     private void OnEnable()
     {
         sceneNavigation.OnSceneNavigationRequest += StopAllCoroutines;
-        target.OnUpdate += Target_OnUpdate;
-        if (target.Movement) Target_OnUpdate();
+        Target_OnUpdate();
     }
 
     private void OnDisable()
     {
         sceneNavigation.OnSceneNavigationRequest -= StopAllCoroutines;
-        target.OnUpdate -= Target_OnUpdate;
+        controller.OnUpdate -= Target_OnUpdate;
     }
 
     private void Target_OnUpdate()
     {
         StopAllCoroutines();
-        attackCoroutine = StartCoroutine(AttackTimer());
+        StartCoroutine(AttackTimer());
     }
 
     // Start is called before the first frame update
     private void Awake()
     {
-        startPosition = transform.position;
         movementController = GetComponent<MovementController>();
         attackable = GetComponent<Attackable>();
         attackable.OnHealthDepleted += StopAllCoroutines;
@@ -48,6 +45,8 @@ public class Crocodile : MonoBehaviour
 
     private IEnumerator AttackTimer()
     {
+        yield return new WaitUntil(() => arena.Players.Count > 0);
+
         do
         {
             yield return new WaitUntil(() =>
@@ -59,13 +58,14 @@ public class Crocodile : MonoBehaviour
             yield return new WaitUntil(() => movementController.IsAtDestination);
             yield return AimAttack();
         }
-        while (attackable.CurrentHealth > 0 && target.Attackable.CurrentHealth > 0);
+        while (attackable.CurrentHealth > 0 && controller.Attackable.CurrentHealth > 0);
     }
 
     private IEnumerator AimAttack()
     {
+        var target = arena.Players[Random.Range(0, arena.Players.Count)];
 
-        direction = target.Movement.transform.position - transform.position;
+        direction = target.position - transform.position;
         direction.y = 0;
         abilityCast.StartCast(transform, direction.normalized, attackable => true);
 

@@ -169,7 +169,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
@@ -237,12 +237,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0584be89b59f0474eada4b2beab08ac4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
+  controller: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
+  arena: {fileID: 11400000, guid: 24582879ca0914ce48009bfa1a0c10ae, type: 2}
   direction: {x: 0, y: 0, z: 0}
   hitCooldown: 3
   hitTimer: 0
   abilityCast: {fileID: 11400000, guid: 47cdf05b101d649a79ac9aa9cb66416b, type: 2}
-  chargeSpeed: 17.5
+  chargeSpeed: 15
   chargeDistance: 7.5
   sceneNavigation: {fileID: 11400000, guid: 5c885c9a984a3470684bef7e76ca5c2a, type: 2}
 --- !u!114 &233472190970575125
@@ -5274,7 +5275,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3.5, y: 3.5, z: 3.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 3637078975206520970}
@@ -5449,7 +5450,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -5548,7 +5549,7 @@ PrefabInstance:
     - target: {fileID: 7251790514861874930, guid: 0441c366bee6740d1b59ba021e6d2854,
         type: 3}
       propertyPath: m_Parameters.widthMultiplier
-      value: 5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7251790514861874930, guid: 0441c366bee6740d1b59ba021e6d2854,
         type: 3}
@@ -5816,7 +5817,7 @@ PrefabInstance:
     - target: {fileID: 3581972095181777363, guid: 72ab144d5c0ff415aa11d3e80517f61c,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3581972095181777363, guid: 72ab144d5c0ff415aa11d3e80517f61c,
         type: 3}
