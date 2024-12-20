@@ -29,7 +29,7 @@ public class AbilityCastIndicator : MonoBehaviour
 
     private void Update()
     {
-        if (!lineRenderer.gameObject.activeSelf)
+        if (lineRenderer.gameObject.activeSelf)
         {
             UpdateIndicator();
         }
