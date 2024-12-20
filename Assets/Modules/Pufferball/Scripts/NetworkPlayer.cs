@@ -45,6 +45,7 @@ public class NetworkPlayer : NetworkBehaviour
                 {
                     var spawnedFungal = Instantiate(partner.Data.NetworkPrefab, arena.PlayerSpawnPosition, forwardRotation, transform);
                     spawnedFungal.NetworkObject.Spawn();
+                    spawnedFungal.InitializeClientRpc();
                     controller.SetMovement(spawnedFungal.GetComponent<MovementController>());
                 }
                 else
@@ -120,12 +121,12 @@ public class NetworkPlayer : NetworkBehaviour
         networkFungal.NetworkObject.SpawnWithOwnership(clientId);
 
         // Send the NetworkObject ID to the client
-        SendFungalInfoClientRpc(clientId, networkFungal.NetworkObjectId);
+        SendFungalInfoClientRpc(clientId, networkFungal.NetworkObjectId, fungalId);
     }
 
     //todo: consolidate with sendavatar info
     [ClientRpc]
-    private void SendFungalInfoClientRpc(ulong clientId, ulong networkObjectId)
+    private void SendFungalInfoClientRpc(ulong clientId, ulong networkObjectId, string fungalId)
     {
         // Retrieve the spawned object on the client using the NetworkObjectId
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out var networkObject))
@@ -135,6 +136,8 @@ public class NetworkPlayer : NetworkBehaviour
 
             if (NetworkManager.Singleton.LocalClientId == clientId)
             {
+                var fungal = fungalInventory.Fungals.Find(x => x.Data.Id == fungalId);
+                networkFungal.InitializeClientRpc();
                 controller.SetMovement(networkFungal.Movement);
             }
         }

@@ -10,12 +10,10 @@ public class NetworkFungal : NetworkBehaviour
     [SerializeField] private MovementController movement;
 
     public MovementController Movement => movement;
-    public FungalModel Fungal { get; private set; }
 
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-
 
         arena.RegisterPlayer(transform);
 
@@ -24,9 +22,12 @@ public class NetworkFungal : NetworkBehaviour
             var proximityAction = GetComponent<ProximityAction>();
             proximityAction.SetInteractable(false);
         }
+    }
 
-        // Subscribe to the value change event
-        Debug.Log("OnNetworkSpawn");
-
+    [ClientRpc]
+    public void InitializeClientRpc()
+    {
+        var fungalController = GetComponent<FungalController>();
+        fungalController.InitializeAnimations();
     }
 }

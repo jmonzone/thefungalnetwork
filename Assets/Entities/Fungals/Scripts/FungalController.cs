@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public enum FungalState
@@ -23,6 +24,8 @@ public class FungalController : MonoBehaviour
     public FungalModel Model { get; private set; }
     public GameObject Render { get; private set; }
     public MovementController Movement { get; private set; }
+
+    public event UnityAction OnInitialized;
 
     private void Awake()
     {
@@ -63,18 +66,24 @@ public class FungalController : MonoBehaviour
             Render = Instantiate(model.Data.Prefab, transform);
             Render.transform.localScale = Vector3.one;
 
-            var animator = Render.GetComponentInChildren<Animator>();
-            animator.speed = 0.25f;
-
             if (isGrove)
             {
-                Movement.OnJump += () => animator.Play("Jump");
                 Movement.SetMaxJumpCount(model.Data.Type == FungalType.SKY ? 2 : 1);
                 Movement.StartRandomMovement();
             }
 
-            var movementAnimations = GetComponentInChildren<MovementAnimations>();
-            movementAnimations.Initalize();
+            InitializeAnimations();
         }
+    }
+
+    public void InitializeAnimations()
+    {
+        var animator = GetComponentInChildren<Animator>();
+        animator.speed = 0.25f;
+
+        Movement.OnJump += () => animator.Play("Jump");
+
+        var movementAnimations = GetComponentInChildren<MovementAnimations>();
+        movementAnimations.Initalize();
     }
 }

@@ -18,22 +18,23 @@ public class Possession : ScriptableObject
     {
         var posessionName = localData.JsonFile[POSSESSION_KEY] ?? "";
         var posession = fungalInventory.Fungals.Find(fungal => fungal.Data.name == posessionName.ToString());
+        if (!posession && fungalInventory.Fungals.Count > 0) posession = fungalInventory.Fungals[0];
         this.fungal = posession;
 
-        controller.OnUpdate += () =>
-        {
-            //todo: centralize
-            var networkFungal = controller.Movement.GetComponent<NetworkFungal>();
-            if (networkFungal)
-            {
-                SetPossession(networkFungal.Fungal);
-            }
-            else
-            {
-                var fungalController = controller.Movement.GetComponent<FungalController>();
-                SetPossession(fungalController ? fungalController.Model : null);
-            }
-        };
+        //controller.OnUpdate += () =>
+        //{
+        //    //todo: centralize
+        //    var networkFungal = controller.Movement.GetComponent<NetworkFungal>();
+        //    if (networkFungal)
+        //    {
+        //        SetPossession(networkFungal.Fungal);
+        //    }
+        //    else
+        //    {
+        //        var fungalController = controller.Movement.GetComponent<FungalController>();
+        //        SetPossession(fungalController ? fungalController.Model : null);
+        //    }
+        //};
     }
 
     private void SetPossession(FungalModel fungal)
