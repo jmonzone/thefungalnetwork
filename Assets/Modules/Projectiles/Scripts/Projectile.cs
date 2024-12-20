@@ -41,7 +41,7 @@ public class Projectile : MonoBehaviour
                 if (attackable && isValidTarget != null && isValidTarget(attackable))
                 {
                     hitCount++;
-                    attackable.Damage();
+                    attackable.RequestDamage();
 
                     if (whispySpiralMotionCoroutine != null)
                     {

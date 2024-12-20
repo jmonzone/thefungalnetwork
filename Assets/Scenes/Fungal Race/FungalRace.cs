@@ -50,7 +50,7 @@ public class FungalRace : MonoBehaviour
             if (attackTimer <= 0)
             {
                 var damage = Mathf.Lerp(maxDamage, minDamage, fungalRaceUI.AuraValue);
-                currentObstacle.Damage(damage);
+                currentObstacle.RequestDamage(damage);
                 attackTimer = attackCooldown;
             }
         }

@@ -3,10 +3,14 @@ using Unity.Netcode;
 public class CrocodileInteractionSync : NetworkBehaviour
 {
     private CrocodileInteraction crocodileInteraction;
+    private CrocodileCharge crocodileCharge;
 
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
+
+        crocodileCharge = GetComponent<CrocodileCharge>();
+        crocodileCharge.enabled = IsOwner;
 
         crocodileInteraction = GetComponent<CrocodileInteraction>();
         crocodileInteraction.OnMounted += () =>
@@ -30,7 +34,11 @@ public class CrocodileInteractionSync : NetworkBehaviour
     [ClientRpc]
     public void SyncMountClientRpc(ulong clientId)
     {
-        if (NetworkManager.Singleton.LocalClientId == clientId) return;
+        if (NetworkManager.Singleton.LocalClientId == clientId)
+        {
+            crocodileCharge.enabled = true;
+            return;
+        }
         crocodileInteraction.SyncMount();
     }
 
@@ -44,7 +52,11 @@ public class CrocodileInteractionSync : NetworkBehaviour
     [ClientRpc]
     public void SyncUnmountClientRpc(ulong clientId)
     {
-        if (NetworkManager.Singleton.LocalClientId == clientId) return;
+        if (NetworkManager.Singleton.LocalClientId == clientId)
+        {
+            crocodileCharge.enabled = false;
+            return;
+        }
         crocodileInteraction.SyncUnmount();
     }
 }

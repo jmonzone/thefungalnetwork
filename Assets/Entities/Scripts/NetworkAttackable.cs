@@ -28,8 +28,10 @@ public class NetworkAttackable : NetworkBehaviour
             attackable.SetHealth(CurrentHealth.Value);
         }
 
-        attackable.OnDamaged += () =>
+        attackable.OnDamageRequest += () =>
         {
+            Debug.Log($"client damaged");
+
             SyncHealthToOthersClientRpc(NetworkManager.Singleton.LocalClientId);
         };
     }
@@ -38,6 +40,8 @@ public class NetworkAttackable : NetworkBehaviour
     public void SyncHealthToOthersClientRpc(ulong clientId)
     {
         if (NetworkManager.Singleton.LocalClientId == clientId) return;
-        attackable.Damage();
+        Debug.Log($"handling damaged");
+
+        attackable.HandleDamage();
     }
 }

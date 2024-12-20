@@ -21,6 +21,9 @@ public class NetworkCrocodile : NetworkBehaviour
         var ai = GetComponent<CrocodileAI>();
         ai.enabled = IsOwner;
 
+        var charge = GetComponent<CrocodileCharge>();
+        charge.enabled = IsOwner;
+
         if (IsOwner)
         {
             attack.enabled = true;
@@ -50,8 +53,8 @@ public class NetworkCrocodile : NetworkBehaviour
     private void OnAbilityStartClientRpc(ulong clientId, Vector3 direction)
     {
         if (NetworkManager.Singleton.LocalClientId == clientId) return;
-        
-            Debug.Log("on ability Start client RPC");
+
+        Debug.Log("on ability Start client RPC");
 
         //todo: remove second param
         abilityCast.SetDirection(direction);

@@ -15,9 +15,18 @@ public class CrocodileCharge : MonoBehaviour
     private void Awake()
     {
         abilityCast = GetComponent<AbilityCast>();
-        abilityCast.OnCastStart += ChargeAttack;
 
         movement = GetComponent<MovementController>();
+    }
+
+    private void OnEnable()
+    {
+        abilityCast.OnCastStart += ChargeAttack;
+    }
+
+    private void OnDisable()
+    {
+        abilityCast.OnCastStart -= ChargeAttack;
     }
 
     private void ChargeAttack()
@@ -52,7 +61,7 @@ public class CrocodileCharge : MonoBehaviour
         if (attackable && !attackables.Contains(attackable))
         {
             Debug.Log($"Collided {collision.transform.name}");
-            attackable.Damage();
+            attackable.RequestDamage();
             attackables.Add(attackable);
         }
     }

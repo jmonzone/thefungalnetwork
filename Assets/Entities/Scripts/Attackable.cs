@@ -9,6 +9,7 @@ public class Attackable : MonoBehaviour
     public float CurrentHealth => currentHealth;
     public float MaxHealth => maxHealth;
 
+    public event UnityAction OnDamageRequest;
     public event UnityAction OnDamaged;
     public event UnityAction OnHealthChanged;
     public event UnityAction OnHealthDepleted;
@@ -34,12 +35,25 @@ public class Attackable : MonoBehaviour
         }
     }
 
-    public void Damage(float damage = 1)
+    public void RequestDamage(float damage = 1)
+    {
+        if (HandleDamage())
+        {
+            OnDamageRequest?.Invoke();
+        }
+    }
+
+    public bool HandleDamage()
     {
         if (CurrentHealth > 0)
         {
-            SetHealth(currentHealth - damage);
+            SetHealth(currentHealth - 1);
             OnDamaged?.Invoke();
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }
