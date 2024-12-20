@@ -17,14 +17,14 @@ public class AbilityCastIndicator : MonoBehaviour
         HideIndicator();
         Debug.Log($"enable {abilityCast == null}");
 
-        abilityCast.OnStart += ShowIndicator;
-        abilityCast.OnCast += HideIndicator;
+        abilityCast.OnPrepare += ShowIndicator;
+        abilityCast.OnCastStart += HideIndicator;
     }
 
     private void OnDisable()
     {
-        abilityCast.OnStart -= ShowIndicator;
-        abilityCast.OnCast -= HideIndicator;
+        abilityCast.OnPrepare -= ShowIndicator;
+        abilityCast.OnCastStart -= HideIndicator;
     }
 
     private void Update()
@@ -45,7 +45,7 @@ public class AbilityCastIndicator : MonoBehaviour
         position1.y += 0.1f;
 
         // todo: handle between targeted ability and directional ability
-        var position2 = abilityCast.StartPosition + abilityCast.Direction * abilityCast.MaxDistance;
+        var position2 = abilityCast.StartPosition + abilityCast.Direction * abilityCast.Data.MaxDistance;
         position2.y = position1.y;
 
         lineRenderer.SetPositions(new Vector3[]

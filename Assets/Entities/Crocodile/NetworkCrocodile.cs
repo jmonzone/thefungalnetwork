@@ -3,12 +3,12 @@ using UnityEngine;
 
 public class NetworkCrocodile : NetworkBehaviour
 {
-    private Crocodile attack;
+    private CrocodileCharge attack;
     private AbilityCast abilityCast;
 
     private void Awake()
     {
-        attack = GetComponent<Crocodile>();
+        attack = GetComponent<CrocodileCharge>();
         attack.enabled = false;
 
         abilityCast = GetComponent<AbilityCast>();
@@ -21,8 +21,8 @@ public class NetworkCrocodile : NetworkBehaviour
         if (IsOwner)
         {
             attack.enabled = true;
-            abilityCast.OnStart += OnAbilityStart;
-            abilityCast.OnCast += OnAbilityCast;
+            abilityCast.OnPrepare += OnAbilityStart;
+            abilityCast.OnCastStart += OnAbilityCast;
         }
     }
 
@@ -32,8 +32,8 @@ public class NetworkCrocodile : NetworkBehaviour
 
         if (IsOwner)
         {
-            abilityCast.OnStart -= OnAbilityStart;
-            abilityCast.OnCast -= OnAbilityCast;
+            abilityCast.OnPrepare -= OnAbilityStart;
+            abilityCast.OnCastStart -= OnAbilityCast;
         }
     }
 
@@ -52,7 +52,7 @@ public class NetworkCrocodile : NetworkBehaviour
 
         //todo: remove second param
         abilityCast.SetDirection(direction);
-        abilityCast.StartCast();
+        abilityCast.Prepare();
     }
 
     private void OnAbilityCast()
@@ -69,6 +69,6 @@ public class NetworkCrocodile : NetworkBehaviour
 
         Debug.Log("on ability Start client RPC");
 
-        abilityCast.Cast();
+        abilityCast.StartCast();
     }
 }

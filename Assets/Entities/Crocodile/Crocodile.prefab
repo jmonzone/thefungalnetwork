@@ -115,10 +115,11 @@ GameObject:
   m_Component:
   - component: {fileID: 6228169022195851406}
   - component: {fileID: 4922996098477504940}
+  - component: {fileID: 2085717639669873938}
+  - component: {fileID: 2740891359218592500}
   - component: {fileID: 8503401167786087212}
   - component: {fileID: 6235786018507511907}
   - component: {fileID: 760468183822507038}
-  - component: {fileID: 4378440521616930295}
   - component: {fileID: 233472190970575125}
   - component: {fileID: 4469671233377470357}
   - component: {fileID: 8521286082058163821}
@@ -162,15 +163,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0584be89b59f0474eada4b2beab08ac4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controller: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
-  arena: {fileID: 11400000, guid: 24582879ca0914ce48009bfa1a0c10ae, type: 2}
-  direction: {x: 0, y: 0, z: 0}
-  hitCooldown: 3
-  hitTimer: 0
-  abilityCast: {fileID: 11400000, guid: 47cdf05b101d649a79ac9aa9cb66416b, type: 2}
   chargeSpeed: 15
   chargeDistance: 7.5
-  sceneNavigation: {fileID: 11400000, guid: 5c885c9a984a3470684bef7e76ca5c2a, type: 2}
+--- !u!114 &2085717639669873938
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4624336733102921167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f17279f63c3444462b51d1cc1f83e344, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  arena: {fileID: 11400000, guid: 24582879ca0914ce48009bfa1a0c10ae, type: 2}
+  hitCooldown: 3
+  hitTimer: 0
+--- !u!114 &2740891359218592500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4624336733102921167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe17f67262e904bd3863591609755da9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shrune: {fileID: 11400000, guid: 9d2ba073b1e894816aa99f775d4e6af5, type: 2}
+  maxDistance: 5
 --- !u!114 &8503401167786087212
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -224,18 +247,6 @@ MonoBehaviour:
   radius: 4
   radialSpeed: 0.25
   maxJumpCount: 1
---- !u!114 &4378440521616930295
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4624336733102921167}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c3dce7019f6f44278f5d9550cd00843, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &233472190970575125
 MonoBehaviour:
   m_ObjectHideFlags: 0

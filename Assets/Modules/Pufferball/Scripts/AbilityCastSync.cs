@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class AbilityCastSync : NetworkBehaviour
 {
-    [SerializeField] private ShruneCollection shruneCollection;
-
     private AbilityCast abilityCast;
     private Attackable attackable;
 
@@ -20,7 +18,7 @@ public class AbilityCastSync : NetworkBehaviour
 
         if (IsOwner)
         {
-            abilityCast.OnCast += OnAbilityCast;
+            abilityCast.OnCastStart += OnAbilityCast;
         }
     }
     public override void OnNetworkDespawn()
@@ -29,27 +27,24 @@ public class AbilityCastSync : NetworkBehaviour
 
         if (IsOwner)
         {
-            abilityCast.OnCast -= OnAbilityCast;
+            abilityCast.OnCastStart -= OnAbilityCast;
         }
     }
 
     private void OnAbilityCast()
     {
         //todo: centralize logic with AbilityCastController
-        RequestAbilityCastServerRpc(NetworkManager.Singleton.LocalClientId, abilityCast.ShruneId, abilityCast.StartPosition + Vector3.up * 0.5f, abilityCast.Direction);
+        RequestAbilityCastServerRpc(NetworkManager.Singleton.LocalClientId, abilityCast.StartPosition + Vector3.up * 0.5f, abilityCast.Direction);
     }
 
     [ServerRpc()]
-    public void RequestAbilityCastServerRpc(ulong clientId, string shruneId, Vector3 spawnPosition, Vector3 direction)
+    public void RequestAbilityCastServerRpc(ulong clientId, Vector3 spawnPosition, Vector3 direction)
     {
-        var targetShrune = shruneCollection.Data.Find(shrune => shrune.name == shruneId);
-        if (!targetShrune) return;
-
         // Only the server will execute this logic
-        var networkProjectile = Instantiate(targetShrune.NetworkPrefab, spawnPosition, Quaternion.LookRotation(direction), transform);
+        var networkProjectile = Instantiate(abilityCast.Data.NetworkPrefab, spawnPosition, Quaternion.LookRotation(direction), transform);
         networkProjectile.SpawnWithOwnership(clientId);
 
-        SendAbilityInfoClientRpc(clientId, networkProjectile.NetworkObjectId, direction, targetShrune.Speed);
+        SendAbilityInfoClientRpc(clientId, networkProjectile.NetworkObjectId, direction, abilityCast.Data.Speed);
 
     }
 
@@ -62,7 +57,7 @@ public class AbilityCastSync : NetworkBehaviour
             if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out var networkObject))
             {
                 // Apply the rotated direction to the projectile
-                networkObject.GetComponent<NetworkProjectile>().Shoot(direction, abilityCast.MaxDistance, speed, attackable => this.attackable != attackable);
+                networkObject.GetComponent<NetworkProjectile>().Shoot(direction, abilityCast.Data.MaxDistance, speed, attackable => this.attackable != attackable);
             }
             else
             {

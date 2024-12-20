@@ -18,7 +18,7 @@ public class AbilityCastButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
     private float abilityTimer;
 
     private AbilityCast AbilityCast => controller.AbilityCast;
-    private float AbilityCooldown => AbilityCast.Shrune.Cooldown;
+    private float AbilityCooldown => AbilityCast.Data.Cooldown;
     private bool canCast = false;
     private bool castStarted = false;
 
@@ -26,13 +26,13 @@ public class AbilityCastButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
     {
         button.onClick.AddListener(() =>
         {
-            AbilityCast.Cast(controller.Movement.transform.forward);
+            AbilityCast.StartCast(controller.Movement.transform.forward);
         });
     }
 
     private void Update()
     {
-        if (!AbilityCast.Shrune) return;
+        //if (!AbilityCast.Shrune) return;
 
         if (abilityTimer > 0)
         {
@@ -60,13 +60,13 @@ public class AbilityCastButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
     {
         UpdatePreview();
         AbilityCast.OnShruneChanged += UpdatePreview;
-        AbilityCast.OnCast += AbilityCast_OnComplete;
+        AbilityCast.OnCastStart += AbilityCast_OnComplete;
     }
 
     private void OnDisable()
     {
         AbilityCast.OnShruneChanged -= UpdatePreview;
-        AbilityCast.OnCast -= AbilityCast_OnComplete;
+        AbilityCast.OnCastStart -= AbilityCast_OnComplete;
     }
 
     private void AbilityCast_OnComplete()
@@ -76,12 +76,14 @@ public class AbilityCastButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
 
     private void UpdatePreview()
     {
-        render.SetActive(AbilityCast.Shrune);
+        if (!AbilityCast.Data) return;
 
-        if (AbilityCast.Shrune)
+        render.SetActive(AbilityCast.Data);
+
+        if (AbilityCast.Data)
         {
             abilityImage.enabled = true;
-            abilityImage.sprite = AbilityCast.Shrune.AbilityIcon;
+            abilityImage.sprite = AbilityCast.Data.AbilityIcon;
         }
         else
         {
@@ -96,7 +98,7 @@ public class AbilityCastButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
         castStarted = true;
 
         // Start casting ability
-        AbilityCast.StartCast();
+        AbilityCast.Prepare();
 
         // Record the initial touch position
         initialTouchPosition = eventData.position;
@@ -129,7 +131,7 @@ public class AbilityCastButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
         castStarted = false;
 
         // Complete the ability cast
-        AbilityCast.Cast();
+        AbilityCast.StartCast();
     }
 
 

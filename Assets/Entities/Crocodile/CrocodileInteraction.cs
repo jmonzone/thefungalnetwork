@@ -8,6 +8,7 @@ public class CrocodileInteraction : MonoBehaviour
     private Attackable attackable;
     private MovementController movement;
     private ProximityAction proximityAction;
+    private CrocodileAI crocodileAI;
 
     public event UnityAction OnMounted;
 
@@ -21,6 +22,8 @@ public class CrocodileInteraction : MonoBehaviour
         UpdateIsInteractable();
 
         movement = GetComponent<MovementController>();
+
+        crocodileAI = GetComponent<CrocodileAI>();
     }
 
     private void UpdateIsInteractable()
@@ -31,6 +34,7 @@ public class CrocodileInteraction : MonoBehaviour
 
     private void Mount()
     {
+        crocodileAI.enabled = false;
         Restore();
         controller.SetMovement(movement);
         OnMounted?.Invoke();
@@ -39,7 +43,6 @@ public class CrocodileInteraction : MonoBehaviour
     public void Restore()
     {
         attackable.Restore();
-        movement.SetSpeed(2f);
         GetComponentInChildren<Animator>().Play("Spin");
         UpdateIsInteractable();
     }
