@@ -29,18 +29,20 @@ public class AbilityCastIndicator : MonoBehaviour
 
     private void Update()
     {
-        UpdateIndicator();
+        if (!lineRenderer.gameObject.activeSelf)
+        {
+            UpdateIndicator();
+        }
     }
 
     private void ShowIndicator()
     {
+        UpdateIndicator();
         lineRenderer.gameObject.SetActive(true);
     }
 
     private void UpdateIndicator()
     {
-        if (!lineRenderer.gameObject.activeSelf) return;
-
         var position1 = abilityCast.StartPosition;
         position1.y += 0.1f;
 

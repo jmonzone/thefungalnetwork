@@ -33,6 +33,7 @@ public class CrocodileAI : MonoBehaviour
 
     private void OnDisable()
     {
+        StopAllCoroutines();
         abilityCast.OnCastComplete -= AbilityCast_OnCast;
     }
 
