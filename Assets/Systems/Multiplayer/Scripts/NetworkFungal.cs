@@ -17,11 +17,12 @@ public class NetworkFungal : NetworkBehaviour
         arena.RegisterPlayer(transform);
     }
 
-    public void Initialize(string name)
+    [ClientRpc]
+    public void InitalizeFungalClientRpc(string name)
     {
         Fungal = fungalInventory.Fungals.Find(fungal => fungal.Data.name == name);
 
-        //todo: centralize with FungalController
-        movement.SetMaxJumpCount(Fungal.Data.Type == FungalType.SKY ? 2 : 1);
+        var fungalController = GetComponent<FungalController>();
+        fungalController.Initialize(Fungal);
     }
 }

@@ -4,7 +4,9 @@ using UnityEngine;
 public class NetworkPlayer : NetworkBehaviour
 {
     [SerializeField] private NetworkObject networkAvatarPrefab;
+    [SerializeField] private NetworkFungal networkFungalPrefab;
     [SerializeField] private NetworkCrocodile networkCrocdilePrefab;
+
 
     [SerializeField] private MultiplayerArena arena;
     [SerializeField] private Possession possesionService;
@@ -13,7 +15,7 @@ public class NetworkPlayer : NetworkBehaviour
     [SerializeField] private ViewReference inputView;
 
     [SerializeField] private FungalInventory fungalInventory;
-    [SerializeField] private FungalCollection fungalCollection;
+    //[SerializeField] private FungalCollection fungalCollection;
 
     public NetworkVariable<Vector3> PlayerPosition = new NetworkVariable<Vector3>(Vector3.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
@@ -35,17 +37,16 @@ public class NetworkPlayer : NetworkBehaviour
             Debug.Log("Local player spawned: " + gameObject.name);
 
             var partner = possesionService.Fungal;
-            var targetFungal = partner ? fungalInventory.Fungals.Find(fungal => fungal.Data.Id == partner.Data.Id) : null;
 
             Quaternion forwardRotation = Quaternion.LookRotation(Vector3.forward);
 
             if (IsServer)
             {
-                if (targetFungal)
+                if (partner)
                 {
-                    var spawnedFungal = Instantiate(targetFungal.Data.NetworkPrefab, arena.PlayerSpawnPosition, forwardRotation, transform);
+                    var spawnedFungal = Instantiate(networkFungalPrefab, arena.PlayerSpawnPosition, forwardRotation, transform);
                     spawnedFungal.NetworkObject.Spawn();
-                    spawnedFungal.Initialize(targetFungal.Data.Id);
+                    spawnedFungal.InitalizeFungalClientRpc(partner.Data.Id);
                     controller.SetMovement(spawnedFungal.GetComponent<MovementController>());
                 }
                 else
@@ -65,9 +66,9 @@ public class NetworkPlayer : NetworkBehaviour
             }
             else
             {
-                if (targetFungal)
+                if (partner)
                 {
-                    RequestSpawnFungalServerRpc(NetworkManager.Singleton.LocalClientId, targetFungal.Data.Id);
+                    RequestSpawnFungalServerRpc(NetworkManager.Singleton.LocalClientId, partner.Data.Id);
                 }
                 else
                 {
@@ -115,11 +116,9 @@ public class NetworkPlayer : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void RequestSpawnFungalServerRpc(ulong clientId, string fungalId)
     {
-        var data = fungalCollection.Fungals.Find(fungal => fungal.Id == fungalId);
-        if (!data) return;
         // Only the server will execute this logic
-        var networkFungal = Instantiate(data.NetworkPrefab, arena.PlayerSpawnPosition, Quaternion.identity, transform);
-
+        var networkFungal = Instantiate(networkFungalPrefab, arena.PlayerSpawnPosition, Quaternion.identity, transform);
+        networkFungal.InitalizeFungalClientRpc(fungalId);
         networkFungal.NetworkObject.SpawnWithOwnership(clientId);
 
         // Send the NetworkObject ID to the client
@@ -137,7 +136,6 @@ public class NetworkPlayer : NetworkBehaviour
             {
                 var networkFungal = networkObject.GetComponent<NetworkFungal>();
                 Debug.Log("Received Controllable component on the client!");
-                networkFungal.Initialize(fungalName);
                 controller.SetMovement(networkFungal.Movement);
             }
             else
