@@ -59,13 +59,13 @@ public class AbilityCastButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
     private void OnEnable()
     {
         UpdatePreview();
-        AbilityCast.OnShruneChanged += UpdatePreview;
+        controller.OnUpdate += UpdatePreview;
         AbilityCast.OnCastStart += AbilityCast_OnComplete;
     }
 
     private void OnDisable()
     {
-        AbilityCast.OnShruneChanged -= UpdatePreview;
+        controller.OnUpdate -= UpdatePreview;
         AbilityCast.OnCastStart -= AbilityCast_OnComplete;
     }
 

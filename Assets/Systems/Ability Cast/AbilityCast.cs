@@ -13,7 +13,6 @@ public class AbilityCast : MonoBehaviour
 
     private Attackable attackable;
 
-    public event UnityAction OnShruneChanged;
     public event UnityAction OnPrepare;
     public event UnityAction OnCastStart;
     public event UnityAction OnCastComplete;
