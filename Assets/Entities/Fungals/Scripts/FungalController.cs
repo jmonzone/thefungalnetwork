@@ -13,16 +13,27 @@ public class FungalController : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Controller controller;
-    [SerializeField] private ProximityAction proximityAction;
-    [SerializeField] private MovementController movement;
     [SerializeField] private HealthSlider healthSlider;
     [SerializeField] private Image interactionOutline;
     [SerializeField] private Image interactionBackground;
     [SerializeField] private Image interactionImage;
 
+    private ProximityAction proximityAction;
+
     public FungalModel Model { get; private set; }
     public GameObject Render { get; private set; }
-    public MovementController Movement => movement;
+    public MovementController Movement { get; private set; }
+
+    private void Awake()
+    {
+        proximityAction = GetComponent<ProximityAction>();
+        proximityAction.OnUse += () =>
+        {
+            controller.SetMovement(Movement);
+        };
+
+        Movement = GetComponent<MovementController>();
+    }
 
     private void OnEnable()
     {
@@ -57,9 +68,9 @@ public class FungalController : MonoBehaviour
 
             if (isGrove)
             {
-                movement.OnJump += () => animator.Play("Jump");
-                movement.SetMaxJumpCount(model.Data.Type == FungalType.SKY ? 2 : 1);
-                movement.StartRandomMovement();
+                Movement.OnJump += () => animator.Play("Jump");
+                Movement.SetMaxJumpCount(model.Data.Type == FungalType.SKY ? 2 : 1);
+                Movement.StartRandomMovement();
             }
 
             var movementAnimations = GetComponentInChildren<MovementAnimations>();
