@@ -24,8 +24,8 @@ public class FungalInventory : ScriptableObject
             foreach (JObject fungalJson in fungalArray)
             {
                 var fungal = CreateInstance<FungalModel>();
-                var fungalData = fungalCollection.Fungals.FirstOrDefault(fungal => fungal.Id == fungalJson["name"].ToString());
-                fungal.Initialize(fungalData, fungalJson);
+                var fungalIndex = fungalCollection.Fungals.FindIndex(fungal => fungal.Id == fungalJson["name"].ToString());
+                fungal.Initialize(fungalIndex, fungalCollection.Fungals[fungalIndex], fungalJson);
                 AddFungalToList(fungal);
             }
         }

@@ -15,6 +15,7 @@ public class FungalModel : ScriptableObject
     [SerializeField] private float stamina;
     [SerializeField] private float power;
 
+    public int Index { get; private set; }
     public event UnityAction OnDataChanged;
     public event UnityAction<float> OnExperienceChanged;
     public event UnityAction<int> OnLevelChanged;
@@ -49,8 +50,9 @@ public class FungalModel : ScriptableObject
         }
     };
 
-    public void Initialize(FungalData pet)
+    public void Initialize(int index, FungalData pet)
     {
+        Index = index;
         name = pet.Id;
         data = pet;
         level = 1;
@@ -62,8 +64,9 @@ public class FungalModel : ScriptableObject
         power = 0;
     }
 
-    public void Initialize(FungalData pet, JObject json)
+    public void Initialize(int index, FungalData pet, JObject json)
     {
+        Index = index;
         name = pet.Id;
         data = pet;
         level = (int)json[LEVEL_KEY];

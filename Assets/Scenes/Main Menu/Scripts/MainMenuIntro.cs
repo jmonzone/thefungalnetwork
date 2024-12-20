@@ -31,7 +31,7 @@ public class MainMenuIntro : MonoBehaviour
         var randomIndex = Random.Range(0, fungalCollection.Fungals.Count);
         var randomFungal = fungalCollection.Fungals[randomIndex];
         var fungal = ScriptableObject.CreateInstance<FungalModel>();
-        fungal.Initialize(randomFungal);
+        fungal.Initialize(randomIndex, randomFungal);
         fungalInventory.AddFungal(fungal);
 
         yield return namePromptCanvas.FadeOut();

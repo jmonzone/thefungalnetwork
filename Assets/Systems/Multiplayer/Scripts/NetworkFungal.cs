@@ -1,3 +1,4 @@
+using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -14,15 +15,12 @@ public class NetworkFungal : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
+
+
         arena.RegisterPlayer(transform);
-    }
 
-    [ClientRpc]
-    public void InitalizeFungalClientRpc(string name)
-    {
-        Fungal = fungalInventory.Fungals.Find(fungal => fungal.Data.name == name);
+        // Subscribe to the value change event
+        Debug.Log("OnNetworkSpawn");
 
-        var fungalController = GetComponent<FungalController>();
-        fungalController.Initialize(Fungal);
     }
 }

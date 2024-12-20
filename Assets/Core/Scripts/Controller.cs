@@ -6,10 +6,9 @@ using UnityEngine.Rendering;
 public class Controller : ScriptableObject
 {
     [SerializeField] private ViewReference inputView;
-    [SerializeField] private FungalData fungal;
     [SerializeField] private MovementController movement;
 
-    public FungalData Fungal => fungal;
+    public FungalData Fungal => movement?.GetComponent<FungalController>()?.Model?.Data;
 
     public Attackable Attackable { get; private set; }
     public AbilityCast AbilityCast { get; private set; }
@@ -23,6 +22,8 @@ public class Controller : ScriptableObject
 
     public event UnityAction OnInitialize;
     public event UnityAction OnUpdate;
+    public event UnityAction OnCastStart;
+
     public event UnityAction OnPossessionStart;
     public event UnityAction OnReleaseStart;
     public event UnityAction OnDeath;
@@ -48,17 +49,18 @@ public class Controller : ScriptableObject
 
     public void SetMovement(MovementController movement)
     {
-        if (Attackable) Attackable.OnHealthDepleted -= OnDeath;
         if (Movement != null ) Movement.Stop();
-
         this.movement = movement;
+        movement.Stop();
+
+        if (Attackable) Attackable.OnHealthDepleted -= OnDeath;
         Attackable = movement.GetComponent<Attackable>();
-        AbilityCast = movement.GetComponent<AbilityCast>();
         if (Attackable) Attackable.OnHealthDepleted += OnDeath;
 
-        fungal = movement.GetComponent<FungalController>()?.Model.Data;
+        if (AbilityCast) AbilityCast.OnCastStart -= OnCastStart;
+        AbilityCast = movement.GetComponent<AbilityCast>();
+        if (AbilityCast) AbilityCast.OnCastStart += OnCastStart;
 
-        movement.Stop();
         OnUpdate?.Invoke();
     }
 

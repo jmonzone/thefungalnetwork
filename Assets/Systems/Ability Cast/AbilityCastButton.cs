@@ -32,7 +32,7 @@ public class AbilityCastButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
 
     private void Update()
     {
-        //if (!AbilityCast.Shrune) return;
+        if (!AbilityCast) return;
 
         if (abilityTimer > 0)
         {
@@ -60,13 +60,13 @@ public class AbilityCastButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
     {
         UpdatePreview();
         controller.OnUpdate += UpdatePreview;
-        AbilityCast.OnCastStart += AbilityCast_OnComplete;
+        controller.OnCastStart += AbilityCast_OnComplete;
     }
 
     private void OnDisable()
     {
         controller.OnUpdate -= UpdatePreview;
-        AbilityCast.OnCastStart -= AbilityCast_OnComplete;
+        controller.OnCastStart -= AbilityCast_OnComplete;
     }
 
     private void AbilityCast_OnComplete()
@@ -76,7 +76,7 @@ public class AbilityCastButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
 
     private void UpdatePreview()
     {
-        if (!AbilityCast.Data) return;
+        if (!AbilityCast?.Data) return;
 
         render.SetActive(AbilityCast.Data);
 
