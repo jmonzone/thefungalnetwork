@@ -2,12 +2,21 @@ using UnityEngine;
 
 public class AbilityCastIndicator : MonoBehaviour
 {
-    [SerializeField] private AbilityCastReference abilityCast;
-    [SerializeField] private LineRenderer lineRenderer;
+    private AbilityCast abilityCast;
+    private LineRenderer lineRenderer;
+
+    private void Awake()
+    {
+        abilityCast = GetComponentInParent<AbilityCast>();
+        Debug.Log($"awake {abilityCast == null}");
+        lineRenderer = GetComponentInChildren<LineRenderer>(includeInactive: true);
+    }
 
     private void OnEnable()
     {
         HideIndicator();
+        Debug.Log($"enable {abilityCast == null}");
+
         abilityCast.OnStart += ShowIndicator;
         abilityCast.OnCast += HideIndicator;
     }
@@ -37,7 +46,6 @@ public class AbilityCastIndicator : MonoBehaviour
 
         // todo: handle between targeted ability and directional ability
         var position2 = abilityCast.StartPosition + abilityCast.Direction * abilityCast.MaxDistance;
-        if (abilityCast.Target) position2 = abilityCast.Target.position;
         position2.y = position1.y;
 
         lineRenderer.SetPositions(new Vector3[]

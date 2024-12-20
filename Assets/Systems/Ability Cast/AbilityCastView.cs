@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class AbilityCastView : MonoBehaviour
 {
-    [SerializeField] private AbilityCastReference abilityCast;
+    [SerializeField] private AbilityCast abilityCast;
 
     private void OnEnable()
     {

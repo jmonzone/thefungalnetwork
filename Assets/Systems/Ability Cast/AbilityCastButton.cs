@@ -8,7 +8,6 @@ public class AbilityCastButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
 {
     [SerializeField] private Button button;
     [SerializeField] private Controller controller;
-    [SerializeField] private AbilityCastReference abilityCast;
     [SerializeField] private GameObject render;
     [SerializeField] private Image abilityImage;
     [SerializeField] private Image cooldownImage;
@@ -17,7 +16,9 @@ public class AbilityCastButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
 
     private Vector3 initialTouchPosition;
     private float abilityTimer;
-    private float AbilityCooldown => abilityCast.Shrune.Cooldown;
+
+    private AbilityCast AbilityCast => controller.AbilityCast;
+    private float AbilityCooldown => AbilityCast.Shrune.Cooldown;
     private bool canCast = false;
     private bool castStarted = false;
 
@@ -25,13 +26,13 @@ public class AbilityCastButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
     {
         button.onClick.AddListener(() =>
         {
-            abilityCast.Cast(controller.Movement.transform, controller.Movement.transform.forward, IsValidTarget);
+            AbilityCast.Cast(controller.Movement.transform.forward);
         });
     }
 
     private void Update()
     {
-        if (!abilityCast.Shrune) return;
+        if (!AbilityCast.Shrune) return;
 
         if (abilityTimer > 0)
         {
@@ -58,14 +59,14 @@ public class AbilityCastButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
     private void OnEnable()
     {
         UpdatePreview();
-        abilityCast.OnShruneChanged += UpdatePreview;
-        abilityCast.OnCast += AbilityCast_OnComplete;
+        AbilityCast.OnShruneChanged += UpdatePreview;
+        AbilityCast.OnCast += AbilityCast_OnComplete;
     }
 
     private void OnDisable()
     {
-        abilityCast.OnShruneChanged -= UpdatePreview;
-        abilityCast.OnCast -= AbilityCast_OnComplete;
+        AbilityCast.OnShruneChanged -= UpdatePreview;
+        AbilityCast.OnCast -= AbilityCast_OnComplete;
     }
 
     private void AbilityCast_OnComplete()
@@ -75,20 +76,18 @@ public class AbilityCastButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
 
     private void UpdatePreview()
     {
-        render.SetActive(abilityCast.Shrune);
+        render.SetActive(AbilityCast.Shrune);
 
-        if (abilityCast.Shrune)
+        if (AbilityCast.Shrune)
         {
             abilityImage.enabled = true;
-            abilityImage.sprite = abilityCast.Shrune.AbilityIcon;
+            abilityImage.sprite = AbilityCast.Shrune.AbilityIcon;
         }
         else
         {
             abilityImage.enabled = false;
         }
     }
-
-    bool IsValidTarget(Attackable attackable) => attackable != controller.Attackable;
 
     void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
     {
@@ -97,7 +96,7 @@ public class AbilityCastButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
         castStarted = true;
 
         // Start casting ability
-        abilityCast.StartCast(controller.Movement.transform, IsValidTarget);
+        AbilityCast.StartCast();
 
         // Record the initial touch position
         initialTouchPosition = eventData.position;
@@ -121,7 +120,7 @@ public class AbilityCastButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
         Vector3 rotatedDragDirection = cameraRotation * dragDirection.normalized;
 
         // Update the ability cast with the rotated direction
-        abilityCast.SetDirection(rotatedDragDirection);
+        AbilityCast.SetDirection(rotatedDragDirection);
     }
 
     void IEndDragHandler.OnEndDrag(PointerEventData eventData)
@@ -130,7 +129,7 @@ public class AbilityCastButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
         castStarted = false;
 
         // Complete the ability cast
-        abilityCast.Cast();
+        AbilityCast.Cast();
     }
 
 

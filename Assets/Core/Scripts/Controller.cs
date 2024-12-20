@@ -12,6 +12,7 @@ public class Controller : ScriptableObject
     public FungalData Fungal => fungal;
 
     public Attackable Attackable { get; private set; }
+    public AbilityCast AbilityCast { get; private set; }
     public MovementController Movement => movement;
 
     public Volume Volume { get; private set; }
@@ -52,6 +53,7 @@ public class Controller : ScriptableObject
 
         this.movement = movement;
         Attackable = movement.GetComponent<Attackable>();
+        AbilityCast = movement.GetComponent<AbilityCast>();
         if (Attackable) Attackable.OnHealthDepleted += OnDeath;
 
         fungal = movement.GetComponent<FungalController>()?.Model.Data;

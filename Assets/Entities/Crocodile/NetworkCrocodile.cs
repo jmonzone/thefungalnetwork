@@ -4,12 +4,14 @@ using UnityEngine;
 public class NetworkCrocodile : NetworkBehaviour
 {
     private Crocodile attack;
-    [SerializeField] private AbilityCastReference abilityCast;
+    private AbilityCast abilityCast;
 
     private void Awake()
     {
         attack = GetComponent<Crocodile>();
         attack.enabled = false;
+
+        abilityCast = GetComponent<AbilityCast>();
     }
 
     public override void OnNetworkSpawn()
@@ -49,7 +51,8 @@ public class NetworkCrocodile : NetworkBehaviour
             Debug.Log("on ability Start client RPC");
 
         //todo: remove second param
-        abilityCast.StartCast(transform, direction, attackable => true);
+        abilityCast.SetDirection(direction);
+        abilityCast.StartCast();
     }
 
     private void OnAbilityCast()

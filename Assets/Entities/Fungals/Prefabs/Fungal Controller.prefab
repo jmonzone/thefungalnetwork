@@ -147,6 +147,7 @@ GameObject:
   - component: {fileID: 45771349620877434}
   - component: {fileID: 7116469323006247303}
   - component: {fileID: 270810477012964681}
+  - component: {fileID: 605830604813842635}
   m_Layer: 0
   m_Name: Fungal Controller
   m_TagString: Untagged
@@ -369,7 +370,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 669ad6b9e630146e29004839c4d7a3fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  abilityCast: {fileID: 11400000, guid: f64dcda4d45144cc990412b55614233d, type: 2}
+  abilityCast: {fileID: 605830604813842635}
+--- !u!114 &605830604813842635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4710098450848900613}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe17f67262e904bd3863591609755da9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shrune: {fileID: 11400000, guid: 9d2ba073b1e894816aa99f775d4e6af5, type: 2}
+  maxDistance: 10
 --- !u!1001 &2562995384339588117
 PrefabInstance:
   m_ObjectHideFlags: 0

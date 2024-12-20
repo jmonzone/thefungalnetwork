@@ -15,7 +15,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private FadeCanvasGroup screenFade;
     [SerializeField] private MultiplayerManager multiplayer;
 
-    [SerializeField] private AbilityCastReference abilityCast;
     [SerializeField] private DisplayName displayName;
     [SerializeField] private ItemInventory itemInventory;
     [SerializeField] private FungalInventory fungalInventory;
@@ -37,8 +36,6 @@ public class GameManager : MonoBehaviour
             // order of initialization matters here, ability cast as of now
             // needs to be initialized before localdata.inventory does
             // or else there is unexpeted behaviour
-            abilityCast.Reset();
-
             localData.Initialize();
             
             uiNavigation.Initialize();
@@ -54,9 +51,6 @@ public class GameManager : MonoBehaviour
             possession.Initialize();
 
             DontDestroyOnLoad(instance);
-
-            itemInventory.OnInventoryUpdated += ItemInventory_OnInventoryUpdated;
-            ItemInventory_OnInventoryUpdated();
 
             localData.OnReset += () =>
             {
@@ -84,14 +78,5 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         multiplayer.DoUpdate();
-    }
-
-    private void ItemInventory_OnInventoryUpdated()
-    {
-        if (!abilityCast.Shrune)
-        {
-            var shrune = itemInventory.Items.Find(item => item.Data is ShruneItem);
-            if (shrune) abilityCast.SetShrune(shrune.Data as ShruneItem);
-        }
     }
 }

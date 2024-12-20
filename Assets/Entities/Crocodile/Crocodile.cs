@@ -10,13 +10,13 @@ public class Crocodile : MonoBehaviour
     [SerializeField] private Vector3 direction;
     [SerializeField] private float hitCooldown = 3f;
     [SerializeField] private float hitTimer = 0;
-    [SerializeField] private AbilityCastReference abilityCast;
     [SerializeField] private float chargeSpeed = 10f;
     [SerializeField] private float chargeDistance = 10f;
     [SerializeField] private SceneNavigation sceneNavigation;
 
     private MovementController movementController;
     private Attackable attackable;
+    private AbilityCast abilityCast;
 
     private void OnEnable()
     {
@@ -39,6 +39,7 @@ public class Crocodile : MonoBehaviour
     // Start is called before the first frame update
     private void Awake()
     {
+        abilityCast = GetComponent<AbilityCast>();
         movementController = GetComponent<MovementController>();
         attackable = GetComponent<Attackable>();
         attackable.OnHealthDepleted += StopAllCoroutines;
@@ -71,7 +72,8 @@ public class Crocodile : MonoBehaviour
 
         direction = target.position - transform.position;
         direction.y = 0;
-        abilityCast.StartCast(transform, direction.normalized, attackable => true);
+        abilityCast.SetDirection(direction.normalized);
+        abilityCast.StartCast();
 
         yield return new WaitForSeconds(1.5f);
 

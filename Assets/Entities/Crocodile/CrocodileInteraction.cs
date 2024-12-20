@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class CrocodileInteraction : MonoBehaviour
 {
@@ -8,30 +9,39 @@ public class CrocodileInteraction : MonoBehaviour
     private MovementController movement;
     private ProximityAction proximityAction;
 
+    public event UnityAction OnMounted;
+
     private void Awake()
     {
         proximityAction = GetComponent<ProximityAction>();
-        proximityAction.OnUse += ProximityAction_OnUse;
+        proximityAction.OnUse += Mount;
 
         attackable = GetComponent<Attackable>();
-        attackable.OnHealthChanged += Attackable_OnHealthChanged;
-        Attackable_OnHealthChanged();
+        attackable.OnHealthChanged += UpdateIsInteractable;
+        UpdateIsInteractable();
 
         movement = GetComponent<MovementController>();
     }
 
-    private void Attackable_OnHealthChanged()
+    private void UpdateIsInteractable()
     {
         //todo: add delay animation so that the crocodile is not interactable immediately
         proximityAction.SetInteractable(attackable.CurrentHealth == 0);
     }
 
-    private void ProximityAction_OnUse()
+    private void Mount()
+    {
+        Restore();
+        controller.SetMovement(movement);
+        OnMounted?.Invoke();
+    }
+
+    public void Restore()
     {
         attackable.Restore();
         movement.SetSpeed(2f);
-        controller.SetMovement(movement);
         GetComponentInChildren<Animator>().Play("Spin");
+        UpdateIsInteractable();
     }
 
 }

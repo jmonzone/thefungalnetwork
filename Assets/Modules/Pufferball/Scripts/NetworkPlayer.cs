@@ -15,9 +15,6 @@ public class NetworkPlayer : NetworkBehaviour
     [SerializeField] private FungalInventory fungalInventory;
     [SerializeField] private FungalCollection fungalCollection;
 
-    [SerializeField] private AbilityCastReference abilityCast;
-    [SerializeField] private ShruneCollection shruneCollection;
-
     public NetworkVariable<Vector3> PlayerPosition = new NetworkVariable<Vector3>(Vector3.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     private void Update()
@@ -79,60 +76,9 @@ public class NetworkPlayer : NetworkBehaviour
             }
             navigation.Navigate(inputView);
         }
-
-        if (IsOwner)
-        {
-            abilityCast.OnCast += OnAbilityCast;
-        }
     }
 
-    public override void OnNetworkDespawn()
-    {
-        base.OnNetworkDespawn();
-
-        if (IsOwner)
-        {
-            abilityCast.OnCast -= OnAbilityCast;
-        }
-    }
-
-    private void OnAbilityCast()
-    {
-        //todo: centralize logic with AbilityCastController
-        RequestAbilityCastServerRpc(NetworkManager.Singleton.LocalClientId, abilityCast.ShruneId, abilityCast.StartPosition + Vector3.up * 0.5f, abilityCast.Direction);
-    }
-
-    [ServerRpc()]
-    public void RequestAbilityCastServerRpc(ulong clientId, string shruneId, Vector3 spawnPosition, Vector3 direction)
-    {
-        var targetShrune = shruneCollection.Data.Find(shrune => shrune.name == shruneId);
-        if (!targetShrune) return;
-
-        // Only the server will execute this logic
-        var networkProjectile = Instantiate(targetShrune.NetworkPrefab, spawnPosition, Quaternion.LookRotation(direction), transform);
-        networkProjectile.SpawnWithOwnership(clientId);
-
-        SendAbilityInfoClientRpc(clientId, networkProjectile.NetworkObjectId, direction, targetShrune.Speed);
-
-    }
-
-    [ClientRpc]
-    private void SendAbilityInfoClientRpc(ulong clientId, ulong networkObjectId, Vector3 direction, float speed)
-    {
-        if (NetworkManager.Singleton.LocalClientId == clientId)
-        {
-            // Retrieve the spawned object on the client using the NetworkObjectId
-            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out var networkObject))
-            {
-                // Apply the rotated direction to the projectile
-                networkObject.GetComponent<NetworkProjectile>().Shoot(direction, abilityCast.MaxDistance, speed, attackable => attackable != controller.Attackable );
-            }
-            else
-            {
-                Debug.LogError("Failed to find the spawned object on the client.");
-            }
-        }
-    }
+    
 
     [ServerRpc(RequireOwnership = false)]
     public void RequestSpawnAvatarServerRpc(ulong clientId)
