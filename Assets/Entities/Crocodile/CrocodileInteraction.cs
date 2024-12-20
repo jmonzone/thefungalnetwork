@@ -8,11 +8,12 @@ public class CrocodileInteraction : MonoBehaviour
     private Attackable attackable;
     private MovementController movement;
     private ProximityAction proximityAction;
-    private CrocodileAI crocodileAI;
-    private bool isRestored;
+
+    private bool isDefeated;
     private bool isMounted;
 
     public event UnityAction OnMounted;
+    public event UnityAction OnUnmounted;
 
     private void Awake()
     {
@@ -24,15 +25,13 @@ public class CrocodileInteraction : MonoBehaviour
         UpdateIsInteractable();
 
         movement = GetComponent<MovementController>();
-
-        crocodileAI = GetComponent<CrocodileAI>();
     }
 
     private void Attackable_OnHealthChanged()
     {
         if (attackable.CurrentHealth == 0)
         {
-            isRestored = true;
+            isDefeated = true;
             UpdateIsInteractable();
         }
     }
@@ -44,29 +43,39 @@ public class CrocodileInteraction : MonoBehaviour
 
     private void Controller_OnUpdate()
     {
-        isMounted = controller.Movement == movement;
+        if (controller.Movement != movement)
+        {
+            SyncUnmount();
+            OnUnmounted?.Invoke();
+        }
+
         UpdateIsInteractable();
     }
 
     private void UpdateIsInteractable()
     {
         //todo: add delay animation so that the crocodile is not interactable immediately
-        proximityAction.SetInteractable(isRestored && !isMounted);
+        proximityAction.SetInteractable(isDefeated && !isMounted);
     }
 
     private void Mount()
     {
-        crocodileAI.enabled = false;
-        Restore();
+        SyncMount();
         controller.SetMovement(movement);
         OnMounted?.Invoke();
     }
 
-    public void Restore()
+    public void SyncMount()
     {
+        isMounted = true;
         attackable.Restore();
         GetComponentInChildren<Animator>().Play("Spin");
         UpdateIsInteractable();
     }
 
+    public void SyncUnmount()
+    {
+        isMounted = false;
+        UpdateIsInteractable();
+    }
 }

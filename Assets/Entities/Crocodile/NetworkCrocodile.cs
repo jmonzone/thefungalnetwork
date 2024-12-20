@@ -18,7 +18,7 @@ public class NetworkCrocodile : NetworkBehaviour
     {
         base.OnNetworkSpawn();
 
-        var ai = GetComponent<CrocodileCharge>();
+        var ai = GetComponent<CrocodileAI>();
         ai.enabled = IsOwner;
 
         if (IsOwner)

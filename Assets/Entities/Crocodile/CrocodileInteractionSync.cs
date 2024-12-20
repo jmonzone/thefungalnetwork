@@ -11,14 +11,40 @@ public class CrocodileInteractionSync : NetworkBehaviour
         crocodileInteraction = GetComponent<CrocodileInteraction>();
         crocodileInteraction.OnMounted += () =>
         {
-            SyncMountClientRpc(NetworkManager.Singleton.LocalClientId);
+            SyncMountServerRpc(NetworkManager.Singleton.LocalClientId);
         };
+
+        crocodileInteraction.OnUnmounted += () =>
+        {
+            SyncUnmountServerRpc(NetworkManager.Singleton.LocalClientId);
+        };
+    }
+
+    [ServerRpc(RequireOwnership=false)]
+    public void SyncMountServerRpc(ulong clientId)
+    {
+        NetworkObject.ChangeOwnership(clientId);
+        SyncMountClientRpc(clientId);
     }
 
     [ClientRpc]
     public void SyncMountClientRpc(ulong clientId)
     {
         if (NetworkManager.Singleton.LocalClientId == clientId) return;
-        crocodileInteraction.Restore();
+        crocodileInteraction.SyncMount();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void SyncUnmountServerRpc(ulong clientId)
+    {
+        NetworkObject.RemoveOwnership();
+        SyncUnmountClientRpc(clientId);
+    }
+
+    [ClientRpc]
+    public void SyncUnmountClientRpc(ulong clientId)
+    {
+        if (NetworkManager.Singleton.LocalClientId == clientId) return;
+        crocodileInteraction.SyncUnmount();
     }
 }

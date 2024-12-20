@@ -19,6 +19,12 @@ public class NetworkFungal : NetworkBehaviour
 
         arena.RegisterPlayer(transform);
 
+        if (!IsOwner)
+        {
+            var proximityAction = GetComponent<ProximityAction>();
+            proximityAction.SetInteractable(false);
+        }
+
         // Subscribe to the value change event
         Debug.Log("OnNetworkSpawn");
 

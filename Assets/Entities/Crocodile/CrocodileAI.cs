@@ -17,7 +17,13 @@ public class CrocodileAI : MonoBehaviour
         abilityCast = GetComponent<AbilityCast>();
 
         attackable = GetComponent<Attackable>();
-        attackable.OnHealthDepleted += StopAllCoroutines;
+        attackable.OnHealthDepleted += Attackable_OnHealthDepleted;
+    }
+
+    private void Attackable_OnHealthDepleted()
+    {
+        StopAllCoroutines();
+        enabled = false;
     }
 
     private void OnEnable()
