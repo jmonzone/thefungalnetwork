@@ -28,7 +28,10 @@ public class CrocodileInteraction : MonoBehaviour
 
     private void ProximityAction_OnUse()
     {
+        attackable.Restore();
+        movement.SetSpeed(2f);
         controller.SetMovement(movement);
+        GetComponentInChildren<Animator>().Play("Spin");
     }
 
 }

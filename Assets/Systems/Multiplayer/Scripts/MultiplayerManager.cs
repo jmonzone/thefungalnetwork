@@ -78,7 +78,6 @@ public class MultiplayerManager : ScriptableObject
         lobbyUpdateTimer -= Time.deltaTime;
         if (lobbyUpdateTimer < 0f)
         {
-            Debug.Log("poll");
             lobbyUpdateTimer = 1.1f;
             Lobby lobby = await LobbyService.Instance.GetLobbyAsync(JoinedLobby.Id);
             JoinedLobby = lobby;
