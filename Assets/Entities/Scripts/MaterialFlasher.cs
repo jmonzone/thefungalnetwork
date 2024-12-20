@@ -45,7 +45,6 @@ public class MaterialFlasher : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.F))
         {
             FlashColor(Color.white);
-            Debug.Log("hello");
         }
     }
 

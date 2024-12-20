@@ -13,7 +13,7 @@ public class CrocodileInteractionSync : NetworkBehaviour
         crocodileCharge.enabled = IsOwner;
 
         crocodileInteraction = GetComponent<CrocodileInteraction>();
-        crocodileInteraction.OnMounted += () =>
+        crocodileInteraction.OnMountRequested += () =>
         {
             SyncMountServerRpc(NetworkManager.Singleton.LocalClientId);
         };
@@ -39,7 +39,7 @@ public class CrocodileInteractionSync : NetworkBehaviour
             crocodileCharge.enabled = true;
             return;
         }
-        crocodileInteraction.SyncMount();
+        crocodileInteraction.HandleMount(true);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -57,6 +57,6 @@ public class CrocodileInteractionSync : NetworkBehaviour
             crocodileCharge.enabled = false;
             return;
         }
-        crocodileInteraction.SyncUnmount();
+        crocodileInteraction.HandleMount(false);
     }
 }

@@ -4,6 +4,7 @@ using UnityEngine.Events;
 public class CrocodileInteraction : MonoBehaviour
 {
     [SerializeField] private Controller controller;
+    [SerializeField] private GameObject mountIndicator;
 
     private Attackable attackable;
     private MovementController movement;
@@ -12,13 +13,13 @@ public class CrocodileInteraction : MonoBehaviour
     private bool isDefeated;
     private bool isMounted;
 
-    public event UnityAction OnMounted;
+    public event UnityAction OnMountRequested;
     public event UnityAction OnUnmounted;
 
     private void Awake()
     {
         proximityAction = GetComponent<ProximityAction>();
-        proximityAction.OnUse += Mount;
+        proximityAction.OnUse += RequestMount;
 
         attackable = GetComponent<Attackable>();
         attackable.OnHealthChanged += Attackable_OnHealthChanged; ;
@@ -45,8 +46,7 @@ public class CrocodileInteraction : MonoBehaviour
     {
         if (controller.Movement != movement)
         {
-            SyncUnmount();
-            OnUnmounted?.Invoke();
+            RequestUnmount();
         }
 
         UpdateIsInteractable();
@@ -58,24 +58,30 @@ public class CrocodileInteraction : MonoBehaviour
         proximityAction.SetInteractable(isDefeated && !isMounted);
     }
 
-    private void Mount()
+    private void RequestMount()
     {
-        SyncMount();
+        HandleMount(true);
         controller.SetMovement(movement);
-        OnMounted?.Invoke();
+        OnMountRequested?.Invoke();
     }
 
-    public void SyncMount()
+    public void HandleMount(bool value)
     {
-        isMounted = true;
-        attackable.Restore();
-        GetComponentInChildren<Animator>().Play("Spin");
+        isMounted = value;
+        mountIndicator.SetActive(value);
+
+        if (value)
+        {
+            attackable.Restore();
+            GetComponentInChildren<Animator>().Play("Spin");
+        }
+        
         UpdateIsInteractable();
     }
 
-    public void SyncUnmount()
+    public void RequestUnmount()
     {
-        isMounted = false;
-        UpdateIsInteractable();
+        HandleMount(false);
+        OnUnmounted?.Invoke();
     }
 }
