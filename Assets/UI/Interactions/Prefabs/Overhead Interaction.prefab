@@ -10,12 +10,12 @@ GameObject:
   m_Component:
   - component: {fileID: 2577562414194464097}
   m_Layer: 5
-  m_Name: GameObject
+  m_Name: Indicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2577562414194464097
 RectTransform:
   m_ObjectHideFlags: 0
@@ -148,6 +148,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2989991312347930101}
+  - component: {fileID: 5748562680691574355}
   m_Layer: 5
   m_Name: Overhead Interaction
   m_TagString: Untagged
@@ -171,6 +172,19 @@ Transform:
   - {fileID: 7889796297479707024}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5748562680691574355
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5846760016743100905}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0ebbc806cd2749d7b7aacc0d551eede, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interactable: 1
 --- !u!1 &6164630341255778164
 GameObject:
   m_ObjectHideFlags: 0
