@@ -13,6 +13,7 @@ public class MushroomObjective : MonoBehaviour
     private void Awake()
     {
         movement = GetComponent<MovementController>();
+        movement.OnJump += Unmount;
     }
 
     private void Update()
@@ -48,17 +49,15 @@ public class MushroomObjective : MonoBehaviour
     private void Mount()
     {
         mountedController = controller.Movement;
-        mountedController.OnJump += Unmount;
         mountedController.GetComponent<ProximityAction>().SetInteractable(false);
         controller.SetMovement(movement);
     }
 
     private void Unmount()
     {
-        mountedController.OnJump -= Unmount;
         mountedController.GetComponent<ProximityAction>().SetInteractable(true);
         controller.SetMovement(mountedController);
+        movement.Stop();
         mountedController = null;
-
     }
 }
