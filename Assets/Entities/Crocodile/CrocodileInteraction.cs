@@ -4,7 +4,7 @@ using UnityEngine.Events;
 public class CrocodileInteraction : MonoBehaviour
 {
     [SerializeField] private Controller controller;
-    [SerializeField] private GameObject mountIndicator;
+    //[SerializeField] private GameObject mountIndicator;
 
     private Attackable attackable;
     private MovementController movement;
@@ -68,7 +68,7 @@ public class CrocodileInteraction : MonoBehaviour
     public void HandleMount(bool value)
     {
         isMounted = value;
-        mountIndicator.SetActive(value);
+        //mountIndicator.SetActive(value);
 
         if (value)
         {

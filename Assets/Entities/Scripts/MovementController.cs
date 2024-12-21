@@ -7,6 +7,8 @@ public class MovementController : MonoBehaviour
     [SerializeField] private MovementType type;
     [SerializeField] private float speed = 2f;
     [SerializeField] private bool lerpRotation = true;
+    [SerializeField] private bool faceForward = true;
+    [SerializeField] private bool useRoll = true;
     [SerializeField] private bool lockXZ = false;
     [SerializeField] private bool useDrag = false;
     [SerializeField] private PositionAnchor positionAnchor;
@@ -51,7 +53,7 @@ public class MovementController : MonoBehaviour
     public Vector3 Direction { get; private set; }
 
     public float Speed => speed;
-    public bool FaceForward => lerpRotation;
+    public bool FaceForward => faceForward;
 
     public bool IsAtDestination => Vector3.Distance(transform.position, TargetPosition) < distanceThreshold;
 
@@ -181,21 +183,30 @@ public class MovementController : MonoBehaviour
 
         if (type == MovementType.POSITION || type == MovementType.TARGET) Direction = (TargetPosition - transform.position).normalized;
 
-        if (lerpRotation && Direction != Vector3.zero)
+        if (Direction != Vector3.zero)
         {
-            //todo: clean up this logic
-            var lookDirection = Direction;
-            if (type == MovementType.TARGET) lookDirection = target.position - transform.position;
-            Quaternion targetRotation = Quaternion.LookRotation(lookDirection, Vector3.up);
-            if (lockXZ) targetRotation = Quaternion.Euler(0, targetRotation.eulerAngles.y, 0); // Keep only y-axis rotation
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 1000 * Time.deltaTime);
-        }
-        else
-        {
-            transform.forward = Direction;
+            // make enum flag to prevent conflictions
+            if (lerpRotation)
+            {
+                //todo: clean up this logic
+                var lookDirection = Direction;
+                if (type == MovementType.TARGET) lookDirection = target.position - transform.position;
+                Quaternion targetRotation = Quaternion.LookRotation(lookDirection, Vector3.up);
+                if (lockXZ) targetRotation = Quaternion.Euler(0, targetRotation.eulerAngles.y, 0); // Keep only y-axis rotation
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 1000 * Time.deltaTime);
+                transform.position += speed * Time.deltaTime * transform.forward;
+            }
+            else if (FaceForward)
+            {
+                transform.forward = Direction;
+                transform.position += speed * Time.deltaTime * transform.forward;
+            }
+            else if (useRoll)
+            {
+                rb.velocity = speed * Direction;
+            }
         }
 
-        transform.position += speed * Time.deltaTime * transform.forward;
 
         if (useDrag)
         {

@@ -148,7 +148,8 @@ public class PlayerInput : MonoBehaviour
         // Adjust direction relative to the camera's rotation
         direction = Quaternion.Euler(0, mainCamera.transform.eulerAngles.y, 0) * direction;
 
-        if (controller.Attackable.CurrentHealth > 0)
+        //todo: attackable should not be referenced , it should be can move
+        if (!controller.Attackable || controller.Attackable.CurrentHealth > 0)
         {
             // Set the movement direction
             controller.Movement.SetDirection(direction);
