@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//todo: centralize with crocodile interaction
 public class MushroomObjective : MonoBehaviour
 {
     [SerializeField] private Controller controller;
@@ -47,7 +48,17 @@ public class MushroomObjective : MonoBehaviour
     private void Mount()
     {
         mountedController = controller.Movement;
+        mountedController.OnJump += Unmount;
         mountedController.GetComponent<ProximityAction>().SetInteractable(false);
         controller.SetMovement(movement);
+    }
+
+    private void Unmount()
+    {
+        mountedController.OnJump -= Unmount;
+        mountedController.GetComponent<ProximityAction>().SetInteractable(true);
+        controller.SetMovement(mountedController);
+        mountedController = null;
+
     }
 }

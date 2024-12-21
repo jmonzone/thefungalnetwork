@@ -25,8 +25,8 @@ public class MovementController : MonoBehaviour
     [SerializeField] private float radius = 4f;
     [SerializeField] private float radialSpeed = 0.25f;
 
-
     [Header("Jump Movement")]
+    [SerializeField] private float jumpForce = 250f;
     [SerializeField] private int maxJumpCount = 1;
 
     private int jumpCount = 0;
@@ -136,7 +136,7 @@ public class MovementController : MonoBehaviour
     {
         if (!CanJump) return;
         jumpCount++;
-        rb.AddForce(Vector3.up * 250f);
+        rb.AddForce(Vector3.up * jumpForce);
         OnJump?.Invoke();
     }
 
@@ -201,17 +201,11 @@ public class MovementController : MonoBehaviour
             }
             else if (useRoll)
             {
-                rb.velocity = speed * Direction;
+                var targetVelocity = speed * Direction;
+                targetVelocity.y = rb.velocity.y;
+                rb.velocity = targetVelocity;
             }
         }
-        else
-        {
-            if (useRoll)
-            {
-                rb.velocity = Vector3.zero; 
-            }
-        }
-
 
         if (useDrag)
         {
