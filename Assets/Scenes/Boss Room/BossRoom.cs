@@ -1,8 +1,9 @@
 using System.Collections;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 
-public class BossRoom : MonoBehaviour
+public class BossRoom : NetworkBehaviour
 {
     [SerializeField] private Controller playerReference;
     [SerializeField] private ShruneItem defaultShrune;
@@ -26,34 +27,47 @@ public class BossRoom : MonoBehaviour
 
     private void OnEnable()
     {
+        Debug.Log($"OnEnable called on client: {IsClient}, server: {IsServer}");
         multiplayerArena.OnAllMushroomsCollected += MultiplayerArena_OnAllMushroomsCollected;
-        playerReference.OnDeath += OnPlayerDeath;
+        multiplayerArena.OnAllPlayersDead += MultiplayerArena_OnAllPlayersDead;
+        playerReference.OnDeath += TriggerDeathEventServerRpc;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void TriggerDeathEventServerRpc()
+    {
+        OnPlayerDeathClientRpc();
+    }
+
+    [ClientRpc]
+    private void OnPlayerDeathClientRpc()
+    {
+        Debug.Log("OnPlayerDeathClientRpc invoked on client.");
+        multiplayerArena.IncrementDeadPlayerCount();
     }
 
     private void MultiplayerArena_OnAllMushroomsCollected()
-    {
-        OnBossDeath();
-    }
-
-    private void OnDisable()
-    {
-        multiplayerArena.OnAllMushroomsCollected -= MultiplayerArena_OnAllMushroomsCollected;
-        playerReference.OnDeath -= OnPlayerDeath;
-    }
-
-    private void OnBossDeath()
     {
         resultHeader.text = "Bog Unclogged!";
         resultHeader.color = winResultColor;
         ShowResults();
     }
 
-    private void OnPlayerDeath()
+    private void OnDisable()
+    {
+        multiplayerArena.OnAllMushroomsCollected -= MultiplayerArena_OnAllMushroomsCollected;
+        multiplayerArena.OnAllPlayersDead -= MultiplayerArena_OnAllPlayersDead;
+        playerReference.OnDeath -= OnPlayerDeathClientRpc;
+    }
+
+
+    private void MultiplayerArena_OnAllPlayersDead()
     {
         resultHeader.text = "Bogged Down?";
         resultHeader.color = loseResultColor;
         ShowResults();
     }
+
     private void ShowResults()
     {
         playerReference.Movement.Stop();

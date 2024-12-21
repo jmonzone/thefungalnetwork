@@ -53,17 +53,12 @@ public class NetworkCrocodile : NetworkBehaviour
     private void OnAbilityStartClientRpc(ulong clientId, Vector3 direction)
     {
         if (NetworkManager.Singleton.LocalClientId == clientId) return;
-
-        Debug.Log("on ability Start client RPC");
-
-        //todo: remove second param
         abilityCast.SetDirection(direction);
         abilityCast.Prepare();
     }
 
     private void OnAbilityCast()
     {
-        //todo: centralize logic with AbilityCastController
         OnAbilityCastClientRpc(NetworkManager.Singleton.LocalClientId);
     }
 

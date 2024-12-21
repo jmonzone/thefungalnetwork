@@ -27,28 +27,7 @@ public class NetworkAttackable : NetworkBehaviour
 
         //    attackable.SetHealth(CurrentHealth.Value);
         //}
-
-        attackable.OnDamageRequest += () =>
-        {
-            Debug.Log($"client damaged");
-
-            SyncHealthToOthersServerRpc();
-        };
     }
 
-    [ServerRpc(RequireOwnership=false)]
-    public void SyncHealthToOthersServerRpc()
-    {
-        Debug.Log($"handling damaged");
-
-        SyncHealthToOthersClientRpc();
-    }
-
-    [ClientRpc]
-    public void SyncHealthToOthersClientRpc()
-    {
-        Debug.Log($"handling damaged");
-
-        attackable.HandleDamage();
-    }
+    
 }

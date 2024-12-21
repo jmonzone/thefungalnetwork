@@ -23,7 +23,7 @@ public class CrocodileInteraction : MonoBehaviour
         proximityAction.OnUse += RequestMount;
 
         attackable = GetComponent<Attackable>();
-        attackable.OnHealthChanged += Attackable_OnHealthChanged; ;
+        attackable.OnHealthDepleted += Attackable_OnHealthChanged;
         UpdateIsInteractable();
 
         movement = GetComponent<MovementController>();
@@ -31,11 +31,8 @@ public class CrocodileInteraction : MonoBehaviour
 
     private void Attackable_OnHealthChanged()
     {
-        if (attackable.CurrentHealth == 0)
-        {
-            isDefeated = true;
-            UpdateIsInteractable();
-        }
+        isDefeated = true;
+        UpdateIsInteractable();
     }
 
     private void OnEnable()
@@ -79,7 +76,7 @@ public class CrocodileInteraction : MonoBehaviour
 
         if (value)
         {
-            attackable.Restore();
+            attackable.RestoreServerRpc();
             GetComponentInChildren<Animator>().Play("Spin");
         }
         

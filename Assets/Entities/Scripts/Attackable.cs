@@ -1,59 +1,55 @@
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Attackable : MonoBehaviour
+public class Attackable : NetworkBehaviour
 {
-    [SerializeField] private float currentHealth = 3f;
     [SerializeField] private float maxHealth = 3f;
 
-    public float CurrentHealth => currentHealth;
+    private NetworkVariable<float> networkHealth = new NetworkVariable<float>();
+    public float CurrentHealth => networkHealth.Value;
     public float MaxHealth => maxHealth;
 
-    public event UnityAction OnDamageRequest;
     public event UnityAction OnDamaged;
     public event UnityAction OnHealthChanged;
     public event UnityAction OnHealthDepleted;
 
-    private void Awake()
+    public override void OnNetworkSpawn()
     {
-        currentHealth = maxHealth;
+        base.OnNetworkSpawn();
+        if (IsServer)
+        {
+            networkHealth.Value = maxHealth;
+        }
+
+        networkHealth.OnValueChanged += (oldValue, newValue) =>
+        {
+            Debug.Log($"onvaluechanged {oldValue} {newValue}");
+            OnHealthChanged?.Invoke();
+
+            if (newValue <= 0f)
+            {
+                OnHealthDepleted?.Invoke();
+            }
+        };
     }
 
-    public void Restore()
+    [ServerRpc(RequireOwnership = false)]
+    public void RestoreServerRpc()
     {
-        SetHealth(maxHealth);
+        networkHealth.Value = MaxHealth;
     }
 
-    public void SetHealth(float health)
+    [ServerRpc(RequireOwnership = false)]
+    public void DamageServerRpc(float damage)
     {
-        currentHealth = Mathf.Max(health, 0);
-        OnHealthChanged?.Invoke();
-
-        if (CurrentHealth <= 0f)
-        {
-            OnHealthDepleted?.Invoke();
-        }
+        networkHealth.Value = Mathf.Clamp(networkHealth.Value - damage, 0, maxHealth);
+        DamageClientRpc();
     }
 
-    public void RequestDamage(float damage = 1)
+    [ClientRpc]
+    private void DamageClientRpc()
     {
-        if (CurrentHealth > 0)
-        {
-            OnDamageRequest?.Invoke();
-        }
-    }
-
-    public bool HandleDamage()
-    {
-        if (CurrentHealth > 0)
-        {
-            SetHealth(currentHealth - 1);
-            OnDamaged?.Invoke();
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        OnDamaged?.Invoke();
     }
 }

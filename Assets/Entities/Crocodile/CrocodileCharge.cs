@@ -5,6 +5,8 @@ using UnityEngine.Events;
 
 public class CrocodileCharge : MonoBehaviour
 {
+    [SerializeField] private float damage;
+
     private MovementController movement;
     private AbilityCast abilityCast;
 
@@ -61,7 +63,7 @@ public class CrocodileCharge : MonoBehaviour
         if (attackable && !attackables.Contains(attackable))
         {
             Debug.Log($"Collided {collision.transform.name}");
-            attackable.RequestDamage();
+            attackable.DamageServerRpc(damage);
             attackables.Add(attackable);
         }
     }

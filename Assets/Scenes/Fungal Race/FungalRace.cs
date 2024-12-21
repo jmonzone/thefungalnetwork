@@ -50,7 +50,7 @@ public class FungalRace : MonoBehaviour
             if (attackTimer <= 0)
             {
                 var damage = Mathf.Lerp(maxDamage, minDamage, fungalRaceUI.AuraValue);
-                currentObstacle.RequestDamage(damage);
+                currentObstacle.DamageServerRpc(damage);
                 attackTimer = attackCooldown;
             }
         }
@@ -84,7 +84,7 @@ public class FungalRace : MonoBehaviour
         {
             var targetObstacle = obstacles[obstacleIndex];
             targetObstacle.gameObject.SetActive(true);
-            targetObstacle.Restore();
+            targetObstacle.RestoreServerRpc();
 
             controller.Movement.SetTarget(targetObstacle.transform, () =>
             {

@@ -27,6 +27,6 @@ public class HealthSlider : MonoBehaviour
     private void UpdateView()
     {
         slider.value = attackable.CurrentHealth;
-        slider.gameObject.SetActive(attackable.CurrentHealth != attackable.MaxHealth && attackable.CurrentHealth != 0);
+        slider.gameObject.SetActive(attackable.CurrentHealth > 0 && attackable.CurrentHealth < attackable.MaxHealth);
     }
 }

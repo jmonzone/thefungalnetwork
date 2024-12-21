@@ -13,6 +13,16 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 233472190970575125, guid: c723cd605f9c944d29cae414c591489b,
+        type: 3}
+      propertyPath: maxHealth
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 233472190970575125, guid: c723cd605f9c944d29cae414c591489b,
+        type: 3}
+      propertyPath: currentHealth
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 3149471867308357906, guid: c723cd605f9c944d29cae414c591489b,
         type: 3}
       propertyPath: m_IsKinematic
@@ -32,6 +42,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Network Crocodile Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 4922996098477504940, guid: c723cd605f9c944d29cae414c591489b,
+        type: 3}
+      propertyPath: damage
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6228169022195851406, guid: c723cd605f9c944d29cae414c591489b,
         type: 3}
@@ -207,8 +222,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4612bbac67e5475fa17b61caa9e78ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CurrentHealth:
-    m_InternalValue: 0
 --- !u!114 &5683805403441434245
 MonoBehaviour:
   m_ObjectHideFlags: 0
