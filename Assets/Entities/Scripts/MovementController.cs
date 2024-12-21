@@ -8,7 +8,7 @@ public class MovementController : MonoBehaviour
     [SerializeField] private float speed = 2f;
     [SerializeField] private bool lerpRotation = true;
     [SerializeField] private bool faceForward = true;
-    [SerializeField] private bool useRoll = true;
+    [SerializeField] private bool useRoll = false;
     [SerializeField] private bool lockXZLookRotation = false;
     [SerializeField] private bool useDrag = false;
     [SerializeField] private PositionAnchor positionAnchor;

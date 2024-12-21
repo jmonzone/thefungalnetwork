@@ -31,7 +31,7 @@ public class MushroomObjectiveSync : NetworkBehaviour
     [ClientRpc]
     public void SyncMountClientRpc(ulong clientId)
     {
-        objective.enabled = NetworkManager.Singleton.LocalClientId == clientId;
+        objective.SetIsMounted(true);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -44,6 +44,6 @@ public class MushroomObjectiveSync : NetworkBehaviour
     [ClientRpc]
     public void SyncUnmountClientRpc(ulong clientId)
     {
-        objective.enabled = true;
+        objective.SetIsMounted(false);
     }
 }

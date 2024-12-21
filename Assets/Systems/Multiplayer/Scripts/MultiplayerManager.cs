@@ -19,6 +19,7 @@ public class MultiplayerManager : ScriptableObject
     [SerializeField] private SceneNavigation sceneNavigation;
 
     public string PlayerName { get; private set; }
+    public bool IsSignedIn { get; private set; }
 
     private Lobby joinedLobby;
     public Lobby JoinedLobby
@@ -49,7 +50,7 @@ public class MultiplayerManager : ScriptableObject
     public void Initialize()
     {
         JoinedLobby = null;
-        SignIn(displayName.Value, () => { });
+        IsSignedIn = false;
     }
 
     public void DoUpdate()
@@ -85,19 +86,28 @@ public class MultiplayerManager : ScriptableObject
         }
     }
 
-    public async void SignIn(string playerName, UnityAction onComplete)
+    public async void SignIn(UnityAction onComplete)
     {
-        PlayerName = playerName.Replace(" ", "_");
-        InitializationOptions initializationOptions = new InitializationOptions();
-        initializationOptions.SetProfile(PlayerName);
-
-        await UnityServices.InitializeAsync();
-
-        if (AuthenticationService.Instance.IsSignedIn) onComplete?.Invoke();
+        if (IsSignedIn)
+        {
+            onComplete?.Invoke();
+        }
         else
         {
-            AuthenticationService.Instance.SignedIn += () => onComplete?.Invoke();
+            await UnityServices.InitializeAsync();
+
+            PlayerName = displayName.Value.Replace(" ", "_");
+            InitializationOptions initializationOptions = new InitializationOptions();
+            initializationOptions.SetProfile(PlayerName);
+
+            AuthenticationService.Instance.SignedIn += () =>
+            {
+                IsSignedIn = true;
+                onComplete?.Invoke();
+            };
+
             await AuthenticationService.Instance.SignInAnonymouslyAsync();
+
         }
     }
 

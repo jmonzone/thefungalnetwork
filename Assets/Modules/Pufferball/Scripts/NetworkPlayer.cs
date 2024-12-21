@@ -36,7 +36,11 @@ public class NetworkPlayer : NetworkBehaviour
             Debug.Log("Local player spawned: " + gameObject.name);
 
             var partner = possesionService.Fungal;
-
+            if (!partner)
+            {
+                partner = fungalInventory.Fungals[0];
+                possesionService.SetPossession(partner);
+            }
             Quaternion forwardRotation = Quaternion.LookRotation(Vector3.forward);
 
             if (IsServer)

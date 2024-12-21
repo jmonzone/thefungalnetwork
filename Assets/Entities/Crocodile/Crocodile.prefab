@@ -204,7 +204,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
-  mountIndicator: {fileID: 0}
 --- !u!114 &6235786018507511907
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -232,18 +231,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 0
   speed: 2
-  lerpRotation: 0
-  lockXZ: 1
+  lerpRotation: 1
+  faceForward: 0
+  useRoll: 0
+  lockXZLookRotation: 0
   useDrag: 0
   positionAnchor:
     anchor: {fileID: 0}
     bounds: {fileID: 0}
-  distanceThreshold: 0.5
+  distanceThreshold: 0.25
   startIdle: 0
   minIdleDuration: 2
   maxIdleDuration: 5
   radius: 4
   radialSpeed: 0.25
+  jumpForce: 250
   maxJumpCount: 1
 --- !u!114 &233472190970575125
 MonoBehaviour:

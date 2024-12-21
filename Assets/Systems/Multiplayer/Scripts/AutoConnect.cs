@@ -58,20 +58,23 @@ public class AutoConnect : NetworkBehaviour
         {
             yield return new WaitForSeconds(3f);
 
-            multiplayer.ListLobbies(async lobbies =>
+            multiplayer.SignIn(() =>
             {
-                // Check if the player is already in a lobby
-                //var rejoined = await multiplayerManager.TryRejoinLobby();
-                //if (rejoined) return;
+                multiplayer.ListLobbies(async lobbies =>
+                {
+                    // Check if the player is already in a lobby
+                    //var rejoined = await multiplayerManager.TryRejoinLobby();
+                    //if (rejoined) return;
 
-                if (lobbies.Count > 0)
-                {
-                    await multiplayer.JoinLobbyById(lobbies[0].Id);
-                }
-                else
-                {
-                    await multiplayer.CreateRelayAndLobby();
-                }
+                    if (lobbies.Count > 0)
+                    {
+                        await multiplayer.JoinLobbyById(lobbies[0].Id);
+                    }
+                    else
+                    {
+                        await multiplayer.CreateRelayAndLobby();
+                    }
+                });
             });
         }
     }

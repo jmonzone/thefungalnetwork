@@ -37,7 +37,7 @@ public class Attackable : MonoBehaviour
 
     public void RequestDamage(float damage = 1)
     {
-        if (HandleDamage())
+        if (CurrentHealth > 0)
         {
             OnDamageRequest?.Invoke();
         }

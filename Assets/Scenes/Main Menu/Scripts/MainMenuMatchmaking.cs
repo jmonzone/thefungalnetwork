@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Linq;
 using GURU;
+using Unity.Services.Authentication;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -32,7 +33,14 @@ public class MainMenuMatchmaking : MonoBehaviour
 
         GetComponent<ViewController>().OnFadeInStart += () =>
         {
-            enabled = true;
+            if (!multiplayer.IsSignedIn)
+            {
+                multiplayer.SignIn(() => enabled = true);
+            }
+            else
+            {
+                enabled = true;
+            }
         };
     }
 
@@ -40,6 +48,7 @@ public class MainMenuMatchmaking : MonoBehaviour
 
     private void Update()
     {
+        if (!multiplayer.IsSignedIn) return;
         updateTimer += Time.deltaTime;
 
         if (updateTimer > 2)

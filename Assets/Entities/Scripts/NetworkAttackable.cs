@@ -4,42 +4,49 @@ using UnityEngine;
 public class NetworkAttackable : NetworkBehaviour
 {
     private Attackable attackable;
-    public NetworkVariable<float> CurrentHealth = new NetworkVariable<float>(0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    //public NetworkVariable<float> CurrentHealth = new NetworkVariable<float>(0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
         attackable = GetComponent<Attackable>();
 
-        if (IsServer)
-        {
-            // Initialize health only on the server
-            CurrentHealth.Value = attackable.CurrentHealth; // Initial value
-        }
-        else
-        {
-            // Update health locally when CurrentHealth changes
-            CurrentHealth.OnValueChanged += (oldValue, newValue) =>
-            {
-                Debug.Log($"Health updated from {oldValue} to {newValue}");
-                attackable.SetHealth(newValue);
-            };
+        //if (IsServer)
+        //{
+        //    // Initialize health only on the server
+        //    CurrentHealth.Value = attackable.CurrentHealth; // Initial value
+        //}
+        //else
+        //{
+        //    // Update health locally when CurrentHealth changes
+        //    CurrentHealth.OnValueChanged += (oldValue, newValue) =>
+        //    {
+        //        Debug.Log($"Health updated from {oldValue} to {newValue}");
+        //        attackable.SetHealth(newValue);
+        //    };
 
-            attackable.SetHealth(CurrentHealth.Value);
-        }
+        //    attackable.SetHealth(CurrentHealth.Value);
+        //}
 
         attackable.OnDamageRequest += () =>
         {
             Debug.Log($"client damaged");
 
-            SyncHealthToOthersClientRpc(NetworkManager.Singleton.LocalClientId);
+            SyncHealthToOthersServerRpc();
         };
     }
 
-    [ClientRpc]
-    public void SyncHealthToOthersClientRpc(ulong clientId)
+    [ServerRpc(RequireOwnership=false)]
+    public void SyncHealthToOthersServerRpc()
     {
-        if (NetworkManager.Singleton.LocalClientId == clientId) return;
+        Debug.Log($"handling damaged");
+
+        SyncHealthToOthersClientRpc();
+    }
+
+    [ClientRpc]
+    public void SyncHealthToOthersClientRpc()
+    {
         Debug.Log($"handling damaged");
 
         attackable.HandleDamage();

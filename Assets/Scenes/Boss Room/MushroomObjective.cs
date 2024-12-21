@@ -8,6 +8,7 @@ public class MushroomObjective : MonoBehaviour
 {
     [SerializeField] private Controller controller;
 
+    private bool isMounted;
     private MovementController movement;
     private MovementController mountedController;
 
@@ -32,6 +33,7 @@ public class MushroomObjective : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         Debug.Log("collision");
+        if (isMounted) return;
         if (mountedController) return;
         Rigidbody playerRb = collision.rigidbody;
 
@@ -55,6 +57,7 @@ public class MushroomObjective : MonoBehaviour
         mountedController = controller.Movement;
         controller.SetMovement(movement);
         mountedController.GetComponent<ProximityAction>().SetInteractable(false);
+        SetIsMounted(true);
         OnMounted?.Invoke();
     }
 
@@ -64,6 +67,12 @@ public class MushroomObjective : MonoBehaviour
         mountedController.GetComponent<ProximityAction>().SetInteractable(true);
         movement.Stop();
         mountedController = null;
+        SetIsMounted(false);
         OnUnmounted?.Invoke();
+    }
+
+    public void SetIsMounted(bool value)
+    {
+        isMounted = value;
     }
 }

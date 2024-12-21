@@ -37,7 +37,7 @@ public class Possession : ScriptableObject
         //};
     }
 
-    private void SetPossession(FungalModel fungal)
+    public void SetPossession(FungalModel fungal)
     {
         this.fungal = fungal;
         var possession = fungal?.Data.Id ?? "";
