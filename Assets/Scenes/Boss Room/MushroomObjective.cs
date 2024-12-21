@@ -9,7 +9,8 @@ public class MushroomObjective : NetworkBehaviour
 {
     [SerializeField] private Controller controller;
 
-    private NetworkVariable<bool> IsMounted = new NetworkVariable<bool>(false);
+    public NetworkVariable<bool> IsMounted = new NetworkVariable<bool>(false);
+
     private MovementController movement;
     private MovementController mountedController;
 
@@ -71,9 +72,10 @@ public class MushroomObjective : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void UnmountServerRpc()
     {
+        var owner = NetworkObject.OwnerClientId;
         NetworkObject.RemoveOwnership();
         IsMounted.Value = false;
-        UnmountClientRpc(NetworkObject.OwnerClientId);
+        UnmountClientRpc(owner);
     }
 
     [ClientRpc]
