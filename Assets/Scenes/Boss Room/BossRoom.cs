@@ -7,6 +7,7 @@ public class BossRoom : MonoBehaviour
     [SerializeField] private Controller playerReference;
     [SerializeField] private ShruneItem defaultShrune;
     [SerializeField] private ItemInventory itemInventory;
+    [SerializeField] private MultiplayerArena multiplayerArena;
 
     [Header("Results")]
     [SerializeField] private Navigation navigation;
@@ -25,11 +26,18 @@ public class BossRoom : MonoBehaviour
 
     private void OnEnable()
     {
+        multiplayerArena.OnAllMushroomsCollected += MultiplayerArena_OnAllMushroomsCollected;
         playerReference.OnDeath += OnPlayerDeath;
+    }
+
+    private void MultiplayerArena_OnAllMushroomsCollected()
+    {
+        OnBossDeath();
     }
 
     private void OnDisable()
     {
+        multiplayerArena.OnAllMushroomsCollected -= MultiplayerArena_OnAllMushroomsCollected;
         playerReference.OnDeath -= OnPlayerDeath;
     }
 
