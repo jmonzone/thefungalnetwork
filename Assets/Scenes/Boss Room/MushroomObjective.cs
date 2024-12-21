@@ -19,6 +19,7 @@ public class MushroomObjective : MonoBehaviour
         if (mountedController)
         {
             mountedController.transform.position = transform.position + Vector3.up * 0.625f;
+            mountedController.LookAt(controller.Movement.Direction);
         }
     }
 
@@ -46,6 +47,7 @@ public class MushroomObjective : MonoBehaviour
     private void Mount()
     {
         mountedController = controller.Movement;
+        mountedController.GetComponent<ProximityAction>().SetInteractable(false);
         controller.SetMovement(movement);
     }
 }

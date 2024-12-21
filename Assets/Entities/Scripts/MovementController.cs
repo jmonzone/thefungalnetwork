@@ -9,7 +9,7 @@ public class MovementController : MonoBehaviour
     [SerializeField] private bool lerpRotation = true;
     [SerializeField] private bool faceForward = true;
     [SerializeField] private bool useRoll = true;
-    [SerializeField] private bool lockXZ = false;
+    [SerializeField] private bool lockXZLookRotation = false;
     [SerializeField] private bool useDrag = false;
     [SerializeField] private PositionAnchor positionAnchor;
     
@@ -191,9 +191,7 @@ public class MovementController : MonoBehaviour
                 //todo: clean up this logic
                 var lookDirection = Direction;
                 if (type == MovementType.TARGET) lookDirection = target.position - transform.position;
-                Quaternion targetRotation = Quaternion.LookRotation(lookDirection, Vector3.up);
-                if (lockXZ) targetRotation = Quaternion.Euler(0, targetRotation.eulerAngles.y, 0); // Keep only y-axis rotation
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 1000 * Time.deltaTime);
+                LookAt(lookDirection);
                 transform.position += speed * Time.deltaTime * transform.forward;
             }
             else if (FaceForward)
@@ -206,6 +204,13 @@ public class MovementController : MonoBehaviour
                 rb.velocity = speed * Direction;
             }
         }
+        else
+        {
+            if (useRoll)
+            {
+                rb.velocity = Vector3.zero; 
+            }
+        }
 
 
         if (useDrag)
@@ -213,6 +218,13 @@ public class MovementController : MonoBehaviour
             if (speed > 0.05f) speed *= 1 - Time.deltaTime * 0.1f;
             else speed = 0;
         }
+    }
+
+    public void LookAt(Vector3 direction)
+    {
+        Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
+        if (lockXZLookRotation) targetRotation = Quaternion.Euler(0, targetRotation.eulerAngles.y, 0); // Keep only y-axis rotation
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 1000 * Time.deltaTime);
     }
 
     private IEnumerator WaitUntilDestinationReached(UnityAction onComplete)
