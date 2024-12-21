@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 //todo: centralize with crocodile interaction
 public class MushroomObjective : MonoBehaviour
@@ -9,6 +10,9 @@ public class MushroomObjective : MonoBehaviour
 
     private MovementController movement;
     private MovementController mountedController;
+
+    public event UnityAction OnMounted;
+    public event UnityAction OnUnmounted;
 
     private void Awake()
     {
@@ -38,7 +42,7 @@ public class MushroomObjective : MonoBehaviour
         {
             Debug.Log("contacts");
             // Check if the player is falling onto the object
-            if (playerRb.velocity.y <= 0)
+            if (playerRb.velocity.y < 0)
             {
                 Debug.Log("Player landed on this object!");
                 Mount();
@@ -51,6 +55,7 @@ public class MushroomObjective : MonoBehaviour
         mountedController = controller.Movement;
         mountedController.GetComponent<ProximityAction>().SetInteractable(false);
         controller.SetMovement(movement);
+        OnMounted?.Invoke();
     }
 
     private void Unmount()
@@ -59,5 +64,6 @@ public class MushroomObjective : MonoBehaviour
         controller.SetMovement(mountedController);
         movement.Stop();
         mountedController = null;
+        OnUnmounted?.Invoke();
     }
 }

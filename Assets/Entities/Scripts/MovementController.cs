@@ -216,6 +216,8 @@ public class MovementController : MonoBehaviour
 
     public void LookAt(Vector3 direction)
     {
+        if (direction == Vector3.zero) return;
+
         Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
         if (lockXZLookRotation) targetRotation = Quaternion.Euler(0, targetRotation.eulerAngles.y, 0); // Keep only y-axis rotation
         transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 1000 * Time.deltaTime);

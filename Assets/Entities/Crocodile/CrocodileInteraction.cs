@@ -42,9 +42,15 @@ public class CrocodileInteraction : MonoBehaviour
         controller.OnUpdate += Controller_OnUpdate;
     }
 
+    private void OnDisable()
+    {
+        controller.OnUpdate -= Controller_OnUpdate;
+    }
+
+
     private void Controller_OnUpdate()
     {
-        if (controller.Movement != movement)
+        if (isMounted && controller.Movement != movement)
         {
             RequestUnmount();
         }
