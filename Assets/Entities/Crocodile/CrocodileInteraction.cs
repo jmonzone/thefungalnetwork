@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
+//todo: centralize with mushroomobjective to create a central moutn component
 public class CrocodileInteraction : MonoBehaviour
 {
     [SerializeField] private Controller controller;

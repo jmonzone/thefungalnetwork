@@ -53,15 +53,15 @@ public class MushroomObjective : MonoBehaviour
     private void Mount()
     {
         mountedController = controller.Movement;
-        mountedController.GetComponent<ProximityAction>().SetInteractable(false);
         controller.SetMovement(movement);
+        mountedController.GetComponent<ProximityAction>().SetInteractable(false);
         OnMounted?.Invoke();
     }
 
     private void Unmount()
     {
-        mountedController.GetComponent<ProximityAction>().SetInteractable(true);
         controller.SetMovement(mountedController);
+        mountedController.GetComponent<ProximityAction>().SetInteractable(true);
         movement.Stop();
         mountedController = null;
         OnUnmounted?.Invoke();
