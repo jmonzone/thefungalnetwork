@@ -9,13 +9,12 @@ public class AutoConnect : NetworkBehaviour
     [SerializeField] private MultiplayerArena arena;
     [SerializeField] private MultiplayerManager multiplayer;
     [SerializeField] private Transform playerSpawnAnchor;
-    [SerializeField] private Transform crocodileSpawnAnchor;
     [SerializeField] private DisplayName displayName;
     [SerializeField] private Button exitButton;
 
     private void Awake()
     {
-        arena.Initialize(playerSpawnAnchor.position, crocodileSpawnAnchor.position);
+        arena.Initialize(playerSpawnAnchor.position);
     }
 
     private void OnEnable()

@@ -1,24 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
 
 //todo: centralize with crocodile interaction
-public class MushroomObjective : MonoBehaviour
+public class MushroomObjective : NetworkBehaviour
 {
     [SerializeField] private Controller controller;
 
-    private bool isMounted;
+    private NetworkVariable<bool> IsMounted = new NetworkVariable<bool>(false);
     private MovementController movement;
     private MovementController mountedController;
-
-    public event UnityAction OnMounted;
-    public event UnityAction OnUnmounted;
 
     private void Awake()
     {
         movement = GetComponent<MovementController>();
-        movement.OnJump += Unmount;
+        movement.OnJump += UnmountServerRpc;
     }
 
     private void Update()
@@ -32,9 +30,9 @@ public class MushroomObjective : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("collision");
-        if (isMounted) return;
+        if (IsMounted.Value) return;
         if (mountedController) return;
+            
         Rigidbody playerRb = collision.rigidbody;
 
         var movement = collision.gameObject.GetComponentInParent<MovementController>();
@@ -42,37 +40,51 @@ public class MushroomObjective : MonoBehaviour
         // Ensure the player is the one colliding
         if (movement && movement == controller.Movement)
         {
-            Debug.Log("contacts");
             // Check if the player is falling onto the object
             if (playerRb.velocity.y < 0)
             {
                 Debug.Log("Player landed on this object!");
-                Mount();
+                MountServerRpc(NetworkManager.Singleton.LocalClientId);
             }
         }
     }
 
-    private void Mount()
+    [ServerRpc(RequireOwnership = false)]
+    public void MountServerRpc(ulong clientId)
     {
-        mountedController = controller.Movement;
-        controller.SetMovement(movement);
-        mountedController.GetComponent<ProximityAction>().SetInteractable(false);
-        SetIsMounted(true);
-        OnMounted?.Invoke();
+        NetworkObject.ChangeOwnership(clientId);
+        IsMounted.Value = true;
+        MounterClientRpc(clientId);
     }
 
-    private void Unmount()
+    [ClientRpc]
+    public void MounterClientRpc(ulong clientId)
     {
-        controller.SetMovement(mountedController);
-        mountedController.GetComponent<ProximityAction>().SetInteractable(true);
-        movement.Stop();
-        mountedController = null;
-        SetIsMounted(false);
-        OnUnmounted?.Invoke();
+        if (NetworkManager.Singleton.LocalClientId == clientId)
+        {
+            mountedController = controller.Movement;
+            controller.SetMovement(movement);
+            mountedController.GetComponent<ProximityAction>().SetInteractable(false);
+        }
     }
 
-    public void SetIsMounted(bool value)
+    [ServerRpc(RequireOwnership = false)]
+    public void UnmountServerRpc()
     {
-        isMounted = value;
+        NetworkObject.RemoveOwnership();
+        IsMounted.Value = false;
+        UnmountClientRpc(NetworkObject.OwnerClientId);
+    }
+
+    [ClientRpc]
+    public void UnmountClientRpc(ulong clientId)
+    {
+        if (NetworkManager.Singleton.LocalClientId == clientId)
+        {
+            controller.SetMovement(mountedController);
+            mountedController.GetComponent<ProximityAction>().SetInteractable(true);
+            movement.Stop();
+            mountedController = null;
+        }
     }
 }

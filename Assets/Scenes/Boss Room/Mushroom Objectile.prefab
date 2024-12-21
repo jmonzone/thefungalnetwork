@@ -9,11 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7132786186537795995}
+  - component: {fileID: 9071348346300523584}
   - component: {fileID: 560567521552257232}
   - component: {fileID: 6283547910459686726}
-  - component: {fileID: 9071348346300523584}
   - component: {fileID: 4617217471031680403}
-  - component: {fileID: 8646358175818319075}
   - component: {fileID: 9082754761563988515}
   - component: {fileID: 4264008912883346571}
   m_Layer: 0
@@ -39,6 +38,27 @@ Transform:
   - {fileID: 6677416589189383041}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9071348346300523584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 474011470429881578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 2155931564
+  InScenePlacedSourceGlobalObjectIdHash: 3259940467
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!114 &560567521552257232
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -82,27 +102,6 @@ MonoBehaviour:
   radialSpeed: 0.25
   jumpForce: 500
   maxJumpCount: 1
---- !u!114 &9071348346300523584
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 474011470429881578}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3416563057
-  InScenePlacedSourceGlobalObjectIdHash: 3259940467
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
 --- !u!114 &4617217471031680403
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -134,18 +133,6 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &8646358175818319075
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 474011470429881578}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 49c96b4a3ce774ae8b78ef6df4ea6e24, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!54 &9082754761563988515
 Rigidbody:
   m_ObjectHideFlags: 0

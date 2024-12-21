@@ -5,22 +5,15 @@ using UnityEngine;
 public class BossRoom : MonoBehaviour
 {
     [SerializeField] private Controller playerReference;
-    [SerializeField] private Attackable boss;
+    [SerializeField] private ShruneItem defaultShrune;
+    [SerializeField] private ItemInventory itemInventory;
+
+    [Header("Results")]
     [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference resultView;
     [SerializeField] private TextMeshProUGUI resultHeader;
     [SerializeField] private Color winResultColor;
     [SerializeField] private Color loseResultColor;
-    [SerializeField] private ShruneItem defaultShrune;
-    [SerializeField] private ItemInventory itemInventory;
-
-    //[Header("Input")]
-    //[SerializeField] private
-
-    private void Awake()
-    {
-        //boss.OnHealthDepleted += OnBossDeath;
-    }
 
     private void Start()
     {
@@ -32,12 +25,12 @@ public class BossRoom : MonoBehaviour
 
     private void OnEnable()
     {
-        //playerReference.OnDeath += OnPlayerDeath;
+        playerReference.OnDeath += OnPlayerDeath;
     }
 
     private void OnDisable()
     {
-        //playerReference.OnDeath -= OnPlayerDeath;
+        playerReference.OnDeath -= OnPlayerDeath;
     }
 
     private void OnBossDeath()
