@@ -22,11 +22,7 @@ public class NetworkFungal : NetworkBehaviour
             var proximityAction = GetComponent<ProximityAction>();
             proximityAction.SetInteractable(false);
         }
-    }
 
-    [ClientRpc]
-    public void InitializeClientRpc()
-    {
         var fungalController = GetComponent<FungalController>();
         fungalController.InitializeAnimations();
     }

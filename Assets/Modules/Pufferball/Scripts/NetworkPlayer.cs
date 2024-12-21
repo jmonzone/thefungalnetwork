@@ -3,28 +3,12 @@ using UnityEngine;
 
 public class NetworkPlayer : NetworkBehaviour
 {
-    [SerializeField] private NetworkObject networkAvatarPrefab;
-    [SerializeField] private NetworkCrocodile networkCrocdilePrefab;
-
-
     [SerializeField] private MultiplayerArena arena;
-    [SerializeField] private Possession possesionService;
     [SerializeField] private Controller controller;
     [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference inputView;
 
-    [SerializeField] private FungalInventory fungalInventory;
     [SerializeField] private FungalCollection fungalCollection;
-
-    public NetworkVariable<Vector3> PlayerPosition = new NetworkVariable<Vector3>(Vector3.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-
-    private void Update()
-    {
-        if (IsOwner && controller.Movement)
-        {
-            PlayerPosition.Value = controller.Movement.transform.position;
-        }
-    }
 
     public override void OnNetworkSpawn()
     {
@@ -32,122 +16,42 @@ public class NetworkPlayer : NetworkBehaviour
 
         if (IsOwner)
         {
-            // This is the local player
-            Debug.Log("Local player spawned: " + gameObject.name);
-
-            var partner = possesionService.Fungal;
-            if (!partner)
-            {
-                partner = fungalInventory.Fungals[0];
-                possesionService.SetPossession(partner);
-            }
-            Quaternion forwardRotation = Quaternion.LookRotation(Vector3.forward);
-
-            if (IsServer)
-            {
-                if (partner)
-                {
-                    var spawnedFungal = Instantiate(partner.Data.NetworkPrefab, arena.PlayerSpawnPosition, forwardRotation, transform);
-                    spawnedFungal.NetworkObject.Spawn();
-                    spawnedFungal.InitializeClientRpc();
-                    controller.SetMovement(spawnedFungal.GetComponent<MovementController>());
-                }
-                else
-                {
-                    var randomOffset = Random.insideUnitSphere;
-                    randomOffset.y = 0;
-
-                    var avatarSpawnPosition = arena.PlayerSpawnPosition + randomOffset.normalized * 2f;
-                    var spawnedAvatar = Instantiate(networkAvatarPrefab, avatarSpawnPosition, forwardRotation, transform);
-                    spawnedAvatar.Spawn();
-                    controller.SetMovement(spawnedAvatar.GetComponent<MovementController>());
-                }
-
-
-                //var spawnedCrocodile = Instantiate(networkCrocdilePrefab, arena.CrocodileSpawnPosition, Quaternion.LookRotation(Vector3.back), transform);
-                //spawnedCrocodile.NetworkObject.Spawn();
-            }
-            else
-            {
-                if (partner)
-                {
-                    RequestSpawnFungalServerRpc(NetworkManager.Singleton.LocalClientId, partner.Data.Id);
-                }
-                else
-                {
-                    RequestSpawnAvatarServerRpc(NetworkManager.Singleton.LocalClientId);
-                }
-            }
-            navigation.Navigate(inputView);
+            var initialIndex = Random.Range(0, fungalCollection.Fungals.Count);
+            RequestSpawnFungalServerRpc(NetworkManager.Singleton.LocalClientId, Random.Range(0, initialIndex));
         }
     }
 
-    
-
     [ServerRpc(RequireOwnership = false)]
-    public void RequestSpawnAvatarServerRpc(ulong clientId)
+    private void RequestSpawnFungalServerRpc(ulong clientId, int fungalIndex)
     {
-        // Only the server will execute this logic
-        var networkAvatar = Instantiate(networkAvatarPrefab, arena.PlayerSpawnPosition, Quaternion.identity, transform);
-        networkAvatar.SpawnWithOwnership(clientId);
+        var fungal = fungalCollection.Fungals[fungalIndex];
 
-        // Send the NetworkObject ID to the client
-        SendAvatarInfoClientRpc(clientId, networkAvatar.NetworkObjectId);
+        var randomOffset = Random.insideUnitSphere.normalized * 3f;
+        randomOffset.y = 0;
+
+        var randomPosition = arena.PlayerSpawnPosition + randomOffset;
+
+        var networkFungal = Instantiate(fungal.NetworkPrefab, randomPosition, Quaternion.identity, transform);
+        networkFungal.NetworkObject.SpawnWithOwnership(clientId);
+
+        OnFungalSpawnedClientRpc(clientId, networkFungal.NetworkObjectId);
     }
 
     [ClientRpc]
-    private void SendAvatarInfoClientRpc(ulong clientId, ulong networkObjectId)
+    private void OnFungalSpawnedClientRpc(ulong clientId, ulong networkObjectId)
     {
         if (NetworkManager.Singleton.LocalClientId == clientId)
         {
-            // Retrieve the spawned object on the client using the NetworkObjectId
             if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out var networkObject))
             {
-                // Get the desired component
-                var controllable = networkObject.GetComponent<MovementController>();
-                Debug.Log("Received Controllable component on the client!");
-
-                controller.SetMovement(controllable);
+                var networkFungal = networkObject.GetComponent<NetworkFungal>();
+                controller.SetMovement(networkFungal.Movement);
+                navigation.Navigate(inputView);
             }
             else
             {
                 Debug.LogError("Failed to find the spawned object on the client.");
             }
-        }
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void RequestSpawnFungalServerRpc(ulong clientId, string fungalId)
-    {
-        var fungal = fungalCollection.Fungals.Find(x => x.Id == fungalId);
-        // Only the server will execute this logic
-        var networkFungal = Instantiate(fungal.NetworkPrefab, arena.PlayerSpawnPosition, Quaternion.identity, transform);
-        networkFungal.NetworkObject.SpawnWithOwnership(clientId);
-
-        // Send the NetworkObject ID to the client
-        SendFungalInfoClientRpc(clientId, networkFungal.NetworkObjectId, fungalId);
-    }
-
-    //todo: consolidate with sendavatar info
-    [ClientRpc]
-    private void SendFungalInfoClientRpc(ulong clientId, ulong networkObjectId, string fungalId)
-    {
-        // Retrieve the spawned object on the client using the NetworkObjectId
-        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out var networkObject))
-        {
-            var networkFungal = networkObject.GetComponent<NetworkFungal>();
-            Debug.Log("Received Controllable component on the client!");
-
-            if (NetworkManager.Singleton.LocalClientId == clientId)
-            {
-                var fungal = fungalInventory.Fungals.Find(x => x.Data.Id == fungalId);
-                networkFungal.InitializeClientRpc();
-                controller.SetMovement(networkFungal.Movement);
-            }
-        }
-        else
-        {
-            Debug.LogError("Failed to find the spawned object on the client.");
         }
     }
 }

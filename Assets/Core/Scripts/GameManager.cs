@@ -9,7 +9,6 @@ public class GameManager : MonoBehaviour
 
     [Header("Services")]
     [SerializeField] private LocalData localData;
-    [SerializeField] private Tutorial tutorial;
     [SerializeField] private Navigation uiNavigation;
     [SerializeField] private SceneNavigation sceneNavigation;
     [SerializeField] private FadeCanvasGroup screenFade;
@@ -19,8 +18,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private ItemInventory itemInventory;
     [SerializeField] private FungalInventory fungalInventory;
     [SerializeField] private Possession possession;
-
-
 
     private void Awake()
     {
@@ -40,7 +37,6 @@ public class GameManager : MonoBehaviour
             
             uiNavigation.Initialize();
 
-            tutorial.Initialize();
             displayName.Initialize();
 
             // displayName needs to be initalized before multiplayer;
