@@ -16,6 +16,7 @@ public class ViewController : MonoBehaviour
     private void Awake()
     {
         canvas = GetComponentInChildren<FadeCanvasGroup>(includeInactive: true);
+        canvas.gameObject.SetActive(false);
     }
 
     private void OnEnable()

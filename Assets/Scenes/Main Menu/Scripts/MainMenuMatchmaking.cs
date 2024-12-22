@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Linq;
 using GURU;
+using TMPro;
 using Unity.Services.Authentication;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,8 +14,9 @@ public class MainMenuMatchmaking : MonoBehaviour
     [SerializeField] private ViewReference partyPrepareView;
 
     [SerializeField] private Button createPartyButton;
-    [SerializeField] private ListUI lobbyListUI;
     [SerializeField] private Button exitButton;
+    [SerializeField] private TextMeshProUGUI noPartiesText;
+    [SerializeField] private ListUI lobbyListUI;
 
     private void Awake()
     {
@@ -35,7 +37,11 @@ public class MainMenuMatchmaking : MonoBehaviour
         {
             if (!multiplayer.IsSignedIn)
             {
-                multiplayer.SignIn(() => enabled = true);
+                multiplayer.SignIn(() =>
+                {
+                    UpdateLobbyList();
+                    enabled = true;
+                });
             }
             else
             {
@@ -73,6 +79,7 @@ public class MainMenuMatchmaking : MonoBehaviour
             }).ToList();
 
             lobbyListUI.SetItems(lobbyListData);
+            noPartiesText.gameObject.SetActive(lobbyListData.Count == 0);
         });
 
     }
