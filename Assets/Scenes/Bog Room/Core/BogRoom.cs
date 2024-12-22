@@ -3,7 +3,7 @@ using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 
-public class BossRoom : NetworkBehaviour
+public class BogRoom : NetworkBehaviour
 {
     [SerializeField] private Controller playerReference;
     [SerializeField] private ShruneItem defaultShrune;

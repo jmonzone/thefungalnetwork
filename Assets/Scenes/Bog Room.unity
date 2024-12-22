@@ -752,7 +752,7 @@ PrefabInstance:
     - target: {fileID: 1576384917746520769, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.87467146
+      value: 0.8746715
       objectReference: {fileID: 0}
     - target: {fileID: 1576384917746520769, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
         type: 3}
@@ -762,12 +762,12 @@ PrefabInstance:
     - target: {fileID: 1576384917746520769, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.36230078
+      value: 0.36230075
       objectReference: {fileID: 0}
     - target: {fileID: 1576384917746520769, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.12322644
+      value: -0.12322642
       objectReference: {fileID: 0}
     - target: {fileID: 1576384917746520769, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
         type: 3}
@@ -5231,22 +5231,22 @@ PrefabInstance:
     - target: {fileID: 2612740834622465615, guid: 44cfcdf81f0074e5b844e37940278904,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.9467376
+      value: 0.9467375
       objectReference: {fileID: 0}
     - target: {fileID: 2612740834622465615, guid: 44cfcdf81f0074e5b844e37940278904,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.32200626
+      value: 0.3220062
       objectReference: {fileID: 0}
     - target: {fileID: 2612740834622465615, guid: 44cfcdf81f0074e5b844e37940278904,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: -0.000000029802319
       objectReference: {fileID: 0}
     - target: {fileID: 2612740834622465615, guid: 44cfcdf81f0074e5b844e37940278904,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.000000007450581
+      value: 0.000000029802319
       objectReference: {fileID: 0}
     - target: {fileID: 3460427230498625851, guid: 44cfcdf81f0074e5b844e37940278904,
         type: 3}
@@ -5338,7 +5338,7 @@ GameObject:
   - component: {fileID: 1917954867}
   - component: {fileID: 1917954870}
   m_Layer: 0
-  m_Name: Boss Room
+  m_Name: Bog Room
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5353,7 +5353,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1917954866}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5cda0fe3d1c7f4baf9241ad0b5d1f5cf, type: 3}
+  m_Script: {fileID: 11500000, guid: 5907e8fe8e2e04643b8f1921f3c44d06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   playerReference: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
@@ -5415,7 +5415,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   arena: {fileID: 11400000, guid: 24582879ca0914ce48009bfa1a0c10ae, type: 2}
   multiplayer: {fileID: 11400000, guid: 408255eed57604ff491c1da858247ecd, type: 2}
-  playerSpawnAnchor: {fileID: 0}
+  playerSpawnAnchor: {fileID: 1917954868}
   displayName: {fileID: 11400000, guid: 70aa9925b762e422089c41437a664eeb, type: 2}
   exitButton: {fileID: 1510852529}
 --- !u!1 &1923781919
@@ -6423,6 +6423,79 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
+--- !u!1001 &397374782906856566
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 5468026230324998263, guid: f1c7a183dd3ae44d6a59e0046269b21e,
+        type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 4145540505
+      objectReference: {fileID: 0}
+    - target: {fileID: 6750012702859033805, guid: f1c7a183dd3ae44d6a59e0046269b21e,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6750012702859033805, guid: f1c7a183dd3ae44d6a59e0046269b21e,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6750012702859033805, guid: f1c7a183dd3ae44d6a59e0046269b21e,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6750012702859033805, guid: f1c7a183dd3ae44d6a59e0046269b21e,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6750012702859033805, guid: f1c7a183dd3ae44d6a59e0046269b21e,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6750012702859033805, guid: f1c7a183dd3ae44d6a59e0046269b21e,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6750012702859033805, guid: f1c7a183dd3ae44d6a59e0046269b21e,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6750012702859033805, guid: f1c7a183dd3ae44d6a59e0046269b21e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6750012702859033805, guid: f1c7a183dd3ae44d6a59e0046269b21e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6750012702859033805, guid: f1c7a183dd3ae44d6a59e0046269b21e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6979892510154196894, guid: f1c7a183dd3ae44d6a59e0046269b21e,
+        type: 3}
+      propertyPath: m_Name
+      value: Boss Frog
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f1c7a183dd3ae44d6a59e0046269b21e, type: 3}
 --- !u!224 &1404579849602580034
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6935,3 +7008,4 @@ SceneRoots:
   - {fileID: 558062069}
   - {fileID: 554122489}
   - {fileID: 202591953}
+  - {fileID: 397374782906856566}
