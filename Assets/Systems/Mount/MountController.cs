@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
@@ -17,11 +15,15 @@ public class MountController : NetworkBehaviour
     public Mountable Mount => mount;
 
     public event UnityAction OnMounted;
+    public event UnityAction OnUnmounted;
 
     private void Awake()
     {
         movement = GetComponent<MovementController>();
-        movement.OnJump += Unmount;
+        movement.OnJump += () =>
+        {
+            if (mount) Unmount();
+        };
     }
 
     private void Update()
@@ -65,14 +67,12 @@ public class MountController : NetworkBehaviour
         if (NetworkManager.Singleton.LocalClientId == clientId)
         {
             OnMounted?.Invoke();
-            //mountedController = controller.Movement;
-            //controller.SetMovement(movement);
-            //mountedController.GetComponent<ProximityAction>().SetInteractable(false);
         }
     }
 
-    private void Unmount()
+    public void Unmount()
     {
+        mount.UnmountServerRpc();
         UnmountServerRpc(NetworkManager.Singleton.LocalClientId);
     }
 
@@ -89,6 +89,7 @@ public class MountController : NetworkBehaviour
         if (NetworkManager.Singleton.LocalClientId == clientId)
         {
             mount = null;
+            OnUnmounted?.Invoke();
         }
     }
 }

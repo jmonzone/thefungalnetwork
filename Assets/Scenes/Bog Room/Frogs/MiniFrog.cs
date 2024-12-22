@@ -24,9 +24,8 @@ public class MiniFrog : MonoBehaviour
 
     private void Update()
     {
-        if (mountController && targetPosition && Vector3.Distance(transform.position, targetPosition.position) < 2f)
+        if (mountController && mountController.HasMount.Value && Vector3.Distance(transform.position, targetPosition.position) < 2f)
         {
-            Debug.Log("unmounting");
             movement.Jump();
         }
     }
