@@ -18,7 +18,7 @@ public class BogFrog : NetworkBehaviour
             animator.Play("Jump");
 
             // Start shrinking the parent object
-            StartCoroutine(ShrinkParent());
+            //StartCoroutine(ShrinkParent());
         }
     }
 
