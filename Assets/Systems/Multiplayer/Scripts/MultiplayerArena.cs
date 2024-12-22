@@ -5,6 +5,7 @@ using UnityEngine.Events;
 [CreateAssetMenu]
 public class MultiplayerArena : ScriptableObject
 {
+    [SerializeField] private MultiplayerManager multiplayer;
     [SerializeField] private int deadPlayerCount = 0;
 
     public List<Transform> Players { get; private set; }
@@ -15,6 +16,8 @@ public class MultiplayerArena : ScriptableObject
 
     public event UnityAction OnAllMushroomsCollected;
     public event UnityAction OnAllPlayersDead;
+    public event UnityAction OnAllPlayersSpawned;
+    public event UnityAction OnIntroComplete;
 
     public void Initialize(Vector3 playerSpawnPosition)
     {
@@ -27,6 +30,14 @@ public class MultiplayerArena : ScriptableObject
     public void RegisterPlayer(Transform player)
     {
         Players.Add(player);
+
+        if (multiplayer.JoinedLobby != null)
+        {
+            if (multiplayer.JoinedLobby.Players.Count == Players.Count)
+            {
+                OnAllPlayersSpawned?.Invoke();
+            }
+        }
     }
 
     public void IncrementMushroomsCollected()
@@ -45,5 +56,10 @@ public class MultiplayerArena : ScriptableObject
         {
             OnAllPlayersDead?.Invoke();
         }
+    }
+
+    public void InvokeIntroComplete()
+    {
+        OnIntroComplete?.Invoke();
     }
 }

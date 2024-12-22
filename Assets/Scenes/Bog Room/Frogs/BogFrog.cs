@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class BogFrog : NetworkBehaviour
 {
+    [SerializeField] private MultiplayerArena arena;
+
     public GameObject miniPrefab;  // Reference to the prefab of the mini version
     public float shrinkSpeed = 1f; // Speed at which the parent shrinks
     public float miniSpawnHeight = 2f; // Height offset for mini versions
@@ -15,11 +17,17 @@ public class BogFrog : NetworkBehaviour
         if (IsOwner)
         {
             var animator = GetComponentInChildren<Animator>();
+            animator.speed = 0.5f;
             animator.Play("Jump");
 
-            // Start shrinking the parent object
-            //StartCoroutine(ShrinkParent());
+            StartCoroutine(HandleAnimation());
         }
+    }
+
+    private IEnumerator HandleAnimation()
+    {
+        yield return new WaitForSeconds(3f);
+        arena.InvokeIntroComplete();
     }
 
     private IEnumerator ShrinkParent()

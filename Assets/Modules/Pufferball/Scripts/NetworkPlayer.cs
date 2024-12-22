@@ -13,6 +13,24 @@ public class NetworkPlayer : NetworkBehaviour
 
     [SerializeField] private FungalCollection fungalCollection;
 
+    private NetworkFungal networkFungal;
+
+    private void OnEnable()
+    {
+        arena.OnIntroComplete += OnIntroComplete;
+    }
+
+    private void OnDisable()
+    {
+        arena.OnIntroComplete -= OnIntroComplete;
+    }
+
+    private void OnIntroComplete()
+    {
+        controller.SetMovement(networkFungal.Movement);
+        navigation.Navigate(inputView);
+    }
+
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
@@ -32,7 +50,7 @@ public class NetworkPlayer : NetworkBehaviour
                 initialIndex = localPlayer.Data.TryGetValue("Fungal", out var fungalData)
                         ? int.TryParse(fungalData?.Value, out var index) ? index : 0 : 0;
             }
-           
+
 
             RequestSpawnFungalServerRpc(NetworkManager.Singleton.LocalClientId, initialIndex);
         }
@@ -43,10 +61,10 @@ public class NetworkPlayer : NetworkBehaviour
     {
         var fungal = fungalCollection.Fungals[fungalIndex];
 
-        var randomOffset = Random.insideUnitSphere.normalized * 3f;
+        var randomOffset = Random.insideUnitSphere.normalized;
         randomOffset.y = 0;
 
-        var randomPosition = arena.PlayerSpawnPosition + randomOffset;
+        var randomPosition = arena.PlayerSpawnPosition + randomOffset.normalized * 15f;
 
         var networkFungal = Instantiate(fungal.NetworkPrefab, randomPosition, Quaternion.identity, transform);
         networkFungal.NetworkObject.SpawnWithOwnership(clientId);
@@ -61,13 +79,7 @@ public class NetworkPlayer : NetworkBehaviour
         {
             if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out var networkObject))
             {
-                var networkFungal = networkObject.GetComponent<NetworkFungal>();
-                controller.SetMovement(networkFungal.Movement);
-                navigation.Navigate(inputView);
-            }
-            else
-            {
-                Debug.LogError("Failed to find the spawned object on the client.");
+                networkFungal = networkObject.GetComponent<NetworkFungal>();
             }
         }
     }
