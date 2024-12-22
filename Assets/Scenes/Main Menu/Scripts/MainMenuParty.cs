@@ -1,23 +1,22 @@
-using System.Collections.Generic;
-using TMPro;
+using System.Linq;
+using GURU;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MainMenuPartyPrepare : MonoBehaviour
+public class MainMenuParty : MonoBehaviour
 {
-    [SerializeField] private MultiplayerManager multiplayer;
-    [SerializeField] private Transform playerListAnchor;
+    [SerializeField] private ListUI playerList;
+    [SerializeField] private ListUI fungalList;
     [SerializeField] private Button startButton;
     [SerializeField] private Button exitButton;
-    [SerializeField] private SceneNavigation sceneNavigation;
-    [SerializeField] private Navigation navigation;
 
-    private List<TextMeshProUGUI> playerList = new List<TextMeshProUGUI>();
+    [SerializeField] private FungalCollection fungalCollection;
+    [SerializeField] private Navigation navigation;
+    [SerializeField] private SceneNavigation sceneNavigation;
+    [SerializeField] private MultiplayerManager multiplayer;
 
     private void Awake()
     {
-        playerListAnchor.GetComponentsInChildren(true, playerList);
-
         startButton.onClick.AddListener(() =>
         {
             sceneNavigation.NavigateToScene(4);
@@ -46,21 +45,28 @@ public class MainMenuPartyPrepare : MonoBehaviour
     private void MultiplayerManager_OnLobbyPoll()
     {
         var players = multiplayer.JoinedLobby.Players;
-        for(var i = 0; i < players.Count; i++)
-        {
-            playerList[i].text = players[i].Data["PlayerName"].Value;
-            playerList[i].gameObject.SetActive(true);
-        }
 
-        for (var i = players.Count; i < playerList.Count; i++)
+        var playerData = players.Select(player => new ListItemData
         {
-            playerList[i].gameObject.SetActive(false);
-        }
+            label = player.Data["PlayerName"].Value,
+            onClick = () => { }
+        }).ToList();
+
+        playerList.SetItems(playerData);
+
+        var fungalData = fungalCollection.Fungals.Select(fungal => new ListItemData
+        {
+            label = fungal.Id,
+            sprite = fungal.ActionImage,
+            onClick = () => { }
+        }).ToList();
+
+        fungalList.SetItems(fungalData);
 
         if (!joining && multiplayer.JoinedLobby.Data.ContainsKey("JoinCode") && !string.IsNullOrEmpty(multiplayer.JoinedLobby.Data["JoinCode"].Value))
         {
             Debug.Log("joining");
-            sceneNavigation.NavigateToScene(4);
+            sceneNavigation.NavigateToScene(1);
             joining = true;
         }
     }
