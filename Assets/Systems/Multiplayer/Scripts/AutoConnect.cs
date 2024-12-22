@@ -13,10 +13,11 @@ public class AutoConnect : NetworkBehaviour
     [SerializeField] private DisplayName displayName;
     [SerializeField] private Button exitButton;
     [SerializeField] private List<Transform> spores = new List<Transform>();
+    [SerializeField] private List<Transform> targetSporePositions = new List<Transform>();
 
     private void Awake()
     {
-        arena.Initialize(playerSpawnAnchor.position, spores);
+        arena.Initialize(playerSpawnAnchor.position, spores, targetSporePositions);
     }
 
     private void OnEnable()

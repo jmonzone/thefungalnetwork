@@ -10,12 +10,11 @@ GameObject:
   m_Component:
   - component: {fileID: 7132786186537795995}
   - component: {fileID: 9071348346300523584}
-  - component: {fileID: 560567521552257232}
+  - component: {fileID: 5256640574062156214}
   - component: {fileID: 6283547910459686726}
   - component: {fileID: 4617217471031680403}
   - component: {fileID: 9082754761563988515}
   - component: {fileID: 4264008912883346571}
-  - component: {fileID: 5975358802875528974}
   m_Layer: 0
   m_Name: Spore
   m_TagString: Untagged
@@ -60,7 +59,7 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &560567521552257232
+--- !u!114 &5256640574062156214
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -69,10 +68,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 474011470429881578}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 332dcc766b1a945959533ca74722f432, type: 3}
+  m_Script: {fileID: 11500000, guid: bc253eef91f9545fea575164a4c843e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controller: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
   IsMounted:
     m_InternalValue: 0
 --- !u!114 &6283547910459686726
@@ -88,7 +86,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 3
-  speed: 3
+  speed: 2
   lerpRotation: 0
   faceForward: 0
   useRoll: 1
@@ -175,27 +173,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!135 &5975358802875528974
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 474011470429881578}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 1.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &855403914701615857
 GameObject:
   m_ObjectHideFlags: 0

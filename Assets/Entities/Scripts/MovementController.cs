@@ -110,6 +110,7 @@ public class MovementController : MonoBehaviour
 
     public void Stop()
     {
+        this.target = null;
         SetType(MovementType.IDLE);
     }
 

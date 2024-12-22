@@ -1,11 +1,13 @@
 using System.Collections;
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
 public class BogFrog : NetworkBehaviour
 {
     [SerializeField] private MultiplayerArena arena;
-    [SerializeField] private MiniFrog miniFrogPrefab;  // Reference to the prefab of the mini version
+    [SerializeField] private List<MiniFrog> miniFrogs;
+
     public float shrinkSpeed = 1f; // Speed at which the parent shrinks
     public float miniSpawnHeight = 2f; // Height offset for mini versions
 
@@ -29,7 +31,7 @@ public class BogFrog : NetworkBehaviour
         yield return ShrinkDown();
         yield return new WaitForSeconds(1.5f);
         SpawnMiniObjects();
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(2f);
         arena.InvokeIntroComplete();
     }
 
@@ -56,14 +58,9 @@ public class BogFrog : NetworkBehaviour
         var randomOffset = Random.insideUnitSphere.normalized;
         randomOffset.y = miniSpawnHeight;
 
-        var randomPosition = arena.PlayerSpawnPosition + randomOffset.normalized * 2.5f;
-
         for (int i = 0; i < 5; i++)
         {
-            var miniFrog = Instantiate(miniFrogPrefab, randomPosition, Quaternion.identity);
-            miniFrog.AssignSpore(arena.Spores[i]);
+            miniFrogs[i].AssignSpore(arena.Spores[i], arena.SporePositions[i]);
         }
-
-
     }
 }

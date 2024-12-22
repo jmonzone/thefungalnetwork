@@ -51,7 +51,6 @@ public class NetworkPlayer : NetworkBehaviour
                         ? int.TryParse(fungalData?.Value, out var index) ? index : 0 : 0;
             }
 
-
             RequestSpawnFungalServerRpc(NetworkManager.Singleton.LocalClientId, initialIndex);
         }
     }
