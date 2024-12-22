@@ -5,8 +5,7 @@ using UnityEngine;
 public class BogFrog : NetworkBehaviour
 {
     [SerializeField] private MultiplayerArena arena;
-
-    public GameObject miniPrefab;  // Reference to the prefab of the mini version
+    [SerializeField] private MiniFrog miniFrogPrefab;  // Reference to the prefab of the mini version
     public float shrinkSpeed = 1f; // Speed at which the parent shrinks
     public float miniSpawnHeight = 2f; // Height offset for mini versions
 
@@ -26,11 +25,15 @@ public class BogFrog : NetworkBehaviour
 
     private IEnumerator HandleAnimation()
     {
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(1.5f);
+        yield return ShrinkDown();
+        yield return new WaitForSeconds(1.5f);
+        SpawnMiniObjects();
+        yield return new WaitForSeconds(1.5f);
         arena.InvokeIntroComplete();
     }
 
-    private IEnumerator ShrinkParent()
+    private IEnumerator ShrinkDown()
     {
         // Shrink the parent object
         Vector3 originalScale = transform.localScale;
@@ -46,18 +49,21 @@ public class BogFrog : NetworkBehaviour
 
         // Ensure the parent object is fully shrunk
         transform.localScale = targetScale;
-
-        // Spawn the mini versions
-        SpawnMiniObjects();
     }
 
     private void SpawnMiniObjects()
     {
+        var randomOffset = Random.insideUnitSphere.normalized;
+        randomOffset.y = miniSpawnHeight;
+
+        var randomPosition = arena.PlayerSpawnPosition + randomOffset.normalized * 2.5f;
+
         for (int i = 0; i < 5; i++)
         {
-            // Instantiate mini versions at different positions above the parent
-            Vector3 spawnPosition = transform.position + new Vector3(i * 1f, miniSpawnHeight, 0f);
-            Instantiate(miniPrefab, spawnPosition, Quaternion.identity);
+            var miniFrog = Instantiate(miniFrogPrefab, randomPosition, Quaternion.identity);
+            miniFrog.AssignSpore(arena.Spores[i]);
         }
+
+
     }
 }

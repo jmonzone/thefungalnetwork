@@ -9,6 +9,7 @@ public class MultiplayerArena : ScriptableObject
     [SerializeField] private int deadPlayerCount = 0;
 
     public List<Transform> Players { get; private set; }
+    public List<Transform> Spores { get; private set; }
     public Vector3 PlayerSpawnPosition { get; private set; }
 
     public int MushroomsCollected { get; private set; }
@@ -19,9 +20,10 @@ public class MultiplayerArena : ScriptableObject
     public event UnityAction OnAllPlayersSpawned;
     public event UnityAction OnIntroComplete;
 
-    public void Initialize(Vector3 playerSpawnPosition)
+    public void Initialize(Vector3 playerSpawnPosition, List<Transform> spores)
     {
         Players = new List<Transform>();
+        Spores = spores;
         PlayerSpawnPosition = playerSpawnPosition;
         MushroomsCollected = 0;
         deadPlayerCount = 0;

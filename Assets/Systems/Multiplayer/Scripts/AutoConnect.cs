@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Unity.Netcode;
 using UnityEngine;
@@ -11,10 +12,11 @@ public class AutoConnect : NetworkBehaviour
     [SerializeField] private Transform playerSpawnAnchor;
     [SerializeField] private DisplayName displayName;
     [SerializeField] private Button exitButton;
+    [SerializeField] private List<Transform> spores = new List<Transform>();
 
     private void Awake()
     {
-        arena.Initialize(playerSpawnAnchor.position);
+        arena.Initialize(playerSpawnAnchor.position, spores);
     }
 
     private void OnEnable()

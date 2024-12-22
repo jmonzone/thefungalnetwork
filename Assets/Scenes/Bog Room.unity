@@ -360,6 +360,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e228583af65294814bc7573439bae39c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &179300373 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7132786186537795995, guid: f3035997736d6427e9209db5ca7815be,
+    type: 3}
+  m_PrefabInstance: {fileID: 558062069}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &185317314
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -371,7 +377,7 @@ PrefabInstance:
     - target: {fileID: 474011470429881578, guid: f3035997736d6427e9209db5ca7815be,
         type: 3}
       propertyPath: m_Name
-      value: Mushroom Objectile (1)
+      value: Spore
       objectReference: {fileID: 0}
     - target: {fileID: 7132786186537795995, guid: f3035997736d6427e9209db5ca7815be,
         type: 3}
@@ -507,7 +513,7 @@ PrefabInstance:
     - target: {fileID: 474011470429881578, guid: f3035997736d6427e9209db5ca7815be,
         type: 3}
       propertyPath: m_Name
-      value: Mushroom Objectile (4)
+      value: Spore
       objectReference: {fileID: 0}
     - target: {fileID: 7132786186537795995, guid: f3035997736d6427e9209db5ca7815be,
         type: 3}
@@ -752,7 +758,7 @@ PrefabInstance:
     - target: {fileID: 1576384917746520769, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.8746715
+      value: 0.87467146
       objectReference: {fileID: 0}
     - target: {fileID: 1576384917746520769, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
         type: 3}
@@ -762,7 +768,7 @@ PrefabInstance:
     - target: {fileID: 1576384917746520769, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.36230075
+      value: 0.36230072
       objectReference: {fileID: 0}
     - target: {fileID: 1576384917746520769, guid: 3cc98d3fba40e460f93b4af73d61d5dd,
         type: 3}
@@ -1080,6 +1086,12 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4458032547626594, guid: 8ae7718c33e89b042b204b36902c7745,
     type: 3}
   m_PrefabInstance: {fileID: 279045225}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &280339023 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7132786186537795995, guid: f3035997736d6427e9209db5ca7815be,
+    type: 3}
+  m_PrefabInstance: {fileID: 1907090314249427451}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &282105890
 PrefabInstance:
@@ -1855,7 +1867,7 @@ PrefabInstance:
     - target: {fileID: 474011470429881578, guid: f3035997736d6427e9209db5ca7815be,
         type: 3}
       propertyPath: m_Name
-      value: Mushroom Objectile (3)
+      value: Spore
       objectReference: {fileID: 0}
     - target: {fileID: 7132786186537795995, guid: f3035997736d6427e9209db5ca7815be,
         type: 3}
@@ -1928,7 +1940,7 @@ PrefabInstance:
     - target: {fileID: 474011470429881578, guid: f3035997736d6427e9209db5ca7815be,
         type: 3}
       propertyPath: m_Name
-      value: Mushroom Objectile (2)
+      value: Spore
       objectReference: {fileID: 0}
     - target: {fileID: 7132786186537795995, guid: f3035997736d6427e9209db5ca7815be,
         type: 3}
@@ -2895,6 +2907,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 857119851}
   m_CullTransparentMesh: 1
+--- !u!4 &866628733 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7132786186537795995, guid: f3035997736d6427e9209db5ca7815be,
+    type: 3}
+  m_PrefabInstance: {fileID: 554122489}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &877674739
 GameObject:
   m_ObjectHideFlags: 0
@@ -3411,6 +3429,12 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4458032547626594, guid: 8ae7718c33e89b042b204b36902c7745,
     type: 3}
   m_PrefabInstance: {fileID: 1167368120}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1181488071 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7132786186537795995, guid: f3035997736d6427e9209db5ca7815be,
+    type: 3}
+  m_PrefabInstance: {fileID: 185317314}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1205744733
 PrefabInstance:
@@ -5236,27 +5260,42 @@ PrefabInstance:
     - target: {fileID: 1496710922116336965, guid: 44cfcdf81f0074e5b844e37940278904,
         type: 3}
       propertyPath: rotateCamera
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1496710922116336965, guid: 44cfcdf81f0074e5b844e37940278904,
+        type: 3}
+      propertyPath: maxVerticalAngle
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2612740834622465615, guid: 44cfcdf81f0074e5b844e37940278904,
+        type: 3}
+      propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2612740834622465615, guid: 44cfcdf81f0074e5b844e37940278904,
         type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -13
+      objectReference: {fileID: 0}
+    - target: {fileID: 2612740834622465615, guid: 44cfcdf81f0074e5b844e37940278904,
+        type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.9467375
+      value: 0.9467376
       objectReference: {fileID: 0}
     - target: {fileID: 2612740834622465615, guid: 44cfcdf81f0074e5b844e37940278904,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.3220062
+      value: 0.32200623
       objectReference: {fileID: 0}
     - target: {fileID: 2612740834622465615, guid: 44cfcdf81f0074e5b844e37940278904,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.000000029802319
+      value: -0.000000059604645
       objectReference: {fileID: 0}
     - target: {fileID: 2612740834622465615, guid: 44cfcdf81f0074e5b844e37940278904,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.000000029802319
+      value: 0.000000029802322
       objectReference: {fileID: 0}
     - target: {fileID: 3460427230498625851, guid: 44cfcdf81f0074e5b844e37940278904,
         type: 3}
@@ -5428,6 +5467,12 @@ MonoBehaviour:
   playerSpawnAnchor: {fileID: 1917954868}
   displayName: {fileID: 11400000, guid: 70aa9925b762e422089c41437a664eeb, type: 2}
   exitButton: {fileID: 1510852529}
+  spores:
+  - {fileID: 280339023}
+  - {fileID: 1181488071}
+  - {fileID: 179300373}
+  - {fileID: 866628733}
+  - {fileID: 2058170481}
 --- !u!1 &1923781919
 GameObject:
   m_ObjectHideFlags: 0
@@ -6182,6 +6227,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2056541290}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &2058170481 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7132786186537795995, guid: f3035997736d6427e9209db5ca7815be,
+    type: 3}
+  m_PrefabInstance: {fileID: 202591953}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2059519466
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6727,7 +6778,7 @@ PrefabInstance:
     - target: {fileID: 474011470429881578, guid: f3035997736d6427e9209db5ca7815be,
         type: 3}
       propertyPath: m_Name
-      value: Mushroom Objectile
+      value: Spore
       objectReference: {fileID: 0}
     - target: {fileID: 7132786186537795995, guid: f3035997736d6427e9209db5ca7815be,
         type: 3}

@@ -29,24 +29,18 @@ public class MushroomObjective : NetworkBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
         if (IsMounted.Value) return;
         if (mountedController) return;
-            
-        Rigidbody playerRb = collision.rigidbody;
 
-        var movement = collision.gameObject.GetComponentInParent<MovementController>();
+        var movement = other.GetComponentInParent<MovementController>();
 
         // Ensure the player is the one colliding
         if (movement && movement == controller.Movement)
         {
-            // Check if the player is falling onto the object
-            if (playerRb.velocity.y < 0)
-            {
-                Debug.Log("Player landed on this object!");
-                MountServerRpc(NetworkManager.Singleton.LocalClientId);
-            }
+            Debug.Log("Player landed on this object!");
+            MountServerRpc(NetworkManager.Singleton.LocalClientId);
         }
     }
 
