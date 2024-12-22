@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using GURU;
 using Unity.Services.Authentication;
@@ -17,6 +18,11 @@ public class MainMenuParty : MonoBehaviour
     [SerializeField] private SceneNavigation sceneNavigation;
     [SerializeField] private MultiplayerManager multiplayer;
 
+    [SerializeField] private Transform fungalSpawnAnchor;
+
+    private Dictionary<int, GameObject> fungalObjects = new Dictionary<int, GameObject>();
+    private int selectedFungalIndex = 0;
+
     private void Awake()
     {
         startButton.onClick.AddListener(() =>
@@ -29,6 +35,25 @@ public class MainMenuParty : MonoBehaviour
             await multiplayer.LeaveLobby();
             navigation.GoBack();
         });
+
+        for(var i = 0; i < fungalCollection.Fungals.Count; i++)
+        {
+            var fungal = fungalCollection.Fungals[i];
+            var prefab = Instantiate(fungal.Prefab, fungalSpawnAnchor);
+            prefab.transform.SetPositionAndRotation(fungalSpawnAnchor.position, fungalSpawnAnchor.rotation);
+            prefab.SetActive(false);
+            fungalObjects.Add(i, prefab);
+        }
+
+        GetComponent<ViewController>().OnFadeInComplete += () =>
+        {
+            fungalObjects[selectedFungalIndex].SetActive(true);
+        };
+
+        GetComponent<ViewController>().OnFadeOutComplete += () =>
+        {
+            fungalObjects[selectedFungalIndex].SetActive(false);
+        };
     }
 
     private void OnEnable()
@@ -44,8 +69,6 @@ public class MainMenuParty : MonoBehaviour
         multiplayer.OnLobbyJoined -= MultiplayerManager_OnLobbyJoined;
     }
 
-    private int localPlayerFungalIndex = 0;
-
     private void MultiplayerManager_OnLobbyPoll()
     {
 
@@ -55,7 +78,7 @@ public class MainMenuParty : MonoBehaviour
 
             int fungalIndex = 0;
 
-            if (isLocalPlayer) fungalIndex = localPlayerFungalIndex;
+            if (isLocalPlayer) fungalIndex = selectedFungalIndex;
             else
             {
                 if (player.Data.TryGetValue("Fungal", out var fungalData))
@@ -89,7 +112,10 @@ public class MainMenuParty : MonoBehaviour
             sprite = fungal.ActionImage,
             onClick = async () =>
             {
-                localPlayerFungalIndex = index;
+                fungalObjects[selectedFungalIndex].SetActive(false);
+                selectedFungalIndex = index;
+                fungalObjects[selectedFungalIndex].SetActive(true);
+
                 MultiplayerManager_OnLobbyPoll();
                 await multiplayer.AddPlayerDataToLobby("Fungal", index.ToString());
             }
