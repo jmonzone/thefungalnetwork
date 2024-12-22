@@ -19,7 +19,7 @@ public class MiniFrog : MonoBehaviour
     private void MountController_OnMounted()
     {
         movement.Stop();
-        mountController.Mount.Movement.SetPosition(targetPosition.position);
+        mountController.Mountable.Movement.SetPosition(targetPosition.position);
     }
 
     private void Update()

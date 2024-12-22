@@ -26,7 +26,7 @@ public class FungalController : MonoBehaviour
         var mountController = GetComponent<MountController>();
         mountController.OnMounted += () =>
         {
-            controller.SetMovement(mountController.Mount.Movement);
+            controller.SetMovement(mountController.Mountable.Movement);
         };
 
         mountController.OnUnmounted += () =>

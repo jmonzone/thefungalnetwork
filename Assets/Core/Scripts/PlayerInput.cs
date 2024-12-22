@@ -25,7 +25,7 @@ public class PlayerInput : MonoBehaviour
 
         jumpButton.onClick.AddListener(() =>
         {
-            controller.Movement.Jump();
+            HandleJump();
         });
 
         interactionButton.onClick.AddListener(() =>
@@ -137,6 +137,21 @@ public class PlayerInput : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            HandleJump();
+        }
+    }
+
+    private void HandleJump()
+    {
+        // if controlling a mount, then make the rider jump
+        if (controller.Mount)
+        {
+            Debug.Log("has mount");
+            controller.Mount.MountController.Movement.Jump();
+        }
+        else
+        {
+            Debug.Log("no mount");
             controller.Movement.Jump();
         }
     }

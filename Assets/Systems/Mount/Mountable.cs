@@ -1,17 +1,20 @@
 using Unity.Netcode;
+using UnityEngine;
 
 //todo: centralize with crocodile interaction
 public class Mountable : NetworkBehaviour
 {
     public NetworkVariable<bool> IsMounted = new NetworkVariable<bool>(false);
 
-    private MovementController mountMovement;
+    private MovementController movement;
+    private MountController mountController;
 
-    public MovementController Movement => mountMovement;
+    public MovementController Movement => movement;
+    public MountController MountController => mountController;
 
     private void Awake()
     {
-        mountMovement = GetComponent<MovementController>();
+        movement = GetComponent<MovementController>();
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -19,23 +22,43 @@ public class Mountable : NetworkBehaviour
     {
         NetworkObject.ChangeOwnership(clientId);
         IsMounted.Value = true;
+        OnMountClientRpc(clientId, networkObjectId);
+    }
+
+    [ClientRpc]
+    private void OnMountClientRpc(ulong clientId, ulong networkObjectId)
+    {
+        if (NetworkManager.Singleton.LocalClientId == clientId)
+        {
+            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out var networkObject))
+            {
+                mountController = networkObject.GetComponent<MountController>();
+            }
+        }
+    }
+
+    public void Unmount()
+    {
+        Debug.Log("Unmounted");
+        if (mountController) mountController.UnmountServerRpc();
+        UnmountServerRpc();
     }
 
     [ServerRpc(RequireOwnership = false)]
     public void UnmountServerRpc()
     {
-        var owner = NetworkObject.OwnerClientId;
+        Debug.Log("UnmountServerRpc");
+
         NetworkObject.RemoveOwnership();
         IsMounted.Value = false;
-        UnmountClientRpc(owner);
+        OnUnmountClientRpc();
     }
 
     [ClientRpc]
-    public void UnmountClientRpc(ulong clientId)
+    public void OnUnmountClientRpc()
     {
-        if (NetworkManager.Singleton.LocalClientId == clientId)
-        {
-            mountMovement.Stop();
-        }
+        mountController = null;
+
+        if (IsOwner) movement.Stop();
     }
 }

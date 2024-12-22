@@ -13,8 +13,8 @@ public class MushroomMarking : NetworkBehaviour
         {
             if (IsOwner)
             {
-                //objective.UnmountServerRpc();
-                //OnMushroomCollectedClientRpc();
+                objective.Unmount();
+                OnMushroomCollectedClientRpc();
             }
         }
     }

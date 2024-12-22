@@ -7,12 +7,13 @@ public class MountController : NetworkBehaviour
     [SerializeField] private float mountHeight;
 
     private MovementController movement;
-    private Mountable mount;
+    private Mountable mountable;
 
     public NetworkVariable<bool> HasMount = new NetworkVariable<bool>(false);
 
     public Vector3 Direction => movement.Direction;
-    public Mountable Mount => mount;
+    public MovementController Movement => movement;
+    public Mountable Mountable => mountable;
 
     public event UnityAction OnMounted;
     public event UnityAction OnUnmounted;
@@ -20,21 +21,18 @@ public class MountController : NetworkBehaviour
     private void Awake()
     {
         movement = GetComponent<MovementController>();
-        movement.OnJump += () =>
-        {
-            if (mount) Unmount();
-        };
+        movement.OnJump += Unmount;
     }
 
     private void Update()
     {
-        if (IsOwner && mount)
+        if (IsOwner && mountable)
         {
-            transform.position = mount.transform.position + Vector3.up * mountHeight;
+            transform.position = mountable.transform.position + Vector3.up * mountHeight;
 
-            if (mount.Movement.Direction.magnitude > 0)
+            if (mountable.Movement.Direction.magnitude > 0)
             {
-                transform.forward = mount.Movement.Direction;
+                transform.forward = mountable.Movement.Direction;
             }
         }
     }
@@ -44,52 +42,53 @@ public class MountController : NetworkBehaviour
         if (IsOwner && !HasMount.Value)
         {
             var mount = other.GetComponentInParent<Mountable>();
+            Mount(mount);
+        }
+    }
 
-            if (mount && !mount.IsMounted.Value)
-            {
-                this.mount = mount;
-                mount.MountServerRpc(OwnerClientId, NetworkObjectId);
-                MountServerRpc(OwnerClientId);
-            }
+    public void Mount(Mountable mount)
+    {
+        if (mount && !mount.IsMounted.Value)
+        {
+            this.mountable = mount;
+            mount.MountServerRpc(OwnerClientId, NetworkObjectId);
+            MountServerRpc();
         }
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void MountServerRpc(ulong clientId)
+    public void MountServerRpc()
     {
         HasMount.Value = true;
-        MounterClientRpc(clientId);
+        OnMountClientRpc();
     }
 
     [ClientRpc]
-    private void MounterClientRpc(ulong clientId)
+    private void OnMountClientRpc()
     {
-        if (NetworkManager.Singleton.LocalClientId == clientId)
-        {
-            OnMounted?.Invoke();
-        }
+        if (IsOwner) OnMounted?.Invoke();
     }
 
     public void Unmount()
     {
-        mount.UnmountServerRpc();
-        UnmountServerRpc(NetworkManager.Singleton.LocalClientId);
+        Debug.Log("unmounting");
+        if (mountable) mountable.UnmountServerRpc();
+        mountable = null;
+        UnmountServerRpc();
+
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void UnmountServerRpc(ulong clientId)
+    public void UnmountServerRpc()
     {
         HasMount.Value = false;
-        UnmountClientRpc(clientId);
+        OnUnmountClientRpc();
     }
 
     [ClientRpc]
-    private void UnmountClientRpc(ulong clientId)
+    private void OnUnmountClientRpc()
     {
-        if (NetworkManager.Singleton.LocalClientId == clientId)
-        {
-            mount = null;
-            OnUnmounted?.Invoke();
-        }
+        mountable = null;
+        if (IsOwner) OnUnmounted?.Invoke();
     }
 }

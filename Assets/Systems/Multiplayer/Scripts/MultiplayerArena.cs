@@ -14,7 +14,7 @@ public class MultiplayerArena : ScriptableObject
     public Vector3 PlayerSpawnPosition { get; private set; }
 
     public int MushroomsCollected { get; private set; }
-    public const int MushroomRequirement = 5;
+    public int MushroomRequirement => Spores.Count;
 
     public event UnityAction OnAllMushroomsCollected;
     public event UnityAction OnAllPlayersDead;
@@ -47,7 +47,8 @@ public class MultiplayerArena : ScriptableObject
     public void IncrementMushroomsCollected()
     {
         MushroomsCollected++;
-        if (MushroomsCollected == Spores.Count)
+        Debug.Log(MushroomsCollected);
+        if (MushroomsCollected == MushroomRequirement)
         {
             OnAllMushroomsCollected?.Invoke();
         }

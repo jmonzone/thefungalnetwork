@@ -7,12 +7,14 @@ public class Controller : ScriptableObject
 {
     [SerializeField] private ViewReference inputView;
     [SerializeField] private MovementController movement;
+    [SerializeField] private Mountable mount;
 
     public FungalData Fungal => movement?.GetComponent<FungalController>()?.Model?.Data;
 
     public Attackable Attackable { get; private set; }
     public AbilityCast AbilityCast { get; private set; }
     public MovementController Movement => movement;
+    public Mountable Mount => mount;
 
     public Volume Volume { get; private set; }
 
@@ -61,6 +63,8 @@ public class Controller : ScriptableObject
         AbilityCast = movement.GetComponent<AbilityCast>();
         if (AbilityCast) AbilityCast.OnCastStart += OnCastStart;
 
+        mount = movement.GetComponent<Mountable>();
+        Debug.Log(mount);
         OnUpdate?.Invoke();
     }
 
