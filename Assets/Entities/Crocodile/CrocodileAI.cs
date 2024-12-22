@@ -46,17 +46,24 @@ public class CrocodileAI : MonoBehaviour
 
     private IEnumerator Start()
     {
-        yield return new WaitUntil(() => arena.Players.Count > 0);
-
         yield return new WaitUntil(() =>
         {
             hitTimer += Time.deltaTime;
             return hitTimer > hitCooldown;
         });
 
-        var target = arena.Players
-                   .OrderBy(player => Vector3.Distance(player.transform.position, transform.position))
-                   .FirstOrDefault();
+        var targets = arena.Players;
+
+        yield return new WaitUntil(() =>
+        {
+            targets = arena.Players
+                  .Where(player => Vector3.Distance(player.transform.position, transform.position) < 5f)
+                  .OrderBy(player => Vector3.Distance(player.transform.position, transform.position))
+                  .ToList();
+            return targets.Count > 0;
+        });
+
+        var target = targets[0];
 
         direction = target.position - transform.position;
         direction.y = 0;
