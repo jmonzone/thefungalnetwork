@@ -55,10 +55,7 @@ public class BogFrog : NetworkBehaviour
 
     private void SpawnMiniObjects()
     {
-        var randomOffset = Random.insideUnitSphere.normalized;
-        randomOffset.y = miniSpawnHeight;
-
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < miniFrogs.Count; i++)
         {
             miniFrogs[i].AssignSpore(arena.Spores[i], arena.SporePositions[i]);
         }

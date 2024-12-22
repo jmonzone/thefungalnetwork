@@ -63,7 +63,7 @@ public class NetworkPlayer : NetworkBehaviour
         var randomOffset = Random.insideUnitSphere.normalized;
         randomOffset.y = 0;
 
-        var randomPosition = arena.PlayerSpawnPosition + randomOffset.normalized * 15f;
+        var randomPosition = arena.PlayerSpawnPosition + randomOffset.normalized * 3f;
 
         var networkFungal = Instantiate(fungal.NetworkPrefab, randomPosition, Quaternion.identity, transform);
         networkFungal.NetworkObject.SpawnWithOwnership(clientId);

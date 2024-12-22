@@ -47,7 +47,7 @@ public class MultiplayerArena : ScriptableObject
     public void IncrementMushroomsCollected()
     {
         MushroomsCollected++;
-        if (MushroomsCollected == 5)
+        if (MushroomsCollected == Spores.Count)
         {
             OnAllMushroomsCollected?.Invoke();
         }
