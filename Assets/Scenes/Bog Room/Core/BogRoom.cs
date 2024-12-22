@@ -61,7 +61,6 @@ public class BogRoom : NetworkBehaviour
         playerReference.OnDeath -= OnPlayerDeathClientRpc;
     }
 
-
     private void MultiplayerArena_OnAllPlayersDead()
     {
         resultHeader.text = "Bogged Down?";
