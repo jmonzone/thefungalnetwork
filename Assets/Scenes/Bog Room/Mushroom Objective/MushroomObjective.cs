@@ -24,7 +24,7 @@ public class MushroomObjective : NetworkBehaviour
     {
         if (mountedController)
         {
-            mountedController.transform.position = transform.position + Vector3.up * 0.625f;
+            mountedController.transform.position = transform.position + Vector3.up * 2f;
             mountedController.LookAt(controller.Movement.Direction);
         }
     }
@@ -37,7 +37,7 @@ public class MushroomObjective : NetworkBehaviour
         var movement = other.GetComponentInParent<MovementController>();
 
         // Ensure the player is the one colliding
-        if (movement && movement == controller.Movement)
+        if (movement)
         {
             Debug.Log("Player landed on this object!");
             MountServerRpc(NetworkManager.Singleton.LocalClientId);
@@ -58,8 +58,8 @@ public class MushroomObjective : NetworkBehaviour
         if (NetworkManager.Singleton.LocalClientId == clientId)
         {
             mountedController = controller.Movement;
-            controller.SetMovement(movement);
-            mountedController.GetComponent<ProximityAction>().SetInteractable(false);
+            //controller.SetMovement(movement);
+            //mountedController.GetComponent<ProximityAction>().SetInteractable(false);
         }
     }
 
@@ -77,8 +77,8 @@ public class MushroomObjective : NetworkBehaviour
     {
         if (NetworkManager.Singleton.LocalClientId == clientId)
         {
-            controller.SetMovement(mountedController);
-            mountedController.GetComponent<ProximityAction>().SetInteractable(true);
+            //controller.SetMovement(mountedController);
+            //mountedController.GetComponent<ProximityAction>().SetInteractable(true);
             movement.Stop();
             mountedController = null;
         }
