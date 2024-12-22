@@ -130,22 +130,6 @@ public class MultiplayerManager : ScriptableObject
 
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
             NetworkManager.Singleton.StartHost();
-            //NetworkManager.Singleton.OnClientDisconnectCallback += async (clientId) =>
-            //{
-            //    Debug.Log($"Client disconnected: {clientId}");
-
-            //    foreach(var player in joinedLobby.Players)
-            //    {
-            //        Debug.Log($"player: {player.Data["NetworkId"].Value}");
-
-            //        if (player.Data["NetworkId"].Value == clientId.ToString())
-            //        {
-            //            await LobbyService.Instance.RemovePlayerAsync(joinedLobby.Id, player.Id);
-            //        }
-            //    }
-
-
-            //};
 
             JoinedRelay = true;
 
@@ -179,6 +163,30 @@ public class MultiplayerManager : ScriptableObject
             Debug.Log(e);
         }
     }
+
+    public async Task AddPlayerDataToLobby(string key, string value)
+    {
+        try
+        {
+            var playerData = new Dictionary<string, PlayerDataObject>
+            {
+                { key, new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, value) }
+            };
+
+            await LobbyService.Instance.UpdatePlayerAsync(JoinedLobby.Id, AuthenticationService.Instance.PlayerId, new UpdatePlayerOptions
+            {
+                Data = playerData
+            });
+
+            Debug.Log($"Player data updated: {key} = {value}");
+            OnLobbyPoll?.Invoke();
+        }
+        catch (LobbyServiceException e)
+        {
+            Debug.LogError($"Failed to update player data: {e}");
+        }
+    }
+
 
     public async Task RemoveRelayFromLobbyData()
     {
@@ -290,64 +298,6 @@ public class MultiplayerManager : ScriptableObject
         catch (LobbyServiceException e)
         {
             Debug.Log(e);
-        }
-    }
-
-    public async Task JoinLobbyByCode(string lobbyCode)
-    {
-        try
-        {
-            player = CreatePlayer();
-            JoinLobbyByCodeOptions joinLobbyByCodeOptions = new JoinLobbyByCodeOptions
-            {
-                Player = player,
-            };
-
-            Lobby lobby = await LobbyService.Instance.JoinLobbyByCodeAsync(lobbyCode, joinLobbyByCodeOptions);
-            JoinedLobby = lobby;
-        }
-        catch (LobbyServiceException e)
-        {
-            Debug.Log(e);
-        }
-    }
-
-    public async Task<bool> TryRejoinLobby()
-    {
-        try
-        {
-            string playerId = AuthenticationService.Instance.PlayerId;
-
-            // Fetch the current lobby for this player
-            var joinedLobbies = await LobbyService.Instance.GetJoinedLobbiesAsync();
-
-            Debug.Log($"rejoinabl lobby: {joinedLobbies.Count}");
-
-            if (joinedLobbies.Count > 0)
-            {
-                var lobby = await LobbyService.Instance.GetLobbyAsync(joinedLobbies[0]);
-                player = lobby.Players.Find(p => p.Id == playerId);
-                JoinedLobby = lobby;
-
-                foreach (var dataEntry in JoinedLobby.Data)
-                {
-                    Debug.Log($"Key: {dataEntry.Key}, Value: {dataEntry.Value.Value}");
-                }
-                Debug.Log($"Rejoined lobby: {lobby}");
-                // Update the player's status or proceed to the game
-                return true;
-            }
-            else
-            {
-                Debug.Log("Player is not part of any active lobbies.");
-                // Prompt to create or join a new lobby
-                return false;
-            }
-        }
-        catch (LobbyServiceException ex)
-        {
-            Debug.LogError($"Failed to fetch joined lobbies: {ex.Message}");
-            return false;
         }
     }
 
