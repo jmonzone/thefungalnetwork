@@ -45,6 +45,8 @@ public class MainMenuParty : MonoBehaviour
             fungalObjects.Add(i, prefab);
         }
 
+        selectedFungalIndex = PlayerPrefs.GetInt("FungalIndex", 0);
+
         GetComponent<ViewController>().OnFadeInComplete += () =>
         {
             fungalObjects[selectedFungalIndex].SetActive(true);
@@ -114,6 +116,7 @@ public class MainMenuParty : MonoBehaviour
             {
                 fungalObjects[selectedFungalIndex].SetActive(false);
                 selectedFungalIndex = index;
+                PlayerPrefs.SetInt("FungalIndex", selectedFungalIndex); // Default to 0 if key doesn't exist
                 fungalObjects[selectedFungalIndex].SetActive(true);
 
                 MultiplayerManager_OnLobbyPoll();

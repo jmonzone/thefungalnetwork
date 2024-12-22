@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
-using UnityEngine;
-using UnityEngine.Events;
+﻿using UnityEngine;
 
 [CreateAssetMenu]
 public class Possession : ScriptableObject

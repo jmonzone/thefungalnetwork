@@ -1,8 +1,11 @@
+using System.Linq;
 using Unity.Netcode;
+using Unity.Services.Authentication;
 using UnityEngine;
 
 public class NetworkPlayer : NetworkBehaviour
 {
+    [SerializeField] private MultiplayerManager multiplayer;
     [SerializeField] private MultiplayerArena arena;
     [SerializeField] private Controller controller;
     [SerializeField] private Navigation navigation;
@@ -16,8 +19,16 @@ public class NetworkPlayer : NetworkBehaviour
 
         if (IsOwner)
         {
-            var initialIndex = Random.Range(0, fungalCollection.Fungals.Count);
-            RequestSpawnFungalServerRpc(NetworkManager.Singleton.LocalClientId, Random.Range(0, initialIndex));
+            // Get the ID of the local player
+            string localPlayerId = AuthenticationService.Instance.PlayerId;
+
+            // Find the local player in the lobby's player list
+            var localPlayer = multiplayer.JoinedLobby.Players.FirstOrDefault(player => player.Id == localPlayerId);
+
+            var initialIndex = localPlayer.Data.TryGetValue("Fungal", out var fungalData)
+                    ? int.TryParse(fungalData?.Value, out var index) ? index : 0 : 0;
+
+            RequestSpawnFungalServerRpc(NetworkManager.Singleton.LocalClientId, initialIndex);
         }
     }
 
