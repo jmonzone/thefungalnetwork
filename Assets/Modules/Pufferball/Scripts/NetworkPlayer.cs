@@ -19,14 +19,20 @@ public class NetworkPlayer : NetworkBehaviour
 
         if (IsOwner)
         {
-            // Get the ID of the local player
-            string localPlayerId = AuthenticationService.Instance.PlayerId;
+            var initialIndex = Random.Range(0, fungalCollection.Fungals.Count);
 
-            // Find the local player in the lobby's player list
-            var localPlayer = multiplayer.JoinedLobby.Players.FirstOrDefault(player => player.Id == localPlayerId);
+            if (multiplayer.JoinedLobby != null)
+            {
+                // Get the ID of the local player
+                string localPlayerId = AuthenticationService.Instance.PlayerId;
 
-            var initialIndex = localPlayer.Data.TryGetValue("Fungal", out var fungalData)
-                    ? int.TryParse(fungalData?.Value, out var index) ? index : 0 : 0;
+                // Find the local player in the lobby's player list
+                var localPlayer = multiplayer.JoinedLobby.Players.FirstOrDefault(player => player.Id == localPlayerId);
+
+                initialIndex = localPlayer.Data.TryGetValue("Fungal", out var fungalData)
+                        ? int.TryParse(fungalData?.Value, out var index) ? index : 0 : 0;
+            }
+           
 
             RequestSpawnFungalServerRpc(NetworkManager.Singleton.LocalClientId, initialIndex);
         }
