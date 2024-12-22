@@ -95,13 +95,6 @@ public class MultiplayerManager : ScriptableObject
         else
         {
             await UnityServices.InitializeAsync();
-
-            // Check if displayName.Value is available and assign it; otherwise, generate a random name
-            if (string.IsNullOrWhiteSpace(displayName?.Value))
-            {
-                displayName.SetValue(GenerateRandomName());
-            }
-
             PlayerName = displayName.Value.Replace(" ", "_");
 
             InitializationOptions initializationOptions = new InitializationOptions();
@@ -116,18 +109,6 @@ public class MultiplayerManager : ScriptableObject
             await AuthenticationService.Instance.SignInAnonymouslyAsync();
 
         }
-    }
-    // Method to generate a random name
-    private string GenerateRandomName()
-    {
-        string[] adjectives = { "Party", "Quick", "Brat", "Lucid", "Fungal", "Bog" };
-        string[] nouns = { "Exit", "Dragon", "Brat", "Wizard", "Warrior", "Fungal" };
-
-        string adjective = adjectives[Random.Range(0, adjectives.Length)];
-        string noun = nouns[Random.Range(0, nouns.Length)];
-        int number = Random.Range(1000, 9999);
-
-        return $"{adjective}{noun}{number}";
     }
 
     public async Task CreateRelayAndLobby()

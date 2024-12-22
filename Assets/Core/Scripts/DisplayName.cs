@@ -15,7 +15,15 @@ public class DisplayName : ScriptableObject
     public void Initialize()
     {
         var name = localData.JsonFile[DISPLAY_NAME_KEY] ?? "";
-        value = name.ToString();
+
+        if (string.IsNullOrWhiteSpace(name.ToString()))
+        {
+            SetValue(GenerateRandomName());
+        }
+        else
+        {
+            value = name.ToString();
+        }
     }
 
     public void SetValue(string value)
@@ -23,5 +31,17 @@ public class DisplayName : ScriptableObject
         this.value = value;
         localData.SaveData(DISPLAY_NAME_KEY, value);
         OnDisplayNameChanged?.Invoke();
+    }
+
+    private string GenerateRandomName()
+    {
+        string[] adjectives = { "Party", "Quick", "Brat", "Lucid", "Fungal", "Bog" };
+        string[] nouns = { "Exit", "Dragon", "Brat", "Wizard", "Warrior", "Fungal" };
+
+        string adjective = adjectives[Random.Range(0, adjectives.Length)];
+        string noun = nouns[Random.Range(0, nouns.Length)];
+        int number = Random.Range(1000, 9999);
+
+        return $"{adjective}{noun}{number}";
     }
 }

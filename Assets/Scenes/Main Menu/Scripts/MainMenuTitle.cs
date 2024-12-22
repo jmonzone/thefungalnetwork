@@ -14,8 +14,9 @@ public class MainMenuTitle : MonoBehaviour
     [SerializeField] private SceneNavigation sceneNavigation;
     [SerializeField] private MultiplayerManager multiplayer;
 
-    [SerializeField] private ViewReference matchmakingViewReference;
-    [SerializeField] private ViewReference partyViewReference;
+    [SerializeField] private ViewReference homeView;
+    [SerializeField] private ViewReference matchmakingView;
+    [SerializeField] private ViewReference partyView;
 
     private void Awake()
     {
@@ -28,8 +29,14 @@ public class MainMenuTitle : MonoBehaviour
         partyButton.onClick.AddListener(() =>
         {
             StopAllCoroutines();
-            navigation.Navigate(matchmakingViewReference);
+            navigation.Navigate(homeView);
         });
+    }
+
+    private IEnumerator ShowTitle()
+    {
+        yield return new WaitForSeconds(1f);
+        StartCoroutine(partyButtonFade.FadeIn());
     }
 
     private void OnEnable()
@@ -45,20 +52,16 @@ public class MainMenuTitle : MonoBehaviour
     private void ShowInitialUI()
     {
         var targetUI = titleViewReference;
+
         if (multiplayer.JoinedLobby != null)
         {
-            targetUI = partyViewReference;
+            targetUI = partyView;
             navigation.InitalizeHistory(new List<ViewReference>
             {
-                titleViewReference, matchmakingViewReference
+                homeView, matchmakingView
             });
         }
-        navigation.Navigate(targetUI);
-    }
 
-    private IEnumerator ShowTitle()
-    {
-        yield return new WaitForSeconds(1f);
-        StartCoroutine(partyButtonFade.FadeIn());
+        navigation.Navigate(targetUI);
     }
 }
