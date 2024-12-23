@@ -23,6 +23,12 @@ public class Tutorial : MonoBehaviour
         arena.OnMinionAssigned += Arena_OnMinionAssigned;
     }
 
+    private void OnDisable()
+    {
+        arena.OnIntroComplete -= Arena_OnIntroComplete;
+        arena.OnMinionAssigned -= Arena_OnMinionAssigned;
+    }
+
     private void Arena_OnMinionAssigned()
     {
         SetInformation("You have been possessed!");
