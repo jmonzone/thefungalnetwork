@@ -34,16 +34,9 @@ public class BogRoom : NetworkBehaviour
         base.OnNetworkSpawn();
         if (IsOwner)
         {
-            StartCoroutine(StartGame());
+            StartGameServerRpc();
+            //StartCoroutine(StartGame());
         }
-    }
-
-    private IEnumerator StartGame()
-    {
-        if (bogFrog.gameObject.activeSelf) yield return bogFrog.HandleAnimation();
-        else yield return new WaitForSeconds(2f);
-        virtualCamera.Priority = 0;
-        StartGameServerRpc();
     }
 
     private void OnEnable()

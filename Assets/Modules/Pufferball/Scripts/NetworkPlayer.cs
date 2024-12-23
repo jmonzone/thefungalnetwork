@@ -15,25 +15,6 @@ public class NetworkPlayer : NetworkBehaviour
 
     private NetworkFungal networkFungal;
 
-    private void OnEnable()
-    {
-        arena.OnIntroComplete += OnIntroComplete;
-    }
-
-    private void OnDisable()
-    {
-        arena.OnIntroComplete -= OnIntroComplete;
-    }
-
-    private void OnIntroComplete()
-    {
-        if (IsOwner)
-        {
-            controller.SetMovement(networkFungal.Movement);
-            navigation.Navigate(inputView);
-        }
-    }
-
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
@@ -71,6 +52,7 @@ public class NetworkPlayer : NetworkBehaviour
         var networkFungal = Instantiate(fungal.NetworkPrefab, randomPosition, Quaternion.identity, transform);
         networkFungal.NetworkObject.SpawnWithOwnership(clientId);
 
+
         OnFungalSpawnedClientRpc(clientId, networkFungal.NetworkObjectId);
     }
 
@@ -82,6 +64,8 @@ public class NetworkPlayer : NetworkBehaviour
             if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out var networkObject))
             {
                 networkFungal = networkObject.GetComponent<NetworkFungal>();
+                controller.SetMovement(networkFungal.Movement);
+                navigation.Navigate(inputView);
             }
         }
     }

@@ -64,7 +64,6 @@ public class Controller : ScriptableObject
         if (AbilityCast) AbilityCast.OnCastStart += OnCastStart;
 
         mount = movement.GetComponent<Mountable>();
-        Debug.Log(mount);
         OnUpdate?.Invoke();
     }
 
