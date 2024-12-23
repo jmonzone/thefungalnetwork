@@ -6,6 +6,16 @@ using UnityEngine.Events;
 public class FadeCanvasGroup : MonoBehaviour
 {
     private CanvasGroup canvasGroup;
+
+    public bool IsVisible
+    {
+        get
+        {
+            if (!canvasGroup) canvasGroup = GetComponent<CanvasGroup>();
+            return canvasGroup.alpha > 0;
+        }
+    }
+
     public IEnumerator FadeIn(float duration = 1f) => Fade(0f, 1f, duration);
 
     public IEnumerator FadeOut(float duration = 1f, UnityAction onComplete = null) => Fade(1f, 0, duration, onComplete);

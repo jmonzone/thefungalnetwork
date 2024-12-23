@@ -56,8 +56,9 @@ public class CrocodileAI : MonoBehaviour
 
         yield return new WaitUntil(() =>
         {
+            if (!transform) return false;
             targets = arena.Players
-                  .Where(player => Vector3.Distance(player.transform.position, transform.position) < 5f)
+                  .Where(player => player && Vector3.Distance(player.transform.position, transform.position) < 5f)
                   .OrderBy(player => Vector3.Distance(player.transform.position, transform.position))
                   .ToList();
             return targets.Count > 0;

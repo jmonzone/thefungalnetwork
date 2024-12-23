@@ -67,4 +67,14 @@ public class MultiplayerArena : ScriptableObject
     {
         OnIntroComplete?.Invoke();
     }
+
+    public ulong MinionClientId { get; private set; }
+
+    public event UnityAction OnMinionAssigned;
+
+    public void AssignMinion(ulong clientId)
+    {
+        MinionClientId = clientId;
+        OnMinionAssigned?.Invoke();
+    }
 }
