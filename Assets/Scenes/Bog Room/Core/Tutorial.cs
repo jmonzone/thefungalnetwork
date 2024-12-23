@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Tutorial : MonoBehaviour
@@ -20,9 +19,7 @@ public class Tutorial : MonoBehaviour
     private IEnumerator Arena_OnIntroCompleteCoroutine()
     {
         yield return fadeCanvasGroup.FadeIn();
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(2f);
         yield return fadeCanvasGroup.FadeOut();
     }
-
-
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
@@ -12,40 +13,13 @@ public class BogFrog : NetworkBehaviour
     public float shrinkSpeed = 1f; // Speed at which the parent shrinks
     public float miniSpawnHeight = 2f; // Height offset for mini versions
 
-    public override void OnNetworkSpawn()
+    public IEnumerator HandleAnimation()
     {
-        base.OnNetworkSpawn();
-
-        if (IsOwner)
-        {
-            var animator = GetComponentInChildren<Animator>();
-            animator.speed = 0.5f;
-            animator.Play("Jump");
-
-            StartCoroutine(HandleAnimation());
-        }
-    }
-
-    private IEnumerator HandleAnimation()
-    {
-        yield return new WaitForSeconds(1.5f);
-        yield return ShrinkDown();
-        yield return new WaitForSeconds(1.5f);
-        SpawnMiniObjects();
         yield return new WaitForSeconds(2f);
-        StartGameServerRpc();
-    }
-
-    [ServerRpc(RequireOwnership=false)]
-    private void StartGameServerRpc()
-    {
-        StartGameClientRpc();
-    }
-
-    [ClientRpc]
-    private void StartGameClientRpc()
-    {
-        arena.InvokeIntroComplete();
+        var animator = GetComponentInChildren<Animator>();
+        animator.speed = 0.25f;
+        animator.Play("Death");
+        yield return new WaitForSeconds(2f);
     }
 
     private IEnumerator ShrinkDown()
