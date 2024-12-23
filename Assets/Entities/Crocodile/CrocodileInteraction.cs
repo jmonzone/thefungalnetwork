@@ -19,8 +19,12 @@ public class CrocodileInteraction : MonoBehaviour
 
     private void Awake()
     {
+
         proximityAction = GetComponent<ProximityAction>();
-        proximityAction.OnUse += RequestMount;
+        if (proximityAction)
+        {
+            proximityAction.OnUse += RequestMount;
+        }
 
         attackable = GetComponent<Attackable>();
         attackable.OnHealthDepleted += Attackable_OnHealthChanged;
@@ -59,7 +63,7 @@ public class CrocodileInteraction : MonoBehaviour
     private void UpdateIsInteractable()
     {
         //todo: add delay animation so that the crocodile is not interactable immediately
-        proximityAction.SetInteractable(isDefeated && !isMounted);
+        //proximityAction.SetInteractable(isDefeated && !isMounted);
     }
 
     private void RequestMount()

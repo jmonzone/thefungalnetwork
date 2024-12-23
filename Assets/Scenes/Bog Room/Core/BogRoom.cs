@@ -26,6 +26,15 @@ public class BogRoom : NetworkBehaviour
         }
     }
 
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        if (IsOwner)
+        {
+            StartGameServerRpc();
+        }
+    }
+
     private void OnEnable()
     {
         Debug.Log($"OnEnable called on client: {IsClient}, server: {IsServer}");
@@ -38,6 +47,18 @@ public class BogRoom : NetworkBehaviour
     public void TriggerDeathEventServerRpc()
     {
         OnPlayerDeathClientRpc();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void StartGameServerRpc()
+    {
+        StartGameClientRpc();
+    }
+
+    [ClientRpc]
+    private void StartGameClientRpc()
+    {
+        multiplayerArena.InvokeIntroComplete();
     }
 
     [ClientRpc]

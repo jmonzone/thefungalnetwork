@@ -9,7 +9,6 @@ public enum FungalState
     TARGET,
 }
 
-[RequireComponent(typeof(ProximityAction))]
 public class FungalController : MonoBehaviour
 {
     [SerializeField] private Controller controller;
