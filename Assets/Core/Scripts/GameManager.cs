@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 // implements a singleton GameManager to manage communication 
 // with persistent global data across scenes
@@ -18,6 +19,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private ItemInventory itemInventory;
     [SerializeField] private FungalInventory fungalInventory;
     [SerializeField] private Possession possession;
+    [SerializeField] private Controller controller;
+    [SerializeField] private Volume volume;
+
 
     private void Awake()
     {
@@ -45,6 +49,8 @@ public class GameManager : MonoBehaviour
             itemInventory.Initialize();
             fungalInventory.Initialize();
             possession.Initialize();
+
+            controller.Initialize(volume);
 
             DontDestroyOnLoad(instance);
 

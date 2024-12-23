@@ -1,5 +1,54 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &351716908963115576
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 614617940589672951}
+  - component: {fileID: 4423017710883401162}
+  m_Layer: 0
+  m_Name: Global Volume
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &614617940589672951
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 351716908963115576}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2275327749610400236}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4423017710883401162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 351716908963115576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: a6560a915ef98420e9faacc1c7438823, type: 2}
 --- !u!1 &1135693640868867722
 GameObject:
   m_ObjectHideFlags: 0
@@ -412,6 +461,7 @@ Transform:
   m_Children:
   - {fileID: 6945272657625525232}
   - {fileID: 7196918589337771087}
+  - {fileID: 614617940589672951}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4377193916735545544
@@ -427,13 +477,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   localData: {fileID: 11400000, guid: 81d22df7435974c419891ceb2bc9e4ee, type: 2}
-  tutorial: {fileID: 11400000, guid: efdd5f0cddba44a8aa359bce2c9bf5d3, type: 2}
   uiNavigation: {fileID: 11400000, guid: 7af35f01730a846d692adda4734cddd3, type: 2}
   sceneNavigation: {fileID: 11400000, guid: 5c885c9a984a3470684bef7e76ca5c2a, type: 2}
   screenFade: {fileID: 1911354538186324394}
   multiplayer: {fileID: 11400000, guid: 408255eed57604ff491c1da858247ecd, type: 2}
-  abilityCast: {fileID: 11400000, guid: f64dcda4d45144cc990412b55614233d, type: 2}
   displayName: {fileID: 11400000, guid: 70aa9925b762e422089c41437a664eeb, type: 2}
   itemInventory: {fileID: 11400000, guid: b0534c2b759264d94ad364617da988b3, type: 2}
   fungalInventory: {fileID: 11400000, guid: c2d8b29caee5b440ca0269f2f27fa2b3, type: 2}
   possession: {fileID: 11400000, guid: 2733aad4d1436406fb3b8878be90ba62, type: 2}
+  controller: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
+  volume: {fileID: 4423017710883401162}

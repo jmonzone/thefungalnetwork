@@ -52,9 +52,6 @@ public class PlayerInput : MonoBehaviour
             var direction = new Vector3(input.x, 0, input.y);
             ApplyDirection(direction);
         };
-
-        //todo: have this initialized in GameManager
-        controller.Initialize(volume);
     }
 
     private void OnEnable()

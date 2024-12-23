@@ -44,14 +44,14 @@ public class BogRoom : NetworkBehaviour
         var randomIndex = Random.Range(0, multiplayerArena.Players.Count);
         var randomPlayer = multiplayerArena.Players[randomIndex];
         var networkFungal = randomPlayer.GetComponent<NetworkFungal>();
-        networkFungal.SetAsMinionServerRpc();
+        //networkFungal.SetAsMinionServerRpc();
         AssignMinionClientRpc(networkFungal.OwnerClientId);
     }
 
     [ClientRpc]
     private void AssignMinionClientRpc(ulong clientId)
     {
-        multiplayerArena.AssignMinion(clientId);
+        if (NetworkManager.Singleton.LocalClientId == clientId) multiplayerArena.AssignMinion(clientId);
     }
 
     private void OnEnable()
