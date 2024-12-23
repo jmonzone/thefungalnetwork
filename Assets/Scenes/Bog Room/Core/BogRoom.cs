@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using Cinemachine;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
@@ -11,8 +9,7 @@ public class BogRoom : NetworkBehaviour
     [SerializeField] private ShruneItem defaultShrune;
     [SerializeField] private ItemInventory itemInventory;
     [SerializeField] private MultiplayerArena multiplayerArena;
-    [SerializeField] private BogFrog bogFrog;
-    [SerializeField] private CinemachineVirtualCamera virtualCamera;
+    [SerializeField] private MultiplayerManager multiplayer;
 
     [Header("Results")]
     [SerializeField] private Navigation navigation;
@@ -34,9 +31,16 @@ public class BogRoom : NetworkBehaviour
         base.OnNetworkSpawn();
         if (IsOwner)
         {
-            StartGameServerRpc();
-            //StartCoroutine(StartGame());
+            StartCoroutine(WaitForLobby());
         }
+    }
+
+    private IEnumerator WaitForLobby()
+    {
+        yield return new WaitUntil(() => multiplayer.JoinedLobby != null);
+        yield return new WaitUntil(() => multiplayerArena.Players.Count == multiplayer.JoinedLobby.Players.Count);
+        StartGameServerRpc();
+
     }
 
     private void OnEnable()
