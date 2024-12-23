@@ -67,7 +67,6 @@ public class BogRoom : NetworkBehaviour
         multiplayerArena.OnAllMushroomsCollected -= MultiplayerArena_OnAllMushroomsCollected;
         multiplayerArena.OnAllPlayersDead -= MultiplayerArena_OnAllPlayersDead;
         playerReference.OnDeath -= TriggerDeathEventServerRpc;
-
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -100,13 +99,6 @@ public class BogRoom : NetworkBehaviour
         resultHeader.text = "Bog Unclogged!";
         resultHeader.color = winResultColor;
         ShowResults();
-    }
-
-    private void OnDisable()
-    {
-        multiplayerArena.OnAllMushroomsCollected -= MultiplayerArena_OnAllMushroomsCollected;
-        multiplayerArena.OnAllPlayersDead -= MultiplayerArena_OnAllPlayersDead;
-        playerReference.OnDeath -= OnPlayerDeathClientRpc;
     }
 
     private void MultiplayerArena_OnAllPlayersDead()

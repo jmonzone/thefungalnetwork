@@ -58,7 +58,6 @@ public class CrocodileCharge : MonoBehaviour
     {
         if (!isAttacking) return;
 
-        Debug.Log("onTriggerEnter");
         var attackable = collision.transform.GetComponentInParent<Attackable>();
         if (attackable && !attackables.Contains(attackable))
         {
