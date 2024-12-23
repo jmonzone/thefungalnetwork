@@ -117,9 +117,6 @@ GameObject:
   - component: {fileID: 4922996098477504940}
   - component: {fileID: 2085717639669873938}
   - component: {fileID: 2740891359218592500}
-  - component: {fileID: 8503401167786087212}
-  - component: {fileID: 6235786018507511907}
-  - component: {fileID: 760468183822507038}
   - component: {fileID: 233472190970575125}
   - component: {fileID: 4469671233377470357}
   - component: {fileID: 8521286082058163821}
@@ -163,7 +160,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0584be89b59f0474eada4b2beab08ac4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 0
+  damage: 1
+  chargeForce: 30
 --- !u!114 &2085717639669873938
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -177,8 +175,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   arena: {fileID: 11400000, guid: 24582879ca0914ce48009bfa1a0c10ae, type: 2}
-  hitCooldown: 2
+  hitCooldown: 1.5
   hitTimer: 0
+  detectRadius: 7.5
+  delay: 1
 --- !u!114 &2740891359218592500
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -192,62 +192,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 56b745a3e49bf4401b66f5a9bb9bae91, type: 2}
---- !u!114 &8503401167786087212
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4624336733102921167}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d392a6d70601549189c0fd1548fdbc34, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  controller: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
---- !u!114 &6235786018507511907
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4624336733102921167}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a0ebbc806cd2749d7b7aacc0d551eede, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  interactable: 1
---- !u!114 &760468183822507038
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4624336733102921167}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47a3fda79a53a4b9e9ab1b8cf9d8acb6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  type: 0
-  speed: 2
-  lerpRotation: 1
-  faceForward: 0
-  useRoll: 0
-  lockXZLookRotation: 0
-  useDrag: 0
-  positionAnchor:
-    anchor: {fileID: 0}
-    bounds: {fileID: 0}
-  distanceThreshold: 0.5
-  startIdle: 0
-  minIdleDuration: 2
-  maxIdleDuration: 5
-  radius: 4
-  radialSpeed: 0.25
-  jumpForce: 250
-  maxJumpCount: 1
 --- !u!114 &233472190970575125
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -339,8 +283,8 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4624336733102921167}
   serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
+  m_Mass: 10
+  m_Drag: 5
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -354,7 +298,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0

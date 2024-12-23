@@ -3,14 +3,10 @@ using UnityEngine;
 
 public class NetworkCrocodile : NetworkBehaviour
 {
-    private CrocodileCharge attack;
     private AbilityCast abilityCast;
 
     private void Awake()
     {
-        attack = GetComponent<CrocodileCharge>();
-        attack.enabled = false;
-
         abilityCast = GetComponent<AbilityCast>();
     }
 
@@ -26,7 +22,6 @@ public class NetworkCrocodile : NetworkBehaviour
 
         if (IsOwner)
         {
-            attack.enabled = true;
             abilityCast.OnPrepare += OnAbilityStart;
             abilityCast.OnCastStart += OnAbilityCast;
         }
@@ -45,7 +40,6 @@ public class NetworkCrocodile : NetworkBehaviour
 
     private void OnAbilityStart()
     {
-        Debug.Log("on ability Start");
         OnAbilityStartClientRpc(NetworkManager.Singleton.LocalClientId, abilityCast.Direction);
     }
 

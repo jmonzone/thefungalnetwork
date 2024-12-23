@@ -7,6 +7,8 @@ public class CrocodileAI : MonoBehaviour
     [SerializeField] private MultiplayerArena arena;
     [SerializeField] private float hitCooldown = 3f;
     [SerializeField] private float hitTimer = 0;
+    [SerializeField] private float detectRadius = 7.5f;
+    [SerializeField] private float delay = 1f;
 
     private AbilityCast abilityCast;
     private Vector3 direction;
@@ -58,7 +60,7 @@ public class CrocodileAI : MonoBehaviour
         {
             if (!transform) return false;
             targets = arena.Players
-                  .Where(player => player && Vector3.Distance(player.transform.position, transform.position) < 5f)
+                  .Where(player => player && Vector3.Distance(player.transform.position, transform.position) < detectRadius)
                   .OrderBy(player => Vector3.Distance(player.transform.position, transform.position))
                   .ToList();
             return targets.Count > 0;
@@ -70,7 +72,7 @@ public class CrocodileAI : MonoBehaviour
         direction.y = 0;
         abilityCast.SetDirection(direction.normalized);
         abilityCast.Prepare();
-        yield return new WaitForSeconds(1.75f);
+        yield return new WaitForSeconds(delay);
         abilityCast.StartCast();
 
     }

@@ -1,24 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class CrocodileCharge : MonoBehaviour
 {
     [SerializeField] private float damage;
+    [SerializeField] private float chargeForce;
 
-    private MovementController movement;
+    private Rigidbody rb;
     private AbilityCast abilityCast;
 
     private bool isAttacking = false;
     private List<Attackable> attackables = new List<Attackable>();
 
-    // Start is called before the first frame update
     private void Awake()
     {
         abilityCast = GetComponent<AbilityCast>();
-
-        movement = GetComponent<MovementController>();
+        rb = GetComponent<Rigidbody>();
     }
 
     private void OnEnable()
@@ -40,17 +38,12 @@ public class CrocodileCharge : MonoBehaviour
     {
         GetComponentInChildren<Animator>().Play("Attack");
 
-        movement.SetSpeed(abilityCast.Data.Speed);
-        var targetPosition = abilityCast.StartPosition + abilityCast.Direction * abilityCast.Data.MaxDistance;
-        movement.SetPosition(targetPosition);
+        rb.velocity = abilityCast.Direction.normalized * chargeForce;
+        transform.forward = abilityCast.Direction.normalized;
         isAttacking = true;
-
-        yield return new WaitUntil(() => movement.IsAtDestination);
-
+        yield return new WaitUntil(() => rb.velocity.magnitude < 10f);
         isAttacking = false;
         attackables = new List<Attackable>();
-        movement.SetSpeed(2f);
-        movement.Stop();
         abilityCast.CompleteCast();
     }
 
