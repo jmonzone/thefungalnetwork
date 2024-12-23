@@ -118,6 +118,7 @@ GameObject:
   - component: {fileID: 2085717639669873938}
   - component: {fileID: 2740891359218592500}
   - component: {fileID: 233472190970575125}
+  - component: {fileID: -7065809476165298200}
   - component: {fileID: 4469671233377470357}
   - component: {fileID: 8521286082058163821}
   - component: {fileID: 4099868245457224918}
@@ -205,6 +206,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 5
+--- !u!114 &-7065809476165298200
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4624336733102921167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 1691312482
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!114 &4469671233377470357
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -434,7 +456,7 @@ Transform:
   m_GameObject: {fileID: 8958253930977985318}
   serializedVersion: 2
   m_LocalRotation: {x: -0.96476436, y: -0, z: -0, w: 0.2631155}
-  m_LocalPosition: {x: 0, y: 0.68, z: 0.39999962}
+  m_LocalPosition: {x: 0, y: 0.89, z: 0.04}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -576,7 +598,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1.5
+      scalar: 0.5
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -1277,7 +1299,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 10
+      scalar: 5
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -1402,8 +1424,8 @@ ParticleSystem:
           inWeight: 0.33333334
           outWeight: 0.33333334
         - serializedVersion: 3
-          time: 0.15931019
-          value: 1
+          time: 0.29264504
+          value: 0.33846158
           inSlope: -0.22111231
           outSlope: -0.22111231
           tangentMode: 0
@@ -5521,6 +5543,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Overhead Interaction
+      objectReference: {fileID: 0}
+    - target: {fileID: 5846760016743100905, guid: 923f0bfc7a7de4470aef307e3aa0043d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5748562680691574355, guid: 923f0bfc7a7de4470aef307e3aa0043d, type: 3}
