@@ -60,7 +60,7 @@ public class CrocodileAI : MonoBehaviour
         {
             if (!transform) return false;
             targets = arena.Players
-                  .Where(player => player && Vector3.Distance(player.transform.position, transform.position) < detectRadius)
+                  .Where(player => player && player.GetComponent<Attackable>().CurrentHealth > 0 && Vector3.Distance(player.transform.position, transform.position) < detectRadius)
                   .OrderBy(player => Vector3.Distance(player.transform.position, transform.position))
                   .ToList();
             return targets.Count > 0;

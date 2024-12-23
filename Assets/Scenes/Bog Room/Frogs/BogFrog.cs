@@ -1,9 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using Cinemachine;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class BogFrog : NetworkBehaviour
 {
@@ -20,31 +18,5 @@ public class BogFrog : NetworkBehaviour
         animator.speed = 0.25f;
         animator.Play("Death");
         yield return new WaitForSeconds(2f);
-    }
-
-    private IEnumerator ShrinkDown()
-    {
-        // Shrink the parent object
-        Vector3 originalScale = transform.localScale;
-        Vector3 targetScale = Vector3.zero;
-        float elapsedTime = 0f;
-
-        while (elapsedTime < shrinkSpeed)
-        {
-            transform.localScale = Vector3.Lerp(originalScale, targetScale, elapsedTime / shrinkSpeed);
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
-
-        // Ensure the parent object is fully shrunk
-        transform.localScale = targetScale;
-    }
-
-    private void SpawnMiniObjects()
-    {
-        for (int i = 0; i < miniFrogs.Count; i++)
-        {
-            miniFrogs[i].AssignSpore(arena.Spores[i], arena.SporePositions[i]);
-        }
     }
 }
