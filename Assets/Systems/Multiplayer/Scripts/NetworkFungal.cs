@@ -19,4 +19,17 @@ public class NetworkFungal : NetworkBehaviour
         var fungalController = GetComponent<FungalController>();
         fungalController.InitializeAnimations();
     }
+
+    [ServerRpc]
+    public void SetAsMinionServerRpc()
+    {
+        SetAsMinionClientRpc();
+    }
+
+    [ClientRpc]
+    private void SetAsMinionClientRpc()
+    {
+        Debug.Log("I am the minion");
+
+    }
 }
