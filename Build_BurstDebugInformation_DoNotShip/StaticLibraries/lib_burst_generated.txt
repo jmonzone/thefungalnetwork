@@ -3,15 +3,12 @@ Library: /Users/johnnanmonzon/jmonzone/thefungalnetwork/Temp/BurstOutput/StaticL
 --backend=burst-llvm-10
 --target=ARMV8A_AARCH64
 --global-safety-checks-setting=Off
---disable-safety-checks
 --meta-data-generation=False
 --dump=Function
 --float-precision=Standard
 --target-framework=NetFramework
---float-mode=Fast
 --assembly-defines=Assembly-CSharp;
 --assembly-defines=Cinemachine;
---assembly-defines=GURU;
 --assembly-defines=Mono.Security;
 --assembly-defines=mscorlib;
 --assembly-defines=Newtonsoft.Json;
@@ -66,82 +63,6 @@ Library: /Users/johnnanmonzon/jmonzone/thefungalnetwork/Temp/BurstOutput/StaticL
 --linker-options=min-ios-version=12.0
 --generate-link-xml=Temp/burst.link.xml
 --temp-folder=/Users/johnnanmonzon/jmonzone/thefungalnetwork/Temp/Burst
---debug=Full
---generate-static-linkage-methods
---key-folder=/Applications/Unity/Hub/Editor/2022.3.19f1/PlaybackEngines/iOSSupport
---decode-folder=/Users/johnnanmonzon/jmonzone/thefungalnetwork/Library/Burst
---output=/Users/johnnanmonzon/jmonzone/thefungalnetwork/Temp/BurstOutput/StaticLibraries/lib_burst_generated
---pdb-search-paths=Temp/ManagedSymbols/
-
---method=Unity.Jobs.IJobForExtensions+ForJobStruct`1[[UnityEngine.Rendering.Universal.ZBinningJob, Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(UnityEngine.Rendering.Universal.ZBinningJob&, Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--77fc393cb521ac129b1392d4eb94d29a
---method=Unity.Jobs.IJobForExtensions+ForJobStruct`1[[UnityEngine.Rendering.Universal.TileRangeExpansionJob, Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(UnityEngine.Rendering.Universal.TileRangeExpansionJob&, Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--adceb2156d08d59afc9749dc2521fd2b
---method=Unity.Jobs.IJobForExtensions+ForJobStruct`1[[UnityEngine.Rendering.Universal.TilingJob, Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(UnityEngine.Rendering.Universal.TilingJob&, Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--a6f5259e22ed809ef3937424c4bd686d
---platform=iOS
---backend=burst-llvm-10
---target=ARMV8A_AARCH64
---global-safety-checks-setting=Off
---meta-data-generation=False
---dump=Function
---float-precision=Standard
---target-framework=NetFramework
---assembly-defines=Assembly-CSharp;
---assembly-defines=Cinemachine;
---assembly-defines=GURU;
---assembly-defines=Mono.Security;
---assembly-defines=mscorlib;
---assembly-defines=Newtonsoft.Json;
---assembly-defines=System.Configuration;
---assembly-defines=System.Core;
---assembly-defines=System.Data;
---assembly-defines=System;
---assembly-defines=System.Numerics;
---assembly-defines=System.Runtime.Serialization;
---assembly-defines=System.Xml;
---assembly-defines=System.Xml.Linq;
---assembly-defines=unity-websocket-sharp;
---assembly-defines=Unity.2D.Animation.Runtime;
---assembly-defines=Unity.Burst;
---assembly-defines=Unity.Burst.Unsafe;
---assembly-defines=Unity.Collections;
---assembly-defines=Unity.Collections.LowLevel.ILSupport;
---assembly-defines=Unity.InternalAPIEngineBridge.001;
---assembly-defines=Unity.Mathematics;
---assembly-defines=Unity.Multiplayer.Samples.Utilities.ClientAuthority;
---assembly-defines=Unity.Multiplayer.Tools.Adapters;
---assembly-defines=Unity.Multiplayer.Tools.Adapters.Ngo1;
---assembly-defines=Unity.Multiplayer.Tools.Common;
---assembly-defines=Unity.Multiplayer.Tools.MetricEvents;
---assembly-defines=Unity.Multiplayer.Tools.MetricTypes;
---assembly-defines=Unity.Multiplayer.Tools.NetStats;
---assembly-defines=Unity.Multiplayer.Tools.NetStatsReporting;
---assembly-defines=Unity.Multiplayer.Tools.NetworkSolutionInterface;
---assembly-defines=Unity.Netcode.Components;
---assembly-defines=Unity.Netcode.Runtime;
---assembly-defines=Unity.Networking.Transport;
---assembly-defines=Unity.RenderPipeline.Universal.ShaderLibrary;
---assembly-defines=Unity.RenderPipelines.Core.Runtime;
---assembly-defines=Unity.RenderPipelines.Universal.Runtime;
---assembly-defines=Unity.Services.Authentication;
---assembly-defines=Unity.Services.Core.Configuration;
---assembly-defines=Unity.Services.Core.Device;
---assembly-defines=Unity.Services.Core;
---assembly-defines=Unity.Services.Core.Environments.Internal;
---assembly-defines=Unity.Services.Core.Internal;
---assembly-defines=Unity.Services.Core.Registration;
---assembly-defines=Unity.Services.Core.Scheduler;
---assembly-defines=Unity.Services.Core.Telemetry;
---assembly-defines=Unity.Services.Core.Threading;
---assembly-defines=Unity.Services.Lobbies;
---assembly-defines=Unity.Services.QoS;
---assembly-defines=Unity.Services.Relay;
---assembly-defines=Unity.Services.Wire.Internal;
---assembly-defines=Unity.TextMeshPro;
---assembly-defines=Unity.Timeline;
---assembly-defines=UnityEngine;
---linker-options=min-ios-version=12.0
---generate-link-xml=Temp/burst.link.xml
---temp-folder=/Users/johnnanmonzon/jmonzone/thefungalnetwork/Temp/Burst
---debug=Full
 --generate-static-linkage-methods
 --key-folder=/Applications/Unity/Hub/Editor/2022.3.19f1/PlaybackEngines/iOSSupport
 --decode-folder=/Users/johnnanmonzon/jmonzone/thefungalnetwork/Library/Burst
@@ -203,7 +124,6 @@ Library: /Users/johnnanmonzon/jmonzone/thefungalnetwork/Temp/BurstOutput/StaticL
 --method=Unity.Networking.Transport.FragmentationPipelineStage, Unity.Networking.Transport, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::InitializeConnection(System.Byte*, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.Byte*, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.Byte*, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.Byte*, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--3d9c5d25cbaf59b6968b73af5208abeb
 --method=Unity.Networking.Transport.TLS.SecureNetworkProtocol, Unity.Networking.Transport, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::ProcessSendConnectionAccept(Unity.Networking.Transport.NetworkDriver+Connection&, Unity.Networking.Transport, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|Unity.Networking.Transport.NetworkSendInterface&, Unity.Networking.Transport, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|Unity.Networking.Transport.NetworkSendQueueHandle&, Unity.Networking.Transport, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--c1fbfd281ea134b7d03f2ca9400e6a6e
 --method=Unity.Collections.AllocatorManager+StackAllocator, Unity.Collections, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Try(System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Collections.AllocatorManager+Block&, Unity.Collections, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null)--478bf3abafa12cba2083fb45bca79b9c
---method=Unity.Jobs.IJobExtensions+JobStruct`1[[Unity.Collections.LowLevel.Unsafe.UnsafeHashMapDataDisposeJob, Unity.Collections, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(Unity.Collections.LowLevel.Unsafe.UnsafeHashMapDataDisposeJob&, Unity.Collections, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--2ef0a503423574beae197ba4b01ed0be
 --method=Unity.Networking.Transport.UnityTransportProtocol, Unity.Networking.Transport, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::ProcessSendPing(Unity.Networking.Transport.NetworkDriver+Connection&, Unity.Networking.Transport, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|Unity.Networking.Transport.NetworkSendInterface&, Unity.Networking.Transport, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|Unity.Networking.Transport.NetworkSendQueueHandle&, Unity.Networking.Transport, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--f80492d8d058e4c37006d65d7477333b
 --method=Unity.Networking.Transport.NullPipelineStage, Unity.Networking.Transport, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Send(Unity.Networking.Transport.NetworkPipelineContext&, Unity.Networking.Transport, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|Unity.Networking.Transport.InboundSendBuffer&, Unity.Networking.Transport, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|Unity.Networking.Transport.NetworkPipelineStage+Requests&, Unity.Networking.Transport, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--b0a8237b9f72a2c6c05e3956ddcac6fb
 --method=Unity.Jobs.IJobExtensions+JobStruct`1[[UnityEngine.U2D.Animation.FillPerSkinJobSingleThread, Unity.2D.Animation.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(UnityEngine.U2D.Animation.FillPerSkinJobSingleThread&, Unity.2D.Animation.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--7194d9a68a20c1c6a01d3a365d4f21b9
@@ -226,4 +146,79 @@ Library: /Users/johnnanmonzon/jmonzone/thefungalnetwork/Temp/BurstOutput/StaticL
 --method=Unity.Networking.Transport.ReliableSequencedPipelineStage, Unity.Networking.Transport, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Receive(Unity.Networking.Transport.NetworkPipelineContext&, Unity.Networking.Transport, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|Unity.Networking.Transport.InboundRecvBuffer&, Unity.Networking.Transport, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|Unity.Networking.Transport.NetworkPipelineStage+Requests&, Unity.Networking.Transport, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--fb9d72c5d14dfcf8e3bf820e9f9c39c8
 --method=Unity.Networking.Transport.UnityTransportProtocol, Unity.Networking.Transport, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::ProcessSendConnectionAccept(Unity.Networking.Transport.NetworkDriver+Connection&, Unity.Networking.Transport, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|Unity.Networking.Transport.NetworkSendInterface&, Unity.Networking.Transport, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|Unity.Networking.Transport.NetworkSendQueueHandle&, Unity.Networking.Transport, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--c8d81af4a53bbefbf665e9c19db8deeb
 --method=Unity.Networking.Transport.FragmentationPipelineStage, Unity.Networking.Transport, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Send(Unity.Networking.Transport.NetworkPipelineContext&, Unity.Networking.Transport, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|Unity.Networking.Transport.InboundSendBuffer&, Unity.Networking.Transport, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|Unity.Networking.Transport.NetworkPipelineStage+Requests&, Unity.Networking.Transport, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--3134d6572ef8ceff1d5057c9272f12fe
+--platform=iOS
+--backend=burst-llvm-10
+--target=ARMV8A_AARCH64
+--global-safety-checks-setting=Off
+--disable-safety-checks
+--meta-data-generation=False
+--dump=Function
+--float-precision=Standard
+--target-framework=NetFramework
+--float-mode=Fast
+--assembly-defines=Assembly-CSharp;
+--assembly-defines=Cinemachine;
+--assembly-defines=Mono.Security;
+--assembly-defines=mscorlib;
+--assembly-defines=Newtonsoft.Json;
+--assembly-defines=System.Configuration;
+--assembly-defines=System.Core;
+--assembly-defines=System.Data;
+--assembly-defines=System;
+--assembly-defines=System.Numerics;
+--assembly-defines=System.Runtime.Serialization;
+--assembly-defines=System.Xml;
+--assembly-defines=System.Xml.Linq;
+--assembly-defines=unity-websocket-sharp;
+--assembly-defines=Unity.2D.Animation.Runtime;
+--assembly-defines=Unity.Burst;
+--assembly-defines=Unity.Burst.Unsafe;
+--assembly-defines=Unity.Collections;
+--assembly-defines=Unity.Collections.LowLevel.ILSupport;
+--assembly-defines=Unity.InternalAPIEngineBridge.001;
+--assembly-defines=Unity.Mathematics;
+--assembly-defines=Unity.Multiplayer.Samples.Utilities.ClientAuthority;
+--assembly-defines=Unity.Multiplayer.Tools.Adapters;
+--assembly-defines=Unity.Multiplayer.Tools.Adapters.Ngo1;
+--assembly-defines=Unity.Multiplayer.Tools.Common;
+--assembly-defines=Unity.Multiplayer.Tools.MetricEvents;
+--assembly-defines=Unity.Multiplayer.Tools.MetricTypes;
+--assembly-defines=Unity.Multiplayer.Tools.NetStats;
+--assembly-defines=Unity.Multiplayer.Tools.NetStatsReporting;
+--assembly-defines=Unity.Multiplayer.Tools.NetworkSolutionInterface;
+--assembly-defines=Unity.Netcode.Components;
+--assembly-defines=Unity.Netcode.Runtime;
+--assembly-defines=Unity.Networking.Transport;
+--assembly-defines=Unity.RenderPipeline.Universal.ShaderLibrary;
+--assembly-defines=Unity.RenderPipelines.Core.Runtime;
+--assembly-defines=Unity.RenderPipelines.Universal.Runtime;
+--assembly-defines=Unity.Services.Authentication;
+--assembly-defines=Unity.Services.Core.Configuration;
+--assembly-defines=Unity.Services.Core.Device;
+--assembly-defines=Unity.Services.Core;
+--assembly-defines=Unity.Services.Core.Environments.Internal;
+--assembly-defines=Unity.Services.Core.Internal;
+--assembly-defines=Unity.Services.Core.Registration;
+--assembly-defines=Unity.Services.Core.Scheduler;
+--assembly-defines=Unity.Services.Core.Telemetry;
+--assembly-defines=Unity.Services.Core.Threading;
+--assembly-defines=Unity.Services.Lobbies;
+--assembly-defines=Unity.Services.QoS;
+--assembly-defines=Unity.Services.Relay;
+--assembly-defines=Unity.Services.Wire.Internal;
+--assembly-defines=Unity.TextMeshPro;
+--assembly-defines=Unity.Timeline;
+--assembly-defines=UnityEngine;
+--linker-options=min-ios-version=12.0
+--generate-link-xml=Temp/burst.link.xml
+--temp-folder=/Users/johnnanmonzon/jmonzone/thefungalnetwork/Temp/Burst
+--generate-static-linkage-methods
+--key-folder=/Applications/Unity/Hub/Editor/2022.3.19f1/PlaybackEngines/iOSSupport
+--decode-folder=/Users/johnnanmonzon/jmonzone/thefungalnetwork/Library/Burst
+--output=/Users/johnnanmonzon/jmonzone/thefungalnetwork/Temp/BurstOutput/StaticLibraries/lib_burst_generated
+--pdb-search-paths=Temp/ManagedSymbols/
+
+--method=Unity.Jobs.IJobForExtensions+ForJobStruct`1[[UnityEngine.Rendering.Universal.ZBinningJob, Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(UnityEngine.Rendering.Universal.ZBinningJob&, Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--77fc393cb521ac129b1392d4eb94d29a
+--method=Unity.Jobs.IJobForExtensions+ForJobStruct`1[[UnityEngine.Rendering.Universal.TileRangeExpansionJob, Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(UnityEngine.Rendering.Universal.TileRangeExpansionJob&, Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--adceb2156d08d59afc9749dc2521fd2b
+--method=Unity.Jobs.IJobForExtensions+ForJobStruct`1[[UnityEngine.Rendering.Universal.TilingJob, Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(UnityEngine.Rendering.Universal.TilingJob&, Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--a6f5259e22ed809ef3937424c4bd686d
 

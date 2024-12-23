@@ -36,7 +36,7 @@ public class MultiplayerManager : ScriptableObject
     public event UnityAction OnLobbyJoined;
     public event UnityAction OnLobbyPoll;
 
-    private int maxPlayers = 10;
+    private const int MAX_PLAYER_COUNT = 4;
 
     private Lobby hostLobby;
 
@@ -122,7 +122,7 @@ public class MultiplayerManager : ScriptableObject
     {
         try
         {
-            Allocation allocation = await RelayService.Instance.CreateAllocationAsync(maxPlayers - 1);
+            Allocation allocation = await RelayService.Instance.CreateAllocationAsync(MAX_PLAYER_COUNT - 1);
 
             string joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
 
@@ -152,7 +152,8 @@ public class MultiplayerManager : ScriptableObject
             data["JoinCode"] = new DataObject(DataObject.VisibilityOptions.Member, joinCode);
             Lobby lobby = await LobbyService.Instance.UpdateLobbyAsync(JoinedLobby.Id, new UpdateLobbyOptions
             {
-                Data = data
+                Data = data,
+                IsLocked = true
             });
 
             JoinedLobby = lobby;
@@ -259,7 +260,7 @@ public class MultiplayerManager : ScriptableObject
                 }
             };
 
-            Lobby lobby = await LobbyService.Instance.CreateLobbyAsync("Test Lobby", maxPlayers, createLobbyOptions);
+            Lobby lobby = await LobbyService.Instance.CreateLobbyAsync("Test Lobby", MAX_PLAYER_COUNT, createLobbyOptions);
             hostLobby = lobby;
             JoinedLobby = lobby;
 
@@ -286,10 +287,10 @@ public class MultiplayerManager : ScriptableObject
                 Data = new Dictionary<string, DataObject>()
                 {
                     { "HostName", new DataObject(DataObject.VisibilityOptions.Public, PlayerName)},
-                }
+                },
             };
 
-            Lobby lobby = await LobbyService.Instance.CreateLobbyAsync("Test Lobby", maxPlayers, createLobbyOptions);
+            Lobby lobby = await LobbyService.Instance.CreateLobbyAsync("Test Lobby", MAX_PLAYER_COUNT, createLobbyOptions);
             hostLobby = lobby;
             JoinedLobby = lobby;
 

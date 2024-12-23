@@ -33,6 +33,18 @@ public class BogFrog : NetworkBehaviour
         yield return new WaitForSeconds(1.5f);
         SpawnMiniObjects();
         yield return new WaitForSeconds(2f);
+        StartGameServerRpc();
+    }
+
+    [ServerRpc(RequireOwnership=false)]
+    private void StartGameServerRpc()
+    {
+        StartGameClientRpc();
+    }
+
+    [ClientRpc]
+    private void StartGameClientRpc()
+    {
         arena.InvokeIntroComplete();
     }
 

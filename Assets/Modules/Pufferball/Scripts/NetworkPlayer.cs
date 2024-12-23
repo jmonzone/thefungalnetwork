@@ -27,8 +27,11 @@ public class NetworkPlayer : NetworkBehaviour
 
     private void OnIntroComplete()
     {
-        controller.SetMovement(networkFungal.Movement);
-        navigation.Navigate(inputView);
+        if (IsOwner)
+        {
+            controller.SetMovement(networkFungal.Movement);
+            navigation.Navigate(inputView);
+        }
     }
 
     public override void OnNetworkSpawn()
