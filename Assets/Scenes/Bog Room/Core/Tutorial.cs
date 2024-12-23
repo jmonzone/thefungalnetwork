@@ -8,10 +8,10 @@ public class Tutorial : MonoBehaviour
     [SerializeField] private Controller controller;
     [SerializeField] private MultiplayerArena arena;
     [SerializeField] private FadeCanvasGroup fadeCanvasGroup;
+    [SerializeField] private TextMeshProUGUI header;
     [SerializeField] private TextMeshProUGUI text;
 
     private Vignette vignette;
-
 
     public float pulseIntensity = 0.5f; // Peak intensity of the vignette during the pulse
     public float pulseDuration = 1f; // Duration of each pulse
@@ -31,7 +31,8 @@ public class Tutorial : MonoBehaviour
 
     private void Arena_OnMinionAssigned()
     {
-        SetInformation("You have been possessed!");
+        var header = "Hate to say it, but...";
+        SetInformation(header, "You have been possessed!");
 
         if (controller.Volume.profile.TryGet<Vignette>(out var v))
         {
@@ -42,11 +43,13 @@ public class Tutorial : MonoBehaviour
 
     private void Arena_OnIntroComplete()
     {
-        SetInformation("Collect the mushrooms in order to escape");
+        var header = "Another day, another bog";
+        SetInformation(header, "Collect the mushrooms in order to escape");
     }
 
-    private void SetInformation(string text)
+    private void SetInformation(string header, string text)
     {
+        this.header.text = header;
         this.text.text = text;
 
         StartCoroutine(Arena_OnIntroCompleteCoroutine());

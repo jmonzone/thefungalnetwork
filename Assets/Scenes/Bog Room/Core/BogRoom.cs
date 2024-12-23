@@ -40,7 +40,7 @@ public class BogRoom : NetworkBehaviour
         yield return new WaitUntil(() => multiplayer.JoinedLobby != null);
         yield return new WaitUntil(() => multiplayerArena.Players.Count == multiplayer.JoinedLobby.Players.Count);
         StartGameServerRpc();
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(15f);
         var randomIndex = Random.Range(0, multiplayerArena.Players.Count);
         var randomPlayer = multiplayerArena.Players[randomIndex];
         var networkFungal = randomPlayer.GetComponent<NetworkFungal>();
