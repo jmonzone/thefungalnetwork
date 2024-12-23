@@ -1,11 +1,14 @@
 using Cinemachine;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class CameraSwitcher : MonoBehaviour
 {
     [SerializeField] private Controller controller;
     [SerializeField] private CinemachineVirtualCamera virtualCamera;
     [SerializeField] private bool lockOnTarget = false;
+
+    public event UnityAction OnSwitch;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -14,6 +17,7 @@ public class CameraSwitcher : MonoBehaviour
         {
             if (lockOnTarget) virtualCamera.LookAt = controller.Movement.transform;
             virtualCamera.Priority = 2;
+            OnSwitch?.Invoke();
         }
     }
 

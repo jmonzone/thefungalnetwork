@@ -62,6 +62,14 @@ public class BogRoom : NetworkBehaviour
         playerReference.OnDeath += TriggerDeathEventServerRpc;
     }
 
+    private void OnDisable()
+    {
+        multiplayerArena.OnAllMushroomsCollected -= MultiplayerArena_OnAllMushroomsCollected;
+        multiplayerArena.OnAllPlayersDead -= MultiplayerArena_OnAllPlayersDead;
+        playerReference.OnDeath -= TriggerDeathEventServerRpc;
+
+    }
+
     [ServerRpc(RequireOwnership = false)]
     public void TriggerDeathEventServerRpc()
     {

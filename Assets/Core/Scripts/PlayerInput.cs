@@ -7,9 +7,6 @@ public class PlayerInput : MonoBehaviour
 {
     [SerializeField] private Controller controller;
 
-    [SerializeField] private CameraController cameraController;
-    [SerializeField] private Volume volume;
-
     [SerializeField] private VirtualJoystick virtualJoystick;
     [SerializeField] private Button jumpButton;
     [SerializeField] private Button releaseButton;
@@ -52,26 +49,6 @@ public class PlayerInput : MonoBehaviour
             var direction = new Vector3(input.x, 0, input.y);
             ApplyDirection(direction);
         };
-    }
-
-    private void OnEnable()
-    {
-        controller.OnUpdate += OnControllerUpdated;
-    }
-
-    private void OnDisable()
-    {
-        controller.OnUpdate -= OnControllerUpdated;
-    }
-
-    private void OnControllerUpdated()
-    {
-        cameraController.Target = controller.Movement.transform;
-
-        if (controller.Fungal)
-        {
-            releaseButton.interactable = true;
-        }
     }
 
     private bool usingWASD;

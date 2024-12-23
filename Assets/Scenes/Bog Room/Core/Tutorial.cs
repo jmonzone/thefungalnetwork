@@ -10,6 +10,7 @@ public class Tutorial : MonoBehaviour
     [SerializeField] private FadeCanvasGroup fadeCanvasGroup;
     [SerializeField] private TextMeshProUGUI header;
     [SerializeField] private TextMeshProUGUI text;
+    [SerializeField] private CameraSwitcher cameraSwitcher;
 
     private Vignette vignette;
 
@@ -17,15 +18,18 @@ public class Tutorial : MonoBehaviour
     public float pulseDuration = 1f; // Duration of each pulse
     public int pulseCount = 3; // Number of pulses
 
+    private void Awake()
+    {
+        cameraSwitcher.OnSwitch += Arena_OnIntroComplete;
+    }
+
     private void OnEnable()
     {
-        arena.OnIntroComplete += Arena_OnIntroComplete;
         arena.OnMinionAssigned += Arena_OnMinionAssigned;
     }
 
     private void OnDisable()
     {
-        arena.OnIntroComplete -= Arena_OnIntroComplete;
         arena.OnMinionAssigned -= Arena_OnMinionAssigned;
     }
 
@@ -45,6 +49,7 @@ public class Tutorial : MonoBehaviour
     {
         var header = "Another day, another bog";
         SetInformation(header, "Collect the mushrooms in order to escape");
+        cameraSwitcher.OnSwitch -= Arena_OnIntroComplete;
     }
 
     private void SetInformation(string header, string text)
