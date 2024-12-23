@@ -73,7 +73,6 @@ public class MainMenuParty : MonoBehaviour
 
     private void MultiplayerManager_OnLobbyPoll()
     {
-
         var playerData = multiplayer.JoinedLobby.Players.Select(player =>
         {
             bool isLocalPlayer = player.Id == AuthenticationService.Instance.PlayerId;

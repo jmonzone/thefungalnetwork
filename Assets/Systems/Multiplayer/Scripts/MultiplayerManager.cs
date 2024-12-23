@@ -405,8 +405,8 @@ public class MultiplayerManager : ScriptableObject
     {
         Data = new Dictionary<string, PlayerDataObject>
         {
-            { "PlayerName", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, PlayerName) }
-
+            { "PlayerName", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, PlayerName) },
+            { "Fungal",new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, PlayerPrefs.GetInt("FungalIndex", 0).ToString()) }
         }
     };
 }
