@@ -27,7 +27,7 @@ public class MainMenuParty : MonoBehaviour
     {
         startButton.onClick.AddListener(async () =>
         {
-            await multiplayer.LockLobby();
+            await multiplayer.ToggleLobbyLock(true);
             sceneNavigation.NavigateToScene(1);
         });
 

@@ -164,13 +164,13 @@ public class MultiplayerManager : ScriptableObject
         }
     }
 
-    public async Task LockLobby()
+    public async Task ToggleLobbyLock(bool value)
     {
         try
         {
             Lobby lobby = await LobbyService.Instance.UpdateLobbyAsync(JoinedLobby.Id, new UpdateLobbyOptions
             {
-                IsLocked = true,
+                IsLocked = value,
             });
 
             JoinedLobby = lobby;
@@ -410,11 +410,20 @@ public class MultiplayerManager : ScriptableObject
 
     public async void DisconnectFromRelay()
     {
-        if (IsHost) await RemoveRelayFromLobbyData();
+        if (IsHost)
+        {
+            await RemoveRelayFromLobbyData();
+        }
 
         NetworkManager.Singleton.GetComponent<UnityTransport>().DisconnectLocalClient();
         NetworkManager.Singleton.Shutdown();
         sceneNavigation.NavigateToScene(0);
+
+        if (IsHost)
+        {
+            await ToggleLobbyLock(false);
+        }
+
     }
 
     private Player player;
