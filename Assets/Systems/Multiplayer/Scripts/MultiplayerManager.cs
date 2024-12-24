@@ -144,16 +144,33 @@ public class MultiplayerManager : ScriptableObject
 
     }
 
-    public async Task AddRelayToLobby(string joinCode)
+    public async Task AddRelayToLobby(string relayCode)
     {
         try
         {
             var data = JoinedLobby.Data;
-            data["JoinCode"] = new DataObject(DataObject.VisibilityOptions.Member, joinCode);
+            data["JoinCode"] = new DataObject(DataObject.VisibilityOptions.Member, relayCode);
             Lobby lobby = await LobbyService.Instance.UpdateLobbyAsync(JoinedLobby.Id, new UpdateLobbyOptions
             {
                 Data = data,
-                IsLocked = true
+            });
+
+            JoinedLobby = lobby;
+            OnLobbyPoll?.Invoke();
+        }
+        catch (RelayServiceException e)
+        {
+            Debug.Log(e);
+        }
+    }
+
+    public async Task ToggleLobbyLock(bool value)
+    {
+        try
+        {
+            Lobby lobby = await LobbyService.Instance.UpdateLobbyAsync(JoinedLobby.Id, new UpdateLobbyOptions
+            {
+                IsLocked = value,
             });
 
             JoinedLobby = lobby;
@@ -302,7 +319,7 @@ public class MultiplayerManager : ScriptableObject
         }
     }
 
-    public async Task JoinLobbyById(string lobbyId)
+    public async Task<bool> TryJoinLobbyById(string lobbyId)
     {
         try
         {
@@ -317,13 +334,14 @@ public class MultiplayerManager : ScriptableObject
             JoinedLobby = lobby;
 
             OnLobbyJoined?.Invoke();
-
             // Confirm that the lobby has been joined
             Debug.Log($"Successfully joined lobby with ID: {lobby.Id}");
+            return true;
         }
         catch (LobbyServiceException e)
         {
             Debug.LogError($"Failed to join lobby by ID: {e}");
+            return false;
         }
     }
 
@@ -392,11 +410,20 @@ public class MultiplayerManager : ScriptableObject
 
     public async void DisconnectFromRelay()
     {
-        if (IsHost) await RemoveRelayFromLobbyData();
+        if (IsHost)
+        {
+            await RemoveRelayFromLobbyData();
+        }
 
         NetworkManager.Singleton.GetComponent<UnityTransport>().DisconnectLocalClient();
         NetworkManager.Singleton.Shutdown();
         sceneNavigation.NavigateToScene(0);
+
+        if (IsHost)
+        {
+            await ToggleLobbyLock(false);
+        }
+
     }
 
     private Player player;

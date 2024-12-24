@@ -2,11 +2,14 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class InventoryUI : MonoBehaviour
 {
     [SerializeField] private ItemInventory inventory;
     [SerializeField] private ItemTags itemTags;
+    [SerializeField] private Button exitButton;
+    [SerializeField] private MultiplayerManager multiplayerManager;
 
     private List<InventorySlot> inventorySlots;
 
@@ -15,6 +18,11 @@ public class InventoryUI : MonoBehaviour
 
     private void Awake()
     {
+        exitButton.onClick.AddListener(() =>
+        {
+            multiplayerManager.RequestDisconnect();
+        });
+
         inventorySlots = GetComponentsInChildren<InventorySlot>(includeInactive: true).ToList();
         foreach(var slot in inventorySlots)
         {
