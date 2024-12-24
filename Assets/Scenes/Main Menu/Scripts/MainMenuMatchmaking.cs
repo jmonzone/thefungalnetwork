@@ -17,6 +17,7 @@ public class MainMenuMatchmaking : MonoBehaviour
     [SerializeField] private Button exitButton;
     [SerializeField] private TextMeshProUGUI noPartiesText;
     [SerializeField] private ListUI lobbyListUI;
+    [SerializeField] private FadeCanvasGroup errorMessage;
 
     private void Awake()
     {
@@ -73,8 +74,14 @@ public class MainMenuMatchmaking : MonoBehaviour
                 label = lobby.Data["HostName"].Value.Replace("_", " "),
                 onClick = async () =>
                 {
-                    await multiplayer.JoinLobbyById(lobby.Id);
-                    navigation.Navigate(partyPrepareView);
+                    if (await multiplayer.TryJoinLobbyById(lobby.Id))
+                    {
+                        navigation.Navigate(partyPrepareView);
+                    }
+                    else
+                    {
+                        StartCoroutine(errorMessage.FadeIn());
+                    }
                 }
             }).ToList();
 

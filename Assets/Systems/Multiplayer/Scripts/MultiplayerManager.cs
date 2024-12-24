@@ -302,7 +302,7 @@ public class MultiplayerManager : ScriptableObject
         }
     }
 
-    public async Task JoinLobbyById(string lobbyId)
+    public async Task<bool> TryJoinLobbyById(string lobbyId)
     {
         try
         {
@@ -317,13 +317,14 @@ public class MultiplayerManager : ScriptableObject
             JoinedLobby = lobby;
 
             OnLobbyJoined?.Invoke();
-
             // Confirm that the lobby has been joined
             Debug.Log($"Successfully joined lobby with ID: {lobby.Id}");
+            return true;
         }
         catch (LobbyServiceException e)
         {
             Debug.LogError($"Failed to join lobby by ID: {e}");
+            return false;
         }
     }
 

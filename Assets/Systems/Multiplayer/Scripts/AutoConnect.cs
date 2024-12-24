@@ -70,7 +70,7 @@ public class AutoConnect : NetworkBehaviour
 
                     if (lobbies.Count > 0)
                     {
-                        await multiplayer.JoinLobbyById(lobbies[0].Id);
+                        await multiplayer.TryJoinLobbyById(lobbies[0].Id);
                     }
                     else
                     {
