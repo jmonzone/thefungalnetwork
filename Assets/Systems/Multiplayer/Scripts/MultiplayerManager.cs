@@ -144,16 +144,33 @@ public class MultiplayerManager : ScriptableObject
 
     }
 
-    public async Task AddRelayToLobby(string joinCode)
+    public async Task AddRelayToLobby(string relayCode)
     {
         try
         {
             var data = JoinedLobby.Data;
-            data["JoinCode"] = new DataObject(DataObject.VisibilityOptions.Member, joinCode);
+            data["JoinCode"] = new DataObject(DataObject.VisibilityOptions.Member, relayCode);
             Lobby lobby = await LobbyService.Instance.UpdateLobbyAsync(JoinedLobby.Id, new UpdateLobbyOptions
             {
                 Data = data,
-                IsLocked = true
+            });
+
+            JoinedLobby = lobby;
+            OnLobbyPoll?.Invoke();
+        }
+        catch (RelayServiceException e)
+        {
+            Debug.Log(e);
+        }
+    }
+
+    public async Task LockLobby()
+    {
+        try
+        {
+            Lobby lobby = await LobbyService.Instance.UpdateLobbyAsync(JoinedLobby.Id, new UpdateLobbyOptions
+            {
+                IsLocked = true,
             });
 
             JoinedLobby = lobby;

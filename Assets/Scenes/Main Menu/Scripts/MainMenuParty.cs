@@ -25,8 +25,9 @@ public class MainMenuParty : MonoBehaviour
 
     private void Awake()
     {
-        startButton.onClick.AddListener(() =>
+        startButton.onClick.AddListener(async () =>
         {
+            await multiplayer.LockLobby();
             sceneNavigation.NavigateToScene(1);
         });
 
