@@ -1,8 +1,6 @@
-using System.Collections;
 using System.Linq;
 using GURU;
 using TMPro;
-using Unity.Services.Authentication;
 using UnityEngine;
 using UnityEngine.UI;
 

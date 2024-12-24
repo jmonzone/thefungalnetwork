@@ -5,6 +5,7 @@ using UnityEngine.Events;
 [RequireComponent(typeof(CanvasGroup))]
 public class FadeCanvasGroup : MonoBehaviour
 {
+    [SerializeField] private float duration = 1f;
     private CanvasGroup canvasGroup;
 
     public bool IsVisible
@@ -16,9 +17,11 @@ public class FadeCanvasGroup : MonoBehaviour
         }
     }
 
-    public IEnumerator FadeIn(float duration = 1f) => Fade(0f, 1f, duration);
+    public IEnumerator FadeIn() => Fade(0f, 1f, duration);
+    public IEnumerator FadeIn(float duration) => Fade(0f, 1f, duration);
 
-    public IEnumerator FadeOut(float duration = 1f, UnityAction onComplete = null) => Fade(1f, 0, duration, onComplete);
+    public IEnumerator FadeOut() => Fade(1f, 0, duration);
+    public IEnumerator FadeOut(float duration, UnityAction onComplete = null) => Fade(1f, 0, duration, onComplete);
 
     private IEnumerator Fade(float startAlpha, float endAlpha, float duration = 1f, UnityAction onComplete = null)
     {

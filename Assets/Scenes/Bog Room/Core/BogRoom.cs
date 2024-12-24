@@ -10,6 +10,7 @@ public class BogRoom : NetworkBehaviour
     [SerializeField] private ItemInventory itemInventory;
     [SerializeField] private MultiplayerArena multiplayerArena;
     [SerializeField] private MultiplayerManager multiplayer;
+    [SerializeField] private Transform lightTransform;
 
     [Header("Results")]
     [SerializeField] private Navigation navigation;
@@ -32,6 +33,14 @@ public class BogRoom : NetworkBehaviour
         if (IsOwner)
         {
             StartCoroutine(WaitForLobby());
+        }
+    }
+
+    private void Update()
+    {
+        if (playerReference.Movement)
+        {
+            lightTransform.position = playerReference.Movement.transform.position + Vector3.up * 4f;
         }
     }
 
