@@ -5176,7 +5176,9 @@ MonoBehaviour:
   type: 0
   speed: 3
   lerpRotation: 1
-  lockXZ: 0
+  faceForward: 1
+  useRoll: 1
+  lockXZLookRotation: 0
   useDrag: 0
   positionAnchor:
     anchor: {fileID: 0}
@@ -5187,6 +5189,7 @@ MonoBehaviour:
   maxIdleDuration: 5
   radius: 4
   radialSpeed: 0.25
+  jumpForce: 250
   maxJumpCount: 1
 --- !u!82 &4904470711253674077
 AudioSource:
@@ -10207,8 +10210,8 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 0.9490196, g: 0.9529412, b: 0.70980394, a: 1}
-  m_Intensity: 1
-  m_Range: 1.5
+  m_Intensity: 10
+  m_Range: 100
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10

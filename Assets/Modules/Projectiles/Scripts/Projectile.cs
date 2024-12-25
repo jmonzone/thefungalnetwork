@@ -18,7 +18,7 @@ public class Projectile : MonoBehaviour
     [SerializeField] private float spiralRadius = 2f;         // Radius of the spiral motion
     [SerializeField] private float spiralSpeed = 5f;            // Speed of the spiral rotation
     [SerializeField] private float scaleVariation = 0.1f;       // Scale pulsing variation
-
+    
     private Coroutine whispySpiralMotionCoroutine;
 
     public event UnityAction OnDissipateStart;
@@ -26,6 +26,12 @@ public class Projectile : MonoBehaviour
     public event UnityAction OnComplete;
 
     private int hitCount = 0;
+    private float baseLightIntensity = 1;
+
+    private void Awake()
+    {
+        baseLightIntensity = light.intensity;
+    }
 
     private void Update()
     {
@@ -81,7 +87,7 @@ public class Projectile : MonoBehaviour
             // Ease-out growth for a quick, satisfying expansion
             float scaleValue = Mathf.Lerp(0f, growthMultiplier, Mathf.Sin(normalizedTime * Mathf.PI * 0.5f));
             transform.localScale = originalScale * scaleValue;
-            light.intensity = scaleValue;
+            light.intensity = baseLightIntensity * scaleValue;
 
             elapsedTime += Time.deltaTime;
             yield return null;
@@ -110,7 +116,7 @@ public class Projectile : MonoBehaviour
             // Scale pulsing
             float scaleFactor = 1 + Mathf.Sin(elapsedTime * oscillationFrequency * 2) * scaleVariation;
             transform.localScale = originalScale * scaleFactor;
-            light.intensity = scaleFactor;
+            light.intensity = baseLightIntensity * scaleFactor;
 
             // Increment elapsed time
             elapsedTime += Time.deltaTime;
@@ -158,7 +164,7 @@ public class Projectile : MonoBehaviour
             // Ease-out growth for a quick, satisfying expansion
             float scaleValue = Mathf.Lerp(1f, growthMultiplier, Mathf.Sin(normalizedTime * Mathf.PI * 0.5f));
             transform.localScale = originalScale * scaleValue;
-            light.intensity = scaleValue;
+            light.intensity = baseLightIntensity * scaleValue;
 
             elapsedTime += Time.deltaTime;
             yield return null;
@@ -182,10 +188,11 @@ public class Projectile : MonoBehaviour
             // Shrink with an ease-in curve
             float scaleValue = Mathf.Lerp(growthMultiplier, 0f, 1 - Mathf.Cos(normalizedTime * Mathf.PI * 0.5f));
             transform.localScale = originalScale * Mathf.Clamp(scaleValue, 0.01f, growthMultiplier);
-            light.intensity = scaleValue;
+            light.intensity = baseLightIntensity * scaleValue;
 
             // Set Bloom intensity
-            bloom.intensity.value = scaleValue * 5f;
+            Debug.Log("blooming");
+            bloom.intensity.value = baseLightIntensity * scaleValue * 5f;
             bloom.intensity.overrideState = true;
 
             // Bounce with a diminishing sine wave
