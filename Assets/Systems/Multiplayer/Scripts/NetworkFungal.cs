@@ -22,5 +22,6 @@ public class NetworkFungal : NetworkBehaviour
 
         var fungalController = GetComponent<FungalController>();
         fungalController.InitializeAnimations();
+
     }
 }

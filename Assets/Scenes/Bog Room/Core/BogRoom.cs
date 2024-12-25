@@ -3,6 +3,7 @@ using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 
+// todo: organize with AutoConnect.cs
 public class BogRoom : NetworkBehaviour
 {
     [SerializeField] private Controller playerReference;
@@ -81,7 +82,7 @@ public class BogRoom : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void TriggerDeathEventServerRpc()
     {
-        OnPlayerDeathClientRpc();
+        //OnPlayerDeathClientRpc();
     }
 
     [ServerRpc(RequireOwnership = false)]

@@ -5,6 +5,7 @@ using UnityEngine.Events;
 public class Attackable : NetworkBehaviour
 {
     [SerializeField] private float maxHealth = 3f;
+    [SerializeField] private bool autoReplenish;
 
     private NetworkVariable<float> networkHealth = new NetworkVariable<float>();
     public float CurrentHealth => networkHealth.Value;
@@ -30,6 +31,7 @@ public class Attackable : NetworkBehaviour
             if (newValue <= 0f)
             {
                 OnHealthDepleted?.Invoke();
+                if (IsServer) Invoke(nameof(RestoreServerRpc), 5f);
             }
         };
     }
