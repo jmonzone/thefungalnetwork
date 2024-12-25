@@ -12,6 +12,7 @@ public class BogRoom : NetworkBehaviour
     [SerializeField] private MultiplayerArena multiplayerArena;
     [SerializeField] private MultiplayerManager multiplayer;
     [SerializeField] private Transform lightTransform;
+    [SerializeField] private GameClock gameClock;
 
     [Header("Results")]
     [SerializeField] private Navigation navigation;
@@ -19,6 +20,16 @@ public class BogRoom : NetworkBehaviour
     [SerializeField] private TextMeshProUGUI resultHeader;
     [SerializeField] private Color winResultColor;
     [SerializeField] private Color loseResultColor;
+
+    private void Awake()
+    {
+        gameClock.OnCountdownComplete += GameClock_OnCountdownComplete;
+    }
+
+    private void GameClock_OnCountdownComplete()
+    {
+        OnLossServerRpc();
+    }
 
     private void Start()
     {
@@ -68,22 +79,29 @@ public class BogRoom : NetworkBehaviour
     {
         Debug.Log($"OnEnable called on client: {IsClient}, server: {IsServer}");
         multiplayerArena.OnAllMushroomsCollected += MultiplayerArena_OnAllMushroomsCollected;
-        multiplayerArena.OnAllPlayersDead += MultiplayerArena_OnAllPlayersDead;
-        playerReference.OnDeath += TriggerDeathEventServerRpc;
+        playerReference.OnDeath += OnLossServerRpc;
     }
 
     private void OnDisable()
     {
         multiplayerArena.OnAllMushroomsCollected -= MultiplayerArena_OnAllMushroomsCollected;
-        multiplayerArena.OnAllPlayersDead -= MultiplayerArena_OnAllPlayersDead;
-        playerReference.OnDeath -= TriggerDeathEventServerRpc;
+        playerReference.OnDeath -= OnLossServerRpc;
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void TriggerDeathEventServerRpc()
+    private void OnLossServerRpc()
     {
-        //OnPlayerDeathClientRpc();
+        OnLossClientRpc();
     }
+
+    [ClientRpc]
+    private void OnLossClientRpc()
+    {
+        resultHeader.text = "Bogged Down?";
+        resultHeader.color = loseResultColor;
+        ShowResults();
+    }
+
 
     [ServerRpc(RequireOwnership = false)]
     private void StartGameServerRpc()
@@ -97,24 +115,10 @@ public class BogRoom : NetworkBehaviour
         multiplayerArena.InvokeIntroComplete();
     }
 
-    [ClientRpc]
-    private void OnPlayerDeathClientRpc()
-    {
-        Debug.Log("OnPlayerDeathClientRpc invoked on client.");
-        multiplayerArena.IncrementDeadPlayerCount();
-    }
-
     private void MultiplayerArena_OnAllMushroomsCollected()
     {
         resultHeader.text = "Bog Unclogged!";
         resultHeader.color = winResultColor;
-        ShowResults();
-    }
-
-    private void MultiplayerArena_OnAllPlayersDead()
-    {
-        resultHeader.text = "Bogged Down?";
-        resultHeader.color = loseResultColor;
         ShowResults();
     }
 

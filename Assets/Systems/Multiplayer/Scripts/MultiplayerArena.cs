@@ -42,6 +42,10 @@ public class MultiplayerArena : ScriptableObject
                 OnAllPlayersSpawned?.Invoke();
             }
         }
+        else
+        {
+            OnAllPlayersSpawned?.Invoke();
+        }
     }
 
     public void IncrementMushroomsCollected()

@@ -5,12 +5,12 @@ using UnityEngine.Rendering.Universal;
 
 public class Tutorial : MonoBehaviour
 {
+    [SerializeField] private GameClock gameClock;
     [SerializeField] private Controller controller;
     [SerializeField] private MultiplayerArena arena;
     [SerializeField] private FadeCanvasGroup fadeCanvasGroup;
     [SerializeField] private TextMeshProUGUI header;
     [SerializeField] private TextMeshProUGUI text;
-    [SerializeField] private CameraSwitcher cameraSwitcher;
 
     private Vignette vignette;
 
@@ -20,7 +20,18 @@ public class Tutorial : MonoBehaviour
 
     private void Awake()
     {
-        cameraSwitcher.OnSwitch += Arena_OnIntroComplete;
+        gameClock.OnCountdown += GameClock_OnCountdown;
+    }
+
+    private void GameClock_OnCountdown(float arg0)
+    {
+        Debug.Log(arg0 / 60f);
+        if ((arg0 / 60f) <= 9.95f)
+        {
+            var header = "Another day, another bog";
+            SetInformation(header, "Collect the mushrooms in order to escape");
+            gameClock.OnCountdown -= GameClock_OnCountdown;
+        }
     }
 
     private void OnEnable()
@@ -43,13 +54,6 @@ public class Tutorial : MonoBehaviour
             vignette = v;
             StartCoroutine(PulseVignette());
         }
-    }
-
-    private void Arena_OnIntroComplete()
-    {
-        var header = "Another day, another bog";
-        SetInformation(header, "Collect the mushrooms in order to escape");
-        cameraSwitcher.OnSwitch -= Arena_OnIntroComplete;
     }
 
     private void SetInformation(string header, string text)
