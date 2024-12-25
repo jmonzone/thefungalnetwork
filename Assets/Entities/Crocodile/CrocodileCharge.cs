@@ -10,6 +10,8 @@ public class CrocodileCharge : MonoBehaviour
     private Rigidbody rb;
     private AbilityCast abilityCast;
 
+    private Attackable attackable;
+
     private bool isAttacking = false;
     private List<Attackable> attackables = new List<Attackable>();
 
@@ -17,6 +19,9 @@ public class CrocodileCharge : MonoBehaviour
     {
         abilityCast = GetComponent<AbilityCast>();
         rb = GetComponent<Rigidbody>();
+
+        attackable = GetComponent<Attackable>();
+        attackable.OnHealthDepleted += StopAllCoroutines;
     }
 
     private void OnEnable()
@@ -36,6 +41,7 @@ public class CrocodileCharge : MonoBehaviour
 
     private IEnumerator ChargeAttackRoutine()
     {
+        if (attackable.CurrentHealth == 0) yield break;
         GetComponentInChildren<Animator>().Play("Attack");
 
         rb.velocity = abilityCast.Direction.normalized * chargeForce;
