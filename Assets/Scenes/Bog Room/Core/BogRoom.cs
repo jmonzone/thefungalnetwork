@@ -37,7 +37,7 @@ public class BogRoom : NetworkBehaviour
 
     private void GameClock_OnCountdownComplete()
     {
-        OnLossServerRpc();
+        if (IsServer) OnLossServerRpc();
     }
 
     private void Start()
