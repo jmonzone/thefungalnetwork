@@ -37,7 +37,7 @@ public class AttackAnimation : MonoBehaviour
             if (attackable.CurrentHealth <= 0)
             {
                 GetComponentInChildren<Animator>().Play("Death");
-                movementController.Stop();
+                if (movementController) movementController.Stop();
             }
             else
             {

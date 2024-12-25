@@ -191,7 +191,6 @@ public class Projectile : MonoBehaviour
             light.intensity = baseLightIntensity * scaleValue;
 
             // Set Bloom intensity
-            Debug.Log("blooming");
             bloom.intensity.value = baseLightIntensity * scaleValue * 5f;
             bloom.intensity.overrideState = true;
 
