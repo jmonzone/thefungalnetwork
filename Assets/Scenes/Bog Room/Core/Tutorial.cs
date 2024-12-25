@@ -25,8 +25,7 @@ public class Tutorial : MonoBehaviour
 
     private void GameClock_OnCountdown(float arg0)
     {
-        Debug.Log(arg0 / 60f);
-        if ((arg0 / 60f) <= 9.95f)
+        if ((arg0 / 60f) > 0.05f)
         {
             var header = "Another day, another bog";
             SetInformation(header, "Collect the mushrooms in order to escape");

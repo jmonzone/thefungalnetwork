@@ -53,7 +53,7 @@ public class GameClock : MonoBehaviour
 
         // Decrease the remaining time
         remainingTime -= Time.deltaTime;
-        OnCountdown?.Invoke(remainingTime);
+        OnCountdown?.Invoke(minutes * 60 - remainingTime);
 
         if (remainingTime <= 0)
         {
