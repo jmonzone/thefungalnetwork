@@ -19,12 +19,14 @@ public class AbilityCastIndicator : MonoBehaviour
 
         abilityCast.OnPrepare += ShowIndicator;
         abilityCast.OnCastStart += HideIndicator;
+        abilityCast.OnCancel += HideIndicator;
     }
 
     private void OnDisable()
     {
         abilityCast.OnPrepare -= ShowIndicator;
         abilityCast.OnCastStart -= HideIndicator;
+        abilityCast.OnCancel -= HideIndicator;
     }
 
     private void Update()

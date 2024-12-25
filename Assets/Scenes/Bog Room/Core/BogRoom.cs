@@ -117,13 +117,13 @@ public class BogRoom : NetworkBehaviour
     {
         Debug.Log($"OnEnable called on client: {IsClient}, server: {IsServer}");
         multiplayerArena.OnAllMushroomsCollected += MultiplayerArena_OnAllMushroomsCollected;
-        playerReference.OnDeath += OnLossServerRpc;
+        //playerReference.OnDeath += OnLossServerRpc;
     }
 
     private void OnDisable()
     {
         multiplayerArena.OnAllMushroomsCollected -= MultiplayerArena_OnAllMushroomsCollected;
-        playerReference.OnDeath -= OnLossServerRpc;
+        //playerReference.OnDeath -= OnLossServerRpc;
     }
 
     [ServerRpc(RequireOwnership = false)]

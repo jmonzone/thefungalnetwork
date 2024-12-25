@@ -31,7 +31,7 @@ public class Attackable : NetworkBehaviour
             if (newValue <= 0f)
             {
                 OnHealthDepleted?.Invoke();
-                if (IsServer) Invoke(nameof(RestoreServerRpc), 5f);
+                if (autoReplenish && IsServer) Invoke(nameof(RestoreServerRpc), 5f);
             }
         };
     }

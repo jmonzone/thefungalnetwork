@@ -16,10 +16,12 @@ public class AbilityCast : MonoBehaviour
     public event UnityAction OnPrepare;
     public event UnityAction OnCastStart;
     public event UnityAction OnCastComplete;
+    public event UnityAction OnCancel;
 
     private void Awake()
     {
         attackable = GetComponent<Attackable>();
+        attackable.OnHealthDepleted += () => OnCancel?.Invoke();
     }
 
     public void Prepare()
