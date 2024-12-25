@@ -375,6 +375,89 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 50006314}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &52276084
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1763684013641006131, guid: d8c601b01d4604133a33748642b9604b,
+        type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 1559259808
+      objectReference: {fileID: 0}
+    - target: {fileID: 1763684013641006131, guid: d8c601b01d4604133a33748642b9604b,
+        type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 728075801
+      objectReference: {fileID: 0}
+    - target: {fileID: 2267079722238955722, guid: d8c601b01d4604133a33748642b9604b,
+        type: 3}
+      propertyPath: m_Name
+      value: Network Turtle Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 2267079722238955722, guid: d8c601b01d4604133a33748642b9604b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7399363853175170809, guid: d8c601b01d4604133a33748642b9604b,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7399363853175170809, guid: d8c601b01d4604133a33748642b9604b,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7399363853175170809, guid: d8c601b01d4604133a33748642b9604b,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 7399363853175170809, guid: d8c601b01d4604133a33748642b9604b,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7399363853175170809, guid: d8c601b01d4604133a33748642b9604b,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7399363853175170809, guid: d8c601b01d4604133a33748642b9604b,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7399363853175170809, guid: d8c601b01d4604133a33748642b9604b,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7399363853175170809, guid: d8c601b01d4604133a33748642b9604b,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7399363853175170809, guid: d8c601b01d4604133a33748642b9604b,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7399363853175170809, guid: d8c601b01d4604133a33748642b9604b,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d8c601b01d4604133a33748642b9604b, type: 3}
 --- !u!1001 &78061734
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2007,8 +2090,8 @@ Light:
   m_Color: {r: 0.9490196, g: 0.9529412, b: 0.70980394, a: 1}
   m_Intensity: 25
   m_Range: 10
-  m_SpotAngle: 100
-  m_InnerSpotAngle: 60
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 40
   m_CookieSize: 10
   m_Shadows:
     m_Type: 1
@@ -7231,8 +7314,12 @@ MonoBehaviour:
   itemInventory: {fileID: 11400000, guid: b0534c2b759264d94ad364617da988b3, type: 2}
   multiplayerArena: {fileID: 11400000, guid: 24582879ca0914ce48009bfa1a0c10ae, type: 2}
   multiplayer: {fileID: 11400000, guid: 408255eed57604ff491c1da858247ecd, type: 2}
-  lightTransform: {fileID: 386446385}
   gameClock: {fileID: 1736572642}
+  spotlight: {fileID: 386446384}
+  detectionRadius: 2.5
+  lerpSpeed: 4
+  minSpotAngle: 40
+  maxSpotAngle: 200
   navigation: {fileID: 11400000, guid: 7af35f01730a846d692adda4734cddd3, type: 2}
   resultView: {fileID: 11400000, guid: 0d3498889a9f44a1aa5c3c36fe4e32fd, type: 2}
   resultHeader: {fileID: 607414690}
@@ -12667,6 +12754,7 @@ SceneRoots:
   - {fileID: 1917954868}
   - {fileID: 386446385}
   - {fileID: 276753204}
+  - {fileID: 52276084}
   - {fileID: 1340945506}
   - {fileID: 1146269437}
   - {fileID: 892211786}

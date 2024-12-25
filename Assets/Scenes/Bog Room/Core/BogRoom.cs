@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
@@ -11,8 +12,15 @@ public class BogRoom : NetworkBehaviour
     [SerializeField] private ItemInventory itemInventory;
     [SerializeField] private MultiplayerArena multiplayerArena;
     [SerializeField] private MultiplayerManager multiplayer;
-    [SerializeField] private Transform lightTransform;
     [SerializeField] private GameClock gameClock;
+
+    [SerializeField] private Light spotlight; // Spotlight component to adjust
+    [SerializeField] private float detectionRadius = 5f; // Radius of the overlap circle
+    [SerializeField] private float lerpSpeed = 2f; // Speed of the spotlight shape adjustment
+    [SerializeField] private int minSpotAngle = 60; // Minimum spotlight angle
+    [SerializeField] private int maxSpotAngle = 100; // Maximum spotlight angle
+
+    private float targetSpotAngle;
 
     [Header("Results")]
     [SerializeField] private Navigation navigation;
@@ -24,6 +32,7 @@ public class BogRoom : NetworkBehaviour
     private void Awake()
     {
         gameClock.OnCountdownComplete += GameClock_OnCountdownComplete;
+        targetSpotAngle = minSpotAngle;
     }
 
     private void GameClock_OnCountdownComplete()
@@ -52,7 +61,36 @@ public class BogRoom : NetworkBehaviour
     {
         if (playerReference.Movement)
         {
-            lightTransform.position = playerReference.Movement.transform.position + Vector3.up * 4f;
+            spotlight.transform.position = playerReference.Movement.transform.position + Vector3.up * 4f;
+            DetectNearbyFungals();
+            AdjustSpotlightShape();
+        }
+    }
+
+    private void DetectNearbyFungals()
+    {
+        Collider[] hits = Physics.OverlapSphere(playerReference.Movement.transform.position, detectionRadius);
+        List<NetworkFungal> currentFungals = new List<NetworkFungal>();
+
+        foreach (var hit in hits)
+        {
+            NetworkFungal fungal = hit.GetComponentInParent<NetworkFungal>();
+            if (fungal && !currentFungals.Contains(fungal)) currentFungals.Add(fungal);
+        }
+
+        // Update the number of nearby fungals
+        int fungalCount = currentFungals.Count - 1;
+
+        // Calculate the target spotlight angles based on the number of nearby fungals
+        targetSpotAngle = Mathf.Clamp(minSpotAngle + fungalCount * 30f, minSpotAngle, maxSpotAngle); // Increment by 10 per additional fungal
+    }
+
+    private void AdjustSpotlightShape()
+    {
+        if (spotlight != null)
+        {
+            spotlight.innerSpotAngle = Mathf.Lerp(spotlight.innerSpotAngle, targetSpotAngle, lerpSpeed * Time.deltaTime);
+            spotlight.spotAngle = spotlight.innerSpotAngle + 10;
         }
     }
 
