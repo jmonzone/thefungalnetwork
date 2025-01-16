@@ -15,17 +15,6 @@ public class AvatarAnimation : MonoBehaviour
     private void Awake()
     {
         animator = GetComponentInChildren<Animator>();
-
-    }
-
-    private void OnEnable()
-    {
-        controller.OnPossessionStart += StartPossessionAnimation;
-    }
-
-    private void OnDisable()
-    {
-        controller.OnPossessionStart -= StartPossessionAnimation;
     }
 
     private void StartPossessionAnimation()
@@ -41,22 +30,24 @@ public class AvatarAnimation : MonoBehaviour
 
     private IEnumerator PossessionAnimation()
     {
-        var target = controller.Possessable.transform;
+        yield return null;
 
-        // Move towards target while shrinking
-        while (Vector3.Distance(transform.position, target.position) > 0.1f)
-        {
-            transform.position = Vector3.MoveTowards(transform.position, target.position, shrinkSpeed * Time.deltaTime);
-            transform.localScale = Vector3.Lerp(transform.localScale, Vector3.zero, shrinkSpeed * Time.deltaTime);
-            transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime, Space.Self);
-            yield return null;
-        }
+        //var target = controller.Possessable.transform;
 
-        transform.localScale = Vector3.zero; // Ensure fully shrunk
-        transform.position = target.position; // Ensure exact positioning
+        //// Move towards target while shrinking
+        //while (Vector3.Distance(transform.position, target.position) > 0.1f)
+        //{
+        //    transform.position = Vector3.MoveTowards(transform.position, target.position, shrinkSpeed * Time.deltaTime);
+        //    transform.localScale = Vector3.Lerp(transform.localScale, Vector3.zero, shrinkSpeed * Time.deltaTime);
+        //    transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime, Space.Self);
+        //    yield return null;
+        //}
+
+        //transform.localScale = Vector3.zero; // Ensure fully shrunk
+        //transform.position = target.position; // Ensure exact positioning
 
         // Invoke completion callback
-        controller.CompletePossession();
+        //controller.CompletePossession();
     }
 
     public void StartReleaseAnimation()
@@ -65,20 +56,20 @@ public class AvatarAnimation : MonoBehaviour
 
         if (possessionCoroutine != null) StopCoroutine(possessionCoroutine);
 
-        var target = controller.Possessable.transform;
+        //var target = controller.Possessable.transform;
 
         // Randomly offset the position within a 2-unit radius, ignoring the y-axis for horizontal movement
         var randomOffset = Random.insideUnitSphere.normalized * 2f;
         randomOffset.y = 0;
 
         // Add the offset to the target position to get the new position
-        Vector3 randomPosition = target.position + randomOffset;
+        //Vector3 randomPosition = target.position + randomOffset;
 
         transform.localScale = Vector3.zero; // Ensure fully shrunk
-        transform.position = controller.Possessable.transform.position; // Ensure exact positioning
+        //transform.position = controller.Possessable.transform.position; // Ensure exact positioning
 
         // Start the reverse possession animation coroutine
-        possessionCoroutine = StartCoroutine(ReversePossessionAnimation(randomPosition));
+        //possessionCoroutine = StartCoroutine(ReversePossessionAnimation(randomPosition));
     }
 
     private IEnumerator ReversePossessionAnimation(Vector3 targetPosition)
@@ -132,10 +123,6 @@ public class AvatarAnimation : MonoBehaviour
         transform.localScale = Vector3.one;
         transform.rotation = Quaternion.LookRotation(targetPosition - transform.position); // Optional for better rotation control
 
-        controller.CompleteRelease();
-
+        //controller.CompleteRelease();
     }
-
-
-
 }

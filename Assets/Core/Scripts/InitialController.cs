@@ -31,16 +31,6 @@ public class InitialController : MonoBehaviour
         }
     }
 
-    private void OnEnable()
-    {
-        controller.OnReleaseStart += ReleaseFungal;
-    }
-
-    private void OnDisable()
-    {
-        controller.OnReleaseStart -= ReleaseFungal;
-    }
-
     private void SpawnPlayer()
     {
         Debug.Log("spawning avatar");
@@ -54,15 +44,13 @@ public class InitialController : MonoBehaviour
             var fungalController = SpawnFungal(initalFungal, transform.position);
 
             Debug.Log("Setting fungal controller");
-            controller.Initialize(fungalController.Movement);
-            controller.InitalizePosessable(fungalController.GetComponent<Possessable>());
-
+            controller.SetMovement(fungalController.Movement);
             avatar.transform.localScale = Vector3.zero;
         }
         else
         {
             Debug.Log("Setting player controller");
-            controller.Initialize(avatar);
+            controller.SetMovement(avatar);
 
             avatar.GetComponent<AbilityCastView>().enabled = true;
         }
@@ -73,9 +61,6 @@ public class InitialController : MonoBehaviour
     private void PossessFungal(FungalController fungal)
     {
         fungal.Movement.Stop();
-
-        var possessable = fungal.GetComponent<Possessable>();
-        controller.StartPossession(possessable);
 
         fungal.GetComponent<AbilityCastView>().enabled = true;
         avatar.GetComponent<AbilityCastView>().enabled = false;

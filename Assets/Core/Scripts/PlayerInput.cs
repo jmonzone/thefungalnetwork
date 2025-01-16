@@ -1,6 +1,5 @@
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public class PlayerInput : MonoBehaviour
@@ -9,7 +8,6 @@ public class PlayerInput : MonoBehaviour
 
     [SerializeField] private VirtualJoystick virtualJoystick;
     [SerializeField] private Button jumpButton;
-    [SerializeField] private Button releaseButton;
     [SerializeField] private Button interactionButton;
 
     private Camera mainCamera;
@@ -30,22 +28,15 @@ public class PlayerInput : MonoBehaviour
             if (interactionAction) interactionAction.Use();
         });
 
-        releaseButton.onClick.AddListener(() =>
-        {
-            controller.ReleasePossession();
-        });
-
         virtualJoystick.OnJoystickEnd += () =>
         {
             if (controller == null) return;
-            if (controller.IsPossessing) return;
             controller.Movement.Stop();
         };
 
         virtualJoystick.OnJoystickUpdate += input =>
         {
             if (controller == null) return;
-            if (controller.IsPossessing) return;
             var direction = new Vector3(input.x, 0, input.y);
             ApplyDirection(direction);
         };
@@ -75,7 +66,6 @@ public class PlayerInput : MonoBehaviour
         if (interactionAction) this.interactionAction.SetInRange(true);
 
         interactionButton.gameObject.SetActive(interactionAction && interactionAction.Interactable);
-        releaseButton.gameObject.SetActive(controller.Fungal && !controller.IsPossessing);
     }
 
     private void UpdateWASDMovment()
@@ -132,8 +122,6 @@ public class PlayerInput : MonoBehaviour
 
     private void ApplyDirection(Vector3 direction)
     {
-        if (controller.IsPossessing) return;
-
         // Adjust direction relative to the camera's rotation
         direction = Quaternion.Euler(0, mainCamera.transform.eulerAngles.y, 0) * direction;
 
