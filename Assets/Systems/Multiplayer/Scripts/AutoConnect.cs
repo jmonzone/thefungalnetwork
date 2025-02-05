@@ -6,35 +6,12 @@ using UnityEngine;
 public class AutoConnect : NetworkBehaviour
 {
     [SerializeField] private MultiplayerManager multiplayer;
+    [SerializeField] private MultiplayerArena arena;
+    [SerializeField] private Transform playerSpawnAnchor;
 
-    private void OnEnable()
+    private void Awake()
     {
-        multiplayer.OnDisconnectRequested += Multiplayer_OnDisconnectRequested;
-    }
-
-    private void OnDisable()
-    {
-        multiplayer.OnDisconnectRequested -= Multiplayer_OnDisconnectRequested;
-    }
-
-    private void Multiplayer_OnDisconnectRequested()
-    {
-        NotifyClientsDisconnectServerRpc();
-    }
-
-    [ServerRpc(RequireOwnership=false)]
-    public void NotifyClientsDisconnectServerRpc()
-    {
-        Debug.Log("AutoConnect NotifyClientsDisconnectServerRpc");
-        NotifyClientsDisconnectClientRpc();
-    }
-
-    // RPC method to notify other clients about disconnection
-    [ClientRpc]
-    public void NotifyClientsDisconnectClientRpc()
-    {
-        Debug.Log("AutoConnect NotifyClientsDisconnectClientRpc");
-        multiplayer.DisconnectFromRelay();
+        arena.Initialize(playerSpawnAnchor.position);
     }
 
     private IEnumerator Start()
@@ -51,10 +28,6 @@ public class AutoConnect : NetworkBehaviour
             {
                 multiplayer.ListLobbies(async lobbies =>
                 {
-                    // Check if the player is already in a lobby
-                    //var rejoined = await multiplayerManager.TryRejoinLobby();
-                    //if (rejoined) return;
-
                     if (lobbies.Count > 0)
                     {
                         await multiplayer.TryJoinLobbyById(lobbies[0].Id);
@@ -84,4 +57,34 @@ public class AutoConnect : NetworkBehaviour
             }
         }
     }
+
+    private void OnEnable()
+    {
+        multiplayer.OnDisconnectRequested += Multiplayer_OnDisconnectRequested;
+    }
+
+    private void OnDisable()
+    {
+        multiplayer.OnDisconnectRequested -= Multiplayer_OnDisconnectRequested;
+    }
+
+    private void Multiplayer_OnDisconnectRequested()
+    {
+        NotifyClientsDisconnectServerRpc();
+    }
+
+    [ServerRpc(RequireOwnership=false)]
+    public void NotifyClientsDisconnectServerRpc()
+    {
+        Debug.Log("AutoConnect NotifyClientsDisconnectServerRpc");
+        NotifyClientsDisconnectClientRpc();
+    }
+
+    [ClientRpc]
+    public void NotifyClientsDisconnectClientRpc()
+    {
+        Debug.Log("AutoConnect NotifyClientsDisconnectClientRpc");
+        multiplayer.DisconnectFromRelay();
+    }
+
 }

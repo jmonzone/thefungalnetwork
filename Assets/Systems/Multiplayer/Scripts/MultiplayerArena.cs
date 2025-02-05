@@ -21,11 +21,9 @@ public class MultiplayerArena : ScriptableObject
     public event UnityAction OnAllPlayersSpawned;
     public event UnityAction OnIntroComplete;
 
-    public void Initialize(Vector3 playerSpawnPosition, List<Transform> spores, List<Transform> sporePositions)
+    public void Initialize(Vector3 playerSpawnPosition)
     {
         Players = new List<Transform>();
-        Spores = spores;
-        SporePositions = sporePositions;
         PlayerSpawnPosition = playerSpawnPosition;
         MushroomsCollected = 0;
         deadPlayerCount = 0;
