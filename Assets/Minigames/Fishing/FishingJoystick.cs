@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class FishingInput : MonoBehaviour
+public class FishingJoystick : MonoBehaviour
 {
     [SerializeField] private VirtualJoystick joystick;
     [SerializeField] private Transform reticle;
