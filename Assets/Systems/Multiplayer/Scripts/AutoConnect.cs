@@ -1,24 +1,11 @@
 using System.Collections;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class AutoConnect : NetworkBehaviour
 {
-    [SerializeField] private MultiplayerArena arena;
     [SerializeField] private MultiplayerManager multiplayer;
-    [SerializeField] private Transform playerSpawnAnchor;
-    [SerializeField] private DisplayName displayName;
-    [SerializeField] private Button exitButton;
-    [SerializeField] private List<Transform> spores = new List<Transform>();
-    [SerializeField] private List<Transform> targetSporePositions = new List<Transform>();
-
-    private void Awake()
-    {
-        arena.Initialize(playerSpawnAnchor.position, spores, targetSporePositions);
-    }
 
     private void OnEnable()
     {
