@@ -22,7 +22,6 @@ public class ThrowFishingNet : MonoBehaviour
     {
         throwButton.interactable = false;
 
-        net.transform.position = netStartPosition.position;
         net.gameObject.SetActive(true);
         reticle.gameObject.SetActive(false);
 
@@ -70,8 +69,9 @@ public class ThrowFishingNet : MonoBehaviour
         //inventoryText.text = inventory.GetItemCount(fishData).ToString();
         yield return new WaitForSeconds(0.25f);
 
-        //interactionButton.interactable = true;
-        net.gameObject.SetActive(false);
+        net.transform.position = netStartPosition.position;
+
+        throwButton.interactable = true;
         reticle.gameObject.SetActive(true);
 
     }
