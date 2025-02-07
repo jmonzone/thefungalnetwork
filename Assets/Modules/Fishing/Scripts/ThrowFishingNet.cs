@@ -1,6 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class ThrowFishingNet : MonoBehaviour
@@ -12,6 +13,8 @@ public class ThrowFishingNet : MonoBehaviour
     [SerializeField] private Transform reticle;
     [SerializeField] private Transform net;
     [SerializeField] private Transform netStartPosition;
+
+    public event UnityAction OnFishCaught;
 
     private void Start()
     {
@@ -57,12 +60,12 @@ public class ThrowFishingNet : MonoBehaviour
         net.transform.position = end;
 
         var sphereCast = Physics.OverlapSphere(reticle.transform.position, reticle.transform.localScale.x);
-        //var fishControllers = sphereCast.Select(collider => collider.GetComponentInParent<FishController>()).OfType<FishController>().ToList();
-        //foreach (var fish in fishControllers)
-        //{
-        //    fish.gameObject.SetActive(false);
-        //    OnFishCaught?.Invoke();
-        //}
+        var fishControllers = sphereCast.Select(collider => collider.GetComponentInParent<FishController>()).OfType<FishController>().ToList();
+        foreach (var fish in fishControllers)
+        {
+            fish.gameObject.SetActive(false);
+            OnFishCaught?.Invoke();
+        }
 
         //inventory.AddToInventory(fishData, fishControllers.Count);
 
