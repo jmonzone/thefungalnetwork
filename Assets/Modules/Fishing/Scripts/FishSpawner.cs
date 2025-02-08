@@ -35,7 +35,7 @@ public class FishSpawner : MonoBehaviour
         {
             var targetFish = GetFishToSpawn();
             var fishController = Instantiate(targetFish.Prefab, spawnPosition.Position, Quaternion.identity, transform);
-            fishController.Initialize(targetFish, spawnPosition.Bounds);
+            fishController.Initialize(spawnPosition.Bounds);
             objectCount++;
 
             timer = 0;

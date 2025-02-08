@@ -1246,7 +1246,6 @@ Transform:
   m_Children:
   - {fileID: 276753204}
   - {fileID: 1109389106}
-  - {fileID: 1519942647}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &689007581
@@ -2571,7 +2570,7 @@ GameObject:
   - component: {fileID: 1519942645}
   - component: {fileID: 1519942644}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: Fish Bounds
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2592,9 +2591,9 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -2656,12 +2655,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1519942643}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3.92, y: 1, z: 3.62}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalScale: {x: 11.76, y: 1, z: 7.24}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 685339989}
+  m_Father: {fileID: 1937808449}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1597235456
 GameObject:
@@ -3065,7 +3064,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1519942647}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1937808450
@@ -3132,11 +3132,11 @@ MonoBehaviour:
   - fishData: {fileID: 11400000, guid: 259ca4af75d8b4b03802dec6e194fd09, type: 2}
     weight: 0.75
   - fishData: {fileID: 11400000, guid: ccfda4bf5791a45849164dc62f4783c4, type: 2}
-    weight: 0
-  frequency: 1
+    weight: 0.25
+  frequency: 5
   maxObjectCount: 3
   spawnPosition:
-    anchor: {fileID: 1519942647}
+    anchor: {fileID: 0}
     bounds: {fileID: 1519942644}
   throwFishingNet: {fileID: 5225214373093127422}
 --- !u!1 &1976919461

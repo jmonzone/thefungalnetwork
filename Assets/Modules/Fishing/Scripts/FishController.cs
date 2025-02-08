@@ -1,40 +1,23 @@
 using System.Collections;
 using UnityEngine;
 
-public enum FishState
-{
-    IDLE,
-    ATTRACTED,
-    CAUGHT
-}
-
-[RequireComponent(typeof(MovementController))]
 public class FishController : MonoBehaviour
 {
-    [SerializeField] private FishData data;
+    [SerializeField] private bool isIdle = true;
+    [SerializeField] private float idleTimer;
+    [SerializeField] private float minIdleDuration = 2f;
+    [SerializeField] private float maxIdleDuration = 5f;
+    [SerializeField] private float speed = 2f;
 
-    public FishData Data => data;
+    private Vector3 targetPosition;
+    private Collider bounds;
 
-    public FishState State { get; private set; }
-
-    private MovementController movement;
-    private float baseSpeed;
-    private FishingBobController fishingBob;
-
-    private void Awake()
+    public void Initialize(Collider bounds)
     {
-        movement = GetComponent<MovementController>();
-        baseSpeed = movement.Speed;
-    }
+        this.bounds = bounds;
 
-    public void Initialize(FishData data, Collider bounds)
-    {
-        this.data = data;
-        movement.SetBounds(bounds);
-
-        if (movement.FaceForward) transform.forward = Utility.RandomXZVector;
+        transform.forward = Utility.RandomXZVector;
         transform.localScale = Vector3.zero;
-
 
         IEnumerator LerpScale()
         {
@@ -49,41 +32,36 @@ public class FishController : MonoBehaviour
         }
 
         StartCoroutine(LerpScale());
-        SetState(FishState.IDLE);
-    }
 
-    private void SetState(FishState state)
-    {
-        State = state;
-
-        switch (state)
-        {
-            case FishState.IDLE:
-                movement.SetSpeed(baseSpeed);
-                movement.StartRandomMovement();
-                break;
-            case FishState.ATTRACTED:
-                movement.SetTarget(fishingBob.transform);
-                break;
-            case FishState.CAUGHT:
-                movement.SetSpeed(fishingBob.ReelSpeed);
-                break;
-        }
+        Debug.Log(bounds.bounds.min);
+        Debug.Log(bounds.bounds.max);
     }
 
     private void Update()
     {
-        switch (State)
+        if (isIdle)
         {
-            case FishState.ATTRACTED:
-                if (movement.IsAtDestination) SetState(FishState.CAUGHT);
-                break;
+            idleTimer += Time.deltaTime;
+            if (idleTimer > maxIdleDuration)
+            {
+                isIdle = false;
+                targetPosition = bounds.GetRandomXZPosition();
+                Debug.Log(targetPosition);
+            }
+            return;
         }
-    }
 
-    public void Attract(FishingBobController bob)
-    {
-        fishingBob = bob;
-        SetState(FishState.ATTRACTED);
+        var direction = targetPosition - transform.position;
+
+        if (direction.magnitude > 0.05f)
+        {
+            transform.forward = direction;
+            transform.position += speed * Time.deltaTime * direction.normalized;
+        }
+        else
+        {
+            idleTimer = Random.Range(0f, maxIdleDuration - minIdleDuration);
+            isIdle = true;
+        }
     }
 }

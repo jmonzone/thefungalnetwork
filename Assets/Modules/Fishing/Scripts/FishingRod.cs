@@ -73,7 +73,7 @@ public class FishingRod : MonoBehaviour
                 break;
             case FishingRodState.ATTRACTING:
                 TargetFish = CatchableFish[0];
-                TargetFish.Attract(bob);
+                //TargetFish.Attract(bob);
                 break;
         }
 
@@ -99,7 +99,7 @@ public class FishingRod : MonoBehaviour
                 else if (CatchableFish.Count > 0) SetState(FishingRodState.ATTRACTING);
                 break;
             case FishingRodState.ATTRACTING:
-                if (TargetFish.State == FishState.CAUGHT) SetState(FishingRodState.REELING);
+                //if (TargetFish.State == FishState.CAUGHT) SetState(FishingRodState.REELING);
                 break;
             case FishingRodState.REELING:
                 if (bob.IsReeledIn) SetState(FishingRodState.IDLE);

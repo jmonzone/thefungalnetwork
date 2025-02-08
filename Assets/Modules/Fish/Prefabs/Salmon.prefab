@@ -46,7 +46,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b54965bd37bcc473cbe4dc0a87e48f7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data: {fileID: 0}
+  isIdle: 1
+  idleTimer: 0
+  minIdleDuration: 0.5
+  maxIdleDuration: 1.5
+  speed: 4
 --- !u!114 &4701732161822769148
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -62,17 +66,20 @@ MonoBehaviour:
   type: 0
   speed: 4
   lerpRotation: 1
-  lockXZ: 0
+  faceForward: 1
+  useRoll: 0
+  lockXZLookRotation: 0
   useDrag: 0
   positionAnchor:
     anchor: {fileID: 0}
     bounds: {fileID: 0}
   distanceThreshold: 2
-  startIdle: 0
+  startIdle: 1
   minIdleDuration: 0.5
   maxIdleDuration: 1.5
   radius: 4
   radialSpeed: 0.25
+  jumpForce: 250
   maxJumpCount: 1
 --- !u!1001 &450373414579174310
 PrefabInstance:
