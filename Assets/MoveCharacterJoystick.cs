@@ -18,7 +18,6 @@ public class MoveCharacterJoystick : MonoBehaviour
         var y = Input.GetAxis("Vertical");
 
         var direction = new Vector3(x, y) * Time.deltaTime;
-        if (direction.magnitude == 0) return;
         MoveReticle(direction);
     }
 
@@ -29,6 +28,8 @@ public class MoveCharacterJoystick : MonoBehaviour
         translation.y = 0;
 
         translation = Quaternion.Euler(0, transform.eulerAngles.y, 0) * translation;
+
+        if (translation == Vector3.zero) return;
 
         controller.Transform.position += translation;
         controller.Transform.forward = translation;

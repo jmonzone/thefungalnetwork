@@ -12,6 +12,7 @@ public class AutoConnect : NetworkBehaviour
     private void Awake()
     {
         arena.Initialize(playerSpawnAnchor.position);
+        Debug.Log(Application.internetReachability);
     }
 
     private IEnumerator Start()
