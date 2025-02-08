@@ -44,13 +44,13 @@ public class InitialController : MonoBehaviour
             var fungalController = SpawnFungal(initalFungal, transform.position);
 
             Debug.Log("Setting fungal controller");
-            controller.SetMovement(fungalController.Movement);
+            //controller.SetMovement(fungalController.Movement);
             avatar.transform.localScale = Vector3.zero;
         }
         else
         {
             Debug.Log("Setting player controller");
-            controller.SetMovement(avatar);
+            //controller.SetMovement(avatar);
 
             avatar.GetComponent<AbilityCastView>().enabled = true;
         }
@@ -68,14 +68,14 @@ public class InitialController : MonoBehaviour
 
     private void ReleaseFungal()
     {
-        var fungal = controller.Movement;
-        fungal.StartRandomMovement();
+        //var fungal = controller.Movement;
+        //fungal.StartRandomMovement();
 
-        fungal.GetComponent<AbilityCastView>().enabled = false;
+        //fungal.GetComponent<AbilityCastView>().enabled = false;
         avatar.GetComponent<AbilityCastView>().enabled = true;
 
         avatar.GetComponent<AvatarAnimation>().StartReleaseAnimation();
-        controller.SetMovement(avatar);
+        //controller.SetMovement(avatar);
     }
 
     public FungalController SpawnFungal(FungalModel fungal, Vector3 spawnPosition)

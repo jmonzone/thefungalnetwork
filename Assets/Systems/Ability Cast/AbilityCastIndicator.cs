@@ -17,16 +17,16 @@ public class AbilityCastIndicator : MonoBehaviour
         HideIndicator();
         Debug.Log($"enable {abilityCast == null}");
 
-        abilityCast.OnPrepare += ShowIndicator;
-        abilityCast.OnCastStart += HideIndicator;
-        abilityCast.OnCancel += HideIndicator;
+        //abilityCast.OnPrepare += ShowIndicator;
+        //abilityCast.OnCastStart += HideIndicator;
+        //abilityCast.OnCancel += HideIndicator;
     }
 
     private void OnDisable()
     {
-        abilityCast.OnPrepare -= ShowIndicator;
-        abilityCast.OnCastStart -= HideIndicator;
-        abilityCast.OnCancel -= HideIndicator;
+        //abilityCast.OnPrepare -= ShowIndicator;
+        //abilityCast.OnCastStart -= HideIndicator;
+        //abilityCast.OnCancel -= HideIndicator;
     }
 
     private void Update()

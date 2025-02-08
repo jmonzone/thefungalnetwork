@@ -59,30 +59,30 @@ public class BogRoom : NetworkBehaviour
 
     private void Update()
     {
-        if (playerReference.Movement)
-        {
-            spotlight.transform.position = playerReference.Movement.transform.position + Vector3.up * 4f;
-            DetectNearbyFungals();
-            AdjustSpotlightShape();
-        }
+        //if (playerReference.Movement)
+        //{
+        //    spotlight.transform.position = playerReference.Movement.transform.position + Vector3.up * 4f;
+        //    DetectNearbyFungals();
+        //    AdjustSpotlightShape();
+        //}
     }
 
     private void DetectNearbyFungals()
     {
-        Collider[] hits = Physics.OverlapSphere(playerReference.Movement.transform.position, detectionRadius);
-        List<NetworkFungal> currentFungals = new List<NetworkFungal>();
+        //Collider[] hits = Physics.OverlapSphere(playerReference.Movement.transform.position, detectionRadius);
+        //List<NetworkFungal> currentFungals = new List<NetworkFungal>();
 
-        foreach (var hit in hits)
-        {
-            NetworkFungal fungal = hit.GetComponentInParent<NetworkFungal>();
-            if (fungal && !currentFungals.Contains(fungal)) currentFungals.Add(fungal);
-        }
+        //foreach (var hit in hits)
+        //{
+        //    NetworkFungal fungal = hit.GetComponentInParent<NetworkFungal>();
+        //    if (fungal && !currentFungals.Contains(fungal)) currentFungals.Add(fungal);
+        //}
 
-        // Update the number of nearby fungals
-        int fungalCount = currentFungals.Count - 1;
+        //// Update the number of nearby fungals
+        //int fungalCount = currentFungals.Count - 1;
 
-        // Calculate the target spotlight angles based on the number of nearby fungals
-        targetSpotAngle = Mathf.Clamp(minSpotAngle + fungalCount * 30f, minSpotAngle, maxSpotAngle); // Increment by 10 per additional fungal
+        //// Calculate the target spotlight angles based on the number of nearby fungals
+        //targetSpotAngle = Mathf.Clamp(minSpotAngle + fungalCount * 30f, minSpotAngle, maxSpotAngle); // Increment by 10 per additional fungal
     }
 
     private void AdjustSpotlightShape()
@@ -162,8 +162,8 @@ public class BogRoom : NetworkBehaviour
 
     private void ShowResults()
     {
-        playerReference.Movement.Stop();
-        playerReference.Movement.enabled = false;
+        //playerReference.Movement.Stop();
+        //playerReference.Movement.enabled = false;
         StartCoroutine(WaitToShowResults());
     }
 

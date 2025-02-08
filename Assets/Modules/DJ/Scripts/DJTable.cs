@@ -85,21 +85,21 @@ namespace TheFungalNetwork.DJ
                 // Update visuals animator speed based on the active track's BPM and pitch
                 visualsVideoPlayer.playbackSpeed = targetTrack.Bpm / 120;
 
-                float distance = Vector3.Distance(controller.Movement.transform.position, transform.position);
+                //float distance = Vector3.Distance(controller.Movement.transform.position, transform.position);
 
 
-                if (distance <= minDistance)
-                {
-                    audioMixer.SetVolume("Background", 0f);
-                    audioMixer.SetVolume("DJ Table", 1f);
-                }
-                else
-                {
-                    float volume = Mathf.Clamp01(1 - Mathf.Log10(distance - minDistance + 1) / Mathf.Log10(maxDistance - minDistance + 1));
-                    audioMixer.SetVolume("DJ Table", volume);
-                    audioMixer.SetVolume("Background", 1 - volume);
+                //if (distance <= minDistance)
+                //{
+                //    audioMixer.SetVolume("Background", 0f);
+                //    audioMixer.SetVolume("DJ Table", 1f);
+                //}
+                //else
+                //{
+                //    float volume = Mathf.Clamp01(1 - Mathf.Log10(distance - minDistance + 1) / Mathf.Log10(maxDistance - minDistance + 1));
+                //    audioMixer.SetVolume("DJ Table", volume);
+                //    audioMixer.SetVolume("Background", 1 - volume);
 
-                }
+                //}
             }
             else
             {

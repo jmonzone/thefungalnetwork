@@ -17,8 +17,8 @@ public class AbilityCastButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
     private Vector3 initialTouchPosition;
     private float abilityTimer;
 
-    private AbilityCast AbilityCast => controller.AbilityCast;
-    private float AbilityCooldown => AbilityCast.Data.Cooldown;
+    //private AbilityCast AbilityCast => controller.AbilityCast;
+    //private float AbilityCooldown => AbilityCast.Data.Cooldown;
     private bool canCast = false;
     private bool castStarted = false;
 
@@ -26,13 +26,13 @@ public class AbilityCastButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
     {
         button.onClick.AddListener(() =>
         {
-            AbilityCast.StartCast(controller.Movement.transform.forward);
+            //AbilityCast.StartCast(controller.Movement.transform.forward);
         });
     }
 
     private void Update()
     {
-        if (!AbilityCast) return;
+        //if (!AbilityCast) return;
 
         if (abilityTimer > 0)
         {
@@ -46,49 +46,49 @@ public class AbilityCastButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
 
     private void SetAbilityTimer(float timer)
     {
-        cooldownImage.fillAmount = timer / AbilityCooldown;
-        cooldownText.text = Mathf.CeilToInt(timer).ToString();
-        cooldownText.color = cooldownTextGradient.Evaluate(1 - timer / AbilityCooldown);
-        abilityTimer = timer;
+        //cooldownImage.fillAmount = timer / AbilityCooldown;
+        //cooldownText.text = Mathf.CeilToInt(timer).ToString();
+        //cooldownText.color = cooldownTextGradient.Evaluate(1 - timer / AbilityCooldown);
+        //abilityTimer = timer;
 
-        canCast = timer == 0;
-        button.interactable = canCast;
-        cooldownText.enabled = !canCast;
+        //canCast = timer == 0;
+        //button.interactable = canCast;
+        //cooldownText.enabled = !canCast;
     }
 
     private void OnEnable()
     {
         UpdatePreview();
-        controller.OnUpdate += UpdatePreview;
-        controller.OnCastStart += AbilityCast_OnComplete;
+        //controller.OnUpdate += UpdatePreview;
+        //controller.OnCastStart += AbilityCast_OnComplete;
     }
 
     private void OnDisable()
     {
-        controller.OnUpdate -= UpdatePreview;
-        controller.OnCastStart -= AbilityCast_OnComplete;
+        //controller.OnUpdate -= UpdatePreview;
+        //controller.OnCastStart -= AbilityCast_OnComplete;
     }
 
     private void AbilityCast_OnComplete()
     {
-        SetAbilityTimer(AbilityCooldown);
+        //SetAbilityTimer(AbilityCooldown);
     }
 
     private void UpdatePreview()
     {
-        if (!AbilityCast?.Data) return;
+        //if (!AbilityCast?.Data) return;
 
-        render.SetActive(AbilityCast.Data);
+        //render.SetActive(AbilityCast.Data);
 
-        if (AbilityCast.Data)
-        {
-            abilityImage.enabled = true;
-            abilityImage.sprite = AbilityCast.Data.AbilityIcon;
-        }
-        else
-        {
-            abilityImage.enabled = false;
-        }
+        //if (AbilityCast.Data)
+        //{
+        //    abilityImage.enabled = true;
+        //    abilityImage.sprite = AbilityCast.Data.AbilityIcon;
+        //}
+        //else
+        //{
+        //    abilityImage.enabled = false;
+        //}
     }
 
     void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
@@ -98,7 +98,7 @@ public class AbilityCastButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
         castStarted = true;
 
         // Start casting ability
-        AbilityCast.Prepare();
+        //AbilityCast.Prepare();
 
         // Record the initial touch position
         initialTouchPosition = eventData.position;
@@ -122,7 +122,7 @@ public class AbilityCastButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
         Vector3 rotatedDragDirection = cameraRotation * dragDirection.normalized;
 
         // Update the ability cast with the rotated direction
-        AbilityCast.SetDirection(rotatedDragDirection);
+        //AbilityCast.SetDirection(rotatedDragDirection);
     }
 
     void IEndDragHandler.OnEndDrag(PointerEventData eventData)
@@ -131,7 +131,7 @@ public class AbilityCastButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
         castStarted = false;
 
         // Complete the ability cast
-        AbilityCast.StartCast();
+        //AbilityCast.StartCast();
     }
 
 

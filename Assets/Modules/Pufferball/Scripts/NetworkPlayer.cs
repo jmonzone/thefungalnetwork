@@ -64,7 +64,7 @@ public class NetworkPlayer : NetworkBehaviour
             if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out var networkObject))
             {
                 networkFungal = networkObject.GetComponent<NetworkFungal>();
-                controller.SetMovement(networkFungal.Movement);
+                //controller.SetMovement(networkFungal.Movement);
                 navigation.Navigate(inputView);
             }
         }

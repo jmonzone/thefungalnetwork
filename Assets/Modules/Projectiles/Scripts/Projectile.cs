@@ -172,13 +172,13 @@ public class Projectile : MonoBehaviour
 
         elapsedTime = 0f; // Reset for shrink and bounce phase
 
-        var volume = controller.Volume;
+        //var volume = controller.Volume;
 
         // Add Bloom effect if not already present
-        if (!volume.profile.TryGet(out Bloom bloom))
-        {
-            bloom = volume.profile.Add<Bloom>(true);
-        }
+        //if (!volume.profile.TryGet(out Bloom bloom))
+        //{
+        //    bloom = volume.profile.Add<Bloom>(true);
+        //}
 
         // Shrink and bounce phase
         while (elapsedTime < animationDuration)
@@ -191,8 +191,8 @@ public class Projectile : MonoBehaviour
             light.intensity = baseLightIntensity * scaleValue;
 
             // Set Bloom intensity
-            bloom.intensity.value = baseLightIntensity * scaleValue * 5f;
-            bloom.intensity.overrideState = true;
+            //bloom.intensity.value = baseLightIntensity * scaleValue * 5f;
+            //bloom.intensity.overrideState = true;
 
             // Bounce with a diminishing sine wave
             float bounceValue = Mathf.Sin(normalizedTime * Mathf.PI) * bounceHeight * (1 - normalizedTime);

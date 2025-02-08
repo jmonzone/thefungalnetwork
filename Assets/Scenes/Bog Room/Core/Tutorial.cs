@@ -48,11 +48,11 @@ public class Tutorial : MonoBehaviour
         var header = "Hate to say it, but...";
         SetInformation(header, "You have been possessed!");
 
-        if (controller.Volume.profile.TryGet<Vignette>(out var v))
-        {
-            vignette = v;
-            StartCoroutine(PulseVignette());
-        }
+        //if (controller.Volume.profile.TryGet<Vignette>(out var v))
+        //{
+        //    vignette = v;
+        //    StartCoroutine(PulseVignette());
+        //}
     }
 
     private void SetInformation(string header, string text)

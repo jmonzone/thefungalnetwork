@@ -31,7 +31,7 @@ public class PlayerInput : MonoBehaviour
         virtualJoystick.OnJoystickEnd += () =>
         {
             if (controller == null) return;
-            controller.Movement.Stop();
+            //controller.Movement.Stop();
         };
 
         virtualJoystick.OnJoystickUpdate += input =>
@@ -50,27 +50,27 @@ public class PlayerInput : MonoBehaviour
     {
         UpdateWASDMovment();
 
-        if (controller.Movement == null) return;
+        //if (controller.Movement == null) return;
 
-        var targetActions = Physics.OverlapSphere(controller.Movement.transform.position, MAXIMUM_PROXIMITY_DISTANCE)
-           .Where(collider => !collider.isTrigger)
-           .Select(collider => collider.GetComponentInParent<ProximityAction>())
-           .Where(action => action && action.transform != controller.Movement.transform)
-           .OrderBy(entity => Vector3.Distance(controller.Movement.transform.position, entity.transform.position))
-           .ToList();
+        //var targetActions = Physics.OverlapSphere(controller.Movement.transform.position, MAXIMUM_PROXIMITY_DISTANCE)
+        //   .Where(collider => !collider.isTrigger)
+        //   .Select(collider => collider.GetComponentInParent<ProximityAction>())
+        //   .Where(action => action && action.transform != controller.Movement.transform)
+        //   .OrderBy(entity => Vector3.Distance(controller.Movement.transform.position, entity.transform.position))
+        //   .ToList();
 
-        var interactionAction = targetActions.FirstOrDefault();
+        //var interactionAction = targetActions.FirstOrDefault();
 
-        if (this.interactionAction && this.interactionAction != interactionAction) this.interactionAction.SetInRange(false);
-        this.interactionAction = interactionAction;
-        if (interactionAction) this.interactionAction.SetInRange(true);
+        //if (this.interactionAction && this.interactionAction != interactionAction) this.interactionAction.SetInRange(false);
+        //this.interactionAction = interactionAction;
+        //if (interactionAction) this.interactionAction.SetInRange(true);
 
-        interactionButton.gameObject.SetActive(interactionAction && interactionAction.Interactable);
+        //interactionButton.gameObject.SetActive(interactionAction && interactionAction.Interactable);
     }
 
     private void UpdateWASDMovment()
     {
-        if (controller.Movement == null) return;
+        //if (controller.Movement == null) return;
 
         // Read WASD or Arrow Key input
         float horizontal = Input.GetAxis("Horizontal"); // A/D or Left/Right Arrow
@@ -84,7 +84,7 @@ public class PlayerInput : MonoBehaviour
             // Stop movement if no input is detected
             if (direction == Vector3.zero)
             {
-                controller.Movement.Stop();
+                //controller.Movement.Stop();
                 usingWASD = false;
                 return;
             }
@@ -108,16 +108,16 @@ public class PlayerInput : MonoBehaviour
     private void HandleJump()
     {
         // if controlling a mount, then make the rider jump
-        if (controller.Mount)
-        {
-            Debug.Log("has mount");
-            controller.Mount.MountController.Movement.Jump();
-        }
-        else
-        {
-            Debug.Log("no mount");
-            controller.Movement.Jump();
-        }
+        //if (controller.Mount)
+        //{
+        //    Debug.Log("has mount");
+        //    controller.Mount.MountController.Movement.Jump();
+        //}
+        //else
+        //{
+        //    Debug.Log("no mount");
+        //    controller.Movement.Jump();
+        //}
     }
 
     private void ApplyDirection(Vector3 direction)
@@ -126,10 +126,10 @@ public class PlayerInput : MonoBehaviour
         direction = Quaternion.Euler(0, mainCamera.transform.eulerAngles.y, 0) * direction;
 
         //todo: attackable should not be referenced , it should be can move
-        if (!controller.Attackable || controller.Attackable.CurrentHealth > 0)
-        {
-            // Set the movement direction
-            controller.Movement.SetDirection(direction);
-        }
+        //if (!controller.Attackable || controller.Attackable.CurrentHealth > 0)
+        //{
+        //    // Set the movement direction
+        //    controller.Movement.SetDirection(direction);
+        //}
     }
 }

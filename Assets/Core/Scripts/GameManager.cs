@@ -50,7 +50,7 @@ public class GameManager : MonoBehaviour
             fungalInventory.Initialize();
             possession.Initialize();
 
-            controller.Initialize(volume);
+            //controller.Initialize(volume);
 
             DontDestroyOnLoad(instance);
 

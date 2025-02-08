@@ -35,8 +35,7 @@ public class FishingPlayer : NetworkBehaviour
                         ? int.TryParse(fungalData?.Value, out var index) ? index : 0 : 0;
             }
 
-            navigation.Navigate(inputView);
-            //RequestSpawnFungalServerRpc(NetworkManager.Singleton.LocalClientId, initialIndex);
+            RequestSpawnFungalServerRpc(NetworkManager.Singleton.LocalClientId, initialIndex);
         }
     }
 
@@ -65,7 +64,8 @@ public class FishingPlayer : NetworkBehaviour
             if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out var networkObject))
             {
                 networkFungal = networkObject.GetComponent<NetworkFungal>();
-                controller.SetMovement(networkFungal.Movement);
+                controller.SetTransform(networkFungal.transform);
+                navigation.Navigate(inputView);
             }
         }
     }

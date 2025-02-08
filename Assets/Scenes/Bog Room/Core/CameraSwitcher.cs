@@ -13,12 +13,12 @@ public class CameraSwitcher : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         var movement = other.GetComponentInParent<MovementController>();
-        if (movement && movement == controller.Movement)
-        {
-            if (lockOnTarget) virtualCamera.LookAt = controller.Movement.transform;
-            virtualCamera.Priority = 2;
-            OnSwitch?.Invoke();
-        }
+        //if (movement && movement == controller.Movement)
+        //{
+        //    //if (lockOnTarget) virtualCamera.LookAt = controller.Movement.transform;
+        //    virtualCamera.Priority = 2;
+        //    OnSwitch?.Invoke();
+        //}
     }
 
     private void OnTriggerExit(Collider other)

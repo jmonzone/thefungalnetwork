@@ -21,17 +21,6 @@ public class FungalController : MonoBehaviour
     private void Awake()
     {
         Movement = GetComponent<MovementController>();
-
-        var mountController = GetComponent<MountController>();
-        mountController.OnMounted += () =>
-        {
-            controller.SetMovement(mountController.Mountable.Movement);
-        };
-
-        mountController.OnUnmounted += () =>
-        {
-            controller.SetMovement(Movement);
-        };
     }
 
     //todo: centralize between GroveManager and Launcher
@@ -47,12 +36,6 @@ public class FungalController : MonoBehaviour
             var render = Instantiate(model.Data.Prefab, transform);
             render.transform.localScale = Vector3.one;
 
-            if (isGrove)
-            {
-                Movement.SetMaxJumpCount(model.Data.Type == FungalType.SKY ? 2 : 1);
-                Movement.StartRandomMovement();
-            }
-
             InitializeAnimations();
         }
     }
@@ -62,9 +45,9 @@ public class FungalController : MonoBehaviour
         var animator = GetComponentInChildren<Animator>();
         animator.speed = 0.25f;
 
-        Movement.OnJump += () => animator.Play("Jump");
+        //Movement.OnJump += () => animator.Play("Jump");
 
-        var movementAnimations = GetComponentInChildren<MovementAnimations>();
-        movementAnimations.Initalize();
+        //var movementAnimations = GetComponentInChildren<MovementAnimations>();
+        //movementAnimations.Initalize();
     }
 }
