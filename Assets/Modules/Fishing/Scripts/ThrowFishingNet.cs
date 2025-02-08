@@ -12,12 +12,14 @@ public class ThrowFishingNet : MonoBehaviour
 
     [SerializeField] private Transform reticle;
     [SerializeField] private Transform net;
-    [SerializeField] private Transform netStartPosition;
+
+    private Vector3 startPosition;
 
     public event UnityAction OnFishCaught;
 
-    private void Start()
+    private void Awake()
     {
+        startPosition = net.position;
         throwButton.onClick.AddListener(() => StartCoroutine(ThrowNet()));
     }
 
@@ -66,13 +68,9 @@ public class ThrowFishingNet : MonoBehaviour
             fish.gameObject.SetActive(false);
             OnFishCaught?.Invoke();
         }
-
-        //inventory.AddToInventory(fishData, fishControllers.Count);
-
-        //inventoryText.text = inventory.GetItemCount(fishData).ToString();
         yield return new WaitForSeconds(0.25f);
 
-        net.transform.position = netStartPosition.position;
+        net.transform.position = startPosition;
 
         throwButton.interactable = true;
         reticle.gameObject.SetActive(true);

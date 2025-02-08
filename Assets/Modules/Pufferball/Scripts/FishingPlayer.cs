@@ -35,7 +35,8 @@ public class FishingPlayer : NetworkBehaviour
                         ? int.TryParse(fungalData?.Value, out var index) ? index : 0 : 0;
             }
 
-            RequestSpawnFungalServerRpc(NetworkManager.Singleton.LocalClientId, initialIndex);
+            navigation.Navigate(inputView);
+            //RequestSpawnFungalServerRpc(NetworkManager.Singleton.LocalClientId, initialIndex);
         }
     }
 
@@ -65,7 +66,6 @@ public class FishingPlayer : NetworkBehaviour
             {
                 networkFungal = networkObject.GetComponent<NetworkFungal>();
                 controller.SetMovement(networkFungal.Movement);
-                navigation.Navigate(inputView);
             }
         }
     }
