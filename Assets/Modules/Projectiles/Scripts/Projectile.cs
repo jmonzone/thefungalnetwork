@@ -11,7 +11,7 @@ public class Projectile : MonoBehaviour
     [SerializeField] private ParticleSystem projectileParticles;
     [SerializeField] private ParticleSystem dissipateParticles;
     [SerializeField] private Light light;
-    [SerializeField] private Controller controller;
+    [SerializeField] private PlayerReference controller;
 
     [SerializeField] private float oscillationAmplitude = 1f; // Amplitude of the up-and-down motion
     [SerializeField] private float oscillationFrequency = 5f;   // Speed of the up-and-down motion

@@ -1,18 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class FishingMinigame : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    //todo: add to separate ocmponent
+    [SerializeField] private PlayerReference playerReference;
+    [SerializeField] private CameraController cameraController;
+
+    private void Awake()
     {
-        
+        playerReference.OnPlayerUpdated += PlayerReference_OnPlayerUpdated;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void PlayerReference_OnPlayerUpdated()
     {
-        
+        cameraController.Target = playerReference.Transform;
     }
 }

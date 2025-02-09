@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private ItemInventory itemInventory;
     [SerializeField] private FungalInventory fungalInventory;
     [SerializeField] private Possession possession;
-    [SerializeField] private Controller controller;
+    [SerializeField] private PlayerReference controller;
     [SerializeField] private Volume volume;
 
 

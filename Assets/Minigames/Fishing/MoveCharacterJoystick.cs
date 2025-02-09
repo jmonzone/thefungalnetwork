@@ -3,7 +3,8 @@ using UnityEngine;
 public class MoveCharacterJoystick : MonoBehaviour
 {
     [SerializeField] private VirtualJoystick joystick;
-    [SerializeField] private Controller controller;
+    [SerializeField] private PlayerReference player;
+    [SerializeField] private float wasdSensitivity;
 
     private void Awake()
     {
@@ -12,12 +13,12 @@ public class MoveCharacterJoystick : MonoBehaviour
 
     private void Update()
     {
-        if (!controller.Transform) return;
+        if (!player.Transform) return;
 
         var x = Input.GetAxis("Horizontal");
         var y = Input.GetAxis("Vertical");
 
-        var direction = new Vector3(x, y) * Time.deltaTime;
+        var direction = wasdSensitivity * Time.deltaTime * new Vector3(x, y);
         MoveReticle(direction);
     }
 
@@ -31,7 +32,7 @@ public class MoveCharacterJoystick : MonoBehaviour
 
         if (translation == Vector3.zero) return;
 
-        controller.Transform.position += translation;
-        controller.Transform.forward = translation;
+        player.Transform.position += translation;
+        player.Transform.forward = translation;
     }
 }

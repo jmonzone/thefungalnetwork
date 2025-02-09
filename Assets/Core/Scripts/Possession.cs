@@ -6,7 +6,7 @@ public class Possession : ScriptableObject
     [SerializeField] private LocalData localData;
     [SerializeField] private FungalInventory fungalInventory;
     [SerializeField] private FungalModel fungal;
-    [SerializeField] private Controller controller;
+    [SerializeField] private PlayerReference controller;
 
     public FungalModel Fungal => fungal;
 

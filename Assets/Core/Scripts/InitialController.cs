@@ -4,7 +4,7 @@ using UnityEngine.Events;
 //todo: name something more like PlayerHandler or PlayerController
 public class InitialController : MonoBehaviour
 {
-    [SerializeField] private Controller controller;
+    [SerializeField] private PlayerReference controller;
     [SerializeField] private Possession possession;
     [SerializeField] private FungalInventory fungalInventory;
     [SerializeField] private MovementController avatarPrefab;

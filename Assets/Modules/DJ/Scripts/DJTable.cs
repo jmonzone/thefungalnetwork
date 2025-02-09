@@ -17,7 +17,7 @@ namespace TheFungalNetwork.DJ
 
     public class DJTable : MonoBehaviour
     {
-        [SerializeField] private Controller controller;
+        [SerializeField] private PlayerReference controller;
 
         [Header("Audio References")]
         [SerializeField] private AudioMixer audioMixer;

@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class AbilityCastButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     [SerializeField] private Button button;
-    [SerializeField] private Controller controller;
+    [SerializeField] private PlayerReference controller;
     [SerializeField] private GameObject render;
     [SerializeField] private Image abilityImage;
     [SerializeField] private Image cooldownImage;

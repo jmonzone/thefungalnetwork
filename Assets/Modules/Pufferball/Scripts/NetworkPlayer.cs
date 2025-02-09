@@ -7,7 +7,7 @@ public class NetworkPlayer : NetworkBehaviour
 {
     [SerializeField] private MultiplayerManager multiplayer;
     [SerializeField] private MultiplayerArena arena;
-    [SerializeField] private Controller controller;
+    [SerializeField] private PlayerReference controller;
     [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference inputView;
 

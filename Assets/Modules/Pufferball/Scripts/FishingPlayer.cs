@@ -7,7 +7,7 @@ public class FishingPlayer : NetworkBehaviour
 {
     [SerializeField] private MultiplayerManager multiplayer;
     [SerializeField] private MultiplayerArena arena;
-    [SerializeField] private Controller controller;
+    [SerializeField] private PlayerReference player;
     [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference inputView;
 
@@ -64,7 +64,7 @@ public class FishingPlayer : NetworkBehaviour
             if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out var networkObject))
             {
                 networkFungal = networkObject.GetComponent<NetworkFungal>();
-                controller.SetTransform(networkFungal.transform);
+                player.SetTransform(networkFungal.transform);
                 navigation.Navigate(inputView);
             }
         }

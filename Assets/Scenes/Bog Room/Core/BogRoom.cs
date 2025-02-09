@@ -7,7 +7,7 @@ using UnityEngine;
 // todo: organize with AutoConnect.cs
 public class BogRoom : NetworkBehaviour
 {
-    [SerializeField] private Controller playerReference;
+    [SerializeField] private PlayerReference playerReference;
     [SerializeField] private ShruneItem defaultShrune;
     [SerializeField] private ItemInventory itemInventory;
     [SerializeField] private MultiplayerArena multiplayerArena;

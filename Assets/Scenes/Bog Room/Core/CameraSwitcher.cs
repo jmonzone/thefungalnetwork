@@ -4,7 +4,7 @@ using UnityEngine.Events;
 
 public class CameraSwitcher : MonoBehaviour
 {
-    [SerializeField] private Controller controller;
+    [SerializeField] private PlayerReference controller;
     [SerializeField] private CinemachineVirtualCamera virtualCamera;
     [SerializeField] private bool lockOnTarget = false;
 

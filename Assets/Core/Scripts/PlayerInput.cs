@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class PlayerInput : MonoBehaviour
 {
-    [SerializeField] private Controller controller;
+    [SerializeField] private PlayerReference controller;
 
     [SerializeField] private VirtualJoystick virtualJoystick;
     [SerializeField] private Button jumpButton;

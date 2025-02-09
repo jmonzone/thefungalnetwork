@@ -11,7 +11,7 @@ public enum FungalState
 
 public class FungalController : MonoBehaviour
 {
-    [SerializeField] private Controller controller;
+    [SerializeField] private PlayerReference player;
 
     public FungalModel Model { get; private set; }
     public MovementController Movement { get; private set; }

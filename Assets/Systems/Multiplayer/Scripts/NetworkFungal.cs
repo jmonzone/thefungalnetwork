@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class NetworkFungal : NetworkBehaviour
 {
-    [SerializeField] private Controller controller;
+    [SerializeField] private PlayerReference player;
     [SerializeField] private MultiplayerArena arena;
     [SerializeField] private FungalInventory fungalInventory;
 

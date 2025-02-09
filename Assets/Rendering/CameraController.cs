@@ -19,6 +19,11 @@ public class CameraController : MonoBehaviour
 
     public Transform Target { get => target; set => target = value; }
 
+    public void SetLookTarget(Transform target)
+    {
+        lookTarget = target;
+    }
+
     private void Update()
     {
         if (lookTarget)

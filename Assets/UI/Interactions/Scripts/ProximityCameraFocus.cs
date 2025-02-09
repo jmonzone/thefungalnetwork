@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ProximityCameraFocus : MonoBehaviour
 {
-    [SerializeField] private Controller controller;
+    [SerializeField] private PlayerReference controller;
     [SerializeField] private CinemachineVirtualCamera virtualCamera;
 
     private void OnTriggerEnter(Collider other)

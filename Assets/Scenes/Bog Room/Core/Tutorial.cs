@@ -6,7 +6,7 @@ using UnityEngine.Rendering.Universal;
 public class Tutorial : MonoBehaviour
 {
     [SerializeField] private GameClock gameClock;
-    [SerializeField] private Controller controller;
+    [SerializeField] private PlayerReference controller;
     [SerializeField] private MultiplayerArena arena;
     [SerializeField] private FadeCanvasGroup fadeCanvasGroup;
     [SerializeField] private TextMeshProUGUI header;

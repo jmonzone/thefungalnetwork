@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class AvatarAnimation : MonoBehaviour
 {
-    [SerializeField] private Controller controller;
+    [SerializeField] private PlayerReference controller;
 
     public float shrinkSpeed = 2f;
     public float flashDuration = 0.2f;
