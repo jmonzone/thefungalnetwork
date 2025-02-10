@@ -32,6 +32,9 @@ public class FishSpawner : MonoBehaviour
             fishController.Initialize(spawnPosition.Bounds);
             objectCount++;
 
+            // Subscribe to disable event
+            fishController.OnFishDisabled += HandleFishDisabled;
+
             timer = 0;
         }
 
@@ -63,5 +66,9 @@ public class FishSpawner : MonoBehaviour
         return fish[0].fishData; // Default to the first fish type if no match (safety fallback)
     }
 
+    private void HandleFishDisabled()
+    {
+        objectCount--;
+    }
 }
 

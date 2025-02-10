@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class FishController : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class FishController : MonoBehaviour
 
     private Vector3 targetPosition;
     private Collider bounds;
+
+    public event UnityAction OnFishDisabled;
 
     public void Initialize(Collider bounds)
     {
@@ -59,5 +62,10 @@ public class FishController : MonoBehaviour
             idleTimer = Random.Range(0f, maxIdleDuration - minIdleDuration);
             isIdle = true;
         }
+    }
+
+    private void OnDisable()
+    {
+        OnFishDisabled?.Invoke();
     }
 }
