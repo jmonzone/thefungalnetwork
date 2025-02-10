@@ -17,15 +17,9 @@ public class FishSpawner : MonoBehaviour
     [SerializeField] private int maxObjectCount;
     [SerializeField] protected PositionAnchor spawnPosition;
 
-    [SerializeField] private ThrowFishingNet throwFishingNet;
     private float timer;
 
     private int objectCount;
-
-    private void Awake()
-    {
-        throwFishingNet.OnFishCaught += () => objectCount--;
-    }
 
     private void Update()
     {
