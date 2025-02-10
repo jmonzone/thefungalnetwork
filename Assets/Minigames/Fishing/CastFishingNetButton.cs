@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -68,7 +69,14 @@ public class CastFishingNetButton : MonoBehaviour
 
         // Ensure the net reaches the exact target position
         fishingNet.transform.position = end;
-        targetFish.gameObject.SetActive(false);
+
+        var sphereCast = Physics.OverlapSphere(end, 1f);
+        var fishControllers = sphereCast.Select(collider => collider.GetComponentInParent<FishController>()).OfType<FishController>().ToList();
+        foreach (var fish in fishControllers)
+        {
+            fish.gameObject.SetActive(false);
+        }
+
         yield return new WaitForSeconds(0.25f);
 
         fishingNet.gameObject.SetActive(false);
