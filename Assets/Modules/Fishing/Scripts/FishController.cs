@@ -32,9 +32,6 @@ public class FishController : MonoBehaviour
         }
 
         StartCoroutine(LerpScale());
-
-        Debug.Log(bounds.bounds.min);
-        Debug.Log(bounds.bounds.max);
     }
 
     private void Update()
@@ -46,7 +43,6 @@ public class FishController : MonoBehaviour
             {
                 isIdle = false;
                 targetPosition = bounds.GetRandomXZPosition();
-                Debug.Log(targetPosition);
             }
             return;
         }

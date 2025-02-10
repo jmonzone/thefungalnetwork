@@ -3077,7 +3077,7 @@ GameObject:
   - component: {fileID: 1918365171}
   - component: {fileID: 1918365170}
   m_Layer: 0
-  m_Name: Land (1)
+  m_Name: Land
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3182,6 +3182,7 @@ GameObject:
   - component: {fileID: 1937808451}
   - component: {fileID: 1937808452}
   - component: {fileID: 1937808454}
+  - component: {fileID: 1937808455}
   m_Layer: 0
   m_Name: Fishing Minigame
   m_TagString: Untagged
@@ -3276,6 +3277,21 @@ MonoBehaviour:
   spawnPosition:
     anchor: {fileID: 0}
     bounds: {fileID: 1519942644}
+--- !u!114 &1937808455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1937808448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b32805b3dbd76487291ccfaeb5384d94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerReference: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
+  reticle: {fileID: 1023455798}
+  searchRadius: 4
 --- !u!1 &1976919461
 GameObject:
   m_ObjectHideFlags: 0
