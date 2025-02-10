@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,15 +9,27 @@ public class CastFishingNetButton : MonoBehaviour
     [SerializeField] private Transform fishingNet;
     [SerializeField] private PlayerReference playerReference;
     [SerializeField] private float duration = 1f;
+    [SerializeField] private float cooldown = 2f;
+
+    private bool isOnCooldown = false;
+
+    private void Awake()
+    {
+        castFishingNetButton.onClick.AddListener(() => StartCoroutine(ThrowNet()));
+    }
 
     private void Update()
     {
-        castFishingNetButton.interactable = autoTargetReticle.TargetFishController;
-        castFishingNetButton.onClick.AddListener(() => StartCoroutine(ThrowNet()));
+        castFishingNetButton.interactable = autoTargetReticle.TargetFishController && !isOnCooldown;
     }
 
     private IEnumerator ThrowNet()
     {
+        if (isOnCooldown) yield break;
+
+        isOnCooldown = true;
+        castFishingNetButton.interactable = false; // Disable button
+
         var targetFish = autoTargetReticle.TargetFishController;
         if (!targetFish) yield break;
 
@@ -50,7 +61,7 @@ public class CastFishingNetButton : MonoBehaviour
 
             // Update position
             fishingNet.position = new Vector3(currentXZPosition.x, y, currentXZPosition.z);
-            fishingNet.Rotate(Vector3.down, Time.deltaTime * 10f);
+            fishingNet.Rotate(Vector3.down, Time.deltaTime);
 
             yield return null;
         }
@@ -61,5 +72,7 @@ public class CastFishingNetButton : MonoBehaviour
         yield return new WaitForSeconds(0.25f);
 
         fishingNet.gameObject.SetActive(false);
+        yield return new WaitForSeconds(cooldown);
+        isOnCooldown = false;
     }
 }
