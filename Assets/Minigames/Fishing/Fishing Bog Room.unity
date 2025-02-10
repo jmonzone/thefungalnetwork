@@ -375,7 +375,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -848,7 +848,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -2142,7 +2142,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -2222,7 +2222,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.10539634, z: 0, w: 0.9944303}
   m_LocalPosition: {x: 0, y: 3, z: -4}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 946940260}
@@ -2280,7 +2280,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -2535,7 +2535,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -3182,7 +3182,6 @@ GameObject:
   - component: {fileID: 1937808451}
   - component: {fileID: 1937808452}
   - component: {fileID: 1937808454}
-  - component: {fileID: 1937808455}
   m_Layer: 0
   m_Name: Fishing Minigame
   m_TagString: Untagged
@@ -3277,21 +3276,6 @@ MonoBehaviour:
   spawnPosition:
     anchor: {fileID: 0}
     bounds: {fileID: 1519942644}
---- !u!114 &1937808455
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1937808448}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b32805b3dbd76487291ccfaeb5384d94, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerReference: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
-  reticle: {fileID: 1023455798}
-  searchRadius: 4
 --- !u!1 &1976919461
 GameObject:
   m_ObjectHideFlags: 0
@@ -3478,7 +3462,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -3584,6 +3568,8 @@ GameObject:
   - component: {fileID: 1021674304189523941}
   - component: {fileID: 5225214373093127420}
   - component: {fileID: 5225214373093127422}
+  - component: {fileID: 5225214373093127424}
+  - component: {fileID: 5225214373093127423}
   m_Layer: 0
   m_Name: Fishing Input
   m_TagString: Untagged
@@ -4449,6 +4435,38 @@ MonoBehaviour:
   joystick: {fileID: 3229456022335916232}
   player: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
   wasdSensitivity: 2
+--- !u!114 &5225214373093127423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 307079635496400233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b32805b3dbd76487291ccfaeb5384d94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerReference: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
+  reticle: {fileID: 1023455798}
+  searchRadius: 4
+--- !u!114 &5225214373093127424
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 307079635496400233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c12c845760a2f4ad098d03ba06c1589d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  autoTargetReticle: {fileID: 5225214373093127423}
+  castFishingNetButton: {fileID: 2562923867676117843}
+  fishingNet: {fileID: 1211942116}
+  playerReference: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
+  duration: 1
 --- !u!114 &5313666362027771867
 MonoBehaviour:
   m_ObjectHideFlags: 0
