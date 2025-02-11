@@ -333,7 +333,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 145407831}
-  - component: {fileID: 145407832}
   m_Layer: 5
   m_Name: Fishing Score
   m_TagString: Untagged
@@ -362,20 +361,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 33}
   m_Pivot: {x: 1, y: 1}
---- !u!114 &145407832
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 145407830}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11cff2f9025d548cf91537cdd87c8350, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fishingNetButton: {fileID: 5225214373093127424}
-  scoreText: {fileID: 1723903667}
 --- !u!1 &153690995
 GameObject:
   m_ObjectHideFlags: 0
@@ -3000,6 +2985,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1322502231}
   - component: {fileID: 1322502230}
+  - component: {fileID: 1322502233}
+  - component: {fileID: 1322502232}
   m_Layer: 0
   m_Name: Fishing HUD
   m_TagString: Untagged
@@ -3036,6 +3023,34 @@ Transform:
   - {fileID: 993908717}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1322502232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1322502229}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11cff2f9025d548cf91537cdd87c8350, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fishingNetButton: {fileID: 5225214373093127424}
+  scoreText: {fileID: 1723903667}
+--- !u!114 &1322502233
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1322502229}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43156911d32c244c8b3a84afe33eca00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timerText: {fileID: 199765676}
+  startTime: 180
 --- !u!1 &1347598360
 GameObject:
   m_ObjectHideFlags: 0
@@ -3194,7 +3209,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1436575644}
-  - component: {fileID: 1436575645}
   m_Layer: 5
   m_Name: Fishing Timer
   m_TagString: Untagged
@@ -3223,20 +3237,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 33}
   m_Pivot: {x: 0.5, y: 1}
---- !u!114 &1436575645
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1436575643}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 43156911d32c244c8b3a84afe33eca00, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  timerText: {fileID: 199765676}
-  startTime: 10
 --- !u!1 &1467937335
 GameObject:
   m_ObjectHideFlags: 0
@@ -5254,6 +5254,12 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 982210727}
     m_Modifications:
+    - target: {fileID: 3794482853265438230, guid: 6d815ebfe92f244ceae499e70d6370bf,
+        type: 3}
+      propertyPath: fish.Array.data[0].fishData
+      value: 
+      objectReference: {fileID: 11400000, guid: ccfda4bf5791a45849164dc62f4783c4,
+        type: 2}
     - target: {fileID: 7527456899910876558, guid: 6d815ebfe92f244ceae499e70d6370bf,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5748,7 +5754,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   navigation: {fileID: 11400000, guid: 7af35f01730a846d692adda4734cddd3, type: 2}
   resultsView: {fileID: 11400000, guid: 0d3498889a9f44a1aa5c3c36fe4e32fd, type: 2}
-  fishingTimer: {fileID: 1436575645}
+  fishingTimer: {fileID: 0}
 --- !u!224 &8864958489339964706
 RectTransform:
   m_ObjectHideFlags: 0
