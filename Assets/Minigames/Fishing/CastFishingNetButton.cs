@@ -1,6 +1,8 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class CastFishingNetButton : MonoBehaviour
@@ -13,6 +15,8 @@ public class CastFishingNetButton : MonoBehaviour
     [SerializeField] private float cooldown = 2f;
 
     private bool isOnCooldown = false;
+
+    public event UnityAction<List<FishController>> OnFishCaught;
 
     private void Awake()
     {
@@ -76,6 +80,9 @@ public class CastFishingNetButton : MonoBehaviour
         {
             fish.gameObject.SetActive(false);
         }
+
+        Debug.Log(fishControllers.Count);
+        OnFishCaught?.Invoke(fishControllers);
 
         yield return new WaitForSeconds(0.25f);
 
