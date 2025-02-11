@@ -81,7 +81,6 @@ public class CastFishingNetButton : MonoBehaviour
             fish.gameObject.SetActive(false);
         }
 
-        Debug.Log(fishControllers.Count);
         OnFishCaught?.Invoke(fishControllers);
 
         yield return new WaitForSeconds(0.25f);
