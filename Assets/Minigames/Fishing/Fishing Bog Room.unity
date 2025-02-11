@@ -3236,7 +3236,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timerText: {fileID: 199765676}
-  startTime: 180
+  startTime: 10
 --- !u!1 &1467937335
 GameObject:
   m_ObjectHideFlags: 0
@@ -5726,13 +5726,29 @@ GameObject:
   m_Component:
   - component: {fileID: 7917522849322604618}
   - component: {fileID: 7975112458181059254}
+  - component: {fileID: 8366697932842567079}
   m_Layer: 0
-  m_Name: Results UI
+  m_Name: Fishing Results
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &8366697932842567079
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8366697932842567078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d731cb90d36aa4058aa7d789f04e3a1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  navigation: {fileID: 11400000, guid: 7af35f01730a846d692adda4734cddd3, type: 2}
+  resultsView: {fileID: 11400000, guid: 0d3498889a9f44a1aa5c3c36fe4e32fd, type: 2}
+  fishingTimer: {fileID: 1436575645}
 --- !u!224 &8864958489339964706
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5787,9 +5803,9 @@ SceneRoots:
   - {fileID: 1841194354}
   - {fileID: 689007582}
   - {fileID: 685339989}
-  - {fileID: 7917522849322604618}
   - {fileID: 1021674304189523941}
   - {fileID: 1322502231}
+  - {fileID: 7917522849322604618}
   - {fileID: 1937808449}
   - {fileID: 982210727}
   - {fileID: 1023455798}

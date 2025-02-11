@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class FishingTimer : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class FishingTimer : MonoBehaviour
 
     private float timeRemaining;
     private bool isRunning = true;
+
+    public event UnityAction OnTimerComplete;
 
     private void Start()
     {
@@ -26,6 +29,7 @@ public class FishingTimer : MonoBehaviour
         {
             timeRemaining = 0;
             isRunning = false;
+            OnTimerComplete?.Invoke();
         }
 
         UpdateTimerText();
