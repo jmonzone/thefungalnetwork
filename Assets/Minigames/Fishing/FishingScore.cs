@@ -5,22 +5,19 @@ using UnityEngine;
 
 public class FishingScore : MonoBehaviour
 {
-    [SerializeField] private CastFishingNetButton fishingNetButton;
+    [SerializeField] private FishManager fishManager;
     [SerializeField] private TextMeshProUGUI scoreText;
 
     private int score;
 
     private void Awake()
     {
-        fishingNetButton.OnFishCaught += FishingNetButton_OnFishCaught;
+        fishManager.OnFishCaught += FishingNetButton_OnFishCaught;
     }
 
-    private void FishingNetButton_OnFishCaught(IEnumerable<FishController> fishControllers)
+    private void FishingNetButton_OnFishCaught()
     {
-        foreach(var fish in fishControllers)
-        {
-            score++;
-            scoreText.text = score.ToString();
-        }
+        score++;
+        scoreText.text = score.ToString();
     }
 }

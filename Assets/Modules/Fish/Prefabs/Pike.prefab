@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5569854717866690982}
   - component: {fileID: 1985368070077868474}
-  - component: {fileID: 4701732161822769148}
+  - component: {fileID: -4030193095364800986}
   m_Layer: 3
   m_Name: Pike
   m_TagString: Untagged
@@ -46,8 +46,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b54965bd37bcc473cbe4dc0a87e48f7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data: {fileID: 0}
---- !u!114 &4701732161822769148
+  isIdle: 1
+  idleTimer: 0
+  minIdleDuration: 2
+  maxIdleDuration: 5
+  speed: 2
+--- !u!114 &-4030193095364800986
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -56,27 +60,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1998284645538067842}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47a3fda79a53a4b9e9ab1b8cf9d8acb6, type: 3}
+  m_Script: {fileID: 11500000, guid: 46dd51b430cc74c0fa814eebd6724708, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 0
-  speed: 2
-  lerpRotation: 1
-  faceForward: 1
-  useRoll: 1
-  lockXZLookRotation: 0
-  useDrag: 0
-  positionAnchor:
-    anchor: {fileID: 0}
-    bounds: {fileID: 0}
-  distanceThreshold: 2
-  startIdle: 1
-  minIdleDuration: 2
-  maxIdleDuration: 5
-  radius: 4
-  radialSpeed: 0.25
-  jumpForce: 250
-  maxJumpCount: 1
 --- !u!1001 &450373414579174310
 PrefabInstance:
   m_ObjectHideFlags: 0

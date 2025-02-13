@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.Events;
 
 [System.Serializable]
 public class FishSpawn
@@ -21,6 +21,8 @@ public class FishSpawner : MonoBehaviour
 
     private int objectCount;
 
+    public event UnityAction<FishController> OnFishSpawned;
+
     private void Update()
     {
         if (objectCount >= maxObjectCount) return;
@@ -32,8 +34,10 @@ public class FishSpawner : MonoBehaviour
             fishController.Initialize(spawnPosition.Bounds);
             objectCount++;
 
+            OnFishSpawned?.Invoke(fishController);
+
             // Subscribe to disable event
-            fishController.OnFishDisabled += HandleFishDisabled;
+            fishController.OnCaught += HandleFishDisabled;
 
             timer = 0;
         }

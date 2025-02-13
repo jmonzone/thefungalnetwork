@@ -2217,6 +2217,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 982210727}
+  - component: {fileID: 982210728}
   m_Layer: 0
   m_Name: Fishing Ponds
   m_TagString: Untagged
@@ -2243,6 +2244,18 @@ Transform:
   - {fileID: 805249891}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &982210728
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 982210726}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77e36557362e142a5894a09b74b08313, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &993908716
 GameObject:
   m_ObjectHideFlags: 0
@@ -3035,7 +3048,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11cff2f9025d548cf91537cdd87c8350, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fishingNetButton: {fileID: 5225214373093127424}
+  fishManager: {fileID: 982210728}
   scoreText: {fileID: 1723903667}
 --- !u!114 &1322502233
 MonoBehaviour:
@@ -4217,6 +4230,12 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 982210727}
     m_Modifications:
+    - target: {fileID: 3794482853265438230, guid: 6d815ebfe92f244ceae499e70d6370bf,
+        type: 3}
+      propertyPath: fish.Array.data[0].fishData
+      value: 
+      objectReference: {fileID: 11400000, guid: 46bb23fb8a0a045fd96e9d9c31636f65,
+        type: 2}
     - target: {fileID: 7527456899910876558, guid: 6d815ebfe92f244ceae499e70d6370bf,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5754,7 +5773,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   navigation: {fileID: 11400000, guid: 7af35f01730a846d692adda4734cddd3, type: 2}
   resultsView: {fileID: 11400000, guid: 0d3498889a9f44a1aa5c3c36fe4e32fd, type: 2}
-  fishingTimer: {fileID: 0}
+  fishingTimer: {fileID: 1322502233}
 --- !u!224 &8864958489339964706
 RectTransform:
   m_ObjectHideFlags: 0

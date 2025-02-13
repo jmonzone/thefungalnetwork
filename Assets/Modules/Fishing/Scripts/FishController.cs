@@ -13,7 +13,8 @@ public class FishController : MonoBehaviour
     private Vector3 targetPosition;
     private Collider bounds;
 
-    public event UnityAction OnFishDisabled;
+    public event UnityAction OnHit;
+    public event UnityAction OnCaught;
 
     public void Initialize(Collider bounds)
     {
@@ -64,8 +65,14 @@ public class FishController : MonoBehaviour
         }
     }
 
-    private void OnDisable()
+    public void Hit()
     {
-        OnFishDisabled?.Invoke();
+        OnHit?.Invoke();   
+    }
+
+    public void Catch()
+    {
+        gameObject.SetActive(false);
+        OnCaught?.Invoke();
     }
 }
