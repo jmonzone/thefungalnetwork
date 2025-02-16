@@ -2,9 +2,10 @@ using UnityEngine;
 
 public class FishingRodCatch : MonoBehaviour
 {
+    [SerializeField] private PlayerReference playerReference;
     [SerializeField] private float detectionRadius = 1f;
 
-    private Transform caughtPufferfish;
+    private Pufferfish caughtPufferfish;
 
     private void Update()
     {
@@ -12,14 +13,11 @@ public class FishingRodCatch : MonoBehaviour
         {
             DetectPufferfish();
         }
-        else
-        {
-            MovePufferfish();
-        }
     }
 
     private void OnDisable()
     {
+        if (caughtPufferfish) caughtPufferfish.PickUp(playerReference.Transform);
         caughtPufferfish = null;
     }
 
@@ -32,14 +30,10 @@ public class FishingRodCatch : MonoBehaviour
             Pufferfish pufferfish = hit.GetComponentInParent<Pufferfish>();
             if (pufferfish != null)
             {
-                caughtPufferfish = pufferfish.transform;
+                caughtPufferfish = pufferfish;
+                pufferfish.Catch(transform);
                 break;
             }
         }
-    }
-
-    private void MovePufferfish()
-    {
-        caughtPufferfish.position = Vector3.Lerp(caughtPufferfish.position, transform.position, Time.deltaTime * 5f);
     }
 }

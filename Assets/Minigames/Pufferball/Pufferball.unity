@@ -1133,6 +1133,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4947f3c52a353439e8788aaa280848a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerReference: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
   detectionRadius: 1
 --- !u!114 &652051166
 MonoBehaviour:
@@ -1148,7 +1149,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerReference: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
   speed: 7.5
-  range: 5
+  range: 7.5
 --- !u!1 &685339988
 GameObject:
   m_ObjectHideFlags: 0
@@ -2351,6 +2352,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29c804e1c5a31492dbed0b1d66d85662, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  followSpeed: 5
+  carryOffset: 1
 --- !u!1 &1937808448
 GameObject:
   m_ObjectHideFlags: 0
