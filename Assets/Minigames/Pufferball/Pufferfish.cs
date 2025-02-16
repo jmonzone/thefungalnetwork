@@ -9,6 +9,7 @@ public class Pufferfish : MonoBehaviour
 
     [SerializeField] private float followSpeed = 5f;
     [SerializeField] private float carryOffset = 1f; // Offset when being carried by the player
+    [SerializeField] private Collider collider;
 
     private void Update()
     {
@@ -37,6 +38,7 @@ public class Pufferfish : MonoBehaviour
     {
         isCaught = true;
         targetTransform = fishingRod;
+        collider.enabled = false;
     }
 
     // Called when the Fishing Rod is disabled, making the Pufferfish follow the player
