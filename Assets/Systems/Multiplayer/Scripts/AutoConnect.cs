@@ -6,14 +6,6 @@ using UnityEngine;
 public class AutoConnect : NetworkBehaviour
 {
     [SerializeField] private MultiplayerManager multiplayer;
-    [SerializeField] private MultiplayerArena arena;
-    [SerializeField] private Transform playerSpawnAnchor;
-
-    private void Awake()
-    {
-        arena.Initialize(playerSpawnAnchor.position);
-        Debug.Log(Application.internetReachability);
-    }
 
     private IEnumerator Start()
     {

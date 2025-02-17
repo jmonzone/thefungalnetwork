@@ -5,6 +5,7 @@ public class MoveCharacterJoystick : MonoBehaviour
     [SerializeField] private VirtualJoystick joystick;
     [SerializeField] private PlayerReference player;
     [SerializeField] private float wasdSensitivity;
+    [SerializeField] private float speed = 2f;
 
     private void Awake()
     {
@@ -15,11 +16,14 @@ public class MoveCharacterJoystick : MonoBehaviour
     {
         if (!player.Transform) return;
 
-        var x = Input.GetAxis("Horizontal");
-        var y = Input.GetAxis("Vertical");
+        if (Application.isEditor)
+        {
+            var x = Input.GetAxis("Horizontal");
+            var y = Input.GetAxis("Vertical");
 
-        var direction = wasdSensitivity * Time.deltaTime * new Vector3(x, y);
-        MoveReticle(direction);
+            var direction = wasdSensitivity * Time.deltaTime * new Vector3(x, y);
+            MoveReticle(direction);
+        }
     }
 
     private void MoveReticle(Vector3 direction)
@@ -32,7 +36,7 @@ public class MoveCharacterJoystick : MonoBehaviour
 
         if (translation == Vector3.zero) return;
 
-        player.Transform.position += translation;
+        player.Transform.position += speed * Time.deltaTime * translation.normalized;
         player.Transform.forward = translation;
     }
 }

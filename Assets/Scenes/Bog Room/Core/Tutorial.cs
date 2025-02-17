@@ -35,12 +35,12 @@ public class Tutorial : MonoBehaviour
 
     private void OnEnable()
     {
-        arena.OnMinionAssigned += Arena_OnMinionAssigned;
+        //arena.OnMinionAssigned += Arena_OnMinionAssigned;
     }
 
     private void OnDisable()
     {
-        arena.OnMinionAssigned -= Arena_OnMinionAssigned;
+        //arena.OnMinionAssigned -= Arena_OnMinionAssigned;
     }
 
     private void Arena_OnMinionAssigned()

@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class MainMenuTitle : MonoBehaviour
 {
+    [SerializeField] private bool debug;
+
     [SerializeField] private ViewController titleViewController;
     [SerializeField] private Button partyButton;
     [SerializeField] private FadeCanvasGroup partyButtonFade;
@@ -59,6 +61,14 @@ public class MainMenuTitle : MonoBehaviour
             navigation.InitalizeHistory(new List<ViewReference>
             {
                 homeView, matchmakingView
+            });
+        }
+        else if (debug)
+        {
+            targetUI = matchmakingView;
+            navigation.InitalizeHistory(new List<ViewReference>
+            {
+                homeView
             });
         }
 

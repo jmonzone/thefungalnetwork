@@ -21,7 +21,7 @@ public class FishingPlayer : NetworkBehaviour
 
         if (IsOwner)
         {
-            var initialIndex = Random.Range(0, fungalCollection.Fungals.Count);
+            var characterIndex = Random.Range(0, fungalCollection.Fungals.Count);
 
             if (multiplayer.JoinedLobby != null)
             {
@@ -31,25 +31,38 @@ public class FishingPlayer : NetworkBehaviour
                 // Find the local player in the lobby's player list
                 var localPlayer = multiplayer.JoinedLobby.Players.FirstOrDefault(player => player.Id == localPlayerId);
 
-                initialIndex = localPlayer.Data.TryGetValue("Fungal", out var fungalData)
+                characterIndex = localPlayer.Data.TryGetValue("Fungal", out var fungalData)
                         ? int.TryParse(fungalData?.Value, out var index) ? index : 0 : 0;
             }
 
-            RequestSpawnFungalServerRpc(NetworkManager.Singleton.LocalClientId, initialIndex);
+            RequestSpawnFungalServerRpc(NetworkManager.Singleton.LocalClientId, characterIndex);
         }
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void RequestSpawnFungalServerRpc(ulong clientId, int fungalIndex)
+
+
+    private int GetPlayerIndex(ulong clientId)
     {
-        var fungal = fungalCollection.Fungals[fungalIndex];
+        var connectedClients = NetworkManager.Singleton.ConnectedClientsList
+            .OrderBy(client => client.ClientId) // Ensure ordered list
+            .Select(client => client.ClientId)
+            .ToList();
+
+        return connectedClients.IndexOf(clientId); // 0-based index
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void RequestSpawnFungalServerRpc(ulong clientId, int characterIndex)
+    {
+        var fungal = fungalCollection.Fungals[characterIndex];
 
         var randomOffset = Random.insideUnitSphere.normalized;
         randomOffset.y = 0;
 
-        var randomPosition = arena.PlayerSpawnPosition;
+        var playerIndex = GetPlayerIndex(clientId);
+        var spawnPosition = arena.SpawnPositions[playerIndex];
 
-        var networkFungal = Instantiate(fungal.NetworkPrefab, randomPosition, Quaternion.identity, transform);
+        var networkFungal = Instantiate(fungal.NetworkPrefab, spawnPosition.position, Quaternion.identity, transform);
         networkFungal.NetworkObject.SpawnWithOwnership(clientId);
 
 

@@ -22,7 +22,7 @@ public class MushroomMarking : NetworkBehaviour
     [ClientRpc]
     public void OnMushroomCollectedClientRpc()
     {
-        multiplayerArena.IncrementMushroomsCollected();
+        //multiplayerArena.IncrementMushroomsCollected();
     }
 
 }

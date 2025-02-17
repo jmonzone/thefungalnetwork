@@ -110,19 +110,19 @@ public class BogRoom : NetworkBehaviour
     [ClientRpc]
     private void AssignMinionClientRpc(ulong clientId)
     {
-        if (NetworkManager.Singleton.LocalClientId == clientId) multiplayerArena.AssignMinion(clientId);
+        //if (NetworkManager.Singleton.LocalClientId == clientId) multiplayerArena.AssignMinion(clientId);
     }
 
     private void OnEnable()
     {
         Debug.Log($"OnEnable called on client: {IsClient}, server: {IsServer}");
-        multiplayerArena.OnAllMushroomsCollected += MultiplayerArena_OnAllMushroomsCollected;
+        //multiplayerArena.OnAllMushroomsCollected += MultiplayerArena_OnAllMushroomsCollected;
         //playerReference.OnDeath += OnLossServerRpc;
     }
 
     private void OnDisable()
     {
-        multiplayerArena.OnAllMushroomsCollected -= MultiplayerArena_OnAllMushroomsCollected;
+        //multiplayerArena.OnAllMushroomsCollected -= MultiplayerArena_OnAllMushroomsCollected;
         //playerReference.OnDeath -= OnLossServerRpc;
     }
 
@@ -150,7 +150,7 @@ public class BogRoom : NetworkBehaviour
     [ClientRpc]
     private void StartGameClientRpc()
     {
-        multiplayerArena.InvokeIntroComplete();
+        //multiplayerArena.InvokeIntroComplete();
     }
 
     private void MultiplayerArena_OnAllMushroomsCollected()
