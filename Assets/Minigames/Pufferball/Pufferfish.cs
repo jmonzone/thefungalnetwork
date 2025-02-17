@@ -1,50 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Pufferfish : MonoBehaviour
 {
-    private Transform targetTransform; // The current transform it follows (Fishing Rod or Player)
-    private bool isCaught = false;     // Is the pufferfish currently caught?
+    [SerializeField] private Movement movement;
+    [SerializeField] private PlayerReference playerReference;
 
-    [SerializeField] private float followSpeed = 5f;
-    [SerializeField] private float carryOffset = 1f; // Offset when being carried by the player
-    [SerializeField] private Collider collider;
-
-    private void Update()
+    public void Catch(Transform bobber)
     {
-        if (targetTransform != null)
-        {
-            FollowTarget();
-        }
+        movement.SetFollow(bobber);
     }
 
-    private void FollowTarget()
+    public void PickUp()
     {
-        Vector3 targetPosition = targetTransform.position;
-
-        // If being carried, apply an offset (to avoid clipping into player)
-        if (!isCaught)
-        {
-            targetPosition += Vector3.up * carryOffset;
-        }
-
-        // Smooth movement
-        transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * followSpeed);
+        movement.SetFollow(playerReference.Transform);
     }
 
-    // Called when the Fishing Rod catches the Pufferfish
-    public void Catch(Transform fishingRod)
+    public void Sling(Vector3 direction)
     {
-        isCaught = true;
-        targetTransform = fishingRod;
-        collider.enabled = false;
-    }
-
-    // Called when the Fishing Rod is disabled, making the Pufferfish follow the player
-    public void PickUp(Transform player)
-    {
-        isCaught = false;
-        targetTransform = player;
+        movement.SetMoveTo(transform.position + direction * 4f, 5f);
     }
 }

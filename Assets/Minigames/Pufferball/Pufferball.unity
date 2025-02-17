@@ -792,7 +792,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1933443836}
@@ -812,7 +812,7 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -1097,7 +1097,6 @@ GameObject:
   m_Component:
   - component: {fileID: 652051164}
   - component: {fileID: 652051166}
-  - component: {fileID: 652051165}
   m_Layer: 0
   m_Name: Fishing Rod Projectile
   m_TagString: Untagged
@@ -1121,20 +1120,6 @@ Transform:
   - {fileID: 30430707}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &652051165
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 652051163}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4947f3c52a353439e8788aaa280848a4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerReference: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
-  detectionRadius: 1
 --- !u!114 &652051166
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1150,6 +1135,7 @@ MonoBehaviour:
   playerReference: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
   speed: 7.5
   range: 7.5
+  detectionRadius: 1
 --- !u!1 &685339988
 GameObject:
   m_ObjectHideFlags: 0
@@ -2316,7 +2302,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1933443836}
-  - component: {fileID: 1933443837}
+  - component: {fileID: 1933443838}
+  - component: {fileID: 1933443839}
   m_Layer: 0
   m_Name: Pufferfish
   m_TagString: Untagged
@@ -2340,7 +2327,7 @@ Transform:
   - {fileID: 486819213}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1933443837
+--- !u!114 &1933443838
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2349,11 +2336,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 1933443835}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 29c804e1c5a31492dbed0b1d66d85662, type: 3}
+  m_Script: {fileID: 11500000, guid: e4f38a60f34c04797adf8777a4399a69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  followSpeed: 5
-  carryOffset: 1
+  movement: {fileID: 1933443839}
+  playerReference: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
+--- !u!114 &1933443839
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1933443835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31c87108264554a99a582980bf170550, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  followSpeed: 15
+  moveSpeed: 10
+  stopDistance: 0.1
 --- !u!1 &1937808448
 GameObject:
   m_ObjectHideFlags: 0
