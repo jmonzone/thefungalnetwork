@@ -12,15 +12,14 @@ public class FishingRodProjectile : MonoBehaviour
 
     public void CastFishingRod(Vector3 direction)
     {
-        if (Pufferfish)
+        if (Pufferfish && Pufferfish.IsCaught)
         {
             Pufferfish.Sling(direction);
-            Pufferfish = null;
         }
         else
         {
+            Pufferfish = null;
             gameObject.SetActive(true);
-
             StopAllCoroutines();
             StartCoroutine(MoveProjectile(direction));
         }

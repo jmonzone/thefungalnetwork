@@ -7,6 +7,9 @@ public class Pufferfish : MonoBehaviour
     private Movement movement;
     private PufferfishSling pufferfishSling;
     private PufferfishExplosion pufferfishExplosion;
+    private PufferfishTemper pufferfishTemper;
+
+    public bool IsCaught { get; private set; } = false;
 
     private void Awake()
     {
@@ -15,14 +18,21 @@ public class Pufferfish : MonoBehaviour
         pufferfishSling = GetComponent<PufferfishSling>();
         pufferfishSling.OnSlingComplete += () =>
         {
-            pufferfishExplosion.Explode();
+            Explode();
         };
 
         pufferfishExplosion = GetComponent<PufferfishExplosion>();
         pufferfishExplosion.OnExplodeComplete += () =>
         {
+            pufferfishTemper.StopTimer();
             movement.SetSpeed(5);
             movement.StartRadialMovement(true);
+        };
+
+        pufferfishTemper = GetComponent<PufferfishTemper>();
+        pufferfishTemper.OnMaxTemperReached += () =>
+        {
+            Explode();
         };
     }
 
@@ -35,10 +45,19 @@ public class Pufferfish : MonoBehaviour
     public void PickUp()
     {
         movement.Follow(playerReference.Transform); // Follow the player
+        pufferfishTemper.StartTemper();
+        IsCaught = true;
     }
 
     public void Sling(Vector3 direction)
     {
         pufferfishSling.Sling(direction);
+    }
+
+    private void Explode()
+    {
+        movement.Stop();
+        IsCaught = false;
+        pufferfishExplosion.Explode();
     }
 }

@@ -3,6 +3,8 @@ using UnityEngine.Events;
 
 public class PufferfishSling : MonoBehaviour
 {
+    [SerializeField] private float range = 5f;
+
     private Vector3 targetPosition;
     private Movement movement;
 
@@ -16,7 +18,7 @@ public class PufferfishSling : MonoBehaviour
     public void Sling(Vector3 direction)
     {
         enabled = true;
-        targetPosition = transform.position + direction * 4f;
+        targetPosition = transform.position + direction * range;
         targetPosition.y = 0; // Keep on the ground
         movement.SetTargetPosition(targetPosition); // Move towards the target
     }
