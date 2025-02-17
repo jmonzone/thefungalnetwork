@@ -6,8 +6,8 @@ public class PufferfishTemper : MonoBehaviour
     [SerializeField] private Renderer renderer;
     [SerializeField] private float temperIncreaseSpeed = 1f;
 
-    public float Temper { get; private set; } = 0f;
-    private bool isIncreasing = false;
+    public float Temper { get; private set; }
+    private bool isIncreasing;
 
     public event UnityAction OnMaxTemperReached;
 

@@ -3,13 +3,15 @@ using UnityEngine;
 public class Pufferfish : MonoBehaviour
 {
     [SerializeField] private PlayerReference playerReference;
+    [SerializeField] private float minExplosionRadius = 3f;
+    [SerializeField] private float maxExplosionRadius = 3f;
 
     private Movement movement;
     private PufferfishSling pufferfishSling;
     private PufferfishExplosion pufferfishExplosion;
     private PufferfishTemper pufferfishTemper;
 
-    public bool IsCaught { get; private set; } = false;
+    public bool IsCaught { get; private set; }
 
     private void Awake()
     {
@@ -58,6 +60,6 @@ public class Pufferfish : MonoBehaviour
     {
         movement.Stop();
         IsCaught = false;
-        pufferfishExplosion.Explode();
+        pufferfishExplosion.Explode(pufferfishTemper.Temper * (maxExplosionRadius - minExplosionRadius) + minExplosionRadius);
     }
 }

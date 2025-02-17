@@ -8,8 +8,9 @@ public class PufferfishExplosion : MonoBehaviour
 
     public event UnityAction OnExplodeComplete;
 
-    public void Explode()
+    public void Explode(float radius = 1f)
     {
+        render.transform.localScale = Vector3.one * radius;
         StartCoroutine(ExplosionRoutine());
     }
 
