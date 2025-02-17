@@ -4,104 +4,124 @@ public class Movement : MonoBehaviour
 {
     public enum MovementType
     {
-        None,
-        FollowTarget,
-        MoveInDirection,
-        MoveToPosition
+        IDLE,
+        FOLLOW,
+        DIRECTIONAL,
+        POSITIONAL,
+        RADIAL
     }
 
-    private MovementType currentMovement = MovementType.None;
-    private Transform target; // Target to follow
-    private Vector3 moveDirection; // Directional movement
-    private Vector3 targetPosition; // Fixed position movement
-    [SerializeField] private Vector3 followOffset;
+    [SerializeField] private MovementType movementType = MovementType.IDLE;
+    [SerializeField] private float moveSpeed = 5f;
 
-    [SerializeField] private float followSpeed = 5f;
-    [SerializeField] private float moveSpeed = 10f;
+    [Header("Follow Target Settings")]
+    [SerializeField] private Vector3 followOffset;
+    private Transform target;
+
+    [Header("Move In Direction Settings")]
+    private Vector3 moveDirection;
+
+    [Header("Move To Position Settings")]
     [SerializeField] private float stopDistance = 0.1f;
+    private Vector3 targetPosition;
+
+    [Header("Radial Movement Settings")]
+    [SerializeField] private float circleRadius = 5f;
+    private Vector3 circleCenter;
+    private float angle;
+    private bool reverseDirection;
+
+    private void Awake()
+    {
+        circleCenter = transform.position;
+    }
 
     private void Update()
     {
-        switch (currentMovement)
+        switch (movementType)
         {
-            case MovementType.FollowTarget:
+            case MovementType.FOLLOW:
                 FollowTarget();
                 break;
-            case MovementType.MoveInDirection:
+            case MovementType.DIRECTIONAL:
                 MoveInDirection();
                 break;
-            case MovementType.MoveToPosition:
+            case MovementType.POSITIONAL:
                 MoveToPosition();
+                break;
+            case MovementType.RADIAL:
+                MoveInCircle();
                 break;
         }
     }
 
-    public void SetFollowOffset(Vector3 followOffset)
+    public void SetSpeed(float speed)
     {
-        this.followOffset = followOffset;
+        moveSpeed = speed;
     }
 
-    /// <summary>
-    /// Makes the transform follow a target smoothly.
-    /// </summary>
-    public void SetFollow(Transform newTarget)
+    // Follow Target Movement
+    public void Follow(Transform newTarget)
     {
         target = newTarget;
-        currentMovement = MovementType.FollowTarget;
+        movementType = MovementType.FOLLOW;
     }
 
     private void FollowTarget()
     {
-        if (target == null)
-        {
-            StopMovement();
-            return;
-        }
-
-        transform.position = Vector3.Lerp(transform.position, target.position + followOffset, Time.deltaTime * followSpeed);
+        if (target == null) return;
+        transform.position = Vector3.MoveTowards(transform.position, target.position + followOffset, Time.deltaTime * moveSpeed);
     }
 
-    /// <summary>
-    /// Moves the transform in a given direction at a constant speed.
-    /// </summary>
-    public void SetMove(Vector3 direction, float speed)
+    // Directional Movement
+    public void SetDirection(Vector3 direction, float speed)
     {
         moveDirection = direction.normalized;
         moveSpeed = speed;
-        currentMovement = MovementType.MoveInDirection;
+        movementType = MovementType.DIRECTIONAL;
     }
 
     private void MoveInDirection()
     {
-        transform.position += moveDirection * moveSpeed * Time.deltaTime;
+        transform.position += moveSpeed * Time.deltaTime * moveDirection;
     }
 
-    /// <summary>
-    /// Moves the transform toward a fixed position with smoothing.
-    /// </summary>
-    public void SetMoveTo(Vector3 position, float stopThreshold = 0.1f)
+    // Positional Movement
+    public void SetTargetPosition(Vector3 position, float stopThreshold = 0.1f)
     {
         targetPosition = position;
         stopDistance = stopThreshold;
-        currentMovement = MovementType.MoveToPosition;
+        movementType = MovementType.POSITIONAL;
     }
 
     private void MoveToPosition()
     {
-        var direction = targetPosition - transform.position;
-        transform.position += moveSpeed * Time.deltaTime * direction.normalized;
-
+        transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
         if (Vector3.Distance(transform.position, targetPosition) <= stopDistance)
         {
-            StopMovement();
+            Stop();
         }
     }
 
-    /// <summary>
-    /// Stops all movement.
-    /// </summary>
-    public void StopMovement()
+    // Radial Movement
+    public void StartRadialMovement(bool reverse)
     {
-        currentMovement = MovementType.None;
+        reverseDirection = reverse;
+        movementType = MovementType.RADIAL;
+    }
+
+    private void MoveInCircle()
+    {
+        angle += reverseDirection ? -Time.deltaTime : Time.deltaTime;
+
+        var targetPosition = circleCenter + new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * circleRadius;
+        transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+
+    }
+
+    // Idle State (Stop Movement)
+    public void Stop()
+    {
+        movementType = MovementType.IDLE;
     }
 }

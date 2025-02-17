@@ -67,5 +67,4 @@ public class FishingRodProjectile : MonoBehaviour
         if (Pufferfish) Pufferfish.PickUp();
         gameObject.SetActive(false);
     }
-
 }
