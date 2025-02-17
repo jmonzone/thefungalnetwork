@@ -14,6 +14,7 @@ public class Movement : MonoBehaviour
     private Transform target; // Target to follow
     private Vector3 moveDirection; // Directional movement
     private Vector3 targetPosition; // Fixed position movement
+    [SerializeField] private Vector3 followOffset;
 
     [SerializeField] private float followSpeed = 5f;
     [SerializeField] private float moveSpeed = 10f;
@@ -35,6 +36,11 @@ public class Movement : MonoBehaviour
         }
     }
 
+    public void SetFollowOffset(Vector3 followOffset)
+    {
+        this.followOffset = followOffset;
+    }
+
     /// <summary>
     /// Makes the transform follow a target smoothly.
     /// </summary>
@@ -52,7 +58,7 @@ public class Movement : MonoBehaviour
             return;
         }
 
-        transform.position = Vector3.Lerp(transform.position, target.position, Time.deltaTime * followSpeed);
+        transform.position = Vector3.Lerp(transform.position, target.position + followOffset, Time.deltaTime * followSpeed);
     }
 
     /// <summary>
@@ -73,17 +79,17 @@ public class Movement : MonoBehaviour
     /// <summary>
     /// Moves the transform toward a fixed position with smoothing.
     /// </summary>
-    public void SetMoveTo(Vector3 position, float speed, float stopThreshold = 0.1f)
+    public void SetMoveTo(Vector3 position, float stopThreshold = 0.1f)
     {
         targetPosition = position;
-        followSpeed = speed;
         stopDistance = stopThreshold;
         currentMovement = MovementType.MoveToPosition;
     }
 
     private void MoveToPosition()
     {
-        transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * followSpeed);
+        var direction = targetPosition - transform.position;
+        transform.position += moveSpeed * Time.deltaTime * direction.normalized;
 
         if (Vector3.Distance(transform.position, targetPosition) <= stopDistance)
         {

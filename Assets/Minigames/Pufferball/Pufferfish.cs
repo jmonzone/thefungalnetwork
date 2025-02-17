@@ -17,6 +17,8 @@ public class Pufferfish : MonoBehaviour
 
     public void Sling(Vector3 direction)
     {
-        movement.SetMoveTo(transform.position + direction * 4f, 5f);
+        var targetPosition = transform.position + direction * 4f;
+        targetPosition.y = 0;
+        movement.SetMoveTo(targetPosition);
     }
 }

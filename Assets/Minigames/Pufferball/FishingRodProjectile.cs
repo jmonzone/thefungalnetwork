@@ -10,34 +10,6 @@ public class FishingRodProjectile : MonoBehaviour
 
     public Pufferfish Pufferfish { get; private set; }
 
-    private void Update()
-    {
-        if (Pufferfish == null)
-        {
-            DetectPufferfish();
-        }
-    }
-
-    private void OnDisable()
-    {
-        if (Pufferfish) Pufferfish.PickUp();
-    }
-
-    private void DetectPufferfish()
-    {
-        Collider[] hits = Physics.OverlapSphere(transform.position, detectionRadius);
-
-        foreach (Collider hit in hits)
-        {
-            Pufferfish = hit.GetComponentInParent<Pufferfish>();
-            if (Pufferfish != null)
-            {
-                Pufferfish.Catch(transform);
-                break;
-            }
-        }
-    }
-
     public void CastFishingRod(Vector3 direction)
     {
         if (Pufferfish)
@@ -54,34 +26,46 @@ public class FishingRodProjectile : MonoBehaviour
         }
     }
 
+    private bool DetectPufferfishHit()
+    {
+        Collider[] hits = Physics.OverlapSphere(transform.position, 0.5f); // Small detection radius
+
+        foreach (Collider hit in hits)
+        {
+            Pufferfish = hit.GetComponentInParent<Pufferfish>();
+            if (Pufferfish != null)
+            {
+                Pufferfish.Catch(transform);
+                return true; // Collision detected
+            }
+        }
+        return false;
+    }
+
     private IEnumerator MoveProjectile(Vector3 direction)
     {
         Vector3 startPos = playerReference.Transform.position + direction.normalized;
-        Vector3 targetPos = startPos + direction * range;
+        Vector3 targetPos = startPos + direction.normalized * range;
 
-
-        float journey = 0f;
-        float travelTime = range / speed;
+        transform.position = startPos;
 
         // Move forward
-        while (journey < 1f)
+        while (Vector3.Distance(transform.position, targetPos) > 0.1f)
         {
-            journey += Time.deltaTime / travelTime;
-            transform.position = Vector3.Lerp(startPos, targetPos, journey);
+            transform.position = Vector3.MoveTowards(transform.position, targetPos, speed * Time.deltaTime);
+            if (DetectPufferfishHit()) break;
             yield return null;
         }
 
-        journey = 0f; // Reset journey for return trip
-
-        // Move back
-        while (journey < 1f)
+        // Move back to the player
+        while (Vector3.Distance(transform.position, playerReference.Transform.position) > 0.1f)
         {
-            journey += Time.deltaTime / travelTime;
-            var returnPosition = playerReference.Transform.position + (targetPos - playerReference.Transform.position).normalized;
-            transform.position = Vector3.Lerp(targetPos, returnPosition, journey);
+            transform.position = Vector3.MoveTowards(transform.position, playerReference.Transform.position, speed * Time.deltaTime);
             yield return null;
         }
 
+        if (Pufferfish) Pufferfish.PickUp();
         gameObject.SetActive(false);
     }
+
 }

@@ -255,7 +255,7 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -791,7 +791,7 @@ Transform:
   m_GameObject: {fileID: 486819212}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2353,7 +2353,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31c87108264554a99a582980bf170550, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  followSpeed: 15
+  followOffset: {x: 0, y: 1, z: 0}
+  followSpeed: 25
   moveSpeed: 10
   stopDistance: 0.1
 --- !u!1 &1937808448
