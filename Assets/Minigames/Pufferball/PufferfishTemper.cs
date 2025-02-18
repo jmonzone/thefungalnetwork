@@ -15,14 +15,10 @@ public class PufferfishTemper : MonoBehaviour
     {
         if (isIncreasing)
         {
-            Temper += temperIncreaseSpeed * Time.deltaTime;
-            Temper = Mathf.Clamp(Temper, 0, 1);
-            UpdateColor();
-
+            SetTemper(Temper + temperIncreaseSpeed * Time.deltaTime);
             if (Temper == 1)
             {
                 isIncreasing = false;
-                OnMaxTemperReached?.Invoke();
             }
         }
     }
@@ -46,7 +42,14 @@ public class PufferfishTemper : MonoBehaviour
 
     public void SetTemper(float value)
     {
+        if (Temper == value) return;
+
         Temper = Mathf.Clamp(value, 0, 1);
         UpdateColor();
+
+        if (Temper == 1)
+        {
+            OnMaxTemperReached?.Invoke();
+        }
     }
 }

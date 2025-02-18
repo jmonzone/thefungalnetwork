@@ -11,6 +11,17 @@ public class FishingRodButton : MonoBehaviour
     private void Awake()
     {
         directionalButton.OnDragCompleted += DirectionalButton_OnDragCompleted;
+        pufferballReference.OnFishingRodUpdated += PufferballReference_OnFishingRodUpdated;
+    }
+
+    private void PufferballReference_OnFishingRodUpdated()
+    {
+        pufferballReference.FishingRod.OnPufferfishReleased += FishingRod_OnPufferfishReleased;
+    }
+
+    private void FishingRod_OnPufferfishReleased()
+    {
+        cooldownHandler.StartCooldown(castCooldown); // Start logic cooldown
     }
 
     private void DirectionalButton_OnDragCompleted(Vector3 direction)
@@ -20,7 +31,8 @@ public class FishingRodButton : MonoBehaviour
         direction.y = 0; // Keep it in the XZ plane
         direction.Normalize(); // Normalize to maintain consistent speed
 
-        if (pufferballReference.FishingRod.Pufferfish)
+        var pufferfish = pufferballReference.FishingRod.Pufferfish;
+        if (pufferfish)
         {
             pufferballReference.FishingRod.Sling(direction);
             cooldownHandler.StartCooldown(castCooldown); // Start logic cooldown

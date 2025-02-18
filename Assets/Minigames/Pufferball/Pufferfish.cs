@@ -1,5 +1,6 @@
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Pufferfish : NetworkBehaviour
 {
@@ -12,7 +13,11 @@ public class Pufferfish : NetworkBehaviour
     private PufferfishExplosion pufferfishExplosion;
     private PufferfishTemper pufferfishTemper;
 
-    public bool IsCaught { get; private set; }
+    public event UnityAction OnMaxTemperReached;
+
+    public NetworkVariable<float> Temper = new NetworkVariable<float>(
+        0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server
+    );
 
     private void Awake()
     {
@@ -21,42 +26,61 @@ public class Pufferfish : NetworkBehaviour
         pufferfishSling = GetComponent<PufferfishSling>();
         pufferfishSling.OnSlingComplete += () =>
         {
-            Explode();
+            if (IsOwner) Explode();
         };
 
         pufferfishExplosion = GetComponent<PufferfishExplosion>();
         pufferfishExplosion.OnExplodeComplete += () =>
         {
-            pufferfishTemper.GetComponent<NetworkPufferfishTemper>().StopTimerServerRpc();
-            movement.SetSpeed(5);
-            movement.StartRadialMovement(true);
+            if (IsOwner)
+            {
+                StopTemperServerRpc();
+                movement.SetSpeed(5);
+                movement.StartRadialMovement(true);
+            }
         };
 
         pufferfishTemper = GetComponent<PufferfishTemper>();
         pufferfishTemper.OnMaxTemperReached += () =>
         {
-            Explode();
+            if (IsOwner)
+            {
+                Debug.Log("OnMaxTemperReached");
+                Explode();
+                OnMaxTemperReached?.Invoke();
+            }
         };
+    }
+
+    private void Update()
+    {
+        if (IsServer)
+        {
+            Temper.Value = pufferfishTemper.Temper;
+        }
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        Temper.OnValueChanged += (oldValue, newValue) => pufferfishTemper.SetTemper(newValue);
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        Temper.OnValueChanged -= (oldValue, newValue) => pufferfishTemper.SetTemper(newValue);
     }
 
     public void Catch(Transform bobber)
     {
         movement.SetSpeed(10);
         movement.Follow(bobber); // Follow the bobber
-        RequestCatchServerRpc(NetworkManager.Singleton.LocalClientId);
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    private void RequestCatchServerRpc(ulong requestingClientId)
-    {
-        NetworkObject.ChangeOwnership(requestingClientId);
+        RequestOwnershipServerRpc(NetworkManager.Singleton.LocalClientId);
     }
 
     public void PickUp()
     {
         movement.Follow(playerReference.Transform); // Follow the player
-        pufferfishTemper.GetComponent<NetworkPufferfishTemper>().StartTemperServerRpc();
-        IsCaught = true;
+        StartTemperServerRpc();
     }
 
     public void Sling(Vector3 direction)
@@ -67,6 +91,36 @@ public class Pufferfish : NetworkBehaviour
     private void Explode()
     {
         movement.Stop();
-        pufferfishExplosion.GetComponent<NetworkPufferfishExplosion>().ExplodeServerRpc(pufferfishTemper.Temper * (maxExplosionRadius - minExplosionRadius) + minExplosionRadius);
+        ExplodeServerRpc(pufferfishTemper.Temper * (maxExplosionRadius - minExplosionRadius) + minExplosionRadius);
+    }
+
+    [ServerRpc]
+    public void StartTemperServerRpc()
+    {
+        pufferfishTemper.StartTemper();
+    }
+
+    [ServerRpc]
+    public void StopTemperServerRpc()
+    {
+        pufferfishTemper.StopTimer();
+    }
+
+    [ServerRpc]
+    public void ExplodeServerRpc(float radius)
+    {
+        ExplodeClientRpc(radius);
+    }
+
+    [ClientRpc]
+    private void ExplodeClientRpc(float radius)
+    {
+        pufferfishExplosion.Explode(radius);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void RequestOwnershipServerRpc(ulong requestingClientId)
+    {
+        NetworkObject.ChangeOwnership(requestingClientId);
     }
 }

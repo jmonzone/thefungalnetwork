@@ -6,12 +6,15 @@ using UnityEngine.Events;
 public class FishingRodProjectile : NetworkBehaviour
 {
     [SerializeField] private PlayerReference playerReference;
+    [SerializeField] private PufferballReference pufferballReference;
+
     [SerializeField] private GameObject render;
     [SerializeField] private float speed = 7.5f;
     [SerializeField] private float range = 5f;
     [SerializeField] private float detectionRadius = 1f;
 
     public Pufferfish Pufferfish { get; private set; }
+    public event UnityAction OnPufferfishReleased;
 
     private void Update()
     {
@@ -20,10 +23,23 @@ public class FishingRodProjectile : NetworkBehaviour
             transform.position = playerReference.Transform.position;
         }
     }
+
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
         render.SetActive(false);
+
+        var networkPufferfish = FindObjectOfType<Pufferfish>(); // Ensure it's the correct one
+        if (networkPufferfish != null)
+        {
+            networkPufferfish.OnMaxTemperReached += NetworkPufferfish_OnMaxTemperReached;
+        }
+    }
+
+    private void NetworkPufferfish_OnMaxTemperReached()
+    {
+        Pufferfish = null;
+        OnPufferfishReleased?.Invoke();
     }
 
     public void Sling(Vector3 direction)
@@ -81,9 +97,8 @@ public class FishingRodProjectile : NetworkBehaviour
             Pufferfish = hit.GetComponentInParent<Pufferfish>();
             if (Pufferfish != null)
             {
-                //Pufferfish.GetComponent<NetworkObject>().req
                 Pufferfish.Catch(transform);
-                return true; // Collision detected
+                return true;
             }
         }
         return false;

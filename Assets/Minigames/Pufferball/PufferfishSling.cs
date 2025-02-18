@@ -13,6 +13,7 @@ public class PufferfishSling : MonoBehaviour
     private void Awake()
     {
         movement = GetComponent<Movement>();
+        enabled = false;
     }
 
     public void Sling(Vector3 direction)
