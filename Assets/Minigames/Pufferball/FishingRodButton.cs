@@ -3,7 +3,7 @@ using UnityEngine;
 public class FishingRodButton : MonoBehaviour
 {
     [SerializeField] private DirectionalButton directionalButton;
-    [SerializeField] private FishingRodProjectile fishingRod;
+    [SerializeField] private PufferballReference pufferballReference;
 
     private void Awake()
     {
@@ -15,6 +15,6 @@ public class FishingRodButton : MonoBehaviour
         direction.y = 0; // Keep it in the XZ plane
         direction.Normalize(); // Normalize to maintain consistent speed
 
-        fishingRod.CastFishingRod(direction);
+        pufferballReference.FishingRod.CastFishingRod(direction);
     }
 }
