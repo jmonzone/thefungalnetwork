@@ -13,7 +13,6 @@ public class DirectionalButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
     private Vector3 direction;
     private bool castStarted = false;
 
-
     public event UnityAction OnClick;
     public event UnityAction OnDragStarted;
     public event UnityAction<Vector3> OnDragUpdated;
@@ -25,6 +24,16 @@ public class DirectionalButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
         {
             OnClick?.Invoke();
         });
+    }
+
+    private void OnEnable()
+    {
+        button.enabled = true;
+    }
+
+    private void OnDisable()
+    {
+        button.enabled = false;
     }
 
     void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
