@@ -65,9 +65,8 @@ public class FishingPlayer : NetworkBehaviour
         var playerIndex = GetPlayerIndex(clientId);
         var spawnPosition = arena.SpawnPositions[playerIndex];
 
-        var networkFungal = Instantiate(fungal.NetworkPrefab, spawnPosition.position, Quaternion.identity, transform);
+        var networkFungal = Instantiate(fungal.NetworkPrefab, spawnPosition.position, Quaternion.identity);
         networkFungal.NetworkObject.SpawnWithOwnership(clientId);
-
 
         OnFungalSpawnedClientRpc(clientId, networkFungal.NetworkObjectId);
     }
@@ -89,7 +88,7 @@ public class FishingPlayer : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     private void RequestSpawnFishingRodServerRpc(ulong clientId)
     {
-        var networkFishingRod = Instantiate(fishingRodPrefab, Vector3.zero, Quaternion.identity, transform);
+        var networkFishingRod = Instantiate(fishingRodPrefab, Vector3.zero, Quaternion.identity);
         networkFishingRod.NetworkObject.SpawnWithOwnership(clientId);
 
         OnFishingRodSpawnedClientRpc(clientId, networkFishingRod.NetworkObjectId);

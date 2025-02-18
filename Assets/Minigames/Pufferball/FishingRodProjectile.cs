@@ -1,6 +1,5 @@
 using System.Collections;
 using Unity.Netcode;
-using Unity.Netcode.Components;
 using UnityEngine;
 
 public class FishingRodProjectile : NetworkBehaviour
@@ -13,6 +12,13 @@ public class FishingRodProjectile : NetworkBehaviour
 
     public Pufferfish Pufferfish { get; private set; }
 
+    private void Update()
+    {
+        if (IsOwner && !render.activeSelf)
+        {
+            transform.position = playerReference.Transform.position;
+        }
+    }
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
@@ -42,6 +48,7 @@ public class FishingRodProjectile : NetworkBehaviour
             Pufferfish = hit.GetComponentInParent<Pufferfish>();
             if (Pufferfish != null)
             {
+                //Pufferfish.GetComponent<NetworkObject>().req
                 Pufferfish.Catch(transform);
                 return true; // Collision detected
             }
@@ -54,16 +61,10 @@ public class FishingRodProjectile : NetworkBehaviour
         Vector3 startPos = playerReference.Transform.position + direction.normalized;
         Vector3 targetPos = startPos + direction.normalized * range;
 
-        // Hide the object initially
-        RequestVisibilityServerRpc(false);
-
-        // Tell the server to teleport it before clients see it
-        TeleportServerRpc(startPos);
-
-        yield return new WaitForSeconds(0.5f); // Ensure transform updates before showing
-
         // Now make it visible
         RequestVisibilityServerRpc(true);
+
+        transform.position = startPos;
 
         // Move forward
         while (Vector3.Distance(transform.position, targetPos) > 0.1f)
@@ -82,14 +83,6 @@ public class FishingRodProjectile : NetworkBehaviour
 
         if (Pufferfish) Pufferfish.PickUp();
         RequestVisibilityServerRpc(false);
-    }
-
-    // 🚀 **Server-side teleporting before clients see it**
-    [ServerRpc(RequireOwnership = false)]
-    private void TeleportServerRpc(Vector3 position)
-    {
-        transform.position = position;
-        GetComponent<NetworkTransform>().Teleport(position, Quaternion.identity, Vector3.one);
     }
 
     // 🫥 **Toggle visibility across clients**

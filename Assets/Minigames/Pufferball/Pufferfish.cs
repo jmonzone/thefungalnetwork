@@ -1,6 +1,7 @@
+using Unity.Netcode;
 using UnityEngine;
 
-public class Pufferfish : MonoBehaviour
+public class Pufferfish : NetworkBehaviour
 {
     [SerializeField] private PlayerReference playerReference;
     [SerializeField] private float minExplosionRadius = 3f;
@@ -42,6 +43,13 @@ public class Pufferfish : MonoBehaviour
     {
         movement.SetSpeed(10);
         movement.Follow(bobber); // Follow the bobber
+        RequestCatchServerRpc(NetworkManager.Singleton.LocalClientId);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void RequestCatchServerRpc(ulong requestingClientId)
+    {
+        NetworkObject.ChangeOwnership(requestingClientId);
     }
 
     public void PickUp()
