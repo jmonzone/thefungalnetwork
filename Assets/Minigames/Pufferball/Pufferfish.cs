@@ -27,7 +27,7 @@ public class Pufferfish : NetworkBehaviour
         pufferfishExplosion = GetComponent<PufferfishExplosion>();
         pufferfishExplosion.OnExplodeComplete += () =>
         {
-            pufferfishTemper.StopTimer();
+            pufferfishTemper.GetComponent<NetworkPufferfishTemper>().StopTimerServerRpc();
             movement.SetSpeed(5);
             movement.StartRadialMovement(true);
         };
@@ -55,7 +55,7 @@ public class Pufferfish : NetworkBehaviour
     public void PickUp()
     {
         movement.Follow(playerReference.Transform); // Follow the player
-        pufferfishTemper.StartTemper();
+        pufferfishTemper.GetComponent<NetworkPufferfishTemper>().StartTemperServerRpc();
         IsCaught = true;
     }
 

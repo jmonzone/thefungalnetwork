@@ -85,7 +85,6 @@ public class FishingRodProjectile : NetworkBehaviour
         RequestVisibilityServerRpc(false);
     }
 
-    // 🫥 **Toggle visibility across clients**
     [ServerRpc(RequireOwnership = false)]
     private void RequestVisibilityServerRpc(bool isVisible)
     {

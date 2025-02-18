@@ -43,4 +43,10 @@ public class PufferfishTemper : MonoBehaviour
         Temper = 0f;
         UpdateColor();
     }
+
+    public void SetTemper(float value)
+    {
+        Temper = Mathf.Clamp(value, 0, 1);
+        UpdateColor();
+    }
 }
