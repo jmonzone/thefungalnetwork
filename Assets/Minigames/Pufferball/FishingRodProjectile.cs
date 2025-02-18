@@ -1,6 +1,7 @@
 using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class FishingRodProjectile : NetworkBehaviour
 {
@@ -25,38 +26,22 @@ public class FishingRodProjectile : NetworkBehaviour
         render.SetActive(false);
     }
 
-    public void CastFishingRod(Vector3 direction)
+    public void Sling(Vector3 direction)
     {
-        if (Pufferfish && Pufferfish.IsCaught)
+        if (Pufferfish)
         {
             Pufferfish.Sling(direction);
-        }
-        else
-        {
             Pufferfish = null;
-            StopAllCoroutines();
-            StartCoroutine(CastFishingRodRoutine(direction));
         }
     }
 
-    private bool DetectPufferfishHit()
+    public void Cast(Vector3 direction, UnityAction<bool> onComplete)
     {
-        Collider[] hits = Physics.OverlapSphere(transform.position, 0.5f); // Small detection radius
-
-        foreach (Collider hit in hits)
-        {
-            Pufferfish = hit.GetComponentInParent<Pufferfish>();
-            if (Pufferfish != null)
-            {
-                //Pufferfish.GetComponent<NetworkObject>().req
-                Pufferfish.Catch(transform);
-                return true; // Collision detected
-            }
-        }
-        return false;
+        StopAllCoroutines();
+        StartCoroutine(CastFishingRodRoutine(direction, onComplete));
     }
 
-    private IEnumerator CastFishingRodRoutine(Vector3 direction)
+    private IEnumerator CastFishingRodRoutine(Vector3 direction, UnityAction<bool> onComplete)
     {
         Vector3 startPos = playerReference.Transform.position + direction.normalized;
         Vector3 targetPos = startPos + direction.normalized * range;
@@ -82,7 +67,26 @@ public class FishingRodProjectile : NetworkBehaviour
         }
 
         if (Pufferfish) Pufferfish.PickUp();
+        onComplete?.Invoke(Pufferfish);
         RequestVisibilityServerRpc(false);
+
+    }
+
+    private bool DetectPufferfishHit()
+    {
+        Collider[] hits = Physics.OverlapSphere(transform.position, 0.5f); // Small detection radius
+
+        foreach (Collider hit in hits)
+        {
+            Pufferfish = hit.GetComponentInParent<Pufferfish>();
+            if (Pufferfish != null)
+            {
+                //Pufferfish.GetComponent<NetworkObject>().req
+                Pufferfish.Catch(transform);
+                return true; // Collision detected
+            }
+        }
+        return false;
     }
 
     [ServerRpc(RequireOwnership = false)]

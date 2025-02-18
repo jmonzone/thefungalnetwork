@@ -67,7 +67,6 @@ public class Pufferfish : NetworkBehaviour
     private void Explode()
     {
         movement.Stop();
-        IsCaught = false;
         pufferfishExplosion.GetComponent<NetworkPufferfishExplosion>().ExplodeServerRpc(pufferfishTemper.Temper * (maxExplosionRadius - minExplosionRadius) + minExplosionRadius);
     }
 }

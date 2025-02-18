@@ -5,7 +5,8 @@ public class FishingRodButton : MonoBehaviour
     [SerializeField] private DirectionalButton directionalButton;
     [SerializeField] private PufferballReference pufferballReference;
     [SerializeField] private CooldownHandler cooldownHandler;
-    [SerializeField] private CooldownView cooldownView; // Reference to cooldown UI
+    [SerializeField] private float castCooldown = 2f;
+    [SerializeField] private float slingCooldown = 0.25f;
 
     private void Awake()
     {
@@ -19,10 +20,26 @@ public class FishingRodButton : MonoBehaviour
         direction.y = 0; // Keep it in the XZ plane
         direction.Normalize(); // Normalize to maintain consistent speed
 
-        pufferballReference.FishingRod.CastFishingRod(direction);
-        pufferballReference.FishingRod.enabled = false;
+        if (pufferballReference.FishingRod.Pufferfish)
+        {
+            pufferballReference.FishingRod.Sling(direction);
+            cooldownHandler.StartCooldown(castCooldown); // Start logic cooldown
+        }
+        else
+        {
+            pufferballReference.FishingRod.Cast(direction, pufferfishCaught =>
+            {
+                if (pufferfishCaught)
+                {
+                    cooldownHandler.SetInteractable(true);
+                }
+                else
+                {
+                    cooldownHandler.StartCooldown(castCooldown);
+                }
+            });
 
-        cooldownHandler.StartCooldown(); // Start logic cooldown
-        cooldownView.StartCooldown(cooldownHandler.CooldownTimer); // Start UI cooldown
+            cooldownHandler.SetInteractable(false);
+        }
     }
 }
