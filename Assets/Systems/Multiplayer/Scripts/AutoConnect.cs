@@ -23,7 +23,12 @@ public class AutoConnect : NetworkBehaviour
                 {
                     if (lobbies.Count > 0)
                     {
-                        await multiplayer.TryJoinLobbyById(lobbies[0].Id);
+                        var value = await multiplayer.TryJoinLobbyById(lobbies[0].Id);
+                        if (value)
+                        {
+                            var joinCode = multiplayer.JoinedLobby.Data["JoinCode"].Value;
+                            multiplayer.JoinRelay(joinCode);
+                        }
                     }
                     else
                     {
