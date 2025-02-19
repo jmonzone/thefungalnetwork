@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class DirectionalButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     [SerializeField] private Button button;
+    [SerializeField] private float sensitivity = 0.01f;
 
     private Vector3 initalPosition;
     private Vector3 direction;
@@ -67,7 +68,7 @@ public class DirectionalButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
         Quaternion cameraRotation = Quaternion.Euler(0f, Camera.main.transform.rotation.eulerAngles.y, 0f);
 
         // Rotate the drag direction by the camera's rotation
-        direction = cameraRotation * dragDirection;
+        direction = cameraRotation * dragDirection * sensitivity;
     }
 
     void IEndDragHandler.OnEndDrag(PointerEventData eventData)

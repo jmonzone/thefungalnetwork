@@ -94,9 +94,9 @@ public class Pufferfish : NetworkBehaviour
         RequestPickUpServerRpc(NetworkManager.Singleton.LocalClientId);
     }
 
-    public void Sling(Vector3 direction)
+    public void Sling(Vector3 targetPosition)
     {
-        pufferfishSling.Sling(direction);
+        pufferfishSling.Sling(targetPosition);
     }
 
     [ServerRpc(RequireOwnership = false)]

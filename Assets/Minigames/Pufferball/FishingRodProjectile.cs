@@ -42,35 +42,36 @@ public class FishingRodProjectile : NetworkBehaviour
         OnPufferfishReleased?.Invoke();
     }
 
-    public void Sling(Vector3 direction)
+    public void Sling(Vector3 targetPosition)
     {
         if (Pufferfish)
         {
-            Pufferfish.Sling(direction);
+            Pufferfish.Sling(targetPosition);
             Pufferfish = null;
         }
     }
 
-    public void Cast(Vector3 direction, UnityAction<bool> onComplete)
+    public void Cast(Vector3 targetPosition, UnityAction<bool> onComplete)
     {
         StopAllCoroutines();
-        StartCoroutine(CastFishingRodRoutine(direction, onComplete));
+        StartCoroutine(CastFishingRodRoutine(targetPosition, onComplete));
     }
 
-    private IEnumerator CastFishingRodRoutine(Vector3 direction, UnityAction<bool> onComplete)
+    private IEnumerator CastFishingRodRoutine(Vector3 targetPosition, UnityAction<bool> onComplete)
     {
-        Vector3 startPos = playerReference.Movement.transform.position + direction.normalized;
-        Vector3 targetPos = startPos + direction.normalized * range;
+        Vector3 startPosition = playerReference.Movement.transform.position;
+        var direction = targetPosition - startPosition;
+        startPosition += direction.normalized;
 
         // Now make it visible
         RequestVisibilityServerRpc(true);
 
-        transform.position = startPos;
+        transform.position = startPosition;
 
         // Move forward
-        while (Vector3.Distance(transform.position, targetPos) > 0.1f)
+        while (Vector3.Distance(transform.position, targetPosition) > 0.1f)
         {
-            transform.position = Vector3.MoveTowards(transform.position, targetPos, speed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
             if (DetectPufferfishHit()) break;
             yield return null;
         }
@@ -85,7 +86,6 @@ public class FishingRodProjectile : NetworkBehaviour
         if (Pufferfish) Pufferfish.PickUp();
         onComplete?.Invoke(Pufferfish);
         RequestVisibilityServerRpc(false);
-
     }
 
     private bool DetectPufferfishHit()

@@ -2391,11 +2391,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1787190108356621281, guid: 0441c366bee6740d1b59ba021e6d2854,
-        type: 3}
-      propertyPath: m_Color.a
-      value: 0.101960786
-      objectReference: {fileID: 0}
     - target: {fileID: 2714240657893474865, guid: 0441c366bee6740d1b59ba021e6d2854,
         type: 3}
       propertyPath: m_Name
@@ -2622,6 +2617,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   button: {fileID: 1952977510}
+  sensitivity: 0.01
 --- !u!114 &1952977510
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2679,7 +2675,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cooldownHandler: {fileID: 1952977507}
-  maxRange: 2
+  range: 3
   player: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
   castCooldown: 2
   moveCharacterJoystick: {fileID: 6163485878806447941}
@@ -4306,6 +4302,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   button: {fileID: 2562923867676117843}
+  sensitivity: 0.01
 --- !u!114 &9131982414348320260
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4336,12 +4333,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cooldownHandler: {fileID: 9131982414348320260}
-  maxRange: 3
+  range: 3
   playerReference: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
   pufferballReference: {fileID: 11400000, guid: 08db032ff48be41208a04f1067508370,
     type: 2}
   castCooldown: 2
   slingCooldown: 0.25
+  minRange: 2
+  maxRange: 6
+  rangeIncreaseSpeed: 2
 --- !u!114 &9131982414348320262
 MonoBehaviour:
   m_ObjectHideFlags: 0

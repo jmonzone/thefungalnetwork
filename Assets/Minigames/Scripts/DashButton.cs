@@ -14,16 +14,12 @@ public class DashButton : Ability
         moveCharacterJoystick.enabled = true;
     }
 
-    public override void CastAbility(Vector3 direction)
+    public override void CastAbility(Vector3 targetPosition)
     {
         moveCharacterJoystick.enabled = false;
 
         player.Movement.OnDestinationReached += Movement_OnDestinationReached;
 
-        direction.y = 0; // Keep it in the XZ plane
-        direction.Normalize(); // Normalize to maintain consistent speed
-
-        var targetPosition = player.Movement.transform.position + direction.normalized * 3f;
         player.Movement.SetSpeed(7.5f);
         player.Movement.SetTargetPosition(targetPosition);
         cooldownHandler.StartCooldown(castCooldown); // Start logic cooldown

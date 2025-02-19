@@ -5,7 +5,6 @@ public class PufferfishSling : MonoBehaviour
 {
     [SerializeField] private float range = 5f;
 
-    private Vector3 targetPosition;
     private Movement movement;
 
     public event UnityAction OnSlingComplete;
@@ -26,10 +25,9 @@ public class PufferfishSling : MonoBehaviour
         movement.OnDestinationReached -= Movement_OnDestinationReached;
     }
 
-    public void Sling(Vector3 direction)
+    public void Sling(Vector3 targetPosition)
     {
         enabled = true;
-        targetPosition = transform.position + direction * range;
         targetPosition.y = 0; // Keep on the ground
         movement.SetTargetPosition(targetPosition); // Move towards the target
     }

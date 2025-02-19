@@ -6,6 +6,9 @@ public class FishingRodButton : Ability
     [SerializeField] private PufferballReference pufferballReference;
     [SerializeField] private float castCooldown = 2f;
     [SerializeField] private float slingCooldown = 0.25f;
+    [SerializeField] private float minRange = 1f;
+    [SerializeField] private float maxRange = 4f;
+    [SerializeField] private float rangeIncreaseSpeed = 1.5f;
 
     private void Awake()
     {
@@ -26,29 +29,26 @@ public class FishingRodButton : Ability
     public override void PrepareAbility()
     {
         base.PrepareAbility();
-        range = 0;
+        range = minRange;
     }
 
     public override void ChargeAbility()
     {
         base.ChargeAbility();
-        range = Mathf.Clamp(range + Time.deltaTime * 2f, 0, 3f);
+        range = Mathf.Clamp(range + Time.deltaTime * rangeIncreaseSpeed, minRange, maxRange);
     }
 
-    public override void CastAbility(Vector3 direction)
+    public override void CastAbility(Vector3 targetPosition)
     {
-        direction.y = 0; // Keep it in the XZ plane
-        direction.Normalize(); // Normalize to maintain consistent speed
-
         var pufferfish = pufferballReference.FishingRod.Pufferfish;
         if (pufferfish)
         {
-            pufferballReference.FishingRod.Sling(direction);
+            pufferballReference.FishingRod.Sling(targetPosition);
             cooldownHandler.StartCooldown(castCooldown); // Start logic cooldown
         }
         else
         {
-            pufferballReference.FishingRod.Cast(direction, pufferfishCaught =>
+            pufferballReference.FishingRod.Cast(targetPosition, pufferfishCaught =>
             {
                 if (pufferfishCaught)
                 {

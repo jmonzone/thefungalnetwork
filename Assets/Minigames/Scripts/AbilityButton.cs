@@ -47,7 +47,7 @@ public class AbilityButton : MonoBehaviour
     {
         ability.ChargeAbility();
 
-        var clampedDirection = Vector3.ClampMagnitude(direction * 0.01f, ability.Range);
+        var clampedDirection = Vector3.ClampMagnitude(direction, ability.Range);
         var startPosition = playerReference.Movement.transform.position;
         var targetPosition = startPosition + clampedDirection;
         abilityCastIndicator.UpdateIndicator(playerReference.Movement.transform.position, targetPosition, ability.Range);
@@ -56,7 +56,15 @@ public class AbilityButton : MonoBehaviour
     private void OnDragCompleted(Vector3 direction)
     {
         if (ability.IsOnCooldown) return;
-        ability.CastAbility(direction);  // Cast the assigned ability
+
+        var clampedDirection = Vector3.ClampMagnitude(direction, ability.Range);
+        var startPosition = playerReference.Movement.transform.position;
+        var targetPosition = startPosition + clampedDirection;
+
+        targetPosition.y = 0; // Keep it in the XZ plane
+
+        ability.CastAbility(targetPosition);
+
         abilityCastIndicator.HideIndicator();
     }
 
