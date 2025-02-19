@@ -45,7 +45,6 @@ public class Pufferfish : NetworkBehaviour
         {
             if (IsOwner)
             {
-                Debug.Log("OnMaxTemperReached");
                 Explode();
                 OnMaxTemperReached?.Invoke();
             }
@@ -109,13 +108,14 @@ public class Pufferfish : NetworkBehaviour
     [ServerRpc]
     public void ExplodeServerRpc(float radius)
     {
+        pufferfishExplosion.DealExplosionDamage(radius);
         ExplodeClientRpc(radius);
     }
 
     [ClientRpc]
     private void ExplodeClientRpc(float radius)
     {
-        pufferfishExplosion.Explode(radius);
+        pufferfishExplosion.StartExplosionAnimation(radius);
     }
 
     [ServerRpc(RequireOwnership = false)]
