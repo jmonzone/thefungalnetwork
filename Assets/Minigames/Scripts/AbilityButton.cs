@@ -4,8 +4,10 @@ using UnityEngine.Events;
 public abstract class Ability : MonoBehaviour
 {
     [SerializeField] protected CooldownHandler cooldownHandler;
+    [SerializeField] private float maxRange = 3f;
 
     public bool IsOnCooldown => cooldownHandler.IsOnCooldown;
+    public float MaxRange => maxRange;
 
     public event UnityAction OnCancel;
 
@@ -15,6 +17,7 @@ public abstract class Ability : MonoBehaviour
         OnCancel?.Invoke();
     }
 }
+
 public class AbilityButton : MonoBehaviour
 {
     [SerializeField] private PlayerReference playerReference;
@@ -41,15 +44,22 @@ public class AbilityButton : MonoBehaviour
     {
         if (directionalButton.CastStarted)
         {
-            var clampedDirection = Vector3.ClampMagnitude(direction * 0.01f, 2f);
-            abilityCastIndicator.UpdateIndicator(playerReference.Movement.transform.position, clampedDirection);
+            UpdateIndicator();
         }
     }
 
     private void OnDragUpdated(Vector3 direction)
     {
         this.direction = direction;
-        abilityCastIndicator.UpdateIndicator(transform.position, direction);
+        UpdateIndicator();
+    }
+
+    private void UpdateIndicator()
+    {
+        var clampedDirection = Vector3.ClampMagnitude(direction * 0.01f, ability.MaxRange);
+        var startPosition = playerReference.Movement.transform.position;
+        var targetPosition = startPosition + clampedDirection;
+        abilityCastIndicator.UpdateIndicator(playerReference.Movement.transform.position, targetPosition);
     }
 
     private void OnDragStarted()

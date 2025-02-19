@@ -14,13 +14,12 @@ public class AbilityCastIndicator : MonoBehaviour
         lineRenderer.gameObject.SetActive(true);
     }
 
-    public void UpdateIndicator(Vector3 startPosition, Vector3 direction)
+    public void UpdateIndicator(Vector3 startPosition, Vector3 targetPosition)
     {
         var position1 = startPosition;
         position1.y += 0.1f;
 
-        // todo: handle between targeted ability and directional ability
-        var position2 = startPosition + direction * 3f;
+        var position2 = targetPosition;
         position2.y = position1.y;
 
         lineRenderer.SetPositions(new Vector3[]
