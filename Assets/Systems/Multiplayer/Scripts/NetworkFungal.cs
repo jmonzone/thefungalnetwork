@@ -12,12 +12,6 @@ public class NetworkFungal : NetworkBehaviour
 
     public event UnityAction OnHealthDepleted;
 
-    private void Awake()
-    {
-        Debug.Log("Awake");
-        health = GetComponent<Health>();
-    }
-
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
@@ -27,7 +21,6 @@ public class NetworkFungal : NetworkBehaviour
         health = GetComponent<Health>();
         movement = GetComponent<Movement>();
 
-        Debug.Log("OnNetworkSpawn");
         health.OnHealthDepleted += Health_OnHealthDepleted;
     }
 
@@ -46,7 +39,6 @@ public class NetworkFungal : NetworkBehaviour
     [ClientRpc]
     private void TakeDamageClientRpc(float damage)
     {
-        Debug.Log("TakeDamageClientRpc");
         health.SetHealth(health.CurrentHealth - damage);
     }
 }

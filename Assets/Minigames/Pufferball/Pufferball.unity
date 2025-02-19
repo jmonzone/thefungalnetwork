@@ -3009,6 +3009,7 @@ GameObject:
   - component: {fileID: 9131982414348320257}
   - component: {fileID: 2562923867676117843}
   - component: {fileID: 9131982414348320258}
+  - component: {fileID: 9131982414348320262}
   - component: {fileID: 9131982414348320261}
   - component: {fileID: 9131982414348320260}
   m_Layer: 5
@@ -4313,14 +4314,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2cbf16235c5e4e9cbe44d23430eb45f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  directionalButton: {fileID: 9131982414348320258}
+  cooldownHandler: {fileID: 9131982414348320260}
   playerReference: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
   pufferballReference: {fileID: 11400000, guid: 08db032ff48be41208a04f1067508370,
     type: 2}
-  cooldownHandler: {fileID: 9131982414348320260}
-  abilityCastIndicator: {fileID: 1098292331}
   castCooldown: 2
   slingCooldown: 0.25
+--- !u!114 &9131982414348320262
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 684448417672636916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1524895b687a944cfb3beaf1d43ca3a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerReference: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
+  directionalButton: {fileID: 9131982414348320258}
+  abilityCastIndicator: {fileID: 1098292331}
+  ability: {fileID: 9131982414348320261}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
