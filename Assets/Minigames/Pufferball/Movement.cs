@@ -87,7 +87,7 @@ public class Movement : MonoBehaviour
     private void MoveInDirection()
     {
         transform.position += moveSpeed * Time.deltaTime * moveDirection;
-        transform.forward = moveDirection;
+        UpdateLookDirection(moveDirection);
     }
 
     // Positional Movement
@@ -101,7 +101,7 @@ public class Movement : MonoBehaviour
     private void MoveToPosition()
     {
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
-        transform.forward = targetPosition - transform.position;
+        UpdateLookDirection(targetPosition - transform.position);
 
         if (Vector3.Distance(transform.position, targetPosition) <= stopDistance)
         {
@@ -123,6 +123,13 @@ public class Movement : MonoBehaviour
 
         var targetPosition = circleCenter + new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * circleRadius;
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+    }
+
+    private void UpdateLookDirection(Vector3 direction)
+    {
+        var lookDirection = direction;
+        lookDirection.y = 0;
+        transform.forward = lookDirection;
     }
 
     // Idle State (Stop Movement)
