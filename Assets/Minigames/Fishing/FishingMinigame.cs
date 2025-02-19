@@ -21,7 +21,7 @@ public class FishingMinigame : MonoBehaviour
 
     private void PlayerReference_OnPlayerUpdated()
     {
-        cameraController.Target = playerReference.Transform;
+        cameraController.Target = playerReference.Movement.transform;
 
     }
 }

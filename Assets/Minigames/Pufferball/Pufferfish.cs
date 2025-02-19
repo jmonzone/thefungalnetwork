@@ -78,7 +78,7 @@ public class Pufferfish : NetworkBehaviour
 
     public void PickUp()
     {
-        movement.Follow(playerReference.Transform); // Follow the player
+        movement.Follow(playerReference.Movement.transform); // Follow the player
         RequestPickUpServerRpc(NetworkManager.Singleton.LocalClientId);
     }
 

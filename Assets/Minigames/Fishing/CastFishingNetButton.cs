@@ -36,7 +36,7 @@ public class CastFishingNetButton : MonoBehaviour
 
         fishingNet.gameObject.SetActive(true);
 
-        var start = playerReference.Transform.position + (targetFish.transform.position - playerReference.Transform.position).normalized * 0.5f;
+        var start = playerReference.Movement.transform.position + (targetFish.transform.position - playerReference.Movement.transform.position).normalized * 0.5f;
         var end = targetFish.transform.position;
 
 

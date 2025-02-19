@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 936509440355627948}
   - component: {fileID: 8610307119214488969}
   - component: {fileID: 2097482643546369042}
+  - component: {fileID: 3325272597309751410}
   m_Layer: 10
   m_Name: Network Fungal
   m_TagString: Untagged
@@ -196,6 +197,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 3
+--- !u!114 &3325272597309751410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2941250707292126303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31c87108264554a99a582980bf170550, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementType: 0
+  moveSpeed: 5
+  followOffset: {x: 0, y: 0, z: 0}
+  stopDistance: 0.1
+  circleRadius: 5
 --- !u!1001 &5621774787556869155
 PrefabInstance:
   m_ObjectHideFlags: 0

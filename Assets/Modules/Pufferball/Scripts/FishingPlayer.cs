@@ -79,7 +79,7 @@ public class FishingPlayer : NetworkBehaviour
             if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out var networkObject))
             {
                 networkFungal = networkObject.GetComponent<NetworkFungal>();
-                player.SetTransform(networkFungal.transform);
+                player.SetMovement(networkFungal.GetComponent<Movement>());
                 navigation.Navigate(inputView);
             }
         }

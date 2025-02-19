@@ -14,7 +14,7 @@ public class MoveCharacterJoystick : MonoBehaviour
 
     private void Update()
     {
-        if (!player.Transform) return;
+        if (!player.Movement) return;
 
         if (Application.isEditor)
         {
@@ -34,9 +34,13 @@ public class MoveCharacterJoystick : MonoBehaviour
 
         translation = Quaternion.Euler(0, transform.eulerAngles.y, 0) * translation;
 
-        if (translation == Vector3.zero) return;
+        if (translation == Vector3.zero)
+        {
+            player.Movement.Stop();
+            return;
+        }
 
-        player.Transform.position += speed * Time.deltaTime * translation.normalized;
-        player.Transform.forward = translation;
+        player.Movement.SetDirection(direction, speed);
+        player.Movement.transform.forward = translation;
     }
 }

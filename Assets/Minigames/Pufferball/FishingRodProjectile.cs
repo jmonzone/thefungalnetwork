@@ -20,7 +20,7 @@ public class FishingRodProjectile : NetworkBehaviour
     {
         if (IsOwner && !render.activeSelf)
         {
-            transform.position = playerReference.Transform.position;
+            transform.position = playerReference.Movement.transform.position;
         }
     }
 
@@ -59,7 +59,7 @@ public class FishingRodProjectile : NetworkBehaviour
 
     private IEnumerator CastFishingRodRoutine(Vector3 direction, UnityAction<bool> onComplete)
     {
-        Vector3 startPos = playerReference.Transform.position + direction.normalized;
+        Vector3 startPos = playerReference.Movement.transform.position + direction.normalized;
         Vector3 targetPos = startPos + direction.normalized * range;
 
         // Now make it visible
@@ -76,9 +76,9 @@ public class FishingRodProjectile : NetworkBehaviour
         }
 
         // Move back to the player
-        while (Vector3.Distance(transform.position, playerReference.Transform.position) > 0.1f)
+        while (Vector3.Distance(transform.position, playerReference.Movement.transform.position) > 0.1f)
         {
-            transform.position = Vector3.MoveTowards(transform.position, playerReference.Transform.position, speed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, playerReference.Movement.transform.position, speed * Time.deltaTime);
             yield return null;
         }
 

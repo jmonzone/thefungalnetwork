@@ -4,13 +4,13 @@ using UnityEngine.Events;
 [CreateAssetMenu]
 public class PlayerReference : ScriptableObject
 {
-    public Transform Transform { get; private set; }
+    public Movement Movement { get; private set; }
 
     public event UnityAction OnPlayerUpdated;
 
-    public void SetTransform(Transform transform)
+    public void SetMovement(Movement movement)
     {
-        Transform = transform;
+        Movement = movement;
         OnPlayerUpdated?.Invoke();
     }
 }

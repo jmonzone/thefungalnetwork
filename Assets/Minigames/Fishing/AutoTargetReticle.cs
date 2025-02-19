@@ -14,14 +14,14 @@ public class AutoTargetReticle : MonoBehaviour
 
     private void Update()
     {
-        if (!playerReference.Transform) return;
+        if (!playerReference.Movement) return;
 
         // Find all FishController objects within the search radius
-        Collider[] colliders = Physics.OverlapSphere(playerReference.Transform.position, searchRadius);
+        Collider[] colliders = Physics.OverlapSphere(playerReference.Movement.transform.position, searchRadius);
         TargetFishController = colliders
             .Select(c => c.GetComponentInParent<FishController>())
             .Where(fish => fish != null)
-            .OrderBy(fish => Vector3.Distance(playerReference.Transform.position, fish.transform.position))
+            .OrderBy(fish => Vector3.Distance(playerReference.Movement.transform.position, fish.transform.position))
             .FirstOrDefault();
 
         if (TargetFishController)
