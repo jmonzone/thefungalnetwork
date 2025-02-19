@@ -2555,6 +2555,7 @@ GameObject:
   - component: {fileID: 1952977506}
   - component: {fileID: 1952977510}
   - component: {fileID: 1952977509}
+  - component: {fileID: 1952977512}
   - component: {fileID: 1952977511}
   - component: {fileID: 1952977507}
   m_Layer: 5
@@ -2672,12 +2673,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97bc030552465436394e164a3d125717, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  directionalButton: {fileID: 1952977509}
-  player: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
   cooldownHandler: {fileID: 1952977507}
-  abilityCastIndicator: {fileID: 1098292331}
+  player: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
   castCooldown: 2
   moveCharacterJoystick: {fileID: 6163485878806447941}
+--- !u!114 &1952977512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1952977505}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1524895b687a944cfb3beaf1d43ca3a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerReference: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
+  directionalButton: {fileID: 1952977509}
+  abilityCastIndicator: {fileID: 1098292331}
+  ability: {fileID: 1952977511}
 --- !u!1 &1976919461
 GameObject:
   m_ObjectHideFlags: 0
