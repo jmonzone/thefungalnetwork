@@ -29,7 +29,7 @@ public class FishingRodButton : MonoBehaviour
     {
         if (directionalButton.CastStarted)
         {
-            var clampedDirection = Vector3.ClampMagnitude(direction * 0.01f, 3f);
+            var clampedDirection = Vector3.ClampMagnitude(direction * 0.01f, 2f);
             abilityCastIndicator.UpdateIndicator(playerReference.Transform.position, clampedDirection);
         }
     }

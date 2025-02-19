@@ -72,14 +72,14 @@ public class Pufferfish : NetworkBehaviour
     public void Catch(Transform bobber)
     {
         movement.SetSpeed(10);
-        movement.Follow(bobber); // Follow the bobber
-        RequestOwnershipServerRpc(NetworkManager.Singleton.LocalClientId);
+        movement.Follow(bobber);
+        RequestCatchServerRpc(NetworkManager.Singleton.LocalClientId);
     }
 
     public void PickUp()
     {
         movement.Follow(playerReference.Transform); // Follow the player
-        StartTemperServerRpc();
+        RequestPickUpServerRpc(NetworkManager.Singleton.LocalClientId);
     }
 
     public void Sling(Vector3 direction)
@@ -91,6 +91,19 @@ public class Pufferfish : NetworkBehaviour
     {
         movement.Stop();
         ExplodeServerRpc(pufferfishTemper.Temper * (maxExplosionRadius - minExplosionRadius) + minExplosionRadius);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void RequestCatchServerRpc(ulong requestingClientId)
+    {
+        NetworkObject.ChangeOwnership(requestingClientId);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void RequestPickUpServerRpc(ulong clientId)
+    {
+        NetworkObject.ChangeOwnership(clientId);
+        StartTemperServerRpc();
     }
 
     [ServerRpc]
@@ -116,11 +129,5 @@ public class Pufferfish : NetworkBehaviour
     private void ExplodeClientRpc(float radius)
     {
         pufferfishExplosion.StartExplosionAnimation(radius);
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    private void RequestOwnershipServerRpc(ulong requestingClientId)
-    {
-        NetworkObject.ChangeOwnership(requestingClientId);
     }
 }
