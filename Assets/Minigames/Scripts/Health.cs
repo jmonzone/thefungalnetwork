@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Health : MonoBehaviour
 {
@@ -6,6 +7,9 @@ public class Health : MonoBehaviour
     private float currentHealth;
 
     public float CurrentHealth => currentHealth;
+    public float MaxHealth => maxHealth;
+
+    public event UnityAction OnHealthChanged;
 
     private void Awake()
     {
@@ -15,5 +19,6 @@ public class Health : MonoBehaviour
     public void SetHealth(float health)
     {
         currentHealth = health;
+        OnHealthChanged?.Invoke();
     }
 }
