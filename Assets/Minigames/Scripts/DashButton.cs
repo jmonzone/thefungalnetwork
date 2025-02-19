@@ -33,7 +33,7 @@ public class DashButton : MonoBehaviour
     {
         if (directionalButton.CastStarted)
         {
-            var clampedDirection = Vector3.ClampMagnitude(direction * 0.01f, 2f);
+            var clampedDirection = Vector3.ClampMagnitude(direction * 0.01f, 0.5f);
             abilityCastIndicator.UpdateIndicator(player.Movement.transform.position, clampedDirection);
         }
     }
@@ -56,7 +56,7 @@ public class DashButton : MonoBehaviour
         direction.Normalize(); // Normalize to maintain consistent speed
 
         var targetPosition = player.Movement.transform.position + direction.normalized * 3f;
-        player.Movement.SetSpeed(5f);
+        player.Movement.SetSpeed(7.5f);
         player.Movement.SetTargetPosition(targetPosition);
         cooldownHandler.StartCooldown(castCooldown); // Start logic cooldown
 
