@@ -12,8 +12,9 @@ GameObject:
   - component: {fileID: 4842475867895104760}
   - component: {fileID: 9119543484638871854}
   - component: {fileID: 557969962005751666}
+  - component: {fileID: 6363629999170578499}
   m_Layer: 0
-  m_Name: Fishing Minigame
+  m_Name: Pufferball Minigame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -48,7 +49,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2905715354
+  GlobalObjectIdHash: 2204508983
   InScenePlacedSourceGlobalObjectIdHash: 45463052
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -86,6 +87,21 @@ MonoBehaviour:
   spawnPositions:
   - {fileID: 5472367748348191746}
   - {fileID: 7993457804324698410}
+--- !u!114 &6363629999170578499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4354389770045121639}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00cbc18abe3124809a6107870beabc26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pufferball: {fileID: 11400000, guid: 08db032ff48be41208a04f1067508370, type: 2}
+  navigation: {fileID: 11400000, guid: 7af35f01730a846d692adda4734cddd3, type: 2}
+  resultsView: {fileID: 11400000, guid: 0d3498889a9f44a1aa5c3c36fe4e32fd, type: 2}
 --- !u!1 &6099512261139555836
 GameObject:
   m_ObjectHideFlags: 0
