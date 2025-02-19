@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class AbilityCastIndicator : MonoBehaviour
 {
+    [SerializeField] private Transform rangeIndicator;
+
     private LineRenderer lineRenderer;
 
     private void Awake()
@@ -12,9 +14,10 @@ public class AbilityCastIndicator : MonoBehaviour
     public void ShowIndicator()
     {
         lineRenderer.gameObject.SetActive(true);
+        rangeIndicator.gameObject.SetActive(true);
     }
 
-    public void UpdateIndicator(Vector3 startPosition, Vector3 targetPosition)
+    public void UpdateIndicator(Vector3 startPosition, Vector3 targetPosition, float range)
     {
         var position1 = startPosition;
         position1.y += 0.1f;
@@ -27,10 +30,14 @@ public class AbilityCastIndicator : MonoBehaviour
                 position1,
                 position2
         });
+
+        rangeIndicator.transform.position = startPosition;
+        rangeIndicator.transform.localScale = 2f * range * Vector3.one;
     }
 
     public void HideIndicator()
     {
         lineRenderer.gameObject.SetActive(false);
+        rangeIndicator.gameObject.SetActive(false);
     }
 }

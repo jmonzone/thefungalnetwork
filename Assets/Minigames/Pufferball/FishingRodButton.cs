@@ -23,6 +23,18 @@ public class FishingRodButton : Ability
         CancelAbility();
     }
 
+    public override void PrepareAbility()
+    {
+        base.PrepareAbility();
+        range = 0;
+    }
+
+    public override void ChargeAbility()
+    {
+        base.ChargeAbility();
+        range = Mathf.Clamp(range + Time.deltaTime * 2f, 0, 3f);
+    }
+
     public override void CastAbility(Vector3 direction)
     {
         direction.y = 0; // Keep it in the XZ plane

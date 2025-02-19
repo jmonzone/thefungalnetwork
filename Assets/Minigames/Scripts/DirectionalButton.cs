@@ -26,6 +26,11 @@ public class DirectionalButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
         });
     }
 
+    private void Update()
+    {
+        if (CastStarted) OnDragUpdated?.Invoke(direction);
+    }
+
     private void OnEnable()
     {
         button.enabled = true;
@@ -63,8 +68,6 @@ public class DirectionalButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
 
         // Rotate the drag direction by the camera's rotation
         direction = cameraRotation * dragDirection;
-
-        OnDragUpdated?.Invoke(direction);
     }
 
     void IEndDragHandler.OnEndDrag(PointerEventData eventData)
