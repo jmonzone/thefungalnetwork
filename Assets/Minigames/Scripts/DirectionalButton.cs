@@ -11,7 +11,7 @@ public class DirectionalButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
 
     private Vector3 initalPosition;
     private Vector3 direction;
-    private bool castStarted = false;
+    public bool CastStarted { get; private set; }
 
     public event UnityAction OnClick;
     public event UnityAction OnDragStarted;
@@ -38,7 +38,7 @@ public class DirectionalButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
 
     void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
     {
-        castStarted = true;
+        CastStarted = true;
 
         // Start casting ability
         OnDragStarted?.Invoke();
@@ -49,7 +49,7 @@ public class DirectionalButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
 
     void IDragHandler.OnDrag(PointerEventData eventData)
     {
-        if (!castStarted) return;
+        if (!CastStarted) return;
 
         // Calculate the direction from the initial touch position
         Vector3 dragDirection = (Vector3)eventData.position - initalPosition;
@@ -62,14 +62,14 @@ public class DirectionalButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
         Quaternion cameraRotation = Quaternion.Euler(0f, Camera.main.transform.rotation.eulerAngles.y, 0f);
 
         // Rotate the drag direction by the camera's rotation
-        direction = cameraRotation * dragDirection.normalized;
+        direction = cameraRotation * dragDirection;
 
         OnDragUpdated?.Invoke(direction);
     }
 
     void IEndDragHandler.OnEndDrag(PointerEventData eventData)
     {
-        castStarted = false;
+        CastStarted = false;
         OnDragCompleted?.Invoke(direction);
     }
 }

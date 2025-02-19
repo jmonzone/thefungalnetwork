@@ -25,7 +25,7 @@ public class PufferfishExplosion : MonoBehaviour
 
     public void StartExplosionAnimation(float radius = 1f)
     {
-        render.transform.localScale = Vector3.one * radius;
+        render.transform.localScale = 2f * radius * Vector3.one;
         StartCoroutine(ExplosionRoutine());
     }
 

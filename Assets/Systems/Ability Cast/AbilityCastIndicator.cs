@@ -2,54 +2,25 @@ using UnityEngine;
 
 public class AbilityCastIndicator : MonoBehaviour
 {
-    private AbilityCast abilityCast;
     private LineRenderer lineRenderer;
 
     private void Awake()
     {
-        abilityCast = GetComponentInParent<AbilityCast>();
-        Debug.Log($"awake {abilityCast == null}");
         lineRenderer = GetComponentInChildren<LineRenderer>(includeInactive: true);
     }
 
-    private void OnEnable()
+    public void ShowIndicator()
     {
-        HideIndicator();
-        Debug.Log($"enable {abilityCast == null}");
-
-        //abilityCast.OnPrepare += ShowIndicator;
-        //abilityCast.OnCastStart += HideIndicator;
-        //abilityCast.OnCancel += HideIndicator;
-    }
-
-    private void OnDisable()
-    {
-        //abilityCast.OnPrepare -= ShowIndicator;
-        //abilityCast.OnCastStart -= HideIndicator;
-        //abilityCast.OnCancel -= HideIndicator;
-    }
-
-    private void Update()
-    {
-        if (lineRenderer.gameObject.activeSelf)
-        {
-            UpdateIndicator();
-        }
-    }
-
-    private void ShowIndicator()
-    {
-        UpdateIndicator();
         lineRenderer.gameObject.SetActive(true);
     }
 
-    private void UpdateIndicator()
+    public void UpdateIndicator(Vector3 startPosition, Vector3 direction)
     {
-        var position1 = abilityCast.StartPosition;
+        var position1 = startPosition;
         position1.y += 0.1f;
 
         // todo: handle between targeted ability and directional ability
-        var position2 = abilityCast.StartPosition + abilityCast.Direction * 3f;
+        var position2 = startPosition + direction * 3f;
         position2.y = position1.y;
 
         lineRenderer.SetPositions(new Vector3[]
@@ -59,7 +30,7 @@ public class AbilityCastIndicator : MonoBehaviour
         });
     }
 
-    private void HideIndicator()
+    public void HideIndicator()
     {
         lineRenderer.gameObject.SetActive(false);
     }
