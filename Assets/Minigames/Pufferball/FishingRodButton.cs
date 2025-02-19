@@ -36,6 +36,7 @@ public class FishingRodButton : MonoBehaviour
 
     private void DirectionalButton_OnDragStarted()
     {
+        if (cooldownHandler.IsOnCooldown) return;
         abilityCastIndicator.ShowIndicator();
     }
 
