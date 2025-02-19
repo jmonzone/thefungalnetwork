@@ -29,7 +29,7 @@ public class MoveCharacterJoystick : MonoBehaviour
     private void MoveReticle(Vector3 direction)
     {
         var translation = direction;
-        translation.z = direction.y;
+        translation.z = translation.y;
         translation.y = 0;
 
         translation = Quaternion.Euler(0, transform.eulerAngles.y, 0) * translation;
@@ -40,7 +40,7 @@ public class MoveCharacterJoystick : MonoBehaviour
             return;
         }
 
-        player.Movement.SetDirection(direction, speed);
+        player.Movement.SetDirection(translation, speed);
         player.Movement.transform.forward = translation;
     }
 }

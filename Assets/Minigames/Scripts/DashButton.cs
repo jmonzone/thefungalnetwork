@@ -18,6 +18,12 @@ public class DashButton : MonoBehaviour
         directionalButton.OnDragCompleted += DirectionalButton_OnDragCompleted;
     }
 
+    private void Movement_OnDestinationReached()
+    {
+        player.Movement.OnDestinationReached -= Movement_OnDestinationReached;
+        moveCharacterJoystick.enabled = true;
+    }
+
     private void DirectionalButton_OnDragUpdated(Vector3 direction)
     {
         this.direction = direction;
@@ -43,6 +49,9 @@ public class DashButton : MonoBehaviour
         if (cooldownHandler.IsOnCooldown) return;
 
         moveCharacterJoystick.enabled = false;
+
+        player.Movement.OnDestinationReached += Movement_OnDestinationReached;
+
         direction.y = 0; // Keep it in the XZ plane
         direction.Normalize(); // Normalize to maintain consistent speed
 
@@ -50,5 +59,7 @@ public class DashButton : MonoBehaviour
         player.Movement.SetSpeed(5f);
         player.Movement.SetTargetPosition(targetPosition);
         cooldownHandler.StartCooldown(castCooldown); // Start logic cooldown
+
+        abilityCastIndicator.HideIndicator();
     }
 }

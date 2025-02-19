@@ -16,6 +16,16 @@ public class PufferfishSling : MonoBehaviour
         enabled = false;
     }
 
+    private void OnEnable()
+    {
+        movement.OnDestinationReached += Movement_OnDestinationReached;
+    }
+
+    private void OnDisable()
+    {
+        movement.OnDestinationReached -= Movement_OnDestinationReached;
+    }
+
     public void Sling(Vector3 direction)
     {
         enabled = true;
@@ -24,13 +34,9 @@ public class PufferfishSling : MonoBehaviour
         movement.SetTargetPosition(targetPosition); // Move towards the target
     }
 
-    private void Update()
+    private void Movement_OnDestinationReached()
     {
-        // Handle slung movement (already handled in Sling method)
-        if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
-        {
-            enabled = false;
-            OnSlingComplete?.Invoke();
-        }
+        enabled = false;
+        OnSlingComplete?.Invoke();
     }
 }

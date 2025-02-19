@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Movement : MonoBehaviour
 {
@@ -30,6 +31,8 @@ public class Movement : MonoBehaviour
     private Vector3 circleCenter;
     private float angle;
     private bool reverseDirection;
+
+    public event UnityAction OnDestinationReached;
 
     private void Awake()
     {
@@ -99,6 +102,7 @@ public class Movement : MonoBehaviour
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
         if (Vector3.Distance(transform.position, targetPosition) <= stopDistance)
         {
+            OnDestinationReached?.Invoke();
             Stop();
         }
     }
@@ -116,7 +120,6 @@ public class Movement : MonoBehaviour
 
         var targetPosition = circleCenter + new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * circleRadius;
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
-
     }
 
     // Idle State (Stop Movement)
