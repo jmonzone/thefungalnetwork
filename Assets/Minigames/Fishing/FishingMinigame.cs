@@ -16,12 +16,11 @@ public class FishingMinigame : MonoBehaviour
 
     private void Start()
     {
-        pufferballReference.SetPufferfish(pufferfish);
+        pufferballReference.Initialize(pufferfish);
     }
 
     private void PlayerReference_OnPlayerUpdated()
     {
         cameraController.Target = playerReference.Movement.transform;
-
     }
 }

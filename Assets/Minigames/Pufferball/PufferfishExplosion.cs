@@ -18,7 +18,6 @@ public class PufferfishExplosion : MonoBehaviour
             if (fungal != null)
             {
                 fungal.TakeDamageServerRpc(1f);
-                break;
             }
         }
     }

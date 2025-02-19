@@ -87,6 +87,7 @@ public class Movement : MonoBehaviour
     private void MoveInDirection()
     {
         transform.position += moveSpeed * Time.deltaTime * moveDirection;
+        transform.forward = moveDirection;
     }
 
     // Positional Movement
@@ -100,6 +101,8 @@ public class Movement : MonoBehaviour
     private void MoveToPosition()
     {
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+        transform.forward = targetPosition - transform.position;
+
         if (Vector3.Distance(transform.position, targetPosition) <= stopDistance)
         {
             OnDestinationReached?.Invoke();

@@ -15,29 +15,28 @@ public class PufferballReference : ScriptableObject
 
     public event UnityAction OnFishingRodUpdated;
     public event UnityAction OnPufferfishUpdated;
-    public event UnityAction OnPlayerDefeated;
+    public event UnityAction<ulong> OnPlayerDefeated;
 
-    public void Initialize(FishingRodProjectile fishingRod)
+    public void Initialize(Pufferfish pufferfish)
+    {
+        Players = new List<NetworkFungal>();
+        PufferfishNetworkId = pufferfish.NetworkObjectId;
+        OnPufferfishUpdated?.Invoke();
+    }
+
+    public void RegisterFishingRod(FishingRodProjectile fishingRod)
     {
         FishingRod = fishingRod;
         OnFishingRodUpdated?.Invoke();
     }
 
-    public void SetPufferfish(Pufferfish pufferfish)
-    {
-        PufferfishNetworkId = pufferfish.NetworkObjectId;
-        OnPufferfishUpdated?.Invoke();
-    }
-
     public void RegisterPlayer(NetworkFungal player)
     {
         Players.Add(player);
-        player.OnHealthDepleted += Player_OnHealthDepleted;
-    }
-
-    private void Player_OnHealthDepleted()
-    {
-        OnPlayerDefeated?.Invoke();
+        player.OnHealthDepleted += () =>
+        {
+            OnPlayerDefeated?.Invoke(player.OwnerClientId);
+        };
     }
 
     public NetworkObject GetPufferfish()

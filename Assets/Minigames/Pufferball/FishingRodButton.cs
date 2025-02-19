@@ -48,6 +48,7 @@ public class FishingRodButton : MonoBehaviour
     private void FishingRod_OnPufferfishReleased()
     {
         cooldownHandler.StartCooldown(castCooldown); // Start logic cooldown
+        abilityCastIndicator.HideIndicator();
     }
 
     private void DirectionalButton_OnDragCompleted(Vector3 direction)

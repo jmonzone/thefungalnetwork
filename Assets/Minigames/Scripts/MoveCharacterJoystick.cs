@@ -10,13 +10,21 @@ public class MoveCharacterJoystick : MonoBehaviour
     private void Awake()
     {
         joystick.OnJoystickUpdate += MoveReticle;
+        joystick.OnJoystickEnd += Joystick_OnJoystickEnd;
+    }
+
+    private void Joystick_OnJoystickEnd()
+    {
+        if (!enabled) return;
+        Debug.Log("Joystick_OnJoystickEnd");
+        player.Movement.Stop();
     }
 
     private void Update()
     {
         if (!player.Movement) return;
 
-        if (Application.isEditor)
+        if (Application.isEditor && !joystick.IsActive)
         {
             var x = Input.GetAxis("Horizontal");
             var y = Input.GetAxis("Vertical");
@@ -28,6 +36,8 @@ public class MoveCharacterJoystick : MonoBehaviour
 
     private void MoveReticle(Vector3 direction)
     {
+        if (!enabled) return;
+
         var translation = direction;
         translation.z = translation.y;
         translation.y = 0;
@@ -40,7 +50,6 @@ public class MoveCharacterJoystick : MonoBehaviour
             return;
         }
 
-        player.Movement.SetDirection(translation, speed);
-        player.Movement.transform.forward = translation;
+        player.Movement.SetDirection(translation.normalized, speed);
     }
 }

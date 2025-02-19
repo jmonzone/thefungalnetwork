@@ -102,7 +102,7 @@ public class FishingPlayer : NetworkBehaviour
             if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out var networkObject))
             {
                 var fishingRod = networkObject.GetComponent<FishingRodProjectile>();
-                pufferballReference.Initialize(fishingRod);
+                pufferballReference.RegisterFishingRod(fishingRod);
             }
         }
     }
