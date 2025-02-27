@@ -6,7 +6,6 @@ public class FishingMinigame : MonoBehaviour
     [SerializeField] private PlayerReference playerReference;
     [SerializeField] private CameraController cameraController;
 
-    [SerializeField] private Pufferfish pufferfish;
     [SerializeField] private PufferballReference pufferballReference;
 
     private void Awake()
@@ -16,7 +15,7 @@ public class FishingMinigame : MonoBehaviour
 
     private void Start()
     {
-        pufferballReference.Initialize(pufferfish);
+        pufferballReference.Initialize();
     }
 
     private void PlayerReference_OnPlayerUpdated()

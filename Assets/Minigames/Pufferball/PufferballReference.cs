@@ -7,20 +7,16 @@ using UnityEngine.Events;
 [CreateAssetMenu]
 public class PufferballReference : ScriptableObject
 {
-    [SerializeField] private Pufferfish pufferfish;
-
     public FishingRodProjectile FishingRod { get; private set; }
-    public ulong PufferfishNetworkId { get; private set; }
     public List<NetworkFungal> Players { get; private set; }
 
     public event UnityAction OnFishingRodUpdated;
     public event UnityAction OnPufferfishUpdated;
     public event UnityAction<ulong> OnPlayerDefeated;
 
-    public void Initialize(Pufferfish pufferfish)
+    public void Initialize()
     {
         Players = new List<NetworkFungal>();
-        PufferfishNetworkId = pufferfish.NetworkObjectId;
         OnPufferfishUpdated?.Invoke();
     }
 
@@ -38,10 +34,4 @@ public class PufferballReference : ScriptableObject
             OnPlayerDefeated?.Invoke(player.OwnerClientId);
         };
     }
-
-    public NetworkObject GetPufferfish()
-    {
-        return NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(PufferfishNetworkId, out var obj) ? obj : null;
-    }
-
 }
