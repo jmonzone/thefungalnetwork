@@ -67,9 +67,14 @@ public class Pufferfish : NetworkBehaviour
         if (IsOwner)
         {
             StopTemperServerRpc();
-            movement.SetSpeed(5);
-            movement.StartRadialMovement(true);
+            Invoke(nameof(ReturnToRadialMovement), 0.5f);
         }
+    }
+
+    private void ReturnToRadialMovement()
+    {
+        movement.SetSpeed(5);
+        movement.StartRadialMovement(true);
     }
 
     private void HandleMaxTemperReached()

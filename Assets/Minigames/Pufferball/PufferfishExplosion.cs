@@ -31,8 +31,8 @@ public class PufferfishExplosion : MonoBehaviour
     public IEnumerator ExplosionRoutine()
     {
         render.SetActive(true);
+        OnExplodeComplete?.Invoke();
         yield return new WaitForSeconds(0.5f);
         render.SetActive(false);
-        OnExplodeComplete?.Invoke();
     }
 }
