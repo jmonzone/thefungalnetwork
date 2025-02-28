@@ -10,6 +10,7 @@ public class Fish : NetworkBehaviour
     private Movement movement;
     private ThrowFish throwFish;
 
+    public event UnityAction OnPrepareThrow;
     public event UnityAction OnPickup;
 
     private void Awake()
@@ -30,6 +31,11 @@ public class Fish : NetworkBehaviour
     {
         movement.Follow(playerReference.Movement.transform);
         RequestPickUpServerRpc(NetworkManager.Singleton.LocalClientId);
+    }
+
+    public void PrepareThrow()
+    {
+        OnPrepareThrow?.Invoke();
     }
 
     public void Throw(Vector3 targetPosition)

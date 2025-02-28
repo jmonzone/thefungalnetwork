@@ -13,7 +13,10 @@ public class PufferballReference : ScriptableObject
     public int CurrentScore { get; private set; }
     public int OpponentScore { get; private set; }
 
+    public bool IsWinner { get; private set; }
+
     public event UnityAction OnScoreUpdated;
+    public event UnityAction OnGameComplete;
 
     public event UnityAction OnFishingRodUpdated;
     public event UnityAction OnPufferfishUpdated;
@@ -23,6 +26,7 @@ public class PufferballReference : ScriptableObject
     {
         CurrentScore = 0;
         OpponentScore = 0;
+        IsWinner = false;
         Players = new List<NetworkFungal>();
         OnPufferfishUpdated?.Invoke();
     }
@@ -48,6 +52,13 @@ public class PufferballReference : ScriptableObject
         else CurrentScore++;
 
         OnScoreUpdated?.Invoke();
+
+        IsWinner = CurrentScore >= 3;
+
+        if (IsWinner || OpponentScore >= 3)
+        {
+            OnGameComplete?.Invoke();
+        }
 
         if (networkObject.IsOwner)
         {

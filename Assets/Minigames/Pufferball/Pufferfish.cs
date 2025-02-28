@@ -26,7 +26,7 @@ public class Pufferfish : NetworkBehaviour
         movement = GetComponent<Movement>();
 
         fish = GetComponent<Fish>();
-        fish.OnPickup += StartTemperServerRpc;
+        fish.OnPrepareThrow += StartTemperServerRpc;
 
         var throwFish = GetComponent<ThrowFish>();
         throwFish.OnThrowComplete += OnThrowComplete;

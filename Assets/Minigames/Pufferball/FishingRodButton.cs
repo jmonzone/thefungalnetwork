@@ -29,6 +29,12 @@ public class FishingRodButton : Ability
     public override void PrepareAbility()
     {
         base.PrepareAbility();
+        var fish = pufferballReference.FishingRod.Fish;
+        if (fish)
+        {
+            fish.PrepareThrow();
+        }
+
         range = minRange;
     }
 

@@ -13,24 +13,20 @@ public class Results : MonoBehaviour
 
     private void OnEnable()
     {
-        pufferball.OnScoreUpdated += PufferballMinigame_OnScoreUpdated;
+        pufferball.OnGameComplete += Pufferball_OnGameComplete;
     }
 
     private void OnDisable()
     {
-        pufferball.OnScoreUpdated -= PufferballMinigame_OnScoreUpdated;
+        pufferball.OnGameComplete -= Pufferball_OnGameComplete;
     }
 
-
-    private void PufferballMinigame_OnScoreUpdated()
+    private void Pufferball_OnGameComplete()
     {
-        var isWinner = pufferball.CurrentScore >= 3;
-        var isLoser = pufferball.OpponentScore >= 3;
-
-        if (isWinner || isLoser)
+        if (pufferball.IsWinner)
         {
-            headerText.color = isWinner ? winColor : loseColor;
-            headerText.text = isWinner ? "Bog Unclogged" : "Bogged Down";
+            headerText.color = pufferball.IsWinner ? winColor : loseColor;
+            headerText.text = pufferball.IsWinner ? "Bog Unclogged" : "Bogged Down";
 
             navigation.Navigate(resultsView);
         }
