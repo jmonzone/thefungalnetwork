@@ -10,12 +10,19 @@ public class PufferballReference : ScriptableObject
     public FishingRodProjectile FishingRod { get; private set; }
     public List<NetworkFungal> Players { get; private set; }
 
+    public int CurrentScore { get; private set; }
+    public int OpponentScore { get; private set; }
+
+    public event UnityAction OnScoreUpdated;
+
     public event UnityAction OnFishingRodUpdated;
     public event UnityAction OnPufferfishUpdated;
     public event UnityAction<ulong> OnPlayerDefeated;
 
     public void Initialize()
     {
+        CurrentScore = 0;
+        OpponentScore = 0;
         Players = new List<NetworkFungal>();
         OnPufferfishUpdated?.Invoke();
     }
@@ -33,5 +40,21 @@ public class PufferballReference : ScriptableObject
         {
             OnPlayerDefeated?.Invoke(player.NetworkObjectId);
         };
+    }
+
+    public void UpdateScore(NetworkObject networkObject)
+    {
+
+        if (networkObject.IsOwner) OpponentScore++;
+        else CurrentScore++;
+
+        OnScoreUpdated?.Invoke();
+
+        if (networkObject.IsOwner)
+        {
+
+            var networkFungal = networkObject.GetComponent<NetworkFungal>();
+            networkFungal.RespawnServerRpc();
+        }
     }
 }

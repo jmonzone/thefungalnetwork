@@ -3484,7 +3484,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efde61da4a4f946deb4c7efe0d2f17a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pufferballMinigame: {fileID: 580428163980080938}
+  pufferball: {fileID: 11400000, guid: 08db032ff48be41208a04f1067508370, type: 2}
   playerColor: {r: 0.79607844, g: 0.972549, b: 0.43529412, a: 1}
   opponentColor: {r: 1, g: 0.56502765, b: 0.48584908, a: 1}
 --- !u!1 &1934135025
@@ -4117,18 +4117,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 27ce10afa047841998b98defe05138e0, type: 3}
---- !u!114 &580428163980080938 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6363629999170578499, guid: 27ce10afa047841998b98defe05138e0,
-    type: 3}
-  m_PrefabInstance: {fileID: 580428163980080937}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00cbc18abe3124809a6107870beabc26, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &684448417672636916
 GameObject:
   m_ObjectHideFlags: 0
@@ -5429,6 +5417,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7917522849322604618}
   - component: {fileID: 7975112458181059254}
+  - component: {fileID: 8366697932842567079}
   m_Layer: 0
   m_Name: Results UI
   m_TagString: Untagged
@@ -5436,6 +5425,24 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &8366697932842567079
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8366697932842567078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea49d6cb0da21400fad50b00a2d18d36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pufferball: {fileID: 11400000, guid: 08db032ff48be41208a04f1067508370, type: 2}
+  navigation: {fileID: 11400000, guid: 7af35f01730a846d692adda4734cddd3, type: 2}
+  resultsView: {fileID: 11400000, guid: 0d3498889a9f44a1aa5c3c36fe4e32fd, type: 2}
+  headerText: {fileID: 607414690}
+  winColor: {r: 0.79607844, g: 0.972549, b: 0.43529412, a: 1}
+  loseColor: {r: 1, g: 0.56502765, b: 0.48584908, a: 1}
 --- !u!224 &8864958489339964706
 RectTransform:
   m_ObjectHideFlags: 0

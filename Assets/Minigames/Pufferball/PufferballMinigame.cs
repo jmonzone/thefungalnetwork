@@ -7,17 +7,6 @@ public class PufferballMinigame : NetworkBehaviour
 {
     [SerializeField] private PufferballReference pufferball;
 
-    [SerializeField] private Navigation navigation;
-    [SerializeField] private ViewReference resultsView;
-    [SerializeField] private TextMeshProUGUI headerText;
-    [SerializeField] private Color winColor;
-    [SerializeField] private Color loseColor;
-
-    public int CurrentScore { get; private set; }
-    public int OpponentScore { get; private set; }
-
-    public event UnityAction OnScoreUpdated;
-
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
@@ -41,23 +30,8 @@ public class PufferballMinigame : NetworkBehaviour
     {
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(fungalId, out var networkObject))
         {
-            if (networkObject.IsOwner) CurrentScore++;
-            else OpponentScore++;
-
-            OnScoreUpdated?.Invoke();
-
-            if (CurrentScore >= 3 || OpponentScore >= 3)
-            {
-                headerText.color = networkObject.IsOwner ? loseColor : winColor;
-                headerText.text = networkObject.IsOwner ? "Bogged Down" : "Bog Unclogged";
-
-                navigation.Navigate(resultsView);
-            }
-            else if (networkObject.IsOwner)
-            {
-                var networkFungal = networkObject.GetComponent<NetworkFungal>();
-                networkFungal.RespawnServerRpc();
-            }
+            Debug.Log("OnPufferballMinigameClientRpc");
+            pufferball.UpdateScore(networkObject);
         }
     }
 }

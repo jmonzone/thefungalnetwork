@@ -46,13 +46,13 @@ public class NetworkFungal : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void RespawnServerRpc()
     {
-        transform.position = arena.SpawnPositions[playerIndex].position;
         RespawnClientRpc();
     }
 
     [ClientRpc]
     private void RespawnClientRpc()
     {
+        if (IsOwner) transform.position = arena.SpawnPositions[playerIndex].position;
         health.SetHealth(health.MaxHealth);
     }
 
