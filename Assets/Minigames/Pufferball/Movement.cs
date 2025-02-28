@@ -13,7 +13,10 @@ public class Movement : MonoBehaviour
     }
 
     [SerializeField] private MovementType movementType = MovementType.IDLE;
-    [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float baseSpeed = 5f;
+
+    private float modifier = 1f;
+    private float Speed => baseSpeed * modifier * Time.deltaTime;
 
     [Header("Follow Target Settings")]
     [SerializeField] private Vector3 followOffset;
@@ -60,7 +63,17 @@ public class Movement : MonoBehaviour
 
     public void SetSpeed(float speed)
     {
-        moveSpeed = speed;
+        baseSpeed = speed;
+    }
+
+    public void SetSpeedModifier(float modifier)
+    {
+        this.modifier = modifier;
+    }
+
+    public void ResetSpeedModifier()
+    {
+        modifier = 1f;
     }
 
     // Follow Target Movement
@@ -73,20 +86,20 @@ public class Movement : MonoBehaviour
     private void FollowTarget()
     {
         if (target == null) return;
-        transform.position = Vector3.MoveTowards(transform.position, target.position + followOffset, Time.deltaTime * moveSpeed);
+        transform.position = Vector3.MoveTowards(transform.position, target.position + followOffset, Speed);
     }
 
     // Directional Movement
     public void SetDirection(Vector3 direction, float speed)
     {
         moveDirection = direction.normalized;
-        moveSpeed = speed;
+        baseSpeed = speed;
         movementType = MovementType.DIRECTIONAL;
     }
 
     private void MoveInDirection()
     {
-        transform.position += moveSpeed * Time.deltaTime * moveDirection;
+        transform.position += Speed * moveDirection;
         UpdateLookDirection(moveDirection);
     }
 
@@ -100,7 +113,7 @@ public class Movement : MonoBehaviour
 
     private void MoveToPosition()
     {
-        transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, targetPosition, Speed);
         UpdateLookDirection(targetPosition - transform.position);
 
         if (Vector3.Distance(transform.position, targetPosition) <= stopDistance)
@@ -122,7 +135,7 @@ public class Movement : MonoBehaviour
         angle += reverseDirection ? -Time.deltaTime : Time.deltaTime;
 
         var targetPosition = circleCenter + new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * circleRadius;
-        transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, targetPosition, Speed);
     }
 
     private void UpdateLookDirection(Vector3 direction)

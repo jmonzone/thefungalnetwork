@@ -41,4 +41,26 @@ public class NetworkFungal : NetworkBehaviour
     {
         health.SetHealth(health.CurrentHealth - damage);
     }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void ModifySpeedServerRpc(float modifer, float duration)
+    {
+        ModifySpeedClientRpc(modifer, duration);
+    }
+
+    [ClientRpc]
+    private void ModifySpeedClientRpc(float modifer, float duration)
+    {
+        if (IsOwner)
+        {
+            movement.SetSpeedModifier(modifer);
+            Invoke(nameof(ResetSpeed), duration);
+        }
+    }
+
+
+    private void ResetSpeed()
+    {
+        movement.ResetSpeedModifier();
+    }
 }

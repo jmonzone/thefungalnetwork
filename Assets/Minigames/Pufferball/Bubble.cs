@@ -23,6 +23,7 @@ public class Bubble : NetworkBehaviour
             var fungal = hit.GetComponent<NetworkFungal>();
             if (fungal != null)
             {
+                fungal.ModifySpeedServerRpc(0f, 1.5f);
                 fungal.TakeDamageServerRpc(1f);
                 gameObject.SetActive(false);
             }

@@ -17,6 +17,7 @@ public class PufferfishExplosion : MonoBehaviour
             var fungal = hit.GetComponent<NetworkFungal>();
             if (fungal != null)
             {
+                fungal.ModifySpeedServerRpc(0, 0.5f);
                 fungal.TakeDamageServerRpc(damage);
             }
         }
