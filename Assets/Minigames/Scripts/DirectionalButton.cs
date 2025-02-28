@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -16,6 +17,7 @@ public class DirectionalButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
 
     public event UnityAction OnClick;
     public event UnityAction OnDragStarted;
+    public event UnityAction OnDragCanceled;
     public event UnityAction<Vector3> OnDragUpdated;
     public event UnityAction<Vector3> OnDragCompleted;
 
@@ -71,9 +73,42 @@ public class DirectionalButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
         direction = cameraRotation * dragDirection * sensitivity;
     }
 
-    void IEndDragHandler.OnEndDrag(PointerEventData eventData)
+    public void OnEndDrag(PointerEventData eventData)
     {
+        if (!CastStarted) return;
         CastStarted = false;
-        OnDragCompleted?.Invoke(direction);
+
+        if (IsPointerOverThisButton(eventData))
+        {
+            Debug.Log("Cancel");
+            OnDragCanceled?.Invoke();
+        }
+        else
+        {
+            Debug.Log("Complete");
+            OnDragCompleted?.Invoke(direction);
+        }
+    }
+
+    /// <summary>
+    /// Checks if the pointer is still over this button.
+    /// </summary>
+    private bool IsPointerOverThisButton(PointerEventData eventData)
+    {
+        PointerEventData pointerData = new PointerEventData(EventSystem.current)
+        {
+            position = eventData.position
+        };
+
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointerData, results);
+
+        Debug.Log(results.Count);
+        foreach (var result in results)
+        {
+            if (result.gameObject == button.targetGraphic.gameObject) return true;
+        }
+
+        return false;
     }
 }

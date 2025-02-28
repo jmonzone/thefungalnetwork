@@ -33,7 +33,8 @@ public class AbilityButton : MonoBehaviour
         directionalButton.OnDragStarted += OnDragStarted;
         directionalButton.OnDragUpdated += OnDragUpdated;
         directionalButton.OnDragCompleted += OnDragCompleted;
-        ability.OnCancel += Ability_OnCancel;
+        directionalButton.OnDragCanceled += OnDragCanceled;
+        ability.OnCancel += OnDragCanceled;
     }
 
     private void OnDragStarted()
@@ -68,7 +69,7 @@ public class AbilityButton : MonoBehaviour
         abilityCastIndicator.HideIndicator();
     }
 
-    private void Ability_OnCancel()
+    private void OnDragCanceled()
     {
         abilityCastIndicator.HideIndicator();
     }

@@ -106,10 +106,9 @@ public class Movement : MonoBehaviour
     }
 
     // Positional Movement
-    public void SetTargetPosition(Vector3 position, float stopThreshold = 0.1f)
+    public void SetTargetPosition(Vector3 position)
     {
         targetPosition = GetValidTargetPosition(position);
-        stopDistance = stopThreshold;
         movementType = MovementType.POSITIONAL;
     }
 
