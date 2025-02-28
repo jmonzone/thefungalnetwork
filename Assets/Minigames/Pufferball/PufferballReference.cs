@@ -31,7 +31,7 @@ public class PufferballReference : ScriptableObject
         Players.Add(player);
         player.OnHealthDepleted += () =>
         {
-            OnPlayerDefeated?.Invoke(player.OwnerClientId);
+            OnPlayerDefeated?.Invoke(player.NetworkObjectId);
         };
     }
 }

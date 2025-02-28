@@ -5,10 +5,11 @@ using UnityEngine.Events;
 public class NetworkFungal : NetworkBehaviour
 {
     [SerializeField] private PufferballReference pufferball;
-    [SerializeField] private FungalInventory fungalInventory;
+    [SerializeField] private MultiplayerArena arena;
 
     private Health health;
     private Movement movement;
+    public int playerIndex { get; private set; }
 
     public event UnityAction OnHealthDepleted;
 
@@ -28,6 +29,31 @@ public class NetworkFungal : NetworkBehaviour
     {
         movement.Stop();
         OnHealthDepleted?.Invoke();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void InitializeServerRpc(int playerIndex)
+    {
+        InitializeClientRpc(playerIndex);
+    }
+
+    [ClientRpc]
+    private void InitializeClientRpc(int playerIndex)
+    {
+        this.playerIndex = playerIndex;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void RespawnServerRpc()
+    {
+        transform.position = arena.SpawnPositions[playerIndex].position;
+        RespawnClientRpc();
+    }
+
+    [ClientRpc]
+    private void RespawnClientRpc()
+    {
+        health.SetHealth(health.MaxHealth);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -57,7 +83,6 @@ public class NetworkFungal : NetworkBehaviour
             Invoke(nameof(ResetSpeed), duration);
         }
     }
-
 
     private void ResetSpeed()
     {

@@ -6,6 +6,7 @@ using UnityEngine.Events;
 public class PufferballMinigame : NetworkBehaviour
 {
     [SerializeField] private PufferballReference pufferball;
+
     [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference resultsView;
     [SerializeField] private TextMeshProUGUI headerText;
@@ -30,27 +31,33 @@ public class PufferballMinigame : NetworkBehaviour
     }
 
     [ServerRpc]
-    private void OnPufferballMinigameServerRpc(ulong playerId)
+    private void OnPufferballMinigameServerRpc(ulong fungalId)
     {
-        OnPufferballMinigameClientRpc(playerId);
+        OnPufferballMinigameClientRpc(fungalId);
     }
 
     [ClientRpc]
-    private void OnPufferballMinigameClientRpc(ulong playerId)
+    private void OnPufferballMinigameClientRpc(ulong fungalId)
     {
-        var isOwner = playerId == NetworkManager.Singleton.LocalClientId;
-
-        if (isOwner) CurrentScore++;
-        else OpponentScore++;
-
-        OnScoreUpdated?.Invoke();
-
-        if (CurrentScore >=3 || OpponentScore >= 3)
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(fungalId, out var networkObject))
         {
-            headerText.color = isOwner ? loseColor : winColor;
-            headerText.text = isOwner ? "Bogged Down" : "Bog Unclogged";
+            if (networkObject.IsOwner) CurrentScore++;
+            else OpponentScore++;
 
-            navigation.Navigate(resultsView);
+            OnScoreUpdated?.Invoke();
+
+            if (CurrentScore >= 3 || OpponentScore >= 3)
+            {
+                headerText.color = networkObject.IsOwner ? loseColor : winColor;
+                headerText.text = networkObject.IsOwner ? "Bogged Down" : "Bog Unclogged";
+
+                navigation.Navigate(resultsView);
+            }
+            else if (networkObject.IsOwner)
+            {
+                var networkFungal = networkObject.GetComponent<NetworkFungal>();
+                networkFungal.RespawnServerRpc();
+            }
         }
     }
 }

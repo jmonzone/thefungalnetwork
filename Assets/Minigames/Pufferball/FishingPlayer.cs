@@ -66,17 +66,18 @@ public class FishingPlayer : NetworkBehaviour
         var networkFungal = Instantiate(fungal.NetworkPrefab, spawnPosition.position, Quaternion.identity);
         networkFungal.NetworkObject.SpawnWithOwnership(clientId);
 
-        OnFungalSpawnedClientRpc(clientId, networkFungal.NetworkObjectId);
+        OnFungalSpawnedClientRpc(clientId, networkFungal.NetworkObjectId, playerIndex);
     }
 
     [ClientRpc]
-    private void OnFungalSpawnedClientRpc(ulong clientId, ulong networkObjectId)
+    private void OnFungalSpawnedClientRpc(ulong clientId, ulong networkObjectId, int playerIndex)
     {
         if (NetworkManager.Singleton.LocalClientId == clientId)
         {
             if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out var networkObject))
             {
                 networkFungal = networkObject.GetComponent<NetworkFungal>();
+                networkFungal.InitializeServerRpc(playerIndex);
                 player.SetMovement(networkFungal.GetComponent<Movement>());
                 navigation.Navigate(inputView);
             }
