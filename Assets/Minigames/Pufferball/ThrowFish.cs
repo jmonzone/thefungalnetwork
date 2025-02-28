@@ -4,13 +4,16 @@ using UnityEngine.Events;
 public class ThrowFish : MonoBehaviour
 {
     [SerializeField] private float range = 5f;
+    [SerializeField] private bool respawnOnThrow = true;
 
+    private Fish fish;
     private Movement movement;
 
     public event UnityAction OnThrowComplete;
 
     private void Awake()
     {
+        fish = GetComponent<Fish>();
         movement = GetComponent<Movement>();
         enabled = false;
     }
@@ -35,6 +38,7 @@ public class ThrowFish : MonoBehaviour
     private void Movement_OnDestinationReached()
     {
         enabled = false;
+        if (respawnOnThrow) fish.ReturnToRadialMovement();
         OnThrowComplete?.Invoke();
     }
 }
