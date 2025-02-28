@@ -40,7 +40,7 @@ public class FishingRodButton : Ability
 
     public override void CastAbility(Vector3 targetPosition)
     {
-        var pufferfish = pufferballReference.FishingRod.Pufferfish;
+        var pufferfish = pufferballReference.FishingRod.Fish;
         if (pufferfish)
         {
             pufferballReference.FishingRod.Sling(targetPosition);

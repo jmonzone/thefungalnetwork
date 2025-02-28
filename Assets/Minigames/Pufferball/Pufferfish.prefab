@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8509736622436039212}
   - component: {fileID: 6570859336618269919}
   - component: {fileID: 1456472598768483316}
+  - component: {fileID: 331018154297557544}
   - component: {fileID: 5159478907015362789}
   - component: {fileID: 7290316461581926753}
   - component: {fileID: 6767651255589689632}
@@ -52,7 +53,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2170739467
+  GlobalObjectIdHash: 4149475198
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -92,6 +93,19 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &331018154297557544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4560751212198832292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de4e66d2707594597a5257c92c87e887, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerReference: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
 --- !u!114 &5159478907015362789
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -165,7 +179,7 @@ MonoBehaviour:
   moveSpeed: 10
   followOffset: {x: 0, y: 1, z: 0}
   stopDistance: 0.1
-  circleRadius: 3
+  circleRadius: 1.5
 --- !u!1 &6047455802489071344
 GameObject:
   m_ObjectHideFlags: 0

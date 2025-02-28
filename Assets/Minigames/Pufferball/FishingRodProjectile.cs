@@ -13,7 +13,7 @@ public class FishingRodProjectile : NetworkBehaviour
     [SerializeField] private float range = 5f;
     [SerializeField] private float detectionRadius = 1f;
 
-    public Pufferfish Pufferfish { get; private set; }
+    public Fish Fish { get; private set; }
     public event UnityAction OnPufferfishReleased;
 
     private void Update()
@@ -28,27 +28,31 @@ public class FishingRodProjectile : NetworkBehaviour
     {
         base.OnNetworkSpawn();
         render.SetActive(false);
-
-        var networkPufferfish = FindObjectOfType<Pufferfish>(); // Ensure it's the correct one
-        if (networkPufferfish != null)
-        {
-            networkPufferfish.OnMaxTemperReached += NetworkPufferfish_OnMaxTemperReached;
-        }
     }
 
     private void NetworkPufferfish_OnMaxTemperReached()
     {
-        Pufferfish = null;
+        OnFishRemoved();
         OnPufferfishReleased?.Invoke();
     }
 
     public void Sling(Vector3 targetPosition)
     {
-        if (Pufferfish)
+        if (Fish)
         {
-            Pufferfish.Sling(targetPosition);
-            Pufferfish = null;
+            Fish.Sling(targetPosition);
+            OnFishRemoved();
         }
+    }
+
+    private void OnFishRemoved()
+    {
+        var networkPufferfish = Fish.GetComponent<Pufferfish>(); // Ensure it's the correct one
+        if (networkPufferfish != null)
+        {
+            networkPufferfish.OnMaxTemperReached -= NetworkPufferfish_OnMaxTemperReached;
+        }
+        Fish = null;
     }
 
     public void Cast(Vector3 targetPosition, UnityAction<bool> onComplete)
@@ -83,8 +87,8 @@ public class FishingRodProjectile : NetworkBehaviour
             yield return null;
         }
 
-        if (Pufferfish) Pufferfish.PickUp();
-        onComplete?.Invoke(Pufferfish);
+        if (Fish) Fish.PickUp();
+        onComplete?.Invoke(Fish);
         RequestVisibilityServerRpc(false);
     }
 
@@ -94,10 +98,17 @@ public class FishingRodProjectile : NetworkBehaviour
 
         foreach (Collider hit in hits)
         {
-            Pufferfish = hit.GetComponentInParent<Pufferfish>();
-            if (Pufferfish != null)
+            Fish = hit.GetComponentInParent<Fish>();
+            if (Fish != null)
             {
-                Pufferfish.Catch(transform);
+
+                var networkPufferfish = Fish.GetComponent<Pufferfish>(); // Ensure it's the correct one
+                if (networkPufferfish != null)
+                {
+                    networkPufferfish.OnMaxTemperReached += NetworkPufferfish_OnMaxTemperReached;
+                }
+
+                Fish.Catch(transform);
                 return true;
             }
         }

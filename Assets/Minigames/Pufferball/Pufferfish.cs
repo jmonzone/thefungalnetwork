@@ -9,7 +9,7 @@ public class Pufferfish : NetworkBehaviour
     [SerializeField] private float maxExplosionRadius = 3f;
 
     private Movement movement;
-    private PufferfishSling pufferfishSling;
+    private Fish fish;
     private PufferfishExplosion pufferfishExplosion;
     private PufferfishTemper pufferfishTemper;
 
@@ -23,7 +23,10 @@ public class Pufferfish : NetworkBehaviour
     {
         movement = GetComponent<Movement>();
 
-        pufferfishSling = GetComponent<PufferfishSling>();
+        fish = GetComponent<Fish>();
+        fish.OnPickup += StartTemperServerRpc;
+
+        var pufferfishSling = GetComponent<PufferfishSling>();
         pufferfishSling.OnSlingComplete += HandleSlingComplete;
 
         pufferfishExplosion = GetComponent<PufferfishExplosion>();
@@ -66,15 +69,9 @@ public class Pufferfish : NetworkBehaviour
     {
         if (IsOwner)
         {
+            fish.InvokeReturnToRadialMovement();
             StopTemperServerRpc();
-            Invoke(nameof(ReturnToRadialMovement), 0.5f);
         }
-    }
-
-    private void ReturnToRadialMovement()
-    {
-        movement.SetSpeed(5);
-        movement.StartRadialMovement(true);
     }
 
     private void HandleMaxTemperReached()
@@ -84,37 +81,6 @@ public class Pufferfish : NetworkBehaviour
             Explode();
             OnMaxTemperReached?.Invoke();
         }
-    }
-
-    public void Catch(Transform bobber)
-    {
-        movement.SetSpeed(10);
-        movement.Follow(bobber);
-        RequestCatchServerRpc(NetworkManager.Singleton.LocalClientId);
-    }
-
-    public void PickUp()
-    {
-        movement.Follow(playerReference.Movement.transform);
-        RequestPickUpServerRpc(NetworkManager.Singleton.LocalClientId);
-    }
-
-    public void Sling(Vector3 targetPosition)
-    {
-        pufferfishSling.Sling(targetPosition);
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    private void RequestCatchServerRpc(ulong requestingClientId)
-    {
-        NetworkObject.ChangeOwnership(requestingClientId);
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void RequestPickUpServerRpc(ulong clientId)
-    {
-        NetworkObject.ChangeOwnership(clientId);
-        StartTemperServerRpc();
     }
 
     [ServerRpc(RequireOwnership = false)]
