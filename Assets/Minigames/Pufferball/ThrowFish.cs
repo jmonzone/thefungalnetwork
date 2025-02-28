@@ -1,13 +1,13 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public class PufferfishSling : MonoBehaviour
+public class ThrowFish : MonoBehaviour
 {
     [SerializeField] private float range = 5f;
 
     private Movement movement;
 
-    public event UnityAction OnSlingComplete;
+    public event UnityAction OnThrowComplete;
 
     private void Awake()
     {
@@ -25,7 +25,7 @@ public class PufferfishSling : MonoBehaviour
         movement.OnDestinationReached -= Movement_OnDestinationReached;
     }
 
-    public void Sling(Vector3 targetPosition)
+    public void Throw(Vector3 targetPosition)
     {
         enabled = true;
         targetPosition.y = 0; // Keep on the ground
@@ -35,6 +35,6 @@ public class PufferfishSling : MonoBehaviour
     private void Movement_OnDestinationReached()
     {
         enabled = false;
-        OnSlingComplete?.Invoke();
+        OnThrowComplete?.Invoke();
     }
 }

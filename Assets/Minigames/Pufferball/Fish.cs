@@ -7,7 +7,7 @@ public class Fish : NetworkBehaviour
     [SerializeField] private PlayerReference playerReference;
 
     private Movement movement;
-    private PufferfishSling pufferfishSling;
+    private ThrowFish throwFish;
 
     public event UnityAction OnPickup;
 
@@ -15,8 +15,8 @@ public class Fish : NetworkBehaviour
     {
         movement = GetComponent<Movement>();
 
-        pufferfishSling = GetComponent<PufferfishSling>();
-        pufferfishSling.OnSlingComplete += InvokeReturnToRadialMovement;
+        throwFish = GetComponent<ThrowFish>();
+        throwFish.OnThrowComplete += InvokeReturnToRadialMovement;
     }
 
     public void InvokeReturnToRadialMovement()
@@ -43,9 +43,9 @@ public class Fish : NetworkBehaviour
         RequestPickUpServerRpc(NetworkManager.Singleton.LocalClientId);
     }
 
-    public void Sling(Vector3 targetPosition)
+    public void Throw(Vector3 targetPosition)
     {
-        pufferfishSling.Sling(targetPosition);
+        throwFish.Throw(targetPosition);
     }
 
     [ServerRpc(RequireOwnership = false)]

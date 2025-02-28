@@ -26,8 +26,8 @@ public class Pufferfish : NetworkBehaviour
         fish = GetComponent<Fish>();
         fish.OnPickup += StartTemperServerRpc;
 
-        var pufferfishSling = GetComponent<PufferfishSling>();
-        pufferfishSling.OnSlingComplete += HandleSlingComplete;
+        var throwFish = GetComponent<ThrowFish>();
+        throwFish.OnThrowComplete += HandleSlingComplete;
 
         pufferfishExplosion = GetComponent<PufferfishExplosion>();
         pufferfishExplosion.OnExplodeComplete += HandleExplodeComplete;

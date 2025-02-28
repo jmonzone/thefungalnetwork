@@ -40,7 +40,7 @@ public class FishingRodProjectile : NetworkBehaviour
     {
         if (Fish)
         {
-            Fish.Sling(targetPosition);
+            Fish.Throw(targetPosition);
             OnFishRemoved();
         }
     }
