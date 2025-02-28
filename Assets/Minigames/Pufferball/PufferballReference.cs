@@ -44,7 +44,6 @@ public class PufferballReference : ScriptableObject
 
     public void UpdateScore(NetworkObject networkObject)
     {
-
         if (networkObject.IsOwner) OpponentScore++;
         else CurrentScore++;
 
@@ -52,7 +51,6 @@ public class PufferballReference : ScriptableObject
 
         if (networkObject.IsOwner)
         {
-
             var networkFungal = networkObject.GetComponent<NetworkFungal>();
             networkFungal.RespawnServerRpc();
         }

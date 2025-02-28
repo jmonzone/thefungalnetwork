@@ -31,7 +31,8 @@ public class Movement : MonoBehaviour
 
     [Header("Radial Movement Settings")]
     [SerializeField] private float circleRadius = 5f;
-    private Vector3 circleCenter;
+    public Vector3 CircleCenter { get; private set; }
+
     private float angle;
     private bool reverseDirection;
 
@@ -39,7 +40,7 @@ public class Movement : MonoBehaviour
 
     private void Awake()
     {
-        circleCenter = transform.position;
+        CircleCenter = transform.position;
     }
 
     private void Update()
@@ -134,7 +135,7 @@ public class Movement : MonoBehaviour
     {
         angle += reverseDirection ? -Time.deltaTime : Time.deltaTime;
 
-        var targetPosition = circleCenter + new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * circleRadius;
+        var targetPosition = CircleCenter + new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * circleRadius;
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, Speed);
     }
 

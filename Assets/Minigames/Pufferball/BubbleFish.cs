@@ -5,8 +5,12 @@ public class BubbleFish : NetworkBehaviour
 {
     [SerializeField] private NetworkObject bubblePrefab;
 
+    private Fish fish;
+
     private void Awake()
     {
+        fish = GetComponent<Fish>();
+
         var throwFish = GetComponent<ThrowFish>();
         throwFish.OnThrowComplete += OnThrowComplete;
     }
@@ -15,6 +19,7 @@ public class BubbleFish : NetworkBehaviour
     {
         if (IsOwner)
         {
+            fish.ReturnToRadialMovement();
             RequestSpawnBubbleServerRpc();
         }
     }

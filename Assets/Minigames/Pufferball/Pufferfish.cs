@@ -67,17 +67,11 @@ public class Pufferfish : NetworkBehaviour
         if (IsOwner) Explode();
     }
 
-    private void ReturnToRadialMovement()
-    {
-        movement.SetSpeed(5);
-        movement.StartRadialMovement(true);
-    }
-
     private void HandleExplodeComplete()
     {
         if (IsOwner)
         {
-            Invoke(nameof(ReturnToRadialMovement), 1f);
+            fish.ReturnToRadialMovement();
             StopTemperServerRpc();
         }
     }

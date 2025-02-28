@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
@@ -48,4 +49,19 @@ public class Fish : NetworkBehaviour
         NetworkObject.ChangeOwnership(clientId);
         OnPickup?.Invoke();
     }
+
+    public void ReturnToRadialMovement()
+    {
+        StartCoroutine(RespawnRoutine());
+    }
+
+    private IEnumerator RespawnRoutine()
+    {
+        yield return new WaitForSeconds(1f);
+
+        transform.position = movement.CircleCenter;
+        movement.SetSpeed(3);
+        movement.StartRadialMovement(true);
+    }
+
 }
