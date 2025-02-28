@@ -14,6 +14,7 @@ public class Movement : MonoBehaviour
 
     [SerializeField] private MovementType movementType = MovementType.IDLE;
     [SerializeField] private float baseSpeed = 5f;
+    [SerializeField] private LayerMask obstacleLayer;
 
     private float modifier = 1f;
     private float Speed => baseSpeed * modifier * Time.deltaTime;
@@ -107,9 +108,29 @@ public class Movement : MonoBehaviour
     // Positional Movement
     public void SetTargetPosition(Vector3 position, float stopThreshold = 0.1f)
     {
-        targetPosition = position;
+        targetPosition = GetValidTargetPosition(position);
         stopDistance = stopThreshold;
         movementType = MovementType.POSITIONAL;
+    }
+
+    /// <summary>
+    /// Performs a raycast and clamps the target position if an obstacle is in the way.
+    /// </summary>
+    private Vector3 GetValidTargetPosition(Vector3 targetPosition)
+    {
+        Vector3 origin = transform.position;
+        origin.y = targetPosition.y;
+
+        Vector3 direction = (targetPosition - origin).normalized;
+        float maxDistance = Vector3.Distance(origin, targetPosition);
+
+        if (Physics.Raycast(origin, direction, out RaycastHit hit, maxDistance, obstacleLayer))
+        {
+            // If an obstacle is hit, adjust the target position to be just before the obstacle
+            return hit.point - direction * stopDistance; // Slightly offset from the obstacle
+        }
+
+        return targetPosition; // No obstacle, use original position
     }
 
     private void MoveToPosition()
