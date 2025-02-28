@@ -16,18 +16,6 @@ public class Fish : NetworkBehaviour
         movement = GetComponent<Movement>();
 
         throwFish = GetComponent<ThrowFish>();
-        throwFish.OnThrowComplete += InvokeReturnToRadialMovement;
-    }
-
-    public void InvokeReturnToRadialMovement()
-    {
-        Invoke(nameof(ReturnToRadialMovement), 1f);
-    }
-
-    private void ReturnToRadialMovement()
-    {
-        movement.SetSpeed(5);
-        movement.StartRadialMovement(true);
     }
 
     public void Catch(Transform bobber)

@@ -27,7 +27,7 @@ public class Pufferfish : NetworkBehaviour
         fish.OnPickup += StartTemperServerRpc;
 
         var throwFish = GetComponent<ThrowFish>();
-        throwFish.OnThrowComplete += HandleSlingComplete;
+        throwFish.OnThrowComplete += OnThrowComplete;
 
         pufferfishExplosion = GetComponent<PufferfishExplosion>();
         pufferfishExplosion.OnExplodeComplete += HandleExplodeComplete;
@@ -60,16 +60,22 @@ public class Pufferfish : NetworkBehaviour
         pufferfishTemper.SetTemper(newValue);
     }
 
-    private void HandleSlingComplete()
+    private void OnThrowComplete()
     {
         if (IsOwner) Explode();
+    }
+
+    private void ReturnToRadialMovement()
+    {
+        movement.SetSpeed(5);
+        movement.StartRadialMovement(true);
     }
 
     private void HandleExplodeComplete()
     {
         if (IsOwner)
         {
-            fish.InvokeReturnToRadialMovement();
+            Invoke(nameof(ReturnToRadialMovement), 1f);
             StopTemperServerRpc();
         }
     }
