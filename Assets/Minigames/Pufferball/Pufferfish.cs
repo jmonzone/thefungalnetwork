@@ -104,8 +104,9 @@ public class Pufferfish : NetworkBehaviour
     private void Explode()
     {
         movement.Stop();
+        var damage = 1 + pufferfishTemper.Temper * 5;
         float radius = pufferfishTemper.Temper * (maxExplosionRadius - minExplosionRadius) + minExplosionRadius;
-        pufferfishExplosion.DealExplosionDamage(radius);
+        pufferfishExplosion.DealExplosionDamage(damage, radius);
         ExplodeServerRpc(radius);
     }
 

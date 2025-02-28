@@ -8,7 +8,7 @@ public class PufferfishExplosion : MonoBehaviour
 
     public event UnityAction OnExplodeComplete;
 
-    public void DealExplosionDamage(float radius = 1f)
+    public void DealExplosionDamage(float damage, float radius = 1f)
     {
         // Detect all players in radius
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, radius);
@@ -17,7 +17,7 @@ public class PufferfishExplosion : MonoBehaviour
             var fungal = hit.GetComponent<NetworkFungal>();
             if (fungal != null)
             {
-                fungal.TakeDamageServerRpc(1f);
+                fungal.TakeDamageServerRpc(damage);
             }
         }
     }
