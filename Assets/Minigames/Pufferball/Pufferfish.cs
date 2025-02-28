@@ -7,6 +7,8 @@ public class Pufferfish : NetworkBehaviour
     [SerializeField] private PlayerReference playerReference;
     [SerializeField] private float minExplosionRadius = 3f;
     [SerializeField] private float maxExplosionRadius = 3f;
+    [SerializeField] private float minExplosionDamage = 1f;
+    [SerializeField] private float maxExplosionDamage = 3f;
 
     private Movement movement;
     private Fish fish;
@@ -104,7 +106,7 @@ public class Pufferfish : NetworkBehaviour
     private void Explode()
     {
         movement.Stop();
-        var damage = 1 + pufferfishTemper.Temper * 2;
+        float damage = pufferfishTemper.Temper * (maxExplosionDamage - minExplosionDamage) + minExplosionDamage;
         float radius = pufferfishTemper.Temper * (maxExplosionRadius - minExplosionRadius) + minExplosionRadius;
         pufferfishExplosion.DealExplosionDamage(damage, radius);
         ExplodeServerRpc(radius);
