@@ -42,8 +42,6 @@ public class FishingPlayer : NetworkBehaviour
         }
     }
 
-
-
     private int GetPlayerIndex(ulong clientId)
     {
         var connectedClients = NetworkManager.Singleton.ConnectedClientsList

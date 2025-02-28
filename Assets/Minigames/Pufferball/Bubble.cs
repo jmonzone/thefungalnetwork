@@ -5,10 +5,13 @@ using UnityEngine;
 
 public class Bubble : NetworkBehaviour
 {
-    //[SerializeField] private Gam
+    [SerializeField] private GameObject render;
+
+    private bool canHit = true;
+
     private void Update()
     {
-        if (IsOwner)
+        if (IsOwner && canHit)
         {
             CheckPlayerHit();
         }
@@ -25,8 +28,22 @@ public class Bubble : NetworkBehaviour
             {
                 fungal.ModifySpeedServerRpc(0f, 1.5f);
                 fungal.TakeDamageServerRpc(1f);
-                gameObject.SetActive(false);
+                OnPlayerHitServerRpc();
+
+                canHit = false;
             }
         }
+    }
+
+    [ServerRpc]
+    private void OnPlayerHitServerRpc()
+    {
+        OnPlayerHitClientRpc();
+    }
+
+    [ClientRpc]
+    private void OnPlayerHitClientRpc()
+    {
+        render.SetActive(false);
     }
 }
