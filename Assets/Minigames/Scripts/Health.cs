@@ -6,12 +6,16 @@ public class Health : MonoBehaviour
     [SerializeField] private float maxHealth = 100f;
 
     private float currentHealth;
+    private float currentShield;
 
     public float CurrentHealth => currentHealth;
+    public float CurrentShield => currentShield;
     public float MaxHealth => maxHealth;
 
     public event UnityAction OnHealthChanged;
     public event UnityAction OnHealthDepleted;
+
+    public event UnityAction OnShieldChanged;
 
     private void Awake()
     {
@@ -27,5 +31,11 @@ public class Health : MonoBehaviour
         {
             OnHealthDepleted?.Invoke();
         }
+    }
+
+    public void SetShield(float shield)
+    {
+        currentShield = Mathf.Max(0, shield);
+        OnShieldChanged?.Invoke();
     }
 }

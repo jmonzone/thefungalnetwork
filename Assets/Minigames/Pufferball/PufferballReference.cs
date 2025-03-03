@@ -8,6 +8,7 @@ using UnityEngine.Events;
 public class PufferballReference : ScriptableObject
 {
     public FishingRodProjectile FishingRod { get; private set; }
+    public NetworkFungal Player { get; private set; }
     public List<NetworkFungal> Players { get; private set; }
 
     public int CurrentScore { get; private set; }
@@ -27,6 +28,7 @@ public class PufferballReference : ScriptableObject
         CurrentScore = 0;
         OpponentScore = 0;
         IsWinner = false;
+        Player = null;
         Players = new List<NetworkFungal>();
         OnPufferfishUpdated?.Invoke();
     }
@@ -39,6 +41,7 @@ public class PufferballReference : ScriptableObject
 
     public void RegisterPlayer(NetworkFungal player)
     {
+        if (player.IsOwner) Player = player;
         Players.Add(player);
         player.OnHealthDepleted += () =>
         {

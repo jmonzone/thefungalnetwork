@@ -65,7 +65,31 @@ public class NetworkFungal : NetworkBehaviour
     [ClientRpc]
     private void TakeDamageClientRpc(float damage)
     {
-        health.SetHealth(health.CurrentHealth - damage);
+        // Subtract damage from the shield first
+        if (health.CurrentShield > 0)
+        {
+            float shieldDamage = Mathf.Min(damage, health.CurrentShield); // Take as much damage as possible from the shield
+            health.SetShield(health.CurrentShield - shieldDamage); // Reduce shield
+            damage -= shieldDamage; // Reduce the remaining damage
+        }
+
+        // If there's any remaining damage, subtract it from health
+        if (damage > 0)
+        {
+            health.SetHealth(health.CurrentHealth - damage); // Reduce health with the remaining damage
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void AddShieldServerRpc(float value)
+    {
+        AddShieldClientRpc(value);
+    }
+
+    [ClientRpc]
+    private void AddShieldClientRpc(float value)
+    {
+        health.SetShield(health.CurrentShield + value);
     }
 
     [ServerRpc(RequireOwnership = false)]

@@ -80,12 +80,10 @@ public class DirectionalButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
 
         if (IsPointerOverThisButton(eventData))
         {
-            Debug.Log("Cancel");
             OnDragCanceled?.Invoke();
         }
         else
         {
-            Debug.Log("Complete");
             OnDragCompleted?.Invoke(direction);
         }
     }
@@ -103,7 +101,6 @@ public class DirectionalButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
         List<RaycastResult> results = new List<RaycastResult>();
         EventSystem.current.RaycastAll(pointerData, results);
 
-        Debug.Log(results.Count);
         foreach (var result in results)
         {
             if (result.gameObject == button.targetGraphic.gameObject) return true;

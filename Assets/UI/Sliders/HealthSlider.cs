@@ -3,29 +3,45 @@ using UnityEngine.UI;
 
 public class HealthSlider : MonoBehaviour
 {
-    private Slider slider;
+    [SerializeField] private GameObject render;
+    [SerializeField] private Image healthFill;
+    [SerializeField] private Image shieldFill;
+
+    [SerializeField] private Color healthColor = Color.green;
+    [SerializeField] private Color shieldColor = Color.blue;
+
     private Health health;
 
     private void Awake()
     {
-        slider = GetComponentInChildren<Slider>(includeInactive: true);
         health = GetComponentInParent<Health>();
 
-        slider.maxValue = health.MaxHealth;
-        slider.minValue = 0;
-        slider.value = health.CurrentHealth;
-
         health.OnHealthChanged += UpdateView;
+        health.OnShieldChanged += UpdateView;
+
+        healthFill.color = healthColor;
+        shieldFill.color = shieldColor;
     }
 
     private void Start()
     {
-        UpdateView();
+        healthFill.fillAmount = 1;
+        shieldFill.fillAmount = 0;
     }
 
     private void UpdateView()
     {
-        slider.value = health.CurrentHealth;
-        slider.gameObject.SetActive(health.CurrentHealth > 0 && health.CurrentHealth < health.MaxHealth);
+        render.SetActive(health.CurrentHealth > 0);
+
+        float healthRatio = health.CurrentHealth / (health.MaxHealth + health.CurrentShield);
+        float shieldRatio = (health.CurrentHealth  + health.CurrentShield) / (health.MaxHealth + health.CurrentShield);
+
+        // Update fill sizes
+        healthFill.fillAmount = healthRatio;
+        shieldFill.fillAmount = shieldRatio;
+
+        // Ensure colors are applied
+        healthFill.color = healthColor;
+        shieldFill.color = shieldColor;
     }
 }

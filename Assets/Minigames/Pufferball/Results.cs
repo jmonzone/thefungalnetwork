@@ -23,12 +23,9 @@ public class Results : MonoBehaviour
 
     private void Pufferball_OnGameComplete()
     {
-        if (pufferball.IsWinner)
-        {
-            headerText.color = pufferball.IsWinner ? winColor : loseColor;
-            headerText.text = pufferball.IsWinner ? "Bog Unclogged" : "Bogged Down";
+        headerText.color = pufferball.IsWinner ? winColor : loseColor;
+        headerText.text = pufferball.IsWinner ? "Bog Unclogged" : "Bogged Down";
 
-            navigation.Navigate(resultsView);
-        }
+        navigation.Navigate(resultsView);
     }
 }
