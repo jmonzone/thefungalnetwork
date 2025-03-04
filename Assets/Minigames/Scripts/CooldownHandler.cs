@@ -6,6 +6,7 @@ using System.Collections;
 public class CooldownHandler : MonoBehaviour
 {
     [SerializeField] private Button button;
+    [SerializeField] private DirectionalButton directionalButton;
     [SerializeField] private TMP_Text cooldownText;
     [SerializeField] private Image cooldownRadial;
     [SerializeField] private Color startColor = Color.red;
@@ -32,6 +33,7 @@ public class CooldownHandler : MonoBehaviour
 
     public void SetInteractable(bool value)
     {
+        directionalButton.enabled = value;
         button.interactable = value;
         cooldownRadial.gameObject.SetActive(!value);
         cooldownRadial.fillAmount = value ? 0 : 1;

@@ -68,6 +68,6 @@ public class FishingRodButton : Ability
     public override void CastAbility(Vector3 targetPosition)
     {
         fishPickup.Sling(targetPosition);
-        //cooldownHandler.SetInteractable(false);
+        cooldownHandler.SetInteractable(false);
     }
 }
