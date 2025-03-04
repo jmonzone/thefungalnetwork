@@ -32,7 +32,7 @@ public class ThrowFish : MonoBehaviour
     {
         enabled = true;
         targetPosition.y = 0; // Keep on the ground
-        movement.SetTargetPosition(targetPosition); // Move towards the target
+        movement.SetTrajectoryMovement(targetPosition); // Move towards the target
     }
 
     private void Movement_OnDestinationReached()

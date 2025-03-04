@@ -9,13 +9,16 @@ public class Movement : MonoBehaviour
         FOLLOW,
         DIRECTIONAL,
         POSITIONAL,
-        RADIAL
+        RADIAL,
+        TRAJECTORY // New movement type
     }
 
     [SerializeField] private MovementType movementType = MovementType.IDLE;
     [SerializeField] private float baseSpeed = 5f;
     [SerializeField] private LayerMask obstacleLayer;
+    [SerializeField] private Transform lookTransform;
 
+    private Vector3 direction;
     private float modifier = 1f;
     private float Speed => baseSpeed * modifier * Time.deltaTime;
 
@@ -23,8 +26,6 @@ public class Movement : MonoBehaviour
     [SerializeField] private Vector3 followOffset;
     private Transform target;
 
-    [Header("Move In Direction Settings")]
-    private Vector3 moveDirection;
 
     [Header("Move To Position Settings")]
     [SerializeField] private float stopDistance = 0.1f;
@@ -37,11 +38,19 @@ public class Movement : MonoBehaviour
     private float angle;
     private bool reverseDirection;
 
+    [Header("Trajectory Movement Settings")]
+    [SerializeField] private float trajectoryHeight = 3f; // Height of the trajectory
+    [SerializeField] private float trajectoryDuration = 2f; // Duration of the movement in seconds
+    private Vector3 trajectoryStartPosition;
+    private Vector3 trajectoryEndPosition;
+    private float trajectoryTimeElapsed;
+
     public event UnityAction OnDestinationReached;
 
     private void Awake()
     {
         CircleCenter = transform.position;
+        if (!lookTransform) lookTransform = transform;
     }
 
     private void Update()
@@ -59,6 +68,14 @@ public class Movement : MonoBehaviour
                 break;
             case MovementType.RADIAL:
                 MoveInCircle();
+                break;
+            case MovementType.TRAJECTORY:
+                MoveAlongTrajectory();
+                break;
+            case MovementType.IDLE:
+                var lookDirection = lookTransform.forward;
+                lookDirection.y = 0;
+                UpdateLookDirection(lookDirection);
                 break;
         }
     }
@@ -88,22 +105,23 @@ public class Movement : MonoBehaviour
     private void FollowTarget()
     {
         if (target == null) return;
-        UpdateLookDirection(target.position - transform.position);
+        UpdateLookDirection(target.position + followOffset - transform.position);
         transform.position = Vector3.MoveTowards(transform.position, target.position + followOffset, Speed);
     }
 
     // Directional Movement
     public void SetDirection(Vector3 direction, float speed)
     {
-        moveDirection = direction.normalized;
+        this.direction = direction.normalized;
         baseSpeed = speed;
         movementType = MovementType.DIRECTIONAL;
     }
 
     private void MoveInDirection()
     {
-        transform.position += Speed * moveDirection;
-        UpdateLookDirection(moveDirection);
+        UpdateLookDirection(direction);
+        transform.position += Speed * direction;
+        UpdateLookDirection(direction);
     }
 
     // Positional Movement
@@ -113,9 +131,6 @@ public class Movement : MonoBehaviour
         movementType = MovementType.POSITIONAL;
     }
 
-    /// <summary>
-    /// Performs a raycast and clamps the target position if an obstacle is in the way.
-    /// </summary>
     private Vector3 GetValidTargetPosition(Vector3 targetPosition)
     {
         Vector3 origin = transform.position;
@@ -127,16 +142,16 @@ public class Movement : MonoBehaviour
         if (Physics.Raycast(origin, direction, out RaycastHit hit, maxDistance, obstacleLayer))
         {
             // If an obstacle is hit, adjust the target position to be just before the obstacle
-            return hit.point - direction * stopDistance; // Slightly offset from the obstacle
+            return hit.point - direction * stopDistance;
         }
 
-        return targetPosition; // No obstacle, use original position
+        return targetPosition;
     }
 
     private void MoveToPosition()
     {
-        transform.position = Vector3.MoveTowards(transform.position, targetPosition, Speed);
         UpdateLookDirection(targetPosition - transform.position);
+        transform.position = Vector3.MoveTowards(transform.position, targetPosition, Speed);
 
         if (Vector3.Distance(transform.position, targetPosition) <= stopDistance)
         {
@@ -155,17 +170,59 @@ public class Movement : MonoBehaviour
     private void MoveInCircle()
     {
         angle += reverseDirection ? -Time.deltaTime : Time.deltaTime;
-
-        var targetPosition = CircleCenter + new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * circleRadius;
+        targetPosition = CircleCenter + new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * circleRadius;
         UpdateLookDirection(targetPosition - transform.position);
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, Speed);
+    }
+
+    // Trajectory Movement
+    public void SetTrajectoryMovement(Vector3 endPosition)
+    {
+        trajectoryStartPosition = transform.position;
+        trajectoryEndPosition = endPosition;
+        //trajectoryHeight = height;
+        //trajectoryDuration = duration;
+        trajectoryTimeElapsed = 0f;
+        movementType = MovementType.TRAJECTORY;
+    }
+
+    private void MoveAlongTrajectory()
+    {
+        trajectoryTimeElapsed += Time.deltaTime;
+        float progress = Mathf.Clamp01(trajectoryTimeElapsed / trajectoryDuration);
+
+        // Calculate the position on the XZ plane with constant speed
+        Vector3 currentPosition = Vector3.Lerp(trajectoryStartPosition, trajectoryEndPosition, progress);
+
+        // Calculate the height using a simple curve (parabola-like trajectory)
+        float heightOffset = Mathf.Sin(progress * Mathf.PI) * trajectoryHeight;
+
+        targetPosition = new Vector3(currentPosition.x, heightOffset, currentPosition.z);
+        UpdateLookDirection(targetPosition - transform.position);
+
+        // Set the final position with calculated height
+        transform.position = targetPosition;
+
+
+
+        // If the movement is complete, stop the movement
+        if (progress >= 1f)
+        {
+            OnDestinationReached?.Invoke();
+            Stop();
+        }
     }
 
     private void UpdateLookDirection(Vector3 direction)
     {
         var lookDirection = direction;
-        lookDirection.y = 0;
-        if (lookDirection.magnitude > 0) transform.forward = lookDirection;
+
+        if (lookDirection.magnitude > 0)
+        {
+            // Smoothly rotate using Slerp (Spherical Linear Interpolation)
+            Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
+            lookTransform.rotation = Quaternion.Slerp(lookTransform.rotation, targetRotation, Time.deltaTime * baseSpeed);
+        }
     }
 
     // Idle State (Stop Movement)
