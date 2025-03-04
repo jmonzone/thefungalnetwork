@@ -27,6 +27,7 @@ public class AbilityButton : MonoBehaviour
     [SerializeField] private DirectionalButton directionalButton;
     [SerializeField] private AbilityCastIndicator abilityCastIndicator;
     [SerializeField] private Ability ability;
+    [SerializeField] private bool useTrajectory = false;
 
     private void Awake()
     {
@@ -41,7 +42,7 @@ public class AbilityButton : MonoBehaviour
     {
         if (ability.IsOnCooldown) return;
         ability.PrepareAbility();
-        abilityCastIndicator.ShowIndicator();
+        abilityCastIndicator.ShowIndicator(useTrajectory);
     }
 
     private void OnDragUpdated(Vector3 direction)
