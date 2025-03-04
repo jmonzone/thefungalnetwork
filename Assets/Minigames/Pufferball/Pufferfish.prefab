@@ -107,6 +107,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerReference: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
   swimSpeed: 2
+  IsPickedUp:
+    m_InternalValue: 0
 --- !u!114 &5159478907015362789
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -121,9 +123,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerReference: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
   minExplosionRadius: 1.5
-  maxExplosionRadius: 3
+  maxExplosionRadius: 2
   minExplosionDamage: 1
-  maxExplosionDamage: 3
+  maxExplosionDamage: 5
   Temper:
     m_InternalValue: 0
 --- !u!114 &7290316461581926753
@@ -153,7 +155,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   renderer: {fileID: 3196242633864401127}
-  temperIncreaseSpeed: 0.5
+  maxTemperDuration: 6
+  flashCount: 5
+  flashDuration: 1
 --- !u!114 &2774039480892393551
 MonoBehaviour:
   m_ObjectHideFlags: 0
