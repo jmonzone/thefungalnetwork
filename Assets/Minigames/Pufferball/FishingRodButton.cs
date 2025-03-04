@@ -30,7 +30,14 @@ public class FishingRodButton : Ability
         Debug.Log("PufferballReference_OnPlayerRegistered");
         fishPickup = pufferballReference.Player.GetComponent<FishPickup>();
         fishPickup.OnFishChanged += FishPickup_OnFishChanged;
+        fishPickup.OnFishReleased += FishPickup_OnFishReleased;
         cooldownHandler.SetInteractable(false);
+    }
+
+    private void FishPickup_OnFishReleased()
+    {
+        cooldownHandler.StartCooldown(castCooldown); // Start logic cooldown
+        CancelAbility();
     }
 
     private void FishPickup_OnFishChanged()
@@ -41,19 +48,12 @@ public class FishingRodButton : Ability
         else cooldownHandler.SetInteractable(false);
     }
 
-    private void FishingRod_OnPufferfishReleased()
-    {
-        cooldownHandler.StartCooldown(castCooldown); // Start logic cooldown
-        CancelAbility();
-    }
-
     public override void PrepareAbility()
     {
         base.PrepareAbility();
-        var fish = pufferballReference.FishingRod.Fish;
-        if (fish)
+        if (fishPickup.Fish)
         {
-            fish.PrepareThrow();
+            fishPickup.Fish.PrepareThrow();
         }
 
         range = minRange;
@@ -68,6 +68,6 @@ public class FishingRodButton : Ability
     public override void CastAbility(Vector3 targetPosition)
     {
         fishPickup.Sling(targetPosition);
-        cooldownHandler.StartCooldown(castCooldown);
+        //cooldownHandler.SetInteractable(false);
     }
 }

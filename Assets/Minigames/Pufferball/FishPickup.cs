@@ -8,6 +8,7 @@ public class FishPickup : MonoBehaviour
     public Fish Fish { get; private set; }
 
     public event UnityAction OnFishChanged;
+    public event UnityAction OnFishReleased;
 
     private void Update()
     {
@@ -27,7 +28,14 @@ public class FishPickup : MonoBehaviour
 
     private void OnFishRemoved()
     {
+        var networkPufferfish = Fish.GetComponent<Pufferfish>(); // Ensure it's the correct one
+        if (networkPufferfish != null)
+        {
+            networkPufferfish.OnMaxTemperReached -= NetworkPufferfish_OnMaxTemperReached;
+        }
+
         Fish = null;
+        OnFishChanged?.Invoke();
     }
 
     private bool DetectPufferfishHit()
@@ -36,14 +44,28 @@ public class FishPickup : MonoBehaviour
 
         foreach (Collider hit in hits)
         {
-            Fish = hit.GetComponentInParent<Fish>();
-            if (Fish != null && Fish.CanPickUp)
+            var fish = hit.GetComponentInParent<Fish>();
+            if (fish != null && fish.CanPickUp)
             {
+                var networkPufferfish = fish.GetComponent<Pufferfish>(); // Ensure it's the correct one
+                if (networkPufferfish != null)
+                {
+                    networkPufferfish.OnMaxTemperReached += NetworkPufferfish_OnMaxTemperReached;
+                }
+
+
+                Fish = fish;
                 Fish.PickUp();
                 OnFishChanged?.Invoke();
                 return true;
             }
         }
         return false;
+    }
+
+    private void NetworkPufferfish_OnMaxTemperReached()
+    {
+        OnFishRemoved();
+        OnFishReleased?.Invoke();
     }
 }
