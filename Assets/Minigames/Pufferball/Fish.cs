@@ -6,9 +6,12 @@ using UnityEngine.Events;
 public class Fish : NetworkBehaviour
 {
     [SerializeField] private PlayerReference playerReference;
+    [SerializeField] private float swimSpeed = 1f;
 
     private Movement movement;
     private ThrowFish throwFish;
+
+    public bool CanPickUp { get; private set; }
 
     public event UnityAction OnPrepareThrow;
     public event UnityAction OnPickup;
@@ -18,6 +21,8 @@ public class Fish : NetworkBehaviour
         movement = GetComponent<Movement>();
 
         throwFish = GetComponent<ThrowFish>();
+
+        CanPickUp = true;
     }
 
     public void Catch(Transform bobber)
@@ -29,6 +34,7 @@ public class Fish : NetworkBehaviour
 
     public void PickUp()
     {
+        movement.SetSpeed(10);
         movement.Follow(playerReference.Movement.transform);
         RequestPickUpServerRpc(NetworkManager.Singleton.LocalClientId);
     }
@@ -53,7 +59,14 @@ public class Fish : NetworkBehaviour
     public void RequestPickUpServerRpc(ulong clientId)
     {
         NetworkObject.ChangeOwnership(clientId);
+        OnPickupClientRpc();
         OnPickup?.Invoke();
+    }
+
+    [ClientRpc]
+    private void OnPickupClientRpc()
+    {
+        CanPickUp = false;
     }
 
     public void ReturnToRadialMovement()
@@ -65,9 +78,21 @@ public class Fish : NetworkBehaviour
     {
         yield return new WaitForSeconds(1f);
 
-        transform.position = movement.CircleCenter;
-        movement.SetSpeed(3);
+        movement.SetSpeed(swimSpeed);
         movement.StartRadialMovement(true);
+        OnRespawnServerRpc();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void OnRespawnServerRpc()
+    {
+        OnRespawnClientRpc();
+    }
+
+    [ClientRpc]
+    private void OnRespawnClientRpc()
+    {
+        CanPickUp = true;
     }
 
 }

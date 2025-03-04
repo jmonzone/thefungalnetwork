@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 8610307119214488969}
   - component: {fileID: 2097482643546369042}
   - component: {fileID: 3325272597309751410}
+  - component: {fileID: 779741349755401041}
   m_Layer: 10
   m_Name: Network Fungal
   m_TagString: Untagged
@@ -213,6 +214,18 @@ MonoBehaviour:
   followOffset: {x: 0, y: 0, z: 0}
   stopDistance: 0.1
   circleRadius: 5
+--- !u!114 &779741349755401041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2941250707292126303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b38646decf524ae9b91d78c834e3d6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &9192630567062910213
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -309,22 +322,22 @@ PrefabInstance:
     - target: {fileID: 8268941721791759063, guid: db49ec9c09b9a45e0899865abf9716a9,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8268941721791759063, guid: db49ec9c09b9a45e0899865abf9716a9,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8268941721791759063, guid: db49ec9c09b9a45e0899865abf9716a9,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 8268941721791759063, guid: db49ec9c09b9a45e0899865abf9716a9,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -50
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

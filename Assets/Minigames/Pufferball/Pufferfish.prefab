@@ -54,7 +54,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GlobalObjectIdHash: 4149475198
-  InScenePlacedSourceGlobalObjectIdHash: 0
+  InScenePlacedSourceGlobalObjectIdHash: 4149475198
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
@@ -106,6 +106,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerReference: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
+  swimSpeed: 2
 --- !u!114 &5159478907015362789
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -179,13 +180,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementType: 4
-  baseSpeed: 5
+  baseSpeed: 2
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 128
   followOffset: {x: 0, y: 1, z: 0}
   stopDistance: 0.1
-  circleRadius: 1
+  circleRadius: 7
 --- !u!1 &6047455802489071344
 GameObject:
   m_ObjectHideFlags: 0

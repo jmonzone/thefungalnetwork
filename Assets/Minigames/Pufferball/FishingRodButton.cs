@@ -10,14 +10,35 @@ public class FishingRodButton : Ability
     [SerializeField] private float maxRange = 4f;
     [SerializeField] private float rangeIncreaseSpeed = 1.5f;
 
+    private FishPickup fishPickup;
+
     private void Awake()
     {
-        pufferballReference.OnFishingRodUpdated += PufferballReference_OnFishingRodUpdated;
+        Debug.Log($"awake pufferballReference.Player");
+        if (pufferballReference.Player)
+        {
+            PufferballReference_OnPlayerRegistered();
+        }
+        else
+        {
+            pufferballReference.OnPlayerRegistered += PufferballReference_OnPlayerRegistered;
+        }
     }
 
-    private void PufferballReference_OnFishingRodUpdated()
+    private void PufferballReference_OnPlayerRegistered()
     {
-        pufferballReference.FishingRod.OnPufferfishReleased += FishingRod_OnPufferfishReleased;
+        Debug.Log("PufferballReference_OnPlayerRegistered");
+        fishPickup = pufferballReference.Player.GetComponent<FishPickup>();
+        fishPickup.OnFishChanged += FishPickup_OnFishChanged;
+        cooldownHandler.SetInteractable(false);
+    }
+
+    private void FishPickup_OnFishChanged()
+    {
+        Debug.Log("FishPickup_OnFishChanged");
+
+        if (fishPickup.Fish) cooldownHandler.SetInteractable(true);
+        else cooldownHandler.SetInteractable(false);
     }
 
     private void FishingRod_OnPufferfishReleased()
@@ -46,27 +67,7 @@ public class FishingRodButton : Ability
 
     public override void CastAbility(Vector3 targetPosition)
     {
-        var pufferfish = pufferballReference.FishingRod.Fish;
-        if (pufferfish)
-        {
-            pufferballReference.FishingRod.Sling(targetPosition);
-            cooldownHandler.StartCooldown(castCooldown); // Start logic cooldown
-        }
-        else
-        {
-            pufferballReference.FishingRod.Cast(targetPosition, pufferfishCaught =>
-            {
-                if (pufferfishCaught)
-                {
-                    cooldownHandler.SetInteractable(true);
-                }
-                else
-                {
-                    cooldownHandler.StartCooldown(castCooldown);
-                }
-            });
-
-            cooldownHandler.SetInteractable(false);
-        }
+        fishPickup.Sling(targetPosition);
+        cooldownHandler.StartCooldown(castCooldown);
     }
 }

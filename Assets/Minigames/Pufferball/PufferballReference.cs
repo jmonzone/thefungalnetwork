@@ -21,6 +21,8 @@ public class PufferballReference : ScriptableObject
 
     public event UnityAction OnFishingRodUpdated;
     public event UnityAction OnPufferfishUpdated;
+
+    public event UnityAction OnPlayerRegistered;
     public event UnityAction<ulong> OnPlayerDefeated;
 
     public void Initialize()
@@ -41,7 +43,13 @@ public class PufferballReference : ScriptableObject
 
     public void RegisterPlayer(NetworkFungal player)
     {
-        if (player.IsOwner) Player = player;
+        if (player.IsOwner)
+        {
+            Player = player;
+            Debug.Log("OnPlayerRegistered");
+            OnPlayerRegistered?.Invoke();
+        }
+
         Players.Add(player);
         player.OnHealthDepleted += () =>
         {
