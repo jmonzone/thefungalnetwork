@@ -48,7 +48,6 @@ public class PufferfishTemper : MonoBehaviour
         }
     }
 
-
     public void StartTemper()
     {
         isIncreasing = true;

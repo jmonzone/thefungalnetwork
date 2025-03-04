@@ -88,6 +88,7 @@ public class Movement : MonoBehaviour
     private void FollowTarget()
     {
         if (target == null) return;
+        UpdateLookDirection(target.position - transform.position);
         transform.position = Vector3.MoveTowards(transform.position, target.position + followOffset, Speed);
     }
 
@@ -156,6 +157,7 @@ public class Movement : MonoBehaviour
         angle += reverseDirection ? -Time.deltaTime : Time.deltaTime;
 
         var targetPosition = CircleCenter + new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * circleRadius;
+        UpdateLookDirection(targetPosition - transform.position);
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, Speed);
     }
 
@@ -163,7 +165,7 @@ public class Movement : MonoBehaviour
     {
         var lookDirection = direction;
         lookDirection.y = 0;
-        transform.forward = lookDirection;
+        if (lookDirection.magnitude > 0) transform.forward = lookDirection;
     }
 
     // Idle State (Stop Movement)

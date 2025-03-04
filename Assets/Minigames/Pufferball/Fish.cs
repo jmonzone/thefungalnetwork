@@ -90,14 +90,43 @@ public class Fish : NetworkBehaviour
         StartCoroutine(RespawnRoutine());
     }
 
+    private Vector3 originalScale;
+
     private IEnumerator RespawnRoutine()
     {
+        originalScale = transform.GetChild(0).localScale;
+
         yield return new WaitForSeconds(1f);
+
+        yield return ScaleOverTime(1f, 1f, 0f); // Shrink over 1 second
+
+        yield return new WaitForSeconds(1f);
+
+        transform.position = movement.CircleCenter;
+
+        yield return ScaleOverTime(1f, 0f, 1f); // Grow back over 1 second
 
         movement.SetSpeed(swimSpeed);
         movement.StartRadialMovement(true);
         OnRespawnServerRpc();
     }
+
+    // Generalized scaling coroutine
+    private IEnumerator ScaleOverTime(float duration, float startScale, float endScale)
+    {
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float scaleFactor = Mathf.Lerp(startScale, endScale, elapsed / duration);
+            transform.GetChild(0).localScale = originalScale * scaleFactor;
+            yield return null;
+        }
+
+        transform.GetChild(0).localScale = originalScale * endScale; // Ensure final scale
+    }
+
 
     [ServerRpc(RequireOwnership = false)]
     public void OnRespawnServerRpc()
