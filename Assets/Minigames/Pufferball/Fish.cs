@@ -11,18 +11,14 @@ public class Fish : NetworkBehaviour
     private Movement movement;
     private ThrowFish throwFish;
 
-    public bool CanPickUp { get; private set; }
-
     public event UnityAction OnPrepareThrow;
     public event UnityAction OnPickup;
 
-    private void Awake()
+    public override void OnNetworkSpawn()
     {
+        base.OnNetworkSpawn();
         movement = GetComponent<Movement>();
-
         throwFish = GetComponent<ThrowFish>();
-
-        CanPickUp = true;
     }
 
     public void Catch(Transform bobber)
@@ -32,12 +28,6 @@ public class Fish : NetworkBehaviour
         RequestCatchServerRpc(NetworkManager.Singleton.LocalClientId);
     }
 
-    public void PickUp()
-    {
-        movement.SetSpeed(10);
-        movement.Follow(playerReference.Movement.transform);
-        RequestPickUpServerRpc(NetworkManager.Singleton.LocalClientId);
-    }
 
     public void PrepareThrow()
     {
@@ -55,22 +45,48 @@ public class Fish : NetworkBehaviour
         NetworkObject.ChangeOwnership(requestingClientId);
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    public void RequestPickUpServerRpc(ulong clientId)
+
+    public NetworkVariable<bool> IsPickedUp = new NetworkVariable<bool>(false);
+
+    public bool PickUp()
     {
+        if (IsPickedUp.Value) return false;  // Return false if it's already picked up
+
+        RequestPickUpServerRpc(NetworkManager.Singleton.LocalClientId);
+        return true; // Return true if the pick-up was successful
+    }
+
+
+    [ServerRpc(RequireOwnership = false)]
+    private void RequestPickUpServerRpc(ulong clientId)
+    {
+        Debug.Log($"RequestPickUpServerRpc {IsPickedUp.Value}");
+
+        if (IsPickedUp.Value) return;  // Double check server-side to prevent race conditions.
+
+        IsPickedUp.Value = true;
         NetworkObject.ChangeOwnership(clientId);
-        OnPickupClientRpc();
-        OnPickup?.Invoke();
+        OnPickupClientRpc(clientId);
     }
 
     [ClientRpc]
-    private void OnPickupClientRpc()
+    private void OnPickupClientRpc(ulong clientId)
     {
-        CanPickUp = false;
+        Debug.Log($"OnPickupClientRpc {NetworkManager.Singleton.LocalClientId == clientId}");
+
+        // Update the local state after ownership change
+        if (NetworkManager.Singleton.LocalClientId == clientId)
+        {
+            movement.SetSpeed(10);
+            movement.Follow(playerReference.Movement.transform);
+            OnPickup?.Invoke();  // Trigger pickup event only on the owning client
+        }
     }
 
     public void ReturnToRadialMovement()
     {
+        Debug.Log("ReturnToRadialMovement");
+
         StartCoroutine(RespawnRoutine());
     }
 
@@ -86,13 +102,7 @@ public class Fish : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void OnRespawnServerRpc()
     {
-        OnRespawnClientRpc();
-    }
-
-    [ClientRpc]
-    private void OnRespawnClientRpc()
-    {
-        CanPickUp = true;
+        IsPickedUp.Value = false;
     }
 
 }
