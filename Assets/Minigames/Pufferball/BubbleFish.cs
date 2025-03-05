@@ -1,8 +1,11 @@
 using Unity.Netcode;
 using UnityEngine;
+using System.Collections;
 
 public class BubbleFish : NetworkBehaviour
 {
+    [SerializeField] private float autoPopTime = 3f; // Adjust the time as needed
+
     private Fish fish;
     private bool canHit = false;
 
@@ -17,6 +20,13 @@ public class BubbleFish : NetworkBehaviour
     private void ThrowFish_OnThrowComplete()
     {
         canHit = true;
+        StartCoroutine(AutoPopTimer()); // Start auto-pop countdown
+    }
+
+    private IEnumerator AutoPopTimer()
+    {
+        yield return new WaitForSeconds(autoPopTime);
+        PopServerRpc();
     }
 
     private void Update()
@@ -27,8 +37,12 @@ public class BubbleFish : NetworkBehaviour
         }
     }
 
+    private bool hitRequested;
+
     private void CheckPlayerHit()
     {
+        if (hitRequested) return;
+
         // Detect all players in radius
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, 1f);
         foreach (Collider hit in hitColliders)
@@ -38,6 +52,8 @@ public class BubbleFish : NetworkBehaviour
             {
                 fungal.ModifySpeedServerRpc(0f, 1.5f);
                 fungal.TakeDamageServerRpc(1f);
+                hitRequested = true;
+
                 PopServerRpc();
             }
         }
@@ -46,16 +62,18 @@ public class BubbleFish : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void PopServerRpc()
     {
-        PopClientRpc();
+        Debug.Log("bubble.PopServerRpc()");
+        if (canHit) PopClientRpc();
     }
 
     [ClientRpc]
     private void PopClientRpc()
     {
-        if (IsOwner)
+        if (IsOwner && canHit)
         {
             fish.ReturnToRadialMovement();
             canHit = false;
+            hitRequested = false;
         }
     }
 }

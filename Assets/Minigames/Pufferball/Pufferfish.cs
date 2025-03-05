@@ -106,7 +106,6 @@ public class Pufferfish : NetworkBehaviour
         ExplodeServerRpc(radius);
     }
 
-
     [ServerRpc]
     public void ExplodeServerRpc(float radius)
     {
