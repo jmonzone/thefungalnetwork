@@ -23,12 +23,14 @@ public class BubbleFish : NetworkBehaviour
 
     private void ThrowFish_OnThrowComplete()
     {
-        canHit = true;
         StartCoroutine(AutoPopTimer());
     }
 
     private IEnumerator AutoPopTimer()
     {
+        yield return fish.Movement.ScaleOverTime(0.75f, 1f, 1.75f);
+        canHit = true;
+
         yield return new WaitForSeconds(autoPopTime);
         PopServerRpc();
     }
