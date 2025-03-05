@@ -5,23 +5,31 @@ using System.Collections;
 public class BubbleFish : NetworkBehaviour
 {
     [SerializeField] private float autoPopTime = 3f;
-    [SerializeField] private float popDuration = 0.3f; // Duration of pop animation
+    [SerializeField] private float popDuration = 0.3f;
+    [SerializeField] private float damage = 3f;
 
     private Fish fish;
-    private bool canHit = false;
+    private NetworkVariable<bool> canHit = new NetworkVariable<bool>(false);  // Use NetworkVariable
     private bool hitRequested = false;
     private Material bubbleMaterial;
 
     private void Awake()
     {
         fish = GetComponent<Fish>();
-        bubbleMaterial = GetComponentInChildren<Renderer>().material; // Get shader material
+        bubbleMaterial = GetComponentInChildren<Renderer>().material;
 
         var throwFish = GetComponent<ThrowFish>();
-        throwFish.OnThrowComplete += ThrowFish_OnThrowComplete;
+        throwFish.OnThrowComplete += InflateServerRpc;
     }
 
-    private void ThrowFish_OnThrowComplete()
+    [ServerRpc(RequireOwnership = false)]
+    private void InflateServerRpc()
+    {
+        InflateClientRpc();
+    }
+
+    [ClientRpc]
+    private void InflateClientRpc()
     {
         StartCoroutine(AutoPopTimer());
     }
@@ -29,15 +37,20 @@ public class BubbleFish : NetworkBehaviour
     private IEnumerator AutoPopTimer()
     {
         yield return fish.Movement.ScaleOverTime(0.75f, 1f, 1.75f);
-        canHit = true;
 
-        yield return new WaitForSeconds(autoPopTime);
-        PopServerRpc();
+        if (IsOwner)
+        {
+            // Update server-side canHit variable
+            SetCanHitServerRpc(true);
+
+            yield return new WaitForSeconds(autoPopTime);
+            PopServerRpc();
+        }
     }
 
     private void Update()
     {
-        if (IsOwner && canHit)
+        if (IsOwner && canHit.Value)  // Check the NetworkVariable's value
         {
             CheckPlayerHit();
         }
@@ -54,7 +67,7 @@ public class BubbleFish : NetworkBehaviour
             if (fungal != null)
             {
                 fungal.ModifySpeedServerRpc(0f, 1.5f);
-                fungal.TakeDamageServerRpc(1f);
+                fungal.TakeDamageServerRpc(damage);
                 hitRequested = true;
 
                 PopServerRpc();
@@ -65,34 +78,36 @@ public class BubbleFish : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void PopServerRpc()
     {
-        Debug.Log("bubble.PopServerRpc()");
-        if (canHit) PopClientRpc();
+        if (canHit.Value) PopClientRpc();
     }
 
     [ClientRpc]
     private void PopClientRpc()
     {
-        if (IsOwner && canHit)
+        if (canHit.Value)  // Check the NetworkVariable's value
         {
             StopAllCoroutines();
             StartCoroutine(PopAnimation());
-            canHit = false;
+        }
+
+        if (IsOwner && canHit.Value)
+        {
+            // Update canHit value on the server to false when pop happens
+            SetCanHitServerRpc(false);
             hitRequested = false;
         }
     }
 
     private IEnumerator PopAnimation()
     {
-        float elapsedTime = 0f;
+        float elapsedTime = 0; // Sync timing
         float startIntensity = bubbleMaterial.GetFloat("_Intensity");
-
         Color startColor = bubbleMaterial.GetColor("_Outer_Color");
 
-        float peakScale = 1.4f; // Slight expansion before popping
-        float endScale = 0f;     // Fully disappears
+        float peakScale = 1.4f;
+        float endScale = 0f;
         float duration = popDuration;
 
-        // Parallel Scaling and Shader Updates
         while (elapsedTime < duration)
         {
             float t = elapsedTime / duration;
@@ -103,9 +118,8 @@ public class BubbleFish : NetworkBehaviour
                 ? Mathf.Lerp(1f, peakScale, t * 2f)
                 : Mathf.Lerp(peakScale, endScale, (t - 0.5f) * 2f);
 
-            // Modify scale via movement script if available
-            fish.Movement.SetScaleFactor(scaleFactor); // Call method to modify scale
-
+            // Update movement scale if available
+            if (fish.Movement != null) fish.Movement.SetScaleFactor(scaleFactor);
 
             // Modify shader properties
             bubbleMaterial.SetFloat("_Intensity", Mathf.Lerp(startIntensity, startIntensity * 0.5f, popCurve));
@@ -116,7 +130,7 @@ public class BubbleFish : NetworkBehaviour
         }
 
         // Ensure final values
-        fish.Movement.SetScaleFactor(0f); // Call method to modify scale
+        if (fish.Movement != null) fish.Movement.SetScaleFactor(0f);
 
         yield return new WaitForSeconds(1f);
 
@@ -126,5 +140,10 @@ public class BubbleFish : NetworkBehaviour
         fish.ReturnToRadialMovement();
     }
 
-
+    // ServerRpc to update canHit on all clients
+    [ServerRpc]
+    private void SetCanHitServerRpc(bool value)
+    {
+        canHit.Value = value;  // Update NetworkVariable on the server
+    }
 }
