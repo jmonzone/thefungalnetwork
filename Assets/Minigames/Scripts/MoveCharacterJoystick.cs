@@ -37,6 +37,7 @@ public class MoveCharacterJoystick : MonoBehaviour
     private void MoveReticle(Vector3 direction)
     {
         if (!enabled) return;
+        if (player.Fungal.Health.CurrentHealth == 0) return;
 
         var translation = direction;
         translation.z = translation.y;

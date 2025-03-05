@@ -40,4 +40,14 @@ public class MovementAnimations : MonoBehaviour
     {
         animator.Play("Hit");
     }
+
+    public void PlayDeathAnimation()
+    {
+        animator.Play("Death");
+    }
+
+    public void PlaySpawnAnimation()
+    {
+        animator.Play("Clicked");
+    }
 }

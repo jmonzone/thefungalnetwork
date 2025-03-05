@@ -78,7 +78,7 @@ public class FishingPlayer : NetworkBehaviour
             {
                 networkFungal = networkObject.GetComponent<NetworkFungal>();
                 networkFungal.InitializeServerRpc(playerIndex);
-                player.SetMovement(networkFungal.GetComponent<Movement>());
+                player.SetMovement(networkFungal);
                 navigation.Navigate(inputView);
             }
         }

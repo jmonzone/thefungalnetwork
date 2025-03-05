@@ -8,8 +8,8 @@ public class NetworkFungal : NetworkBehaviour
     [SerializeField] private MultiplayerArena arena;
     [SerializeField] private GameObject stunAnimation;
 
-    private Health health;
-    private Movement movement;
+    public Health Health { get; private set; }
+    public Movement Movement { get; private set; }
     private MovementAnimations animations;
     private MaterialFlasher materialFlasher;
 
@@ -23,18 +23,18 @@ public class NetworkFungal : NetworkBehaviour
 
         pufferball.RegisterPlayer(this);
 
-        health = GetComponent<Health>();
-        movement = GetComponent<Movement>();
-        movement.OnTypeChanged += Movement_OnTypeChanged;
+        Health = GetComponent<Health>();
+        Movement = GetComponent<Movement>();
+        Movement.OnTypeChanged += Movement_OnTypeChanged;
         animations = GetComponent<MovementAnimations>();
         materialFlasher = GetComponent<MaterialFlasher>();
 
-        health.OnHealthDepleted += Health_OnHealthDepleted;
+        Health.OnHealthDepleted += Health_OnHealthDepleted;
     }
 
     private void Movement_OnTypeChanged()
     {
-        if (IsOwner) SyncMovementTypeServerRpc((int)movement.Type);
+        if (IsOwner) SyncMovementTypeServerRpc((int)Movement.Type);
     }
 
     [ServerRpc]
@@ -46,12 +46,13 @@ public class NetworkFungal : NetworkBehaviour
     [ClientRpc]
     private void SyncMovementTypeClientRpc(int type)
     {
-        if (!IsOwner) movement.SetType((Movement.MovementType)type);
+        if (!IsOwner) Movement.SetType((Movement.MovementType)type);
     }
 
     private void Health_OnHealthDepleted()
     {
-        movement.Stop();
+        animations.PlayDeathAnimation();
+        Movement.Stop();
         OnHealthDepleted?.Invoke();
     }
 
@@ -70,14 +71,15 @@ public class NetworkFungal : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void RespawnServerRpc()
     {
-        RespawnClientRpc();
+        Invoke(nameof(RespawnClientRpc), 2f);
     }
 
     [ClientRpc]
     private void RespawnClientRpc()
     {
         if (IsOwner) transform.position = arena.SpawnPositions[playerIndex].position;
-        health.SetHealth(health.MaxHealth);
+        Health.SetHealth(Health.MaxHealth);
+        animations.PlaySpawnAnimation();
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -90,19 +92,20 @@ public class NetworkFungal : NetworkBehaviour
     private void TakeDamageClientRpc(float damage)
     {
         // Subtract damage from the shield first
-        if (health.CurrentShield > 0)
+        if (Health.CurrentShield > 0)
         {
-            float shieldDamage = Mathf.Min(damage, health.CurrentShield); // Take as much damage as possible from the shield
-            health.SetShield(health.CurrentShield - shieldDamage); // Reduce shield
+            float shieldDamage = Mathf.Min(damage, Health.CurrentShield); // Take as much damage as possible from the shield
+            Health.SetShield(Health.CurrentShield - shieldDamage); // Reduce shield
             damage -= shieldDamage; // Reduce the remaining damage
         }
 
         // If there's any remaining damage, subtract it from health
         if (damage > 0)
         {
+            
             animations.PlayHitAnimation();
             materialFlasher.FlashColor(Color.white);
-            health.SetHealth(health.CurrentHealth - damage); // Reduce health with the remaining damage
+            Health.SetHealth(Health.CurrentHealth - damage); // Reduce health with the remaining damage
         }
     }
 
@@ -115,7 +118,7 @@ public class NetworkFungal : NetworkBehaviour
     [ClientRpc]
     private void AddShieldClientRpc(float value)
     {
-        health.SetShield(health.CurrentShield + value);
+        Health.SetShield(Health.CurrentShield + value);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -132,7 +135,7 @@ public class NetworkFungal : NetworkBehaviour
 
         if (IsOwner)
         {
-            movement.SetSpeedModifier(modifer);
+            Movement.SetSpeedModifier(modifer);
         }
     }
 
@@ -140,6 +143,6 @@ public class NetworkFungal : NetworkBehaviour
     private void ResetSpeedClientRpc()
     {
         stunAnimation.SetActive(false);
-        movement.ResetSpeedModifier();
+        Movement.ResetSpeedModifier();
     }
 }

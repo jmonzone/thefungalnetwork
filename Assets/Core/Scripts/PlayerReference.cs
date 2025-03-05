@@ -4,13 +4,14 @@ using UnityEngine.Events;
 [CreateAssetMenu]
 public class PlayerReference : ScriptableObject
 {
-    public Movement Movement { get; private set; }
+    public NetworkFungal Fungal { get; private set; }
+    public Movement Movement => Fungal.Movement;
 
     public event UnityAction OnPlayerUpdated;
 
-    public void SetMovement(Movement movement)
+    public void SetMovement(NetworkFungal fungal)
     {
-        Movement = movement;
+        Fungal = fungal;
         OnPlayerUpdated?.Invoke();
     }
 }
