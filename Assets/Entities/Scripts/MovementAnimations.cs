@@ -28,11 +28,16 @@ public class MovementAnimations : MonoBehaviour
         if (IsMoving)
         {
             float curvedSpeed = 1f - (1f / (1f + movement.CalculatedSpeed * 0.2f));
-            animator.speed = Mathf.Lerp(1f, 2f, curvedSpeed);
+            animator.speed = animationSpeed * Mathf.Lerp(1f, 2f, curvedSpeed);
         }
         else
         {
-            animator.speed = 1f; // Default idle speed
+            animator.speed = animationSpeed; // Default idle speed
         }
+    }
+
+    public void PlayHitAnimation()
+    {
+        animator.Play("Hit");
     }
 }

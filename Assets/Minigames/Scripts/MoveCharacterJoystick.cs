@@ -29,7 +29,7 @@ public class MoveCharacterJoystick : MonoBehaviour
             var x = Input.GetAxis("Horizontal");
             var y = Input.GetAxis("Vertical");
 
-            var direction = wasdSensitivity * Time.deltaTime * new Vector3(x, y);
+            var direction = wasdSensitivity * new Vector3(x, y);
             MoveReticle(direction);
         }
     }
@@ -50,6 +50,6 @@ public class MoveCharacterJoystick : MonoBehaviour
             return;
         }
 
-        player.Movement.SetDirection(translation.normalized, speed);
+        player.Movement.SetDirection(translation, speed);
     }
 }

@@ -121,7 +121,7 @@ public class Movement : MonoBehaviour
     // Directional Movement
     public void SetDirection(Vector3 direction, float speed)
     {
-        this.direction = direction.normalized;
+        this.direction = direction;
         baseSpeed = speed;
         type = MovementType.DIRECTIONAL;
     }
