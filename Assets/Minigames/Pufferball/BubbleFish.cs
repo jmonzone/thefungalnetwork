@@ -8,19 +8,24 @@ public class BubbleFish : NetworkBehaviour
     [SerializeField] private float popDuration = 0.3f;
     [SerializeField] private float damage = 3f;
     [SerializeField] private Renderer bubbleRenderer;
+    [SerializeField] private Movement bubbleMovement;
 
     private Fish fish;
+    private Animator animator;
     private NetworkVariable<bool> canHit = new NetworkVariable<bool>(false);  // Use NetworkVariable
     private bool hitRequested = false;
     private Material bubbleMaterial;
 
-    private void Awake()
+    public override void OnNetworkSpawn()
     {
+        base.OnNetworkSpawn();
         fish = GetComponent<Fish>();
         bubbleMaterial = bubbleRenderer.material;
 
         var throwFish = GetComponent<ThrowFish>();
         throwFish.OnThrowComplete += InflateServerRpc;
+
+        animator = GetComponentInChildren<Animator>();
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -32,12 +37,15 @@ public class BubbleFish : NetworkBehaviour
     [ClientRpc]
     private void InflateClientRpc()
     {
-        StartCoroutine(AutoPopTimer());
+        StartCoroutine(InflateRoutine());
     }
 
-    private IEnumerator AutoPopTimer()
+    private IEnumerator InflateRoutine()
     {
-        yield return fish.Movement.ScaleOverTime(0.75f, 0, 1.75f);
+        animator.Play("Jump");
+
+        bubbleMovement.gameObject.SetActive(true);
+        yield return bubbleMovement.ScaleOverTime(0.75f, 0, 1.75f);
 
         if (IsOwner)
         {
@@ -119,8 +127,7 @@ public class BubbleFish : NetworkBehaviour
                 ? Mathf.Lerp(1f, peakScale, t * 2f)
                 : Mathf.Lerp(peakScale, endScale, (t - 0.5f) * 2f);
 
-            // Update movement scale if available
-            if (fish.Movement != null) fish.Movement.SetScaleFactor(scaleFactor);
+            bubbleMovement.SetScaleFactor(scaleFactor);
 
             // Modify shader properties
             bubbleMaterial.SetFloat("_Intensity", Mathf.Lerp(startIntensity, startIntensity * 0.5f, popCurve));
@@ -131,7 +138,8 @@ public class BubbleFish : NetworkBehaviour
         }
 
         // Ensure final values
-        if (fish.Movement != null) fish.Movement.SetScaleFactor(0f);
+        bubbleMovement.SetScaleFactor(0f);
+        bubbleMovement.gameObject.SetActive(false);
 
         yield return new WaitForSeconds(1f);
 
