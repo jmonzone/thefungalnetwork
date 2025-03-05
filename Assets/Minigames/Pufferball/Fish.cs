@@ -11,14 +11,24 @@ public class Fish : NetworkBehaviour
     private Movement movement;
     private ThrowFish throwFish;
 
+    private NetworkVariable<Vector3> networkPosition = new NetworkVariable<Vector3>(
+        Vector3.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server
+    );
+
     public event UnityAction OnPrepareThrow;
     public event UnityAction OnPickup;
+    public event UnityAction OnRespawn;
 
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
         movement = GetComponent<Movement>();
         throwFish = GetComponent<ThrowFish>();
+
+        if (IsServer)
+        {
+            networkPosition.Value = transform.position; // Set initial position on the server
+        }
     }
 
     public void Catch(Transform bobber)
@@ -102,13 +112,14 @@ public class Fish : NetworkBehaviour
 
         yield return new WaitForSeconds(1f);
 
-        transform.position = movement.CircleCenter;
+        transform.position = networkPosition.Value;
 
         yield return ScaleOverTime(1f, 0f, 1f); // Grow back over 1 second
 
         movement.SetSpeed(swimSpeed);
-        movement.StartRadialMovement(true);
+        movement.StartRadialMovement(networkPosition.Value, true);
         OnRespawnServerRpc();
+        OnRespawn?.Invoke();
     }
 
     // Generalized scaling coroutine

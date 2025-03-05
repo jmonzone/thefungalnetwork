@@ -161,8 +161,9 @@ public class Movement : MonoBehaviour
     }
 
     // Radial Movement
-    public void StartRadialMovement(bool reverse)
+    public void StartRadialMovement(Vector3 center, bool reverse)
     {
+        CircleCenter = center;
         reverseDirection = reverse;
         movementType = MovementType.RADIAL;
     }
@@ -202,8 +203,6 @@ public class Movement : MonoBehaviour
 
         // Set the final position with calculated height
         transform.position = targetPosition;
-
-
 
         // If the movement is complete, stop the movement
         if (progress >= 1f)
