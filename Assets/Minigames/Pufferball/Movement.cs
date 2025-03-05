@@ -18,6 +18,7 @@ public class Movement : MonoBehaviour
     [SerializeField] private float baseSpeed = 5f;
     [SerializeField] private LayerMask obstacleLayer;
     [SerializeField] private Transform lookTransform;
+    [SerializeField] private Transform scaleTransform;
 
     private Vector3 direction;
     private float modifier = 1f;
@@ -60,7 +61,9 @@ public class Movement : MonoBehaviour
         originalScale = transform.GetChild(0).localScale;
 
         CircleCenter = transform.position;
+
         if (!lookTransform) lookTransform = transform;
+        if (!scaleTransform) scaleTransform = transform.GetChild(0);
     }
 
     private void Update()
@@ -259,12 +262,12 @@ public class Movement : MonoBehaviour
             yield return null;
         }
 
-        transform.GetChild(0).localScale = originalScale * endScale; // Ensure final scale
+        scaleTransform.localScale = originalScale * endScale; // Ensure final scale
     }
 
     public void SetScaleFactor(float scaleFactor)
     {
-        transform.GetChild(0).localScale = originalScale * scaleFactor;
+        scaleTransform.localScale = originalScale * scaleFactor;
     }
 
     public void ResetScaleFactor()

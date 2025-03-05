@@ -7,6 +7,7 @@ public class BubbleFish : NetworkBehaviour
     [SerializeField] private float autoPopTime = 3f;
     [SerializeField] private float popDuration = 0.3f;
     [SerializeField] private float damage = 3f;
+    [SerializeField] private Renderer bubbleRenderer;
 
     private Fish fish;
     private NetworkVariable<bool> canHit = new NetworkVariable<bool>(false);  // Use NetworkVariable
@@ -16,7 +17,7 @@ public class BubbleFish : NetworkBehaviour
     private void Awake()
     {
         fish = GetComponent<Fish>();
-        bubbleMaterial = GetComponentInChildren<Renderer>().material;
+        bubbleMaterial = bubbleRenderer.material;
 
         var throwFish = GetComponent<ThrowFish>();
         throwFish.OnThrowComplete += InflateServerRpc;
@@ -36,7 +37,7 @@ public class BubbleFish : NetworkBehaviour
 
     private IEnumerator AutoPopTimer()
     {
-        yield return fish.Movement.ScaleOverTime(0.75f, 1f, 1.75f);
+        yield return fish.Movement.ScaleOverTime(0.75f, 0, 1.75f);
 
         if (IsOwner)
         {
