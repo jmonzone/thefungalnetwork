@@ -104,6 +104,8 @@ public class Fish : NetworkBehaviour
     {
         transform.position = networkPosition.Value;
 
+        yield return new WaitForSeconds(2f);
+
         yield return Movement.ScaleOverTime(1f, 0f, 1f); // Grow back over 1 second
 
         Movement.SetSpeed(swimSpeed);

@@ -72,6 +72,7 @@ public class BubbleFish : NetworkBehaviour
     {
         if (IsOwner && canHit)
         {
+            StopAllCoroutines();
             StartCoroutine(PopAnimation());
             canHit = false;
             hitRequested = false;
@@ -82,6 +83,7 @@ public class BubbleFish : NetworkBehaviour
     {
         float elapsedTime = 0f;
         float startIntensity = bubbleMaterial.GetFloat("_Intensity");
+
         Color startColor = bubbleMaterial.GetColor("_Outer_Color");
 
         float peakScale = 1.4f; // Slight expansion before popping
@@ -112,8 +114,12 @@ public class BubbleFish : NetworkBehaviour
         }
 
         // Ensure final values
-        bubbleMaterial.SetColor("_Outer_Color", new Color(startColor.r, startColor.g, startColor.b, 0f));
         fish.Movement.SetScaleFactor(0f); // Call method to modify scale
+
+        yield return new WaitForSeconds(1f);
+
+        bubbleMaterial.SetFloat("_Intensity", startIntensity);
+        bubbleMaterial.SetColor("_Outer_Color", startColor);
 
         fish.ReturnToRadialMovement();
     }
