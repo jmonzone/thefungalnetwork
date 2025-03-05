@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -45,10 +46,14 @@ public class Movement : MonoBehaviour
     private Vector3 trajectoryEndPosition;
     private float trajectoryTimeElapsed;
 
+    private Vector3 originalScale;
+
     public event UnityAction OnDestinationReached;
 
     private void Awake()
     {
+        originalScale = transform.GetChild(0).localScale;
+
         CircleCenter = transform.position;
         if (!lookTransform) lookTransform = transform;
     }
@@ -229,4 +234,31 @@ public class Movement : MonoBehaviour
     {
         movementType = MovementType.IDLE;
     }
+
+    // Generalized scaling coroutine
+    public IEnumerator ScaleOverTime(float duration, float startScale, float endScale)
+    {
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float scaleFactor = Mathf.Lerp(startScale, endScale, elapsed / duration);
+            SetScaleFactor(scaleFactor);
+            yield return null;
+        }
+
+        transform.GetChild(0).localScale = originalScale * endScale; // Ensure final scale
+    }
+
+    public void SetScaleFactor(float scaleFactor)
+    {
+        transform.GetChild(0).localScale = originalScale * scaleFactor;
+    }
+
+    public void ResetScaleFactor()
+    {
+        SetScaleFactor(1);
+    }
+
 }

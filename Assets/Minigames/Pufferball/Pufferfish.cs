@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
@@ -71,10 +72,23 @@ public class Pufferfish : NetworkBehaviour
     {
         if (IsOwner)
         {
-            fish.ReturnToRadialMovement();
+            StartCoroutine(RespawnRoutine());
             StopTemperServerRpc();
         }
     }
+
+    private IEnumerator RespawnRoutine()
+    {
+
+        yield return new WaitForSeconds(1f);
+
+        yield return movement.ScaleOverTime(1f, 1f, 0f); // Shrink over 1 second
+
+        yield return new WaitForSeconds(1f);
+
+        fish.ReturnToRadialMovement();
+    }
+
 
     private void HandleMaxTemperReached()
     {

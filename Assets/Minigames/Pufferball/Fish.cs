@@ -8,7 +8,7 @@ public class Fish : NetworkBehaviour
     [SerializeField] private PlayerReference playerReference;
     [SerializeField] private float swimSpeed = 1f;
 
-    private Movement movement;
+    public Movement Movement { get; private set; }
     private ThrowFish throwFish;
 
     private NetworkVariable<Vector3> networkPosition = new NetworkVariable<Vector3>(
@@ -22,7 +22,7 @@ public class Fish : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-        movement = GetComponent<Movement>();
+        Movement = GetComponent<Movement>();
         throwFish = GetComponent<ThrowFish>();
 
         if (IsServer)
@@ -33,8 +33,8 @@ public class Fish : NetworkBehaviour
 
     public void Catch(Transform bobber)
     {
-        movement.SetSpeed(10);
-        movement.Follow(bobber);
+        Movement.SetSpeed(10);
+        Movement.Follow(bobber);
         RequestCatchServerRpc(NetworkManager.Singleton.LocalClientId);
     }
 
@@ -87,8 +87,8 @@ public class Fish : NetworkBehaviour
         // Update the local state after ownership change
         if (NetworkManager.Singleton.LocalClientId == clientId)
         {
-            movement.SetSpeed(10);
-            movement.Follow(playerReference.Movement.transform);
+            Movement.SetSpeed(10);
+            Movement.Follow(playerReference.Movement.transform);
             OnPickup?.Invoke();  // Trigger pickup event only on the owning client
         }
     }
@@ -100,44 +100,17 @@ public class Fish : NetworkBehaviour
         StartCoroutine(RespawnRoutine());
     }
 
-    private Vector3 originalScale;
-
     private IEnumerator RespawnRoutine()
     {
-        originalScale = transform.GetChild(0).localScale;
-
-        yield return new WaitForSeconds(1f);
-
-        yield return ScaleOverTime(1f, 1f, 0f); // Shrink over 1 second
-
-        yield return new WaitForSeconds(1f);
-
         transform.position = networkPosition.Value;
 
-        yield return ScaleOverTime(1f, 0f, 1f); // Grow back over 1 second
+        yield return Movement.ScaleOverTime(1f, 0f, 1f); // Grow back over 1 second
 
-        movement.SetSpeed(swimSpeed);
-        movement.StartRadialMovement(networkPosition.Value, true);
+        Movement.SetSpeed(swimSpeed);
+        Movement.StartRadialMovement(networkPosition.Value, true);
         OnRespawnServerRpc();
         OnRespawn?.Invoke();
     }
-
-    // Generalized scaling coroutine
-    private IEnumerator ScaleOverTime(float duration, float startScale, float endScale)
-    {
-        float elapsed = 0f;
-
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            float scaleFactor = Mathf.Lerp(startScale, endScale, elapsed / duration);
-            transform.GetChild(0).localScale = originalScale * scaleFactor;
-            yield return null;
-        }
-
-        transform.GetChild(0).localScale = originalScale * endScale; // Ensure final scale
-    }
-
 
     [ServerRpc(RequireOwnership = false)]
     public void OnRespawnServerRpc()
