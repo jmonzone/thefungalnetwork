@@ -208,8 +208,8 @@ public class Movement : MonoBehaviour
         // If the movement is complete, stop the movement
         if (progress >= 1f)
         {
-            OnDestinationReached?.Invoke();
             Stop();
+            OnDestinationReached?.Invoke();
         }
     }
 
