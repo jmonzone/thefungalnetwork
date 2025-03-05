@@ -25,10 +25,28 @@ public class NetworkFungal : NetworkBehaviour
 
         health = GetComponent<Health>();
         movement = GetComponent<Movement>();
+        movement.OnTypeChanged += Movement_OnTypeChanged;
         animations = GetComponent<MovementAnimations>();
         materialFlasher = GetComponent<MaterialFlasher>();
 
         health.OnHealthDepleted += Health_OnHealthDepleted;
+    }
+
+    private void Movement_OnTypeChanged()
+    {
+        if (IsOwner) SyncMovementTypeServerRpc((int)movement.Type);
+    }
+
+    [ServerRpc]
+    private void SyncMovementTypeServerRpc(int type)
+    {
+        SyncMovementTypeClientRpc(type);
+    }
+
+    [ClientRpc]
+    private void SyncMovementTypeClientRpc(int type)
+    {
+        if (!IsOwner) movement.SetType((Movement.MovementType)type);
     }
 
     private void Health_OnHealthDepleted()
@@ -103,18 +121,18 @@ public class NetworkFungal : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void ModifySpeedServerRpc(float modifer, float duration)
     {
-        ModifySpeedClientRpc(modifer, duration);
+        ModifySpeedClientRpc(modifer);
+        Invoke(nameof(ResetSpeedClientRpc), duration);
     }
 
     [ClientRpc]
-    private void ModifySpeedClientRpc(float modifer, float duration)
+    private void ModifySpeedClientRpc(float modifer)
     {
         stunAnimation.SetActive(true);
 
         if (IsOwner)
         {
             movement.SetSpeedModifier(modifer);
-            Invoke(nameof(ResetSpeedClientRpc), duration);
         }
     }
 

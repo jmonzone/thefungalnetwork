@@ -52,6 +52,7 @@ public class Movement : MonoBehaviour
 
     private Vector3 originalScale;
 
+    public event UnityAction OnTypeChanged;
     public event UnityAction OnDestinationReached;
 
     private void Awake()
@@ -89,6 +90,12 @@ public class Movement : MonoBehaviour
         }
     }
 
+    public void SetType(MovementType type)
+    {
+        this.type = type;
+        OnTypeChanged?.Invoke();
+    }
+
     public void SetSpeed(float speed)
     {
         baseSpeed = speed;
@@ -108,7 +115,7 @@ public class Movement : MonoBehaviour
     public void Follow(Transform newTarget)
     {
         target = newTarget;
-        type = MovementType.FOLLOW;
+        SetType(MovementType.FOLLOW);
     }
 
     private void FollowTarget()
@@ -123,7 +130,7 @@ public class Movement : MonoBehaviour
     {
         this.direction = direction;
         baseSpeed = speed;
-        type = MovementType.DIRECTIONAL;
+        SetType(MovementType.DIRECTIONAL);
     }
 
     private void MoveInDirection()
@@ -137,7 +144,7 @@ public class Movement : MonoBehaviour
     public void SetTargetPosition(Vector3 position)
     {
         targetPosition = GetValidTargetPosition(position);
-        type = MovementType.POSITIONAL;
+        SetType(MovementType.POSITIONAL);
     }
 
     private Vector3 GetValidTargetPosition(Vector3 targetPosition)
@@ -174,7 +181,7 @@ public class Movement : MonoBehaviour
     {
         CircleCenter = center;
         reverseDirection = reverse;
-        type = MovementType.RADIAL;
+        SetType(MovementType.RADIAL);
     }
 
     private void MoveInCircle()
@@ -193,7 +200,7 @@ public class Movement : MonoBehaviour
         //trajectoryHeight = height;
         //trajectoryDuration = duration;
         trajectoryTimeElapsed = 0f;
-        type = MovementType.TRAJECTORY;
+        SetType(MovementType.TRAJECTORY);
     }
 
     private void MoveAlongTrajectory()
@@ -236,7 +243,7 @@ public class Movement : MonoBehaviour
     // Idle State (Stop Movement)
     public void Stop()
     {
-        type = MovementType.IDLE;
+        SetType(MovementType.IDLE);
     }
 
     // Generalized scaling coroutine
