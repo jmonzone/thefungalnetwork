@@ -10,7 +10,7 @@ public class PufferfishExplosion : MonoBehaviour
 
     public void DealExplosionDamage(float damage, float radius = 1f)
     {
-        // Detect all players in radius
+        // Detect all colliders, including triggers
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, radius);
         foreach (Collider hit in hitColliders)
         {
@@ -19,9 +19,18 @@ public class PufferfishExplosion : MonoBehaviour
             {
                 fungal.ModifySpeedServerRpc(0, 0.5f);
                 fungal.TakeDamageServerRpc(damage);
+                continue;
+            }
+
+            var bubble = hit.GetComponentInParent<BubbleFish>();
+            if (bubble != null)
+            {
+                bubble.PopServerRpc();
+                continue;
             }
         }
     }
+
 
     public void StartExplosionAnimation(float radius = 1f)
     {

@@ -38,10 +38,24 @@ public class BubbleFish : NetworkBehaviour
             {
                 fungal.ModifySpeedServerRpc(0f, 1.5f);
                 fungal.TakeDamageServerRpc(1f);
-                fish.ReturnToRadialMovement();
-
-                canHit = false;
+                PopServerRpc();
             }
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void PopServerRpc()
+    {
+        PopClientRpc();
+    }
+
+    [ClientRpc]
+    private void PopClientRpc()
+    {
+        if (IsOwner)
+        {
+            fish.ReturnToRadialMovement();
+            canHit = false;
         }
     }
 }
