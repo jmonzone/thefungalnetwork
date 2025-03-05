@@ -129,7 +129,6 @@ public class MultiplayerManager : ScriptableObject
             RelayServerData relayServerData = new RelayServerData(allocation, "dtls");
 
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
-            NetworkManager.Singleton.StartHost();
 
             JoinedRelay = true;
 
@@ -227,6 +226,12 @@ public class MultiplayerManager : ScriptableObject
         }
     }
 
+    public void StartHostClient()
+    {
+        if (IsHost) NetworkManager.Singleton.StartHost();
+        else NetworkManager.Singleton.StartClient();
+    }
+
     public async void JoinRelay(string joinCode)
     {
         try
@@ -236,7 +241,6 @@ public class MultiplayerManager : ScriptableObject
             RelayServerData relayServerData = new RelayServerData(joinAllocation, "dtls");
 
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
-            NetworkManager.Singleton.StartClient();
 
             NetworkManager.Singleton.OnClientConnectedCallback += async (clientId) =>
             {

@@ -31,11 +31,14 @@ public class Score : MonoBehaviour
         for(var i = 0; i < pufferball.CurrentScore; i++)
         {
             images[i].color = playerColor;
+            images[i].rectTransform.sizeDelta = Vector2.one * 25f;
+
         }
 
         for(var i = images.Count - pufferball.OpponentScore; i < images.Count; i++)
         {
             images[i].color = opponentColor;
+            images[i].rectTransform.sizeDelta = Vector2.one * 25f;
         }
     }
 }

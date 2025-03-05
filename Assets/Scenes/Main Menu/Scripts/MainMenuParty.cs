@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using GURU;
 using Unity.Services.Authentication;
 using UnityEngine;
@@ -28,7 +29,8 @@ public class MainMenuParty : MonoBehaviour
         startButton.onClick.AddListener(async () =>
         {
             await multiplayer.ToggleLobbyLock(true);
-            sceneNavigation.NavigateToScene(1);
+            var joinCode = await multiplayer.CreateRelay();
+            await multiplayer.AddRelayToLobby(joinCode);
         });
 
         exitButton.onClick.AddListener(async () =>
@@ -128,6 +130,11 @@ public class MainMenuParty : MonoBehaviour
 
         if (!joining && multiplayer.JoinedLobby.Data.ContainsKey("JoinCode") && !string.IsNullOrEmpty(multiplayer.JoinedLobby.Data["JoinCode"].Value))
         {
+            if (!multiplayer.IsHost)
+            {
+                var joinCode = multiplayer.JoinedLobby.Data["JoinCode"].Value;
+                multiplayer.JoinRelay(joinCode);
+            }
             sceneNavigation.NavigateToScene(1);
             joining = true;
         }

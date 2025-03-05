@@ -11,7 +11,7 @@ public class AutoConnect : NetworkBehaviour
     {
         if (multiplayer.JoinedLobby != null)
         {
-            yield return CreateRelay();
+            multiplayer.StartHostClient();
         }
         else
         {
@@ -33,26 +33,10 @@ public class AutoConnect : NetworkBehaviour
                     else
                     {
                         await multiplayer.CreateRelayAndLobby();
+                        multiplayer.StartHostClient();
                     }
                 });
             });
-        }
-    }
-
-    private async Task CreateRelay()
-    {
-        if (multiplayer.IsHost)
-        {
-            var joinCode = await multiplayer.CreateRelay();
-            await multiplayer.AddRelayToLobby(joinCode);
-        }
-        else
-        {
-            if (multiplayer.JoinedLobby.Data.ContainsKey("JoinCode"))
-            {
-                var joinCode = multiplayer.JoinedLobby.Data["JoinCode"].Value;
-                multiplayer.JoinRelay(joinCode);
-            }
         }
     }
 
