@@ -6,6 +6,7 @@ public class NetworkFungal : NetworkBehaviour
 {
     [SerializeField] private PufferballReference pufferball;
     [SerializeField] private MultiplayerArena arena;
+    [SerializeField] private GameObject stunAnimation;
 
     private Health health;
     private Movement movement;
@@ -101,15 +102,19 @@ public class NetworkFungal : NetworkBehaviour
     [ClientRpc]
     private void ModifySpeedClientRpc(float modifer, float duration)
     {
+        stunAnimation.SetActive(true);
+
         if (IsOwner)
         {
             movement.SetSpeedModifier(modifer);
-            Invoke(nameof(ResetSpeed), duration);
+            Invoke(nameof(ResetSpeedClientRpc), duration);
         }
     }
 
-    private void ResetSpeed()
+    [ClientRpc]
+    private void ResetSpeedClientRpc()
     {
+        stunAnimation.SetActive(false);
         movement.ResetSpeedModifier();
     }
 }
