@@ -1,25 +1,18 @@
-using Unity.Netcode;
 using UnityEngine;
 
 public class MovementAnimations : MonoBehaviour
 {
-    [SerializeField] private MovementController movementController;
-    [SerializeField] private Animator animator;
     [SerializeField] private float animationSpeed = 1;
 
-    public Animator Animator => animator;
+    private Movement movement;
+    private Animator animator;
 
     public bool IsMoving { get; private set; }
-    public float DirectionMagnitude { get; private set; }
     public float AnimationSpeed => animationSpeed;
 
     private void Awake()
     {
-        Initalize();
-    }
-
-    public void Initalize()
-    {
+        movement = GetComponent<Movement>();
         animator = GetComponentInChildren<Animator>();
     }
 
@@ -27,12 +20,19 @@ public class MovementAnimations : MonoBehaviour
     {
         if (!animator) return;
 
-        IsMoving = !movementController.IsAtDestination;
-        DirectionMagnitude = movementController.Direction.magnitude;
+        IsMoving = movement.Type != Movement.MovementType.IDLE;
 
         // Set parameters locally
         animator.SetBool("isMoving", IsMoving);
-        animator.speed = animationSpeed;
-        if (IsMoving) animator.speed *= DirectionMagnitude / 1.5f;
+
+        if (IsMoving)
+        {
+            float curvedSpeed = 1f - (1f / (1f + movement.CalculatedSpeed * 0.2f));
+            animator.speed = Mathf.Lerp(1f, 2f, curvedSpeed);
+        }
+        else
+        {
+            animator.speed = 1f; // Default idle speed
+        }
     }
 }

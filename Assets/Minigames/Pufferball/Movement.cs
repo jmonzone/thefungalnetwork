@@ -14,14 +14,18 @@ public class Movement : MonoBehaviour
         TRAJECTORY // New movement type
     }
 
-    [SerializeField] private MovementType movementType = MovementType.IDLE;
+    [SerializeField] private MovementType type = MovementType.IDLE;
     [SerializeField] private float baseSpeed = 5f;
     [SerializeField] private LayerMask obstacleLayer;
     [SerializeField] private Transform lookTransform;
 
     private Vector3 direction;
     private float modifier = 1f;
-    private float Speed => baseSpeed * modifier * Time.deltaTime;
+
+    public float CalculatedSpeed => baseSpeed * modifier;
+    private float SpeedDelta => CalculatedSpeed * Time.deltaTime;
+
+    public MovementType Type => type;
 
     [Header("Follow Target Settings")]
     [SerializeField] private Vector3 followOffset;
@@ -60,7 +64,7 @@ public class Movement : MonoBehaviour
 
     private void Update()
     {
-        switch (movementType)
+        switch (type)
         {
             case MovementType.FOLLOW:
                 FollowTarget();
@@ -104,14 +108,14 @@ public class Movement : MonoBehaviour
     public void Follow(Transform newTarget)
     {
         target = newTarget;
-        movementType = MovementType.FOLLOW;
+        type = MovementType.FOLLOW;
     }
 
     private void FollowTarget()
     {
         if (target == null) return;
         UpdateLookDirection(target.position + followOffset - transform.position);
-        transform.position = Vector3.MoveTowards(transform.position, target.position + followOffset, Speed);
+        transform.position = Vector3.MoveTowards(transform.position, target.position + followOffset, SpeedDelta);
     }
 
     // Directional Movement
@@ -119,13 +123,13 @@ public class Movement : MonoBehaviour
     {
         this.direction = direction.normalized;
         baseSpeed = speed;
-        movementType = MovementType.DIRECTIONAL;
+        type = MovementType.DIRECTIONAL;
     }
 
     private void MoveInDirection()
     {
         UpdateLookDirection(direction);
-        transform.position += Speed * direction;
+        transform.position += SpeedDelta * direction;
         UpdateLookDirection(direction);
     }
 
@@ -133,7 +137,7 @@ public class Movement : MonoBehaviour
     public void SetTargetPosition(Vector3 position)
     {
         targetPosition = GetValidTargetPosition(position);
-        movementType = MovementType.POSITIONAL;
+        type = MovementType.POSITIONAL;
     }
 
     private Vector3 GetValidTargetPosition(Vector3 targetPosition)
@@ -156,7 +160,7 @@ public class Movement : MonoBehaviour
     private void MoveToPosition()
     {
         UpdateLookDirection(targetPosition - transform.position);
-        transform.position = Vector3.MoveTowards(transform.position, targetPosition, Speed);
+        transform.position = Vector3.MoveTowards(transform.position, targetPosition, SpeedDelta);
 
         if (Vector3.Distance(transform.position, targetPosition) <= stopDistance)
         {
@@ -170,7 +174,7 @@ public class Movement : MonoBehaviour
     {
         CircleCenter = center;
         reverseDirection = reverse;
-        movementType = MovementType.RADIAL;
+        type = MovementType.RADIAL;
     }
 
     private void MoveInCircle()
@@ -178,7 +182,7 @@ public class Movement : MonoBehaviour
         angle += reverseDirection ? -Time.deltaTime : Time.deltaTime;
         targetPosition = CircleCenter + new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * circleRadius;
         UpdateLookDirection(targetPosition - transform.position);
-        transform.position = Vector3.MoveTowards(transform.position, targetPosition, Speed);
+        transform.position = Vector3.MoveTowards(transform.position, targetPosition, SpeedDelta);
     }
 
     // Trajectory Movement
@@ -189,7 +193,7 @@ public class Movement : MonoBehaviour
         //trajectoryHeight = height;
         //trajectoryDuration = duration;
         trajectoryTimeElapsed = 0f;
-        movementType = MovementType.TRAJECTORY;
+        type = MovementType.TRAJECTORY;
     }
 
     private void MoveAlongTrajectory()
@@ -232,7 +236,7 @@ public class Movement : MonoBehaviour
     // Idle State (Stop Movement)
     public void Stop()
     {
-        movementType = MovementType.IDLE;
+        type = MovementType.IDLE;
     }
 
     // Generalized scaling coroutine

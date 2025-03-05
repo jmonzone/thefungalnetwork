@@ -10,6 +10,8 @@ public class NetworkFungal : NetworkBehaviour
 
     private Health health;
     private Movement movement;
+    private MaterialFlasher materialFlasher;
+
     public int playerIndex { get; private set; }
 
     public event UnityAction OnHealthDepleted;
@@ -22,6 +24,7 @@ public class NetworkFungal : NetworkBehaviour
 
         health = GetComponent<Health>();
         movement = GetComponent<Movement>();
+        materialFlasher = GetComponent<MaterialFlasher>();
 
         health.OnHealthDepleted += Health_OnHealthDepleted;
     }
@@ -77,6 +80,7 @@ public class NetworkFungal : NetworkBehaviour
         // If there's any remaining damage, subtract it from health
         if (damage > 0)
         {
+            materialFlasher.FlashColor(Color.white);
             health.SetHealth(health.CurrentHealth - damage); // Reduce health with the remaining damage
         }
     }

@@ -19,7 +19,7 @@ public class NetworkMovementAnimations : NetworkBehaviour
     {
         if (IsOwner)
         {
-            UpdateAnimationStateServerRpc(animations.IsMoving, animations.DirectionMagnitude, animations.AnimationSpeed);
+            //UpdateAnimationStateServerRpc(animations.IsMoving, animations.DirectionMagnitude, animations.AnimationSpeed);
         }
         else
         {
@@ -38,12 +38,12 @@ public class NetworkMovementAnimations : NetworkBehaviour
 
     private void SyncAnimations()
     {
-        if (!animations.Animator) return;
-        animations.Animator.SetBool("isMoving", isMovingNetwork.Value);
-        animations.Animator.speed = animationSpeedNetwork.Value;
-        if (isMovingNetwork.Value)
-        {
-            animations.Animator.speed *= directionMagnitudeNetwork.Value / 1.5f;
-        }
+        //if (!animations.Animator) return;
+        //animations.Animator.SetBool("isMoving", isMovingNetwork.Value);
+        //animations.Animator.speed = animationSpeedNetwork.Value;
+        //if (isMovingNetwork.Value)
+        //{
+        //    animations.Animator.speed *= directionMagnitudeNetwork.Value / 1.5f;
+        //}
     }
 }
