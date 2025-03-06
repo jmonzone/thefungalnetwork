@@ -10,6 +10,8 @@ public class DirectionalButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
 {
     [SerializeField] private Button button;
     [SerializeField] private float sensitivity = 0.01f;
+    [SerializeField] private CanvasGroup canvasGroup;
+    [SerializeField] private Image outline;
 
     private Vector3 initalPosition;
     private Vector3 direction;
@@ -37,11 +39,15 @@ public class DirectionalButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
     private void OnEnable()
     {
         button.enabled = true;
+        outline.gameObject.SetActive(true);
+        canvasGroup.alpha = 1;
     }
 
     private void OnDisable()
     {
         button.enabled = false;
+        outline.gameObject.SetActive(false);
+        canvasGroup.alpha = 0.25f;
     }
 
     void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)

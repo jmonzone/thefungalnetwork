@@ -102,7 +102,7 @@ public class Fish : NetworkBehaviour
 
     private IEnumerator RespawnRoutine()
     {
-        transform.position = networkPosition.Value;
+        //transform.position = networkPosition.Value;
 
         yield return new WaitForSeconds(2f);
 

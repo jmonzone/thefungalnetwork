@@ -9,6 +9,7 @@ public class BubbleFish : NetworkBehaviour
     [SerializeField] private float damage = 3f;
     [SerializeField] private Renderer bubbleRenderer;
     [SerializeField] private Movement bubbleMovement;
+    [SerializeField] private Bubble bubblePrefab;
 
     private Fish fish;
     private Animator animator;
@@ -44,13 +45,20 @@ public class BubbleFish : NetworkBehaviour
     {
         animator.Play("Jump");
 
-        bubbleMovement.gameObject.SetActive(true);
-        yield return bubbleMovement.ScaleOverTime(0.75f, 0, 1.75f);
+        yield return new WaitForSeconds(1f);
+        if (IsServer)
+        {
+            var bubble = Instantiate(bubblePrefab, transform.position, Quaternion.identity);
+            SetCanHitServerRpc(true);
+        }
+
+
+        //bubbleMovement.gameObject.SetActive(true);
+        //yield return bubbleMovement.ScaleOverTime(0.75f, 0, 1.75f);
 
         if (IsOwner)
         {
             // Update server-side canHit variable
-            SetCanHitServerRpc(true);
 
             yield return new WaitForSeconds(autoPopTime);
             PopServerRpc();

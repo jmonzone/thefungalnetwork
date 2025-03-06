@@ -38,7 +38,7 @@ public class FishingPlayer : NetworkBehaviour
             }
 
             RequestSpawnFungalServerRpc(NetworkManager.Singleton.LocalClientId, characterIndex);
-            RequestSpawnFishingRodServerRpc(NetworkManager.Singleton.LocalClientId);
+            //RequestSpawnFishingRodServerRpc(NetworkManager.Singleton.LocalClientId);
         }
     }
 
