@@ -1,4 +1,6 @@
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class FishingRodButton : Ability
 {
@@ -9,6 +11,14 @@ public class FishingRodButton : Ability
     [SerializeField] private float minRange = 1f;
     [SerializeField] private float maxRange = 4f;
     [SerializeField] private float rangeIncreaseSpeed = 1.5f;
+
+    [Header("UI")]
+    [SerializeField] private Image abilityBackground;
+    [SerializeField] private Image abilityIcon;
+    [SerializeField] private Image fishIcon;
+    [SerializeField] private Color defaultBackgroundColor;
+    [SerializeField] private Color activeBackgroundColor;
+    [SerializeField] private TextMeshProUGUI abilityText;
 
     private FishPickup fishPickup;
 
@@ -44,7 +54,14 @@ public class FishingRodButton : Ability
     {
         Debug.Log("FishPickup_OnFishChanged");
 
-        if (fishPickup.Fish) cooldownHandler.SetInteractable(true);
+        if (fishPickup.Fish)
+        {
+            cooldownHandler.SetInteractable(true);
+            abilityBackground.color = activeBackgroundColor;
+            abilityIcon.gameObject.SetActive(false);
+            fishIcon.gameObject.SetActive(true);
+            abilityText.text = "Explosion!";
+        }
         else cooldownHandler.SetInteractable(false);
     }
 
@@ -69,5 +86,9 @@ public class FishingRodButton : Ability
     {
         fishPickup.Sling(targetPosition);
         cooldownHandler.SetInteractable(false);
+        abilityBackground.color = defaultBackgroundColor;
+        abilityIcon.gameObject.SetActive(true);
+        fishIcon.gameObject.SetActive(false);
+        abilityText.text = "No Fish Available";
     }
 }
