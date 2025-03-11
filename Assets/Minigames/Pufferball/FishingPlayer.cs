@@ -5,15 +5,10 @@ using UnityEngine;
 
 public class FishingPlayer : NetworkBehaviour
 {
-    [SerializeField] private MultiplayerManager multiplayer;
-    [SerializeField] private MultiplayerArena arena;
     [SerializeField] private PlayerReference player;
     [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference inputView;
-
-    [SerializeField] private FungalCollection fungalCollection;
-    [SerializeField] private PufferballReference pufferballReference;
-    [SerializeField] private FishingRodProjectile fishingRodPrefab;
+    [SerializeField] private MultiplayerManager multiplayer;
 
     private NetworkFungal networkFungal;
 
@@ -23,63 +18,42 @@ public class FishingPlayer : NetworkBehaviour
 
         if (IsOwner)
         {
-            var characterIndex = Random.Range(0, fungalCollection.Fungals.Count);
+            Debug.Log("FishingPlayer.OnNetworkSpawn");
 
-            if (multiplayer.JoinedLobby != null)
+            PlayerSpawner playerSpawner = FindObjectOfType<PlayerSpawner>();
+            if (playerSpawner.IsSpawned)
             {
-                // Get the ID of the local player
-                string localPlayerId = AuthenticationService.Instance.PlayerId;
-
-                // Find the local player in the lobby's player list
-                var localPlayer = multiplayer.JoinedLobby.Players.FirstOrDefault(player => player.Id == localPlayerId);
-
-                characterIndex = localPlayer.Data.TryGetValue("Fungal", out var fungalData)
-                        ? int.TryParse(fungalData?.Value, out var index) ? index : 0 : 0;
+                AddPlayerToSpawner(playerSpawner);
             }
-
-            RequestSpawnFungalServerRpc(NetworkManager.Singleton.LocalClientId, characterIndex);
-        }
-    }
-
-    private int GetPlayerIndex(ulong clientId)
-    {
-        var connectedClients = NetworkManager.Singleton.ConnectedClientsList
-            .OrderBy(client => client.ClientId) // Ensure ordered list
-            .Select(client => client.ClientId)
-            .ToList();
-
-        return connectedClients.IndexOf(clientId); // 0-based index
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    private void RequestSpawnFungalServerRpc(ulong clientId, int characterIndex)
-    {
-        var fungal = fungalCollection.Fungals[characterIndex];
-
-        var randomOffset = Random.insideUnitSphere.normalized;
-        randomOffset.y = 0;
-
-        var playerIndex = GetPlayerIndex(clientId);
-        var spawnPosition = arena.SpawnPositions[playerIndex];
-
-        var networkFungal = Instantiate(fungal.NetworkPrefab, spawnPosition.position, Quaternion.identity);
-        networkFungal.NetworkObject.SpawnWithOwnership(clientId);
-
-        OnFungalSpawnedClientRpc(clientId, networkFungal.NetworkObjectId, playerIndex);
-    }
-
-    [ClientRpc]
-    private void OnFungalSpawnedClientRpc(ulong clientId, ulong networkObjectId, int playerIndex)
-    {
-        if (NetworkManager.Singleton.LocalClientId == clientId)
-        {
-            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out var networkObject))
+            else
             {
-                networkFungal = networkObject.GetComponent<NetworkFungal>();
-                networkFungal.InitializeServerRpc(playerIndex);
-                player.SetMovement(networkFungal);
-                navigation.Navigate(inputView);
+                // Subscribe to event when spawner becomes available
+                playerSpawner.OnSpawnerReady += AddPlayerToSpawner;
             }
         }
     }
+
+    private void AddPlayerToSpawner(PlayerSpawner playerSpawner)
+    {
+        playerSpawner.OnSpawnerReady -= AddPlayerToSpawner; // Unsubscribe to avoid duplicates
+
+        string localPlayerId = AuthenticationService.Instance.PlayerId;
+
+        var localPlayerIndex = multiplayer.JoinedLobby.Players.FindIndex(player => player.Id == localPlayerId);
+        var localPlayer = multiplayer.JoinedLobby.Players[localPlayerIndex];
+
+        var characterIndex = localPlayer.Data.TryGetValue("Fungal", out var fungalData)
+                ? int.TryParse(fungalData?.Value, out var index) ? index : 0 : 0;
+
+        Debug.Log(playerSpawner.NetworkObjectId);
+        playerSpawner.AddPlayer(NetworkManager.Singleton.LocalClientId, localPlayerIndex, characterIndex);
+    }
+
+    public void AssignFungal(NetworkFungal fungal)
+    {
+        networkFungal = fungal;
+        player.SetMovement(networkFungal);
+        navigation.Navigate(inputView);
+    }
+
 }
