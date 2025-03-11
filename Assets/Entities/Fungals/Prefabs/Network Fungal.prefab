@@ -197,7 +197,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec5c261224e9c4b4dbdb053d91342a04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 1
+  maxHealth: 10
 --- !u!114 &3325272597309751410
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -212,10 +212,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 0
   baseSpeed: 5
+  rotationSpeed: 5
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 128
   lookTransform: {fileID: 0}
+  scaleTransform: {fileID: 0}
   followOffset: {x: 0, y: 0, z: 0}
   stopDistance: 0.1
   circleRadius: 5

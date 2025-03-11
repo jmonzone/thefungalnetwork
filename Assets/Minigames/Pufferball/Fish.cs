@@ -8,6 +8,14 @@ public class Fish : NetworkBehaviour
     [SerializeField] private PlayerReference playerReference;
     [SerializeField] private float swimSpeed = 1f;
 
+    [SerializeField] private Sprite icon;
+    [SerializeField] private string abilityName;
+    [SerializeField] private Color backgroundColor;
+
+    public Sprite Icon => icon;
+    public string AbilityName => abilityName;
+    public Color BackgroundColor => backgroundColor;
+
     public Movement Movement { get; private set; }
     private ThrowFish throwFish;
 
@@ -97,22 +105,24 @@ public class Fish : NetworkBehaviour
     {
         Debug.Log("ReturnToRadialMovement");
 
-        StartCoroutine(RespawnRoutine());
-    }
-
-    private IEnumerator RespawnRoutine()
-    {
-        //transform.position = networkPosition.Value;
-
-        yield return new WaitForSeconds(2f);
-
-        yield return Movement.ScaleOverTime(1f, 0f, 1f); // Grow back over 1 second
+        //StartCoroutine(RespawnRoutine());
 
         Movement.SetSpeed(swimSpeed);
         Movement.StartRadialMovement(networkPosition.Value, true);
         OnRespawnServerRpc();
         OnRespawn?.Invoke();
     }
+
+    //private IEnumerator RespawnRoutine()
+    //{
+    //    //transform.position = networkPosition.Value;
+
+    //    //yield return new WaitForSeconds(2f);
+
+    //    //yield return Movement.ScaleOverTime(1f, 0f, 1f); // Grow back over 1 second
+
+        
+    //}
 
     [ServerRpc(RequireOwnership = false)]
     public void OnRespawnServerRpc()

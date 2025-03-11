@@ -79,16 +79,9 @@ public class Pufferfish : NetworkBehaviour
 
     private IEnumerator RespawnRoutine()
     {
-
         yield return new WaitForSeconds(1f);
-
-        yield return movement.ScaleOverTime(1f, 1f, 0f); // Shrink over 1 second
-
-        yield return new WaitForSeconds(1f);
-
         fish.ReturnToRadialMovement();
     }
-
 
     private void HandleMaxTemperReached()
     {

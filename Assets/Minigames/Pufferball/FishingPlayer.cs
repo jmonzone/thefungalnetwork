@@ -38,7 +38,6 @@ public class FishingPlayer : NetworkBehaviour
             }
 
             RequestSpawnFungalServerRpc(NetworkManager.Singleton.LocalClientId, characterIndex);
-            //RequestSpawnFishingRodServerRpc(NetworkManager.Singleton.LocalClientId);
         }
     }
 
@@ -80,28 +79,6 @@ public class FishingPlayer : NetworkBehaviour
                 networkFungal.InitializeServerRpc(playerIndex);
                 player.SetMovement(networkFungal);
                 navigation.Navigate(inputView);
-            }
-        }
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    private void RequestSpawnFishingRodServerRpc(ulong clientId)
-    {
-        var networkFishingRod = Instantiate(fishingRodPrefab, Vector3.zero, Quaternion.identity);
-        networkFishingRod.NetworkObject.SpawnWithOwnership(clientId);
-
-        OnFishingRodSpawnedClientRpc(clientId, networkFishingRod.NetworkObjectId);
-    }
-
-    [ClientRpc]
-    private void OnFishingRodSpawnedClientRpc(ulong clientId, ulong networkObjectId)
-    {
-        if (NetworkManager.Singleton.LocalClientId == clientId)
-        {
-            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out var networkObject))
-            {
-                var fishingRod = networkObject.GetComponent<FishingRodProjectile>();
-                pufferballReference.RegisterFishingRod(fishingRod);
             }
         }
     }

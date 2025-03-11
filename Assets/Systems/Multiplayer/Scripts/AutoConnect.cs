@@ -33,6 +33,7 @@ public class AutoConnect : NetworkBehaviour
                     else
                     {
                         await multiplayer.CreateRelayAndLobby();
+                        await multiplayer.AddAIPlayer("AI Player");
                         multiplayer.StartHostClient();
                     }
                 });

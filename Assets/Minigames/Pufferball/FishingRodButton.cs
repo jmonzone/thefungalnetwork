@@ -17,7 +17,6 @@ public class FishingRodButton : Ability
     [SerializeField] private Image abilityIcon;
     [SerializeField] private Image fishIcon;
     [SerializeField] private Color defaultBackgroundColor;
-    [SerializeField] private Color activeBackgroundColor;
     [SerializeField] private TextMeshProUGUI abilityText;
 
     private FishPickup fishPickup;
@@ -54,13 +53,18 @@ public class FishingRodButton : Ability
     {
         Debug.Log("FishPickup_OnFishChanged");
 
-        if (fishPickup.Fish)
+        var fish = fishPickup.Fish;
+        if (fish)
         {
             cooldownHandler.SetInteractable(true);
-            abilityBackground.color = activeBackgroundColor;
+
+            abilityBackground.color = fish.BackgroundColor;
+            abilityText.text = fish.AbilityName;
+            fishIcon.sprite = fish.Icon;
+
             abilityIcon.gameObject.SetActive(false);
             fishIcon.gameObject.SetActive(true);
-            abilityText.text = "Explosion!";
+
         }
         else cooldownHandler.SetInteractable(false);
     }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using Unity.Networking.Transport.Relay;
@@ -440,4 +441,108 @@ public class MultiplayerManager : ScriptableObject
             { "Fungal",new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, PlayerPrefs.GetInt("FungalIndex", 0).ToString()) }
         }
     };
+
+    /// <summary>
+    /// Adds an AI player to the lobby data.
+    /// </summary>
+    public async Task AddAIPlayer(string aiPlayerName)
+    {
+        if (JoinedLobby == null)
+        {
+            Debug.LogWarning("No joined lobby to add AI player to.");
+            return;
+        }
+
+        List<string> aiPlayerNames = GetCurrentAIPlayerList();
+
+        // Add the new AI player
+        aiPlayerNames.Add(aiPlayerName);
+
+        // Update the lobby data
+        await UpdateLobbyAIData(aiPlayerNames);
+
+        Debug.Log($"AI Player '{aiPlayerName}' added.");
+    }
+
+    /// <summary>
+    /// Removes an AI player from the lobby data.
+    /// </summary>
+    public async Task RemoveAIPlayer(string aiPlayerName)
+    {
+        if (JoinedLobby == null)
+        {
+            Debug.LogWarning("No joined lobby to remove AI player from.");
+            return;
+        }
+
+        List<string> aiPlayerNames = GetCurrentAIPlayerList();
+
+        // Remove the AI player if it exists
+        if (aiPlayerNames.Remove(aiPlayerName))
+        {
+            // Update the lobby data
+            await UpdateLobbyAIData(aiPlayerNames);
+
+            Debug.Log($"AI Player '{aiPlayerName}' removed.");
+        }
+        else
+        {
+            Debug.LogWarning($"AI Player '{aiPlayerName}' not found in the list.");
+        }
+    }
+
+    /// <summary>
+    /// Retrieves the current AI player list from lobby data.
+    /// </summary>
+    public List<string> GetCurrentAIPlayerList()
+    {
+        if (JoinedLobby == null)
+        {
+            Debug.LogWarning("No joined lobby to get AI players from.");
+            return new List<string>();
+        }
+
+        // Get the AI player list from the lobby data
+        if (JoinedLobby.Data.TryGetValue("BotNames", out var botNamesData))
+        {
+            try
+            {
+                return JsonConvert.DeserializeObject<List<string>>(botNamesData.Value) ?? new List<string>();
+            }
+            catch
+            {
+                Debug.LogError("Failed to deserialize BotNames data.");
+                return new List<string>();
+            }
+        }
+
+        // No bots yet
+        return new List<string>();
+    }
+
+    /// <summary>
+    /// Updates the lobby data with the new AI player list.
+    /// </summary>
+    private async Task UpdateLobbyAIData(List<string> aiPlayerNames)
+    {
+        try
+        {
+            var updatedData = new Dictionary<string, DataObject>()
+            {
+                { "BotCount", new DataObject(DataObject.VisibilityOptions.Public, aiPlayerNames.Count.ToString()) },
+                { "BotNames", new DataObject(DataObject.VisibilityOptions.Public, JsonConvert.SerializeObject(aiPlayerNames)) }
+            };
+
+            JoinedLobby = await LobbyService.Instance.UpdateLobbyAsync(JoinedLobby.Id, new UpdateLobbyOptions
+            {
+                Data = updatedData
+            });
+
+            Debug.Log("Lobby AI player data updated successfully.");
+        }
+        catch (LobbyServiceException e)
+        {
+            Debug.LogError($"Failed to update lobby AI player data: {e.Message}");
+        }
+    }
 }

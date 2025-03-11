@@ -16,6 +16,7 @@ public class Movement : MonoBehaviour
 
     [SerializeField] private MovementType type = MovementType.IDLE;
     [SerializeField] private float baseSpeed = 5f;
+    [SerializeField] private float rotationSpeed = 5f;
     [SerializeField] private LayerMask obstacleLayer;
     [SerializeField] private Transform lookTransform;
     [SerializeField] private Transform scaleTransform;
@@ -239,7 +240,7 @@ public class Movement : MonoBehaviour
         {
             // Smoothly rotate using Slerp (Spherical Linear Interpolation)
             Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
-            lookTransform.rotation = Quaternion.Slerp(lookTransform.rotation, targetRotation, Time.deltaTime * baseSpeed);
+            lookTransform.rotation = Quaternion.Slerp(lookTransform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
         }
     }
 

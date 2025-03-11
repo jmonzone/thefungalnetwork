@@ -5,12 +5,17 @@ using UnityEngine;
 public class PufferballMinigame : NetworkBehaviour
 {
     [SerializeField] private PufferballReference pufferball;
+    [SerializeField] private MultiplayerManager multiplayerManager;
 
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
 
-        if (IsServer) pufferball.OnPlayerDefeated += OnPufferballMinigameServerRpc;
+        if (IsServer)
+        {
+            Debug.Log("multiplayerManager.GetCurrentAIPlayerList " + multiplayerManager.GetCurrentAIPlayerList().Count);
+            pufferball.OnPlayerDefeated += OnPufferballMinigameServerRpc;
+        }
     }
 
     public override void OnNetworkDespawn()

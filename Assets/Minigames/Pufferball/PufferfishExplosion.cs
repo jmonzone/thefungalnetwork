@@ -22,7 +22,7 @@ public class PufferfishExplosion : MonoBehaviour
                 continue;
             }
 
-            var bubble = hit.GetComponentInParent<BubbleFish>();
+            var bubble = hit.GetComponentInParent<Bubble>();
             if (bubble != null)
             {
                 bubble.PopServerRpc();
