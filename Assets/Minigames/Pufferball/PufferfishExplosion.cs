@@ -7,8 +7,16 @@ public class PufferfishExplosion : MonoBehaviour
     [SerializeField] private GameObject radiusIndicator;
     [SerializeField] private Movement movement;
     [SerializeField] private ParticleSystem particleSystem;
+    [SerializeField] private AudioClip explosionClip;
+
+    private AudioSource audioSource;
 
     public event UnityAction OnExplodeComplete;
+
+    private void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
 
     public void DealExplosionDamage(float damage, float radius = 1f)
     {
@@ -43,6 +51,10 @@ public class PufferfishExplosion : MonoBehaviour
 
     public void StartExplosionAnimation(float radius = 1f)
     {
+        audioSource.clip = explosionClip;
+        audioSource.pitch = 1.5f;
+        audioSource.Play();
+
         StartCoroutine(ExplosionRoutine(radius));
     }
 

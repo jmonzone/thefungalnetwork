@@ -8,17 +8,20 @@ public class Bubble : NetworkBehaviour
     [SerializeField] private float autoPopTime = 3f;
     [SerializeField] private float popDuration = 0.3f;
     [SerializeField] private float damage = 3f;
+    [SerializeField] private AudioClip audioClip;
 
     private Movement movement;
     private NetworkVariable<bool> canHit = new NetworkVariable<bool>(true);  // Use NetworkVariable
     private bool hitRequested = false;
 
+    private AudioSource audioSource;
     private Material bubbleMaterial;
 
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
         movement = GetComponent<Movement>();
+        audioSource = GetComponent<AudioSource>();
         bubbleMaterial = GetComponentInChildren<Renderer>().material;
 
         if (IsOwner)
@@ -94,6 +97,10 @@ public class Bubble : NetworkBehaviour
         float endScale = 0f;
         float duration = popDuration;
 
+
+        audioSource.clip = audioClip;
+        audioSource.Play();
+
         while (elapsedTime < duration)
         {
             float t = elapsedTime / duration;
@@ -114,14 +121,16 @@ public class Bubble : NetworkBehaviour
             yield return null;
         }
 
+
         // Ensure final values
         movement.SetScaleFactor(0f);
-        movement.gameObject.SetActive(false);
 
         yield return new WaitForSeconds(1f);
 
         bubbleMaterial.SetFloat("_Intensity", startIntensity);
         bubbleMaterial.SetColor("_Outer_Color", startColor);
+
+        movement.gameObject.SetActive(false);
     }
 
     // ServerRpc to update canHit on all clients
