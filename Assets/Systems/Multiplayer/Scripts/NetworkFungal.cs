@@ -10,6 +10,8 @@ public class NetworkFungal : NetworkBehaviour
 
     public Health Health { get; private set; }
     public Movement Movement { get; private set; }
+    public AudioSource AudioSource { get; private set; }
+
     private MovementAnimations animations;
     private MaterialFlasher materialFlasher;
 
@@ -26,6 +28,9 @@ public class NetworkFungal : NetworkBehaviour
         Health = GetComponent<Health>();
         Movement = GetComponent<Movement>();
         Movement.OnTypeChanged += Movement_OnTypeChanged;
+
+        AudioSource = GetComponent<AudioSource>();
+
         animations = GetComponent<MovementAnimations>();
         materialFlasher = GetComponent<MaterialFlasher>();
 
@@ -35,6 +40,13 @@ public class NetworkFungal : NetworkBehaviour
     private void Movement_OnTypeChanged()
     {
         if (IsOwner) SyncMovementTypeServerRpc((int)Movement.Type);
+    }
+
+    public void PlayAudioClip(AudioClip audioClip, float pitch)
+    {
+        AudioSource.clip = audioClip;
+        //AudioSource.pitch = pitch;
+        AudioSource.Play();
     }
 
     [ServerRpc]

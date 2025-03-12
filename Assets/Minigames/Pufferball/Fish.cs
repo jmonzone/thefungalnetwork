@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
@@ -19,6 +20,9 @@ public class Fish : NetworkBehaviour
     public Movement Movement { get; private set; }
     private ThrowFish throwFish;
 
+    [SerializeField] private List<AudioClip> audioClips;
+    private AudioSource audioSource;
+
     private NetworkVariable<Vector3> networkPosition = new NetworkVariable<Vector3>(
         Vector3.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server
     );
@@ -32,6 +36,7 @@ public class Fish : NetworkBehaviour
         base.OnNetworkSpawn();
         Movement = GetComponent<Movement>();
         throwFish = GetComponent<ThrowFish>();
+        audioSource = GetComponent<AudioSource>();
 
         if (IsServer)
         {
@@ -95,6 +100,8 @@ public class Fish : NetworkBehaviour
         // Update the local state after ownership change
         if (NetworkManager.Singleton.LocalClientId == clientId)
         {
+            audioSource.clip = audioClips.GetRandomItem();
+            audioSource.Play();
             Movement.SetSpeed(10);
             Movement.Follow(playerReference.Movement.transform);
             OnPickup?.Invoke();  // Trigger pickup event only on the owning client
