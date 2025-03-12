@@ -52,15 +52,11 @@ public class Movement : MonoBehaviour
     private Vector3 trajectoryEndPosition;
     private float trajectoryTimeElapsed;
 
-    private Vector3 originalScale;
-
     public event UnityAction OnTypeChanged;
     public event UnityAction OnDestinationReached;
 
     private void Awake()
     {
-        originalScale = transform.GetChild(0).localScale;
-
         CircleCenter = transform.position;
 
         if (!lookTransform) lookTransform = transform;
@@ -263,12 +259,24 @@ public class Movement : MonoBehaviour
             yield return null;
         }
 
-        scaleTransform.localScale = originalScale * endScale; // Ensure final scale
+        SetScaleFactor(endScale);
     }
+
+    [SerializeField] private bool lockX = false;  // Lock X axis
+    [SerializeField] private bool lockY = false;  // Lock Y axis
+    [SerializeField] private bool lockZ = false;  // Lock Z axis
+
+    [SerializeField] private float lockedXValue = 1f;  // Locked value for X
+    [SerializeField] private float lockedYValue = 1f;  // Locked value for Y
+    [SerializeField] private float lockedZValue = 1f;  // Locked value for Z
 
     public void SetScaleFactor(float scaleFactor)
     {
-        scaleTransform.localScale = originalScale * scaleFactor;
+        float x = lockX ? lockedXValue : scaleFactor;
+        float y = lockY ? lockedYValue : scaleFactor;
+        float z = lockZ ? lockedZValue : scaleFactor;
+
+        scaleTransform.localScale = new Vector3(x, y, z);
     }
 
     public void ResetScaleFactor()

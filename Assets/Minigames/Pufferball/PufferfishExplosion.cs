@@ -4,7 +4,9 @@ using UnityEngine.Events;
 
 public class PufferfishExplosion : MonoBehaviour
 {
-    [SerializeField] private GameObject render;
+    [SerializeField] private GameObject radiusIndicator;
+    [SerializeField] private Movement movement;
+    [SerializeField] private ParticleSystem particleSystem;
 
     public event UnityAction OnExplodeComplete;
 
@@ -31,18 +33,29 @@ public class PufferfishExplosion : MonoBehaviour
         }
     }
 
+    public void ShowHitIndicator(Vector3 targetPosition, float radius = 1f)
+    {
+        radiusIndicator.transform.parent = null;
+        radiusIndicator.transform.position = targetPosition + Vector3.up * 0.1f;
+        radiusIndicator.SetActive(true);
+        radiusIndicator.transform.localScale = 2f * radius * Vector3.one;
+    }
 
     public void StartExplosionAnimation(float radius = 1f)
     {
-        render.transform.localScale = 2f * radius * Vector3.one;
-        StartCoroutine(ExplosionRoutine());
+        StartCoroutine(ExplosionRoutine(radius));
     }
 
-    public IEnumerator ExplosionRoutine()
+    public IEnumerator ExplosionRoutine(float radius)
     {
-        render.SetActive(true);
+        movement.gameObject.SetActive(true);
+        particleSystem.Play();
+        yield return movement.ScaleOverTime(0.2f, 0, 2f * radius);
         OnExplodeComplete?.Invoke();
-        yield return new WaitForSeconds(0.5f);
-        render.SetActive(false);
+        yield return new WaitForSeconds(0.25f);
+        radiusIndicator.SetActive(false);
+        yield return movement.ScaleOverTime(0.1f, 2f * radius, 0);
+        movement.gameObject.SetActive(false);
+        particleSystem.Stop();
     }
 }

@@ -9,6 +9,7 @@ public class ThrowFish : MonoBehaviour
     private Fish fish;
     private Movement movement;
 
+    public event UnityAction<Vector3> OnThrowStart;
     public event UnityAction OnThrowComplete;
 
     private void Awake()
@@ -33,6 +34,7 @@ public class ThrowFish : MonoBehaviour
         enabled = true;
         targetPosition.y = 0; // Keep on the ground
         movement.SetTrajectoryMovement(targetPosition); // Move towards the target
+        OnThrowStart?.Invoke(targetPosition);
     }
 
     private void Movement_OnDestinationReached()

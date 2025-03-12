@@ -30,6 +30,7 @@ public class Pufferfish : NetworkBehaviour
         fish.OnPrepareThrow += StartTemperServerRpc;
 
         var throwFish = GetComponent<ThrowFish>();
+        throwFish.OnThrowStart += ThrowFish_OnThrowStart;
         throwFish.OnThrowComplete += OnThrowComplete;
 
         pufferfishExplosion = GetComponent<PufferfishExplosion>();
@@ -61,6 +62,23 @@ public class Pufferfish : NetworkBehaviour
     private void HandleTemperChanged(float oldValue, float newValue)
     {
         pufferfishTemper.SetTemper(newValue);
+    }
+
+    private void ThrowFish_OnThrowStart(Vector3 targetPosition)
+    {
+        if (IsOwner) OnThrowStartServerRpc(targetPosition, ExplosionRadius);
+    }
+
+    [ServerRpc]
+    public void OnThrowStartServerRpc(Vector3 targetPosition, float radius)
+    {
+        OnThrowStartClientRpc(targetPosition, radius);
+    }
+
+    [ClientRpc]
+    private void OnThrowStartClientRpc(Vector3 targetPosition, float radius)
+    {
+        pufferfishExplosion.ShowHitIndicator(targetPosition, radius);
     }
 
     private void OnThrowComplete()
@@ -104,13 +122,13 @@ public class Pufferfish : NetworkBehaviour
         pufferfishTemper.StopTimer();
     }
 
+    private float ExplosionRadius => pufferfishTemper.Temper * (maxExplosionRadius - minExplosionRadius) + minExplosionRadius;
     private void Explode()
     {
         movement.Stop();
         float damage = pufferfishTemper.Temper * (maxExplosionDamage - minExplosionDamage) + minExplosionDamage;
-        float radius = pufferfishTemper.Temper * (maxExplosionRadius - minExplosionRadius) + minExplosionRadius;
-        pufferfishExplosion.DealExplosionDamage(damage, radius);
-        ExplodeServerRpc(radius);
+        pufferfishExplosion.DealExplosionDamage(damage, ExplosionRadius);
+        ExplodeServerRpc(ExplosionRadius);
     }
 
     [ServerRpc]

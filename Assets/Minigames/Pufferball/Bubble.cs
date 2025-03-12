@@ -29,7 +29,7 @@ public class Bubble : NetworkBehaviour
 
     private IEnumerator InflateRoutine()
     {
-        yield return movement.ScaleOverTime(0.75f, 0, 1f);
+        yield return movement.ScaleOverTime(0.75f, 0, 2.5f);
         yield return new WaitForSeconds(autoPopTime);
         PopServerRpc();
     }
