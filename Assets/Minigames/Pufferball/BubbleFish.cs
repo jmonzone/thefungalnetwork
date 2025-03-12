@@ -5,9 +5,11 @@ using System.Collections;
 public class BubbleFish : NetworkBehaviour
 {
     [SerializeField] private Bubble bubblePrefab;
+    [SerializeField] private AudioClip audioClip;
 
     private Fish fish;
     private Animator animator;
+    private AudioSource audioSource;
 
     public override void OnNetworkSpawn()
     {
@@ -18,6 +20,7 @@ public class BubbleFish : NetworkBehaviour
         throwFish.OnThrowComplete += InflateServerRpc;
 
         animator = GetComponentInChildren<Animator>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     [ServerRpc]
@@ -33,6 +36,9 @@ public class BubbleFish : NetworkBehaviour
     private void InflateClientRpc()
     {
         animator.Play("Jump");
+        audioSource.clip = audioClip;
+        audioSource.pitch = 2f;
+        audioSource.Play();
 
         if (IsOwner) StartCoroutine(InflateRoutine());
     }

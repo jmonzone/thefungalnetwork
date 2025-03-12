@@ -20,6 +20,7 @@ public class Fish : NetworkBehaviour
     public Movement Movement { get; private set; }
     private ThrowFish throwFish;
 
+    [SerializeField] private float audioPitch;
     [SerializeField] private List<AudioClip> audioClips;
     private AudioSource audioSource;
 
@@ -101,6 +102,7 @@ public class Fish : NetworkBehaviour
         if (NetworkManager.Singleton.LocalClientId == clientId)
         {
             audioSource.clip = audioClips.GetRandomItem();
+            audioSource.pitch = audioPitch;
             audioSource.Play();
             Movement.SetSpeed(10);
             Movement.Follow(playerReference.Movement.transform);
