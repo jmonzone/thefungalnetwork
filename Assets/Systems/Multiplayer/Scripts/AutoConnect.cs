@@ -6,6 +6,7 @@ using UnityEngine;
 public class AutoConnect : NetworkBehaviour
 {
     [SerializeField] private MultiplayerManager multiplayer;
+    [SerializeField] private bool addAIPlayer = false;
 
     private IEnumerator Start()
     {
@@ -33,7 +34,7 @@ public class AutoConnect : NetworkBehaviour
                     else
                     {
                         await multiplayer.CreateRelayAndLobby();
-                        await multiplayer.AddAIPlayer("AI Player");
+                        if (addAIPlayer) await multiplayer.AddAIPlayer("AI Player");
                         multiplayer.StartHostClient();
                     }
                 });

@@ -23,6 +23,7 @@ public class PlayerSpawner : NetworkBehaviour
     [SerializeField] private MultiplayerManager multiplayerManager;
     [SerializeField] private MultiplayerArena arena;
     [SerializeField] private FungalCollection fungalCollection;
+    [SerializeField] private bool addAIPlayer = false;
 
     private List<PlayerInfo> currentPlayers = new();
 
@@ -34,11 +35,15 @@ public class PlayerSpawner : NetworkBehaviour
 
         if (IsServer)
         {
-            Debug.Log("multiplayerManager.GetCurrentAIPlayerList " + multiplayerManager.GetCurrentAIPlayerList().Count);
 
-            ulong aiClientId = GenerateUniqueAIClientId();
-            var fungalIndex = UnityEngine.Random.Range(0, fungalCollection.Fungals.Count);
-            AddPlayer(aiClientId, 1, fungalIndex, isAI: true);
+            if (multiplayerManager.GetCurrentAIPlayerList().Count > 0)
+            {
+                Debug.Log("multiplayerManager.GetCurrentAIPlayerList " + multiplayerManager.GetCurrentAIPlayerList().Count);
+
+                ulong aiClientId = GenerateUniqueAIClientId();
+                var fungalIndex = UnityEngine.Random.Range(0, fungalCollection.Fungals.Count);
+                AddPlayer(aiClientId, 1, fungalIndex, isAI: true);
+            }
 
             // Notify listeners that the spawner is ready
             OnSpawnerReady?.Invoke(this);
