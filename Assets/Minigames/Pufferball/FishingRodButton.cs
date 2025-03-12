@@ -36,6 +36,8 @@ public class FishingRodButton : Ability
 
     private void PufferballReference_OnPlayerRegistered()
     {
+        pufferballReference.OnPlayerRegistered -= PufferballReference_OnPlayerRegistered;
+
         Debug.Log("PufferballReference_OnPlayerRegistered");
         fishPickup = pufferballReference.Player.GetComponent<FishPickup>();
         fishPickup.OnFishChanged += FishPickup_OnFishChanged;

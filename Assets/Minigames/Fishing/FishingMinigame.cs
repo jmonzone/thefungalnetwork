@@ -8,9 +8,14 @@ public class FishingMinigame : MonoBehaviour
 
     [SerializeField] private PufferballReference pufferballReference;
 
-    private void Awake()
+    private void OnEnable()
     {
         playerReference.OnPlayerUpdated += PlayerReference_OnPlayerUpdated;
+    }
+
+    private void OnDisable()
+    {
+        playerReference.OnPlayerUpdated -= PlayerReference_OnPlayerUpdated;
     }
 
     private void Start()
