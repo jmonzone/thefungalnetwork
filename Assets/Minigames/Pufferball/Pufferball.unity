@@ -13083,6 +13083,11 @@ PrefabInstance:
       objectReference: {fileID: 1663372015}
     - target: {fileID: 8208207798765233014, guid: 0828a55f3188145edbcaf3f9a20d53a9,
         type: 3}
+      propertyPath: useTargetIndicator
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8208207798765233014, guid: 0828a55f3188145edbcaf3f9a20d53a9,
+        type: 3}
       propertyPath: abilityCastIndicator
       value: 
       objectReference: {fileID: 1098292331}
@@ -13130,6 +13135,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cooldownHandler: {fileID: 1663372016}
   range: 3
+  radius: 1
   playerReference: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
   pufferballReference: {fileID: 11400000, guid: 08db032ff48be41208a04f1067508370,
     type: 2}
@@ -16948,7 +16954,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player Spawner
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8762712874566682151, guid: d465dc1a2af7b42be9f815112142376e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5844483568569995954, guid: d465dc1a2af7b42be9f815112142376e, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -17849,6 +17861,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cooldownHandler: {fileID: 7451435924019975917}
   range: 3
+  radius: 1
   player: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
   castCooldown: 2
   moveCharacterJoystick: {fileID: 6163485878806447941}

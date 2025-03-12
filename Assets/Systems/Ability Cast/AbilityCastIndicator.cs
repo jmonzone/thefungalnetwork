@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class AbilityCastIndicator : MonoBehaviour
 {
+    [SerializeField] private Transform targetIndicator;
     [SerializeField] private Transform rangeIndicator;
     [SerializeField] private LineRenderer lineRenderer;
 
@@ -15,11 +16,21 @@ public class AbilityCastIndicator : MonoBehaviour
         if (!lineRenderer) lineRenderer = GetComponentInChildren<LineRenderer>(includeInactive: true);
     }
 
+    public void ShowTargetIndicator(bool useTargetIndicator)
+    {
+        targetIndicator.gameObject.SetActive(useTargetIndicator);
+    }
+
     public void ShowIndicator(bool useTrajectory)
     {
         this.useTrajectory = useTrajectory;
         lineRenderer.gameObject.SetActive(true);
-        rangeIndicator.gameObject.SetActive(true);
+        //rangeIndicator.gameObject.SetActive(true);
+    }
+
+    public void SetTargetIndicatorRadius(float radius)
+    {
+        targetIndicator.transform.localScale = 2f * radius * Vector3.one;
     }
 
     public void UpdateIndicator(Vector3 startPosition, Vector3 targetPosition, float range)
@@ -32,6 +43,8 @@ public class AbilityCastIndicator : MonoBehaviour
         {
             DrawStraightLine(startPosition, targetPosition);
         }
+
+        targetIndicator.transform.position = targetPosition;
 
         rangeIndicator.transform.position = startPosition;
         rangeIndicator.transform.localScale = 2f * range * Vector3.one;
@@ -67,6 +80,7 @@ public class AbilityCastIndicator : MonoBehaviour
 
     public void HideIndicator()
     {
+        targetIndicator.gameObject.SetActive(false);
         lineRenderer.gameObject.SetActive(false);
         rangeIndicator.gameObject.SetActive(false);
     }

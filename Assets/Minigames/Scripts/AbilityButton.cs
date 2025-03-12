@@ -5,9 +5,11 @@ public abstract class Ability : MonoBehaviour
 {
     [SerializeField] protected CooldownHandler cooldownHandler;
     [SerializeField] protected float range = 3f;
+    [SerializeField] protected float radius = 1f;
 
     public bool IsOnCooldown => cooldownHandler.IsOnCooldown;
     public float Range => range;
+    public float Radius => radius;
 
     public event UnityAction OnCancel;
 
@@ -28,6 +30,7 @@ public class AbilityButton : MonoBehaviour
     [SerializeField] private AbilityCastIndicator abilityCastIndicator;
     [SerializeField] private Ability ability;
     [SerializeField] private bool useTrajectory = false;
+    [SerializeField] private bool useTargetIndicator = false;
 
     private void Awake()
     {
@@ -43,6 +46,7 @@ public class AbilityButton : MonoBehaviour
         if (ability.IsOnCooldown) return;
         ability.PrepareAbility();
         abilityCastIndicator.ShowIndicator(useTrajectory);
+        abilityCastIndicator.ShowTargetIndicator(useTargetIndicator);
     }
 
     private void OnDragUpdated(Vector3 direction)
@@ -53,6 +57,8 @@ public class AbilityButton : MonoBehaviour
         var startPosition = playerReference.Movement.transform.position;
         var targetPosition = startPosition + clampedDirection;
         abilityCastIndicator.UpdateIndicator(playerReference.Movement.transform.position, targetPosition, ability.Range);
+
+        abilityCastIndicator.SetTargetIndicatorRadius(ability.Radius);
     }
 
     private void OnDragCompleted(Vector3 direction)

@@ -122,7 +122,7 @@ public class Pufferfish : NetworkBehaviour
         pufferfishTemper.StopTimer();
     }
 
-    private float ExplosionRadius => pufferfishTemper.Temper * (maxExplosionRadius - minExplosionRadius) + minExplosionRadius;
+    public float ExplosionRadius => pufferfishTemper.Temper * (maxExplosionRadius - minExplosionRadius) + minExplosionRadius;
     private void Explode()
     {
         movement.Stop();

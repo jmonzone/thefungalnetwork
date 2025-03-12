@@ -84,6 +84,17 @@ public class FishingRodButton : Ability
     {
         base.ChargeAbility();
         range = Mathf.Clamp(range + Time.deltaTime * rangeIncreaseSpeed, minRange, maxRange);
+
+        var fish = fishPickup.Fish;
+        if (fish)
+        {
+            var pufferfish = fish.GetComponent<Pufferfish>();
+
+            if (pufferfish)
+            {
+                radius = pufferfish.ExplosionRadius;
+            }
+        }
     }
 
     public override void CastAbility(Vector3 targetPosition)
