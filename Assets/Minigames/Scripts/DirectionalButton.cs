@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -12,6 +13,7 @@ public class DirectionalButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
     [SerializeField] private float sensitivity = 0.01f;
     [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private Image outline;
+    [SerializeField] private GameObject background;
 
     private Vector3 initalPosition;
     private Vector3 direction;
@@ -53,7 +55,7 @@ public class DirectionalButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
     void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
     {
         CastStarted = true;
-
+        background.SetActive(true);
         // Start casting ability
         OnDragStarted?.Invoke();
 
@@ -83,6 +85,7 @@ public class DirectionalButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
     {
         if (!CastStarted) return;
         CastStarted = false;
+        background.SetActive(false);
 
         if (IsPointerOverThisButton(eventData))
         {
