@@ -137,7 +137,6 @@ public class Movement : MonoBehaviour
     {
         UpdateLookDirection(direction);
         transform.position += SpeedDelta * direction;
-        UpdateLookDirection(direction);
     }
 
     // Positional Movement
@@ -150,7 +149,7 @@ public class Movement : MonoBehaviour
     private Vector3 GetValidTargetPosition(Vector3 targetPosition)
     {
         Vector3 origin = transform.position;
-        origin.y = targetPosition.y;
+        targetPosition.y = origin.y;
 
         Vector3 direction = (targetPosition - origin).normalized;
         float maxDistance = Vector3.Distance(origin, targetPosition);
@@ -158,7 +157,9 @@ public class Movement : MonoBehaviour
         if (Physics.Raycast(origin, direction, out RaycastHit hit, maxDistance, obstacleLayer))
         {
             // If an obstacle is hit, adjust the target position to be just before the obstacle
-            return hit.point - direction * stopDistance;
+            var adjustedPosition = hit.point - direction * stopDistance;
+            adjustedPosition.y = origin.y;
+            return adjustedPosition;
         }
 
         return targetPosition;
