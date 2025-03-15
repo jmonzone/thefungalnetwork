@@ -7,10 +7,12 @@ public abstract class Ability : MonoBehaviour
     [SerializeField] protected float range = 3f;
     [SerializeField] protected float radius = 1f;
 
+    public bool IsAvailable { get; private set; } = true;
     public bool IsOnCooldown => cooldownHandler.IsOnCooldown;
     public float Range => range;
     public float Radius => radius;
 
+    public event UnityAction OnAvailabilityChanged;
     public event UnityAction OnCancel;
 
     public virtual void PrepareAbility() { }
@@ -20,6 +22,12 @@ public abstract class Ability : MonoBehaviour
     protected void CancelAbility()
     {
         OnCancel?.Invoke();
+    }
+
+    protected void ToggleAvailable(bool value)
+    {
+        IsAvailable = value;
+        OnAvailabilityChanged?.Invoke();
     }
 }
 
@@ -34,11 +42,36 @@ public class AbilityButton : MonoBehaviour
 
     private void Awake()
     {
+        Debug.Log("AbilityButton.Awake");
+
         directionalButton.OnDragStarted += OnDragStarted;
         directionalButton.OnDragUpdated += OnDragUpdated;
         directionalButton.OnDragCompleted += OnDragCompleted;
         directionalButton.OnDragCanceled += OnDragCanceled;
         ability.OnCancel += OnDragCanceled;
+        ability.OnAvailabilityChanged += UpdateAbility;
+    }
+
+    private void UpdateAbility()
+    {
+        directionalButton.enabled = ability.IsAvailable;
+    }
+
+    private void OnEnable()
+    {
+        playerReference.Fungal.OnDeath += Fungal_OnDeath;
+        playerReference.Fungal.OnRespawn += UpdateAbility;
+    }
+
+    private void OnDisable()
+    {
+        playerReference.Fungal.OnDeath -= Fungal_OnDeath;
+        playerReference.Fungal.OnRespawn -= UpdateAbility;
+    }
+
+    private void Fungal_OnDeath()
+    {
+        directionalButton.enabled = false;
     }
 
     private void OnDragStarted()

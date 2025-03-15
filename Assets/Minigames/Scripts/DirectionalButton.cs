@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -56,6 +54,7 @@ public class DirectionalButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
     {
         CastStarted = true;
         background.SetActive(true);
+
         // Start casting ability
         OnDragStarted?.Invoke();
 

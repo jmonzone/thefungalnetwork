@@ -19,7 +19,7 @@ public class NetworkFungal : NetworkBehaviour
     private MovementAnimations animations;
     private MaterialFlasher materialFlasher;
 
-
+    public event UnityAction OnRespawn;
     public event UnityAction OnDeath;
 
     public override void OnNetworkSpawn()
@@ -103,6 +103,7 @@ public class NetworkFungal : NetworkBehaviour
         if (IsOwner) transform.position = arena.SpawnPositions[PlayerIndex].position;
         Health.SetHealth(Health.MaxHealth);
         animations.PlaySpawnAnimation();
+        OnRespawn?.Invoke();
     }
 
     [ServerRpc(RequireOwnership = false)]

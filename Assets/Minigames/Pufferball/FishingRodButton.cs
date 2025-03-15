@@ -56,6 +56,8 @@ public class FishingRodButton : Ability
         Debug.Log("FishPickup_OnFishChanged");
 
         var fish = fishPickup.Fish;
+        ToggleAvailable(fish);
+
         if (fish)
         {
             cooldownHandler.SetInteractable(true);
@@ -68,7 +70,15 @@ public class FishingRodButton : Ability
             fishIcon.gameObject.SetActive(true);
 
         }
-        else cooldownHandler.SetInteractable(false);
+        else
+        {
+            cooldownHandler.SetInteractable(false);
+
+            abilityBackground.color = defaultBackgroundColor;
+            abilityIcon.gameObject.SetActive(true);
+            fishIcon.gameObject.SetActive(false);
+            abilityText.text = "No Fish Available";
+        }
     }
 
     public override void PrepareAbility()
@@ -102,10 +112,5 @@ public class FishingRodButton : Ability
     public override void CastAbility(Vector3 targetPosition)
     {
         fishPickup.Sling(targetPosition);
-        cooldownHandler.SetInteractable(false);
-        abilityBackground.color = defaultBackgroundColor;
-        abilityIcon.gameObject.SetActive(true);
-        fishIcon.gameObject.SetActive(false);
-        abilityText.text = "No Fish Available";
     }
 }
