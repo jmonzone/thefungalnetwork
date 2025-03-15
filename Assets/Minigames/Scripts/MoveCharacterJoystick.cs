@@ -9,7 +9,7 @@ public class MoveCharacterJoystick : MonoBehaviour
 
     private void Awake()
     {
-        joystick.OnJoystickUpdate += MoveReticle;
+        joystick.OnJoystickUpdate += MovePlayer;
         joystick.OnJoystickEnd += Joystick_OnJoystickEnd;
     }
 
@@ -30,14 +30,14 @@ public class MoveCharacterJoystick : MonoBehaviour
             var y = Input.GetAxis("Vertical");
 
             var direction = wasdSensitivity * new Vector3(x, y);
-            MoveReticle(direction);
+            MovePlayer(direction);
         }
     }
 
-    private void MoveReticle(Vector3 direction)
+    private void MovePlayer(Vector3 direction)
     {
         if (!enabled) return;
-        if (player.Fungal.Health.CurrentHealth == 0) return;
+        if (player.Fungal.IsDead) return;
 
         var translation = direction;
         translation.z = translation.y;

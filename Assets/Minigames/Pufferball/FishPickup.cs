@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
@@ -7,13 +5,31 @@ using UnityEngine.Events;
 public class FishPickup : NetworkBehaviour
 {
     public Fish Fish { get; private set; }
+    private NetworkFungal fungal;
 
     public event UnityAction OnFishChanged;
     public event UnityAction OnFishReleased;
 
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+
+        fungal = GetComponent<NetworkFungal>();
+        fungal.OnDeath += Fungal_OnHealthDepleted;
+    }
+
+    private void Fungal_OnHealthDepleted()
+    {
+        if (Fish)
+        {
+            Fish.ReturnToRadialMovement();
+            RemoveFish();
+        }
+    }
+
     private void Update()
     {
-        if (IsOwner && !Fish) DetectPufferfishHit();
+        if (IsOwner && !Fish && !fungal.IsDead) DetectPufferfishHit();
     }
 
     private bool DetectPufferfishHit()
@@ -56,11 +72,11 @@ public class FishPickup : NetworkBehaviour
         if (Fish)
         {
             Fish.Throw(targetPosition);
-            OnFishRemoved();
+            RemoveFish();
         }
     }
 
-    private void OnFishRemoved()
+    private void RemoveFish()
     {
         var networkPufferfish = Fish.GetComponent<Pufferfish>(); // Ensure it's the correct one
         if (networkPufferfish != null)
@@ -74,7 +90,7 @@ public class FishPickup : NetworkBehaviour
 
     private void NetworkPufferfish_OnMaxTemperReached()
     {
-        OnFishRemoved();
+        RemoveFish();
         OnFishReleased?.Invoke();
     }
 }

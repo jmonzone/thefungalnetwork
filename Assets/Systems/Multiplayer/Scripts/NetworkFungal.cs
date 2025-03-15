@@ -12,12 +12,15 @@ public class NetworkFungal : NetworkBehaviour
     public Movement Movement { get; private set; }
     public AudioSource AudioSource { get; private set; }
 
+    //todo: make separate death component
+    public bool IsDead { get; private set; }
+    public int PlayerIndex { get; private set; }
+
     private MovementAnimations animations;
     private MaterialFlasher materialFlasher;
 
-    public int playerIndex { get; private set; }
 
-    public event UnityAction OnHealthDepleted;
+    public event UnityAction OnDeath;
 
     public override void OnNetworkSpawn()
     {
@@ -34,7 +37,7 @@ public class NetworkFungal : NetworkBehaviour
         animations = GetComponent<MovementAnimations>();
         materialFlasher = GetComponent<MaterialFlasher>();
 
-        Health.OnHealthDepleted += Health_OnHealthDepleted;
+        Health.OnHealthDepleted += Die;
     }
 
     private void Movement_OnTypeChanged()
@@ -61,11 +64,17 @@ public class NetworkFungal : NetworkBehaviour
         if (!IsOwner) Movement.SetType((Movement.MovementType)type);
     }
 
-    private void Health_OnHealthDepleted()
+    private void Update()
     {
+        if (Input.GetKeyUp(KeyCode.L)) Die();
+    }
+    private void Die()
+    {
+        IsDead = true;
+
         animations.PlayDeathAnimation();
         Movement.Stop();
-        OnHealthDepleted?.Invoke();
+        OnDeath?.Invoke();
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -77,7 +86,7 @@ public class NetworkFungal : NetworkBehaviour
     [ClientRpc]
     private void InitializeClientRpc(int playerIndex)
     {
-        this.playerIndex = playerIndex;
+        this.PlayerIndex = playerIndex;
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -89,7 +98,9 @@ public class NetworkFungal : NetworkBehaviour
     [ClientRpc]
     private void RespawnClientRpc()
     {
-        if (IsOwner) transform.position = arena.SpawnPositions[playerIndex].position;
+        IsDead = false;
+
+        if (IsOwner) transform.position = arena.SpawnPositions[PlayerIndex].position;
         Health.SetHealth(Health.MaxHealth);
         animations.PlaySpawnAnimation();
     }
