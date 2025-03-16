@@ -18,7 +18,7 @@ public class FishingMinigame : MonoBehaviour
         playerReference.OnPlayerUpdated -= PlayerReference_OnPlayerUpdated;
     }
 
-    private void Start()
+    private void Awake()
     {
         pufferballReference.Initialize();
     }

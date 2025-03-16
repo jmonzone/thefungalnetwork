@@ -16,9 +16,15 @@ public class Score : MonoBehaviour
         GetComponentsInChildren(includeInactive: true, images);
     }
 
+    private void Start()
+    {
+        PufferballMinigame_OnScoreUpdated();
+    }
+
     private void OnEnable()
     {
         pufferball.OnScoreUpdated += PufferballMinigame_OnScoreUpdated;
+        PufferballMinigame_OnScoreUpdated();
     }
 
     private void OnDisable()
