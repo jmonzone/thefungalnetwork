@@ -24,6 +24,8 @@ public class PufferballReference : ScriptableObject
 
     public event UnityAction OnPlayerRegistered;
     public event UnityAction<ulong> OnPlayerDefeated;
+    public event UnityAction OnRespawnStart;
+    public event UnityAction OnRespawnComplete;
 
     public void Initialize()
     {
@@ -69,12 +71,37 @@ public class PufferballReference : ScriptableObject
         if (IsWinner || OpponentScore >= 3)
         {
             OnGameComplete?.Invoke();
+            return;
         }
 
         if (networkObject.IsOwner)
         {
-            var networkFungal = networkObject.GetComponent<NetworkFungal>();
-            networkFungal.RespawnServerRpc();
+            networkObject.StartCoroutine(RespawnRoutine(networkObject));
         }
+    }
+
+    public float RemainingRespawnTime { get; private set; }
+
+    // You can adjust this in the inspector or hardcode it.
+    [SerializeField] private float respawnDuration = 5f;
+
+    private IEnumerator RespawnRoutine(NetworkObject networkObject)
+    {
+        OnRespawnStart?.Invoke();
+        RemainingRespawnTime = respawnDuration;
+
+        while (RemainingRespawnTime > 0f)
+        {
+            yield return null; // Wait for next frame
+            RemainingRespawnTime -= Time.deltaTime;
+        }
+
+        RemainingRespawnTime = 0f;
+
+        var networkFungal = networkObject.GetComponent<NetworkFungal>();
+
+        networkFungal.RespawnServerRpc();
+
+        OnRespawnComplete?.Invoke();
     }
 }

@@ -32,6 +32,7 @@ public class FishingRodButton : Ability
         {
             pufferballReference.OnPlayerRegistered += PufferballReference_OnPlayerRegistered;
         }
+
     }
 
     private void PufferballReference_OnPlayerRegistered()
@@ -43,6 +44,7 @@ public class FishingRodButton : Ability
         fishPickup.OnFishChanged += FishPickup_OnFishChanged;
         fishPickup.OnFishReleased += FishPickup_OnFishReleased;
         cooldownHandler.SetInteractable(false);
+        ToggleAvailable(false);
     }
 
     private void FishPickup_OnFishReleased()

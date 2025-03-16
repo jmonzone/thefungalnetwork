@@ -92,14 +92,13 @@ public class NetworkFungal : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void RespawnServerRpc()
     {
-        Invoke(nameof(RespawnClientRpc), 2f);
+        RespawnClientRpc();
     }
 
     [ClientRpc]
     private void RespawnClientRpc()
     {
         IsDead = false;
-
         if (IsOwner) transform.position = arena.SpawnPositions[PlayerIndex].position;
         Health.SetHealth(Health.MaxHealth);
         animations.PlaySpawnAnimation();
