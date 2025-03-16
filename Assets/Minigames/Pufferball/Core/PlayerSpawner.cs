@@ -82,7 +82,22 @@ public class PlayerSpawner : NetworkBehaviour
         currentPlayers.Add(playerInfo);
 
         var fungal = fungalCollection.Fungals[playerInfo.FungalIndex];
-        var spawnPosition = arena.SpawnPositions[playerIndex].position;
+        var spawnOrigin = arena.SpawnPositions[0].position;
+
+        int numberOfPlayers = currentPlayers.Count; // Number of players to be spawned
+
+        // Calculate the spawn radius, with a dynamic range based on the number of players
+        float spawnRadius = Mathf.Lerp(0f, 15f, Mathf.Clamp01((numberOfPlayers - 1) / 7f)); // Smooth increase with more players
+
+        // Calculate the angle between players, evenly distributing them around the circle
+        float angleStep = 360f / numberOfPlayers;
+        float angle = angleStep * playerIndex;
+
+        // Calculate X and Z positions using trigonometry
+        float x = spawnOrigin.x + Mathf.Cos(Mathf.Deg2Rad * angle) * spawnRadius;
+        float z = spawnOrigin.z + Mathf.Sin(Mathf.Deg2Rad * angle) * spawnRadius;
+
+        Vector3 spawnPosition = new Vector3(x, spawnOrigin.y, z);
 
         var networkFungal = Instantiate(fungal.NetworkPrefab, spawnPosition, Quaternion.identity);
         networkFungal.NetworkObject.SpawnWithOwnership(playerInfo.ClientId);
@@ -91,12 +106,8 @@ public class PlayerSpawner : NetworkBehaviour
         {
             OnFungalSpawnedClientRpc(playerInfo.ClientId, networkFungal.NetworkObjectId, playerIndex);
         }
-        else
-        {
-            // Initialize AI-specific logic here
-            //networkFungal.GetComponent<AIController>()?.InitializeAI(playerIndex);
-        }
     }
+
 
     [ClientRpc]
     private void OnFungalSpawnedClientRpc(ulong clientId, ulong networkObjectId, int playerIndex)
