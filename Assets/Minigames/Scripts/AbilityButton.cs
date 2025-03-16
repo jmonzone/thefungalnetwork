@@ -11,6 +11,7 @@ public abstract class Ability : MonoBehaviour
     public bool IsOnCooldown => cooldownHandler.IsOnCooldown;
     public float Range => range;
     public float Radius => radius;
+    public abstract Vector3 TargetPosition { get; }
 
     public event UnityAction OnAvailabilityChanged;
     public event UnityAction OnCancel;
@@ -44,12 +45,18 @@ public class AbilityButton : MonoBehaviour
     {
         Debug.Log("AbilityButton.Awake");
 
+        directionalButton.OnClick += DirectionalButton_OnClick;
         directionalButton.OnDragStarted += OnDragStarted;
         directionalButton.OnDragUpdated += OnDragUpdated;
         directionalButton.OnDragCompleted += OnDragCompleted;
         directionalButton.OnDragCanceled += OnDragCanceled;
         ability.OnCancel += OnDragCanceled;
         ability.OnAvailabilityChanged += UpdateAbility;
+    }
+
+    private void DirectionalButton_OnClick()
+    {
+        ability.CastAbility(ability.TargetPosition);
     }
 
     private void UpdateAbility()

@@ -115,4 +115,6 @@ public class FishingRodButton : Ability
     {
         fishPickup.Sling(targetPosition);
     }
+
+    public override Vector3 TargetPosition => playerReference.Movement.transform.position + playerReference.Movement.transform.forward * range;
 }

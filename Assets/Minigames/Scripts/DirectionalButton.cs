@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 // this script is used to provide events for a directional button
-public class DirectionalButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class DirectionalButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerUpHandler
 {
     [SerializeField] private Button button;
     [SerializeField] private float sensitivity = 0.01f;
@@ -15,7 +15,7 @@ public class DirectionalButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
 
     private Vector3 initalPosition;
     private Vector3 direction;
-    public bool CastStarted { get; private set; }
+    public bool DragStarted { get; private set; }
 
     public event UnityAction OnClick;
     public event UnityAction OnDragStarted;
@@ -25,15 +25,15 @@ public class DirectionalButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
 
     private void Awake()
     {
-        button.onClick.AddListener(() =>
-        {
-            OnClick?.Invoke();
-        });
+        //button.onClick.AddListener(() =>
+        //{
+        //    OnClick?.Invoke();
+        //});
     }
 
     private void Update()
     {
-        if (CastStarted) OnDragUpdated?.Invoke(direction);
+        if (DragStarted) OnDragUpdated?.Invoke(direction);
     }
 
     private void OnEnable()
@@ -52,7 +52,7 @@ public class DirectionalButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
 
     void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
     {
-        CastStarted = true;
+        DragStarted = true;
         background.SetActive(true);
 
         // Start casting ability
@@ -64,7 +64,7 @@ public class DirectionalButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
 
     void IDragHandler.OnDrag(PointerEventData eventData)
     {
-        if (!CastStarted) return;
+        if (!DragStarted) return;
 
         // Calculate the direction from the initial touch position
         Vector3 dragDirection = (Vector3)eventData.position - initalPosition;
@@ -82,18 +82,20 @@ public class DirectionalButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (!CastStarted) return;
-        CastStarted = false;
+        if (!DragStarted) return;
+        DragStarted = false;
         background.SetActive(false);
 
-        if (IsPointerOverThisButton(eventData))
-        {
-            OnDragCanceled?.Invoke();
-        }
-        else
-        {
-            OnDragCompleted?.Invoke(direction);
-        }
+        OnDragCompleted?.Invoke(direction);
+
+        //if (IsPointerOverThisButton(eventData))
+        //{
+        //    OnDragCanceled?.Invoke();
+        //}
+        //else
+        //{
+        //    OnDragCompleted?.Invoke(direction);
+        //}
     }
 
     /// <summary>
@@ -115,5 +117,11 @@ public class DirectionalButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
         }
 
         return false;
+    }
+
+    void IPointerUpHandler.OnPointerUp(PointerEventData eventData)
+    {
+        if (DragStarted) return;
+        OnClick?.Invoke();
     }
 }
