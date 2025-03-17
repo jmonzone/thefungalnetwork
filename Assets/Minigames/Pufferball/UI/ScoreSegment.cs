@@ -14,7 +14,6 @@ public class ScoreSegment : MonoBehaviour
     {
         rectTransform = GetComponent<RectTransform>();
         segmentImage = GetComponent<Image>();
-        segmentIcon.enabled = false;
     }
 
     public void SetFungal(NetworkFungal fungal)
