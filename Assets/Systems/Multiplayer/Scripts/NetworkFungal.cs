@@ -4,10 +4,12 @@ using UnityEngine.Events;
 
 public class NetworkFungal : NetworkBehaviour
 {
+    [SerializeField] private FungalData data;
     [SerializeField] private PufferballReference pufferball;
     [SerializeField] private MultiplayerArena arena;
     [SerializeField] private GameObject stunAnimation;
 
+    public FungalData Data => data;
     public Health Health { get; private set; }
     public Movement Movement { get; private set; }
     public AudioSource AudioSource { get; private set; }

@@ -11,8 +11,10 @@ public class PufferballReference : ScriptableObject
     public NetworkFungal Player { get; private set; }
     public List<NetworkFungal> Players { get; private set; }
 
-    public int CurrentScore { get; private set; }
-    public int OpponentScore { get; private set; }
+    public float CurrentScore { get; private set; }
+    public float OpponentScore { get; private set; }
+
+    public List<float> Scores => new List<float> { CurrentScore, OpponentScore };
 
     public bool IsWinner { get; private set; }
 
@@ -29,8 +31,8 @@ public class PufferballReference : ScriptableObject
 
     public void Initialize()
     {
-        CurrentScore = 0;
-        OpponentScore = 0;
+        CurrentScore = 100f;
+        OpponentScore = 100f;
         IsWinner = false;
         Player = null;
         Players = new List<NetworkFungal>();
@@ -61,14 +63,15 @@ public class PufferballReference : ScriptableObject
 
     public void UpdateScore(NetworkObject networkObject)
     {
-        if (networkObject.IsOwner) OpponentScore++;
-        else CurrentScore++;
+        var killScore = 50f;
+        if (networkObject.IsOwner) OpponentScore += killScore;
+        else CurrentScore += killScore;
 
         OnScoreUpdated?.Invoke();
 
-        IsWinner = CurrentScore >= 3;
+        IsWinner = CurrentScore >= 300f;
 
-        if (IsWinner || OpponentScore >= 3)
+        if (IsWinner || OpponentScore >= 300f)
         {
             OnGameComplete?.Invoke();
             return;
