@@ -16,7 +16,8 @@ public class NetworkFungal : NetworkBehaviour
 
     //todo: make separate death component
     public bool IsDead { get; private set; }
-    public int PlayerIndex { get; private set; }
+
+    private Vector3 spawnPosition;
 
     private MovementAnimations animations;
     private MaterialFlasher materialFlasher;
@@ -24,11 +25,21 @@ public class NetworkFungal : NetworkBehaviour
     public event UnityAction OnRespawn;
     public event UnityAction<int> OnDeath;
 
+    // Exposed to all clients, replicated by Netcode
+    private NetworkVariable<int> playerIndex = new NetworkVariable<int>();
+
+    public int PlayerIndex => playerIndex.Value;
+
+    [ServerRpc(RequireOwnership = false)]
+    public void InitializeServerRpc(int index)
+    {
+        // Only the server sets this value, and it replicates automatically
+        playerIndex.Value = index;
+    }
+
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-
-        pufferball.RegisterPlayer(this);
 
         Health = GetComponent<Health>();
         Movement = GetComponent<Movement>();
@@ -39,7 +50,9 @@ public class NetworkFungal : NetworkBehaviour
         animations = GetComponent<MovementAnimations>();
         materialFlasher = GetComponent<MaterialFlasher>();
 
-        Health.OnHealthDepleted += Die;
+        if (IsOwner) Health.OnHealthDepleted += DieServerRpc;
+
+        spawnPosition = transform.position;
     }
 
     private void Movement_OnTypeChanged()
@@ -68,27 +81,28 @@ public class NetworkFungal : NetworkBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyUp(KeyCode.L)) Die(-1);
+        if (IsOwner && Input.GetKeyUp(KeyCode.L))
+        {
+            var sourceIndex = (PlayerIndex + 1) % pufferball.Players.Count;
+            DieServerRpc(pufferball.Players[sourceIndex].fungal.PlayerIndex);
+        }
     }
-    private void Die(int player)
+
+
+    [ServerRpc]
+    private void DieServerRpc(int source)
+    {
+        DieClientRpc(source);
+    }
+
+    [ClientRpc]
+    private void DieClientRpc(int source)
     {
         IsDead = true;
 
         animations.PlayDeathAnimation();
         Movement.Stop();
-        OnDeath?.Invoke(player);
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void InitializeServerRpc(int playerIndex)
-    {
-        InitializeClientRpc(playerIndex);
-    }
-
-    [ClientRpc]
-    private void InitializeClientRpc(int playerIndex)
-    {
-        this.PlayerIndex = playerIndex;
+        OnDeath?.Invoke(source);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -101,7 +115,7 @@ public class NetworkFungal : NetworkBehaviour
     private void RespawnClientRpc()
     {
         IsDead = false;
-        if (IsOwner) transform.position = arena.SpawnPositions[PlayerIndex].position;
+        if (IsOwner) transform.position = spawnPosition;
         Health.SetHealth(Health.MaxHealth);
         animations.PlaySpawnAnimation();
         OnRespawn?.Invoke();

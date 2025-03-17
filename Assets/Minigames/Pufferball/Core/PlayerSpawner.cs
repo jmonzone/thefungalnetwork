@@ -23,6 +23,7 @@ public class PlayerSpawner : NetworkBehaviour
     [SerializeField] private MultiplayerManager multiplayerManager;
     [SerializeField] private MultiplayerArena arena;
     [SerializeField] private FungalCollection fungalCollection;
+    [SerializeField] private PufferballReference pufferballReference;
     [SerializeField] private bool addAIPlayer = false;
 
     private List<PlayerInfo> currentPlayers = new();
@@ -35,7 +36,6 @@ public class PlayerSpawner : NetworkBehaviour
 
         if (IsServer)
         {
-
             if (multiplayerManager.GetCurrentAIPlayerList().Count > 0)
             {
                 Debug.Log("multiplayerManager.GetCurrentAIPlayerList " + multiplayerManager.GetCurrentAIPlayerList().Count);
@@ -45,8 +45,41 @@ public class PlayerSpawner : NetworkBehaviour
                 AddPlayer(aiClientId, 1, fungalIndex, isAI: true);
             }
 
-            // Notify listeners that the spawner is ready
             OnSpawnerReady?.Invoke(this);
+        }
+    }
+
+
+    [ClientRpc]
+    private void OnFungalSpawnedClientRpc(ulong networkObjectId, int playerIndex)
+    {
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out var networkObject))
+        {
+            var networkFungal = networkObject.GetComponent<NetworkFungal>();
+            pufferballReference.RegisterPlayer(networkFungal, playerIndex);
+
+            if (networkFungal.IsOwner)
+            {
+                networkFungal.InitializeServerRpc(playerIndex);
+
+                var fishingPlayer = FindObjectOfType<FishingPlayer>();
+                fishingPlayer.AssignFungal(networkFungal);
+            }
+        }
+
+        Debug.Log("Client owner spawned, searching for existing NetworkFungals...");
+
+        // Find all existing NetworkFungal objects using the SpawnManager
+        foreach (var spawnedObject in NetworkManager.Singleton.SpawnManager.SpawnedObjects.Values)
+        {
+            var networkFungal = spawnedObject.GetComponent<NetworkFungal>();
+            if (networkFungal != null)
+            {
+                Debug.Log($"Registering fungal {networkFungal.name} with player index {networkFungal.PlayerIndex}");
+
+                // Register the fungal with the pufferballReference
+                pufferballReference.RegisterPlayer(networkFungal, networkFungal.PlayerIndex);
+            }
         }
     }
 
@@ -87,7 +120,7 @@ public class PlayerSpawner : NetworkBehaviour
         int numberOfPlayers = currentPlayers.Count; // Number of players to be spawned
 
         // Calculate the spawn radius, with a dynamic range based on the number of players
-        float spawnRadius = Mathf.Lerp(0f, 15f, Mathf.Clamp01((numberOfPlayers - 1) / 7f)); // Smooth increase with more players
+        float spawnRadius = Mathf.Lerp(0f, 5f, Mathf.Clamp01((numberOfPlayers - 1) / 7f)); // Smooth increase with more players
 
         // Calculate the angle between players, evenly distributing them around the circle
         float angleStep = 360f / numberOfPlayers;
@@ -104,25 +137,7 @@ public class PlayerSpawner : NetworkBehaviour
 
         if (!playerInfo.IsAI)
         {
-            OnFungalSpawnedClientRpc(playerInfo.ClientId, networkFungal.NetworkObjectId, playerIndex);
-        }
-    }
-
-
-    [ClientRpc]
-    private void OnFungalSpawnedClientRpc(ulong clientId, ulong networkObjectId, int playerIndex)
-    {
-        if (NetworkManager.Singleton.LocalClientId == clientId)
-        {
-            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out var networkObject))
-            {
-                var networkFungal = networkObject.GetComponent<NetworkFungal>();
-                networkFungal.InitializeServerRpc(playerIndex);
-
-                // Assign controls for the player
-                var fishingPlayer = FindObjectOfType<FishingPlayer>();
-                fishingPlayer.AssignFungal(networkFungal);
-            }
+            OnFungalSpawnedClientRpc(networkFungal.NetworkObjectId, playerIndex);
         }
     }
 }

@@ -5,15 +5,14 @@ using UnityEngine;
 
 public class Bubble : NetworkBehaviour
 {
-    [SerializeField] private PlayerReference player;
+    [SerializeField] private PufferballReference pufferball;
     [SerializeField] private float autoPopTime = 3f;
     [SerializeField] private float popDuration = 0.3f;
     [SerializeField] private float damage = 3f;
     [SerializeField] private AudioClip audioClip;
 
     private Movement movement;
-    private NetworkVariable<bool> canHit = new NetworkVariable<bool>(true);  // Use NetworkVariable
-    private bool hitRequested = false;
+    private bool isPopped = false;
 
     private AudioSource audioSource;
     private Material bubbleMaterial;
@@ -35,12 +34,12 @@ public class Bubble : NetworkBehaviour
     {
         yield return movement.ScaleOverTime(0.75f, 0, 2.5f);
         yield return new WaitForSeconds(autoPopTime);
-        PopServerRpc();
+        Pop();
     }
 
     private void Update()
     {
-        if (IsOwner && canHit.Value)  // Check the NetworkVariable's value
+        if (IsOwner && !isPopped)  // Check the NetworkVariable's value
         {
             CheckPlayerHit();
         }
@@ -48,19 +47,26 @@ public class Bubble : NetworkBehaviour
 
     private void CheckPlayerHit()
     {
-        if (hitRequested) return;
+        if (isPopped) return;
 
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, 1f);
+
+        HashSet<NetworkFungal> hitFungals = new HashSet<NetworkFungal>();
+
         foreach (Collider hit in hitColliders)
         {
             var fungal = hit.GetComponent<NetworkFungal>();
-            if (fungal != null)
-            {
-                fungal.ModifySpeedServerRpc(0f, 1.5f);
-                fungal.TakeDamageServerRpc(damage, player.Fungal.PlayerIndex);
-                hitRequested = true;
 
-                PopServerRpc();
+            if (fungal != null && !hitFungals.Contains(fungal))
+            {
+                Debug.Log($"fungal.TakeDamageServerRpc damage " + damage);
+                Debug.Log($"fungal.TakeDamageServerRpc index " + pufferball.Player.index);
+
+                fungal.ModifySpeedServerRpc(0f, 1.5f);
+                fungal.TakeDamageServerRpc(damage, pufferball.Player.index);
+
+                hitFungals.Add(fungal); // Mark this fungal as already hit
+                Pop();
             }
         }
     }
@@ -68,23 +74,22 @@ public class Bubble : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void PopServerRpc()
     {
-        if (canHit.Value) PopClientRpc();
+        PopClientRpc();
     }
 
     [ClientRpc]
     private void PopClientRpc()
     {
-        if (canHit.Value)  // Check the NetworkVariable's value
+        if (IsOwner) Pop();
+    }
+
+    private void Pop()
+    {
+        if (IsOwner)
         {
+            isPopped = true;
             StopAllCoroutines();
             StartCoroutine(PopAnimation());
-        }
-
-        if (IsOwner && canHit.Value)
-        {
-            // Update canHit value on the server to false when pop happens
-            SetCanHitServerRpc(false);
-            hitRequested = false;
         }
     }
 
@@ -132,12 +137,5 @@ public class Bubble : NetworkBehaviour
         bubbleMaterial.SetColor("_Outer_Color", startColor);
 
         movement.gameObject.SetActive(false);
-    }
-
-    // ServerRpc to update canHit on all clients
-    [ServerRpc]
-    private void SetCanHitServerRpc(bool value)
-    {
-        canHit.Value = value;  // Update NetworkVariable on the server
     }
 }

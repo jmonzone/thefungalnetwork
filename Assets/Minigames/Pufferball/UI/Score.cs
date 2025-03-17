@@ -9,7 +9,7 @@ public class Score : MonoBehaviour
     [SerializeField] private List<Color> colors;
 
     [SerializeField] private RectTransform barContainer;
-    [SerializeField] private GameObject segmentPrefab;
+    [SerializeField] private ScoreSegment segmentPrefab;
 
     private List<ScoreSegment> segmentControllers = new List<ScoreSegment>();
 
@@ -38,47 +38,55 @@ public class Score : MonoBehaviour
     {
         Debug.Log("PufferballMinigame_OnScoreUpdated");
 
+        var clientPlayer = pufferball.Player; // Reference your client player
+
+        // Move client player to the front if necessary
+        int clientIndex = clientPlayer.index;
+
+
         var players = pufferball.Players;
-        var totalScore = 100f;
+
+        var orderedPlayers = new List<PlayerData>(players);
+
+        if (clientIndex >= orderedPlayers.Count) return;
+
+
+        if (clientIndex > 0)
+        {
+            orderedPlayers[clientIndex] = orderedPlayers[0];
+            orderedPlayers[0] = clientPlayer;
+        }
 
         float barWidth = barContainer.rect.width;
+        const float totalScore = 100f; // Assuming total score is fixed (or adjust dynamically if needed)
 
-        for (int i = 0; i < players.Count; i++)
+        for (int i = 0; i < orderedPlayers.Count; i++)
         {
-            var score = players[i].score;
-            float normalizedScore = (float)score / totalScore;
+            var player = orderedPlayers[i];
+            float normalizedScore = player.Score / totalScore;
 
-            // Instantiate if necessary
+            // Instantiate segment if it doesn't exist yet
             if (i >= segmentControllers.Count)
             {
-                GameObject newSegment = Instantiate(segmentPrefab, barContainer);
-                var segmentController = newSegment.AddComponent<ScoreSegment>();
-                if (pufferball.Players.Count > i)
-                {
-                    segmentController.SetFungal(pufferball.Players[i].fungal);
-                }
+                var segmentController = Instantiate(segmentPrefab, barContainer);
                 segmentControllers.Add(segmentController);
             }
 
             var segment = segmentControllers[i];
             segment.gameObject.SetActive(true);
 
-            // Set color
-            Image segmentImage = segment.GetComponent<Image>();
-            if (segmentImage != null && i < colors.Count)
-            {
-                segmentImage.color = colors[i];
-            }
+            // Assign fungal and color once
+            segment.SetFungal(player.fungal);
 
-            // Set target width for smooth transition
-            float segmentWidth = barWidth * normalizedScore;
-            segment.SetTargetWidth(segmentWidth);
+            // Set segment width
+            segment.SetTargetWidth(barWidth * normalizedScore);
         }
 
-        // Deactivate unused segments
-        for (int i = players.Count; i < segmentControllers.Count; i++)
+        // Deactivate any unused segments
+        for (int i = orderedPlayers.Count; i < segmentControllers.Count; i++)
         {
             segmentControllers[i].gameObject.SetActive(false);
         }
     }
+
 }

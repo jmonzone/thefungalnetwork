@@ -1,8 +1,35 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Netcode;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
+
+[Serializable]
+public class PlayerData
+{
+    public string name;
+    public int index;
+    public NetworkFungal fungal;
+    private float score = 0;
+
+    public float Score => score;
+    public bool IsWinner => score >= 1000f;
+
+    public event UnityAction OnScoreUpdated;
+
+
+    public void SetScore(float value)
+    {
+        score = value;
+        OnScoreUpdated?.Invoke();
+    }
+
+    public void AddToScore(float value)
+    {
+        SetScore(score + value);
+    }
+}
 
 [CreateAssetMenu]
 public class PufferballReference : ScriptableObject
@@ -11,13 +38,6 @@ public class PufferballReference : ScriptableObject
     public PlayerData Player { get; private set; }
     public List<PlayerData> Players { get; private set; }
 
-    public class PlayerData
-    {
-        public NetworkFungal fungal;
-        public float score;
-        public bool IsWinner => score >= 100f;
-    }
-
     public event UnityAction OnScoreUpdated;
     public event UnityAction OnGameComplete;
 
@@ -25,7 +45,7 @@ public class PufferballReference : ScriptableObject
     public event UnityAction OnPufferfishUpdated;
 
     public event UnityAction OnPlayerRegistered;
-    public event UnityAction<ulong, int> OnPlayerDefeated;
+    public event UnityAction<NetworkFungal, int> OnPlayerDefeated;
     public event UnityAction OnRespawnStart;
     public event UnityAction OnRespawnComplete;
 
@@ -42,13 +62,23 @@ public class PufferballReference : ScriptableObject
         OnFishingRodUpdated?.Invoke();
     }
 
-    public void RegisterPlayer(NetworkFungal fungal)
+    public void RegisterPlayer(NetworkFungal fungal, int index)
     {
+        // Check if a player with the same index already exists
+        if (Players.Any(player => player.index == index))
+        {
+            Debug.Log($"Player with index {index} already exists. Skipping registration.");
+            return; // Skip if player already exists
+        }
+
+        // Create new player data
         var playerData = new PlayerData
         {
+            index = index,
             fungal = fungal
         };
 
+        // Register the player if they are the owner
         if (fungal.IsOwner)
         {
             Player = playerData;
@@ -56,52 +86,51 @@ public class PufferballReference : ScriptableObject
             OnPlayerRegistered?.Invoke();
         }
 
+        // Add the player to the list
         Players.Add(playerData);
 
-        foreach(var player in Players)
-        {
-            player.score = 100f / Players.Count;
-        }
+        // Sort the list based on the player index
+        Players.Sort((player1, player2) => player1.index.CompareTo(player2.index));
+
+        // Subscribe to events
+        playerData.OnScoreUpdated += () => OnScoreUpdated?.Invoke();
 
         fungal.OnDeath += source =>
         {
-            OnPlayerDefeated?.Invoke(fungal.NetworkObjectId, source);
+            OnPlayerDeath(fungal, source);
         };
-    }
-
-    public void OnPlayerDeath(NetworkObject networkObject, int source)
-    {
-        var killScore = 20f;
-
-        var i = 0;
-
-        if (source > -1)
-        {
-            Players[source].score += killScore;
-        }
-
-        PlayerData winner = null;
-        foreach (var player in Players)
-        {
-            if (player.fungal.NetworkObject == networkObject)
-            {
-                player.score -= killScore;
-            }
-
-            if (player.IsWinner) winner = player;
-
-            i++;
-        }
 
         OnScoreUpdated?.Invoke();
+    }
 
-        if (winner == null)
+
+    public void OnPlayerDeath(NetworkFungal fungal, int source)
+    {
+        Debug.Log("OnPlayerDeath source " + source);
+
+        if (fungal.PlayerIndex != source)
         {
-            networkObject.StartCoroutine(RespawnRoutine(networkObject));
+            var killScore = 250f;
+
+            if (source > -1) Players[source].AddToScore(killScore);
+
+            OnScoreUpdated?.Invoke();
+
+            foreach (var player in Players)
+            {
+                if (player.IsWinner)
+                {
+                    OnGameComplete?.Invoke();
+                    return;
+                }
+            }
         }
-        else
+
+        if (fungal.IsOwner)
         {
-            OnGameComplete?.Invoke();
+            Debug.Log("OnPlayerDeath.networkObject.IsOwner");
+
+            fungal.StartCoroutine(RespawnRoutine(fungal));
         }
     }
 
@@ -110,7 +139,7 @@ public class PufferballReference : ScriptableObject
     // You can adjust this in the inspector or hardcode it.
     [SerializeField] private float respawnDuration = 5f;
 
-    private IEnumerator RespawnRoutine(NetworkObject networkObject)
+    private IEnumerator RespawnRoutine(NetworkFungal fungal)
     {
         OnRespawnStart?.Invoke();
         RemainingRespawnTime = respawnDuration;
@@ -123,9 +152,7 @@ public class PufferballReference : ScriptableObject
 
         RemainingRespawnTime = 0f;
 
-        var networkFungal = networkObject.GetComponent<NetworkFungal>();
-
-        networkFungal.RespawnServerRpc();
+        fungal.RespawnServerRpc();
 
         OnRespawnComplete?.Invoke();
     }

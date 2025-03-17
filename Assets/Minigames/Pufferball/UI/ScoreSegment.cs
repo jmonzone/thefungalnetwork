@@ -18,6 +18,11 @@ public class ScoreSegment : MonoBehaviour
 
     public void SetFungal(NetworkFungal fungal)
     {
+        Debug.Log($"SetFungal fungal " + !!fungal);
+        Debug.Log($"SetFungal fungal.Data " + !!fungal.Data);
+        Debug.Log($"SetFungal segmentImage " + !!segmentImage);
+        Debug.Log($"SetFungal segmentIcon " + !!segmentIcon);
+
         segmentImage.color = fungal.Data.ActionColor;
         segmentIcon.sprite = fungal.Data.ActionImage;
         segmentIcon.enabled = true;
