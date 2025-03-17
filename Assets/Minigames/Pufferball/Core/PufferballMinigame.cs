@@ -16,24 +16,25 @@ public class PufferballMinigame : NetworkBehaviour
         }
     }
 
+
     public override void OnNetworkDespawn()
     {
         if (IsServer) pufferball.OnPlayerDefeated -= OnPlayerDefeatedServerRpc;
     }
 
-    [ServerRpc]
-    private void OnPlayerDefeatedServerRpc(ulong fungalId)
-    {
-        OnPLayerDefeatedClientRpc(fungalId);
-    }
 
+    [ServerRpc]
+    private void OnPlayerDefeatedServerRpc(ulong fungalId, int source)
+    {
+        OnPlayerDefeatedClientRpc(fungalId, source);
+    }
     [ClientRpc]
-    private void OnPLayerDefeatedClientRpc(ulong fungalId)
+    private void OnPlayerDefeatedClientRpc(ulong fungalId, int source)
     {
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(fungalId, out var networkObject))
         {
             Debug.Log("OnPLayerDefeatedClientRpc");
-            pufferball.UpdateScore(networkObject);
+            pufferball.OnPlayerDeath(networkObject, source);
         }
     }
 }

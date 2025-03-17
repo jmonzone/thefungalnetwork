@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -27,7 +26,6 @@ public class Score : MonoBehaviour
     private void OnEnable()
     {
         pufferball.OnScoreUpdated += PufferballMinigame_OnScoreUpdated;
-        PufferballMinigame_OnScoreUpdated();
     }
 
     private void OnDisable()
@@ -40,36 +38,36 @@ public class Score : MonoBehaviour
     {
         Debug.Log("PufferballMinigame_OnScoreUpdated");
 
-        var playerScores = pufferball.Scores;
-        var totalScore = Mathf.Max(1, playerScores.Sum());
+        var players = pufferball.Players;
+        var totalScore = 100f;
 
         float barWidth = barContainer.rect.width;
 
-        for (int index = 0; index < playerScores.Count; index++)
+        for (int i = 0; i < players.Count; i++)
         {
-            var score = playerScores[index];
+            var score = players[i].score;
             float normalizedScore = (float)score / totalScore;
 
             // Instantiate if necessary
-            if (index >= segmentControllers.Count)
+            if (i >= segmentControllers.Count)
             {
                 GameObject newSegment = Instantiate(segmentPrefab, barContainer);
                 var segmentController = newSegment.AddComponent<ScoreSegment>();
-                if (pufferball.Players.Count > index)
+                if (pufferball.Players.Count > i)
                 {
-                    segmentController.SetFungal(pufferball.Players[index]);
+                    segmentController.SetFungal(pufferball.Players[i].fungal);
                 }
                 segmentControllers.Add(segmentController);
             }
 
-            var segment = segmentControllers[index];
+            var segment = segmentControllers[i];
             segment.gameObject.SetActive(true);
 
             // Set color
             Image segmentImage = segment.GetComponent<Image>();
-            if (segmentImage != null && index < colors.Count)
+            if (segmentImage != null && i < colors.Count)
             {
-                segmentImage.color = colors[index];
+                segmentImage.color = colors[i];
             }
 
             // Set target width for smooth transition
@@ -78,7 +76,7 @@ public class Score : MonoBehaviour
         }
 
         // Deactivate unused segments
-        for (int i = playerScores.Count; i < segmentControllers.Count; i++)
+        for (int i = players.Count; i < segmentControllers.Count; i++)
         {
             segmentControllers[i].gameObject.SetActive(false);
         }

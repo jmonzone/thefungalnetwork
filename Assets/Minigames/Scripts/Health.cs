@@ -13,7 +13,7 @@ public class Health : MonoBehaviour
     public float MaxHealth => maxHealth;
 
     public event UnityAction OnHealthChanged;
-    public event UnityAction OnHealthDepleted;
+    public event UnityAction<int> OnHealthDepleted;
 
     public event UnityAction OnShieldChanged;
 
@@ -22,14 +22,14 @@ public class Health : MonoBehaviour
         currentHealth = maxHealth;
     }
 
-    public void SetHealth(float health)
+    public void SetHealth(float health, int source = -1)
     {
         currentHealth = Mathf.Clamp(health, 0, maxHealth);
         OnHealthChanged?.Invoke();
 
         if (currentHealth <= 0)
         {
-            OnHealthDepleted?.Invoke();
+            OnHealthDepleted?.Invoke(source);
         }
     }
 

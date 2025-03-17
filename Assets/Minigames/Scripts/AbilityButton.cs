@@ -70,17 +70,16 @@ public class AbilityButton : MonoBehaviour
         playerReference.Fungal.OnRespawn += UpdateAbility;
     }
 
+    private void Fungal_OnDeath(int arg0)
+    {
+        directionalButton.enabled = false;
+    }
+
     private void OnDisable()
     {
         playerReference.Fungal.OnDeath -= Fungal_OnDeath;
         playerReference.Fungal.OnRespawn -= UpdateAbility;
     }
-
-    private void Fungal_OnDeath()
-    {
-        directionalButton.enabled = false;
-    }
-
     private void OnDragStarted()
     {
         if (ability.IsOnCooldown) return;

@@ -22,7 +22,7 @@ public class NetworkFungal : NetworkBehaviour
     private MaterialFlasher materialFlasher;
 
     public event UnityAction OnRespawn;
-    public event UnityAction OnDeath;
+    public event UnityAction<int> OnDeath;
 
     public override void OnNetworkSpawn()
     {
@@ -68,15 +68,15 @@ public class NetworkFungal : NetworkBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyUp(KeyCode.L)) Die();
+        if (Input.GetKeyUp(KeyCode.L)) Die(-1);
     }
-    private void Die()
+    private void Die(int player)
     {
         IsDead = true;
 
         animations.PlayDeathAnimation();
         Movement.Stop();
-        OnDeath?.Invoke();
+        OnDeath?.Invoke(player);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -108,13 +108,13 @@ public class NetworkFungal : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void TakeDamageServerRpc(float damage)
+    public void TakeDamageServerRpc(float damage, int source)
     {
-        TakeDamageClientRpc(damage);
+        TakeDamageClientRpc(damage, source);
     }
 
     [ClientRpc]
-    private void TakeDamageClientRpc(float damage)
+    private void TakeDamageClientRpc(float damage, int source)
     {
         // Subtract damage from the shield first
         if (Health.CurrentShield > 0)
@@ -130,7 +130,7 @@ public class NetworkFungal : NetworkBehaviour
             
             animations.PlayHitAnimation();
             materialFlasher.FlashColor(Color.white);
-            Health.SetHealth(Health.CurrentHealth - damage); // Reduce health with the remaining damage
+            Health.SetHealth(Health.CurrentHealth - damage, source); // Reduce health with the remaining damage
         }
     }
 

@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Bubble : NetworkBehaviour
 {
+    [SerializeField] private PlayerReference player;
     [SerializeField] private float autoPopTime = 3f;
     [SerializeField] private float popDuration = 0.3f;
     [SerializeField] private float damage = 3f;
@@ -56,7 +57,7 @@ public class Bubble : NetworkBehaviour
             if (fungal != null)
             {
                 fungal.ModifySpeedServerRpc(0f, 1.5f);
-                fungal.TakeDamageServerRpc(damage);
+                fungal.TakeDamageServerRpc(damage, player.Fungal.PlayerIndex);
                 hitRequested = true;
 
                 PopServerRpc();

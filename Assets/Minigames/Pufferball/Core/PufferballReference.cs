@@ -8,15 +8,15 @@ using UnityEngine.Events;
 public class PufferballReference : ScriptableObject
 {
     public FishingRodProjectile FishingRod { get; private set; }
-    public NetworkFungal Player { get; private set; }
-    public List<NetworkFungal> Players { get; private set; }
+    public PlayerData Player { get; private set; }
+    public List<PlayerData> Players { get; private set; }
 
-    public float CurrentScore { get; private set; }
-    public float OpponentScore { get; private set; }
-
-    public List<float> Scores => new List<float> { CurrentScore, OpponentScore };
-
-    public bool IsWinner { get; private set; }
+    public class PlayerData
+    {
+        public NetworkFungal fungal;
+        public float score;
+        public bool IsWinner => score >= 100f;
+    }
 
     public event UnityAction OnScoreUpdated;
     public event UnityAction OnGameComplete;
@@ -25,17 +25,14 @@ public class PufferballReference : ScriptableObject
     public event UnityAction OnPufferfishUpdated;
 
     public event UnityAction OnPlayerRegistered;
-    public event UnityAction<ulong> OnPlayerDefeated;
+    public event UnityAction<ulong, int> OnPlayerDefeated;
     public event UnityAction OnRespawnStart;
     public event UnityAction OnRespawnComplete;
 
     public void Initialize()
     {
-        CurrentScore = 50f;
-        OpponentScore = 50f;
-        IsWinner = false;
         Player = null;
-        Players = new List<NetworkFungal>();
+        Players = new List<PlayerData>();
         OnPufferfishUpdated?.Invoke();
     }
 
@@ -45,49 +42,66 @@ public class PufferballReference : ScriptableObject
         OnFishingRodUpdated?.Invoke();
     }
 
-    public void RegisterPlayer(NetworkFungal player)
+    public void RegisterPlayer(NetworkFungal fungal)
     {
-        if (player.IsOwner)
+        var playerData = new PlayerData
         {
-            Player = player;
+            fungal = fungal
+        };
+
+        if (fungal.IsOwner)
+        {
+            Player = playerData;
             Debug.Log("OnPlayerRegistered");
             OnPlayerRegistered?.Invoke();
         }
 
-        Players.Add(player);
-        player.OnDeath += () =>
+        Players.Add(playerData);
+
+        foreach(var player in Players)
         {
-            OnPlayerDefeated?.Invoke(player.NetworkObjectId);
+            player.score = 100f / Players.Count;
+        }
+
+        fungal.OnDeath += source =>
+        {
+            OnPlayerDefeated?.Invoke(fungal.NetworkObjectId, source);
         };
     }
 
-    public void UpdateScore(NetworkObject networkObject)
+    public void OnPlayerDeath(NetworkObject networkObject, int source)
     {
         var killScore = 20f;
-        if (networkObject.IsOwner)
+
+        var i = 0;
+
+        if (source > -1)
         {
-            CurrentScore -= killScore;
-            OpponentScore += killScore;
+            Players[source].score += killScore;
         }
-        else
+
+        PlayerData winner = null;
+        foreach (var player in Players)
         {
-            CurrentScore += killScore;
-            OpponentScore -= killScore;
+            if (player.fungal.NetworkObject == networkObject)
+            {
+                player.score -= killScore;
+            }
+
+            if (player.IsWinner) winner = player;
+
+            i++;
         }
 
         OnScoreUpdated?.Invoke();
 
-        IsWinner = CurrentScore >= 100f;
-
-        if (IsWinner || OpponentScore >= 100f)
-        {
-            OnGameComplete?.Invoke();
-            return;
-        }
-
-        if (networkObject.IsOwner)
+        if (winner == null)
         {
             networkObject.StartCoroutine(RespawnRoutine(networkObject));
+        }
+        else
+        {
+            OnGameComplete?.Invoke();
         }
     }
 

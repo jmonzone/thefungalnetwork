@@ -24,7 +24,7 @@ public class FishingRodButton : Ability
     private void Awake()
     {
         Debug.Log($"awake pufferballReference.Player");
-        if (pufferballReference.Player)
+        if (pufferballReference.Player != null)
         {
             PufferballReference_OnPlayerRegistered();
         }
@@ -40,7 +40,7 @@ public class FishingRodButton : Ability
         pufferballReference.OnPlayerRegistered -= PufferballReference_OnPlayerRegistered;
 
         Debug.Log("PufferballReference_OnPlayerRegistered");
-        fishPickup = pufferballReference.Player.GetComponent<FishPickup>();
+        fishPickup = pufferballReference.Player.fungal.GetComponent<FishPickup>();
         fishPickup.OnFishChanged += FishPickup_OnFishChanged;
         fishPickup.OnFishReleased += FishPickup_OnFishReleased;
         cooldownHandler.SetInteractable(false);

@@ -15,12 +15,12 @@ public class ArmoredFish : MonoBehaviour
     [ServerRpc(RequireOwnership = false)]
     private void SpawnArmorServerRpc()
     {
-        pufferballReference.Player.AddShieldServerRpc(2f);
+        pufferballReference.Player.fungal.AddShieldServerRpc(2f);
 
-        var armor = Instantiate(armorPrefab, pufferballReference.Player.transform.position, Quaternion.identity);
+        var armor = Instantiate(armorPrefab, pufferballReference.Player.fungal.transform.position, Quaternion.identity);
         armor.Spawn();
 
         var armorMovement = armor.GetComponent<Movement>();
-        armorMovement.Follow(pufferballReference.Player.transform);
+        armorMovement.Follow(pufferballReference.Player.fungal.transform);
     }
 }

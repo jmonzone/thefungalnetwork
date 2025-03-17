@@ -18,7 +18,7 @@ public class PufferfishExplosion : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
     }
 
-    public void DealExplosionDamage(float damage, float radius = 1f)
+    public void DealExplosionDamage(float damage, float radius, int source)
     {
         // Detect all colliders, including triggers
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, radius);
@@ -28,7 +28,7 @@ public class PufferfishExplosion : MonoBehaviour
             if (fungal != null)
             {
                 fungal.ModifySpeedServerRpc(0, 0.5f);
-                fungal.TakeDamageServerRpc(damage);
+                fungal.TakeDamageServerRpc(damage, source);
                 continue;
             }
 

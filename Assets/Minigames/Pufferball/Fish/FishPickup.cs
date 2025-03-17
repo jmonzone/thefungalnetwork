@@ -15,10 +15,10 @@ public class FishPickup : NetworkBehaviour
         base.OnNetworkSpawn();
 
         fungal = GetComponent<NetworkFungal>();
-        fungal.OnDeath += Fungal_OnHealthDepleted;
+        fungal.OnDeath += Fungal_OnDeath; ;
     }
 
-    private void Fungal_OnHealthDepleted()
+    private void Fungal_OnDeath(int arg0)
     {
         if (Fish)
         {
