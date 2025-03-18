@@ -127,8 +127,6 @@ public class Pufferfish : NetworkBehaviour
     private void Explode()
     {
         movement.Stop();
-        float damage = pufferfishTemper.Temper * (maxExplosionDamage - minExplosionDamage) + minExplosionDamage;
-        pufferfishExplosion.DealExplosionDamage(damage, ExplosionRadius, playerReference.Fungal.PlayerIndex);
         ExplodeServerRpc(ExplosionRadius);
     }
 
@@ -142,5 +140,16 @@ public class Pufferfish : NetworkBehaviour
     private void ExplodeClientRpc(float radius)
     {
         pufferfishExplosion.StartExplosionAnimation(radius);
+
+        if (IsOwner)
+        {
+            Invoke(nameof(DealExplosionDamage), 0.4f);
+        }
+    }
+
+    private void DealExplosionDamage()
+    {
+        float damage = pufferfishTemper.Temper * (maxExplosionDamage - minExplosionDamage) + minExplosionDamage;
+        pufferfishExplosion.DealExplosionDamage(damage, ExplosionRadius, playerReference.Fungal.PlayerIndex);
     }
 }

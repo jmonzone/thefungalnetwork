@@ -97,7 +97,7 @@ public class Bubble : NetworkBehaviour
     {
         float elapsedTime = 0; // Sync timing
         float startIntensity = bubbleMaterial.GetFloat("_Intensity");
-        Color startColor = bubbleMaterial.GetColor("_Outer_Color");
+        Color startColor = bubbleMaterial.GetColor("_Base_Color");
 
         float peakScale = 1.4f;
         float endScale = 0f;
@@ -121,7 +121,7 @@ public class Bubble : NetworkBehaviour
 
             // Modify shader properties
             bubbleMaterial.SetFloat("_Intensity", Mathf.Lerp(startIntensity, startIntensity * 0.5f, popCurve));
-            bubbleMaterial.SetColor("_Outer_Color", new Color(startColor.r, startColor.g, startColor.b, Mathf.Lerp(startColor.a, 0f, popCurve)));
+            bubbleMaterial.SetColor("_Base_Color", new Color(startColor.r, startColor.g, startColor.b, Mathf.Lerp(startColor.a, 0f, popCurve)));
 
             elapsedTime += Time.deltaTime;
             yield return null;
@@ -134,7 +134,7 @@ public class Bubble : NetworkBehaviour
         yield return new WaitForSeconds(1f);
 
         bubbleMaterial.SetFloat("_Intensity", startIntensity);
-        bubbleMaterial.SetColor("_Outer_Color", startColor);
+        bubbleMaterial.SetColor("_Base_Color", startColor);
 
         movement.gameObject.SetActive(false);
     }

@@ -44,6 +44,13 @@ public class Leaderboard : MonoBehaviour
             .ThenByDescending(p => p == clientPlayer)
             .ToList();
 
+        var topPlayer = sortedPlayers[0];
+        var topScore = topPlayer.Score;
+
+        // Check if tied: more than 1 player with the same top score
+        bool isTiedAtTop = sortedPlayers.Count > 1 && sortedPlayers[1].Score == topScore;
+
+
         // Build leaderboard: top 3 plus client if missing
         var leaderboardPlayers = sortedPlayers.Take(3).ToList();
 
@@ -83,7 +90,17 @@ public class Leaderboard : MonoBehaviour
 
                 var playerPoints = player.Score;
 
-                entry.SetEntry(playerIcon, playerName, playerPoints, player == clientPlayer);
+                // Determine if THIS player is the top player
+                bool isTopPlayer = player == topPlayer;
+
+                entry.SetEntry(
+                    playerIcon,
+                    playerName,
+                    playerPoints,
+                    player == clientPlayer,
+                    isTopPlayer && player.Score > 0,
+                    isTiedAtTop && player.Score > 0
+                );
 
                 entry.gameObject.SetActive(true);
             }

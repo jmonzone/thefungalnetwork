@@ -95,6 +95,18 @@ public class PufferballReference : ScriptableObject
         // Subscribe to events
         playerData.OnScoreUpdated += () => OnScoreUpdated?.Invoke();
 
+        fungal.Health.OnHealthChanged += source =>
+        {
+            if (fungal.PlayerIndex != source)
+            {
+                var damageSource = 35f;
+
+                if (source > -1) Players[source].AddToScore(damageSource);
+
+                OnScoreUpdated?.Invoke();
+            }
+        };
+
         fungal.OnDeath += source =>
         {
             OnPlayerDeath(fungal, source);

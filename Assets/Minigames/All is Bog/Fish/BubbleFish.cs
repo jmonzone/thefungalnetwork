@@ -37,7 +37,7 @@ public class BubbleFish : NetworkBehaviour
     {
         animator.Play("Jump");
         audioSource.clip = audioClip;
-        audioSource.pitch = 2f;
+        audioSource.pitch = 0.5f;
         audioSource.Play();
 
         if (IsOwner) StartCoroutine(InflateRoutine());
