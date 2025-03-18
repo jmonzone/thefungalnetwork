@@ -431,9 +431,9 @@ public class MultiplayerManager : ScriptableObject
 
     }
 
-    private Player player;
+    private Unity.Services.Lobbies.Models.Player player;
 
-    private Player CreatePlayer() => new Player
+    private Unity.Services.Lobbies.Models.Player CreatePlayer() => new Unity.Services.Lobbies.Models.Player
     {
         Data = new Dictionary<string, PlayerDataObject>
         {

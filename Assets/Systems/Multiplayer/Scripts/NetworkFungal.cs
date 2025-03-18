@@ -84,7 +84,7 @@ public class NetworkFungal : NetworkBehaviour
         if (IsOwner && Input.GetKeyUp(KeyCode.L))
         {
             var sourceIndex = (PlayerIndex + 1) % pufferball.Players.Count;
-            DieServerRpc(pufferball.Players[sourceIndex].fungal.PlayerIndex);
+            DieServerRpc(pufferball.Players[sourceIndex].Fungal.PlayerIndex);
         }
     }
 

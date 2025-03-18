@@ -18,25 +18,32 @@ public class Leaderboard : MonoBehaviour
 
     private void Start()
     {
-        PufferballMinigame_OnScoreUpdated();
+        UpdateLeaderboard();
     }
 
     private void OnEnable()
     {
-        pufferball.OnScoreUpdated += PufferballMinigame_OnScoreUpdated;
+        pufferball.OnPlayerAdded += Pufferball_OnPlayerAdded;
+        pufferball.OnScoreUpdated += UpdateLeaderboard;
+    }
+
+    private void Pufferball_OnPlayerAdded(Player arg0)
+    {
+        UpdateLeaderboard();
     }
 
     private void OnDisable()
     {
-        pufferball.OnScoreUpdated -= PufferballMinigame_OnScoreUpdated;
+        pufferball.OnPlayerAdded -= Pufferball_OnPlayerAdded;
+        pufferball.OnScoreUpdated -= UpdateLeaderboard;
     }
 
-    private void PufferballMinigame_OnScoreUpdated()
+    private void UpdateLeaderboard()
     {
-        Debug.Log("PufferballMinigame_OnScoreUpdated");
+        //Debug.Log("UpdateLeaderboard");
 
         var players = pufferball.Players;
-        var clientPlayer = pufferball.Player;
+        var clientPlayer = pufferball.ClientPlayer;
 
         // Sort by score descending, client player first if tied
         var sortedPlayers = players
@@ -79,9 +86,9 @@ public class Leaderboard : MonoBehaviour
                 var player = leaderboardPlayers[i];
 
                 // Assuming you have a way to get the player icon and name
-                Sprite playerIcon = player.fungal.Data.ActionImage; // Example property
+                Sprite playerIcon = player.Fungal.Data.ActionImage; // Example property
 
-                var localPlayerIndex = player.index;
+                var localPlayerIndex = player.Index;
                 var localPlayer = multiplayer.JoinedLobby.Players[localPlayerIndex];
 
                 string playerName = localPlayer.Data.TryGetValue("PlayerName", out var playerNameData)

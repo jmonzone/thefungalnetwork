@@ -6,126 +6,85 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [Serializable]
-public class PlayerData
+public class Player
 {
-    public string name;
-    public int index;
-    public NetworkFungal fungal;
-    private float score = 0;
+    public ulong ClientId;
+    public bool IsAI;
+    public int Index;
+    public NetworkFungal Fungal;
+    public float Score;
 
-    public float Score => score;
-    public bool IsWinner => score >= 1000f;
+    public bool IsWinner => Score > 1000f;
 
     public event UnityAction OnScoreUpdated;
 
-
-    public void SetScore(float value)
+    public Player(ulong clientId, int index, NetworkFungal fungal, bool isAI = false)
     {
-        score = value;
-        OnScoreUpdated?.Invoke();
+        ClientId = clientId;
+        Index = index;
+        Fungal = fungal;
+        IsAI = isAI;
     }
 
     public void AddToScore(float value)
     {
-        SetScore(score + value);
+        Score += value;
+        OnScoreUpdated?.Invoke();
     }
 }
 
 [CreateAssetMenu]
 public class PufferballReference : ScriptableObject
 {
-    public FishingRodProjectile FishingRod { get; private set; }
-    public PlayerData Player { get; private set; }
-    public List<PlayerData> Players { get; private set; }
+    [SerializeField] private Player clientPlayer;
+    [SerializeField] private List<Player> players;
+    [SerializeField] private float respawnDuration = 5f;
+
+    public Player ClientPlayer => clientPlayer;
+    public List<Player> Players => players;
+
+    public float RemainingRespawnTime { get; private set; }
 
     public event UnityAction OnScoreUpdated;
     public event UnityAction OnGameComplete;
 
-    public event UnityAction OnFishingRodUpdated;
-    public event UnityAction OnPufferfishUpdated;
+    public event UnityAction OnClientPlayerAdded;
+    public event UnityAction<Player> OnPlayerAdded;
 
-    public event UnityAction OnPlayerRegistered;
-    public event UnityAction<NetworkFungal, int> OnPlayerDefeated;
     public event UnityAction OnRespawnStart;
     public event UnityAction OnRespawnComplete;
 
     public void Initialize()
     {
-        Player = null;
-        Players = new List<PlayerData>();
-        OnPufferfishUpdated?.Invoke();
+        clientPlayer = null;
+        players = new List<Player>();
     }
 
-    public void RegisterFishingRod(FishingRodProjectile fishingRod)
-    {
-        FishingRod = fishingRod;
-        OnFishingRodUpdated?.Invoke();
-    }
-
-    public void RegisterPlayer(NetworkFungal fungal, int index)
+    public void AddPlayer(ulong clientId, int index, NetworkFungal networkFungal, bool isAi)
     {
         // Check if a player with the same index already exists
-        if (Players.Any(player => player.index == index))
+        if (Players.Any(player => player.Index == index))
         {
-            Debug.Log($"Player with index {index} already exists. Skipping registration.");
+            //Debug.Log($"Player with index {index} already exists. Skipping registration.");
             return; // Skip if player already exists
         }
 
-        // Create new player data
-        var playerData = new PlayerData
-        {
-            index = index,
-            fungal = fungal
-        };
-
-        // Register the player if they are the owner
-        if (fungal.IsOwner)
-        {
-            Player = playerData;
-            Debug.Log("OnPlayerRegistered");
-            OnPlayerRegistered?.Invoke();
-        }
-
-        // Add the player to the list
-        Players.Add(playerData);
+        var addedPlayer = new Player(clientId, index, networkFungal, isAi);
+        Players.Add(addedPlayer);
 
         // Sort the list based on the player index
-        Players.Sort((player1, player2) => player1.index.CompareTo(player2.index));
+        Players.Sort((player1, player2) => player1.Index.CompareTo(player2.Index));
 
-        // Subscribe to events
-        playerData.OnScoreUpdated += () => OnScoreUpdated?.Invoke();
-
-        fungal.Health.OnHealthChanged += source =>
+        if (networkFungal.IsOwner)
         {
-            if (fungal.PlayerIndex != source)
-            {
-                var damageSource = 35f;
+            clientPlayer = addedPlayer;
+            OnClientPlayerAdded?.Invoke();
+        }
 
-                if (source > -1) Players[source].AddToScore(damageSource);
+        OnPlayerAdded?.Invoke(addedPlayer);
 
-                OnScoreUpdated?.Invoke();
-            }
-        };
-
-        fungal.OnDeath += source =>
+        addedPlayer.OnScoreUpdated += () =>
         {
-            OnPlayerDeath(fungal, source);
-        };
-
-        OnScoreUpdated?.Invoke();
-    }
-
-
-    public void OnPlayerDeath(NetworkFungal fungal, int source)
-    {
-        Debug.Log("OnPlayerDeath source " + source);
-
-        if (fungal.PlayerIndex != source)
-        {
-            var killScore = 250f;
-
-            if (source > -1) Players[source].AddToScore(killScore);
-
             OnScoreUpdated?.Invoke();
 
             foreach (var player in Players)
@@ -136,21 +95,40 @@ public class PufferballReference : ScriptableObject
                     return;
                 }
             }
-        }
+        };
 
-        if (fungal.IsOwner)
+        addedPlayer.Fungal.GetComponent<FishPickup>().OnFishPickedUp += () =>
         {
-            Debug.Log("OnPlayerDeath.networkObject.IsOwner");
+            Players[index].AddToScore(20f);
+        };
 
-            fungal.StartCoroutine(RespawnRoutine(fungal));
-        }
+        addedPlayer.Fungal.Health.OnHealthChanged += source =>
+        {
+            ValidateAndAddScore(index, source, 35f);
+        };
+
+        addedPlayer.Fungal.OnDeath += source =>
+        {
+            ValidateAndAddScore(index, source, 250f);
+
+            if (addedPlayer.Fungal.IsOwner)
+            {
+                Debug.Log("OnPlayerDeath.networkObject.IsOwner");
+
+                addedPlayer.Fungal.StartCoroutine(RespawnRoutine(addedPlayer.Fungal));
+            }
+        };
     }
 
-    public float RemainingRespawnTime { get; private set; }
 
-    // You can adjust this in the inspector or hardcode it.
-    [SerializeField] private float respawnDuration = 5f;
+    private void ValidateAndAddScore(int index, int source, float value)
+    {
+        if (index != source && source > -1f)
+        {
+            Players[source].AddToScore(value);
+        }
 
+    }
     private IEnumerator RespawnRoutine(NetworkFungal fungal)
     {
         OnRespawnStart?.Invoke();

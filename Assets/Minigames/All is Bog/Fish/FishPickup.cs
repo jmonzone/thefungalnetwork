@@ -7,6 +7,7 @@ public class FishPickup : NetworkBehaviour
     public Fish Fish { get; private set; }
     private NetworkFungal fungal;
 
+    public event UnityAction OnFishPickedUp;
     public event UnityAction OnFishChanged;
     public event UnityAction OnFishReleased;
 
@@ -51,13 +52,14 @@ public class FishPickup : NetworkBehaviour
                 if (pickupSuccessful)
                 {
                     Fish = fish;
+                    OnFishPickedUpServerRpc();
                     OnFishChanged?.Invoke();
                     return true; // Pickup was successful
                 }
                 else
                 {
                     // Handle the case where the pickup was not successful
-                    Debug.Log("Pickup failed.");
+                    //Debug.Log("Pickup failed.");
                     return false;
                 }
             }
@@ -65,10 +67,21 @@ public class FishPickup : NetworkBehaviour
         return false; // No fish to pick up
     }
 
+    [ServerRpc]
+    private void OnFishPickedUpServerRpc()
+    {
+        OnFishPickedUpClientRpc();
+    }
+
+    [ClientRpc]
+    private void OnFishPickedUpClientRpc()
+    {
+        OnFishPickedUp?.Invoke();
+    }
 
     public void Sling(Vector3 targetPosition)
     {
-        Debug.Log("Sling");
+        //Debug.Log("Sling");
         if (Fish)
         {
             Fish.Throw(targetPosition);

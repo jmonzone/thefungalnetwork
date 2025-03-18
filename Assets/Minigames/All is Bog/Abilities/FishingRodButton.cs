@@ -21,26 +21,26 @@ public class FishingRodButton : Ability
 
     private FishPickup fishPickup;
 
-    private void Awake()
+    private void Start()
     {
-        Debug.Log($"awake pufferballReference.Player");
-        if (pufferballReference.Player != null)
+        //Debug.Log($"awake pufferballReference.Player");
+        if (pufferballReference.ClientPlayer != null)
         {
             PufferballReference_OnPlayerRegistered();
         }
         else
         {
-            pufferballReference.OnPlayerRegistered += PufferballReference_OnPlayerRegistered;
+            pufferballReference.OnClientPlayerAdded += PufferballReference_OnPlayerRegistered;
         }
 
     }
 
     private void PufferballReference_OnPlayerRegistered()
     {
-        pufferballReference.OnPlayerRegistered -= PufferballReference_OnPlayerRegistered;
+        pufferballReference.OnClientPlayerAdded -= PufferballReference_OnPlayerRegistered;
 
-        Debug.Log("PufferballReference_OnPlayerRegistered");
-        fishPickup = pufferballReference.Player.fungal.GetComponent<FishPickup>();
+        //Debug.Log("PufferballReference_OnPlayerRegistered");
+        fishPickup = pufferballReference.ClientPlayer.Fungal.GetComponent<FishPickup>();
         fishPickup.OnFishChanged += FishPickup_OnFishChanged;
         fishPickup.OnFishReleased += FishPickup_OnFishReleased;
         cooldownHandler.SetInteractable(false);
@@ -55,7 +55,7 @@ public class FishingRodButton : Ability
 
     private void FishPickup_OnFishChanged()
     {
-        Debug.Log("FishPickup_OnFishChanged");
+        //Debug.Log("FishPickup_OnFishChanged");
 
         var fish = fishPickup.Fish;
         ToggleAvailable(fish);

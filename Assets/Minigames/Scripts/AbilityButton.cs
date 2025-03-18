@@ -43,8 +43,7 @@ public class AbilityButton : MonoBehaviour
 
     private void Awake()
     {
-        Debug.Log("AbilityButton.Awake");
-
+        //Debug.Log("AbilityButton.Awake");
         directionalButton.OnClick += DirectionalButton_OnClick;
         directionalButton.OnDragStarted += OnDragStarted;
         directionalButton.OnDragUpdated += OnDragUpdated;
@@ -73,6 +72,7 @@ public class AbilityButton : MonoBehaviour
 
     private void Fungal_OnDeath(int arg0)
     {
+        abilityCastIndicator.HideIndicator();
         directionalButton.enabled = false;
     }
 

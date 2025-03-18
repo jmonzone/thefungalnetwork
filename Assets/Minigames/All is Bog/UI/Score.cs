@@ -38,15 +38,15 @@ public class Score : MonoBehaviour
     {
         Debug.Log("PufferballMinigame_OnScoreUpdated");
 
-        var clientPlayer = pufferball.Player; // Reference your client player
+        var clientPlayer = pufferball.ClientPlayer; // Reference your client player
 
         // Move client player to the front if necessary
-        int clientIndex = clientPlayer.index;
+        int clientIndex = clientPlayer.Index;
 
 
         var players = pufferball.Players;
 
-        var orderedPlayers = new List<PlayerData>(players);
+        var orderedPlayers = new List<Player>(players);
 
         if (clientIndex >= orderedPlayers.Count) return;
 
@@ -76,7 +76,7 @@ public class Score : MonoBehaviour
             segment.gameObject.SetActive(true);
 
             // Assign fungal and color once
-            segment.SetFungal(player.fungal);
+            segment.SetFungal(player.Fungal);
 
             // Set segment width
             segment.SetTargetWidth(barWidth * normalizedScore);

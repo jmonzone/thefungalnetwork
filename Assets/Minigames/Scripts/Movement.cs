@@ -235,7 +235,7 @@ public class Movement : MonoBehaviour
     {
         var lookDirection = direction;
 
-        if (lookDirection.magnitude > 0)
+        if (lookDirection != Vector3.zero)
         {
             // Smoothly rotate using Slerp (Spherical Linear Interpolation)
             Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
