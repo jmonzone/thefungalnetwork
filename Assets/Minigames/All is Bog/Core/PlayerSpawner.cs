@@ -115,22 +115,24 @@ public class PlayerSpawner : NetworkBehaviour
         currentPlayers.Add(playerInfo);
 
         var fungal = fungalCollection.Fungals[playerInfo.FungalIndex];
-        var spawnOrigin = arena.SpawnPositions[0].position;
+        var spawnOrigin = arena.SpawnPositions[playerIndex].position;
 
-        int numberOfPlayers = currentPlayers.Count; // Number of players to be spawned
+        //int numberOfPlayers = currentPlayers.Count; // Number of players to be spawned
 
         // Calculate the spawn radius, with a dynamic range based on the number of players
-        float spawnRadius = Mathf.Lerp(0f, 5f, Mathf.Clamp01((numberOfPlayers - 1) / 7f)); // Smooth increase with more players
+        //float spawnRadius = Mathf.Lerp(0f, 5f, Mathf.Clamp01((numberOfPlayers - 1) / 7f)); // Smooth increase with more players
 
-        // Calculate the angle between players, evenly distributing them around the circle
-        float angleStep = 360f / numberOfPlayers;
-        float angle = angleStep * playerIndex;
+        //// Calculate the angle between players, evenly distributing them around the circle
+        //float angleStep = 360f / numberOfPlayers;
+        //float angle = angleStep * playerIndex;
 
-        // Calculate X and Z positions using trigonometry
-        float x = spawnOrigin.x + Mathf.Cos(Mathf.Deg2Rad * angle) * spawnRadius;
-        float z = spawnOrigin.z + Mathf.Sin(Mathf.Deg2Rad * angle) * spawnRadius;
+        //// Calculate X and Z positions using trigonometry
+        //float x = spawnOrigin.x + Mathf.Cos(Mathf.Deg2Rad * angle) * spawnRadius;
+        //float z = spawnOrigin.z + Mathf.Sin(Mathf.Deg2Rad * angle) * spawnRadius;
 
-        Vector3 spawnPosition = new Vector3(x, spawnOrigin.y, z);
+        //Vector3 spawnPosition = new Vector3(x, spawnOrigin.y, z);
+
+        var spawnPosition = spawnOrigin;
 
         var networkFungal = Instantiate(fungal.NetworkPrefab, spawnPosition, Quaternion.identity);
         networkFungal.NetworkObject.SpawnWithOwnership(playerInfo.ClientId);
