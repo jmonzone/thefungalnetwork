@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -10,34 +11,50 @@ public class PufferfishExplosion : MonoBehaviour
     [SerializeField] private AudioClip explosionClip;
 
     private AudioSource audioSource;
+    private HitDetector hitDetector;
 
     public event UnityAction OnExplodeComplete;
 
     private void Awake()
     {
         audioSource = GetComponent<AudioSource>();
+        hitDetector = GetComponent<HitDetector>();
     }
 
-    public void DealExplosionDamage(float damage, float radius, int source)
+    public void EnableDamage(float damage, int source)
     {
-        // Detect all colliders, including triggers
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, radius);
-        foreach (Collider hit in hitColliders)
-        {
-            var fungal = hit.GetComponent<NetworkFungal>();
-            if (fungal != null)
-            {
-                fungal.ModifySpeedServerRpc(0, 0.5f);
-                fungal.TakeDamageServerRpc(damage, source);
-                continue;
-            }
+        StartCoroutine(DamageRoutine(damage, source));
+    }
 
-            var bubble = hit.GetComponentInParent<Bubble>();
-            if (bubble != null)
+    private IEnumerator DamageRoutine(float damage, int source)
+    {
+        List<Collider> hits = new List<Collider>();
+
+        while (movement.gameObject.activeSelf)
+        {
+            hitDetector.CheckHits(movement.transform.localScale.x / 2f, hit =>
             {
-                bubble.PopServerRpc();
-                continue;
-            }
+                if (hits.Contains(hit)) return;
+
+                var fungal = hit.GetComponent<NetworkFungal>();
+                if (fungal != null)
+                {
+                    fungal.ModifySpeedServerRpc(0, 0.5f);
+                    fungal.TakeDamageServerRpc(damage, source);
+                    hits.Add(hit);
+                    return;
+                }
+
+                var bubble = hit.GetComponentInParent<Bubble>();
+                if (bubble != null)
+                {
+                    bubble.PopServerRpc();
+                    hits.Add(hit);
+                    return;
+                }
+            });
+
+            yield return null;
         }
     }
 

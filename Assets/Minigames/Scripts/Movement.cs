@@ -21,6 +21,8 @@ public class Movement : MonoBehaviour
     [SerializeField] private Transform lookTransform;
     [SerializeField] private Transform scaleTransform;
 
+
+    public Transform ScaleTransform => scaleTransform;
     private Vector3 direction;
     private float modifier = 1f;
 

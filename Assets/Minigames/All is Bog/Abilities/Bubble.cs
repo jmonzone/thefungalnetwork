@@ -12,6 +12,7 @@ public class Bubble : NetworkBehaviour
     [SerializeField] private AudioClip audioClip;
 
     private Movement movement;
+    private HitDetector hitDetector;
     private bool isPopped = false;
 
     private AudioSource audioSource;
@@ -21,6 +22,7 @@ public class Bubble : NetworkBehaviour
     {
         base.OnNetworkSpawn();
         movement = GetComponent<Movement>();
+        hitDetector = GetComponent<HitDetector>();
         audioSource = GetComponent<AudioSource>();
         bubbleMaterial = GetComponentInChildren<Renderer>().material;
 
@@ -41,33 +43,17 @@ public class Bubble : NetworkBehaviour
     {
         if (IsOwner && !isPopped)  // Check the NetworkVariable's value
         {
-            CheckPlayerHit();
-        }
-    }
-
-    private void CheckPlayerHit()
-    {
-        if (isPopped) return;
-
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 1f);
-
-        HashSet<NetworkFungal> hitFungals = new HashSet<NetworkFungal>();
-
-        foreach (Collider hit in hitColliders)
-        {
-            var fungal = hit.GetComponent<NetworkFungal>();
-
-            if (fungal != null && !hitFungals.Contains(fungal))
+            hitDetector.CheckHits(movement.ScaleTransform.lossyScale.x / 2f, hit =>
             {
-                Debug.Log($"fungal.TakeDamageServerRpc damage " + damage);
-                Debug.Log($"fungal.TakeDamageServerRpc index " + pufferball.Player.index);
+                var fungal = hit.GetComponent<NetworkFungal>();
 
-                fungal.ModifySpeedServerRpc(0f, 1.5f);
-                fungal.TakeDamageServerRpc(damage, pufferball.Player.index);
-
-                hitFungals.Add(fungal); // Mark this fungal as already hit
-                Pop();
-            }
+                if (fungal != null)
+                {
+                    fungal.ModifySpeedServerRpc(0f, 1.5f);
+                    fungal.TakeDamageServerRpc(damage, pufferball.Player.index);
+                    Pop();
+                }
+            });
         }
     }
 

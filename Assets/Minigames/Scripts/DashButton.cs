@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.Multiplayer.Samples.Utilities.ClientAuthority;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -14,6 +15,7 @@ public class DashButton : Ability
     private void Movement_OnDestinationReached()
     {
         player.Movement.OnDestinationReached -= Movement_OnDestinationReached;
+        player.Movement.GetComponent<ClientNetworkTransform>().Interpolate = true;
         moveCharacterJoystick.enabled = true;
     }
 
@@ -21,6 +23,7 @@ public class DashButton : Ability
     {
         moveCharacterJoystick.enabled = false;
 
+        player.Movement.GetComponent<ClientNetworkTransform>().Interpolate = false;
         player.Movement.OnDestinationReached += Movement_OnDestinationReached;
 
         player.Movement.SetSpeed(7.5f);
