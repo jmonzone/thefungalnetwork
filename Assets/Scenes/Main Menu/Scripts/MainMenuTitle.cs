@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,8 +21,11 @@ public class MainMenuTitle : MonoBehaviour
     [SerializeField] private ViewReference matchmakingView;
     [SerializeField] private ViewReference partyView;
 
+    [SerializeField] private TextMeshProUGUI versionText;
+
     private void Awake()
     {
+        versionText.text = $"Version {Application.version}";
         titleViewController.OnFadeInComplete += () =>
         {
             StartCoroutine(ShowTitle());
