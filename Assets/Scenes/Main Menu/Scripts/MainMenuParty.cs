@@ -11,6 +11,7 @@ public class MainMenuParty : MonoBehaviour
 {
     [SerializeField] private ListUI playerList;
     [SerializeField] private ListUI fungalList;
+    [SerializeField] private GameObject waitingIndicator;
     [SerializeField] private Button startButton;
     [SerializeField] private Button exitButton;
 
@@ -145,5 +146,6 @@ public class MainMenuParty : MonoBehaviour
     private void MultiplayerManager_OnLobbyJoined()
     {
         startButton.gameObject.SetActive(multiplayer.IsHost);
+        waitingIndicator.SetActive(!multiplayer.IsHost);
     }
 }
