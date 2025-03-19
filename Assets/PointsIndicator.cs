@@ -33,13 +33,13 @@ public class PointsIndicator : MonoBehaviour
     private void PufferballReference_OnClientPlayerAdded()
     {
         pufferballReference.OnClientPlayerAdded -= PufferballReference_OnClientPlayerAdded;
-        pufferballReference.ClientPlayer.Fungal.OnScoreUpdated += Fungal_OnScoreUpdated;
+        pufferballReference.ClientPlayer.Fungal.OnScoreTriggered += Fungal_OnScoreUpdated;
     }
 
     private void Fungal_OnScoreUpdated(OnScoreUpdatedEventArgs arg0)
     {
         Debug.Log("ClientPlayer_OnScoreUpdated");
-        ShowPopup(arg0.position, $"+{arg0.value}");
+        ShowPopup(arg0.position, $"+{arg0.value} {arg0.label}");
     }
 
     // Function to spawn a new popup

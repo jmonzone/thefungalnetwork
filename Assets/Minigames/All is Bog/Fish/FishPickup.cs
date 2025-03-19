@@ -73,7 +73,8 @@ public class FishPickup : NetworkBehaviour
             fungal.AddToScoreServerRpc(new OnScoreUpdatedEventArgs
             {
                 value = score,
-                position = Fish.transform.position
+                position = Fish.transform.position,
+                label = "Catch"
             });
             OnFishChanged?.Invoke();
         }

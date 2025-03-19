@@ -7,11 +7,13 @@ public struct OnScoreUpdatedEventArgs : INetworkSerializable
 {
     public Vector3 position;
     public float value;
+    public string label;
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
         serializer.SerializeValue(ref position);
         serializer.SerializeValue(ref value);
+        serializer.SerializeValue(ref label);
     }
 }
 
@@ -53,7 +55,8 @@ public class NetworkFungal : NetworkBehaviour
     public int Index => index.Value;
     public float Score => score.Value;
 
-    public event UnityAction<OnScoreUpdatedEventArgs> OnScoreUpdated;
+    public event UnityAction OnScoreUpdated;
+    public event UnityAction<OnScoreUpdatedEventArgs> OnScoreTriggered;
 
     [ServerRpc(RequireOwnership = false)]
     public void InitializeServerRpc(int index, int fungalIndex)
@@ -76,6 +79,10 @@ public class NetworkFungal : NetworkBehaviour
 
         Health.OnDamaged += Health_OnDamaged;
 
+        score.OnValueChanged += (old, value) =>
+        {
+            OnScoreUpdated?.Invoke();
+        };
 
         Debug.Log($"NetworkFungal.OnNetworkSpawn {fungalIndex.Value}");
         if (fungalIndex.Value != -1)
@@ -102,16 +109,16 @@ public class NetworkFungal : NetworkBehaviour
         name = $"Player {index.Value} {data.name}";
     }
 
-    private void Health_OnDamaged()
+    private void Health_OnDamaged(bool knockout)
     {
-        if (Health.CurrentHealth > 0)
+        if (knockout)
         {
-            animations.PlayHitAnimation();
-            materialFlasher.FlashColor(Color.red);
+            if (IsOwner) DieServerRpc();
         }
         else
         {
-            if (IsOwner) DieServerRpc();
+            animations.PlayHitAnimation();
+            materialFlasher.FlashColor(Color.red);
         }
     }
 
@@ -127,7 +134,8 @@ public class NetworkFungal : NetworkBehaviour
             AddToScoreServerRpc(new OnScoreUpdatedEventArgs
             {
                 value = 200f,
-                position = transform.position
+                position = transform.position,
+                label = "Debug"
             });
         }
     }
@@ -196,7 +204,7 @@ public class NetworkFungal : NetworkBehaviour
     [ClientRpc]
     private void AddToScoreClientRpc(OnScoreUpdatedEventArgs args)
     {
-        OnScoreUpdated?.Invoke(args);
+        OnScoreTriggered?.Invoke(args);
     }
 
     private void Movement_OnTypeChanged()

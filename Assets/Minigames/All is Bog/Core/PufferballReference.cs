@@ -75,7 +75,7 @@ public class PufferballReference : ScriptableObject
         addedPlayer.Fungal.OnScoreUpdated += Fungal_OnScoreUpdated;
     }
 
-    private void Fungal_OnScoreUpdated(OnScoreUpdatedEventArgs args)
+    private void Fungal_OnScoreUpdated()
     {
         OnScoreUpdated?.Invoke();
 

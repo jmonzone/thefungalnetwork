@@ -13,7 +13,7 @@ public class Health : NetworkBehaviour
     public float CurrentShield => currentShield;
     public float MaxHealth => maxHealth;
 
-    public event UnityAction OnDamaged;
+    public event UnityAction<bool> OnDamaged;
     public event UnityAction OnHealthChanged;
     public event UnityAction OnHealthDepleted;
     public event UnityAction OnShieldChanged;
@@ -58,31 +58,36 @@ public class Health : NetworkBehaviour
 
         currentHealth.Value = Mathf.Clamp(currentHealth.Value - damage, 0, maxHealth);
 
+
+        var knockout = currentHealth.Value <= 0;
         if (sourceId != NetworkObjectId)
         {
             if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(sourceId, out var networkObject))
             {
                 var networkFungal = networkObject.GetComponent<NetworkFungal>();
-                if (currentHealth.Value <= 0) networkFungal.AddToScoreServerRpc(new OnScoreUpdatedEventArgs
+                if (knockout) networkFungal.AddToScoreServerRpc(new OnScoreUpdatedEventArgs
                 {
                     value = 250f,
-                    position = transform.position
+                    position = transform.position,
+                    label = "KO"
+                    
                 });
                 else networkFungal.AddToScoreServerRpc(new OnScoreUpdatedEventArgs
                 {
                     value = 35f,
-                    position = transform.position
+                    position = transform.position,
+                    label = "Hit"
                 });
             }
         }
 
-        OnDamageClientRpc();
+        OnDamageClientRpc(knockout);
     }
 
     [ClientRpc]
-    private void OnDamageClientRpc()
+    private void OnDamageClientRpc(bool knockout)
     {
-        OnDamaged?.Invoke();
+        OnDamaged?.Invoke(knockout);
     }
 
     public void SetShield(float shield)
