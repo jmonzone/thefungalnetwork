@@ -19,7 +19,7 @@ public class MultiplayerManager : ScriptableObject
     [SerializeField] private DisplayName displayName;
     [SerializeField] private SceneNavigation sceneNavigation;
 
-    public string PlayerName { get; private set; }
+    public string PlayerName => displayName.Value.Replace(" ", "_");
     public bool IsSignedIn { get; private set; }
 
     private Lobby joinedLobby;
@@ -52,6 +52,12 @@ public class MultiplayerManager : ScriptableObject
     {
         JoinedLobby = null;
         IsSignedIn = false;
+        displayName.OnDisplayNameChanged += DisplayName_OnDisplayNameChanged;
+    }
+
+    private void DisplayName_OnDisplayNameChanged()
+    {
+        throw new System.NotImplementedException();
     }
 
     public void DoUpdate()
@@ -96,7 +102,6 @@ public class MultiplayerManager : ScriptableObject
         else
         {
             await UnityServices.InitializeAsync();
-            PlayerName = displayName.Value.Replace(" ", "_");
 
             InitializationOptions initializationOptions = new InitializationOptions();
             initializationOptions.SetProfile(PlayerName);
@@ -233,6 +238,8 @@ public class MultiplayerManager : ScriptableObject
         else NetworkManager.Singleton.StartClient();
     }
 
+
+
     public async void JoinRelay(string joinCode)
     {
         try
@@ -262,6 +269,17 @@ public class MultiplayerManager : ScriptableObject
         }
     }
 
+
+    private Unity.Services.Lobbies.Models.Player player;
+
+    private Unity.Services.Lobbies.Models.Player CreatePlayer() => new Unity.Services.Lobbies.Models.Player
+    {
+        Data = new Dictionary<string, PlayerDataObject>
+        {
+            { "PlayerName", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, PlayerName) },
+            { "Fungal",new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, PlayerPrefs.GetInt("FungalIndex", 0).ToString()) }
+        }
+    };
 
     public async Task CreateLobby(string joinCode)
     {
@@ -430,17 +448,6 @@ public class MultiplayerManager : ScriptableObject
         }
 
     }
-
-    private Unity.Services.Lobbies.Models.Player player;
-
-    private Unity.Services.Lobbies.Models.Player CreatePlayer() => new Unity.Services.Lobbies.Models.Player
-    {
-        Data = new Dictionary<string, PlayerDataObject>
-        {
-            { "PlayerName", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, PlayerName) },
-            { "Fungal",new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, PlayerPrefs.GetInt("FungalIndex", 0).ToString()) }
-        }
-    };
 
     /// <summary>
     /// Adds an AI player to the lobby data.

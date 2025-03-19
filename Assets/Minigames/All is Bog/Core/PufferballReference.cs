@@ -17,10 +17,10 @@ public class Player
 
     public event UnityAction OnScoreUpdated;
 
-    public Player(ulong clientId, NetworkFungal fungal, bool isAI = false)
+    public Player(ulong clientId, int playerIndex, NetworkFungal fungal, bool isAI = false)
     {
         ClientId = clientId;
-        Index = fungal.Index;
+        Index = playerIndex;
         Fungal = fungal;
         Score = fungal.Score.Value;
 
@@ -58,7 +58,7 @@ public class PufferballReference : ScriptableObject
         isComplete = false;
     }
 
-    public void AddPlayer(ulong clientId, NetworkFungal networkFungal, bool isAi)
+    public void AddPlayer(ulong clientId, int playerIndex, NetworkFungal networkFungal, bool isAi)
     {
         // Check if a player with the same index already exists
         if (Players.Any(player => player.Fungal == networkFungal))
@@ -67,8 +67,8 @@ public class PufferballReference : ScriptableObject
             return; // Skip if player already exists
         }
 
-        Debug.Log($"AddPlayer {clientId} {networkFungal.Index}");
-        var addedPlayer = new Player(clientId, networkFungal, isAi);
+        Debug.Log($"AddPlayer {clientId} {playerIndex}");
+        var addedPlayer = new Player(clientId, playerIndex, networkFungal, isAi);
         Players.Add(addedPlayer);
 
         // Sort the list based on the player index

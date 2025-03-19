@@ -28,7 +28,7 @@ public class Health : NetworkBehaviour
         {
             OnHealthChanged?.Invoke();
 
-            if (currentHealth.Value <= 0)
+            if (previousValue > 0 && currentHealth.Value <= 0)
             {
                 OnHealthDepleted?.Invoke();
             }
@@ -54,6 +54,8 @@ public class Health : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void OnDamageServerRpc(float damage, ulong sourceId)
     {
+        if (currentHealth.Value == 0) return;
+
         currentHealth.Value = Mathf.Clamp(currentHealth.Value - damage, 0, maxHealth);
 
         if (sourceId != NetworkObjectId)

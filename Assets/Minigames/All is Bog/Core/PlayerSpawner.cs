@@ -56,12 +56,12 @@ public class PlayerSpawner : NetworkBehaviour
 
         if (!isAI)
         {
-            OnPlayerAddedClientRpc(clientId, networkFungal.NetworkObjectId, isAI);
+            OnPlayerAddedClientRpc(clientId, playerIndex, networkFungal.NetworkObjectId, isAI);
         }
     }
 
     [ClientRpc]
-    private void OnPlayerAddedClientRpc(ulong clientId,ulong networkObjectId,  bool isAi)
+    private void OnPlayerAddedClientRpc(ulong clientId, int playerIndex, ulong networkObjectId,  bool isAi)
     {
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out var networkObject))
         {
@@ -73,7 +73,7 @@ public class PlayerSpawner : NetworkBehaviour
                 fishingPlayer.AssignFungal(networkFungal);
             }
 
-            pufferballReference.AddPlayer(clientId, networkFungal, isAi);
+            pufferballReference.AddPlayer(clientId, playerIndex, networkFungal, isAi);
         }
 
         //Debug.Log("Client owner spawned, searching for existing NetworkFungals...");
@@ -91,7 +91,7 @@ public class PlayerSpawner : NetworkBehaviour
                 }
 
                 // Register the fungal with the pufferballReference
-                pufferballReference.AddPlayer(clientId, networkFungal, isAi);
+                pufferballReference.AddPlayer(clientId, networkFungal.Index, networkFungal, isAi);
             }
         }
     }

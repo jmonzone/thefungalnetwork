@@ -7,7 +7,6 @@ using UnityEngine.UI;
 public class MainMenuMatchmaking : MonoBehaviour
 {
     [SerializeField] private MultiplayerManager multiplayer;
-    [SerializeField] private DisplayName displayName;
     [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference partyPrepareView;
 

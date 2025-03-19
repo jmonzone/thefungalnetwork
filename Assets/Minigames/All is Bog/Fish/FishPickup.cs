@@ -16,6 +16,8 @@ public class FishPickup : NetworkBehaviour
 
         fungal = GetComponent<NetworkFungal>();
         fungal.OnDeath += Fungal_OnDeath;
+
+        requestedFish = null;
     }
 
     private void Fungal_OnDeath()
@@ -27,12 +29,14 @@ public class FishPickup : NetworkBehaviour
         }
     }
 
+    private Fish requestedFish;
+
     private void Update()
     {
-        if (IsOwner && !Fish && !fungal.IsDead) DetectPufferfishHit();
+        if (IsOwner && !Fish && !fungal.IsDead && !requestedFish) TryPickUpFish();
     }
 
-    private bool DetectPufferfishHit()
+    private void TryPickUpFish()
     {
         Collider[] hits = Physics.OverlapSphere(transform.position, 0.5f); // Small detection radius
 
@@ -41,29 +45,32 @@ public class FishPickup : NetworkBehaviour
             var fish = hit.GetComponentInParent<Fish>();
             if (fish != null && !fish.IsPickedUp.Value)
             {
-                var networkPufferfish = fish.GetComponent<Pufferfish>(); // Ensure it's the correct one
-                if (networkPufferfish != null)
-                {
-                    networkPufferfish.OnMaxTemperReached += NetworkPufferfish_OnMaxTemperReached;
-                }
-
-                bool pickupSuccessful = fish.PickUp(); // This now returns whether the pickup was successful
-                if (pickupSuccessful)
-                {
-                    Fish = fish;
-                    OnFishPickedUpServerRpc();
-                    OnFishChanged?.Invoke();
-                    return true; // Pickup was successful
-                }
-                else
-                {
-                    // Handle the case where the pickup was not successful
-                    //Debug.Log("Pickup failed.");
-                    return false;
-                }
+                requestedFish = fish;
+                fish.OnPickUpRequest += Fish_OnPickUpRequest;
+                fish.RequestPickUpServerRpc(NetworkManager.Singleton.LocalClientId);
             }
         }
-        return false; // No fish to pick up
+    }
+
+    private void Fish_OnPickUpRequest(bool success)
+    {
+        requestedFish.OnPickUpRequest -= Fish_OnPickUpRequest;
+
+        if (success)
+        {
+            var networkPufferfish = requestedFish.GetComponent<Pufferfish>(); // Ensure it's the correct one
+            if (networkPufferfish != null)
+            {
+                networkPufferfish.OnMaxTemperReached += NetworkPufferfish_OnMaxTemperReached;
+                networkPufferfish.StartTemperServerRpc();
+            }
+
+            Fish = requestedFish;
+            OnFishPickedUpServerRpc();
+            OnFishChanged?.Invoke();
+        }
+
+        requestedFish = null;
     }
 
     [ServerRpc]

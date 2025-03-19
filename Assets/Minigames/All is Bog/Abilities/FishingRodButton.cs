@@ -49,7 +49,7 @@ public class FishingRodButton : Ability
 
     private void FishPickup_OnFishReleased()
     {
-        cooldownHandler.StartCooldown(castCooldown); // Start logic cooldown
+        //cooldownHandler.StartCooldown(castCooldown); // Start logic cooldown
         CancelAbility();
     }
 

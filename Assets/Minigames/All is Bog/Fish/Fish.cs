@@ -28,6 +28,9 @@ public class Fish : NetworkBehaviour
         Vector3.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server
     );
 
+    public NetworkVariable<bool> IsPickedUp = new NetworkVariable<bool>(false);
+
+    public event UnityAction<bool> OnPickUpRequest;
     public event UnityAction OnPrepareThrow;
     public event UnityAction OnPickup;
     public event UnityAction OnRespawn;
@@ -69,45 +72,56 @@ public class Fish : NetworkBehaviour
         NetworkObject.ChangeOwnership(requestingClientId);
     }
 
-
-    public NetworkVariable<bool> IsPickedUp = new NetworkVariable<bool>(false);
-
-    public bool PickUp()
-    {
-        if (IsPickedUp.Value) return false;  // Return false if it's already picked up
-
-        RequestPickUpServerRpc(NetworkManager.Singleton.LocalClientId);
-        return true; // Return true if the pick-up was successful
-    }
-
+    private bool requested;
 
     [ServerRpc(RequireOwnership = false)]
-    private void RequestPickUpServerRpc(ulong clientId)
+    public void RequestPickUpServerRpc(ulong clientId)
     {
-        //Debug.Log($"RequestPickUpServerRpc {IsPickedUp.Value}");
+        if (requested)
+        {
+            OnRequestPickUpClientRpc(clientId, false);
+            return;
+        }
 
-        if (IsPickedUp.Value) return;  // Double check server-side to prevent race conditions.
+        requested = true;
 
-        IsPickedUp.Value = true;
-        NetworkObject.ChangeOwnership(clientId);
-        OnPickupClientRpc(clientId);
+        if (!IsPickedUp.Value)
+        {
+            IsPickedUp.Value = true;
+            NetworkObject.ChangeOwnership(clientId);
+            OnRequestPickUpClientRpc(clientId, true);
+        }
+        else
+        {
+            OnRequestPickUpClientRpc(clientId, false);
+        }
+
     }
 
-    [ClientRpc]
-    private void OnPickupClientRpc(ulong clientId)
-    {
-        //Debug.Log($"OnPickupClientRpc {NetworkManager.Singleton.LocalClientId == clientId}");
 
-        // Update the local state after ownership change
-        if (NetworkManager.Singleton.LocalClientId == clientId)
+    [ClientRpc]
+    private void OnRequestPickUpClientRpc(ulong clientId, bool success)
+    {
+        if (IsServer) requested = false;
+
+        //Debug.Log($"OnPickupClientRpc {NetworkManager.Singleton.LocalClientId == clientId}");
+        if (success)
         {
-            audioSource.clip = audioClips.GetRandomItem();
-            audioSource.pitch = audioPitch;
-            audioSource.Play();
-            Movement.SetSpeed(10);
-            Movement.Follow(playerReference.Movement.transform);
-            OnPickup?.Invoke();  // Trigger pickup event only on the owning client
+            // Update the local state after ownership change
+            if (NetworkManager.Singleton.LocalClientId == clientId)
+            {
+                audioSource.clip = audioClips.GetRandomItem();
+                audioSource.pitch = audioPitch;
+                audioSource.Play();
+                Movement.SetSpeed(10);
+                Movement.Follow(playerReference.Movement.transform);
+                OnPickup?.Invoke();  // Trigger pickup event only on the owning client
+                OnPickUpRequest?.Invoke(true);
+                return;
+            }
         }
+
+        OnPickUpRequest?.Invoke(false);
     }
 
     public void ReturnToRadialMovement()

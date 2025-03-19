@@ -87,7 +87,7 @@ public class FishingRodProjectile : NetworkBehaviour
             yield return null;
         }
 
-        if (Fish) Fish.PickUp();
+        //if (Fish) Fish.PickUp();
         onComplete?.Invoke(Fish);
         RequestVisibilityServerRpc(false);
     }

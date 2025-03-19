@@ -59,7 +59,7 @@ public class Leaderboard : MonoBehaviour
 
 
         // Build leaderboard: top 3 plus client if missing
-        var leaderboardPlayers = sortedPlayers.Take(3).ToList();
+        var leaderboardPlayers = sortedPlayers.Take(4).ToList();
 
         if (!leaderboardPlayers.Contains(clientPlayer))
         {
