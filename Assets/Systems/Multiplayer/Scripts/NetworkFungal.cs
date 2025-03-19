@@ -3,6 +3,18 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
 
+public struct OnScoreUpdatedEventArgs : INetworkSerializable
+{
+    public Vector3 position;
+    public float value;
+
+    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+    {
+        serializer.SerializeValue(ref position);
+        serializer.SerializeValue(ref value);
+    }
+}
+
 public class NetworkFungal : NetworkBehaviour
 {
     [SerializeField] private FungalData data;
@@ -36,22 +48,18 @@ public class NetworkFungal : NetworkBehaviour
     private NetworkVariable<int> index = new NetworkVariable<int>();
     private NetworkVariable<int> fungalIndex = new NetworkVariable<int>(-1);
 
-    public NetworkVariable<float> Score = new NetworkVariable<float>();
+    private NetworkVariable<float> score = new NetworkVariable<float>();
 
     public int Index => index.Value;
+    public float Score => score.Value;
+
+    public event UnityAction<OnScoreUpdatedEventArgs> OnScoreUpdated;
 
     [ServerRpc(RequireOwnership = false)]
     public void InitializeServerRpc(int index, int fungalIndex)
     {
         this.fungalIndex.Value = fungalIndex;
         this.index.Value = index;
-        InitializeClientRpc();
-    }
-
-    [ClientRpc]
-    private void InitializeClientRpc()
-    {
-        InitializePrefab();
     }
 
     public override void OnNetworkSpawn()
@@ -68,9 +76,18 @@ public class NetworkFungal : NetworkBehaviour
 
         Health.OnDamaged += Health_OnDamaged;
 
+
+        Debug.Log($"NetworkFungal.OnNetworkSpawn {fungalIndex.Value}");
         if (fungalIndex.Value != -1)
         {
             InitializePrefab();
+        }
+        else
+        {
+            fungalIndex.OnValueChanged += (previousValue, newValue) =>
+            {
+                InitializePrefab();
+            };
         }
     }
 
@@ -105,9 +122,13 @@ public class NetworkFungal : NetworkBehaviour
             DieServerRpc();
         }
 
-        if (IsServer && Input.GetKeyUp(KeyCode.P))
+        if (IsOwner && Input.GetKeyUp(KeyCode.P))
         {
-            Score.Value += 100f;
+            AddToScoreServerRpc(new OnScoreUpdatedEventArgs
+            {
+                value = 200f,
+                position = transform.position
+            });
         }
     }
 
@@ -163,6 +184,19 @@ public class NetworkFungal : NetworkBehaviour
         animations.PlaySpawnAnimation();
         materialFlasher.FlashColor(Color.white);
         OnRespawnComplete?.Invoke();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void AddToScoreServerRpc(OnScoreUpdatedEventArgs args)
+    {
+        score.Value += args.value;
+        AddToScoreClientRpc(args);
+    }
+
+    [ClientRpc]
+    private void AddToScoreClientRpc(OnScoreUpdatedEventArgs args)
+    {
+        OnScoreUpdated?.Invoke(args);
     }
 
     private void Movement_OnTypeChanged()

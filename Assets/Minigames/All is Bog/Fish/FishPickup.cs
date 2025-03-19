@@ -7,6 +7,7 @@ public class FishPickup : NetworkBehaviour
     public Fish Fish { get; private set; }
     private NetworkFungal fungal;
 
+    public event UnityAction<float> OnFishPickedUp;
     public event UnityAction OnFishChanged;
     public event UnityAction OnFishReleased;
 
@@ -66,22 +67,22 @@ public class FishPickup : NetworkBehaviour
             }
 
             Fish = requestedFish;
-            OnFishPickedUpServerRpc();
+
+            float score = 20f;
+            OnFishPickedUp?.Invoke(score);
+            fungal.AddToScoreServerRpc(new OnScoreUpdatedEventArgs
+            {
+                value = score,
+                position = Fish.transform.position
+            });
             OnFishChanged?.Invoke();
         }
 
         requestedFish = null;
     }
 
-    [ServerRpc]
-    private void OnFishPickedUpServerRpc()
-    {
-        fungal.Score.Value += 20f;
-    }
-
     public void Sling(Vector3 targetPosition)
     {
-        //Debug.Log("Sling");
         if (Fish)
         {
             Fish.Throw(targetPosition);

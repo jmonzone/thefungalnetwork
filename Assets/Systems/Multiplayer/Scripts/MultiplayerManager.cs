@@ -19,7 +19,7 @@ public class MultiplayerManager : ScriptableObject
     [SerializeField] private DisplayName displayName;
     [SerializeField] private SceneNavigation sceneNavigation;
 
-    public string PlayerName => displayName.Value.Replace(" ", "_");
+    public string PlayerName => displayName.Value?.Replace(" ", "_") ?? "Unknown";
     public bool IsSignedIn { get; private set; }
 
     private Lobby joinedLobby;

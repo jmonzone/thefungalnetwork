@@ -63,8 +63,16 @@ public class Health : NetworkBehaviour
             if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(sourceId, out var networkObject))
             {
                 var networkFungal = networkObject.GetComponent<NetworkFungal>();
-                if (currentHealth.Value <= 0) networkFungal.Score.Value += 250f;
-                else networkFungal.Score.Value += 35f;
+                if (currentHealth.Value <= 0) networkFungal.AddToScoreServerRpc(new OnScoreUpdatedEventArgs
+                {
+                    value = 250f,
+                    position = transform.position
+                });
+                else networkFungal.AddToScoreServerRpc(new OnScoreUpdatedEventArgs
+                {
+                    value = 35f,
+                    position = transform.position
+                });
             }
         }
 

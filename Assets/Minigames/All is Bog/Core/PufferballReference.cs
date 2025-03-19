@@ -11,25 +11,15 @@ public class Player
     public bool IsAI;
     public int Index;
     public NetworkFungal Fungal;
-    public float Score;
+    public float Score => Fungal.Score;
 
     public bool IsWinner => Score > 1000f;
-
-    public event UnityAction OnScoreUpdated;
 
     public Player(ulong clientId, int playerIndex, NetworkFungal fungal, bool isAI = false)
     {
         ClientId = clientId;
         Index = playerIndex;
         Fungal = fungal;
-        Score = fungal.Score.Value;
-
-        fungal.Score.OnValueChanged += (previousValue, newValue) =>
-        {
-            Score = newValue;
-            OnScoreUpdated?.Invoke();
-        };
-
         IsAI = isAI;
     }
 }
@@ -82,10 +72,10 @@ public class PufferballReference : ScriptableObject
 
         OnPlayerAdded?.Invoke(addedPlayer);
 
-        addedPlayer.OnScoreUpdated += AddedPlayer_OnScoreUpdated;
+        addedPlayer.Fungal.OnScoreUpdated += Fungal_OnScoreUpdated;
     }
 
-    private void AddedPlayer_OnScoreUpdated()
+    private void Fungal_OnScoreUpdated(OnScoreUpdatedEventArgs args)
     {
         OnScoreUpdated?.Invoke();
 

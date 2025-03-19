@@ -53,10 +53,10 @@ public class PlayerSpawner : NetworkBehaviour
 
         var networkFungal = Instantiate(fungalPrefab, spawnPosition, Quaternion.identity);
         networkFungal.NetworkObject.SpawnWithOwnership(clientId);
+        networkFungal.InitializeServerRpc(playerIndex, fungalIndex);
 
         if (!isAI)
         {
-            networkFungal.InitializeServerRpc(playerIndex, fungalIndex);
             OnPlayerAddedClientRpc(clientId, playerIndex, networkFungal.NetworkObjectId, isAI);
         }
     }
