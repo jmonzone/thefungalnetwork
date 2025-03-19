@@ -52,11 +52,11 @@ public class PlayerSpawner : NetworkBehaviour
         var spawnPosition = spawnOrigin;
 
         var networkFungal = Instantiate(fungalPrefab, spawnPosition, Quaternion.identity);
-        networkFungal.Initialize(playerIndex, fungalIndex);
         networkFungal.NetworkObject.SpawnWithOwnership(clientId);
 
         if (!isAI)
         {
+            networkFungal.InitializeServerRpc(playerIndex, fungalIndex);
             OnPlayerAddedClientRpc(clientId, playerIndex, networkFungal.NetworkObjectId, isAI);
         }
     }

@@ -34,19 +34,24 @@ public class NetworkFungal : NetworkBehaviour
 
     // Exposed to all clients, replicated by Netcode
     private NetworkVariable<int> index = new NetworkVariable<int>();
-    private NetworkVariable<int> fungalIndex = new NetworkVariable<int>();
+    private NetworkVariable<int> fungalIndex = new NetworkVariable<int>(-1);
 
     public NetworkVariable<float> Score = new NetworkVariable<float>();
 
     public int Index => index.Value;
 
-    public void Initialize(int index, int fungalIndex)
+    [ServerRpc(RequireOwnership = false)]
+    public void InitializeServerRpc(int index, int fungalIndex)
     {
-        if (IsServer)
-        {
-            this.fungalIndex.Value = fungalIndex;
-            this.index.Value = index;
-        }
+        this.fungalIndex.Value = fungalIndex;
+        this.index.Value = index;
+        InitializeClientRpc();
+    }
+
+    [ClientRpc]
+    private void InitializeClientRpc()
+    {
+        InitializePrefab();
     }
 
     public override void OnNetworkSpawn()
@@ -63,12 +68,19 @@ public class NetworkFungal : NetworkBehaviour
 
         Health.OnDamaged += Health_OnDamaged;
 
+        if (fungalIndex.Value != -1)
+        {
+            InitializePrefab();
+        }
+    }
+
+    private void InitializePrefab()
+    {
         data = fungalCollection.Fungals[fungalIndex.Value];
         var model = Instantiate(data.Prefab, transform);
         animations = model.AddComponent<MovementAnimations>();
         materialFlasher = model.AddComponent<MaterialFlasher>();
         materialFlasher.flashDuration = 0.5f;
-
     }
 
     private void Health_OnDamaged()
