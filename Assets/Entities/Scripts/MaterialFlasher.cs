@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MaterialFlasher : MonoBehaviour
 {
-    [SerializeField] private float flashDuration = 2f;
+    public float flashDuration = 2f;
 
     private Material[] originalMaterials;
     private Material[] childMaterials;

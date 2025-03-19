@@ -12,8 +12,8 @@ public class MovementAnimations : MonoBehaviour
 
     private void Awake()
     {
-        movement = GetComponent<Movement>();
-        animator = GetComponentInChildren<Animator>();
+        movement = GetComponentInParent<Movement>();
+        animator = GetComponent<Animator>();
     }
 
     public void Update()

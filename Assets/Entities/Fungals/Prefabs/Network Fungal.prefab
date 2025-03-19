@@ -19,8 +19,6 @@ GameObject:
   - component: {fileID: 2097482643546369042}
   - component: {fileID: 3325272597309751410}
   - component: {fileID: 779741349755401041}
-  - component: {fileID: 2071258041412364226}
-  - component: {fileID: 6843690159585011709}
   - component: {fileID: 4843370089600157221}
   m_Layer: 10
   m_Name: Network Fungal
@@ -166,6 +164,10 @@ MonoBehaviour:
   pufferball: {fileID: 11400000, guid: 08db032ff48be41208a04f1067508370, type: 2}
   arena: {fileID: 11400000, guid: 24582879ca0914ce48009bfa1a0c10ae, type: 2}
   stunAnimation: {fileID: 7684853891565658531}
+  respawnDuration: 5
+  fungalCollection: {fileID: 11400000, guid: 1d49e170120fe4ab1befd22e62e1ea65, type: 2}
+  Score:
+    m_InternalValue: 0
 --- !u!135 &8610307119214488969
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -243,32 +245,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b38646decf524ae9b91d78c834e3d6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &2071258041412364226
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2941250707292126303}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cddd13ae57a0f4283b2df4ce41eea802, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  flashDuration: 0.5
---- !u!114 &6843690159585011709
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2941250707292126303}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7511a942fc4cf4dcaa3d6d403a4ec0d1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animationSpeed: 0.5
 --- !u!82 &4843370089600157221
 AudioSource:
   m_ObjectHideFlags: 0

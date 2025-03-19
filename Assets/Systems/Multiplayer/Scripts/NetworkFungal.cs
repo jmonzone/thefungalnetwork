@@ -10,6 +10,7 @@ public class NetworkFungal : NetworkBehaviour
     [SerializeField] private MultiplayerArena arena;
     [SerializeField] private GameObject stunAnimation;
     [SerializeField] private float respawnDuration = 5f;
+    [SerializeField] private FungalCollection fungalCollection;
 
     public FungalData Data => data;
     public Health Health { get; private set; }
@@ -33,14 +34,17 @@ public class NetworkFungal : NetworkBehaviour
 
     // Exposed to all clients, replicated by Netcode
     private NetworkVariable<int> index = new NetworkVariable<int>();
+    private NetworkVariable<int> fungalIndex = new NetworkVariable<int>();
+
     public NetworkVariable<float> Score = new NetworkVariable<float>();
 
     public int Index => index.Value;
 
-    public void Initialize(int index)
+    public void Initialize(int index, int fungalIndex)
     {
         if (IsServer)
         {
+            this.fungalIndex.Value = fungalIndex;
             this.index.Value = index;
         }
     }
@@ -55,12 +59,16 @@ public class NetworkFungal : NetworkBehaviour
 
         AudioSource = GetComponent<AudioSource>();
 
-        animations = GetComponent<MovementAnimations>();
-        materialFlasher = GetComponent<MaterialFlasher>();
-
         spawnPosition = transform.position;
 
         Health.OnDamaged += Health_OnDamaged;
+
+        data = fungalCollection.Fungals[fungalIndex.Value];
+        var model = Instantiate(data.Prefab, transform);
+        animations = model.AddComponent<MovementAnimations>();
+        materialFlasher = model.AddComponent<MaterialFlasher>();
+        materialFlasher.flashDuration = 0.5f;
+
     }
 
     private void Health_OnDamaged()

@@ -11,6 +11,7 @@ public class PlayerSpawner : NetworkBehaviour
     [SerializeField] private FungalCollection fungalCollection;
     [SerializeField] private PufferballReference pufferballReference;
     [SerializeField] private bool addAIPlayer = false;
+    [SerializeField] private NetworkFungal fungalPrefab;
 
     public event Action<PlayerSpawner> OnSpawnerReady;
 
@@ -45,14 +46,14 @@ public class PlayerSpawner : NetworkBehaviour
     {
         Debug.Log("OnPlayerAddedServerRpc");
 
-        var fungal = fungalCollection.Fungals[fungalIndex];
+       
         var spawnOrigin = arena.SpawnPositions[playerIndex].position;
 
         var spawnPosition = spawnOrigin;
 
-        var networkFungal = Instantiate(fungal.NetworkPrefab, spawnPosition, Quaternion.identity);
+        var networkFungal = Instantiate(fungalPrefab, spawnPosition, Quaternion.identity);
+        networkFungal.Initialize(playerIndex, fungalIndex);
         networkFungal.NetworkObject.SpawnWithOwnership(clientId);
-        networkFungal.Initialize(playerIndex);
 
         if (!isAI)
         {
