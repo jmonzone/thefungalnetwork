@@ -5,6 +5,7 @@ using UnityEngine.Events;
 
 public class PufferfishExplosion : MonoBehaviour
 {
+    [SerializeField] private PufferballReference pufferball;
     [SerializeField] private GameObject radiusIndicator;
     [SerializeField] private Movement movement;
     [SerializeField] private ParticleSystem particleSystem;
@@ -21,12 +22,12 @@ public class PufferfishExplosion : MonoBehaviour
         hitDetector = GetComponent<HitDetector>();
     }
 
-    public void EnableDamage(float damage, int source)
+    public void EnableDamage(float damage)
     {
-        StartCoroutine(DamageRoutine(damage, source));
+        StartCoroutine(DamageRoutine(damage));
     }
 
-    private IEnumerator DamageRoutine(float damage, int source)
+    private IEnumerator DamageRoutine(float damage)
     {
         List<Collider> hits = new List<Collider>();
 
@@ -40,7 +41,7 @@ public class PufferfishExplosion : MonoBehaviour
                 if (fungal != null)
                 {
                     fungal.ModifySpeedServerRpc(0, 0.5f);
-                    fungal.TakeDamageServerRpc(damage, source);
+                    fungal.Health.Damage(damage, pufferball.ClientPlayer.Fungal.NetworkObjectId);
                     hits.Add(hit);
                     return;
                 }

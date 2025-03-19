@@ -50,7 +50,7 @@ public class Bubble : NetworkBehaviour
                 if (fungal != null)
                 {
                     fungal.ModifySpeedServerRpc(0f, 1.5f);
-                    fungal.TakeDamageServerRpc(damage, pufferball.ClientPlayer.Index);
+                    fungal.Health.Damage(damage, pufferball.ClientPlayer.Fungal.NetworkObjectId);
                     Pop();
                 }
             });

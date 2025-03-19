@@ -142,6 +142,6 @@ public class Pufferfish : NetworkBehaviour
     {
         pufferfishExplosion.StartExplosionAnimation(radius);
         float damage = pufferfishTemper.Temper * (maxExplosionDamage - minExplosionDamage) + minExplosionDamage;
-        if (IsOwner) pufferfishExplosion.EnableDamage(damage, playerReference.Fungal.PlayerIndex);
+        if (IsOwner) pufferfishExplosion.EnableDamage(damage);
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -64,7 +65,6 @@ public class PlayerSpawner : NetworkBehaviour
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out var networkObject))
         {
             var networkFungal = networkObject.GetComponent<NetworkFungal>();
-            pufferballReference.AddPlayer(clientId, playerIndex, networkFungal, isAi);
 
             if (networkFungal.IsOwner)
             {
@@ -73,9 +73,11 @@ public class PlayerSpawner : NetworkBehaviour
                 var fishingPlayer = FindObjectOfType<FishingPlayer>();
                 fishingPlayer.AssignFungal(networkFungal);
             }
+
+            pufferballReference.AddPlayer(clientId, networkFungal, isAi);
         }
 
-        Debug.Log("Client owner spawned, searching for existing NetworkFungals...");
+        //Debug.Log("Client owner spawned, searching for existing NetworkFungals...");
 
         // Find all existing NetworkFungal objects using the SpawnManager
         foreach (var spawnedObject in NetworkManager.Singleton.SpawnManager.SpawnedObjects.Values)
@@ -83,8 +85,14 @@ public class PlayerSpawner : NetworkBehaviour
             var networkFungal = spawnedObject.GetComponent<NetworkFungal>();
             if (networkFungal != null)
             {
+                // Check if a player with the same index already exists
+                if (pufferballReference.Players.Any(player => player.Fungal == networkFungal))
+                {
+                    continue;
+                }
+
                 // Register the fungal with the pufferballReference
-                pufferballReference.AddPlayer(clientId, networkFungal.PlayerIndex, networkFungal, isAi);
+                pufferballReference.AddPlayer(clientId, networkFungal, isAi);
             }
         }
     }

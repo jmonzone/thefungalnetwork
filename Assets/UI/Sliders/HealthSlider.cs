@@ -16,7 +16,7 @@ public class HealthSlider : MonoBehaviour
     {
         health = GetComponentInParent<Health>();
 
-        health.OnHealthChanged += _ => UpdateView();
+        health.OnHealthChanged += UpdateView;
         health.OnShieldChanged += UpdateView;
 
         healthFill.color = healthColor;

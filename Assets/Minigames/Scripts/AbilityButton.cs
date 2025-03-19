@@ -67,10 +67,10 @@ public class AbilityButton : MonoBehaviour
     {
         if (!playerReference.Fungal) return;
         playerReference.Fungal.OnDeath += Fungal_OnDeath;
-        playerReference.Fungal.OnRespawn += UpdateAbility;
+        playerReference.Fungal.OnRespawnComplete += UpdateAbility;
     }
 
-    private void Fungal_OnDeath(int arg0)
+    private void Fungal_OnDeath()
     {
         abilityCastIndicator.HideIndicator();
         directionalButton.enabled = false;
@@ -79,7 +79,7 @@ public class AbilityButton : MonoBehaviour
     private void OnDisable()
     {
         playerReference.Fungal.OnDeath -= Fungal_OnDeath;
-        playerReference.Fungal.OnRespawn -= UpdateAbility;
+        playerReference.Fungal.OnRespawnComplete -= UpdateAbility;
     }
     private void OnDragStarted()
     {

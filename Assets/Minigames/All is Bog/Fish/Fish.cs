@@ -84,7 +84,7 @@ public class Fish : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     private void RequestPickUpServerRpc(ulong clientId)
     {
-        Debug.Log($"RequestPickUpServerRpc {IsPickedUp.Value}");
+        //Debug.Log($"RequestPickUpServerRpc {IsPickedUp.Value}");
 
         if (IsPickedUp.Value) return;  // Double check server-side to prevent race conditions.
 
@@ -96,7 +96,7 @@ public class Fish : NetworkBehaviour
     [ClientRpc]
     private void OnPickupClientRpc(ulong clientId)
     {
-        Debug.Log($"OnPickupClientRpc {NetworkManager.Singleton.LocalClientId == clientId}");
+        //Debug.Log($"OnPickupClientRpc {NetworkManager.Singleton.LocalClientId == clientId}");
 
         // Update the local state after ownership change
         if (NetworkManager.Singleton.LocalClientId == clientId)
@@ -112,7 +112,7 @@ public class Fish : NetworkBehaviour
 
     public void ReturnToRadialMovement()
     {
-        Debug.Log("ReturnToRadialMovement");
+        //Debug.Log("ReturnToRadialMovement");
         Movement.SetSpeed(swimSpeed);
         Movement.StartRadialMovement(networkPosition.Value, true);
         OnRespawnServerRpc();

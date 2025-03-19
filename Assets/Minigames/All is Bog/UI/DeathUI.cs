@@ -11,16 +11,19 @@ public class DeathUI : MonoBehaviour
     [Header("Display Settings")]
     [SerializeField] private bool hideWhenZero = true; // Optional: hides text when timer hits 0
 
-    private void OnEnable()
+    private void Awake()
     {
-        minigameReference.OnRespawnStart += MinigameReference_OnRespawnStart;
-        minigameReference.OnRespawnComplete += MinigameReference_OnRespawnComplete;
+        minigameReference.OnClientPlayerAdded += MinigameReference_OnClientPlayerAdded;
+        enabled = false;
     }
 
-    private void OnDisable()
+    private void MinigameReference_OnClientPlayerAdded()
     {
-        minigameReference.OnRespawnStart -= MinigameReference_OnRespawnStart;
-        minigameReference.OnRespawnComplete -= MinigameReference_OnRespawnComplete;
+        minigameReference.OnClientPlayerAdded -= MinigameReference_OnClientPlayerAdded;
+
+        minigameReference.ClientPlayer.Fungal.OnRespawnStart += MinigameReference_OnRespawnStart;
+        minigameReference.ClientPlayer.Fungal.OnRespawnComplete += MinigameReference_OnRespawnComplete;
+        enabled = true;
     }
 
     private void MinigameReference_OnRespawnComplete()
@@ -39,7 +42,7 @@ public class DeathUI : MonoBehaviour
         if (minigameReference == null || timerText == null)
             return;
 
-        float timeRemaining = minigameReference.RemainingRespawnTime;
+        float timeRemaining = minigameReference.ClientPlayer.Fungal.RemainingRespawnTime;
 
         // If you want the UI to disappear when timer is zero
         if (hideWhenZero && timeRemaining <= 0f)

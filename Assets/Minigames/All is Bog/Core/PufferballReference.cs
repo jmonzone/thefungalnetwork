@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -18,18 +17,20 @@ public class Player
 
     public event UnityAction OnScoreUpdated;
 
-    public Player(ulong clientId, int index, NetworkFungal fungal, bool isAI = false)
+    public Player(ulong clientId, NetworkFungal fungal, bool isAI = false)
     {
         ClientId = clientId;
-        Index = index;
+        Index = fungal.Index;
         Fungal = fungal;
-        IsAI = isAI;
-    }
+        Score = fungal.Score.Value;
 
-    public void AddToScore(float value)
-    {
-        Score += value;
-        OnScoreUpdated?.Invoke();
+        fungal.Score.OnValueChanged += (previousValue, newValue) =>
+        {
+            Score = newValue;
+            OnScoreUpdated?.Invoke();
+        };
+
+        IsAI = isAI;
     }
 }
 
@@ -38,12 +39,11 @@ public class PufferballReference : ScriptableObject
 {
     [SerializeField] private Player clientPlayer;
     [SerializeField] private List<Player> players;
-    [SerializeField] private float respawnDuration = 5f;
+
+    private bool isComplete;
 
     public Player ClientPlayer => clientPlayer;
     public List<Player> Players => players;
-
-    public float RemainingRespawnTime { get; private set; }
 
     public event UnityAction OnScoreUpdated;
     public event UnityAction OnGameComplete;
@@ -51,25 +51,24 @@ public class PufferballReference : ScriptableObject
     public event UnityAction OnClientPlayerAdded;
     public event UnityAction<Player> OnPlayerAdded;
 
-    public event UnityAction OnRespawnStart;
-    public event UnityAction OnRespawnComplete;
-
     public void Initialize()
     {
         clientPlayer = null;
         players = new List<Player>();
+        isComplete = false;
     }
 
-    public void AddPlayer(ulong clientId, int index, NetworkFungal networkFungal, bool isAi)
+    public void AddPlayer(ulong clientId, NetworkFungal networkFungal, bool isAi)
     {
         // Check if a player with the same index already exists
-        if (Players.Any(player => player.Index == index))
+        if (Players.Any(player => player.Fungal == networkFungal))
         {
-            //Debug.Log($"Player with index {index} already exists. Skipping registration.");
+            Debug.Log($"Player with fungal {networkFungal.name} already exists. Skipping registration.");
             return; // Skip if player already exists
         }
 
-        var addedPlayer = new Player(clientId, index, networkFungal, isAi);
+        Debug.Log($"AddPlayer {clientId} {networkFungal.Index}");
+        var addedPlayer = new Player(clientId, networkFungal, isAi);
         Players.Add(addedPlayer);
 
         // Sort the list based on the player index
@@ -83,67 +82,22 @@ public class PufferballReference : ScriptableObject
 
         OnPlayerAdded?.Invoke(addedPlayer);
 
-        addedPlayer.OnScoreUpdated += () =>
-        {
-            OnScoreUpdated?.Invoke();
-
-            foreach (var player in Players)
-            {
-                if (player.IsWinner)
-                {
-                    OnGameComplete?.Invoke();
-                    return;
-                }
-            }
-        };
-
-        addedPlayer.Fungal.GetComponent<FishPickup>().OnFishPickedUp += () =>
-        {
-            Players[index].AddToScore(20f);
-        };
-
-        addedPlayer.Fungal.Health.OnHealthChanged += source =>
-        {
-            ValidateAndAddScore(index, source, 35f);
-        };
-
-        addedPlayer.Fungal.OnDeath += source =>
-        {
-            ValidateAndAddScore(index, source, 250f);
-
-            if (addedPlayer.Fungal.IsOwner)
-            {
-                Debug.Log("OnPlayerDeath.networkObject.IsOwner");
-
-                addedPlayer.Fungal.StartCoroutine(RespawnRoutine(addedPlayer.Fungal));
-            }
-        };
+        addedPlayer.OnScoreUpdated += AddedPlayer_OnScoreUpdated;
     }
 
-
-    private void ValidateAndAddScore(int index, int source, float value)
+    private void AddedPlayer_OnScoreUpdated()
     {
-        if (index != source && source > -1f)
+        OnScoreUpdated?.Invoke();
+
+        if (isComplete) return;
+        foreach (var player in Players)
         {
-            Players[source].AddToScore(value);
+            if (player.IsWinner)
+            {
+                isComplete = true;
+                OnGameComplete?.Invoke();
+                return;
+            }
         }
-
-    }
-    private IEnumerator RespawnRoutine(NetworkFungal fungal)
-    {
-        OnRespawnStart?.Invoke();
-        RemainingRespawnTime = respawnDuration;
-
-        while (RemainingRespawnTime > 0f)
-        {
-            yield return null; // Wait for next frame
-            RemainingRespawnTime -= Time.deltaTime;
-        }
-
-        RemainingRespawnTime = 0f;
-
-        fungal.RespawnServerRpc();
-
-        OnRespawnComplete?.Invoke();
     }
 }

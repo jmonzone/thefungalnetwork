@@ -7,7 +7,6 @@ public class FishPickup : NetworkBehaviour
     public Fish Fish { get; private set; }
     private NetworkFungal fungal;
 
-    public event UnityAction OnFishPickedUp;
     public event UnityAction OnFishChanged;
     public event UnityAction OnFishReleased;
 
@@ -16,10 +15,10 @@ public class FishPickup : NetworkBehaviour
         base.OnNetworkSpawn();
 
         fungal = GetComponent<NetworkFungal>();
-        fungal.OnDeath += Fungal_OnDeath; ;
+        fungal.OnDeath += Fungal_OnDeath;
     }
 
-    private void Fungal_OnDeath(int arg0)
+    private void Fungal_OnDeath()
     {
         if (Fish)
         {
@@ -70,13 +69,7 @@ public class FishPickup : NetworkBehaviour
     [ServerRpc]
     private void OnFishPickedUpServerRpc()
     {
-        OnFishPickedUpClientRpc();
-    }
-
-    [ClientRpc]
-    private void OnFishPickedUpClientRpc()
-    {
-        OnFishPickedUp?.Invoke();
+        fungal.Score.Value += 20f;
     }
 
     public void Sling(Vector3 targetPosition)
