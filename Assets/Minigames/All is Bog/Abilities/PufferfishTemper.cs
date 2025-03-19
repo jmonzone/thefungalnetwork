@@ -20,12 +20,7 @@ public class PufferfishTemper : MonoBehaviour
             float temperIncreaseSpeed = 1f / maxTemperDuration;
             SetTemper(Temper + temperIncreaseSpeed * Time.deltaTime);
 
-            if (Temper >= 1f)
-            {
-                Temper = 1f;
-                isIncreasing = false;
-                OnMaxTemperReached?.Invoke(); // Trigger event when full
-            }
+            if (Temper >= 1f) isIncreasing = false;
         }
 
         UpdateColor();

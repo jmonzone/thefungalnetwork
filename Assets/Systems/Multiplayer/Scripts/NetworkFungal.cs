@@ -60,30 +60,28 @@ public class NetworkFungal : NetworkBehaviour
 
         spawnPosition = transform.position;
 
-        if (IsOwner)
-        {
-            Health.OnDamaged += Health_OnDamaged;
-            Health.OnHealthDepleted += Die;
-        }
+        Health.OnDamaged += Health_OnDamaged;
     }
 
     private void Health_OnDamaged()
     {
-        animations.PlayHitAnimation();
-        materialFlasher.FlashColor(Color.white);
+        if (Health.CurrentHealth > 0)
+        {
+            animations.PlayHitAnimation();
+            materialFlasher.FlashColor(Color.red);
+        }
+        else
+        {
+            if (IsOwner) DieServerRpc();
+        }
     }
 
     private void Update()
     {
         if (IsOwner && Input.GetKeyUp(KeyCode.L))
         {
-            Die();
+            DieServerRpc();
         }
-    }
-
-    private void Die()
-    {
-        DieServerRpc();
     }
 
     [ServerRpc]
@@ -98,6 +96,8 @@ public class NetworkFungal : NetworkBehaviour
         IsDead = true;
         if (IsOwner) StartCoroutine(RespawnRoutine());
         animations.PlayDeathAnimation();
+        materialFlasher.FlashColor(Color.red);
+
         Movement.Stop();
         OnDeath?.Invoke();
     }
@@ -134,6 +134,7 @@ public class NetworkFungal : NetworkBehaviour
             Health.Replenish();
         }
         animations.PlaySpawnAnimation();
+        materialFlasher.FlashColor(Color.white);
         OnRespawnComplete?.Invoke();
     }
 
