@@ -94,6 +94,7 @@ public class Movement : MonoBehaviour
 
     public void SetType(MovementType type)
     {
+        //Debug.Log($"{name}.Movement {type}");
         this.type = type;
         OnTypeChanged?.Invoke();
     }

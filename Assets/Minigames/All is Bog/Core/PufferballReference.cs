@@ -40,7 +40,7 @@ public class PufferballReference : ScriptableObject
     [SerializeField] private Player clientPlayer;
     [SerializeField] private List<Player> players;
 
-    private bool isComplete;
+    public bool isComplete;
 
     public Player ClientPlayer => clientPlayer;
     public List<Player> Players => players;
@@ -95,6 +95,8 @@ public class PufferballReference : ScriptableObject
             if (player.IsWinner)
             {
                 isComplete = true;
+                Debug.Log("GameComplete");
+                clientPlayer.Fungal.Movement.Stop();
                 OnGameComplete?.Invoke();
                 return;
             }

@@ -4753,6 +4753,7 @@ GameObject:
   - component: {fileID: 1586257644}
   - component: {fileID: 1586257643}
   - component: {fileID: 1586257642}
+  - component: {fileID: 1586257646}
   m_Layer: 5
   m_Name: Give Up BUtton
   m_TagString: Untagged
@@ -4789,9 +4790,9 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1586257640}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0
   m_Interactable: 1
-  m_BlocksRaycasts: 1
+  m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
 --- !u!114 &1586257643
 MonoBehaviour:
@@ -4957,6 +4958,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &1586257646
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1586257640}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6830e4b21d8854d7dac9573cb944041a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  duration: 0.5
 --- !u!4 &1594180941 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4741473621726338, guid: e86571f2f1251004b98a744302eca0b1,
@@ -16511,6 +16525,8 @@ MonoBehaviour:
   headerText: {fileID: 607414690}
   winColor: {r: 0.79607844, g: 0.972549, b: 0.43529412, a: 1}
   loseColor: {r: 1, g: 0.56502765, b: 0.48584908, a: 1}
+  continueButton: {fileID: 1586257646}
+  moveCharacterJoystick: {fileID: 6163485878806447941}
 --- !u!1 &8377467292078043356
 GameObject:
   m_ObjectHideFlags: 0

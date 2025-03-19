@@ -47,10 +47,11 @@ public class MoveCharacterJoystick : MonoBehaviour
 
         if (translation == Vector3.zero)
         {
-            player.Movement.Stop();
+            if (player.Movement.Type != Movement.MovementType.IDLE) player.Movement.Stop();
             return;
         }
 
+        //Debug.Log("MovePlayer");
         player.Movement.SetDirection(translation, speed);
     }
 }

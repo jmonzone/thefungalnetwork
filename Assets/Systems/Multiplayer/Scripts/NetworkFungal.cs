@@ -81,6 +81,8 @@ public class NetworkFungal : NetworkBehaviour
         animations = model.AddComponent<MovementAnimations>();
         materialFlasher = model.AddComponent<MaterialFlasher>();
         materialFlasher.flashDuration = 0.5f;
+
+        name = $"Player {index.Value} {data.name}";
     }
 
     private void Health_OnDamaged()
@@ -101,6 +103,11 @@ public class NetworkFungal : NetworkBehaviour
         if (IsOwner && Input.GetKeyUp(KeyCode.L))
         {
             DieServerRpc();
+        }
+
+        if (IsServer && Input.GetKeyUp(KeyCode.P))
+        {
+            Score.Value += 100f;
         }
     }
 

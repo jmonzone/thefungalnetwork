@@ -78,6 +78,7 @@ public class AbilityButton : MonoBehaviour
 
     private void OnDisable()
     {
+        if (!playerReference.Fungal) return;
         playerReference.Fungal.OnDeath -= Fungal_OnDeath;
         playerReference.Fungal.OnRespawnComplete -= UpdateAbility;
     }
