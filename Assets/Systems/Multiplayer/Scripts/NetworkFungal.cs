@@ -37,12 +37,12 @@ public class NetworkFungal : NetworkBehaviour
 
     public int Index => index.Value;
 
-
-    [ServerRpc(RequireOwnership = false)]
-    public void InitializeServerRpc(int index)
+    public void Initialize(int index)
     {
-        // Only the server sets this value, and it replicates automatically
-        this.index.Value = index;
+        if (IsServer)
+        {
+            this.index.Value = index;
+        }
     }
 
     public override void OnNetworkSpawn()

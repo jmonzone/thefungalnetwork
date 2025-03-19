@@ -52,15 +52,16 @@ public class PlayerSpawner : NetworkBehaviour
 
         var networkFungal = Instantiate(fungal.NetworkPrefab, spawnPosition, Quaternion.identity);
         networkFungal.NetworkObject.SpawnWithOwnership(clientId);
+        networkFungal.Initialize(playerIndex);
 
         if (!isAI)
         {
-            OnPlayerAddedClientRpc(clientId, playerIndex, networkFungal.NetworkObjectId, isAI);
+            OnPlayerAddedClientRpc(clientId, networkFungal.NetworkObjectId, isAI);
         }
     }
 
     [ClientRpc]
-    private void OnPlayerAddedClientRpc(ulong clientId, int playerIndex, ulong networkObjectId,  bool isAi)
+    private void OnPlayerAddedClientRpc(ulong clientId,ulong networkObjectId,  bool isAi)
     {
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out var networkObject))
         {
@@ -68,8 +69,6 @@ public class PlayerSpawner : NetworkBehaviour
 
             if (networkFungal.IsOwner)
             {
-                networkFungal.InitializeServerRpc(playerIndex);
-
                 var fishingPlayer = FindObjectOfType<FishingPlayer>();
                 fishingPlayer.AssignFungal(networkFungal);
             }
