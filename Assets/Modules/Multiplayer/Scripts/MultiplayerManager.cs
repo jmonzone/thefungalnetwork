@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Unity.Netcode;
@@ -19,7 +20,7 @@ public class MultiplayerManager : ScriptableObject
     [SerializeField] private DisplayName displayName;
     [SerializeField] private SceneNavigation sceneNavigation;
 
-    public string PlayerName => displayName.Value?.Replace(" ", "_") ?? "Unknown";
+    public string PlayerName => displayName.Value ?? "Unknown";
     public bool IsSignedIn { get; private set; }
 
     private Lobby joinedLobby;
@@ -52,12 +53,6 @@ public class MultiplayerManager : ScriptableObject
     {
         JoinedLobby = null;
         IsSignedIn = false;
-        displayName.OnDisplayNameChanged += DisplayName_OnDisplayNameChanged;
-    }
-
-    private void DisplayName_OnDisplayNameChanged()
-    {
-        throw new System.NotImplementedException();
     }
 
     public void DoUpdate()
@@ -104,8 +99,27 @@ public class MultiplayerManager : ScriptableObject
             await UnityServices.InitializeAsync();
 
             InitializationOptions initializationOptions = new InitializationOptions();
-            initializationOptions.SetProfile(PlayerName);
 
+            // Example player name input
+            string playerNameInput = "Some@Player!Name#123_ExtraStuff";
+
+            // Sanitize: Keep only alphanumeric, '-', '_'
+            string sanitizedPlayerName = Regex.Replace(playerNameInput, @"[^a-zA-Z0-9\-_]", "");
+
+            // Trim to a max length of 30 characters
+            if (sanitizedPlayerName.Length > 30)
+            {
+                sanitizedPlayerName = sanitizedPlayerName.Substring(0, 30);
+            }
+
+            // Optional: Fallback if name ends up empty after sanitizing
+            if (string.IsNullOrEmpty(sanitizedPlayerName))
+            {
+                sanitizedPlayerName = "DefaultPlayer";
+            }
+
+            // Set the profile
+            initializationOptions.SetProfile(sanitizedPlayerName);
             AuthenticationService.Instance.SignedIn += () =>
             {
                 IsSignedIn = true;
