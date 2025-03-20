@@ -91,13 +91,12 @@ public class FishingRodButton : Ability
             fishPickup.Fish.PrepareThrow();
         }
 
-        range = minRange;
+        //range = minRange;
     }
 
     public override void ChargeAbility()
     {
         base.ChargeAbility();
-        range = Mathf.Clamp(range + Time.deltaTime * rangeIncreaseSpeed, minRange, maxRange);
 
         var fish = fishPickup.Fish;
         if (fish)
@@ -107,6 +106,13 @@ public class FishingRodButton : Ability
             if (pufferfish)
             {
                 radius = pufferfish.ExplosionRadius;
+                //range = Mathf.Clamp(range + Time.deltaTime * rangeIncreaseSpeed, minRange, maxRange);
+                //range = maxRange;
+
+            }
+            else
+            {
+                radius = 1f;
             }
         }
     }
@@ -116,5 +122,46 @@ public class FishingRodButton : Ability
         fishPickup.Sling(targetPosition);
     }
 
-    public override Vector3 TargetPosition => playerReference.Movement.transform.position + playerReference.Movement.transform.forward * range;
+    public override Vector3 DefaultTargetPosition
+    {
+        get
+        {
+            Vector3 origin = playerReference.Movement.transform.position;
+            Vector3 forwardTarget = origin + playerReference.Movement.transform.forward * range;
+
+            // Search for NetworkFungal in range
+            float searchRadius = range; // or any radius you want
+            LayerMask targetLayer = ~0; // You can specify a layer mask if needed
+
+            Collider[] colliders = Physics.OverlapSphere(origin, searchRadius, targetLayer);
+
+            NetworkFungal closestFungal = null;
+            float closestDistance = Mathf.Infinity;
+
+            foreach (var collider in colliders)
+            {
+                NetworkFungal fungal = collider.GetComponent<NetworkFungal>();
+                if (fungal != null && fungal != playerReference.Fungal)
+                {
+                    float distance = Vector3.Distance(origin, fungal.transform.position);
+                    if (distance < closestDistance)
+                    {
+                        closestDistance = distance;
+                        closestFungal = fungal;
+                    }
+                }
+            }
+
+            // If found, target the closest fungal, otherwise return the original position
+            if (closestFungal != null)
+            {
+                return closestFungal.transform.position;
+            }
+            else
+            {
+                return forwardTarget;
+            }
+        }
+    }
+
 }

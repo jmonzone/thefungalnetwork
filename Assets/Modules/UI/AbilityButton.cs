@@ -7,11 +7,12 @@ public abstract class Ability : MonoBehaviour
     [SerializeField] protected float range = 3f;
     [SerializeField] protected float radius = 1f;
 
+
     public bool IsAvailable { get; private set; } = true;
     public bool IsOnCooldown => cooldownHandler.IsOnCooldown;
     public float Range => range;
     public float Radius => radius;
-    public abstract Vector3 TargetPosition { get; }
+    public abstract Vector3 DefaultTargetPosition { get; }
 
     public event UnityAction OnAvailabilityChanged;
     public event UnityAction OnCancel;
@@ -41,11 +42,13 @@ public class AbilityButton : MonoBehaviour
     [SerializeField] private bool useTrajectory = false;
     [SerializeField] private bool useTargetIndicator = false;
 
+    private bool isDown = false;
+
     private void Awake()
     {
         //Debug.Log("AbilityButton.Awake");
-        directionalButton.OnClick += DirectionalButton_OnClick;
-        directionalButton.OnDragStarted += OnDragStarted;
+        directionalButton.OnPointerUp += DirectionalButton_OnPointerUp; ;
+        directionalButton.OnPointerDown += DirectionalButton_OnPointerDown;
         directionalButton.OnDragUpdated += OnDragUpdated;
         directionalButton.OnDragCompleted += OnDragCompleted;
         directionalButton.OnDragCanceled += OnDragCanceled;
@@ -53,27 +56,23 @@ public class AbilityButton : MonoBehaviour
         ability.OnAvailabilityChanged += UpdateAbility;
     }
 
-    private void DirectionalButton_OnClick()
+    private Vector3 targetPosition;
+    private void Update()
     {
-        ability.CastAbility(ability.TargetPosition);
-    }
+        if (isDown)
+        {
+            ability.ChargeAbility();
 
-    private void UpdateAbility()
-    {
-        directionalButton.enabled = ability.IsAvailable;
+            var targetPosition = directionalButton.DragStarted ? this.targetPosition : ability.DefaultTargetPosition;
+            abilityCastIndicator.UpdateIndicator(playerReference.Movement.transform.position, targetPosition, ability.Range);
+            abilityCastIndicator.SetTargetIndicatorRadius(ability.Radius);
+        }
     }
-
     private void OnEnable()
     {
         if (!playerReference.Fungal) return;
         playerReference.Fungal.OnDeath += Fungal_OnDeath;
         playerReference.Fungal.OnRespawnComplete += UpdateAbility;
-    }
-
-    private void Fungal_OnDeath()
-    {
-        abilityCastIndicator.HideIndicator();
-        directionalButton.enabled = false;
     }
 
     private void OnDisable()
@@ -82,39 +81,53 @@ public class AbilityButton : MonoBehaviour
         playerReference.Fungal.OnDeath -= Fungal_OnDeath;
         playerReference.Fungal.OnRespawnComplete -= UpdateAbility;
     }
-    private void OnDragStarted()
+
+    private void Fungal_OnDeath()
+    {
+        abilityCastIndicator.HideIndicator();
+        directionalButton.enabled = false;
+    }
+
+    private void UpdateAbility()
+    {
+        directionalButton.enabled = ability.IsAvailable;
+    }
+
+    private void DirectionalButton_OnPointerDown()
     {
         if (ability.IsOnCooldown) return;
+
+        isDown = true;
         ability.PrepareAbility();
         abilityCastIndicator.ShowIndicator(useTrajectory);
         abilityCastIndicator.ShowTargetIndicator(useTargetIndicator);
     }
 
+    private void DirectionalButton_OnPointerUp()
+    {
+        if (ability.IsOnCooldown) return;
+        CastAbility(ability.DefaultTargetPosition);
+    }
+
+    private void CastAbility(Vector3 targetPosition)
+    {
+        isDown = false;
+        ability.CastAbility(targetPosition);
+        abilityCastIndicator.HideIndicator();
+    }
+
     private void OnDragUpdated(Vector3 direction)
     {
-        ability.ChargeAbility();
-
         var clampedDirection = Vector3.ClampMagnitude(direction, ability.Range);
         var startPosition = playerReference.Movement.transform.position;
-        var targetPosition = startPosition + clampedDirection;
-        abilityCastIndicator.UpdateIndicator(playerReference.Movement.transform.position, targetPosition, ability.Range);
-
-        abilityCastIndicator.SetTargetIndicatorRadius(ability.Radius);
+        targetPosition = startPosition + clampedDirection;
+        targetPosition.y = 0; // Keep it in the XZ plane
     }
 
     private void OnDragCompleted(Vector3 direction)
     {
         if (ability.IsOnCooldown) return;
-
-        var clampedDirection = Vector3.ClampMagnitude(direction, ability.Range);
-        var startPosition = playerReference.Movement.transform.position;
-        var targetPosition = startPosition + clampedDirection;
-
-        targetPosition.y = 0; // Keep it in the XZ plane
-
-        ability.CastAbility(targetPosition);
-
-        abilityCastIndicator.HideIndicator();
+        CastAbility(targetPosition);
     }
 
     private void OnDragCanceled()

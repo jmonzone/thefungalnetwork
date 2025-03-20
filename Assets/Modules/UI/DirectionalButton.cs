@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 // this script is used to provide events for a directional button
-public class DirectionalButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerUpHandler
+public class DirectionalButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerUpHandler, IPointerDownHandler
 {
     [SerializeField] private Button button;
     [SerializeField] private float sensitivity = 0.01f;
@@ -17,7 +17,9 @@ public class DirectionalButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
     private Vector3 direction;
     public bool DragStarted { get; private set; }
 
-    public event UnityAction OnClick;
+    public event UnityAction OnPointerDown;
+    public event UnityAction OnPointerUp;
+
     public event UnityAction OnDragStarted;
     public event UnityAction OnDragCanceled;
     public event UnityAction<Vector3> OnDragUpdated;
@@ -122,6 +124,12 @@ public class DirectionalButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
     void IPointerUpHandler.OnPointerUp(PointerEventData eventData)
     {
         if (DragStarted) return;
-        OnClick?.Invoke();
+        OnPointerUp?.Invoke();
+    }
+
+    void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
+    {
+        Debug.Log("OnPointerDown");
+        OnPointerDown?.Invoke();
     }
 }

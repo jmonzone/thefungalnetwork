@@ -34,8 +34,7 @@ public class DashButton : Ability
         cooldownHandler.StartCooldown(castCooldown); // Start logic cooldown
     }
 
-
-    public override Vector3 TargetPosition => player.Fungal.transform.position + player.Fungal.transform.forward * range;
+    public override Vector3 DefaultTargetPosition => player.Fungal.transform.position + player.Fungal.transform.forward * range;
 }
 
 public static class Extensions
