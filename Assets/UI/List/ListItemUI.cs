@@ -22,6 +22,8 @@ namespace GURU
         public UnityAction onClick;
 
         public Sprite sprite;
+
+        public bool showBadge = false;
     }
 
     /// <summary>
@@ -44,6 +46,8 @@ namespace GURU
         [SerializeField]
         private Image image;
 
+        [SerializeField] private TextMeshProUGUI badgeText;
+
         /// <summary>
         /// Sets the data for the list item UI.
         /// </summary>
@@ -64,6 +68,8 @@ namespace GURU
             button.onClick.RemoveAllListeners();
             button.onClick.AddListener(() => data.onClick());
             gameObject.SetActive(true);
+
+            if (badgeText) badgeText.enabled = data.showBadge;
         }
     }
 }

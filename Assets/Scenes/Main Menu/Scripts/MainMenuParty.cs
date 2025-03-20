@@ -105,7 +105,8 @@ public class MainMenuParty : MonoBehaviour
                         ? playerNameData.Value
                         : "Unknown Player",
                 sprite = targetFungal.ActionImage,
-                onClick = () => { }
+                onClick = () => { },
+                showBadge = multiplayer.JoinedLobby.HostId == player.Id
             };
         }).ToList();
 
@@ -139,6 +140,8 @@ public class MainMenuParty : MonoBehaviour
             sceneNavigation.NavigateToScene(1);
             joining = true;
         }
+
+        MultiplayerManager_OnLobbyJoined();
     }
 
     private bool joining = false;
