@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GURU;
+using TMPro;
 using Unity.Services.Authentication;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,8 +23,15 @@ public class MainMenuParty : MonoBehaviour
 
     [SerializeField] private Transform fungalSpawnAnchor;
 
+    [SerializeField] private TextMeshProUGUI gameModeTitle;
+    [SerializeField] private TextMeshProUGUI gameModeDescription;
+    [SerializeField] private GameObject hostControls;
+    [SerializeField] private Button gameModeButton;
+
     private Dictionary<int, GameObject> fungalObjects = new Dictionary<int, GameObject>();
     private int selectedFungalIndex = 0;
+
+    private GameMode gameMode;
 
     private void Awake()
     {
@@ -39,6 +47,12 @@ public class MainMenuParty : MonoBehaviour
             await multiplayer.LeaveLobby();
             navigation.GoBack();
         });
+
+        gameModeButton.onClick.AddListener(async () =>
+        {
+            await multiplayer.UpdateGameMode(gameMode == GameMode.PARTY ? GameMode.ELIMINATION : GameMode.PARTY);
+        });
+
 
         for(var i = 0; i < fungalCollection.Fungals.Count; i++)
         {
@@ -64,15 +78,15 @@ public class MainMenuParty : MonoBehaviour
 
     private void OnEnable()
     {
-        MultiplayerManager_OnLobbyJoined();
+        OnHostChanged();
         multiplayer.OnLobbyPoll += MultiplayerManager_OnLobbyPoll;
-        multiplayer.OnLobbyJoined += MultiplayerManager_OnLobbyJoined;
+        multiplayer.OnLobbyJoined += OnHostChanged;
     }
 
     private void OnDisable()
     {
         multiplayer.OnLobbyPoll -= MultiplayerManager_OnLobbyPoll;
-        multiplayer.OnLobbyJoined -= MultiplayerManager_OnLobbyJoined;
+        multiplayer.OnLobbyJoined -= OnHostChanged;
     }
 
     private void MultiplayerManager_OnLobbyPoll()
@@ -141,14 +155,34 @@ public class MainMenuParty : MonoBehaviour
             joining = true;
         }
 
-        MultiplayerManager_OnLobbyJoined();
+        OnHostChanged();
+        OnGameModeChanged();
     }
 
     private bool joining = false;
 
-    private void MultiplayerManager_OnLobbyJoined()
+    private void OnHostChanged()
     {
+        hostControls.SetActive(multiplayer.IsHost);
+
         startButton.gameObject.SetActive(multiplayer.IsHost);
         waitingIndicator.SetActive(!multiplayer.IsHost);
+    }
+
+    private void OnGameModeChanged()
+    {
+        gameMode = multiplayer.GetGameMode(multiplayer.JoinedLobby);
+
+        switch (gameMode)
+        {
+            case GameMode.PARTY:
+                gameModeTitle.text = "Party";
+                gameModeDescription.text = "999, it's a good slime";
+                break;
+            case GameMode.ELIMINATION:
+                gameModeTitle.text = "Elimination";
+                gameModeDescription.text = "Be the last Fungal standing";
+                break;
+        }
     }
 }

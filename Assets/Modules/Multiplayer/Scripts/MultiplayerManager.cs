@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -13,6 +14,12 @@ using Unity.Services.Relay;
 using Unity.Services.Relay.Models;
 using UnityEngine;
 using UnityEngine.Events;
+
+public enum GameMode
+{
+    PARTY,
+    ELIMINATION
+}
 
 [CreateAssetMenu]
 public class MultiplayerManager : ScriptableObject
@@ -84,6 +91,8 @@ public class MultiplayerManager : ScriptableObject
             lobbyUpdateTimer = 1.1f;
             Lobby lobby = await LobbyService.Instance.GetLobbyAsync(JoinedLobby.Id);
             JoinedLobby = lobby;
+            if (IsHost) hostLobby = lobby;
+            else hostLobby = null;
             OnLobbyPoll?.Invoke();
         }
     }
@@ -308,10 +317,11 @@ public class MultiplayerManager : ScriptableObject
                 IsPrivate = false,
                 Player = player,
                 Data = new Dictionary<string, DataObject>()
-                {
-                    { "JoinCode", new DataObject(DataObject.VisibilityOptions.Member, joinCode) },
-                    { "HostName", new DataObject(DataObject.VisibilityOptions.Public, PlayerName)},
-                }
+            {
+                { "JoinCode", new DataObject(DataObject.VisibilityOptions.Member, joinCode) },
+                { "HostName", new DataObject(DataObject.VisibilityOptions.Public, PlayerName) },
+                { "GameMode", new DataObject(DataObject.VisibilityOptions.Public, GameMode.PARTY.ToString()) }
+            }
             };
 
             Lobby lobby = await LobbyService.Instance.CreateLobbyAsync("Test Lobby", MAX_PLAYER_COUNT, createLobbyOptions);
@@ -324,6 +334,48 @@ public class MultiplayerManager : ScriptableObject
         {
             Debug.Log(e);
         }
+    }
+
+    public async Task UpdateGameMode(GameMode newGameMode)
+    {
+        if (hostLobby == null)
+        {
+            Debug.LogWarning("No lobby to update!");
+            return;
+        }
+
+        try
+        {
+            var updates = new UpdateLobbyOptions
+            {
+                Data = new Dictionary<string, DataObject>()
+            {
+                { "GameMode", new DataObject(DataObject.VisibilityOptions.Public, newGameMode.ToString()) }
+            }
+            };
+
+            Lobby updatedLobby = await LobbyService.Instance.UpdateLobbyAsync(hostLobby.Id, updates);
+            hostLobby = updatedLobby;
+
+            Debug.Log("Game mode updated to: " + newGameMode);
+        }
+        catch (LobbyServiceException e)
+        {
+            Debug.LogError(e);
+        }
+    }
+
+    public GameMode GetGameMode(Lobby lobby)
+    {
+        if (lobby.Data.TryGetValue("GameMode", out var gameModeData))
+        {
+            if (Enum.TryParse(gameModeData.Value, out GameMode res))
+            {
+                return res;
+            }
+        }
+
+        return default;
     }
 
     public async Task CreateLobby()
