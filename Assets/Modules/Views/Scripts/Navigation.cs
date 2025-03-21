@@ -31,6 +31,7 @@ public class Navigation : ScriptableObject
 
     public void Initialize()
     {
+        views = new List<ViewReference>();
         Reset();
         sceneNavigation.OnSceneNavigationRequest += () =>
         {

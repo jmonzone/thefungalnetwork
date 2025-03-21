@@ -29,6 +29,7 @@ public class PufferballReference : ScriptableObject
 {
     [SerializeField] private Player clientPlayer;
     [SerializeField] private List<Player> players;
+    [SerializeField] private MultiplayerManager multiplayer;
 
     public bool isComplete;
 
@@ -40,6 +41,7 @@ public class PufferballReference : ScriptableObject
 
     public event UnityAction OnClientPlayerAdded;
     public event UnityAction<Player> OnPlayerAdded;
+    public event UnityAction OnAllPlayersAdded;
 
     public void Initialize()
     {
@@ -71,6 +73,10 @@ public class PufferballReference : ScriptableObject
         }
 
         OnPlayerAdded?.Invoke(addedPlayer);
+        if (multiplayer.JoinedLobby.Players.Count == Players.Count)
+        {
+            OnAllPlayersAdded?.Invoke();
+        }
 
         addedPlayer.Fungal.OnScoreUpdated += Fungal_OnScoreUpdated;
     }

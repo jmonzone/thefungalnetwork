@@ -1,6 +1,8 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Events;
 
+[Obsolete]
 [CreateAssetMenu]
 public class PlayerReference : ScriptableObject
 {

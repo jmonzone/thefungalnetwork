@@ -6,8 +6,6 @@ using UnityEngine;
 public class FishingPlayer : NetworkBehaviour
 {
     [SerializeField] private PlayerReference player;
-    [SerializeField] private Navigation navigation;
-    [SerializeField] private ViewReference inputView;
     [SerializeField] private MultiplayerManager multiplayer;
 
     private NetworkFungal networkFungal;
@@ -53,7 +51,6 @@ public class FishingPlayer : NetworkBehaviour
     {
         networkFungal = fungal;
         player.SetMovement(networkFungal);
-        navigation.Navigate(inputView);
     }
 
 }
