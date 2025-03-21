@@ -16,6 +16,9 @@ public class Pufferfish : NetworkBehaviour
     private Fish fish;
     private PufferfishExplosion pufferfishExplosion;
     private PufferfishTemper pufferfishTemper;
+    private ThrowFish throwFish;
+
+    public float ExplosionRadius => pufferfishTemper.Temper * (maxExplosionRadius - minExplosionRadius) + minExplosionRadius;
 
     public event UnityAction OnMaxTemperReached;
 
@@ -30,8 +33,7 @@ public class Pufferfish : NetworkBehaviour
         fish = GetComponent<Fish>();
         fish.OnPrepareThrow += StartTemperServerRpc;
 
-        var throwFish = GetComponent<ThrowFish>();
-        throwFish.OnThrowStart += ThrowFish_OnThrowStart;
+        throwFish = GetComponent<ThrowFish>();
         throwFish.OnThrowComplete += OnThrowComplete;
 
         pufferfishExplosion = GetComponent<PufferfishExplosion>();
@@ -43,6 +45,11 @@ public class Pufferfish : NetworkBehaviour
 
     private void Update()
     {
+        if (IsOwner)
+        {
+            throwFish.SetRadius(ExplosionRadius);
+        }
+
         if (IsServer)
         {
             Temper.Value = pufferfishTemper.Temper;
@@ -63,23 +70,6 @@ public class Pufferfish : NetworkBehaviour
     private void HandleTemperChanged(float oldValue, float newValue)
     {
         pufferfishTemper.SetTemper(newValue);
-    }
-
-    private void ThrowFish_OnThrowStart(Vector3 targetPosition)
-    {
-        if (IsOwner) OnThrowStartServerRpc(targetPosition, ExplosionRadius);
-    }
-
-    [ServerRpc]
-    public void OnThrowStartServerRpc(Vector3 targetPosition, float radius)
-    {
-        OnThrowStartClientRpc(targetPosition, radius);
-    }
-
-    [ClientRpc]
-    private void OnThrowStartClientRpc(Vector3 targetPosition, float radius)
-    {
-        pufferfishExplosion.ShowHitIndicator(targetPosition, radius);
     }
 
     private void OnThrowComplete()
@@ -123,12 +113,13 @@ public class Pufferfish : NetworkBehaviour
         pufferfishTemper.StopTimer();
     }
 
-    public float ExplosionRadius => pufferfishTemper.Temper * (maxExplosionRadius - minExplosionRadius) + minExplosionRadius;
-
     private void Explode()
     {
-        movement.Stop();
-        ExplodeServerRpc(ExplosionRadius);
+        if (IsOwner)
+        {
+            movement.Stop();
+            ExplodeServerRpc(ExplosionRadius);
+        }
     }
 
     [ServerRpc]

@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
+[Obsolete]
 public enum FishingRodState
 {
     IDLE,
@@ -13,6 +15,7 @@ public enum FishingRodState
     REELING
 }
 
+[Obsolete]
 // handles input for fishing rod controls
 public class FishingRod : MonoBehaviour
 {

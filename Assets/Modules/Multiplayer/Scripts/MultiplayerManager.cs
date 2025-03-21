@@ -140,10 +140,10 @@ public class MultiplayerManager : ScriptableObject
         }
     }
 
-    public async Task CreateRelayAndLobby()
+    public async Task CreateRelayAndLobby(GameMode gameMode)
     {
         var joinCode = await CreateRelay();
-        await CreateLobby(joinCode);
+        await CreateLobby(joinCode, gameMode);
 
     }
 
@@ -304,7 +304,7 @@ public class MultiplayerManager : ScriptableObject
         }
     };
 
-    public async Task CreateLobby(string joinCode)
+    public async Task CreateLobby(string joinCode, GameMode gameMode = GameMode.PARTY)
     {
         try
         {
@@ -320,7 +320,7 @@ public class MultiplayerManager : ScriptableObject
             {
                 { "JoinCode", new DataObject(DataObject.VisibilityOptions.Member, joinCode) },
                 { "HostName", new DataObject(DataObject.VisibilityOptions.Public, PlayerName) },
-                { "GameMode", new DataObject(DataObject.VisibilityOptions.Public, GameMode.PARTY.ToString()) }
+                { "GameMode", new DataObject(DataObject.VisibilityOptions.Public, gameMode.ToString()) }
             }
             };
 
@@ -369,8 +369,11 @@ public class MultiplayerManager : ScriptableObject
     {
         if (lobby.Data.TryGetValue("GameMode", out var gameModeData))
         {
+            Debug.Log(gameModeData.Value);
             if (Enum.TryParse(gameModeData.Value, out GameMode res))
             {
+                Debug.Log(res);
+
                 return res;
             }
         }

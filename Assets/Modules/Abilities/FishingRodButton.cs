@@ -4,7 +4,6 @@ using UnityEngine.UI;
 
 public class FishingRodButton : Ability
 {
-    [SerializeField] private PlayerReference playerReference;
     [SerializeField] private PufferballReference pufferballReference;
     [SerializeField] private float castCooldown = 2f;
     [SerializeField] private float slingCooldown = 0.25f;
@@ -101,19 +100,8 @@ public class FishingRodButton : Ability
         var fish = fishPickup.Fish;
         if (fish)
         {
-            var pufferfish = fish.GetComponent<Pufferfish>();
-
-            if (pufferfish)
-            {
-                radius = pufferfish.ExplosionRadius;
-                //range = Mathf.Clamp(range + Time.deltaTime * rangeIncreaseSpeed, minRange, maxRange);
-                //range = maxRange;
-
-            }
-            else
-            {
-                radius = 1f;
-            }
+            var throwFish = fish.GetComponent<ThrowFish>();
+            radius = throwFish.Radius;
         }
     }
 
@@ -126,8 +114,8 @@ public class FishingRodButton : Ability
     {
         get
         {
-            Vector3 origin = playerReference.Movement.transform.position;
-            Vector3 forwardTarget = origin + playerReference.Movement.transform.forward * range;
+            Vector3 origin = pufferballReference.ClientPlayer.Fungal.transform.position;
+            Vector3 forwardTarget = origin + pufferballReference.ClientPlayer.Fungal.transform.forward * range;
 
             // Search for NetworkFungal in range
             float searchRadius = range; // or any radius you want
@@ -141,7 +129,7 @@ public class FishingRodButton : Ability
             foreach (var collider in colliders)
             {
                 NetworkFungal fungal = collider.GetComponent<NetworkFungal>();
-                if (fungal != null && fungal != playerReference.Fungal)
+                if (fungal != null && fungal != pufferballReference.ClientPlayer.Fungal)
                 {
                     float distance = Vector3.Distance(origin, fungal.transform.position);
                     if (distance < closestDistance)

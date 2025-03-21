@@ -6,7 +6,6 @@ using UnityEngine.Events;
 public class PufferfishExplosion : MonoBehaviour
 {
     [SerializeField] private PufferballReference pufferball;
-    [SerializeField] private GameObject radiusIndicator;
     [SerializeField] private Movement movement;
     [SerializeField] private ParticleSystem particleSystem;
     [SerializeField] private AudioClip explosionClip;
@@ -59,14 +58,6 @@ public class PufferfishExplosion : MonoBehaviour
         }
     }
 
-    public void ShowHitIndicator(Vector3 targetPosition, float radius = 1f)
-    {
-        radiusIndicator.transform.parent = null;
-        radiusIndicator.transform.position = targetPosition + Vector3.up * 0.1f;
-        radiusIndicator.SetActive(true);
-        radiusIndicator.transform.localScale = 2f * radius * Vector3.one;
-    }
-
     public void StartExplosionAnimation(float radius = 1f)
     {
         audioSource.clip = explosionClip;
@@ -82,8 +73,6 @@ public class PufferfishExplosion : MonoBehaviour
         particleSystem.Play();
         yield return movement.ScaleOverTime(0.2f, 0, 2f * radius);
         OnExplodeComplete?.Invoke();
-        yield return new WaitForSeconds(0.25f);
-        radiusIndicator.SetActive(false);
         yield return movement.ScaleOverTime(0.1f, 2f * radius, 0);
         movement.gameObject.SetActive(false);
         particleSystem.Stop();

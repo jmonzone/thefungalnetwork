@@ -12,8 +12,8 @@ public class Player
     public int Index;
     public NetworkFungal Fungal;
     public float Score => Fungal.Score;
-
-    public bool IsWinner => Score > 1000f;
+    public int Lives => Fungal.Lives;
+    public bool IsWinner = false;
 
     public Player(ulong clientId, int playerIndex, NetworkFungal fungal, bool isAI = false)
     {
@@ -78,8 +78,36 @@ public class PufferballReference : ScriptableObject
             OnAllPlayersAdded?.Invoke();
         }
 
-        addedPlayer.Fungal.OnScoreUpdated += Fungal_OnScoreUpdated;
+        if (multiplayer.GetGameMode(multiplayer.JoinedLobby) == GameMode.PARTY)
+        {
+            addedPlayer.Fungal.OnScoreUpdated += Fungal_OnScoreUpdated;
+        }
+        else
+        {
+            addedPlayer.Fungal.OnDeath += Fungal_OnDeath;
+        }
     }
+
+    private void Fungal_OnDeath()
+    {
+        if (isComplete) return;
+
+        // Check how many players are still alive
+        var alivePlayers = Players.Where(player => player.Lives > 0).ToList();
+
+        // If only one player is alive, they win
+        if (alivePlayers.Count == 1)
+        {
+            var winner = alivePlayers[0];
+            winner.IsWinner = true;
+
+            isComplete = true;
+            Debug.Log($"GameComplete. Winner: {winner.Index}"); // Optional: add player name or ID for clarity
+            clientPlayer.Fungal.Movement.Stop();
+            OnGameComplete?.Invoke();
+        }
+    }
+
 
     private void Fungal_OnScoreUpdated()
     {
@@ -88,6 +116,8 @@ public class PufferballReference : ScriptableObject
         if (isComplete) return;
         foreach (var player in Players)
         {
+            player.IsWinner = player.Score >= 1000f;
+
             if (player.IsWinner)
             {
                 isComplete = true;

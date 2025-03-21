@@ -7,6 +7,7 @@ public class AutoConnect : NetworkBehaviour
 {
     [SerializeField] private MultiplayerManager multiplayer;
     [SerializeField] private bool addAIPlayer = false;
+    [SerializeField] private GameMode gameMode;
 
     private void Start()
     {
@@ -39,7 +40,7 @@ public class AutoConnect : NetworkBehaviour
                 }
                 else
                 {
-                    await multiplayer.CreateRelayAndLobby();
+                    await multiplayer.CreateRelayAndLobby(gameMode);
                     if (addAIPlayer) await multiplayer.AddAIPlayer("AI Player");
                     multiplayer.StartHostClient();
                 }

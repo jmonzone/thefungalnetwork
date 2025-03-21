@@ -51,9 +51,11 @@ public class NetworkFungal : NetworkBehaviour
     private NetworkVariable<int> fungalIndex = new NetworkVariable<int>(-1);
 
     private NetworkVariable<float> score = new NetworkVariable<float>();
+    private NetworkVariable<int> lives = new NetworkVariable<int>(3);
 
     public int Index => index.Value;
     public float Score => score.Value;
+    public int Lives => lives.Value;
 
     public event UnityAction OnScoreUpdated;
     public event UnityAction<OnScoreUpdatedEventArgs> OnScoreTriggered;
@@ -144,6 +146,7 @@ public class NetworkFungal : NetworkBehaviour
     private void DieServerRpc()
     {
         DieClientRpc();
+        lives.Value--;
     }
 
     [ClientRpc]

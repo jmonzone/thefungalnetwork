@@ -19,6 +19,7 @@ public class Leaderboard : MonoBehaviour
     private void Start()
     {
         UpdateLeaderboard();
+        gameObject.SetActive(multiplayer.GetGameMode(multiplayer.JoinedLobby) == GameMode.PARTY);
     }
 
     private void OnEnable()
@@ -30,6 +31,7 @@ public class Leaderboard : MonoBehaviour
     private void Pufferball_OnPlayerAdded(Player arg0)
     {
         UpdateLeaderboard();
+
     }
 
     private void OnDisable()

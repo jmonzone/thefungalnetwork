@@ -5314,6 +5314,7 @@ GameObject:
   - component: {fileID: 104772771618064470}
   - component: {fileID: 5828864311738929914}
   - component: {fileID: 6724794663338872766}
+  - component: {fileID: 2908896179428832205}
   m_Layer: 0
   m_Name: Pufferfish
   m_TagString: Untagged
@@ -5352,7 +5353,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 4149475198
+  GlobalObjectIdHash: 2170739467
   InScenePlacedSourceGlobalObjectIdHash: 4149475198
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -5445,6 +5446,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1782d0b396eae4b3ba9e94c10346a054, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  radius: 0
   range: 5
   respawnOnThrow: 0
 --- !u!114 &6767651255589689632
@@ -5476,7 +5478,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pufferball: {fileID: 11400000, guid: 08db032ff48be41208a04f1067508370, type: 2}
-  radiusIndicator: {fileID: 6047455802489071344}
   movement: {fileID: 2416454784390664286}
   particleSystem: {fileID: 8638674173236786817}
   explosionClip: {fileID: 8300000, guid: fd98a48b7cef641478a76c1fa8c732c6, type: 3}
@@ -5619,6 +5620,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7c8c21a395f3462fb6919c7a7adaf7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2908896179428832205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4560751212198832292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e6af63182e3e4a5fb417f1266663ab2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radiusIndicator: {fileID: 6047455802489071344}
 --- !u!1 &6047455802489071344
 GameObject:
   m_ObjectHideFlags: 0

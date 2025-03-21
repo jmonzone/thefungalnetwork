@@ -11,6 +11,9 @@ public class MaterialFlasher : MonoBehaviour
     private Renderer[] renderers;
     private Coroutine coroutine;
 
+    private Color originalColor; // Assuming all child materials share the same original emission color
+
+
     private void Awake()
     {
         renderers = GetComponentsInChildren<Renderer>();
@@ -38,6 +41,7 @@ public class MaterialFlasher : MonoBehaviour
         // Convert the lists back to arrays if you need them as arrays elsewhere
         originalMaterials = validOriginalMaterials.ToArray();
         childMaterials = validChildMaterials.ToArray();
+        originalColor = childMaterials[0].GetColor("_Color"); // Assuming all child materials share the same original emission color
     }
 
     private void Update()
@@ -61,7 +65,6 @@ public class MaterialFlasher : MonoBehaviour
         float minEmission = 0.5f;  // Min intensity (no glow)
 
         // Set target color for the flash effect
-        Color originalColor = childMaterials[0].GetColor("_Color"); // Assuming all child materials share the same original emission color
 
         // Flash duration control (time to go from min to max and back to min)
         float halfDuration = flashDuration / 2f;  // Half of the duration for smooth in/out

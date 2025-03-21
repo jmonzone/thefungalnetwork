@@ -3,11 +3,14 @@ using UnityEngine.Events;
 
 public class ThrowFish : MonoBehaviour
 {
+    [SerializeField] private float radius;
     [SerializeField] private float range = 5f;
     [SerializeField] private bool respawnOnThrow = true;
 
     private Fish fish;
     private Movement movement;
+
+    public float Radius => radius;
 
     public event UnityAction<Vector3> OnThrowStart;
     public event UnityAction OnThrowComplete;
@@ -42,5 +45,10 @@ public class ThrowFish : MonoBehaviour
         enabled = false;
         if (respawnOnThrow) fish.ReturnToRadialMovement();
         OnThrowComplete?.Invoke();
+    }
+
+    public void SetRadius(float radius)
+    {
+        this.radius = radius;
     }
 }
