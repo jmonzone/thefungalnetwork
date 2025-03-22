@@ -304,7 +304,7 @@ public class MultiplayerManager : ScriptableObject
         }
     };
 
-    public async Task CreateLobby(string joinCode, GameMode gameMode = GameMode.PARTY)
+    public async Task CreateLobby(string joinCode, GameMode gameMode = GameMode.ELIMINATION)
     {
         try
         {

@@ -240,7 +240,7 @@ public class Movement : MonoBehaviour
         {
             // Smoothly rotate using Slerp (Spherical Linear Interpolation)
             Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
-            lookTransform.rotation = Quaternion.Slerp(lookTransform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+            lookTransform.rotation = Quaternion.Slerp(lookTransform.rotation, targetRotation, Time.deltaTime * rotationSpeed * modifier);
         }
     }
 

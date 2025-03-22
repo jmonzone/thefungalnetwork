@@ -45,6 +45,7 @@ public class PufferballReference : ScriptableObject
     public event UnityAction<Player> OnPlayerAdded;
     public event UnityAction OnAllPlayersAdded;
     public event UnityAction<int, int> OnKill;
+    public event UnityAction<Player> OnSelfDestruct;
 
     public void Initialize()
     {
@@ -95,6 +96,11 @@ public class PufferballReference : ScriptableObject
             addedPlayer.Fungal.OnLivesChanged += Fungal_OnDeath;
         }
 
+        addedPlayer.Fungal.OnDeath += selfDestruct =>
+        {
+            if (selfDestruct) OnSelfDestruct?.Invoke(addedPlayer);
+        };
+
         addedPlayer.Fungal.OnKill += (x, y) =>
         {
             if (isComplete) return;
@@ -106,20 +112,29 @@ public class PufferballReference : ScriptableObject
     {
         if (isComplete) return;
 
+
         // Check how many players are still alive
         var alivePlayers = Players.Where(player => player.Lives > 0).ToList();
 
-        // If only one player is alive, they win
-        if (alivePlayers.Count == 1)
+        if (Players.Count == 1 && alivePlayers.Count == 0)
+        {
+            var winner = Players[0];
+            winner.IsWinner = true;
+            TriggerWin();
+        }
+        else if (Players.Count > 1 && alivePlayers.Count == 1)
         {
             var winner = alivePlayers[0];
             winner.IsWinner = true;
-
-            isComplete = true;
-            Debug.Log($"GameComplete. Winner: {winner.Index}"); // Optional: add player name or ID for clarity
-            clientPlayer.Fungal.Movement.Stop();
-            OnGameComplete?.Invoke();
+            TriggerWin();
         }
+    }
+
+    private void TriggerWin()
+    {
+        isComplete = true;
+        clientPlayer.Fungal.Movement.Stop();
+        OnGameComplete?.Invoke();
     }
 
 

@@ -57,7 +57,7 @@ public class AbilityButton : MonoBehaviour
     }
 
     private Vector3 targetPosition;
-    private void Update()
+    private void LateUpdate()
     {
         if (isDown)
         {
@@ -82,7 +82,7 @@ public class AbilityButton : MonoBehaviour
         playerReference.Fungal.OnRespawnComplete -= UpdateAbility;
     }
 
-    private void Fungal_OnDeath()
+    private void Fungal_OnDeath(bool killed)
     {
         abilityCastIndicator.HideIndicator();
         directionalButton.enabled = false;

@@ -29,6 +29,8 @@ public class Leaderboard : MonoBehaviour
 
     private void OnEnable()
     {
+        Debug.Log($"Leaderboard OnEnable");
+        pufferball.OnScoreUpdated += UpdateLeaderboard;
         pufferball.OnPlayerAdded += Pufferball_OnPlayerAdded;
         pufferball.OnGameComplete += Pufferball_OnGameComplete;
     }
@@ -40,6 +42,7 @@ public class Leaderboard : MonoBehaviour
 
     private void OnDisable()
     {
+        pufferball.OnScoreUpdated -= UpdateLeaderboard;
         pufferball.OnPlayerAdded -= Pufferball_OnPlayerAdded;
         pufferball.OnGameComplete -= Pufferball_OnGameComplete;
     }
@@ -47,18 +50,15 @@ public class Leaderboard : MonoBehaviour
 
     private void Pufferball_OnPlayerAdded(Player player)
     {
-        if (gameMode == GameMode.PARTY)
-        {
-            player.Fungal.OnScoreUpdated += UpdatePartyLeaderboard;
-        }
-        else
+        Debug.Log("Pufferball_OnPlayerAdded " + gameMode);
+
+        if (gameMode == GameMode.ELIMINATION)
         {
             player.Fungal.Kills.OnValueChanged += (_, __) => UpdateEliminationLeaderboard();
         }
 
         UpdateLeaderboard();
     }
-
 
     private void UpdateLeaderboard()
     {
@@ -71,6 +71,7 @@ public class Leaderboard : MonoBehaviour
             UpdateEliminationLeaderboard();
         }
     }
+
     private void UpdateEliminationLeaderboard()
     {
         var players = pufferball.Players;
@@ -102,19 +103,11 @@ public class Leaderboard : MonoBehaviour
 
                 // Assuming you have a way to get the player icon and name
                 Sprite playerIcon = player.Fungal.Data.ActionImage; // Example property
-
-                var localPlayerIndex = player.Index;
-                var localPlayer = multiplayer.JoinedLobby.Players[localPlayerIndex];
-
-                string playerName = localPlayer.Data.TryGetValue("PlayerName", out var playerNameData)
-                    ? playerNameData.Value
-                    : "Unknown Player";
-
-                var playerPoints = $"{player.Fungal.Kills.Value} Kills";
+                var playerPoints = $"{player.Fungal.Kills.Value} BD";
 
                 entry.SetEliminationEntry(
                     playerIcon,
-                    playerName,
+                    player.DisplayName,
                     playerPoints,
                     showOnElimination && player.IsWinner
                 );
@@ -131,7 +124,7 @@ public class Leaderboard : MonoBehaviour
 
     private void UpdatePartyLeaderboard()
     {
-        //Debug.Log("UpdateLeaderboard");
+        Debug.Log("UpdatePartyLeaderboard");
 
         var players = pufferball.Players;
         var clientPlayer = pufferball.ClientPlayer;
@@ -179,22 +172,15 @@ public class Leaderboard : MonoBehaviour
                 // Assuming you have a way to get the player icon and name
                 Sprite playerIcon = player.Fungal.Data.ActionImage; // Example property
 
-                var localPlayerIndex = player.Index;
-                var localPlayer = multiplayer.JoinedLobby.Players[localPlayerIndex];
-
-                string playerName = localPlayer.Data.TryGetValue("PlayerName", out var playerNameData)
-                    ? playerNameData.Value
-                    : "Unknown Player";
-
                 var playerPoints = player.Score.ToString();
-                if (gameMode == GameMode.ELIMINATION) playerPoints = $"{player.Fungal.Kills} Kills";
+                Debug.Log("UpdatePartyLeaderboard " + playerPoints);
 
                 // Determine if THIS player is the top player
                 bool isTopPlayer = player == topPlayer;
 
                 entry.SetPartyEntry(
                     playerIcon,
-                    playerName,
+                    player.DisplayName,
                     playerPoints,
                     player == clientPlayer,
                     isTopPlayer && player.Score > 0,

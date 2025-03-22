@@ -73,6 +73,8 @@ public class PufferfishExplosion : MonoBehaviour
         particleSystem.Play();
         yield return movement.ScaleOverTime(0.2f, 0, 2f * radius);
         OnExplodeComplete?.Invoke();
+        yield return new WaitForSeconds(0.5f);
+        GetComponent<TelegraphTrajectory>().HideIndicator();
         yield return movement.ScaleOverTime(0.1f, 2f * radius, 0);
         movement.gameObject.SetActive(false);
         particleSystem.Stop();

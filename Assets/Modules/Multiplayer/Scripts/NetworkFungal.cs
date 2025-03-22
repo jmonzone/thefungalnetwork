@@ -3,7 +3,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
 
-public struct OnScoreUpdatedEventArgs : INetworkSerializable
+public struct ScoreEventArgs : INetworkSerializable
 {
     public Vector3 position;
     public float value;
@@ -44,7 +44,7 @@ public class NetworkFungal : NetworkBehaviour
     public event UnityAction OnRespawnStart;
     public event UnityAction OnRespawnComplete;
 
-    public event UnityAction OnDeath;
+    public event UnityAction<bool> OnDeath;
 
     // Exposed to all clients, replicated by Netcode
     private NetworkVariable<int> index = new NetworkVariable<int>();
@@ -61,7 +61,7 @@ public class NetworkFungal : NetworkBehaviour
     public event UnityAction OnLivesChanged;
     public event UnityAction<int, int> OnKill;
     public event UnityAction OnScoreUpdated;
-    public event UnityAction<OnScoreUpdatedEventArgs> OnScoreTriggered;
+    public event UnityAction<ScoreEventArgs> OnScoreTriggered;
 
     [ServerRpc(RequireOwnership = false)]
     public void InitializeServerRpc(int index, int fungalIndex)
@@ -86,12 +86,14 @@ public class NetworkFungal : NetworkBehaviour
 
         score.OnValueChanged += (old, value) =>
         {
+            Debug.Log("score.OnValueChanged");
             OnScoreUpdated?.Invoke();
         };
 
         lives.OnValueChanged += (old, value) =>
         {
             OnLivesChanged?.Invoke();
+            if (IsOwner && value > 0) StartCoroutine(RespawnRoutine());
         };
 
         Debug.Log($"NetworkFungal.OnNetworkSpawn {fungalIndex.Value}");
@@ -119,11 +121,11 @@ public class NetworkFungal : NetworkBehaviour
         name = $"Player {index.Value} {data.name}";
     }
 
-    private void Health_OnDamaged(bool knockout)
+    private void Health_OnDamaged(DamageEventArgs args)
     {
-        if (knockout)
+        if (args.lethal)
         {
-            if (IsOwner) DieServerRpc();
+            if (IsOwner) DieServerRpc(args.SelfInflicted);
         }
         else
         {
@@ -136,12 +138,12 @@ public class NetworkFungal : NetworkBehaviour
     {
         if (IsOwner && Input.GetKeyUp(KeyCode.L))
         {
-            DieServerRpc();
+            DieServerRpc(true);
         }
 
         if (IsOwner && Input.GetKeyUp(KeyCode.P))
         {
-            AddToScoreServerRpc(new OnScoreUpdatedEventArgs
+            AddToScoreServerRpc(new ScoreEventArgs
             {
                 value = 200f,
                 position = transform.position,
@@ -151,22 +153,21 @@ public class NetworkFungal : NetworkBehaviour
     }
 
     [ServerRpc]
-    private void DieServerRpc()
+    private void DieServerRpc(bool selfDestruct)
     {
         lives.Value--;
-        DieClientRpc();
+        DieClientRpc(selfDestruct);
     }
 
     [ClientRpc]
-    private void DieClientRpc()
+    private void DieClientRpc(bool selfDestruct)
     {
         IsDead = true;
-        if (IsOwner) StartCoroutine(RespawnRoutine());
         animations.PlayDeathAnimation();
         materialFlasher.FlashColor(Color.red);
 
         Movement.Stop();
-        OnDeath?.Invoke();
+        OnDeath?.Invoke(selfDestruct);
     }
 
     private IEnumerator RespawnRoutine()
@@ -210,8 +211,7 @@ public class NetworkFungal : NetworkBehaviour
     {
         Kills.Value++;
 
-
-        AddToScoreServerRpc(new OnScoreUpdatedEventArgs
+        AddToScoreServerRpc(new ScoreEventArgs
         {
             value = 250f,
             position = targetPosition,
@@ -228,14 +228,14 @@ public class NetworkFungal : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void AddToScoreServerRpc(OnScoreUpdatedEventArgs args)
+    public void AddToScoreServerRpc(ScoreEventArgs args)
     {
         score.Value += args.value;
         AddToScoreClientRpc(args);
     }
 
     [ClientRpc]
-    private void AddToScoreClientRpc(OnScoreUpdatedEventArgs args)
+    private void AddToScoreClientRpc(ScoreEventArgs args)
     {
         OnScoreTriggered?.Invoke(args);
     }

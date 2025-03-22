@@ -36,7 +36,12 @@ public class TelegraphTrajectory : NetworkBehaviour
     }
 
     [ClientRpc]
-    private void OnThrowCompleteClientRpc()
+    public void OnThrowCompleteClientRpc()
+    {
+        HideIndicator();
+    }
+
+    public void HideIndicator()
     {
         radiusIndicator.SetActive(false);
     }

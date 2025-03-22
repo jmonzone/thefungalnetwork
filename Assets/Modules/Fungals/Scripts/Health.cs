@@ -2,6 +2,21 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
 
+public struct DamageEventArgs : INetworkSerializable
+{
+    public bool lethal;
+    public int source;
+    public int target;
+    public bool SelfInflicted => source == target;
+
+    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+    {
+        serializer.SerializeValue(ref lethal);
+        serializer.SerializeValue(ref source);
+        serializer.SerializeValue(ref target);
+    }
+}
+
 public class Health : NetworkBehaviour
 {
     [SerializeField] private float maxHealth = 100f;
@@ -13,7 +28,7 @@ public class Health : NetworkBehaviour
     public float CurrentShield => currentShield;
     public float MaxHealth => maxHealth;
 
-    public event UnityAction<bool> OnDamaged;
+    public event UnityAction<DamageEventArgs> OnDamaged;
     public event UnityAction OnHealthChanged;
     public event UnityAction OnHealthDepleted;
     public event UnityAction OnShieldChanged;
@@ -60,13 +75,26 @@ public class Health : NetworkBehaviour
 
 
         var knockout = currentHealth.Value <= 0;
+
+        var fungal = GetComponentInParent<NetworkFungal>();
+
+        var args = new DamageEventArgs()
+        {
+            lethal = knockout,
+            target = fungal.Index,
+            source = fungal.Index,
+        };
+
         if (sourceId != NetworkObjectId)
         {
             if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(sourceId, out var networkObject))
             {
                 var networkFungal = networkObject.GetComponent<NetworkFungal>();
-                if (knockout) networkFungal.OnKillServerRpc(transform.position, GetComponentInParent<NetworkFungal>().Index);
-                else networkFungal.AddToScoreServerRpc(new OnScoreUpdatedEventArgs
+
+                args.source = networkFungal.Index;
+
+                if (knockout) networkFungal.OnKillServerRpc(transform.position, fungal.Index);
+                else networkFungal.AddToScoreServerRpc(new ScoreEventArgs
                 {
                     value = 35f,
                     position = transform.position,
@@ -75,13 +103,15 @@ public class Health : NetworkBehaviour
             }
         }
 
-        OnDamageClientRpc(knockout);
+        
+
+        OnDamageClientRpc(args);
     }
 
     [ClientRpc]
-    private void OnDamageClientRpc(bool knockout)
+    private void OnDamageClientRpc(DamageEventArgs args)
     {
-        OnDamaged?.Invoke(knockout);
+        OnDamaged?.Invoke(args);
     }
 
     public void SetShield(float shield)

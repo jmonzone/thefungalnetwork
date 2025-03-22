@@ -16,7 +16,7 @@ public class FishPickup : NetworkBehaviour
         base.OnNetworkSpawn();
 
         fungal = GetComponent<NetworkFungal>();
-        fungal.OnDeath += Fungal_OnDeath;
+        fungal.OnDeath += _ => Fungal_OnDeath();
 
         requestedFish = null;
     }
@@ -70,7 +70,7 @@ public class FishPickup : NetworkBehaviour
 
             float score = 20f;
             OnFishPickedUp?.Invoke(score);
-            fungal.AddToScoreServerRpc(new OnScoreUpdatedEventArgs
+            fungal.AddToScoreServerRpc(new ScoreEventArgs
             {
                 value = score,
                 position = Fish.transform.position,

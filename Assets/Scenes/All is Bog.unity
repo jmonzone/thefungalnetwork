@@ -1439,7 +1439,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &316839016
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4361,8 +4361,10 @@ MonoBehaviour:
   player1Image: {fileID: 266825381}
   player2Image: {fileID: 32749603}
   text: {fileID: 1043306123}
+  announcmentContainer: {fileID: 895168969}
   pufferballReference: {fileID: 11400000, guid: 08db032ff48be41208a04f1067508370,
     type: 2}
+  horizontalLayoutGroup: {fileID: 895168970}
 --- !u!1001 &886885320
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4450,12 +4452,12 @@ GameObject:
   - component: {fileID: 895168970}
   - component: {fileID: 895168971}
   m_Layer: 5
-  m_Name: GameObject
+  m_Name: Announcements Container
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &895168969
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4475,7 +4477,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -75}
+  m_AnchoredPosition: {x: 0, y: -100}
   m_SizeDelta: {x: 960.98, y: 100}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &895168970
@@ -7619,7 +7621,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cooldownHandler: {fileID: 1663372016}
-  range: 4
+  range: 5
   radius: 1
   pufferballReference: {fileID: 11400000, guid: 08db032ff48be41208a04f1067508370,
     type: 2}
