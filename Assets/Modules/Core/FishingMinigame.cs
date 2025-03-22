@@ -12,10 +12,11 @@ public class FishingMinigame : MonoBehaviour
     [SerializeField] private ViewReference inputView;
     [SerializeField] private FadeCanvasGroup canvasGroup;
 
+    //[SerializeField] private GameObject scoreText;
+
     private void Awake()
     {
-        canvasGroup.gameObject.SetActive(true);
-        //StartCoroutine(canvasGroup.FadeIn());
+        if (!Application.isEditor) canvasGroup.gameObject.SetActive(true);
     }
 
     private void OnEnable()
@@ -30,13 +31,18 @@ public class FishingMinigame : MonoBehaviour
 
     private void PlayerReference_OnPlayerUpdated()
     {
+        playerReference.OnAllPlayersAdded -= PlayerReference_OnPlayerUpdated;
+
         StartCoroutine(WaitForSeconds());
     }
 
     private IEnumerator WaitForSeconds()
     {
-        yield return new WaitForSeconds(4f);
-        yield return canvasGroup.FadeOut();
+        if (!Application.isEditor)
+        {
+            yield return new WaitForSeconds(4f);
+            yield return canvasGroup.FadeOut();
+        }
         arenaCamera.Priority = 0;
         cameraController.Target = playerReference.ClientPlayer.Fungal.transform;
         yield return new WaitForSeconds(1f);

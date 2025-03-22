@@ -13,17 +13,31 @@ public class LeaderboardEntry : MonoBehaviour
     public TextMeshProUGUI badgeText;
     public Color tiedColor;
     public Color mvpColor;
+    [SerializeField] private Color winnerColor;
 
     private void Awake()
     {
         defaultColor = outline.color;
     }
 
-    public void SetEntry(Sprite icon, string playerName, float points, bool isCLient, bool isTopPlayer, bool isTiedAtTop)
+    public void SetEliminationEntry(Sprite icon, string playerName, string kills, bool showBadge)
     {
         if (iconImage != null) iconImage.sprite = icon;
         if (nameText != null) nameText.text = playerName;
-        if (pointsText != null) pointsText.text = points.ToString();
+        if (pointsText != null) pointsText.text = kills;
+        if (badgeText != null)
+        {
+            badgeText.gameObject.SetActive(showBadge);
+            badgeText.text = "WINNER";
+            badgeText.color = winnerColor;
+        }
+    }
+
+    public void SetPartyEntry(Sprite icon, string playerName, string score, bool isCLient, bool isTopPlayer, bool isTiedAtTop)
+    {
+        if (iconImage != null) iconImage.sprite = icon;
+        if (nameText != null) nameText.text = playerName;
+        if (pointsText != null) pointsText.text = score;
         if (outline != null) outline.color = isCLient ? clientColor : defaultColor;
 
         /// MVP / TIE badge logic

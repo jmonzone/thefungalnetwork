@@ -369,11 +369,8 @@ public class MultiplayerManager : ScriptableObject
     {
         if (lobby.Data.TryGetValue("GameMode", out var gameModeData))
         {
-            Debug.Log(gameModeData.Value);
             if (Enum.TryParse(gameModeData.Value, out GameMode res))
             {
-                Debug.Log(res);
-
                 return res;
             }
         }

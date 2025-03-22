@@ -47,9 +47,9 @@ public class Bubble : NetworkBehaviour
             {
                 var fungal = hit.GetComponent<NetworkFungal>();
 
-                if (fungal != null)
+                if (fungal != null && !fungal.IsDead)
                 {
-                    fungal.ModifySpeedServerRpc(0f, 1.5f);
+                    fungal.ModifySpeedServerRpc(0f, 2f, showStunAnimation: true);
                     fungal.Health.Damage(damage, pufferball.ClientPlayer.Fungal.NetworkObjectId);
                     Pop();
                 }

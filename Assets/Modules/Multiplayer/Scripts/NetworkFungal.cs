@@ -52,11 +52,14 @@ public class NetworkFungal : NetworkBehaviour
 
     private NetworkVariable<float> score = new NetworkVariable<float>();
     private NetworkVariable<int> lives = new NetworkVariable<int>(3);
+    public NetworkVariable<int> Kills = new NetworkVariable<int>(0);
 
     public int Index => index.Value;
     public float Score => score.Value;
     public int Lives => lives.Value;
 
+    public event UnityAction OnLivesChanged;
+    public event UnityAction<int, int> OnKill;
     public event UnityAction OnScoreUpdated;
     public event UnityAction<OnScoreUpdatedEventArgs> OnScoreTriggered;
 
@@ -84,6 +87,11 @@ public class NetworkFungal : NetworkBehaviour
         score.OnValueChanged += (old, value) =>
         {
             OnScoreUpdated?.Invoke();
+        };
+
+        lives.OnValueChanged += (old, value) =>
+        {
+            OnLivesChanged?.Invoke();
         };
 
         Debug.Log($"NetworkFungal.OnNetworkSpawn {fungalIndex.Value}");
@@ -145,8 +153,8 @@ public class NetworkFungal : NetworkBehaviour
     [ServerRpc]
     private void DieServerRpc()
     {
-        DieClientRpc();
         lives.Value--;
+        DieClientRpc();
     }
 
     [ClientRpc]
@@ -195,6 +203,28 @@ public class NetworkFungal : NetworkBehaviour
         animations.PlaySpawnAnimation();
         materialFlasher.FlashColor(Color.white);
         OnRespawnComplete?.Invoke();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void OnKillServerRpc(Vector3 targetPosition, int killVictim)
+    {
+        Kills.Value++;
+
+
+        AddToScoreServerRpc(new OnScoreUpdatedEventArgs
+        {
+            value = 250f,
+            position = targetPosition,
+            label = "KO"
+        });
+
+        OnKillClientRpc(Index, killVictim);
+    }
+
+    [ClientRpc]
+    private void OnKillClientRpc(int killIndex, int killVictim)
+    {
+        OnKill?.Invoke(killIndex, killVictim);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -247,16 +277,22 @@ public class NetworkFungal : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void ModifySpeedServerRpc(float modifer, float duration)
+    public void ModifySpeedServerRpc(float modifer, float duration, bool showStunAnimation = false)
     {
-        ModifySpeedClientRpc(modifer);
-        Invoke(nameof(ResetSpeedClientRpc), duration);
+        ModifySpeedClientRpc(modifer, showStunAnimation);
+        StartCoroutine(ResetSpeedClientRpcRoutine(duration, showStunAnimation));
+    }
+
+    private IEnumerator ResetSpeedClientRpcRoutine(float duration, bool showStunAnimatio)
+    {
+        yield return new WaitForSeconds(duration);
+        ResetSpeedClientRpc(showStunAnimatio);
     }
 
     [ClientRpc]
-    private void ModifySpeedClientRpc(float modifer)
+    private void ModifySpeedClientRpc(float modifer, bool showStunAnimation)
     {
-        stunAnimation.SetActive(true);
+        if (showStunAnimation) stunAnimation.SetActive(true);
 
         if (IsOwner)
         {
@@ -265,9 +301,9 @@ public class NetworkFungal : NetworkBehaviour
     }
 
     [ClientRpc]
-    private void ResetSpeedClientRpc()
+    private void ResetSpeedClientRpc(bool showStunAnimation)
     {
-        stunAnimation.SetActive(false);
+        if (showStunAnimation) stunAnimation.SetActive(false);
         Movement.ResetSpeedModifier();
     }
 }

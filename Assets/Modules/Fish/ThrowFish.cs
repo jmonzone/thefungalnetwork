@@ -11,6 +11,7 @@ public class ThrowFish : MonoBehaviour
     private Movement movement;
 
     public float Radius => radius;
+    public Vector3 TargetPosition { get; private set; }
 
     public event UnityAction<Vector3> OnThrowStart;
     public event UnityAction OnThrowComplete;
@@ -37,6 +38,7 @@ public class ThrowFish : MonoBehaviour
         enabled = true;
         targetPosition.y = 0; // Keep on the ground
         movement.SetTrajectoryMovement(targetPosition); // Move towards the target
+        TargetPosition = targetPosition;
         OnThrowStart?.Invoke(targetPosition);
     }
 

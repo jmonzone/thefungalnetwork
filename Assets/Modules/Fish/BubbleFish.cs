@@ -17,16 +17,16 @@ public class BubbleFish : NetworkBehaviour
         fish = GetComponent<Fish>();
 
         var throwFish = GetComponent<ThrowFish>();
-        throwFish.OnThrowComplete += () => InflateServerRpc(NetworkObject.OwnerClientId);
+        throwFish.OnThrowComplete += () => InflateServerRpc(NetworkObject.OwnerClientId, throwFish.TargetPosition);
 
         animator = GetComponentInChildren<Animator>();
         audioSource = GetComponent<AudioSource>();
     }
 
     [ServerRpc]
-    private void InflateServerRpc(ulong clientId)
+    private void InflateServerRpc(ulong clientId, Vector3 targetPosition)
     {
-        var bubble = Instantiate(bubblePrefab, transform.position, Quaternion.identity);
+        var bubble = Instantiate(bubblePrefab, targetPosition, Quaternion.identity);;
         bubble.NetworkObject.SpawnWithOwnership(clientId);
 
         InflateClientRpc();

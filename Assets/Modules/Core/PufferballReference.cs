@@ -10,15 +10,17 @@ public class Player
     public ulong ClientId;
     public bool IsAI;
     public int Index;
+    public string DisplayName;
     public NetworkFungal Fungal;
     public float Score => Fungal.Score;
     public int Lives => Fungal.Lives;
     public bool IsWinner = false;
 
-    public Player(ulong clientId, int playerIndex, NetworkFungal fungal, bool isAI = false)
+    public Player(ulong clientId, int playerIndex, string displayName, NetworkFungal fungal, bool isAI = false)
     {
         ClientId = clientId;
         Index = playerIndex;
+        DisplayName = displayName;
         Fungal = fungal;
         IsAI = isAI;
     }
@@ -42,6 +44,7 @@ public class PufferballReference : ScriptableObject
     public event UnityAction OnClientPlayerAdded;
     public event UnityAction<Player> OnPlayerAdded;
     public event UnityAction OnAllPlayersAdded;
+    public event UnityAction<int, int> OnKill;
 
     public void Initialize()
     {
@@ -59,8 +62,13 @@ public class PufferballReference : ScriptableObject
             return; // Skip if player already exists
         }
 
-        Debug.Log($"AddPlayer {clientId} {playerIndex}");
-        var addedPlayer = new Player(clientId, playerIndex, networkFungal, isAi);
+        var localPlayer = multiplayer.JoinedLobby.Players[playerIndex];
+
+        string playerName = localPlayer.Data.TryGetValue("PlayerName", out var playerNameData)
+            ? playerNameData.Value
+            : "Unknown Player";
+
+        var addedPlayer = new Player(clientId, playerIndex, playerName, networkFungal, isAi);
         Players.Add(addedPlayer);
 
         // Sort the list based on the player index
@@ -84,8 +92,14 @@ public class PufferballReference : ScriptableObject
         }
         else
         {
-            addedPlayer.Fungal.OnDeath += Fungal_OnDeath;
+            addedPlayer.Fungal.OnLivesChanged += Fungal_OnDeath;
         }
+
+        addedPlayer.Fungal.OnKill += (x, y) =>
+        {
+            if (isComplete) return;
+            OnKill?.Invoke(x, y);
+        };
     }
 
     private void Fungal_OnDeath()

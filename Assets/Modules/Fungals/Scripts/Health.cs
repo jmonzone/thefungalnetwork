@@ -65,13 +65,7 @@ public class Health : NetworkBehaviour
             if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(sourceId, out var networkObject))
             {
                 var networkFungal = networkObject.GetComponent<NetworkFungal>();
-                if (knockout) networkFungal.AddToScoreServerRpc(new OnScoreUpdatedEventArgs
-                {
-                    value = 250f,
-                    position = transform.position,
-                    label = "KO"
-                    
-                });
+                if (knockout) networkFungal.OnKillServerRpc(transform.position, GetComponentInParent<NetworkFungal>().Index);
                 else networkFungal.AddToScoreServerRpc(new OnScoreUpdatedEventArgs
                 {
                     value = 35f,

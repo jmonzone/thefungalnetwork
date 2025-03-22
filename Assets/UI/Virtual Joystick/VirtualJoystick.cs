@@ -42,7 +42,7 @@ public class VirtualJoystick : MonoBehaviour
         }
 
         // Handle joystick start
-        if (!IsActive && IsPointerOverTarget && IsInputPressed(out int touchIndex))
+        if (!IsActive && IsInputPressed(out int touchIndex))
         {
             IsActive = true;
             activeTouchIndex = touchIndex;
@@ -68,21 +68,29 @@ public class VirtualJoystick : MonoBehaviour
         return Input.mousePosition;
     }
 
-    // Check if any input has been pressed, return touch index or -1 for mouse
     private bool IsInputPressed(out int touchIndex)
     {
         for (int i = 0; i < Input.touchCount; i++)
         {
-            if (Input.GetTouch(i).phase == TouchPhase.Began)
+            Touch touch = Input.GetTouch(i);
+            if (touch.phase == TouchPhase.Began && IsPointerOverTarget(touch.position))
             {
                 touchIndex = i;
                 return true;
             }
         }
 
-        touchIndex = -1;
-        return Input.GetMouseButtonDown(0);
+        // Mouse fallback for editor use
+        if (Input.GetMouseButtonDown(0) && IsPointerOverTarget(Input.mousePosition))
+        {
+            touchIndex = -1;
+            return true;
+        }
+
+        touchIndex = -2; // Nothing found
+        return false;
     }
+
 
     // Check if the active input is being held
     private bool IsInputHeld()
@@ -105,20 +113,18 @@ public class VirtualJoystick : MonoBehaviour
         return Input.GetMouseButtonUp(0);
     }
 
-    public bool IsPointerOverTarget
+    private bool IsPointerOverTarget(Vector2 position)
     {
-        get
+        PointerEventData pointerEventData = new PointerEventData(EventSystem.current)
         {
-            PointerEventData pointerEventData = new PointerEventData(EventSystem.current)
-            {
-                position = GetInputPosition()
-            };
+            position = position
+        };
 
-            List<RaycastResult> results = new List<RaycastResult>();
-            EventSystem.current.RaycastAll(pointerEventData, results);
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointerEventData, results);
 
-            return !target || (results.Count > 0 && results[0].gameObject == target);
-        }
+        return !target || (results.Count > 0 && results[0].gameObject == target);
     }
+
 
 }
