@@ -7,6 +7,7 @@ public class PointsIndicator : MonoBehaviour
 {
     [SerializeField] private PufferballReference pufferballReference;
     [SerializeField] private Transform pointsTextAnchor;
+    [SerializeField] private List<Color> colors;
 
     public TMPro.TextMeshProUGUI popupPrefab; // Reference to the Text prefab
     public int poolSize = 10; // Number of popups to pool
@@ -33,27 +34,25 @@ public class PointsIndicator : MonoBehaviour
     private void PufferballReference_OnClientPlayerAdded()
     {
         pufferballReference.OnClientPlayerAdded -= PufferballReference_OnClientPlayerAdded;
-        pufferballReference.ClientPlayer.Fungal.OnScoreTriggered += Fungal_OnScoreUpdated;
-    }
-
-    private void Fungal_OnScoreUpdated(ScoreEventArgs arg0)
-    {
-        Debug.Log("ClientPlayer_OnScoreUpdated");
-        ShowPopup(arg0.position, $"+{arg0.value} {arg0.label}");
+        pufferballReference.ClientPlayer.Fungal.OnScoreTriggered += ShowPopup;
     }
 
     // Function to spawn a new popup
-    public void ShowPopup(Vector3 worldPosition, string text, float duration = 1.5f, float moveDistance = 1f)
+    public void ShowPopup(ScoreEventArgs arg0)
     {
         if (popupPool.Count > 0)
         {
+            float duration = 1.5f;
+            float moveDistance = 1f;
+
             // Get the popup from the pool
             var popup = popupPool.Dequeue();
             popup.gameObject.SetActive(true);
-            popup.text = text;
+            popup.text = $"+{arg0.value} {arg0.label}";
+            popup.color = Color.Lerp(colors[0], colors[colors.Count - 1], arg0.value / 250);
 
             // Start the floating and fading coroutine
-            StartCoroutine(FloatUpAndFade(popup, worldPosition, duration, moveDistance));
+            StartCoroutine(FloatUpAndFade(popup, arg0.position, duration, moveDistance));
 
             // Add it to the active popups list
             activePopups.Add(popup);

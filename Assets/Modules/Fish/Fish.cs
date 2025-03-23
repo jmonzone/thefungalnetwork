@@ -12,10 +12,12 @@ public class Fish : NetworkBehaviour
     [SerializeField] private Sprite icon;
     [SerializeField] private string abilityName;
     [SerializeField] private Color backgroundColor;
+    [SerializeField] private float score;
 
     public Sprite Icon => icon;
     public string AbilityName => abilityName;
     public Color BackgroundColor => backgroundColor;
+    public float Score => score;
 
     public Movement Movement { get; private set; }
     private ThrowFish throwFish;
@@ -77,6 +79,7 @@ public class Fish : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void RequestPickUpServerRpc(ulong clientId)
     {
+        //Debug.Log($"RequestPickUpServerRpc {name} {requested}");
         if (requested)
         {
             OnRequestPickUpClientRpc(clientId, false);
@@ -102,6 +105,8 @@ public class Fish : NetworkBehaviour
     [ClientRpc]
     private void OnRequestPickUpClientRpc(ulong clientId, bool success)
     {
+        //Debug.Log($"OnRequestPickUpClientRpc {name} {requested} {success}");
+
         if (IsServer) requested = false;
 
         //Debug.Log($"OnPickupClientRpc {NetworkManager.Singleton.LocalClientId == clientId}");

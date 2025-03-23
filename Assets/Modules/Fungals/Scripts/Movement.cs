@@ -209,7 +209,7 @@ public class Movement : MonoBehaviour
 
     private void MoveAlongTrajectory()
     {
-        trajectoryTimeElapsed += Time.deltaTime;
+        trajectoryTimeElapsed += SpeedDelta;
         float progress = Mathf.Clamp01(trajectoryTimeElapsed / trajectoryDuration);
 
         // Calculate the position on the XZ plane with constant speed

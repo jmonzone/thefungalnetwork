@@ -6,8 +6,8 @@ public class FishPickup : NetworkBehaviour
 {
     public Fish Fish { get; private set; }
     private NetworkFungal fungal;
+    private Fish requestedFish;
 
-    public event UnityAction<float> OnFishPickedUp;
     public event UnityAction OnFishChanged;
     public event UnityAction OnFishReleased;
 
@@ -30,8 +30,6 @@ public class FishPickup : NetworkBehaviour
         }
     }
 
-    private Fish requestedFish;
-
     private void Update()
     {
         if (IsOwner && !Fish && !fungal.IsDead && !requestedFish) TryPickUpFish();
@@ -49,6 +47,7 @@ public class FishPickup : NetworkBehaviour
                 requestedFish = fish;
                 fish.OnPickUpRequest += Fish_OnPickUpRequest;
                 fish.RequestPickUpServerRpc(NetworkManager.Singleton.LocalClientId);
+                break;
             }
         }
     }
@@ -68,11 +67,9 @@ public class FishPickup : NetworkBehaviour
 
             Fish = requestedFish;
 
-            float score = 20f;
-            OnFishPickedUp?.Invoke(score);
             fungal.AddToScoreServerRpc(new ScoreEventArgs
             {
-                value = score,
+                value = Fish.Score,
                 position = Fish.transform.position,
                 label = "Catch"
             });

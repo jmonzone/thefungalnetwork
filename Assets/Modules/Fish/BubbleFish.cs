@@ -5,6 +5,7 @@ using System.Collections;
 public class BubbleFish : NetworkBehaviour
 {
     [SerializeField] private Bubble bubblePrefab;
+    [SerializeField] private float pitch = 2f;
     [SerializeField] private AudioClip audioClip;
 
     private Fish fish;
@@ -36,9 +37,9 @@ public class BubbleFish : NetworkBehaviour
     private void InflateClientRpc()
     {
         animator.Play("Jump");
-        audioSource.clip = audioClip;
-        audioSource.pitch = 0.5f;
-        audioSource.Play();
+        //audioSource.clip = audioClip;
+        //audioSource.pitch = pitch;
+        //audioSource.Play();
 
         if (IsOwner) StartCoroutine(InflateRoutine());
     }

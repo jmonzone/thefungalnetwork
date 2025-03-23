@@ -34,6 +34,7 @@ public class PufferballReference : ScriptableObject
     [SerializeField] private MultiplayerManager multiplayer;
 
     public bool isComplete;
+    public GameMode gameMode;
 
     public Player ClientPlayer => clientPlayer;
     public List<Player> Players => players;
@@ -79,6 +80,8 @@ public class PufferballReference : ScriptableObject
         {
             clientPlayer = addedPlayer;
             OnClientPlayerAdded?.Invoke();
+
+            gameMode = multiplayer.GetGameMode(multiplayer.JoinedLobby);
         }
 
         OnPlayerAdded?.Invoke(addedPlayer);

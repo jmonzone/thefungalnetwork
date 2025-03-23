@@ -4,8 +4,8 @@ using UnityEngine.Events;
 public class ThrowFish : MonoBehaviour
 {
     [SerializeField] private float radius;
-    [SerializeField] private float range = 5f;
     [SerializeField] private bool respawnOnThrow = true;
+    [SerializeField] private float throwSpeed = 2f;
 
     private Fish fish;
     private Movement movement;
@@ -37,6 +37,7 @@ public class ThrowFish : MonoBehaviour
     {
         enabled = true;
         targetPosition.y = 0; // Keep on the ground
+        movement.SetSpeed(throwSpeed);
         movement.SetTrajectoryMovement(targetPosition); // Move towards the target
         TargetPosition = targetPosition;
         OnThrowStart?.Invoke(targetPosition);

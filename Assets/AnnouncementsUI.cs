@@ -9,6 +9,7 @@ public class AnnouncementsUI : MonoBehaviour
     [SerializeField] private FadeCanvasGroup canvasGroup;
     [SerializeField] private Image player1Image;
     [SerializeField] private Image player2Image;
+    [SerializeField] private GameObject player2ImageContainer;
     [SerializeField] private TextMeshProUGUI text;
     [SerializeField] private RectTransform announcmentContainer;
     [SerializeField] private PufferballReference pufferballReference;
@@ -93,18 +94,16 @@ public class AnnouncementsUI : MonoBehaviour
 
             if (announcement.Player2 != null)
             {
-                player2Image.gameObject.SetActive(true);
+                player2ImageContainer.SetActive(true);
                 player2Image.sprite = announcement.Player2.Fungal.Data.ActionImage;
             }
             else
             {
-                player2Image.gameObject.SetActive(false);
+                player2ImageContainer.SetActive(false);
             }
 
-            horizontalLayoutGroup.enabled = false;
-            yield return new WaitForFixedUpdate();
-            horizontalLayoutGroup.enabled = true;
-            yield return new WaitForFixedUpdate();
+            LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)horizontalLayoutGroup.transform);
+            yield return new WaitForEndOfFrame();
 
             yield return SlideDownAndBoing(announcmentContainer);
 

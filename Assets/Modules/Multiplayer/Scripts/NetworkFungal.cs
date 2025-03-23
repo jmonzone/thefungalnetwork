@@ -93,7 +93,14 @@ public class NetworkFungal : NetworkBehaviour
         lives.OnValueChanged += (old, value) =>
         {
             OnLivesChanged?.Invoke();
-            if (IsOwner && value > 0) StartCoroutine(RespawnRoutine());
+
+            if (IsOwner)
+            {
+                if (pufferball.gameMode == GameMode.ELIMINATION && value > 0 || pufferball.gameMode == GameMode.PARTY)
+                {
+                    StartCoroutine(RespawnRoutine());
+                }
+            }
         };
 
         Debug.Log($"NetworkFungal.OnNetworkSpawn {fungalIndex.Value}");
@@ -156,6 +163,7 @@ public class NetworkFungal : NetworkBehaviour
     private void DieServerRpc(bool selfDestruct)
     {
         lives.Value--;
+        score.Value = Mathf.FloorToInt(score.Value / 2f);
         DieClientRpc(selfDestruct);
     }
 
