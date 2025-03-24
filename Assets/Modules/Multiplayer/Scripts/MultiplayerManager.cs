@@ -618,4 +618,32 @@ public class MultiplayerManager : ScriptableObject
             Debug.LogError($"Failed to update lobby AI player data: {e.Message}");
         }
     }
+
+    public List<string> GetAllPlayerNames()
+    {
+        var playerNames = new List<string>();
+
+        if (JoinedLobby == null)
+        {
+            Debug.LogWarning("No joined lobby.");
+            return playerNames;
+        }
+
+        // 1. Add human player names
+        foreach (var player in JoinedLobby.Players)
+        {
+            string name = player.Data != null && player.Data.TryGetValue("DisplayName", out var displayName)
+                ? displayName.Value
+                : "Unnamed Player";
+
+            playerNames.Add(name);
+        }
+
+        // 2. Add AI player names
+        var aiPlayerNames = GetCurrentAIPlayerList();
+        playerNames.AddRange(aiPlayerNames);
+
+        return playerNames;
+    }
+
 }

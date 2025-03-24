@@ -64,13 +64,9 @@ public class PufferballReference : ScriptableObject
             return; // Skip if player already exists
         }
 
-        var localPlayer = multiplayer.JoinedLobby.Players[playerIndex];
+        var localPlayerName = multiplayer.GetAllPlayerNames()[playerIndex];
 
-        string playerName = localPlayer.Data.TryGetValue("PlayerName", out var playerNameData)
-            ? playerNameData.Value
-            : "Unknown Player";
-
-        var addedPlayer = new Player(clientId, playerIndex, playerName, networkFungal, isAi);
+        var addedPlayer = new Player(clientId, playerIndex, localPlayerName, networkFungal, isAi);
         Players.Add(addedPlayer);
 
         // Sort the list based on the player index
@@ -85,7 +81,7 @@ public class PufferballReference : ScriptableObject
         }
 
         OnPlayerAdded?.Invoke(addedPlayer);
-        if (multiplayer.JoinedLobby.Players.Count == Players.Count)
+        if (multiplayer.GetAllPlayerNames().Count == Players.Count)
         {
             OnAllPlayersAdded?.Invoke();
         }
