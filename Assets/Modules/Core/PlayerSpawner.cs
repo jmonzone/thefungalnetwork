@@ -11,7 +11,6 @@ public class PlayerSpawner : NetworkBehaviour
     [SerializeField] private MultiplayerArena arena;
     [SerializeField] private FungalCollection fungalCollection;
     [SerializeField] private PufferballReference pufferballReference;
-    [SerializeField] private bool addAIPlayer = false;
     [SerializeField] private NetworkFungal fungalPrefab;
 
     public event Action<PlayerSpawner> OnSpawnerReady;
@@ -22,13 +21,13 @@ public class PlayerSpawner : NetworkBehaviour
 
         if (IsServer)
         {
-            if (multiplayerManager.GetCurrentAIPlayerList().Count > 0)
+            var i = 0;
+            foreach(var aiPlayer in multiplayerManager.GetCurrentAIPlayerList())
             {
-                Debug.Log("multiplayerManager.GetCurrentAIPlayerList " + multiplayerManager.GetCurrentAIPlayerList().Count);
-
                 ulong aiClientId = GenerateUniqueAIClientId();
                 var fungalIndex = UnityEngine.Random.Range(0, fungalCollection.Fungals.Count);
-                AddPlayer(aiClientId, "fungalGPT", 1, fungalIndex, isAI: true);
+                AddPlayer(aiClientId, aiPlayer, i + multiplayerManager.JoinedLobby.Players.Count, fungalIndex, isAI: true);
+                i++;
             }
 
             OnSpawnerReady?.Invoke(this);
@@ -58,12 +57,12 @@ public class PlayerSpawner : NetworkBehaviour
 
         if (!isAI)
         {
-            OnPlayerAddedClientRpc(clientId, playerIndex, networkFungal.NetworkObjectId, isAI);
+            OnPlayerAddedClientRpc(clientId, playerIndex, networkFungal.NetworkObjectId);
         }
     }
 
     [ClientRpc]
-    private void OnPlayerAddedClientRpc(ulong clientId, int playerIndex, ulong networkObjectId,  bool isAi)
+    private void OnPlayerAddedClientRpc(ulong clientId, int playerIndex, ulong networkObjectId)
     {
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out var networkObject))
         {
@@ -75,7 +74,7 @@ public class PlayerSpawner : NetworkBehaviour
                 fishingPlayer.AssignFungal(networkFungal);
             }
 
-            pufferballReference.AddPlayer(clientId, playerIndex, networkFungal, isAi);
+            pufferballReference.AddPlayer(clientId, playerIndex, networkFungal);
         }
 
         //Debug.Log("Client owner spawned, searching for existing NetworkFungals...");
@@ -93,7 +92,7 @@ public class PlayerSpawner : NetworkBehaviour
                 }
 
                 // Register the fungal with the pufferballReference
-                pufferballReference.AddPlayer(clientId, networkFungal.Index, networkFungal, isAi);
+                pufferballReference.AddPlayer(clientId, networkFungal.Index, networkFungal);
             }
         }
     }

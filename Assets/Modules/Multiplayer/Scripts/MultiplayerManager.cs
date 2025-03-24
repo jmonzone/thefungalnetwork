@@ -632,7 +632,7 @@ public class MultiplayerManager : ScriptableObject
         // 1. Add human player names
         foreach (var player in JoinedLobby.Players)
         {
-            string name = player.Data != null && player.Data.TryGetValue("DisplayName", out var displayName)
+            string name = player.Data != null && player.Data.TryGetValue("PlayerName", out var displayName)
                 ? displayName.Value
                 : "Unnamed Player";
 

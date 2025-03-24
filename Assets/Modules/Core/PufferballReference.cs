@@ -8,7 +8,6 @@ using UnityEngine.Events;
 public class Player
 {
     public ulong ClientId;
-    public bool IsAI;
     public int Index;
     public string DisplayName;
     public NetworkFungal Fungal;
@@ -16,13 +15,12 @@ public class Player
     public int Lives => Fungal.Lives;
     public bool IsWinner = false;
 
-    public Player(ulong clientId, int playerIndex, string displayName, NetworkFungal fungal, bool isAI = false)
+    public Player(ulong clientId, int playerIndex, string displayName, NetworkFungal fungal)
     {
         ClientId = clientId;
         Index = playerIndex;
         DisplayName = displayName;
         Fungal = fungal;
-        IsAI = isAI;
     }
 }
 
@@ -55,7 +53,7 @@ public class PufferballReference : ScriptableObject
         isComplete = false;
     }
 
-    public void AddPlayer(ulong clientId, int playerIndex, NetworkFungal networkFungal, bool isAi)
+    public void AddPlayer(ulong clientId, int playerIndex, NetworkFungal networkFungal)
     {
         // Check if a player with the same index already exists
         if (Players.Any(player => player.Fungal == networkFungal))
@@ -66,7 +64,7 @@ public class PufferballReference : ScriptableObject
 
         var localPlayerName = multiplayer.GetAllPlayerNames()[playerIndex];
 
-        var addedPlayer = new Player(clientId, playerIndex, localPlayerName, networkFungal, isAi);
+        var addedPlayer = new Player(clientId, playerIndex, localPlayerName, networkFungal);
         Players.Add(addedPlayer);
 
         // Sort the list based on the player index
