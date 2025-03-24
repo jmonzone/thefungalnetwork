@@ -321,7 +321,7 @@ public class MultiplayerManager : ScriptableObject
                     { "JoinCode", new DataObject(DataObject.VisibilityOptions.Member, joinCode) },
                     { "HostName", new DataObject(DataObject.VisibilityOptions.Public, PlayerName) },
                     { "GameMode", new DataObject(DataObject.VisibilityOptions.Public, gameMode.ToString())},
-                    { "UseAI", new DataObject(DataObject.VisibilityOptions.Public, false.ToString()) }
+                    { "UseAI", new DataObject(DataObject.VisibilityOptions.Public, true.ToString()) }
                 }
             };
 

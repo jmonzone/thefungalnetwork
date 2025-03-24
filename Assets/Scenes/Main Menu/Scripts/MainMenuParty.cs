@@ -35,7 +35,7 @@ public class MainMenuParty : MonoBehaviour
     private int selectedFungalIndex = 0;
 
     private GameMode gameMode;
-    private bool useAIPlayers;
+    private bool useAIPlayers = true;
 
     private void Awake()
     {
