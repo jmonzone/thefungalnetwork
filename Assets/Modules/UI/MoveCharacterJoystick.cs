@@ -16,7 +16,7 @@ public class MoveCharacterJoystick : MonoBehaviour
     private void Joystick_OnJoystickEnd()
     {
         if (!enabled) return;
-        Debug.Log("Joystick_OnJoystickEnd");
+        //Debug.Log("Joystick_OnJoystickEnd");
         player.Movement.Stop();
     }
 
@@ -45,11 +45,11 @@ public class MoveCharacterJoystick : MonoBehaviour
 
         translation = Quaternion.Euler(0, transform.eulerAngles.y, 0) * translation;
 
-        if (translation == Vector3.zero)
-        {
-            if (player.Movement.Type != Movement.MovementType.IDLE) player.Movement.Stop();
-            return;
-        }
+        //if (translation == Vector3.zero)
+        //{
+        //    if (player.Movement.Type != Movement.MovementType.IDLE) player.Movement.Stop();
+        //    return;
+        //}
 
         //Debug.Log("MovePlayer");
         player.Movement.SetDirection(translation, speed);

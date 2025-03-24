@@ -17,13 +17,16 @@ public class Movement : MonoBehaviour
     [SerializeField] private MovementType type = MovementType.IDLE;
     [SerializeField] private float baseSpeed = 5f;
     [SerializeField] private float rotationSpeed = 5f;
+    [SerializeField] private float directionSmoothTime = 0.1f;  // Tweak for more/less drift
     [SerializeField] private LayerMask obstacleLayer;
     [SerializeField] private Transform lookTransform;
     [SerializeField] private Transform scaleTransform;
 
-
     public Transform ScaleTransform => scaleTransform;
-    private Vector3 direction;
+    private Vector3 inputDirection;
+    private Vector3 currentDirection = Vector3.zero;
+    private Vector3 directionSmoothVelocity;
+
     private float modifier = 1f;
 
     public float CalculatedSpeed => baseSpeed * modifier;
@@ -131,15 +134,27 @@ public class Movement : MonoBehaviour
     // Directional Movement
     public void SetDirection(Vector3 direction, float speed)
     {
-        this.direction = direction;
+        this.inputDirection = direction;
         baseSpeed = speed;
         SetType(MovementType.DIRECTIONAL);
     }
 
     private void MoveInDirection()
     {
-        UpdateLookDirection(direction);
-        transform.position += SpeedDelta * direction;
+        // Smoothly interpolate the currentDirection towards the target direction
+        currentDirection = Vector3.SmoothDamp(currentDirection, inputDirection, ref directionSmoothVelocity, directionSmoothTime);
+
+        UpdateLookDirection(currentDirection);
+
+        // Optional: once drift slows enough, go idle
+        if (currentDirection.magnitude > 0.01f)
+        {
+            transform.position += SpeedDelta * currentDirection;
+        }
+        else
+        {
+            Stop();
+        }
     }
 
     // Positional Movement
@@ -236,7 +251,7 @@ public class Movement : MonoBehaviour
     {
         var lookDirection = direction;
 
-        if (lookDirection != Vector3.zero)
+        if (lookDirection.magnitude > 0.001f)
         {
             // Smoothly rotate using Slerp (Spherical Linear Interpolation)
             Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
