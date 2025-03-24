@@ -37,15 +37,14 @@ public class PlayerSpawner : NetworkBehaviour
 
     public void AddPlayer(ulong clientId, string playerName, int playerIndex, int fungalIndex, bool isAI = false)
     {
-        Debug.Log("AddPlayer");
+        //Debug.Log("AddPlayer");
         OnPlayerAddedServerRpc(clientId, playerName, playerIndex, fungalIndex, isAI);
     }
 
     [ServerRpc(RequireOwnership = false)]
     private void OnPlayerAddedServerRpc(ulong clientId, FixedString64Bytes playerName, int playerIndex, int fungalIndex, bool isAI = false)
     {
-        Debug.Log("OnPlayerAddedServerRpc");
-
+        //Debug.Log("OnPlayerAddedServerRpc");
        
         var spawnOrigin = arena.SpawnPositions[playerIndex].position;
 
@@ -53,7 +52,7 @@ public class PlayerSpawner : NetworkBehaviour
 
         var networkFungal = Instantiate(fungalPrefab, spawnPosition, Quaternion.identity);
         networkFungal.NetworkObject.SpawnWithOwnership(clientId);
-        networkFungal.InitializeServerRpc(playerName, playerIndex, fungalIndex);
+        networkFungal.InitializeServerRpc(playerName, playerIndex, fungalIndex, isAI);
 
         if (!isAI)
         {

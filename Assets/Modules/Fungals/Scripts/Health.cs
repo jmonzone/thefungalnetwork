@@ -37,7 +37,8 @@ public class Health : NetworkBehaviour
     {
         base.OnNetworkSpawn();
 
-        if (IsOwner) Replenish();
+        //Debug.Log($"HealthOnNetworkSpawn {IsOwner}");
+        if (IsServer) Replenish();
 
         currentHealth.OnValueChanged += (previousValue, newValue) =>
         {
@@ -63,12 +64,15 @@ public class Health : NetworkBehaviour
 
     public void Damage(float damage, ulong sourceId)
     {
+        //Debug.Log($"Damage {damage} {sourceId}");
         OnDamageServerRpc(damage, sourceId);
     }
 
     [ServerRpc(RequireOwnership = false)]
     public void OnDamageServerRpc(float damage, ulong sourceId)
     {
+        //Debug.Log($"OnDamageServerRpc {damage} {sourceId} {currentHealth.Value}");
+
         if (currentHealth.Value == 0) return;
 
         currentHealth.Value = Mathf.Clamp(currentHealth.Value - damage, 0, maxHealth);

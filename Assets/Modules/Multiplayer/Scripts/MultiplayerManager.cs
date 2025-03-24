@@ -458,7 +458,7 @@ public class MultiplayerManager : ScriptableObject
             //Debug.Log("Available Lobbies:");
             foreach (Lobby lobby in lobbies.Results)
             {
-                Debug.Log($"Lobby: {lobby.Id}, Players: {lobby.Players.Count}/{lobby.MaxPlayers}");
+                //Debug.Log($"Lobby: {lobby.Id}, Players: {lobby.Players.Count}/{lobby.MaxPlayers}");
             }
 
             onComplete?.Invoke(lobbies.Results);
@@ -534,7 +534,7 @@ public class MultiplayerManager : ScriptableObject
         // Update the lobby data
         await UpdateLobbyAIData(aiPlayerNames);
 
-        Debug.Log($"AI Player '{aiPlayerName}' added.");
+        //Debug.Log($"AI Player '{aiPlayerName}' added.");
     }
 
     /// <summary>
@@ -611,7 +611,7 @@ public class MultiplayerManager : ScriptableObject
                 Data = updatedData
             });
 
-            Debug.Log("Lobby AI player data updated successfully.");
+            //Debug.Log("Lobby AI player data updated successfully.");
         }
         catch (LobbyServiceException e)
         {

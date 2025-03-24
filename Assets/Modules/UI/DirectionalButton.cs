@@ -129,7 +129,7 @@ public class DirectionalButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
 
     void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
     {
-        Debug.Log("OnPointerDown");
+        //Debug.Log("OnPointerDown");
         OnPointerDown?.Invoke();
     }
 }

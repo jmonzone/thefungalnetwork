@@ -29,7 +29,7 @@ public class Leaderboard : MonoBehaviour
 
     private void OnEnable()
     {
-        Debug.Log($"Leaderboard OnEnable");
+        //Debug.Log($"Leaderboard OnEnable");
         pufferball.OnScoreUpdated += UpdateLeaderboard;
         pufferball.OnPlayerAdded += Pufferball_OnPlayerAdded;
         pufferball.OnGameComplete += Pufferball_OnGameComplete;

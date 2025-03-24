@@ -40,14 +40,15 @@ public class NetworkFungal : NetworkBehaviour
     public bool IsDead { get; private set; }
 
     private Vector3 spawnPosition;
+    private bool isAI;
 
     private ClientNetworkTransform networkTransform;
     private MovementAnimations animations;
     private MaterialFlasher materialFlasher;
 
-    public event UnityAction OnRespawnStart;
-    public event UnityAction OnRespawnComplete;
-    public event UnityAction<bool> OnDeath;
+    public int Index => index.Value;
+    public float Score => score.Value;
+    public int Lives => lives.Value;
 
     // Exposed to all clients, replicated by Netcode
     public NetworkVariable<FixedString64Bytes> playerName = new NetworkVariable<FixedString64Bytes>();
@@ -58,9 +59,9 @@ public class NetworkFungal : NetworkBehaviour
     private NetworkVariable<int> lives = new NetworkVariable<int>(3);
     public NetworkVariable<int> Kills = new NetworkVariable<int>(0);
 
-    public int Index => index.Value;
-    public float Score => score.Value;
-    public int Lives => lives.Value;
+    public event UnityAction OnRespawnStart;
+    public event UnityAction OnRespawnComplete;
+    public event UnityAction<bool> OnDeath;
 
     public event UnityAction OnLivesChanged;
     public event UnityAction<int, int> OnKill;
@@ -68,12 +69,13 @@ public class NetworkFungal : NetworkBehaviour
     public event UnityAction<ScoreEventArgs> OnScoreTriggered;
 
     [ServerRpc(RequireOwnership = false)]
-    public void InitializeServerRpc(FixedString64Bytes playerName, int index, int fungalIndex)
+    public void InitializeServerRpc(FixedString64Bytes playerName, int index, int fungalIndex, bool isAI)
     {
-        Debug.Log($"InitializeServerRpc {playerName}");
+        //Debug.Log($"InitializeServerRpc {playerName}");
         this.playerName.Value = playerName;
         this.fungalIndex.Value = fungalIndex;
         this.index.Value = index;
+        this.isAI = isAI;
     }
 
     public override void OnNetworkSpawn()
@@ -93,7 +95,7 @@ public class NetworkFungal : NetworkBehaviour
 
         score.OnValueChanged += (old, value) =>
         {
-            Debug.Log("score.OnValueChanged");
+            //Debug.Log("score.OnValueChanged");
             OnScoreUpdated?.Invoke();
         };
 
@@ -101,7 +103,7 @@ public class NetworkFungal : NetworkBehaviour
         {
             OnLivesChanged?.Invoke();
 
-            if (IsOwner)
+            if (IsOwner || isAI)
             {
                 if (pufferball.gameMode == GameMode.ELIMINATION && value > 0 || pufferball.gameMode == GameMode.PARTY)
                 {
@@ -110,7 +112,7 @@ public class NetworkFungal : NetworkBehaviour
             }
         };
 
-        Debug.Log($"NetworkFungal.OnNetworkSpawn {fungalIndex.Value}");
+        //Debug.Log($"NetworkFungal.OnNetworkSpawn {fungalIndex.Value}");
         if (fungalIndex.Value != -1)
         {
             InitializePrefab();
@@ -139,7 +141,7 @@ public class NetworkFungal : NetworkBehaviour
     {
         if (args.lethal)
         {
-            if (IsOwner) DieServerRpc(args.SelfInflicted);
+            if (IsServer) DieServerRpc(args.SelfInflicted);
         }
         else
         {
@@ -166,9 +168,10 @@ public class NetworkFungal : NetworkBehaviour
         }
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     private void DieServerRpc(bool selfDestruct)
     {
+        //Debug.Log("DieClientRpc");
         lives.Value--;
         score.Value = Mathf.FloorToInt(score.Value / 2f);
         DieClientRpc(selfDestruct);
@@ -177,6 +180,7 @@ public class NetworkFungal : NetworkBehaviour
     [ClientRpc]
     private void DieClientRpc(bool selfDestruct)
     {
+        //Debug.Log("DieClientRpc");
         IsDead = true;
         animations.PlayDeathAnimation();
         materialFlasher.FlashColor(Color.red);
@@ -201,7 +205,7 @@ public class NetworkFungal : NetworkBehaviour
         RespawnServerRpc();
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     public void RespawnServerRpc()
     {
         RespawnClientRpc();
@@ -211,12 +215,17 @@ public class NetworkFungal : NetworkBehaviour
     private void RespawnClientRpc()
     {
         IsDead = false;
+
+        if (IsServer)
+        {
+            Health.Replenish();
+        }
+
         if (IsOwner)
         {
             networkTransform.Interpolate = false;
             transform.position = spawnPosition;
             networkTransform.Interpolate = true;
-            Health.Replenish();
         }
         animations.PlaySpawnAnimation();
         materialFlasher.FlashColor(Color.white);

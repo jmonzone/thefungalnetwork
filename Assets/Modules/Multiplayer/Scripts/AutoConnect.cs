@@ -11,6 +11,11 @@ public class AutoConnect : NetworkBehaviour
 
     private void Start()
     {
+        if (NetworkManager.Singleton != null)
+        {
+            NetworkManager.Singleton.LogLevel = LogLevel.Error;
+        }
+
         if (multiplayer.JoinedLobby != null)
         {
             multiplayer.StartHostClient();

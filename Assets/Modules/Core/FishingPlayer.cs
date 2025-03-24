@@ -17,7 +17,7 @@ public class FishingPlayer : NetworkBehaviour
 
         if (IsOwner)
         {
-            Debug.Log("FishingPlayer.OnNetworkSpawn");
+            //Debug.Log("FishingPlayer.OnNetworkSpawn");
 
             PlayerSpawner playerSpawner = FindObjectOfType<PlayerSpawner>();
             if (playerSpawner.IsSpawned)
@@ -44,7 +44,7 @@ public class FishingPlayer : NetworkBehaviour
         var characterIndex = localPlayer.Data.TryGetValue("Fungal", out var fungalData)
                 ? int.TryParse(fungalData?.Value, out var index) ? index : 0 : 0;
 
-        Debug.Log(playerSpawner.NetworkObjectId);
+        //Debug.Log(playerSpawner.NetworkObjectId);
         playerSpawner.AddPlayer(NetworkManager.Singleton.LocalClientId, displayName.Value, localPlayerIndex, characterIndex);
     }
 
