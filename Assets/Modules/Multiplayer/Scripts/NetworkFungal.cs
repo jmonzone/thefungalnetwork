@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.Multiplayer.Samples.Utilities.ClientAuthority;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
@@ -206,7 +207,10 @@ public class NetworkFungal : NetworkBehaviour
         IsDead = false;
         if (IsOwner)
         {
+            var networkTransform = GetComponent<ClientNetworkTransform>();
+            networkTransform.Interpolate = false;
             transform.position = spawnPosition;
+            networkTransform.Interpolate = true;
             Health.Replenish();
         }
         animations.PlaySpawnAnimation();
