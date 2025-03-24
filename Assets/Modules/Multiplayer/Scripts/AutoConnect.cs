@@ -9,7 +9,7 @@ public class AutoConnect : NetworkBehaviour
     [SerializeField] private bool addAIPlayer = false;
     [SerializeField] private GameMode gameMode;
 
-    private void Start()
+    private async void Start()
     {
         if (NetworkManager.Singleton != null)
         {
@@ -18,6 +18,14 @@ public class AutoConnect : NetworkBehaviour
 
         if (multiplayer.JoinedLobby != null)
         {
+            Debug.Log($"AutoConnect multiplayer.IsHost: {multiplayer.IsHost}");
+            if (multiplayer.IsHost && bool.TryParse(multiplayer.GetJoinedLobbyData("UseAI"), out bool useAI))
+            {
+                Debug.Log($"AutoConnect multiplayer.useAI: {useAI}");
+
+                if (useAI) await multiplayer.AddAIPlayer("fungal GPT");
+            }
+
             multiplayer.StartHostClient();
         }
         else
@@ -46,7 +54,7 @@ public class AutoConnect : NetworkBehaviour
                 else
                 {
                     await multiplayer.CreateRelayAndLobby(gameMode);
-                    if (addAIPlayer) await multiplayer.AddAIPlayer("AI Player");
+                    if (addAIPlayer) await multiplayer.AddAIPlayer("fungal GPT");
                     multiplayer.StartHostClient();
                 }
             });

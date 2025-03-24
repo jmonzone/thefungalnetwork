@@ -317,11 +317,12 @@ public class MultiplayerManager : ScriptableObject
                 IsPrivate = false,
                 Player = player,
                 Data = new Dictionary<string, DataObject>()
-            {
-                { "JoinCode", new DataObject(DataObject.VisibilityOptions.Member, joinCode) },
-                { "HostName", new DataObject(DataObject.VisibilityOptions.Public, PlayerName) },
-                { "GameMode", new DataObject(DataObject.VisibilityOptions.Public, gameMode.ToString()) }
-            }
+                {
+                    { "JoinCode", new DataObject(DataObject.VisibilityOptions.Member, joinCode) },
+                    { "HostName", new DataObject(DataObject.VisibilityOptions.Public, PlayerName) },
+                    { "GameMode", new DataObject(DataObject.VisibilityOptions.Public, gameMode.ToString())},
+                    { "UseAI", new DataObject(DataObject.VisibilityOptions.Public, false.ToString()) }
+                }
             };
 
             Lobby lobby = await LobbyService.Instance.CreateLobbyAsync("Test Lobby", MAX_PLAYER_COUNT, createLobbyOptions);
@@ -336,7 +337,7 @@ public class MultiplayerManager : ScriptableObject
         }
     }
 
-    public async Task UpdateGameMode(GameMode newGameMode)
+    public async Task UpdateJoinedLobbyData(string key, string value)
     {
         if (hostLobby == null)
         {
@@ -350,14 +351,12 @@ public class MultiplayerManager : ScriptableObject
             {
                 Data = new Dictionary<string, DataObject>()
             {
-                { "GameMode", new DataObject(DataObject.VisibilityOptions.Public, newGameMode.ToString()) }
+                { key, new DataObject(DataObject.VisibilityOptions.Public, value) }
             }
             };
 
             Lobby updatedLobby = await LobbyService.Instance.UpdateLobbyAsync(hostLobby.Id, updates);
             hostLobby = updatedLobby;
-
-            Debug.Log("Game mode updated to: " + newGameMode);
         }
         catch (LobbyServiceException e)
         {
@@ -365,17 +364,23 @@ public class MultiplayerManager : ScriptableObject
         }
     }
 
-    public GameMode GetGameMode(Lobby lobby)
+    public string GetJoinedLobbyData(string key)
     {
-        if (lobby.Data.TryGetValue("GameMode", out var gameModeData))
+        if (joinedLobby.Data.TryGetValue(key, out var gameModeData))
         {
-            if (Enum.TryParse(gameModeData.Value, out GameMode res))
-            {
-                return res;
-            }
+            return gameModeData.Value;
         }
 
         return default;
+    }
+
+    public GameMode GameMode
+    {
+        get
+        {
+            if (Enum.TryParse(GetJoinedLobbyData("GameMode"), out GameMode gameMode)) return gameMode;
+            else return default;
+        }
     }
 
     public async Task CreateLobby()
@@ -520,6 +525,7 @@ public class MultiplayerManager : ScriptableObject
     /// </summary>
     public async Task AddAIPlayer(string aiPlayerName)
     {
+        //Debug.Log($"AddAIPlayer {aiPlayerName}");
         if (JoinedLobby == null)
         {
             Debug.LogWarning("No joined lobby to add AI player to.");
@@ -534,7 +540,7 @@ public class MultiplayerManager : ScriptableObject
         // Update the lobby data
         await UpdateLobbyAIData(aiPlayerNames);
 
-        //Debug.Log($"AI Player '{aiPlayerName}' added.");
+        Debug.Log($"AI Player '{aiPlayerName}' added.");
     }
 
     /// <summary>

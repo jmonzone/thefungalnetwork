@@ -21,9 +21,13 @@ public class PlayerSpawner : NetworkBehaviour
 
         if (IsServer)
         {
+            Debug.Log($"PlayerSpawner.OnNetworkSpawn multiplayerManager.GetCurrentAIPlayerList() {multiplayerManager.GetCurrentAIPlayerList().Count}");
+
             var i = 0;
             foreach(var aiPlayer in multiplayerManager.GetCurrentAIPlayerList())
             {
+
+                Debug.Log($"PlayerSpawner.OnNetworkSpawn aiPlayer {aiPlayer}");
                 ulong aiClientId = GenerateUniqueAIClientId();
                 var fungalIndex = UnityEngine.Random.Range(0, fungalCollection.Fungals.Count);
                 AddPlayer(aiClientId, aiPlayer, i + multiplayerManager.JoinedLobby.Players.Count, fungalIndex, isAI: true);

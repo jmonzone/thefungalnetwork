@@ -28,10 +28,14 @@ public class MainMenuParty : MonoBehaviour
     [SerializeField] private GameObject hostControls;
     [SerializeField] private Button gameModeButton;
 
+    [SerializeField] private Button useAiPlayersButton;
+    [SerializeField] private TextMeshProUGUI useAiPlayersText;
+
     private Dictionary<int, GameObject> fungalObjects = new Dictionary<int, GameObject>();
     private int selectedFungalIndex = 0;
 
     private GameMode gameMode;
+    private bool useAIPlayers;
 
     private void Awake()
     {
@@ -50,11 +54,23 @@ public class MainMenuParty : MonoBehaviour
 
         gameModeButton.onClick.AddListener(async () =>
         {
-            await multiplayer.UpdateGameMode(gameMode == GameMode.PARTY ? GameMode.ELIMINATION : GameMode.PARTY);
+            gameModeButton.interactable = false;
+            await multiplayer.UpdateJoinedLobbyData("GameMode", (gameMode == GameMode.PARTY ? GameMode.ELIMINATION : GameMode.PARTY).ToString());
+            gameModeButton.interactable = true;
         });
 
+        useAiPlayersButton.onClick.AddListener(async () =>
+        {
+            useAiPlayersButton.interactable = false;
+            useAIPlayers = !useAIPlayers;
+            useAiPlayersText.text = $"Use AI Players: {(useAIPlayers ? "On" : "Off")}";
+            await multiplayer.UpdateJoinedLobbyData("UseAI", useAIPlayers.ToString());
+            useAiPlayersButton.interactable = true;
+        });
 
-        for(var i = 0; i < fungalCollection.Fungals.Count; i++)
+        useAiPlayersText.text = $"Use AI Players: {(useAIPlayers ? "On" : "Off")}";
+
+        for (var i = 0; i < fungalCollection.Fungals.Count; i++)
         {
             var fungal = fungalCollection.Fungals[i];
             var prefab = Instantiate(fungal.Prefab, fungalSpawnAnchor);
@@ -171,9 +187,7 @@ public class MainMenuParty : MonoBehaviour
 
     private void OnGameModeChanged()
     {
-        gameMode = multiplayer.GetGameMode(multiplayer.JoinedLobby);
-
-        switch (gameMode)
+        switch (multiplayer.GameMode)
         {
             case GameMode.PARTY:
                 gameModeTitle.text = "Party";

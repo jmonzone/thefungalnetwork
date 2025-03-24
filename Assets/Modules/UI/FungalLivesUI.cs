@@ -15,7 +15,7 @@ public class FungalLivesUI : MonoBehaviour
 
     private void Awake()
     {
-        gameObject.SetActive(multiplayer.GetGameMode(multiplayer.JoinedLobby) == GameMode.ELIMINATION);
+        gameObject.SetActive(multiplayer.GameMode == GameMode.ELIMINATION);
 
         GetComponentsInChildren(livesIndicator);
         defaultColor = livesIndicator[0].color;

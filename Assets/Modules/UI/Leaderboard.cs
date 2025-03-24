@@ -22,8 +22,7 @@ public class Leaderboard : MonoBehaviour
 
     private void Start()
     {
-        gameMode = multiplayer.GetGameMode(multiplayer.JoinedLobby);
-        if (gameMode == GameMode.ELIMINATION) gameObject.SetActive(showOnElimination);
+        if (multiplayer.GameMode == GameMode.ELIMINATION) gameObject.SetActive(showOnElimination);
         UpdateLeaderboard();
     }
 
@@ -124,7 +123,7 @@ public class Leaderboard : MonoBehaviour
 
     private void UpdatePartyLeaderboard()
     {
-        Debug.Log("UpdatePartyLeaderboard");
+        //Debug.Log("UpdatePartyLeaderboard");
 
         var players = pufferball.Players;
         var clientPlayer = pufferball.ClientPlayer;
@@ -173,7 +172,7 @@ public class Leaderboard : MonoBehaviour
                 Sprite playerIcon = player.Fungal.Data.ActionImage; // Example property
 
                 var playerPoints = player.Score.ToString();
-                Debug.Log("UpdatePartyLeaderboard " + playerPoints);
+                //Debug.Log("UpdatePartyLeaderboard " + playerPoints);
 
                 // Determine if THIS player is the top player
                 bool isTopPlayer = player == topPlayer;

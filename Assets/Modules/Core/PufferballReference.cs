@@ -62,6 +62,8 @@ public class PufferballReference : ScriptableObject
             return; // Skip if player already exists
         }
 
+        Enum.TryParse(multiplayer.GetJoinedLobbyData("GameMode"), out gameMode);
+
         var localPlayerName = multiplayer.GetAllPlayerNames()[playerIndex];
 
         var addedPlayer = new Player(clientId, playerIndex, localPlayerName, networkFungal);
@@ -74,8 +76,6 @@ public class PufferballReference : ScriptableObject
         {
             clientPlayer = addedPlayer;
             OnClientPlayerAdded?.Invoke();
-
-            gameMode = multiplayer.GetGameMode(multiplayer.JoinedLobby);
         }
 
         OnPlayerAdded?.Invoke(addedPlayer);
@@ -84,7 +84,7 @@ public class PufferballReference : ScriptableObject
             OnAllPlayersAdded?.Invoke();
         }
 
-        if (multiplayer.GetGameMode(multiplayer.JoinedLobby) == GameMode.PARTY)
+        if (gameMode== GameMode.PARTY)
         {
             addedPlayer.Fungal.OnScoreUpdated += Fungal_OnScoreUpdated;
         }

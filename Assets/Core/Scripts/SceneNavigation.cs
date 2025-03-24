@@ -34,7 +34,7 @@ public class SceneNavigation : ScriptableObject
         OnSceneFadeOut?.Invoke();
         yield return screenFade.FadeIn(FADE_TRANSITION_DURATION);
 
-        Debug.Log("loading scene");
+        //Debug.Log("loading scene");
         // Load the scene asynchronously
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(buildIndex);
 
@@ -44,7 +44,7 @@ public class SceneNavigation : ScriptableObject
             yield return null;
         }
 
-        Debug.Log("scene loaded");
+        //Debug.Log("scene loaded");
         OnSceneLoaded?.Invoke();
 
         yield return screenFade.FadeOut(FADE_TRANSITION_DURATION);
