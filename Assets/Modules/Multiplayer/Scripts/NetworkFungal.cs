@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using Unity.Multiplayer.Samples.Utilities.ClientAuthority;
 using Unity.Netcode;
 using UnityEngine;
@@ -39,12 +40,12 @@ public class NetworkFungal : NetworkBehaviour
 
     private Vector3 spawnPosition;
 
+    private ClientNetworkTransform networkTransform;
     private MovementAnimations animations;
     private MaterialFlasher materialFlasher;
 
     public event UnityAction OnRespawnStart;
     public event UnityAction OnRespawnComplete;
-
     public event UnityAction<bool> OnDeath;
 
     // Exposed to all clients, replicated by Netcode
@@ -79,6 +80,7 @@ public class NetworkFungal : NetworkBehaviour
         Movement = GetComponent<Movement>();
         Movement.OnTypeChanged += Movement_OnTypeChanged;
 
+        networkTransform = GetComponent<ClientNetworkTransform>();
         AudioSource = GetComponent<AudioSource>();
 
         spawnPosition = transform.position;
@@ -207,7 +209,6 @@ public class NetworkFungal : NetworkBehaviour
         IsDead = false;
         if (IsOwner)
         {
-            var networkTransform = GetComponent<ClientNetworkTransform>();
             networkTransform.Interpolate = false;
             transform.position = spawnPosition;
             networkTransform.Interpolate = true;
@@ -317,5 +318,30 @@ public class NetworkFungal : NetworkBehaviour
     {
         if (showStunAnimation) stunAnimation.SetActive(false);
         Movement.ResetSpeedModifier();
+    }
+
+    [Header("Dash References")]
+    [SerializeField] private List<AudioClip> dashAudio;
+    [SerializeField] private GameObject trailRenderers;
+    public void Dash(Vector3 targetPosition, UnityAction onComplete)
+    {
+        void OnDestinationReached()
+        {
+            Movement.OnDestinationReached -= OnDestinationReached;
+
+            networkTransform.Interpolate = true;
+            trailRenderers.SetActive(false);
+            onComplete?.Invoke();
+        }
+
+        trailRenderers.SetActive(true);
+        networkTransform.Interpolate = false;
+        Movement.OnDestinationReached += OnDestinationReached;
+
+        Movement.SetSpeed(7.5f);
+        Movement.SetTargetPosition(targetPosition);
+
+        var audioClip = dashAudio.GetRandomItem();
+        PlayAudioClip(audioClip, 1.5f);
     }
 }
