@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
@@ -9,6 +10,7 @@ public enum FungalState
     TARGET,
 }
 
+[Obsolete]
 public class FungalController : MonoBehaviour
 {
     [SerializeField] private PlayerReference player;

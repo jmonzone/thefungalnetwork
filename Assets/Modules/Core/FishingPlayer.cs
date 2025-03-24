@@ -6,6 +6,7 @@ using UnityEngine;
 public class FishingPlayer : NetworkBehaviour
 {
     [SerializeField] private PlayerReference player;
+    [SerializeField] private DisplayName displayName;
     [SerializeField] private MultiplayerManager multiplayer;
 
     private NetworkFungal networkFungal;
@@ -44,7 +45,7 @@ public class FishingPlayer : NetworkBehaviour
                 ? int.TryParse(fungalData?.Value, out var index) ? index : 0 : 0;
 
         Debug.Log(playerSpawner.NetworkObjectId);
-        playerSpawner.AddPlayer(NetworkManager.Singleton.LocalClientId, localPlayerIndex, characterIndex);
+        playerSpawner.AddPlayer(NetworkManager.Singleton.LocalClientId, displayName.Value, localPlayerIndex, characterIndex);
     }
 
     public void AssignFungal(NetworkFungal fungal)

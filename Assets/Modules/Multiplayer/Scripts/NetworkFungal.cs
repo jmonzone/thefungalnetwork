@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections;
 using Unity.Multiplayer.Samples.Utilities.ClientAuthority;
 using Unity.Netcode;
 using UnityEngine;
@@ -49,6 +50,7 @@ public class NetworkFungal : NetworkBehaviour
     public event UnityAction<bool> OnDeath;
 
     // Exposed to all clients, replicated by Netcode
+    public NetworkVariable<FixedString64Bytes> playerName = new NetworkVariable<FixedString64Bytes>();
     private NetworkVariable<int> index = new NetworkVariable<int>();
     private NetworkVariable<int> fungalIndex = new NetworkVariable<int>(-1);
 
@@ -66,8 +68,10 @@ public class NetworkFungal : NetworkBehaviour
     public event UnityAction<ScoreEventArgs> OnScoreTriggered;
 
     [ServerRpc(RequireOwnership = false)]
-    public void InitializeServerRpc(int index, int fungalIndex)
+    public void InitializeServerRpc(FixedString64Bytes playerName, int index, int fungalIndex)
     {
+        Debug.Log($"InitializeServerRpc {playerName}");
+        this.playerName.Value = playerName;
         this.fungalIndex.Value = fungalIndex;
         this.index.Value = index;
     }

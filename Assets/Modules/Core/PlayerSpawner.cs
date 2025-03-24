@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -27,7 +28,7 @@ public class PlayerSpawner : NetworkBehaviour
 
                 ulong aiClientId = GenerateUniqueAIClientId();
                 var fungalIndex = UnityEngine.Random.Range(0, fungalCollection.Fungals.Count);
-                AddPlayer(aiClientId, 1, fungalIndex, isAI: true);
+                AddPlayer(aiClientId, "fungalGPT", 1, fungalIndex, isAI: true);
             }
 
             OnSpawnerReady?.Invoke(this);
@@ -35,14 +36,14 @@ public class PlayerSpawner : NetworkBehaviour
     }
 
 
-    public void AddPlayer(ulong clientId, int playerIndex, int fungalIndex, bool isAI = false)
+    public void AddPlayer(ulong clientId, string playerName, int playerIndex, int fungalIndex, bool isAI = false)
     {
         Debug.Log("AddPlayer");
-        OnPlayerAddedServerRpc(clientId, playerIndex, fungalIndex, isAI);
+        OnPlayerAddedServerRpc(clientId, playerName, playerIndex, fungalIndex, isAI);
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void OnPlayerAddedServerRpc(ulong clientId, int playerIndex, int fungalIndex, bool isAI = false)
+    private void OnPlayerAddedServerRpc(ulong clientId, FixedString64Bytes playerName, int playerIndex, int fungalIndex, bool isAI = false)
     {
         Debug.Log("OnPlayerAddedServerRpc");
 
@@ -53,7 +54,7 @@ public class PlayerSpawner : NetworkBehaviour
 
         var networkFungal = Instantiate(fungalPrefab, spawnPosition, Quaternion.identity);
         networkFungal.NetworkObject.SpawnWithOwnership(clientId);
-        networkFungal.InitializeServerRpc(playerIndex, fungalIndex);
+        networkFungal.InitializeServerRpc(playerName, playerIndex, fungalIndex);
 
         if (!isAI)
         {
