@@ -11,7 +11,7 @@ public class WorldToScreenTracker : MonoBehaviour
         mainCamera = Camera.main;
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         var position = mainCamera.WorldToScreenPoint(target.position);
         transform.position = position;

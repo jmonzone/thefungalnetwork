@@ -72,7 +72,7 @@ public class PufferballReference : ScriptableObject
         // Sort the list based on the player index
         Players.Sort((player1, player2) => player1.Index.CompareTo(player2.Index));
 
-        if (networkFungal.IsOwner)
+        if (networkFungal.IsOwner && !networkFungal.isAI.Value)
         {
             clientPlayer = addedPlayer;
             OnClientPlayerAdded?.Invoke();

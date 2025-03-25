@@ -28,7 +28,9 @@ public class PlayerSpawner : NetworkBehaviour
             {
 
                 Debug.Log($"PlayerSpawner.OnNetworkSpawn aiPlayer {aiPlayer}");
-                ulong aiClientId = GenerateUniqueAIClientId();
+                //ulong aiClientId = GenerateUniqueAIClientId();
+                ulong aiClientId = NetworkManager.Singleton.LocalClientId;
+
                 var fungalIndex = UnityEngine.Random.Range(0, fungalCollection.Fungals.Count);
                 AddPlayer(aiClientId, aiPlayer, i + multiplayerManager.JoinedLobby.Players.Count, fungalIndex, isAI: true);
                 i++;

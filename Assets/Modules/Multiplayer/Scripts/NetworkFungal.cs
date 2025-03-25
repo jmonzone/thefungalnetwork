@@ -4,6 +4,7 @@ using Unity.Collections;
 using Unity.Multiplayer.Samples.Utilities.ClientAuthority;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Events;
 
 public struct ScoreEventArgs : INetworkSerializable
@@ -40,7 +41,6 @@ public class NetworkFungal : NetworkBehaviour
     public bool IsDead { get; private set; }
 
     private Vector3 spawnPosition;
-    private bool isAI;
 
     private ClientNetworkTransform networkTransform;
     private MovementAnimations animations;
@@ -54,6 +54,7 @@ public class NetworkFungal : NetworkBehaviour
     public NetworkVariable<FixedString64Bytes> playerName = new NetworkVariable<FixedString64Bytes>();
     private NetworkVariable<int> index = new NetworkVariable<int>();
     private NetworkVariable<int> fungalIndex = new NetworkVariable<int>(-1);
+    public NetworkVariable<bool> isAI = new NetworkVariable<bool>(false);
 
     private NetworkVariable<float> score = new NetworkVariable<float>();
     private NetworkVariable<int> lives = new NetworkVariable<int>(3);
@@ -75,7 +76,7 @@ public class NetworkFungal : NetworkBehaviour
         this.playerName.Value = playerName;
         this.fungalIndex.Value = fungalIndex;
         this.index.Value = index;
-        this.isAI = isAI;
+        this.isAI.Value = isAI;
     }
 
     public override void OnNetworkSpawn()
@@ -93,6 +94,27 @@ public class NetworkFungal : NetworkBehaviour
 
         Health.OnDamaged += Health_OnDamaged;
 
+        index.OnValueChanged += (old, value) =>
+        {
+            name = $"{index.Value}: {playerName.Value}";
+        };
+
+        playerName.OnValueChanged += (old, value) =>
+        {
+            name = $"{index.Value}: {playerName.Value}";
+        };
+
+        name = $"{index.Value}: {playerName.Value}";
+
+        isAI.OnValueChanged += (old, value) =>
+        {
+            if (IsOwner && value)
+            {
+                var agent = GetComponent<FungalAI>();
+                agent.enabled = true;
+            }
+        };
+
         score.OnValueChanged += (old, value) =>
         {
             //Debug.Log("score.OnValueChanged");
@@ -103,7 +125,7 @@ public class NetworkFungal : NetworkBehaviour
         {
             OnLivesChanged?.Invoke();
 
-            if (IsOwner || isAI)
+            if (IsOwner || (IsServer && isAI.Value))
             {
                 if (pufferball.gameMode == GameMode.ELIMINATION && value > 0 || pufferball.gameMode == GameMode.PARTY)
                 {
@@ -133,8 +155,6 @@ public class NetworkFungal : NetworkBehaviour
         animations = model.AddComponent<MovementAnimations>();
         materialFlasher = model.AddComponent<MaterialFlasher>();
         materialFlasher.flashDuration = 0.5f;
-
-        name = $"Player {index.Value} {data.name}";
     }
 
     private void Health_OnDamaged(DamageEventArgs args)

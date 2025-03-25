@@ -40,7 +40,7 @@ public class FishingMinigame : MonoBehaviour
     {
         if (!Application.isEditor)
         {
-            yield return new WaitForSeconds(4f);
+            yield return new WaitForSeconds(2f);
             yield return canvasGroup.FadeOut();
         }
         arenaCamera.Priority = 0;

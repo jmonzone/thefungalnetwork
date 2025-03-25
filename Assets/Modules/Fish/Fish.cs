@@ -7,6 +7,7 @@ using UnityEngine.Events;
 public class Fish : NetworkBehaviour
 {
     [SerializeField] private PlayerReference playerReference;
+    [SerializeField] private PufferballReference pufferballReference;
     [SerializeField] private float swimSpeed = 1f;
 
     [SerializeField] private Sprite icon;
@@ -77,12 +78,12 @@ public class Fish : NetworkBehaviour
     private bool requested;
 
     [ServerRpc(RequireOwnership = false)]
-    public void RequestPickUpServerRpc(ulong clientId)
+    public void RequestPickUpServerRpc(ulong requestingObjectId)
     {
-        //Debug.Log($"RequestPickUpServerRpc {name} {requested}");
+        Debug.Log($"RequestPickUpServerRpc requestingObjectId: {requestingObjectId}");
         if (requested)
         {
-            OnRequestPickUpClientRpc(clientId, false);
+            OnRequestPickUpClientRpc(requestingObjectId, false);
             return;
         }
 
@@ -91,35 +92,40 @@ public class Fish : NetworkBehaviour
         if (!IsPickedUp.Value)
         {
             IsPickedUp.Value = true;
-            NetworkObject.ChangeOwnership(clientId);
-            OnRequestPickUpClientRpc(clientId, true);
+
+            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(requestingObjectId, out var networkObject))
+            {
+                NetworkObject.ChangeOwnership(networkObject.OwnerClientId);
+            }
+
+            OnRequestPickUpClientRpc(requestingObjectId, true);
         }
         else
         {
-            OnRequestPickUpClientRpc(clientId, false);
+            OnRequestPickUpClientRpc(requestingObjectId, false);
         }
 
     }
 
 
     [ClientRpc]
-    private void OnRequestPickUpClientRpc(ulong clientId, bool success)
+    private void OnRequestPickUpClientRpc(ulong requestingObjectId, bool success)
     {
-        //Debug.Log($"OnRequestPickUpClientRpc {name} {requested} {success}");
+        Debug.Log($"OnRequestPickUpClientRpc requestingObjectId: {requestingObjectId}");
 
         if (IsServer) requested = false;
 
         //Debug.Log($"OnPickupClientRpc {NetworkManager.Singleton.LocalClientId == clientId}");
         if (success)
         {
-            // Update the local state after ownership change
-            if (NetworkManager.Singleton.LocalClientId == clientId)
+            audioSource.clip = audioClips.GetRandomItem();
+            audioSource.pitch = audioPitch;
+            audioSource.Play();
+
+            if (IsOwner && NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(requestingObjectId, out var networkObject))
             {
-                audioSource.clip = audioClips.GetRandomItem();
-                audioSource.pitch = audioPitch;
-                audioSource.Play();
                 Movement.SetSpeed(10);
-                Movement.Follow(playerReference.Movement.transform);
+                Movement.Follow(networkObject.transform);
                 OnPickup?.Invoke();  // Trigger pickup event only on the owning client
                 OnPickUpRequest?.Invoke(true);
                 return;

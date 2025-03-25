@@ -46,7 +46,7 @@ public class FishPickup : NetworkBehaviour
             {
                 requestedFish = fish;
                 fish.OnPickUpRequest += Fish_OnPickUpRequest;
-                fish.RequestPickUpServerRpc(NetworkManager.Singleton.LocalClientId);
+                fish.RequestPickUpServerRpc(NetworkObjectId);
                 break;
             }
         }
