@@ -7,7 +7,6 @@ public abstract class Ability : MonoBehaviour
     [SerializeField] protected float range = 3f;
     [SerializeField] protected float radius = 1f;
 
-
     public bool IsAvailable { get; private set; } = true;
     public bool IsOnCooldown => cooldownHandler.IsOnCooldown;
     public float Range => range;
