@@ -1,100 +1,96 @@
 using UnityEngine;
-using UnityEngine.Events;
-
-public abstract class Ability : MonoBehaviour
-{
-    [SerializeField] protected CooldownHandler cooldownHandler;
-    [SerializeField] protected float range = 3f;
-    [SerializeField] protected float radius = 1f;
-
-    public bool IsAvailable { get; private set; } = true;
-    public bool IsOnCooldown => cooldownHandler.IsOnCooldown;
-    public float Range => range;
-    public float Radius => radius;
-    public abstract Vector3 DefaultTargetPosition { get; }
-
-    public event UnityAction OnAvailabilityChanged;
-    public event UnityAction OnCancel;
-
-    public virtual void PrepareAbility() { }
-    public virtual void ChargeAbility() { }
-    public abstract void CastAbility(Vector3 direction);
-
-    protected void CancelAbility()
-    {
-        OnCancel?.Invoke();
-    }
-
-    protected void ToggleAvailable(bool value)
-    {
-        IsAvailable = value;
-        OnAvailabilityChanged?.Invoke();
-    }
-}
 
 public class AbilityButton : MonoBehaviour
 {
-    [SerializeField] private PlayerReference playerReference;
+    [SerializeField] private PufferballReference playerReference;
     [SerializeField] private DirectionalButton directionalButton;
     [SerializeField] private AbilityCastIndicator abilityCastIndicator;
-    [SerializeField] private Ability ability;
     [SerializeField] private bool useTrajectory = false;
     [SerializeField] private bool useTargetIndicator = false;
+    [SerializeField] private CooldownHandler cooldownHandler;
 
+    private Ability ability;
     private bool isDown = false;
+    private Vector3 targetPosition;
 
+    // Initialization
     private void Awake()
     {
-        //Debug.Log("AbilityButton.Awake");
-        directionalButton.OnPointerUp += DirectionalButton_OnPointerUp; ;
+        // Subscribing to directional button events
+        directionalButton.OnPointerUp += DirectionalButton_OnPointerUp;
         directionalButton.OnPointerDown += DirectionalButton_OnPointerDown;
         directionalButton.OnDragUpdated += OnDragUpdated;
         directionalButton.OnDragCompleted += OnDragCompleted;
         directionalButton.OnDragCanceled += OnDragCanceled;
-        ability.OnCancel += OnDragCanceled;
-        ability.OnAvailabilityChanged += UpdateAbility;
-    }
 
-    private Vector3 targetPosition;
-    private void LateUpdate()
-    {
-        if (isDown)
+        // If the ability is assigned, subscribe to its events
+        if (ability != null)
         {
-            ability.ChargeAbility();
-
-            var targetPosition = directionalButton.DragStarted ? this.targetPosition : ability.DefaultTargetPosition;
-            abilityCastIndicator.UpdateIndicator(playerReference.Movement.transform.position, targetPosition, ability.Range);
-            abilityCastIndicator.SetTargetIndicatorRadius(ability.Radius);
+            ability.OnCancel += OnDragCanceled;
+            ability.OnAvailabilityChanged += UpdateAbility;
         }
     }
+
+    private void Start()
+    {
+        // Initialize cooldown handler if ability is assigned
+        if (ability != null)
+        {
+            cooldownHandler.AssignCooldownModel(ability);
+        }
+    }
+
+    // Event Subscription/Unsubscription
     private void OnEnable()
     {
-        if (!playerReference.Fungal) return;
-        playerReference.Fungal.OnDeath += Fungal_OnDeath;
-        playerReference.Fungal.OnRespawnComplete += UpdateAbility;
+        if (playerReference.ClientPlayer?.Fungal == null || ability == null) return;
+
+        playerReference.ClientPlayer.Fungal.OnDeath += Fungal_OnDeath;
+        playerReference.ClientPlayer.Fungal.OnRespawnComplete += UpdateAbility;
     }
 
     private void OnDisable()
     {
-        if (!playerReference.Fungal) return;
-        playerReference.Fungal.OnDeath -= Fungal_OnDeath;
-        playerReference.Fungal.OnRespawnComplete -= UpdateAbility;
+        if (playerReference.ClientPlayer?.Fungal == null || ability == null) return;
+
+        playerReference.ClientPlayer.Fungal.OnDeath -= Fungal_OnDeath;
+        playerReference.ClientPlayer.Fungal.OnRespawnComplete -= UpdateAbility;
     }
 
-    private void Fungal_OnDeath(bool killed)
+    // Ability Management
+    public void AssignAbility(Ability newAbility)
     {
-        abilityCastIndicator.HideIndicator();
-        directionalButton.enabled = false;
+        // Unsubscribe from old ability events if any
+        if (ability != null)
+        {
+            ability.OnCancel -= OnDragCanceled;
+            ability.OnAvailabilityChanged -= UpdateAbility;
+        }
+
+        ability = newAbility;
+
+        // Subscribe to new ability events
+        if (ability != null)
+        {
+            ability.OnCancel += OnDragCanceled;
+            ability.OnAvailabilityChanged += UpdateAbility;
+            cooldownHandler.AssignCooldownModel(ability);
+            UpdateAbility(); // Update ability state
+        }
     }
 
     private void UpdateAbility()
     {
-        directionalButton.enabled = ability.IsAvailable;
+        if (ability != null)
+        {
+            directionalButton.enabled = ability.IsAvailable;
+        }
     }
 
+    // Input Handling
     private void DirectionalButton_OnPointerDown()
     {
-        if (ability.IsOnCooldown) return;
+        if (ability == null || ability.IsOnCooldown) return;
 
         isDown = true;
         ability.PrepareAbility();
@@ -104,33 +100,60 @@ public class AbilityButton : MonoBehaviour
 
     private void DirectionalButton_OnPointerUp()
     {
-        if (ability.IsOnCooldown) return;
+        if (ability == null || ability.IsOnCooldown) return;
         CastAbility(ability.DefaultTargetPosition);
     }
 
     private void CastAbility(Vector3 targetPosition)
     {
+        if (ability == null) return;
+
         isDown = false;
         ability.CastAbility(targetPosition);
         abilityCastIndicator.HideIndicator();
+        ability.Cooldown.StartCooldown(); // Start cooldown
     }
 
+    // Drag & Target Handling
     private void OnDragUpdated(Vector3 direction)
     {
+        if (ability == null) return;
+
         var clampedDirection = Vector3.ClampMagnitude(direction, ability.Range);
-        var startPosition = playerReference.Movement.transform.position;
+        var startPosition = playerReference.ClientPlayer.Fungal.transform.position;
         targetPosition = startPosition + clampedDirection;
-        targetPosition.y = 0; // Keep it in the XZ plane
+        targetPosition.y = 0; // Keep in the XZ plane
     }
 
     private void OnDragCompleted(Vector3 direction)
     {
-        if (ability.IsOnCooldown) return;
+        if (ability == null || ability.IsOnCooldown) return;
         CastAbility(targetPosition);
     }
 
     private void OnDragCanceled()
     {
         abilityCastIndicator.HideIndicator();
+    }
+
+    // UI & Ability State Update
+    private void LateUpdate()
+    {
+        if (isDown && ability != null)
+        {
+            ability.ChargeAbility();
+
+            // Use the target position either from the drag or default
+            var targetPos = directionalButton.DragStarted ? this.targetPosition : ability.DefaultTargetPosition;
+            abilityCastIndicator.UpdateIndicator(playerReference.ClientPlayer.Fungal.transform.position, targetPos, ability.Range);
+            abilityCastIndicator.SetTargetIndicatorRadius(ability.Radius);
+        }
+    }
+
+    // Fungal Death Handling
+    private void Fungal_OnDeath(bool killed)
+    {
+        abilityCastIndicator.HideIndicator();
+        directionalButton.enabled = false;
     }
 }

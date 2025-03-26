@@ -209,6 +209,8 @@ GameObject:
   - component: {fileID: 779741349755401041}
   - component: {fileID: 1801879712863114737}
   - component: {fileID: 117501078218232890}
+  - component: {fileID: 7645941639448045315}
+  - component: {fileID: 8107556039497871619}
   m_Layer: 10
   m_Name: Network Fungal
   m_TagString: Untagged
@@ -247,7 +249,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3129220423
+  GlobalObjectIdHash: 3759262900
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -575,7 +577,7 @@ MonoBehaviour:
   lookTransform: {fileID: 0}
   scaleTransform: {fileID: 0}
   followOffset: {x: 0, y: 0, z: 0}
-  stopDistance: 0.25
+  stopDistance: 0.4
   circleRadius: 5
   trajectoryHeight: 3
   trajectoryDuration: 2
@@ -604,13 +606,13 @@ NavMeshAgent:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2941250707292126303}
-  m_Enabled: 1
+  m_Enabled: 0
   m_AgentTypeID: 0
   m_Radius: 0.5
   m_Speed: 2
   m_Acceleration: 8
   avoidancePriority: 50
-  m_AngularSpeed: 120
+  m_AngularSpeed: 240
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
@@ -634,6 +636,42 @@ MonoBehaviour:
   range: 5
   pufferball: {fileID: 11400000, guid: 08db032ff48be41208a04f1067508370, type: 2}
   currentState: 0
+--- !u!114 &7645941639448045315
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2941250707292126303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ba750423ae11484f96157f59689a48a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  range: 3
+  radius: 1
+  castCooldown: 2
+--- !u!114 &8107556039497871619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2941250707292126303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 093cb938b406040d8954d63af51debb7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  range: 3
+  radius: 1
+  castCooldown: 2
+  pufferballReference: {fileID: 11400000, guid: 08db032ff48be41208a04f1067508370,
+    type: 2}
+  slingCooldown: 0.25
+  minRange: 1
+  maxRange: 4
+  rangeIncreaseSpeed: 1.5
 --- !u!1 &3479753527524024102
 GameObject:
   m_ObjectHideFlags: 0

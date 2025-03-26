@@ -45,6 +45,7 @@ public class NetworkFungal : NetworkBehaviour
     private ClientNetworkTransform networkTransform;
     private MovementAnimations animations;
     private MaterialFlasher materialFlasher;
+    private FungalAI fungalAI;
 
     public int Index => index.Value;
     public float Score => score.Value;
@@ -89,6 +90,7 @@ public class NetworkFungal : NetworkBehaviour
 
         networkTransform = GetComponent<ClientNetworkTransform>();
         AudioSource = GetComponent<AudioSource>();
+        fungalAI = GetComponent<FungalAI>();
 
         spawnPosition = transform.position;
 
@@ -108,10 +110,10 @@ public class NetworkFungal : NetworkBehaviour
 
         isAI.OnValueChanged += (old, value) =>
         {
-            if (IsOwner && value)
+            if (value)
             {
-                var agent = GetComponent<FungalAI>();
-                agent.enabled = true;
+                GetComponent<NavMeshAgent>().enabled = true;
+                ToggleAI(true);
             }
         };
 
@@ -145,6 +147,14 @@ public class NetworkFungal : NetworkBehaviour
             {
                 InitializePrefab();
             };
+        }
+    }
+
+    private void ToggleAI(bool value)
+    {
+        if (IsOwner && isAI.Value)
+        {
+            fungalAI.enabled = value;
         }
     }
 
@@ -200,6 +210,7 @@ public class NetworkFungal : NetworkBehaviour
     [ClientRpc]
     private void DieClientRpc(bool selfDestruct)
     {
+        ToggleAI(false);
         //Debug.Log("DieClientRpc");
         IsDead = true;
         animations.PlayDeathAnimation();
@@ -246,7 +257,10 @@ public class NetworkFungal : NetworkBehaviour
             networkTransform.Interpolate = false;
             transform.position = spawnPosition;
             networkTransform.Interpolate = true;
+
+            ToggleAI(true);
         }
+
         animations.PlaySpawnAnimation();
         materialFlasher.FlashColor(Color.white);
         OnRespawnComplete?.Invoke();
@@ -356,8 +370,10 @@ public class NetworkFungal : NetworkBehaviour
     [Header("Dash References")]
     [SerializeField] private List<AudioClip> dashAudio;
     [SerializeField] private GameObject trailRenderers;
+
     public void Dash(Vector3 targetPosition, UnityAction onComplete)
     {
+        //Debug.Log($"Dashing {gameObject.name} {targetPosition} {transform.position}");
         void OnDestinationReached()
         {
             Movement.OnDestinationReached -= OnDestinationReached;

@@ -3,6 +3,45 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections;
 
+public class CooldownModel
+{
+    public float Cooldown { get; private set; }
+    public bool IsOnCooldown { get; private set; }
+
+    // Event to notify when cooldown progress is updated
+    public event System.Action<float> OnCooldownUpdate;
+    public event System.Action OnCooldownComplete;
+
+    public CooldownModel(float cooldown)
+    {
+        Cooldown = cooldown;
+    }
+
+    public IEnumerator StartCooldown()
+    {
+        if (!IsOnCooldown)
+        {
+            IsOnCooldown = true;
+            float timeLeft = Cooldown;
+
+            while (timeLeft > 0)
+            {
+                float progress = timeLeft / Cooldown;
+
+                // Invoke the event to notify listeners
+                OnCooldownUpdate?.Invoke(progress);
+
+                timeLeft -= Time.deltaTime;
+                yield return null;
+            }
+
+            IsOnCooldown = false;
+            // Notify that cooldown is complete
+            OnCooldownComplete?.Invoke();
+        }
+    }
+}
+
 public class CooldownHandler : MonoBehaviour
 {
     [SerializeField] private Button button;
@@ -12,9 +51,7 @@ public class CooldownHandler : MonoBehaviour
     [SerializeField] private Color startColor = Color.red;
     [SerializeField] private Color endColor = Color.white;
 
-    private bool isOnCooldown;
-
-    public bool IsOnCooldown => isOnCooldown;
+    private Ability ability;
 
     private void Awake()
     {
@@ -23,12 +60,13 @@ public class CooldownHandler : MonoBehaviour
         cooldownRadial.fillAmount = 0;
     }
 
-    public void StartCooldown(float cooldownTime)
+    // Assign the CooldownModel externally
+    public void AssignCooldownModel(Ability ability)
     {
-        if (!isOnCooldown)
-        {
-            StartCoroutine(CooldownRoutine(cooldownTime));
-        }
+        this.ability = ability;
+        ability.OnAvailabilityChanged += () => SetInteractable(ability.IsAvailable);
+        ability.Cooldown.OnCooldownUpdate += OnCooldownUpdate;
+        ability.Cooldown.OnCooldownComplete += OnCooldownComplete;
     }
 
     public void SetInteractable(bool value)
@@ -39,26 +77,26 @@ public class CooldownHandler : MonoBehaviour
         cooldownRadial.fillAmount = value ? 0 : 1;
     }
 
-    private IEnumerator CooldownRoutine(float duration)
+    private void OnCooldownUpdate(float progress)
     {
-        isOnCooldown = true;
-        SetInteractable(false);
-        if (duration >= 1f) cooldownText.gameObject.SetActive(true);
+        cooldownText.text = Mathf.CeilToInt(progress * 100).ToString();
+        cooldownRadial.fillAmount = progress;
+        cooldownText.color = Color.Lerp(endColor, startColor, progress);
+    }
 
-        float timeLeft = duration;
-        while (timeLeft > 0)
-        {
-            float progress = timeLeft / duration;
-            cooldownText.text = Mathf.CeilToInt(timeLeft).ToString();
-            cooldownRadial.fillAmount = progress;
-            cooldownText.color = Color.Lerp(endColor, startColor, progress);
-
-            yield return null;
-            timeLeft -= Time.deltaTime;
-        }
-
+    private void OnCooldownComplete()
+    {
         SetInteractable(true);
         cooldownText.gameObject.SetActive(false);
-        isOnCooldown = false;
+    }
+
+    private void OnDestroy()
+    {
+        // Unsubscribe to prevent memory leaks
+        if (ability != null)
+        {
+            ability.Cooldown.OnCooldownUpdate -= OnCooldownUpdate;
+            ability.Cooldown.OnCooldownComplete -= OnCooldownComplete;
+        }
     }
 }
