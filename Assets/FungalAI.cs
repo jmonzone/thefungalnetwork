@@ -126,29 +126,37 @@ public class FungalAI : MonoBehaviour
 
     private Vector3 GetDashTargetPosition(Vector3 targetPosition)
     {
-        // Calculate the direction vector from the current transform to the target fish
+        // Calculate the direction vector from the current position to the target
         Vector3 directionToTarget = targetPosition - transform.position;
 
-        // Use NavMeshAgent to calculate the best path to the target
+        // Create a NavMeshPath and calculate the path to the target
         NavMeshPath path = new NavMeshPath();
         agent.CalculatePath(targetPosition, path);
 
         // If the path is valid and complete
         if (path.status == NavMeshPathStatus.PathComplete && path.corners.Length > 1)
         {
-            // Get the next corner on the path, which is the next point along the valid path
+            // Get the first corner after the current position (path.corners[1] is the next valid corner)
             Vector3 nextPathPoint = path.corners[1];
 
-            // Check if the next corner is within 5 units
-            Vector3 directionToPathPoint = nextPathPoint - transform.position;
-            return directionToPathPoint.magnitude <= dash.Range
-                ? nextPathPoint
-                : transform.position + directionToPathPoint.normalized * 5f;
+            // Calculate the distance of the full dash (distance between the current position and the next valid corner)
+            float dashDistance = Vector3.Distance(transform.position, nextPathPoint);
+
+            // If the dash distance is within the range, use the path
+            if (dashDistance <= dash.Range)
+            {
+                return nextPathPoint;
+            }
+            else
+            {
+                // If the path is longer than the dash range, return the position based on the dash range
+                return transform.position + directionToTarget.normalized * dash.Range;
+            }
         }
         else
         {
-            // If no valid path is found, fallback to the direct direction towards the fish
-            return transform.position + directionToTarget.normalized * 5f;
+            // If no valid path is found, fallback to a direct dash in the direction of the target
+            return transform.position + directionToTarget.normalized * dash.Range;
         }
     }
 

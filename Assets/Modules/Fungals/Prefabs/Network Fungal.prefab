@@ -542,6 +542,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 937f9cf9beb4a4bc3a4d41b15e01aef3, type: 3}
   - {fileID: 8300000, guid: b71ee5e9badb14dafa1a3529bf1e7b3b, type: 3}
   trailRenderers: {fileID: 2850911616725606102}
+  baseSpeed: 3
+  dashSpeed: 7.5
 --- !u!114 &2097482643546369042
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -636,8 +638,8 @@ MonoBehaviour:
   range: 5
   pufferball: {fileID: 11400000, guid: 08db032ff48be41208a04f1067508370, type: 2}
   currentState: 0
-  minDashInterval: 2
-  maxDashInterval: 5
+  minDashInterval: 0.5
+  maxDashInterval: 2
 --- !u!114 &7645941639448045315
 MonoBehaviour:
   m_ObjectHideFlags: 0
