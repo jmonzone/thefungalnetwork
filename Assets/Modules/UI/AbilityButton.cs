@@ -111,7 +111,6 @@ public class AbilityButton : MonoBehaviour
         isDown = false;
         ability.CastAbility(targetPosition);
         abilityCastIndicator.HideIndicator();
-        ability.Cooldown.StartCooldown(); // Start cooldown
     }
 
     // Drag & Target Handling

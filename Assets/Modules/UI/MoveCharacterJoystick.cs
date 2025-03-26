@@ -5,7 +5,6 @@ public class MoveCharacterJoystick : MonoBehaviour
     [SerializeField] private VirtualJoystick joystick;
     [SerializeField] private PlayerReference player;
     [SerializeField] private float wasdSensitivity;
-    [SerializeField] private float speed = 2f;
 
     private void Awake()
     {
@@ -52,6 +51,6 @@ public class MoveCharacterJoystick : MonoBehaviour
         //}
 
         //Debug.Log("MovePlayer");
-        player.Movement.SetDirection(translation, speed);
+        player.Movement.SetDirection(translation);
     }
 }

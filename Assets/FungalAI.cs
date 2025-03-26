@@ -20,18 +20,30 @@ public class FungalAI : MonoBehaviour
 
     private NetworkFungal fungal;
     private FungalDash dash;
-    private List<Fish> allFish;
+    private List<Fish> allFish = new List<Fish>();
     private Fish targetFish;
     private FishPickup fishPickup;
     private NetworkFungal targetFungal;
+    private Coroutine fungalStateCoroutine;
 
-    private void Start()
+    private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         fungal = GetComponent<NetworkFungal>();
         dash = GetComponent<FungalDash>();
-
+        allFish = FindObjectsOfType<Fish>().ToList();
+        fishPickup = GetComponent<FishPickup>();
         origin = Vector3.zero; // Use the AI's initial spawn position
+    }
+
+    private void Start()
+    {
+        SetState(FungalState.FIND_FISH); // Start moving
+    }
+
+    private void OnEnable()
+    {
+        agent.enabled = true;
 
         // Ensure AI starts on the NavMesh
         if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, range, NavMesh.AllAreas))
@@ -45,24 +57,14 @@ public class FungalAI : MonoBehaviour
         }
 
         agent.isStopped = false; // Make sure it's not paused
-        SetState(FungalState.FIND_FISH); // Start moving
 
-        allFish = FindObjectsOfType<Fish>().ToList();
-        fishPickup = GetComponent<FishPickup>();
-
-        Debug.Log("Starting");
-    }
-
-    private Coroutine fungalStateCoroutine;
-
-    private void OnEnable()
-    {
         // Start the coroutine when the object is enabled
         fungalStateCoroutine = StartCoroutine(FungalStateMachine());
     }
 
     private void OnDisable()
     {
+        agent.enabled = false;
         // Stop the coroutine when the object is disabled
         if (fungalStateCoroutine != null)
         {
@@ -73,19 +75,27 @@ public class FungalAI : MonoBehaviour
 
     private IEnumerator FungalStateMachine()
     {
+        yield return new WaitForSeconds(2f);
+
         while (true)
         {
             switch (currentState)
             {
                 case FungalState.FIND_FISH:
-                    yield return StartCoroutine(FindAndPickUpFish());
+                    yield return FindAndPickUpFish();
                     break;
                 case FungalState.THROW_FISH:
-                    yield return StartCoroutine(ThrowFish());
+                    yield return ThrowFish();
                     break;
             }
             yield return null;
         }
+    }
+
+    // Helper function to check if the position is valid on the NavMesh
+    private bool IsOnNavMesh(Vector3 position)
+    {
+        return NavMesh.SamplePosition(position, out NavMeshHit hit, 1.0f, NavMesh.AllAreas);
     }
 
     private IEnumerator FindAndPickUpFish()
@@ -93,17 +103,14 @@ public class FungalAI : MonoBehaviour
         while (currentState == FungalState.FIND_FISH)
         {
             targetFish = allFish
-                .Where(fish => !fish.IsPickedUp.Value)
+                .Where(fish => !fish.IsPickedUp.Value && IsOnNavMesh(fish.transform.position))
                 .OrderBy(fish => Vector3.Distance(transform.position, fish.transform.position))
                 .FirstOrDefault();
 
             if (targetFish != null)
-                agent.SetDestination(targetFish.transform.position);
-
-            Vector3 dashTargetPosition = GetDashTargetPosition(targetFish.transform.position);
-
-            // Only cast the ability if it's not on cooldown
-            CastDashAbility(dashTargetPosition);
+            {
+                yield return UseMoveAction(targetFish.transform.position);
+            }
 
             if (fishPickup.Fish)
             {
@@ -145,47 +152,76 @@ public class FungalAI : MonoBehaviour
         }
     }
 
-    private void CastDashAbility(Vector3 targetPosition)
+    private float lastDashTime = 0f;  // Stores the last dash time
+    [SerializeField] private float minDashInterval = 2f; // Minimum time between dashes
+    [SerializeField] private float maxDashInterval = 5f; // Maximum time between dashes
+    private float nextDashTime = 0f; // Next randomized dash time
+
+    private IEnumerator UseMoveAction(Vector3 targetPosition)
     {
-        if (!dash.IsOnCooldown)
+        agent.speed = fungal.Movement.CalculatedSpeed;
+        agent.SetDestination(targetPosition);
+
+        Vector3 dashTargetPosition = GetDashTargetPosition(targetPosition);
+
+        float cooldownTime = dash.Cooldown.RemainingTime; // Get cooldown time
+
+        // Check if the dash is ready (not on cooldown) and enough time has passed
+        if (!dash.IsOnCooldown && Time.time >= lastDashTime + nextDashTime + cooldownTime)
         {
-            dash.CastAbility(targetPosition);
             StartCoroutine(dash.Cooldown.StartCooldown());
+
+            agent.enabled = false;
+            dash.CastAbility(dashTargetPosition);
+            lastDashTime = Time.time;  // Update last dash time
+
+            // Randomize the next dash interval within the defined range
+            nextDashTime = Random.Range(minDashInterval, maxDashInterval);
+
+            yield return new WaitUntil(() => fungal.Movement.IsAtDestination);
+            agent.enabled = true;
+
         }
     }
+
     private IEnumerator ThrowFish()
     {
-        targetFungal = pufferball.Players
-            .Where(player => player.Fungal != fungal) // Exclude self
-            .OrderBy(player => Vector3.Distance(transform.position, player.Fungal.transform.position))
-            .FirstOrDefault()?.Fungal;
-
-        if (targetFungal != null)
+        while (currentState == FungalState.THROW_FISH)
         {
-            Vector3 playerPos = transform.position;
-            Vector3 fungalPos = targetFungal.transform.position;
-            float throwRange = targetFish.ThrowRange;
+            targetFungal = pufferball.Players
+                .Where(player => player.Fungal != fungal) // Exclude self
+                .OrderBy(player => Vector3.Distance(transform.position, player.Fungal.transform.position))
+                .FirstOrDefault()?.Fungal;
 
-            Vector3 directionToPlayer = (playerPos - fungalPos).normalized;
-            Vector3 closestValidPosition = fungalPos + directionToPlayer * Mathf.Min(Vector3.Distance(fungalPos, playerPos), throwRange);
-
-            if (NavMesh.SamplePosition(closestValidPosition, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
+            if (targetFungal != null)
             {
-                agent.SetDestination(hit.position);
-                while (!agent.pathPending && agent.remainingDistance > agent.stoppingDistance)
-                    yield return null;
+                var playerPos = transform.position;
+                var targetSlingPosition = targetFungal.transform.position + targetFungal.Movement.SpeedDelta * targetFungal.transform.forward;
+
+
+                var directionToPlayer = (playerPos - targetSlingPosition).normalized;
+
+                // Clamp the movement position within maxRange
+                var targetMovePosition = targetSlingPosition + directionToPlayer * Mathf.Min(Vector3.Distance(targetSlingPosition, playerPos), targetFish.ThrowRange * 0.75f);
+
+                // Check if the closest valid position is within range of the sling position
+                if (NavMesh.SamplePosition(targetMovePosition, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
+                {
+                    yield return UseMoveAction(hit.position);
+
+                    if (Vector3.Distance(agent.transform.position, hit.position) < 0.05f)
+                    {
+                        // Once at the destination, sling the fish
+                        fishPickup.Sling(targetSlingPosition);
+                        SetState(FungalState.FIND_FISH);
+                        yield break;
+                    }
+                }
             }
+
+            yield return null;
         }
-
-        fishPickup.Sling(targetFungal.transform.position + targetFungal.transform.forward * 1.5f);
-        SetState(FungalState.FIND_FISH);
     }
-
-    private void Move()
-    {
-
-    }
-
 
     private void SetState(FungalState state)
     {

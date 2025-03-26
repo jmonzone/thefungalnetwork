@@ -3,10 +3,6 @@ using UnityEngine;
 public class FungalThrow : Ability
 {
     [SerializeField] private PufferballReference pufferballReference;
-    [SerializeField] private float slingCooldown = 0.25f;
-    [SerializeField] private float minRange = 1f;
-    [SerializeField] private float maxRange = 4f;
-    [SerializeField] private float rangeIncreaseSpeed = 1.5f;
 
     private FishPickup fishPickup;
 

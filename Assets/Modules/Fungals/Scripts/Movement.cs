@@ -30,7 +30,7 @@ public class Movement : MonoBehaviour
     private float modifier = 1f;
 
     public float CalculatedSpeed => baseSpeed * modifier;
-    private float SpeedDelta => CalculatedSpeed * Time.deltaTime;
+    public float SpeedDelta => CalculatedSpeed * Time.deltaTime;
 
     public MovementType Type => type;
 
@@ -132,10 +132,9 @@ public class Movement : MonoBehaviour
     }
 
     // Directional Movement
-    public void SetDirection(Vector3 direction, float speed)
+    public void SetDirection(Vector3 direction)
     {
         this.inputDirection = direction;
-        baseSpeed = speed;
         SetType(MovementType.DIRECTIONAL);
     }
 
@@ -183,12 +182,14 @@ public class Movement : MonoBehaviour
         return targetPosition;
     }
 
+    public bool IsAtDestination => Vector3.Distance(transform.position, targetPosition) <= stopDistance;
+
     private void MoveToPosition()
     {
         UpdateLookDirection(targetPosition - transform.position);
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, SpeedDelta);
 
-        if (Vector3.Distance(transform.position, targetPosition) <= stopDistance)
+        if (IsAtDestination)
         {
             OnDestinationReached?.Invoke();
             Stop();

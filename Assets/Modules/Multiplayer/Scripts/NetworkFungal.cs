@@ -112,7 +112,6 @@ public class NetworkFungal : NetworkBehaviour
         {
             if (value)
             {
-                GetComponent<NavMeshAgent>().enabled = true;
                 ToggleAI(true);
             }
         };
@@ -371,11 +370,15 @@ public class NetworkFungal : NetworkBehaviour
     [SerializeField] private List<AudioClip> dashAudio;
     [SerializeField] private GameObject trailRenderers;
 
+    [SerializeField] private float baseSpeed = 3f;
+    [SerializeField] private float dashSpeed = 7.5f;
+
     public void Dash(Vector3 targetPosition, UnityAction onComplete)
     {
         //Debug.Log($"Dashing {gameObject.name} {targetPosition} {transform.position}");
         void OnDestinationReached()
         {
+            Movement.SetSpeed(baseSpeed);
             Movement.OnDestinationReached -= OnDestinationReached;
 
             networkTransform.Interpolate = true;
@@ -387,7 +390,7 @@ public class NetworkFungal : NetworkBehaviour
         networkTransform.Interpolate = false;
         Movement.OnDestinationReached += OnDestinationReached;
 
-        Movement.SetSpeed(7.5f);
+        Movement.SetSpeed(dashSpeed);
         Movement.SetTargetPosition(targetPosition);
 
         var audioClip = dashAudio.GetRandomItem();

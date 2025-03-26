@@ -152,7 +152,7 @@ GameObject:
   - component: {fileID: 8594047820802004220}
   - component: {fileID: 7046899179073509079}
   - component: {fileID: 3525426077894152723}
-  - component: {fileID: 578647051291393175}
+  - component: {fileID: 3340155250446554797}
   m_Layer: 0
   m_Name: Bubble
   m_TagString: Untagged
@@ -385,19 +385,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7c8c21a395f3462fb6919c7a7adaf7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!208 &578647051291393175
-NavMeshObstacle:
+--- !u!114 &3340155250446554797
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9061655168520926991}
   m_Enabled: 1
-  serializedVersion: 3
-  m_Shape: 0
-  m_Extents: {x: 1.25, y: 1, z: 1.25}
-  m_MoveThreshold: 0.1
-  m_Carve: 1
-  m_CarveOnlyStationary: 1
-  m_Center: {x: 0, y: 0, z: 0}
-  m_TimeToStationary: 0.5
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 0
+  m_Area: 0
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 0
+  m_ApplyToChildren: 1
+  m_AffectedAgents: ffffffff
