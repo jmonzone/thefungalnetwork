@@ -11,6 +11,12 @@ public class WorldToScreenTracker : MonoBehaviour
     private void Awake()
     {
         mainCamera = Camera.main;
+
+        // Convert target world position to screen space
+        var targetPosition = mainCamera.WorldToScreenPoint(target.position);
+
+        // Smoothly transition the tracker position
+        transform.position = targetPosition;
     }
 
     private void LateUpdate()

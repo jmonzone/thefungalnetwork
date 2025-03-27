@@ -19,11 +19,14 @@ public class AutoConnect : NetworkBehaviour
         if (multiplayer.JoinedLobby != null)
         {
             Debug.Log($"AutoConnect multiplayer.IsHost: {multiplayer.IsHost}");
-            if (multiplayer.IsHost && bool.TryParse(multiplayer.GetJoinedLobbyData("UseAI"), out bool useAI))
-            {
-                Debug.Log($"AutoConnect multiplayer.useAI: {useAI}");
+            var value = multiplayer.GetJoinedLobbyData("UseAI");
+            if (string.IsNullOrEmpty(value)) value = "true";
+            Debug.Log($"AutoConnect multiplayer.value: {value}");
 
-                if (useAI) await multiplayer.AddAIPlayer("fungal GPT");
+            if (multiplayer.IsHost && bool.Parse(value))
+            {
+                Debug.Log($"AutoConnect multiplayer.useAI");
+                await multiplayer.AddAIPlayer("fungal GPT");
             }
 
             multiplayer.StartHostClient();

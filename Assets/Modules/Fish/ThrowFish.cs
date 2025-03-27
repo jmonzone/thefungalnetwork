@@ -33,6 +33,7 @@ public class ThrowFish : MonoBehaviour
         movement.OnDestinationReached -= Movement_OnDestinationReached;
     }
 
+
     public void Throw(Vector3 targetPosition)
     {
         enabled = true;

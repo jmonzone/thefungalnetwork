@@ -68,6 +68,7 @@ public class MainMenuParty : MonoBehaviour
             useAiPlayersButton.interactable = true;
         });
 
+        //useAIPlayers = bool.Parse(multiplayer.GetJoinedLobbyData("UseAI"));
         useAiPlayersText.text = $"Use AI Players: {(useAIPlayers ? "On" : "Off")}";
 
         for (var i = 0; i < fungalCollection.Fungals.Count; i++)

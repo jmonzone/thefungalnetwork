@@ -321,7 +321,7 @@ public class MultiplayerManager : ScriptableObject
                     { "JoinCode", new DataObject(DataObject.VisibilityOptions.Member, joinCode) },
                     { "HostName", new DataObject(DataObject.VisibilityOptions.Public, PlayerName) },
                     { "GameMode", new DataObject(DataObject.VisibilityOptions.Public, gameMode.ToString())},
-                    { "UseAI", new DataObject(DataObject.VisibilityOptions.Public, true.ToString()) }
+                    { "UseAI", new DataObject(DataObject.VisibilityOptions.Public, "true") }
                 }
             };
 
@@ -366,8 +366,11 @@ public class MultiplayerManager : ScriptableObject
 
     public string GetJoinedLobbyData(string key)
     {
+        Debug.Log($"GetJoinedLobbyData {key}");
+
         if (joinedLobby.Data.TryGetValue(key, out var gameModeData))
         {
+            Debug.Log($"GetJoinedLobbyData {key} {gameModeData.Value}");
             return gameModeData.Value;
         }
 

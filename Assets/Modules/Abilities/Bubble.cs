@@ -1,11 +1,9 @@
 using System.Collections;
-using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
 public class Bubble : NetworkBehaviour
 {
-    [SerializeField] private PufferballReference pufferball;
     [SerializeField] private float autoPopTime = 3f;
     [SerializeField] private float popDuration = 0.3f;
     [SerializeField] private float damage = 3f;
@@ -25,13 +23,15 @@ public class Bubble : NetworkBehaviour
         hitDetector = GetComponent<HitDetector>();
         audioSource = GetComponent<AudioSource>();
         bubbleMaterial = GetComponentInChildren<Renderer>().material;
-
-        if (IsOwner)
-        {
-            StartCoroutine(InflateRoutine());
-        }
     }
 
+    private ulong sourceFungal;
+
+    public void StartInflate(ulong sourceFungal)
+    {
+        this.sourceFungal = sourceFungal;
+        StartCoroutine(InflateRoutine());
+    }
     private IEnumerator InflateRoutine()
     {
         yield return movement.ScaleOverTime(0.75f, 0, 2.5f);
@@ -45,12 +45,12 @@ public class Bubble : NetworkBehaviour
         {
             hitDetector.CheckHits(movement.ScaleTransform.lossyScale.x / 2f, hit =>
             {
-                var fungal = hit.GetComponent<NetworkFungal>();
+                var targetFungal = hit.GetComponent<NetworkFungal>();
 
-                if (fungal != null && !fungal.IsDead)
+                if (targetFungal != null && !targetFungal.IsDead)
                 {
-                    fungal.ModifySpeedServerRpc(0f, 2f, showStunAnimation: true);
-                    fungal.Health.Damage(damage, pufferball.ClientPlayer.Fungal.NetworkObjectId);
+                    targetFungal.ModifySpeedServerRpc(0f, 2f, showStunAnimation: true);
+                    targetFungal.Health.Damage(damage, sourceFungal);
                     Pop();
                 }
             });

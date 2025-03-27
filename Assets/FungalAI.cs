@@ -6,18 +6,22 @@ using UnityEngine.AI;
 
 public class FungalAI : MonoBehaviour
 {
-    public float range = 5f; // Radius from origin
-    private Vector3 origin;  // Initial spawn position
-    private NavMeshAgent agent;
-    [SerializeField] private PufferballReference pufferball;
     private enum FungalState
     {
         FIND_FISH,
         THROW_FISH,
     }
 
+    [SerializeField] private PufferballReference pufferball;
     [SerializeField] private FungalState currentState;
 
+    [SerializeField] private float minDashInterval = 2f; // Minimum time between dashes
+    [SerializeField] private float maxDashInterval = 5f; // Maximum time between dashes
+
+    private float lastDashTime = 0f;  // Stores the last dash time
+    private float nextDashTime = 0f; // Next randomized dash time
+
+    private NavMeshAgent agent;
     private NetworkFungal fungal;
     private FungalDash dash;
     private List<Fish> allFish = new List<Fish>();
@@ -33,11 +37,11 @@ public class FungalAI : MonoBehaviour
         dash = GetComponent<FungalDash>();
         allFish = FindObjectsOfType<Fish>().ToList();
         fishPickup = GetComponent<FishPickup>();
-        origin = Vector3.zero; // Use the AI's initial spawn position
     }
 
     private void Start()
     {
+        nextDashTime = dash.Cooldown.Cooldown;
         SetState(FungalState.FIND_FISH); // Start moving
     }
 
@@ -46,7 +50,7 @@ public class FungalAI : MonoBehaviour
         agent.enabled = true;
 
         // Ensure AI starts on the NavMesh
-        if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, range, NavMesh.AllAreas))
+        if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 5f, NavMesh.AllAreas))
         {
             agent.Warp(hit.position); // Teleport AI to valid NavMesh point
         }
@@ -75,7 +79,7 @@ public class FungalAI : MonoBehaviour
 
     private IEnumerator FungalStateMachine()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(4f);
 
         while (true)
         {
@@ -160,11 +164,6 @@ public class FungalAI : MonoBehaviour
         }
     }
 
-    private float lastDashTime = 0f;  // Stores the last dash time
-    [SerializeField] private float minDashInterval = 2f; // Minimum time between dashes
-    [SerializeField] private float maxDashInterval = 5f; // Maximum time between dashes
-    private float nextDashTime = 0f; // Next randomized dash time
-
     private IEnumerator UseMoveAction(Vector3 targetPosition)
     {
         agent.speed = fungal.Movement.CalculatedSpeed;
@@ -197,7 +196,7 @@ public class FungalAI : MonoBehaviour
         while (currentState == FungalState.THROW_FISH)
         {
             targetFungal = pufferball.Players
-                .Where(player => player.Fungal != fungal) // Exclude self
+                .Where(player => player.Fungal != fungal && !player.Fungal.IsDead) // Exclude self
                 .OrderBy(player => Vector3.Distance(transform.position, player.Fungal.transform.position))
                 .FirstOrDefault()?.Fungal;
 
@@ -205,7 +204,6 @@ public class FungalAI : MonoBehaviour
             {
                 var playerPos = transform.position;
                 var targetSlingPosition = targetFungal.transform.position + targetFungal.Movement.SpeedDelta * targetFungal.transform.forward;
-
 
                 var directionToPlayer = (playerPos - targetSlingPosition).normalized;
 

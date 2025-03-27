@@ -33,6 +33,7 @@ public class Fish : NetworkBehaviour
         Vector3.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server
     );
 
+    public NetworkVariable<ulong> PickedUpFungalId = new NetworkVariable<ulong>();
     public NetworkVariable<bool> IsPickedUp = new NetworkVariable<bool>(false);
 
     public event UnityAction<bool> OnPickUpRequest;
@@ -66,11 +67,6 @@ public class Fish : NetworkBehaviour
         OnPrepareThrow?.Invoke();
     }
 
-    public void Throw(Vector3 targetPosition)
-    {
-        throwFish.Throw(targetPosition);
-    }
-
     [ServerRpc(RequireOwnership = false)]
     private void RequestCatchServerRpc(ulong requestingClientId)
     {
@@ -94,6 +90,7 @@ public class Fish : NetworkBehaviour
         if (!IsPickedUp.Value)
         {
             IsPickedUp.Value = true;
+            PickedUpFungalId.Value = requestingObjectId;
 
             if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(requestingObjectId, out var networkObject))
             {

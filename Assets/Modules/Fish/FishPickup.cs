@@ -83,7 +83,7 @@ public class FishPickup : NetworkBehaviour
     {
         if (Fish)
         {
-            Fish.Throw(targetPosition);
+            Fish.GetComponent<ThrowFish>().Throw(targetPosition);
             RemoveFish();
         }
     }

@@ -38,6 +38,8 @@ public class CooldownModel
                 yield return null;
             }
 
+            OnCooldownUpdate?.Invoke(1);
+
             IsOnCooldown = false;
             // Notify that cooldown is complete
             OnCooldownComplete?.Invoke();
@@ -83,11 +85,9 @@ public class CooldownHandler : MonoBehaviour
 
     private void OnCooldownUpdate(float progress)
     {
-        // Calculate the remaining time in seconds
-        float remainingTime = (1 - progress) * ability.Cooldown.Cooldown;
 
         // Update the UI with the remaining time (in seconds)
-        cooldownText.text = Mathf.CeilToInt(remainingTime).ToString();
+        cooldownText.text = Mathf.CeilToInt(ability.Cooldown.RemainingTime).ToString();
 
         cooldownRadial.fillAmount = progress;
         cooldownText.color = Color.Lerp(endColor, startColor, progress);

@@ -30,23 +30,28 @@ public class BubbleFish : NetworkBehaviour
         var bubble = Instantiate(bubblePrefab, targetPosition, Quaternion.identity);;
         bubble.NetworkObject.SpawnWithOwnership(clientId);
 
-        InflateClientRpc();
+        InflateClientRpc(bubble.NetworkObjectId);
     }
 
     [ClientRpc]
-    private void InflateClientRpc()
+    private void InflateClientRpc(ulong bubbleObjectId)
     {
-        animator.Play("Jump");
-        //audioSource.clip = audioClip;
-        //audioSource.pitch = pitch;
-        //audioSource.Play();
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(bubbleObjectId, out var bubbleObject))
+        {
+            var bubble = bubbleObject.GetComponent<Bubble>();
 
-        if (IsOwner) StartCoroutine(InflateRoutine());
+            animator.Play("Jump");
+
+            if (IsOwner)
+            {
+                bubble.StartInflate(fish.PickedUpFungalId.Value);
+                Invoke(nameof(ReturnFish), 1f);
+            }
+        }
     }
 
-    private IEnumerator InflateRoutine()
+    private void ReturnFish()
     {
-        yield return new WaitForSeconds(1f);
         fish.ReturnToRadialMovement();
     }
 }
