@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using GURU;
 using TMPro;
 using Unity.Services.Authentication;
@@ -34,9 +33,6 @@ public class MainMenuParty : MonoBehaviour
     private Dictionary<int, GameObject> fungalObjects = new Dictionary<int, GameObject>();
     private int selectedFungalIndex = 0;
 
-    private GameMode gameMode;
-    private bool useAIPlayers = true;
-
     private void Awake()
     {
         startButton.onClick.AddListener(async () =>
@@ -55,21 +51,25 @@ public class MainMenuParty : MonoBehaviour
         gameModeButton.onClick.AddListener(async () =>
         {
             gameModeButton.interactable = false;
-            await multiplayer.UpdateJoinedLobbyData("GameMode", (gameMode == GameMode.PARTY ? GameMode.ELIMINATION : GameMode.PARTY).ToString());
+            // Get the next game mode in the enum sequence
+
+            GameMode[] modes = (GameMode[])Enum.GetValues(typeof(GameMode));
+            int currentIndex = Array.IndexOf(modes, multiplayer.GameMode);
+            int nextIndex = (currentIndex + 1) % modes.Length; // Loop back to the first mode if at the end
+            GameMode nextMode = modes[nextIndex];
+
+            // Update the lobby data with the new mode
+            await multiplayer.UpdateJoinedLobbyData("GameMode", nextMode.ToString());
+
             gameModeButton.interactable = true;
         });
 
         useAiPlayersButton.onClick.AddListener(async () =>
         {
             useAiPlayersButton.interactable = false;
-            useAIPlayers = !useAIPlayers;
-            useAiPlayersText.text = $"Use AI Players: {(useAIPlayers ? "On" : "Off")}";
-            await multiplayer.UpdateJoinedLobbyData("UseAI", useAIPlayers.ToString());
+            await multiplayer.UpdateJoinedLobbyData("UseAI", (!multiplayer.UseAiPlayers).ToString());
             useAiPlayersButton.interactable = true;
         });
-
-        //useAIPlayers = bool.Parse(multiplayer.GetJoinedLobbyData("UseAI"));
-        useAiPlayersText.text = $"Use AI Players: {(useAIPlayers ? "On" : "Off")}";
 
         for (var i = 0; i < fungalCollection.Fungals.Count; i++)
         {
@@ -174,6 +174,8 @@ public class MainMenuParty : MonoBehaviour
 
         OnHostChanged();
         OnGameModeChanged();
+
+        useAiPlayersText.text = $"Use AI Players: {(multiplayer.UseAiPlayers ? "On" : "Off")}";
     }
 
     private bool joining = false;

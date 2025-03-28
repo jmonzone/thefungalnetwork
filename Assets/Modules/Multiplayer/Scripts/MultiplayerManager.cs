@@ -304,7 +304,7 @@ public class MultiplayerManager : ScriptableObject
         }
     };
 
-    public async Task CreateLobby(string joinCode, GameMode gameMode = GameMode.ELIMINATION)
+    public async Task CreateLobby(string joinCode, GameMode gameMode)
     {
         try
         {
@@ -386,6 +386,15 @@ public class MultiplayerManager : ScriptableObject
         }
     }
 
+    public bool UseAiPlayers
+    {
+        get
+        {
+            if (bool.TryParse(GetJoinedLobbyData("UseAI"), out bool useAi)) return useAi;
+            else return default;
+        }
+    }
+
     public async Task CreateLobby()
     {
         try
@@ -400,7 +409,9 @@ public class MultiplayerManager : ScriptableObject
                 Player = player,
                 Data = new Dictionary<string, DataObject>()
                 {
-                    { "HostName", new DataObject(DataObject.VisibilityOptions.Public, PlayerName)},
+                    { "HostName", new DataObject(DataObject.VisibilityOptions.Public, PlayerName) },
+                    { "GameMode", new DataObject(DataObject.VisibilityOptions.Public, GameMode.PARTY.ToString())},
+                    { "UseAI", new DataObject(DataObject.VisibilityOptions.Public, "true") }
                 },
             };
 
@@ -510,6 +521,7 @@ public class MultiplayerManager : ScriptableObject
         if (IsHost)
         {
             await RemoveRelayFromLobbyData();
+            await ResetAIPlayers();
         }
 
         NetworkManager.Singleton.GetComponent<UnityTransport>().DisconnectLocalClient();
@@ -571,6 +583,26 @@ public class MultiplayerManager : ScriptableObject
         {
             Debug.LogWarning($"AI Player '{aiPlayerName}' not found in the list.");
         }
+    }
+
+    /// <summary>
+    /// Resets the AI player list by clearing all AI players from the lobby data.
+    /// </summary>
+    public async Task ResetAIPlayers()
+    {
+        if (JoinedLobby == null)
+        {
+            Debug.LogWarning("No joined lobby to reset AI players.");
+            return;
+        }
+
+        // Clear the AI player list
+        List<string> aiPlayerNames = new List<string>();
+
+        // Update the lobby data with an empty AI list
+        await UpdateLobbyAIData(aiPlayerNames);
+
+        Debug.Log("All AI players have been removed.");
     }
 
     /// <summary>
