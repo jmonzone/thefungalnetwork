@@ -50,9 +50,10 @@ public class NetworkFungal : NetworkBehaviour
     public int Index => index.Value;
     public float Score => score.Value;
     public int Lives => lives.Value;
+    public string PlayerName => playerName.Value.ToString();
 
     // Exposed to all clients, replicated by Netcode
-    public NetworkVariable<FixedString64Bytes> playerName = new NetworkVariable<FixedString64Bytes>();
+    private NetworkVariable<FixedString64Bytes> playerName = new NetworkVariable<FixedString64Bytes>();
     private NetworkVariable<int> index = new NetworkVariable<int>();
     private NetworkVariable<int> fungalIndex = new NetworkVariable<int>(-1);
     public NetworkVariable<bool> isAI = new NetworkVariable<bool>(false);
@@ -64,11 +65,11 @@ public class NetworkFungal : NetworkBehaviour
     public event UnityAction OnRespawnStart;
     public event UnityAction OnRespawnComplete;
     public event UnityAction<bool> OnDeath;
-
     public event UnityAction OnLivesChanged;
     public event UnityAction<int, int> OnKill;
     public event UnityAction OnScoreUpdated;
     public event UnityAction<ScoreEventArgs> OnScoreTriggered;
+    public event UnityAction OnPlayerUpdated;
 
     [ServerRpc(RequireOwnership = false)]
     public void InitializeServerRpc(FixedString64Bytes playerName, int index, int fungalIndex, bool isAI)
@@ -103,10 +104,14 @@ public class NetworkFungal : NetworkBehaviour
 
         playerName.OnValueChanged += (old, value) =>
         {
+            //Debug.Log($"NetworkFungal.OnValueChanged {name} {value}");
             name = $"{index.Value}: {playerName.Value}";
+            OnPlayerUpdated?.Invoke();
         };
 
+        //Debug.Log($"NetworkFungal {name} {playerName.Value}");
         name = $"{index.Value}: {playerName.Value}";
+        OnPlayerUpdated?.Invoke();
 
         isAI.OnValueChanged += (old, value) =>
         {
@@ -181,7 +186,7 @@ public class NetworkFungal : NetworkBehaviour
 
     private void Update()
     {
-        if (IsOwner && Input.GetKeyUp(KeyCode.L))
+        if (IsOwner && !isAI.Value && Input.GetKeyUp(KeyCode.L))
         {
             DieServerRpc(true);
         }

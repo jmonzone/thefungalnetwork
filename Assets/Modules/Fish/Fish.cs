@@ -6,10 +6,10 @@ using UnityEngine.Events;
 
 public class Fish : NetworkBehaviour
 {
-    [SerializeField] private PlayerReference playerReference;
     [SerializeField] private PufferballReference pufferballReference;
     [SerializeField] private float swimSpeed = 1f;
     [SerializeField] private float throwRange = 5f;
+    [SerializeField] private bool useTrajectory = false;
 
     [SerializeField] private Sprite icon;
     [SerializeField] private string abilityName;
@@ -21,6 +21,7 @@ public class Fish : NetworkBehaviour
     public Color BackgroundColor => backgroundColor;
     public float Score => score;
     public float ThrowRange => throwRange;
+    public bool UseTrajectory => useTrajectory;
 
     public Movement Movement { get; private set; }
 

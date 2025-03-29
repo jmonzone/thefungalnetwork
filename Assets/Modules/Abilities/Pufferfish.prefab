@@ -5406,10 +5406,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de4e66d2707594597a5257c92c87e887, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerReference: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
-  pufferballReference: {fileID: 0}
+  pufferballReference: {fileID: 11400000, guid: 08db032ff48be41208a04f1067508370,
+    type: 2}
   swimSpeed: 2
   throwRange: 5
+  useTrajectory: 1
   icon: {fileID: 21300000, guid: 607d34466085c445998ce0d3e9471dac, type: 3}
   abilityName: Explosion!
   backgroundColor: {r: 0.60784316, g: 0.84705883, b: 0.88235295, a: 1}
@@ -5434,10 +5435,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerReference: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
-  minExplosionRadius: 1.75
-  maxExplosionRadius: 2.25
-  minExplosionDamage: 3
-  maxExplosionDamage: 5
+  minExplosionRadius: 2
+  maxExplosionRadius: 2.5
+  minExplosionDamage: 4
+  maxExplosionDamage: 7
   Temper:
     m_InternalValue: 0
 --- !u!114 &7290316461581926753
@@ -5454,8 +5455,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   radius: 0
   respawnOnThrow: 0
-  throwSpeed: 1.5
-  useTrajectory: 1
+  throwSpeed: 1.25
+  throwDistance: 10
 --- !u!114 &6767651255589689632
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -57,13 +57,14 @@ public class FungalAI : MonoBehaviour
         else
         {
             Debug.LogError("AI is outside the NavMesh!");
-            return;
         }
 
         agent.isStopped = false; // Make sure it's not paused
 
         // Start the coroutine when the object is enabled
         fungalStateCoroutine = StartCoroutine(FungalStateMachine());
+
+        pufferball.OnGameComplete += Pufferball_OnGameComplete;
     }
 
     private void OnDisable()
@@ -75,6 +76,13 @@ public class FungalAI : MonoBehaviour
             StopCoroutine(fungalStateCoroutine);
             fungalStateCoroutine = null;
         }
+
+        pufferball.OnGameComplete -= Pufferball_OnGameComplete;
+    }
+
+    private void Pufferball_OnGameComplete()
+    {
+        enabled = false;
     }
 
     private IEnumerator FungalStateMachine()

@@ -15,4 +15,5 @@ public class FungalDash : Ability
     }
 
     public override Vector3 DefaultTargetPosition => transform.position + transform.forward * range;
+    public override bool UseTrajectory => false;
 }

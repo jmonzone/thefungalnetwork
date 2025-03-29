@@ -6,7 +6,6 @@ public abstract class Ability : MonoBehaviour
     [SerializeField] protected float range = 3f;
     [SerializeField] protected float radius = 1f;
     [SerializeField] private float castCooldown = 2f;
-
     private CooldownModel cooldownModel;
     protected NetworkFungal networkFungal;
 
@@ -16,6 +15,7 @@ public abstract class Ability : MonoBehaviour
     public float Range => range;
     public float Radius => radius;
     public abstract Vector3 DefaultTargetPosition { get; }
+    public abstract bool UseTrajectory { get; }
 
     public event UnityAction OnAvailabilityChanged;
     public event UnityAction OnCancel;

@@ -7,7 +7,6 @@ public class ThrowFish : MonoBehaviour
     [SerializeField] private bool respawnOnThrow = true;
     [SerializeField] private float throwSpeed = 2f;
     [SerializeField] private float throwDistance = 10f;
-    [SerializeField] private bool useTrajectory = false;
 
     private Fish fish;
     private Movement movement;
@@ -42,7 +41,7 @@ public class ThrowFish : MonoBehaviour
         targetPosition.y = 0; // Keep on the ground
         movement.SetSpeed(throwSpeed);
 
-        if (useTrajectory)
+        if (fish.UseTrajectory)
         {
             movement.SetTrajectoryMovement(targetPosition); // Move towards the target
         }

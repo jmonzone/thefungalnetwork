@@ -9,6 +9,8 @@ public class FungalThrow : Ability
     // Events to notify the UI about state changes
     public event System.Action<Fish> OnFishChanged;
 
+    public override bool UseTrajectory => fishPickup.Fish.UseTrajectory;
+
     private void Start()
     {
         if (pufferballReference.ClientPlayer != null)

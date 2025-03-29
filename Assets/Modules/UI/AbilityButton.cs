@@ -5,8 +5,6 @@ public class AbilityButton : MonoBehaviour
     [SerializeField] private PufferballReference playerReference;
     [SerializeField] private DirectionalButton directionalButton;
     [SerializeField] private AbilityCastIndicator abilityCastIndicator;
-    [SerializeField] private bool useTrajectory = false;
-    [SerializeField] private bool useTargetIndicator = false;
     [SerializeField] private CooldownHandler cooldownHandler;
 
     private Ability ability;
@@ -94,8 +92,8 @@ public class AbilityButton : MonoBehaviour
 
         isDown = true;
         ability.PrepareAbility();
-        abilityCastIndicator.ShowIndicator(useTrajectory);
-        abilityCastIndicator.ShowTargetIndicator(useTargetIndicator);
+        abilityCastIndicator.ShowIndicator(ability.UseTrajectory);
+        abilityCastIndicator.ShowTargetIndicator(ability.UseTrajectory);
     }
 
     private void DirectionalButton_OnPointerUp()

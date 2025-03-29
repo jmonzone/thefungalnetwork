@@ -6,6 +6,8 @@ public class Bubble : NetworkBehaviour
 {
     [SerializeField] private float autoPopTime = 3f;
     [SerializeField] private float popDuration = 0.3f;
+    [SerializeField] private float inflateSpeed = 0.5f;
+    [SerializeField] private float stunDuration = 2.25f;
     [SerializeField] private float damage = 3f;
     [SerializeField] private AudioClip audioClip;
 
@@ -34,7 +36,7 @@ public class Bubble : NetworkBehaviour
     }
     private IEnumerator InflateRoutine()
     {
-        yield return movement.ScaleOverTime(0.75f, 0, 2.5f);
+        yield return movement.ScaleOverTime(inflateSpeed, 0, 2.5f);
         yield return new WaitForSeconds(autoPopTime);
         Pop();
     }
@@ -49,7 +51,7 @@ public class Bubble : NetworkBehaviour
 
                 if (targetFungal != null && !targetFungal.IsDead)
                 {
-                    targetFungal.ModifySpeedServerRpc(0f, 2f, showStunAnimation: true);
+                    targetFungal.ModifySpeedServerRpc(0f, 2.25f, showStunAnimation: true);
                     targetFungal.Health.Damage(damage, sourceFungal);
                     Pop();
                 }

@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Unity.Netcode;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class WindFish : NetworkBehaviour
@@ -14,7 +12,6 @@ public class WindFish : NetworkBehaviour
     [SerializeField] private Material empoweredMaterial;
 
     private HitDetector hitDetector;
-    private ulong sourceFungal;
     private Fish fish;
     private Material originalMaterial;
 
@@ -27,20 +24,36 @@ public class WindFish : NetworkBehaviour
         originalMaterial = fishRenderer.material;
 
         var throwFish = GetComponent<ThrowFish>();
-        throwFish.OnThrowStart += ThrowFish_OnThrowStart;
-        throwFish.OnThrowComplete += ThrowFish_OnThrowComplete;
+        throwFish.OnThrowStart += OnThrowStartServerRpc;
+        throwFish.OnThrowComplete += OnThrowCompleteServerRpc;
     }
 
-    // todo make networked
-    private void ThrowFish_OnThrowStart(Vector3 arg0)
+    [ServerRpc]
+    private void OnThrowStartServerRpc(Vector3 targetPosition)
     {
-        sourceFungal = fish.PickedUpFungalId.Value;
+        OnThrowStartClientRpc();
+    }
+
+    [ClientRpc]
+    private void OnThrowStartClientRpc()
+    {
         trailRenderer.SetActive(true);
         fishRenderer.material = empoweredMaterial;
-        StartCoroutine(ThrowFishUpdate());
+
+        if (IsOwner)
+        {
+            StartCoroutine(ThrowFishUpdate());
+        }
     }
 
-    private void ThrowFish_OnThrowComplete()
+    [ServerRpc]
+    private void OnThrowCompleteServerRpc()
+    {
+        OnThrowCompleteClientRpc();
+    }
+
+    [ClientRpc]
+    private void OnThrowCompleteClientRpc()
     {
         trailRenderer.SetActive(false);
         fishRenderer.material = originalMaterial;
@@ -48,6 +61,8 @@ public class WindFish : NetworkBehaviour
 
     private IEnumerator ThrowFishUpdate()
     {
+        var sourceFungal = fish.PickedUpFungalId.Value;
+
         var hasHit = false;
 
         List<Collider> hits = new List<Collider>();

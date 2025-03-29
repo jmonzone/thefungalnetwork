@@ -105,11 +105,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de4e66d2707594597a5257c92c87e887, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerReference: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
   pufferballReference: {fileID: 11400000, guid: 08db032ff48be41208a04f1067508370,
     type: 2}
   swimSpeed: 1
-  throwRange: 5
+  throwRange: 4
+  useTrajectory: 1
   icon: {fileID: 21300000, guid: 149bc3940087f4455852ae65825b7816, type: 3}
   abilityName: Bubble Trap
   backgroundColor: {r: 0.9764706, g: 0.78431374, b: 0.101960786, a: 1}
@@ -136,7 +136,7 @@ MonoBehaviour:
   radius: 1.25
   respawnOnThrow: 0
   throwSpeed: 1.25
-  useTrajectory: 1
+  throwDistance: 10
 --- !u!114 &8961804015496829284
 MonoBehaviour:
   m_ObjectHideFlags: 0
