@@ -7,11 +7,13 @@ using UnityEngine;
 
 public class PlayerSpawner : NetworkBehaviour
 {
-    [SerializeField] private MultiplayerManager multiplayerManager;
+    [SerializeField] private MultiplayerManager multiplayer;
     [SerializeField] private MultiplayerArena arena;
     [SerializeField] private FungalCollection fungalCollection;
     [SerializeField] private PufferballReference pufferballReference;
     [SerializeField] private NetworkFungal fungalPrefab;
+
+    private List<ulong> aiPlayers = new();
 
     public event Action<PlayerSpawner> OnSpawnerReady;
 
@@ -21,10 +23,10 @@ public class PlayerSpawner : NetworkBehaviour
 
         if (IsServer)
         {
-            Debug.Log($"PlayerSpawner.OnNetworkSpawn multiplayerManager.GetCurrentAIPlayerList() {multiplayerManager.GetCurrentAIPlayerList().Count}");
+            Debug.Log($"PlayerSpawner.OnNetworkSpawn multiplayerManager.GetCurrentAIPlayerList() {multiplayer.GetCurrentAIPlayerList().Count}");
 
             var i = 0;
-            foreach(var aiPlayer in multiplayerManager.GetCurrentAIPlayerList())
+            foreach(var aiPlayer in multiplayer.GetCurrentAIPlayerList())
             {
 
                 Debug.Log($"PlayerSpawner.OnNetworkSpawn aiPlayer {aiPlayer}");
@@ -32,7 +34,7 @@ public class PlayerSpawner : NetworkBehaviour
                 ulong aiClientId = NetworkManager.Singleton.LocalClientId;
 
                 var fungalIndex = UnityEngine.Random.Range(0, fungalCollection.Fungals.Count);
-                AddPlayer(aiClientId, aiPlayer, i + multiplayerManager.JoinedLobby.Players.Count, fungalIndex, isAI: true);
+                AddPlayer(aiClientId, aiPlayer, i + multiplayer.JoinedLobby.Players.Count, fungalIndex, isAI: true);
                 i++;
             }
 
@@ -102,11 +104,27 @@ public class PlayerSpawner : NetworkBehaviour
         }
     }
 
-    private ulong GenerateUniqueAIClientId()
+    private void OnEnable()
     {
-        // Example strategy: ulong.MaxValue - aiPlayers.Count
-        return ulong.MaxValue - (ulong)aiPlayers.Count;
+        multiplayer.OnDisconnectRequested += NotifyClientsDisconnectServerRpc;
     }
 
-    private List<ulong> aiPlayers = new();
+    private void OnDisable()
+    {
+        multiplayer.OnDisconnectRequested -= NotifyClientsDisconnectServerRpc;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void NotifyClientsDisconnectServerRpc()
+    {
+        Debug.Log("AutoConnect NotifyClientsDisconnectServerRpc");
+        NotifyClientsDisconnectClientRpc();
+    }
+
+    [ClientRpc]
+    private void NotifyClientsDisconnectClientRpc()
+    {
+        Debug.Log("AutoConnect NotifyClientsDisconnectClientRpc");
+        multiplayer.DisconnectFromRelay();
+    }
 }

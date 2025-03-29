@@ -169,7 +169,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4885592648799658225
 Transform:
   m_ObjectHideFlags: 0
@@ -179,7 +179,7 @@ Transform:
   m_GameObject: {fileID: 3581922739637746371}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 6, y: 0.5, z: 6.6}
+  m_LocalPosition: {x: 0, y: 0.5, z: -0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -395,7 +395,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 4047059074
+  GlobalObjectIdHash: 4136916986
   InScenePlacedSourceGlobalObjectIdHash: 4047059074
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -447,11 +447,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de4e66d2707594597a5257c92c87e887, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerReference: {fileID: 11400000, guid: 6e0bfa9f35c3841f5924aea13603ecf7, type: 2}
   pufferballReference: {fileID: 11400000, guid: 08db032ff48be41208a04f1067508370,
     type: 2}
   swimSpeed: 1
   throwRange: 5
+  useTrajectory: 0
   icon: {fileID: 21300000, guid: c83dc6075596f4517a70ebc7af12ac3f, type: 3}
   abilityName: Arrow Shot
   backgroundColor: {r: 0.71690184, g: 0.8867924, b: 0.5898006, a: 1}
@@ -479,7 +479,6 @@ MonoBehaviour:
   respawnOnThrow: 1
   throwSpeed: 6.5
   throwDistance: 10
-  useTrajectory: 0
 --- !u!114 &5104642753931470515
 MonoBehaviour:
   m_ObjectHideFlags: 0

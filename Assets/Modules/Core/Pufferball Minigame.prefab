@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1807655065026526144}
   - component: {fileID: 4842475867895104760}
-  - component: {fileID: 9119543484638871854}
   - component: {fileID: 4291406761052059102}
   m_Layer: 0
   m_Name: Pufferball Minigame
@@ -55,21 +54,6 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &9119543484638871854
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4354389770045121639}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cabcd0b152d3b42bbb9473ef900d3f82, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  multiplayer: {fileID: 11400000, guid: 408255eed57604ff491c1da858247ecd, type: 2}
-  addAIPlayer: 0
-  gameMode: 1
 --- !u!114 &4291406761052059102
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -82,11 +66,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f62ad94ce08ab4bc2ab489d37b8d4543, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  multiplayerManager: {fileID: 11400000, guid: 408255eed57604ff491c1da858247ecd, type: 2}
+  multiplayer: {fileID: 11400000, guid: 408255eed57604ff491c1da858247ecd, type: 2}
   arena: {fileID: 11400000, guid: 24582879ca0914ce48009bfa1a0c10ae, type: 2}
   fungalCollection: {fileID: 11400000, guid: 1d49e170120fe4ab1befd22e62e1ea65, type: 2}
   pufferballReference: {fileID: 11400000, guid: 08db032ff48be41208a04f1067508370,
     type: 2}
-  addAIPlayer: 0
   fungalPrefab: {fileID: 936509440355627948, guid: c8047aa074b1443639668ad0e245a1b5,
     type: 3}

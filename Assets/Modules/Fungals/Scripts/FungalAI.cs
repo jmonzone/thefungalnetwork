@@ -69,6 +69,7 @@ public class FungalAI : MonoBehaviour
 
     private void OnDisable()
     {
+        Debug.Log($"FungalAI Disabling {name}");
         agent.enabled = false;
         // Stop the coroutine when the object is disabled
         if (fungalStateCoroutine != null)
@@ -82,6 +83,8 @@ public class FungalAI : MonoBehaviour
 
     private void Pufferball_OnGameComplete()
     {
+        Debug.Log($"Pufferball_OnGameComplete Disabling {name}");
+
         enabled = false;
     }
 

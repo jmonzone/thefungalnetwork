@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Unity.Netcode;
 using UnityEngine;
 
-public class AutoConnect : NetworkBehaviour
+public class AutoConnect : MonoBehaviour
 {
     [SerializeField] private MultiplayerManager multiplayer;
     [SerializeField] private bool addAIPlayer = false;
@@ -11,11 +11,6 @@ public class AutoConnect : NetworkBehaviour
 
     private async void Start()
     {
-        if (NetworkManager.Singleton != null)
-        {
-            NetworkManager.Singleton.LogLevel = LogLevel.Error;
-        }
-
         if (multiplayer.JoinedLobby != null)
         {
             Debug.Log($"AutoConnect multiplayer.IsHost: {multiplayer.IsHost}");
@@ -62,35 +57,6 @@ public class AutoConnect : NetworkBehaviour
                 }
             });
         });
-    }
-
-    private void OnEnable()
-    {
-        multiplayer.OnDisconnectRequested += Multiplayer_OnDisconnectRequested;
-    }
-
-    private void OnDisable()
-    {
-        multiplayer.OnDisconnectRequested -= Multiplayer_OnDisconnectRequested;
-    }
-
-    private void Multiplayer_OnDisconnectRequested()
-    {
-        NotifyClientsDisconnectServerRpc();
-    }
-
-    [ServerRpc(RequireOwnership=false)]
-    public void NotifyClientsDisconnectServerRpc()
-    {
-        Debug.Log("AutoConnect NotifyClientsDisconnectServerRpc");
-        NotifyClientsDisconnectClientRpc();
-    }
-
-    [ClientRpc]
-    public void NotifyClientsDisconnectClientRpc()
-    {
-        Debug.Log("AutoConnect NotifyClientsDisconnectClientRpc");
-        multiplayer.DisconnectFromRelay();
     }
 
 }
