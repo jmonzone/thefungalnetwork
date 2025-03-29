@@ -28,6 +28,7 @@ public class PufferfishExplosion : MonoBehaviour
         StartCoroutine(DamageRoutine(damage));
     }
 
+    //todo: reuselogic across bubble, wind fish and pufferfish
     private IEnumerator DamageRoutine(float damage)
     {
         List<Collider> hits = new List<Collider>();

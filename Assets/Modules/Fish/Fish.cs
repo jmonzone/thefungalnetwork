@@ -23,7 +23,6 @@ public class Fish : NetworkBehaviour
     public float ThrowRange => throwRange;
 
     public Movement Movement { get; private set; }
-    private ThrowFish throwFish;
 
     [SerializeField] private float audioPitch;
     [SerializeField] private List<AudioClip> audioClips;
@@ -45,7 +44,6 @@ public class Fish : NetworkBehaviour
     {
         base.OnNetworkSpawn();
         Movement = GetComponent<Movement>();
-        throwFish = GetComponent<ThrowFish>();
         audioSource = GetComponent<AudioSource>();
 
         if (IsServer)
@@ -78,7 +76,7 @@ public class Fish : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void RequestPickUpServerRpc(ulong requestingObjectId)
     {
-        Debug.Log($"RequestPickUpServerRpc requestingObjectId: {requestingObjectId}");
+        //Debug.Log($"RequestPickUpServerRpc requestingObjectId: {requestingObjectId}");
         if (requested)
         {
             OnRequestPickUpClientRpc(requestingObjectId, false);
@@ -110,7 +108,7 @@ public class Fish : NetworkBehaviour
     [ClientRpc]
     private void OnRequestPickUpClientRpc(ulong requestingObjectId, bool success)
     {
-        Debug.Log($"OnRequestPickUpClientRpc requestingObjectId: {requestingObjectId}");
+        //Debug.Log($"OnRequestPickUpClientRpc requestingObjectId: {requestingObjectId}");
 
         if (IsServer) requested = false;
 
@@ -136,7 +134,7 @@ public class Fish : NetworkBehaviour
 
     public void ReturnToRadialMovement()
     {
-        //Debug.Log("ReturnToRadialMovement");
+        Debug.Log($"ReturnToRadialMovement {name}");
         Movement.SetSpeed(swimSpeed);
         Movement.StartRadialMovement(networkPosition.Value, true);
         OnRespawnServerRpc();

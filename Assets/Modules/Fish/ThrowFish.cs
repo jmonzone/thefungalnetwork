@@ -6,6 +6,8 @@ public class ThrowFish : MonoBehaviour
     [SerializeField] private float radius;
     [SerializeField] private bool respawnOnThrow = true;
     [SerializeField] private float throwSpeed = 2f;
+    [SerializeField] private float throwDistance = 10f;
+    [SerializeField] private bool useTrajectory = false;
 
     private Fish fish;
     private Movement movement;
@@ -33,19 +35,36 @@ public class ThrowFish : MonoBehaviour
         movement.OnDestinationReached -= Movement_OnDestinationReached;
     }
 
-
+    // todo: behaviour for throwing should be defined by the fish class
     public void Throw(Vector3 targetPosition)
     {
         enabled = true;
         targetPosition.y = 0; // Keep on the ground
         movement.SetSpeed(throwSpeed);
-        movement.SetTrajectoryMovement(targetPosition); // Move towards the target
+
+        if (useTrajectory)
+        {
+            movement.SetTrajectoryMovement(targetPosition); // Move towards the target
+        }
+        else
+        {
+            // todo: behaviour for wind fish should be defined by wind fish class
+            var direction = (targetPosition - transform.position).normalized;
+            direction.y = 0;
+
+            var initialPosition = transform.position + direction;
+            initialPosition.y = 0;
+            transform.position = initialPosition;
+            movement.SetTargetPosition(initialPosition + direction * throwDistance);
+        }
+
         TargetPosition = targetPosition;
         OnThrowStart?.Invoke(targetPosition);
     }
 
     private void Movement_OnDestinationReached()
     {
+        Debug.Log($"ThrowFish Movement_OnDestinationReached {name}");
         enabled = false;
         if (respawnOnThrow) fish.ReturnToRadialMovement();
         OnThrowComplete?.Invoke();

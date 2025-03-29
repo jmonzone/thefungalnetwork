@@ -366,11 +366,11 @@ public class MultiplayerManager : ScriptableObject
 
     public string GetJoinedLobbyData(string key)
     {
-        Debug.Log($"GetJoinedLobbyData {key}");
+        //Debug.Log($"GetJoinedLobbyData {key}");
 
         if (joinedLobby.Data.TryGetValue(key, out var gameModeData))
         {
-            Debug.Log($"GetJoinedLobbyData {key} {gameModeData.Value}");
+            //Debug.Log($"GetJoinedLobbyData {key} {gameModeData.Value}");
             return gameModeData.Value;
         }
 

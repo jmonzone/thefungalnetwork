@@ -127,8 +127,13 @@ public class Movement : MonoBehaviour
     private void FollowTarget()
     {
         if (target == null) return;
-        UpdateLookDirection(target.position + followOffset - transform.position);
-        transform.position = Vector3.MoveTowards(transform.position, target.position + followOffset, SpeedDelta);
+
+        // Rotate the follow offset based on the target's rotation
+        Vector3 rotatedOffset = target.rotation * followOffset;
+
+        // Update direction and position
+        UpdateLookDirection(target.position + rotatedOffset - transform.position);
+        transform.position = Vector3.MoveTowards(transform.position, target.position + rotatedOffset, SpeedDelta);
     }
 
     // Directional Movement
@@ -140,6 +145,7 @@ public class Movement : MonoBehaviour
 
     private void MoveInDirection()
     {
+        //todo: add conditional to drift or not
         // Smoothly interpolate the currentDirection towards the target direction
         currentDirection = Vector3.SmoothDamp(currentDirection, inputDirection, ref directionSmoothVelocity, directionSmoothTime);
 
@@ -191,8 +197,8 @@ public class Movement : MonoBehaviour
 
         if (IsAtDestination)
         {
-            OnDestinationReached?.Invoke();
             Stop();
+            OnDestinationReached?.Invoke();
         }
     }
 
