@@ -52,6 +52,15 @@ public class AbilityCastIndicator : MonoBehaviour
 
     private void DrawStraightLine(Vector3 start, Vector3 end)
     {
+        Vector3 direction = end - start;
+
+        // Clamp magnitude to 5f
+        if (direction.magnitude > 5f)
+        {
+            direction = direction.normalized * 5f;
+            end = start + direction;
+        }
+
         lineRenderer.positionCount = 2;
         lineRenderer.SetPositions(new Vector3[] { start, end });
     }

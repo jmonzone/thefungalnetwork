@@ -169,7 +169,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4885592648799658225
 Transform:
   m_ObjectHideFlags: 0
@@ -450,7 +450,6 @@ MonoBehaviour:
   pufferballReference: {fileID: 11400000, guid: 08db032ff48be41208a04f1067508370,
     type: 2}
   swimSpeed: 1
-  throwRange: 5
   useTrajectory: 0
   icon: {fileID: 21300000, guid: c83dc6075596f4517a70ebc7af12ac3f, type: 3}
   abilityName: Arrow Shot
@@ -521,10 +520,10 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: d3c5a3463e9d3468f8c39ee1e31a794d, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.75
-  m_Pitch: 2
+  m_Pitch: 1.5
   Loop: 0
   Mute: 0
   Spatialize: 0
@@ -624,6 +623,8 @@ MonoBehaviour:
   trailRenderer: {fileID: 3581922739637746371}
   fishRenderer: {fileID: 5631422842331983025}
   empoweredMaterial: {fileID: 2100000, guid: 7c9c08cb8ea9a48d3a5be4a7f7f59705, type: 2}
+  audioClip: {fileID: 8300000, guid: d3c5a3463e9d3468f8c39ee1e31a794d, type: 3}
+  audioPitch: 1.5
 --- !u!114 &3380575277732858000
 MonoBehaviour:
   m_ObjectHideFlags: 0

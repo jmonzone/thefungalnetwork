@@ -8,7 +8,6 @@ public class Fish : NetworkBehaviour
 {
     [SerializeField] private PufferballReference pufferballReference;
     [SerializeField] private float swimSpeed = 1f;
-    [SerializeField] private float throwRange = 5f;
     [SerializeField] private bool useTrajectory = false;
 
     [SerializeField] private Sprite icon;
@@ -16,18 +15,20 @@ public class Fish : NetworkBehaviour
     [SerializeField] private Color backgroundColor;
     [SerializeField] private float score;
 
+    [SerializeField] private float audioPitch;
+    [SerializeField] private List<AudioClip> audioClips;
+
     public Sprite Icon => icon;
     public string AbilityName => abilityName;
     public Color BackgroundColor => backgroundColor;
     public float Score => score;
-    public float ThrowRange => throwRange;
     public bool UseTrajectory => useTrajectory;
 
     public Movement Movement { get; private set; }
+    public ThrowFish ThrowFish { get; private set; }
 
-    [SerializeField] private float audioPitch;
-    [SerializeField] private List<AudioClip> audioClips;
     private AudioSource audioSource;
+
 
     private NetworkVariable<Vector3> networkPosition = new NetworkVariable<Vector3>(
         Vector3.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server
@@ -46,6 +47,7 @@ public class Fish : NetworkBehaviour
         base.OnNetworkSpawn();
         Movement = GetComponent<Movement>();
         audioSource = GetComponent<AudioSource>();
+        ThrowFish = GetComponent<ThrowFish>();
 
         if (IsServer)
         {

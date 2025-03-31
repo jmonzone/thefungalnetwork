@@ -1,10 +1,8 @@
 using System.Collections;
-using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Multiplayer.Samples.Utilities.ClientAuthority;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.Events;
 
 public struct ScoreEventArgs : INetworkSerializable
@@ -25,15 +23,16 @@ public class NetworkFungal : NetworkBehaviour
 {
     [SerializeField] private FungalData data;
     [SerializeField] private PufferballReference pufferball;
-    [SerializeField] private MultiplayerArena arena;
     [SerializeField] private GameObject stunAnimation;
     [SerializeField] private float respawnDuration = 5f;
     [SerializeField] private FungalCollection fungalCollection;
 
+    [SerializeField] private float baseSpeed = 3f;
+    public float BaseSpeed => 3f;
+
     public FungalData Data => data;
     public Health Health { get; private set; }
     public Movement Movement { get; private set; }
-    public AudioSource AudioSource { get; private set; }
 
     public float RemainingRespawnTime { get; private set; }
 
@@ -87,10 +86,11 @@ public class NetworkFungal : NetworkBehaviour
 
         Health = GetComponent<Health>();
         Movement = GetComponent<Movement>();
+        Movement.SetSpeed(baseSpeed);
+
         Movement.OnTypeChanged += Movement_OnTypeChanged;
 
         networkTransform = GetComponent<ClientNetworkTransform>();
-        AudioSource = GetComponent<AudioSource>();
         fungalAI = GetComponent<FungalAI>();
 
         spawnPosition = transform.position;
@@ -309,13 +309,7 @@ public class NetworkFungal : NetworkBehaviour
         if (IsOwner) SyncMovementTypeServerRpc((int)Movement.Type);
     }
 
-    public void PlayAudioClip(AudioClip audioClip, float pitch)
-    {
-        AudioSource.clip = audioClip;
-        //AudioSource.pitch = pitch;
-        AudioSource.Play();
-    }
-
+    
     [ServerRpc]
     private void SyncMovementTypeServerRpc(int type)
     {
@@ -369,36 +363,5 @@ public class NetworkFungal : NetworkBehaviour
     {
         if (showStunAnimation) stunAnimation.SetActive(false);
         Movement.ResetSpeedModifier();
-    }
-
-    [Header("Dash References")]
-    [SerializeField] private List<AudioClip> dashAudio;
-    [SerializeField] private GameObject trailRenderers;
-
-    [SerializeField] private float baseSpeed = 3f;
-    [SerializeField] private float dashSpeed = 7.5f;
-
-    public void Dash(Vector3 targetPosition, UnityAction onComplete)
-    {
-        //Debug.Log($"Dashing {gameObject.name} {targetPosition} {transform.position}");
-        void OnDestinationReached()
-        {
-            Movement.SetSpeed(baseSpeed);
-            Movement.OnDestinationReached -= OnDestinationReached;
-
-            networkTransform.Interpolate = true;
-            trailRenderers.SetActive(false);
-            onComplete?.Invoke();
-        }
-
-        trailRenderers.SetActive(true);
-        networkTransform.Interpolate = false;
-        Movement.OnDestinationReached += OnDestinationReached;
-
-        Movement.SetSpeed(dashSpeed);
-        Movement.SetTargetPosition(targetPosition);
-
-        var audioClip = dashAudio.GetRandomItem();
-        PlayAudioClip(audioClip, 1.5f);
     }
 }

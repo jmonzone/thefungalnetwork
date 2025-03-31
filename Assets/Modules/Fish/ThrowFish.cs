@@ -12,6 +12,8 @@ public class ThrowFish : MonoBehaviour
     private Movement movement;
 
     public float Radius => radius;
+    public float Range => throwDistance;
+
     public Vector3 TargetPosition { get; private set; }
 
     public event UnityAction<Vector3> OnThrowStart;

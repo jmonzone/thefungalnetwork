@@ -164,7 +164,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7917103446650580882}
   m_Layer: 10
-  m_Name: Trail
+  m_Name: Trail Renderer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -459,91 +459,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: ba230be9a25454447bd331346bd38ac1, type: 2}
   pufferball: {fileID: 11400000, guid: 08db032ff48be41208a04f1067508370, type: 2}
-  arena: {fileID: 11400000, guid: 24582879ca0914ce48009bfa1a0c10ae, type: 2}
   stunAnimation: {fileID: 7684853891565658531}
   respawnDuration: 5
   fungalCollection: {fileID: 11400000, guid: 1d49e170120fe4ab1befd22e62e1ea65, type: 2}
-  playerName:
-    m_InternalValue:
-      utf8LengthInBytes: 0
-      bytes:
-        offset0000:
-          byte0000: 0
-          byte0001: 0
-          byte0002: 0
-          byte0003: 0
-          byte0004: 0
-          byte0005: 0
-          byte0006: 0
-          byte0007: 0
-          byte0008: 0
-          byte0009: 0
-          byte0010: 0
-          byte0011: 0
-          byte0012: 0
-          byte0013: 0
-          byte0014: 0
-          byte0015: 0
-        offset0016:
-          byte0000: 0
-          byte0001: 0
-          byte0002: 0
-          byte0003: 0
-          byte0004: 0
-          byte0005: 0
-          byte0006: 0
-          byte0007: 0
-          byte0008: 0
-          byte0009: 0
-          byte0010: 0
-          byte0011: 0
-          byte0012: 0
-          byte0013: 0
-          byte0014: 0
-          byte0015: 0
-        offset0032:
-          byte0000: 0
-          byte0001: 0
-          byte0002: 0
-          byte0003: 0
-          byte0004: 0
-          byte0005: 0
-          byte0006: 0
-          byte0007: 0
-          byte0008: 0
-          byte0009: 0
-          byte0010: 0
-          byte0011: 0
-          byte0012: 0
-          byte0013: 0
-          byte0014: 0
-          byte0015: 0
-        byte0048: 0
-        byte0049: 0
-        byte0050: 0
-        byte0051: 0
-        byte0052: 0
-        byte0053: 0
-        byte0054: 0
-        byte0055: 0
-        byte0056: 0
-        byte0057: 0
-        byte0058: 0
-        byte0059: 0
-        byte0060: 0
-        byte0061: 0
+  baseSpeed: 4
   isAI:
     m_InternalValue: 0
   Kills:
     m_InternalValue: 0
-  dashAudio:
-  - {fileID: 8300000, guid: eece8f19a989f4b6ca108b3a2906d19d, type: 3}
-  - {fileID: 8300000, guid: 27f92a5234c7747e8b26b6158009ba5d, type: 3}
-  - {fileID: 8300000, guid: 937f9cf9beb4a4bc3a4d41b15e01aef3, type: 3}
-  - {fileID: 8300000, guid: b71ee5e9badb14dafa1a3529bf1e7b3b, type: 3}
-  trailRenderers: {fileID: 2850911616725606102}
-  baseSpeed: 3
-  dashSpeed: 7.5
 --- !u!114 &2097482643546369042
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -570,7 +493,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 0
-  baseSpeed: 5
+  baseSpeed: 4
   rotationSpeed: 5
   directionSmoothTime: 0.1
   obstacleLayer:
@@ -635,7 +558,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ca72cecd509f4fc996a12ff65e12846, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  range: 5
   pufferball: {fileID: 11400000, guid: 08db032ff48be41208a04f1067508370, type: 2}
   currentState: 0
   minDashInterval: 0.5
@@ -652,9 +574,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ba750423ae11484f96157f59689a48a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  range: 3
   radius: 1
   castCooldown: 3
+  dashRange: 3
+  dashSpeed: 7.5
+  dashAudio:
+  - {fileID: 8300000, guid: eece8f19a989f4b6ca108b3a2906d19d, type: 3}
+  - {fileID: 8300000, guid: 27f92a5234c7747e8b26b6158009ba5d, type: 3}
+  - {fileID: 8300000, guid: 937f9cf9beb4a4bc3a4d41b15e01aef3, type: 3}
+  - {fileID: 8300000, guid: b71ee5e9badb14dafa1a3529bf1e7b3b, type: 3}
+  trailRenderers: {fileID: 2850911616725606102}
 --- !u!114 &8107556039497871619
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -667,7 +596,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 093cb938b406040d8954d63af51debb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  range: 7
   radius: 1
   castCooldown: 2
   pufferballReference: {fileID: 11400000, guid: 08db032ff48be41208a04f1067508370,
@@ -760,7 +688,7 @@ GameObject:
   - component: {fileID: 3153692002590168926}
   - component: {fileID: 5917333144645186216}
   m_Layer: 10
-  m_Name: Sphere
+  m_Name: Placeholder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1307,7 +1235,7 @@ GameObject:
   - component: {fileID: 287675092549917487}
   - component: {fileID: 911325119853674388}
   m_Layer: 10
-  m_Name: Stun
+  m_Name: StunAnimation
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

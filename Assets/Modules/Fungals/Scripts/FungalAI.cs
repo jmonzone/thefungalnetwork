@@ -219,7 +219,7 @@ public class FungalAI : MonoBehaviour
                 var directionToPlayer = (playerPos - targetSlingPosition).normalized;
 
                 // Clamp the movement position within maxRange
-                var targetMovePosition = targetSlingPosition + directionToPlayer * Mathf.Min(Vector3.Distance(targetSlingPosition, playerPos), targetFish.ThrowRange * 0.75f);
+                var targetMovePosition = targetSlingPosition + directionToPlayer * Mathf.Min(Vector3.Distance(targetSlingPosition, playerPos), targetFish.ThrowFish.Range * 0.75f);
 
                 // Check if the closest valid position is within range of the sling position
                 if (NavMesh.SamplePosition(targetMovePosition, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))

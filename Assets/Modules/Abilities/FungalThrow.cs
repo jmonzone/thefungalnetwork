@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class FungalThrow : Ability
@@ -6,10 +7,10 @@ public class FungalThrow : Ability
 
     private FishPickup fishPickup;
 
-    // Events to notify the UI about state changes
-    public event System.Action<Fish> OnFishChanged;
+    public event Action<Fish> OnFishChanged;
 
     public override bool UseTrajectory => fishPickup.Fish.UseTrajectory;
+    public override float Range => fishPickup.Fish.ThrowFish.Range;
 
     private void Start()
     {
@@ -74,8 +75,8 @@ public class FungalThrow : Ability
         get
         {
             Vector3 origin = pufferballReference.ClientPlayer.Fungal.transform.position;
-            Vector3 forwardTarget = origin + pufferballReference.ClientPlayer.Fungal.transform.forward * range;
-            float searchRadius = range;
+            Vector3 forwardTarget = origin + pufferballReference.ClientPlayer.Fungal.transform.forward * Range;
+            float searchRadius = Range;
             LayerMask targetLayer = ~0;
 
             Collider[] colliders = Physics.OverlapSphere(origin, searchRadius, targetLayer);

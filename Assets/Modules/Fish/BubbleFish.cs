@@ -1,16 +1,13 @@
 using Unity.Netcode;
 using UnityEngine;
-using System.Collections;
 
 public class BubbleFish : NetworkBehaviour
 {
     [SerializeField] private Bubble bubblePrefab;
     [SerializeField] private float pitch = 2f;
-    [SerializeField] private AudioClip audioClip;
 
     private Fish fish;
     private Animator animator;
-    private AudioSource audioSource;
 
     public override void OnNetworkSpawn()
     {
@@ -21,7 +18,6 @@ public class BubbleFish : NetworkBehaviour
         throwFish.OnThrowComplete += () => InflateServerRpc(NetworkObject.OwnerClientId, throwFish.TargetPosition);
 
         animator = GetComponentInChildren<Animator>();
-        audioSource = GetComponent<AudioSource>();
     }
 
     [ServerRpc]

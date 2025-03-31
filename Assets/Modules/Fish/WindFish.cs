@@ -10,9 +10,12 @@ public class WindFish : NetworkBehaviour
     [SerializeField] private GameObject trailRenderer;
     [SerializeField] private Renderer fishRenderer;
     [SerializeField] private Material empoweredMaterial;
+    [SerializeField] private AudioClip audioClip;
+    [SerializeField] private float audioPitch = 1.5f;
 
-    private HitDetector hitDetector;
     private Fish fish;
+    private HitDetector hitDetector;
+    private AudioSource audioSource;
     private Material originalMaterial;
 
     public override void OnNetworkSpawn()
@@ -21,11 +24,13 @@ public class WindFish : NetworkBehaviour
 
         fish = GetComponent<Fish>();
         hitDetector = GetComponent<HitDetector>();
-        originalMaterial = fishRenderer.material;
+        audioSource = GetComponent<AudioSource>();
 
         var throwFish = GetComponent<ThrowFish>();
         throwFish.OnThrowStart += OnThrowStartServerRpc;
         throwFish.OnThrowComplete += OnThrowCompleteServerRpc;
+
+        originalMaterial = fishRenderer.material;
     }
 
     [ServerRpc]
@@ -39,6 +44,9 @@ public class WindFish : NetworkBehaviour
     {
         trailRenderer.SetActive(true);
         fishRenderer.material = empoweredMaterial;
+        audioSource.clip = audioClip;
+        audioSource.pitch = audioPitch;
+        audioSource.Play();
 
         if (IsOwner)
         {
@@ -57,6 +65,11 @@ public class WindFish : NetworkBehaviour
     {
         trailRenderer.SetActive(false);
         fishRenderer.material = originalMaterial;
+
+        if (IsOwner)
+        {
+            StopAllCoroutines();
+        }
     }
 
     private IEnumerator ThrowFishUpdate()
