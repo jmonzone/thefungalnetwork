@@ -13,8 +13,6 @@ public class PlayerSpawner : NetworkBehaviour
     [SerializeField] private PufferballReference pufferballReference;
     [SerializeField] private NetworkFungal fungalPrefab;
 
-    private List<ulong> aiPlayers = new();
-
     public event Action<PlayerSpawner> OnSpawnerReady;
 
     public override void OnNetworkSpawn()
@@ -23,17 +21,25 @@ public class PlayerSpawner : NetworkBehaviour
 
         if (IsServer)
         {
-            Debug.Log($"PlayerSpawner.OnNetworkSpawn multiplayerManager.GetCurrentAIPlayerList() {multiplayer.GetCurrentAIPlayerList().Count}");
+            var selectedFungals = new HashSet<int>();
 
-            var i = 0;
-            foreach(var aiPlayer in multiplayer.GetCurrentAIPlayerList())
+            // Collect already selected fungal indices
+            foreach (var player in multiplayer.JoinedLobby.Players)
+                if (player.Data.TryGetValue("Fungal", out var fungalData) &&
+                    int.TryParse(fungalData?.Value, out var index))
+                    selectedFungals.Add(index);
+
+            // Get available indices
+            var availableFungals = Enumerable.Range(0, fungalCollection.Fungals.Count)
+                                             .Where(i => !selectedFungals.Contains(i))
+                                             .ToList();
+
+            int i = 0;
+            foreach (var aiPlayer in multiplayer.GetCurrentAIPlayerList())
             {
-
-                Debug.Log($"PlayerSpawner.OnNetworkSpawn aiPlayer {aiPlayer}");
-                //ulong aiClientId = GenerateUniqueAIClientId();
                 ulong aiClientId = NetworkManager.Singleton.LocalClientId;
+                int fungalIndex = availableFungals.Any() ? availableFungals.PopRandom() : UnityEngine.Random.Range(0, fungalCollection.Fungals.Count);
 
-                var fungalIndex = UnityEngine.Random.Range(0, fungalCollection.Fungals.Count);
                 AddPlayer(aiClientId, aiPlayer, i + multiplayer.JoinedLobby.Players.Count, fungalIndex, isAI: true);
                 i++;
             }

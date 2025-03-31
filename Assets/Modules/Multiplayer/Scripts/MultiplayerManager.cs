@@ -555,7 +555,7 @@ public class MultiplayerManager : ScriptableObject
         // Update the lobby data
         await UpdateLobbyAIData(aiPlayerNames);
 
-        Debug.Log($"AI Player '{aiPlayerName}' added.");
+        //Debug.Log($"AI Player '{aiPlayerName}' added.");
     }
 
     /// <summary>

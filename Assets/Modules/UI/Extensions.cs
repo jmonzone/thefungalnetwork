@@ -10,4 +10,12 @@ public static class Extensions
         var randomIndex = Random.Range(0, items.Count);
         return items[randomIndex];
     }
+
+    public static T PopRandom<T>(this List<T> list)
+    {
+        int index = UnityEngine.Random.Range(0, list.Count);
+        var item = list[index];
+        list.RemoveAt(index);
+        return item;
+    }
 }
