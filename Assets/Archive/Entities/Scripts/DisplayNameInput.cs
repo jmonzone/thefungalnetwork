@@ -1,6 +1,8 @@
+using System;
 using TMPro;
 using UnityEngine;
 
+[Obsolete]
 public class DisplayNameInput : MonoBehaviour
 {
     [SerializeField] private DisplayName displayName;

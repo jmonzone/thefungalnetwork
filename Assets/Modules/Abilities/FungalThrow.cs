@@ -86,14 +86,15 @@ public class FungalThrow : Ability
             foreach (var collider in colliders)
             {
                 NetworkFungal fungal = collider.GetComponent<NetworkFungal>();
-                if (fungal != null && fungal != pufferballReference.ClientPlayer.Fungal)
+                if (fungal == null) continue;
+                if (fungal.IsDead) continue;
+                if (fungal == pufferballReference.ClientPlayer.Fungal) continue;
+
+                float distance = Vector3.Distance(origin, fungal.transform.position);
+                if (distance < closestDistance)
                 {
-                    float distance = Vector3.Distance(origin, fungal.transform.position);
-                    if (distance < closestDistance)
-                    {
-                        closestDistance = distance;
-                        closestFungal = fungal;
-                    }
+                    closestDistance = distance;
+                    closestFungal = fungal;
                 }
             }
 

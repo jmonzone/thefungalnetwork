@@ -15,15 +15,16 @@ public class DisplayName : ScriptableObject
     public void Initialize()
     {
         var name = localData.JsonFile[DISPLAY_NAME_KEY] ?? "";
+        value = name.ToString();
 
-        if (string.IsNullOrWhiteSpace(name.ToString()))
-        {
-            SetValue(GenerateRandomName());
-        }
-        else
-        {
-            value = name.ToString();
-        }
+        //if (string.IsNullOrWhiteSpace(name.ToString()))
+        //{
+        //    SetValue(GenerateRandomName());
+        //}
+        //else
+        //{
+        //    value = name.ToString();
+        //}
     }
 
     public void SetValue(string value)
