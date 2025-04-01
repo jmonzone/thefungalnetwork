@@ -17,6 +17,8 @@ public class MainMenuHome : MonoBehaviour
 
     private void Start()
     {
+        Debug.Log($"MainMenuHome.Home {name}");
+
         nameInputField.onValueChanged.AddListener(value =>
         {
             var isValid = value.Length > MINIMUM_NAME_LENGTH;
@@ -26,6 +28,8 @@ public class MainMenuHome : MonoBehaviour
             if (isValid) displayName.SetValue(value);
         });
 
+        nameInputField.text = displayName.Value;
+
         partyButton.onClick.AddListener(() =>
         {
             navigation.Navigate(matchmakingView);
@@ -34,7 +38,6 @@ public class MainMenuHome : MonoBehaviour
 
     private void OnEnable()
     {
-        nameInputField.text = displayName.Value;
-        partyButton.interactable = displayName.Value.Length > MINIMUM_NAME_LENGTH;
+        
     }
 }

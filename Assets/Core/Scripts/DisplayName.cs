@@ -16,9 +16,11 @@ public class DisplayName : ScriptableObject
     {
         var name = localData.JsonFile[DISPLAY_NAME_KEY] ?? "";
 
+        Debug.Log($"DisplayName.Initialize {name}");
         if (string.IsNullOrWhiteSpace(name.ToString()))
         {
             value = name.ToString();
+
         }
         else
         {

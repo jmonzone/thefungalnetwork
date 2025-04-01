@@ -10,7 +10,7 @@ public class DisplayNameInput : MonoBehaviour
 
     private void Start()
     {
-        inputField.onValueChanged.AddListener(value => displayName.SetValue(value));
+        //inputField.onValueChanged.AddListener(value => displayName.SetValue(value));
     }
 
     private void OnEnable()
