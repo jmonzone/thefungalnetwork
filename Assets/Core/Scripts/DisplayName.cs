@@ -15,23 +15,26 @@ public class DisplayName : ScriptableObject
     public void Initialize()
     {
         var name = localData.JsonFile[DISPLAY_NAME_KEY] ?? "";
-        value = name.ToString();
 
-        //if (string.IsNullOrWhiteSpace(name.ToString()))
-        //{
-        //    SetValue(GenerateRandomName());
-        //}
-        //else
-        //{
-        //    value = name.ToString();
-        //}
+        if (string.IsNullOrWhiteSpace(name.ToString()))
+        {
+            value = name.ToString();
+        }
+        else
+        {
+            value = name.ToString();
+        }
     }
 
     public void SetValue(string value)
     {
-        this.value = value;
-        localData.SaveData(DISPLAY_NAME_KEY, value);
-        OnDisplayNameChanged?.Invoke();
+        if (!string.IsNullOrWhiteSpace(value))
+        {
+            this.value = value;
+            Debug.Log(value);
+            localData.SaveData(DISPLAY_NAME_KEY, value);
+            OnDisplayNameChanged?.Invoke();
+        }
     }
 
     private string GenerateRandomName()

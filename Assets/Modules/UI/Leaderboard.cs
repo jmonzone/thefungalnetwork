@@ -12,9 +12,6 @@ public class Leaderboard : MonoBehaviour
 
     private List<LeaderboardEntry> leaderboardEntries = new List<LeaderboardEntry>();
 
-
-    private GameMode gameMode;
-
     private void Awake()
     {
         GetComponentsInChildren(includeInactive: true, leaderboardEntries);
@@ -28,10 +25,28 @@ public class Leaderboard : MonoBehaviour
 
     private void OnEnable()
     {
-        //Debug.Log($"Leaderboard OnEnable");
         pufferball.OnScoreUpdated += UpdateLeaderboard;
-        pufferball.OnPlayerAdded += Pufferball_OnPlayerAdded;
         pufferball.OnGameComplete += Pufferball_OnGameComplete;
+        pufferball.OnKill += Pufferball_OnKill;
+        pufferball.OnSelfDestruct += Pufferball_OnSelfDestruct;
+    }
+
+    private void OnDisable()
+    {
+        pufferball.OnScoreUpdated -= UpdateLeaderboard;
+        pufferball.OnGameComplete -= Pufferball_OnGameComplete;
+        pufferball.OnKill -= Pufferball_OnKill;
+        pufferball.OnSelfDestruct -= Pufferball_OnSelfDestruct;
+    }
+
+    private void Pufferball_OnKill(int arg0, int arg1)
+    {
+        UpdateLeaderboard();
+    }
+
+    private void Pufferball_OnSelfDestruct(Player arg0)
+    {
+        UpdateLeaderboard();
     }
 
     private void Pufferball_OnGameComplete()
@@ -39,29 +54,11 @@ public class Leaderboard : MonoBehaviour
         UpdateLeaderboard();
     }
 
-    private void OnDisable()
-    {
-        pufferball.OnScoreUpdated -= UpdateLeaderboard;
-        pufferball.OnPlayerAdded -= Pufferball_OnPlayerAdded;
-        pufferball.OnGameComplete -= Pufferball_OnGameComplete;
-    }
-
-
-    private void Pufferball_OnPlayerAdded(Player player)
-    {
-        Debug.Log("Pufferball_OnPlayerAdded " + gameMode);
-
-        if (gameMode == GameMode.ELIMINATION)
-        {
-            player.Fungal.Kills.OnValueChanged += (_, __) => UpdateEliminationLeaderboard();
-        }
-
-        UpdateLeaderboard();
-    }
-
     private void UpdateLeaderboard()
     {
-        if (gameMode == GameMode.PARTY)
+        Debug.Log($"updating leaderboard {multiplayer.GameMode }");
+
+        if (multiplayer.GameMode == GameMode.PARTY)
         {
             UpdatePartyLeaderboard();
         }
@@ -102,7 +99,7 @@ public class Leaderboard : MonoBehaviour
 
                 // Assuming you have a way to get the player icon and name
                 Sprite playerIcon = player.Fungal.Data.ActionImage; // Example property
-                var playerPoints = $"{player.Fungal.Kills.Value} BD";
+                var playerPoints = $"{player.Fungal.Kills} BD | {player.Fungal.SelfDestructs} SU";
 
                 entry.SetEliminationEntry(
                     playerIcon,

@@ -38,7 +38,7 @@ public class LeaderboardEntry : MonoBehaviour
         if (iconImage != null) iconImage.sprite = icon;
         if (nameText != null) nameText.text = playerName;
         if (pointsText != null) pointsText.text = score;
-        if (outline != null) outline.color = isCLient ? clientColor : defaultColor;
+        //if (outline != null) outline.color = isCLient ? clientColor : defaultColor;
 
         /// MVP / TIE badge logic
         if (isTiedAtTop)

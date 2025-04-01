@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -193,7 +194,7 @@ public class FungalAI : MonoBehaviour
             lastDashTime = Time.time;  // Update last dash time
 
             // Randomize the next dash interval within the defined range
-            nextDashTime = Random.Range(minDashInterval, maxDashInterval);
+            nextDashTime = UnityEngine.Random.Range(minDashInterval, maxDashInterval);
 
             yield return new WaitUntil(() => fungal.Movement.IsAtDestination);
             agent.enabled = true;
@@ -218,7 +219,16 @@ public class FungalAI : MonoBehaviour
                 var directionToPlayer = (playerPos - targetSlingPosition).normalized;
 
                 // Clamp the movement position within maxRange
-                var targetMovePosition = targetSlingPosition + directionToPlayer * Mathf.Min(Vector3.Distance(targetSlingPosition, playerPos), targetFish.ThrowFish.Range * 0.75f);
+                var targetMovePosition = targetSlingPosition;
+
+                try
+                {
+                    targetMovePosition += directionToPlayer* Mathf.Min(Vector3.Distance(targetSlingPosition, playerPos), targetFish.ThrowFish.Range * 0.75f);
+                }
+                catch
+                {
+                    Debug.LogWarning($"Failed {targetFish} {targetFish.ThrowFish}");
+                }
 
                 // Check if the closest valid position is within range of the sling position
                 if (NavMesh.SamplePosition(targetMovePosition, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))

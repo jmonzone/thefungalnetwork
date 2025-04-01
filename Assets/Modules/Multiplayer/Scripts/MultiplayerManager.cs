@@ -520,16 +520,22 @@ public class MultiplayerManager : ScriptableObject
     {
         if (IsHost)
         {
+            Debug.Log("RemoveRelayFromLobbyData");
             await RemoveRelayFromLobbyData();
+            Debug.Log("ResetAIPlayers");
             await ResetAIPlayers();
         }
 
+        Debug.Log("DisconnectLocalClient");
         NetworkManager.Singleton.GetComponent<UnityTransport>().DisconnectLocalClient();
+        Debug.Log("Shutdown");
         NetworkManager.Singleton.Shutdown();
+        Debug.Log("NavigateToScene");
         sceneNavigation.NavigateToScene(0);
 
         if (IsHost)
         {
+            Debug.Log("ToggleLobbyLock");
             await ToggleLobbyLock(false);
         }
 

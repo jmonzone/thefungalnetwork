@@ -15,13 +15,15 @@ public class MainMenuHome : MonoBehaviour
 
     private const int MINIMUM_NAME_LENGTH = 3;
 
-    private void Awake()
+    private void Start()
     {
         nameInputField.onValueChanged.AddListener(value =>
         {
-            validationText.gameObject.SetActive(value.Length <= MINIMUM_NAME_LENGTH);
-            partyButton.interactable = value.Length > MINIMUM_NAME_LENGTH;
-            displayName.SetValue(value);
+            var isValid = value.Length > MINIMUM_NAME_LENGTH;
+
+            validationText.gameObject.SetActive(!isValid);
+            partyButton.interactable = isValid;
+            if (isValid) displayName.SetValue(value);
         });
 
         partyButton.onClick.AddListener(() =>

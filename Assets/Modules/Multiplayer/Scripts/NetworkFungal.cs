@@ -59,7 +59,11 @@ public class NetworkFungal : NetworkBehaviour
 
     private NetworkVariable<float> score = new NetworkVariable<float>();
     private NetworkVariable<int> lives = new NetworkVariable<int>(3);
-    public NetworkVariable<int> Kills = new NetworkVariable<int>(0);
+    public NetworkVariable<int> kills = new NetworkVariable<int>(0);
+    public NetworkVariable<int> selfDestructs = new NetworkVariable<int>(0);
+
+    public int Kills => kills.Value;
+    public int SelfDestructs => selfDestructs.Value;
 
     public event UnityAction OnRespawnStart;
     public event UnityAction OnRespawnComplete;
@@ -206,6 +210,8 @@ public class NetworkFungal : NetworkBehaviour
     private void DieServerRpc(bool selfDestruct)
     {
         //Debug.Log("DieClientRpc");
+        if (selfDestruct) selfDestructs.Value++;
+
         lives.Value--;
         score.Value = Mathf.FloorToInt(score.Value / 2f);
         DieClientRpc(selfDestruct);
@@ -273,7 +279,7 @@ public class NetworkFungal : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void OnKillServerRpc(Vector3 targetPosition, int killVictim)
     {
-        Kills.Value++;
+        kills.Value++;
 
         AddToScoreServerRpc(new ScoreEventArgs
         {
