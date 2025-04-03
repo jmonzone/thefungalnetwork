@@ -13,12 +13,12 @@ GameObject:
   - component: {fileID: 4361554531887318248}
   - component: {fileID: 1397613449463771812}
   m_Layer: 5
-  m_Name: Add Bot
+  m_Name: Empty State
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4236937715671034984
 RectTransform:
   m_ObjectHideFlags: 0
@@ -251,7 +251,7 @@ GameObject:
   - component: {fileID: 6378393323996671074}
   - component: {fileID: 2230569005044064711}
   - component: {fileID: 6055747063434697537}
-  - component: {fileID: 7059933860132650913}
+  - component: {fileID: 6662323404895990890}
   m_Layer: 5
   m_Name: Player List Item
   m_TagString: Untagged
@@ -433,7 +433,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ddc7677702024418b7c2b9f06de55ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &7059933860132650913
+--- !u!114 &6662323404895990890
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -442,13 +442,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 2393388931854420157}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1cc5555ddf80f4b369094be3e71c9451, type: 3}
+  m_Script: {fileID: 11500000, guid: 9538ea0ef0c104ce5946c9702e3f2f32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  label: {fileID: 371287273913558086}
-  button: {fileID: 6378393323996671074}
-  image: {fileID: 2904530804851622825}
-  badgeText: {fileID: 6608911813512940834}
+  fungalCollection: {fileID: 11400000, guid: 1d49e170120fe4ab1befd22e62e1ea65, type: 2}
+  multiplayer: {fileID: 11400000, guid: 408255eed57604ff491c1da858247ecd, type: 2}
+  playerNameText: {fileID: 371287273913558086}
+  playerFungalImage: {fileID: 2904530804851622825}
+  activeState: {fileID: 3456708833627657663}
+  inactiveState: {fileID: 319019147806633702}
+  hostBadge: {fileID: 3109136616029038142}
 --- !u!1 &3109136616029038142
 GameObject:
   m_ObjectHideFlags: 0
@@ -466,7 +469,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1546648498490500637
 RectTransform:
   m_ObjectHideFlags: 0
@@ -514,7 +517,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: ready
+  m_text: host
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b4e44b235567b440caf4e04d3269a48c, type: 2}
   m_sharedMaterial: {fileID: -4893521127105691677, guid: b4e44b235567b440caf4e04d3269a48c,
@@ -597,7 +600,7 @@ GameObject:
   - component: {fileID: 6454588512449940307}
   - component: {fileID: 7209813853438131127}
   m_Layer: 5
-  m_Name: Player Background
+  m_Name: Active State
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -836,7 +839,7 @@ GameObject:
   - component: {fileID: 760577059760800227}
   - component: {fileID: 2904530804851622825}
   m_Layer: 5
-  m_Name: Player Fungal Icon
+  m_Name: Player Fungal Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

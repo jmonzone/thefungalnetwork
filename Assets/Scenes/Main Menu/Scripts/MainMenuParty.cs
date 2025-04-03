@@ -18,29 +18,35 @@ public class MainMenuParty : MonoBehaviour
     [Header("UI Elements")]
     [SerializeField] private TextMeshProUGUI gameModeTitle;
     [SerializeField] private TextMeshProUGUI gameModeDescription;
-    [SerializeField] private ListUI playerList;
     [SerializeField] private Button exitButton;
     [SerializeField] private Button gameModeButton;
     [SerializeField] private Button startButton;
     [SerializeField] private GameObject waitingIndicator;
     [SerializeField] private GameObject hostControls;
 
-    [Header("Fungal Selection")]
-    [SerializeField] private Transform fungalSpawnAnchor;
-    [SerializeField] private Transform fungalSelectionItemAnchor;
-    [SerializeField] private FungalSelectionItem fungalSelectionItemPrefab;
+    [Header("Selected Fungal")]
     [SerializeField] private TextMeshProUGUI fungalNameText;
     [SerializeField] private TextMeshProUGUI fungalDescriptionText;
-
-    private List<FungalSelectionItem> fungalSelectionItems = new List<FungalSelectionItem>();
+    [SerializeField] private Transform fungalSpawnAnchor;
     private List<GameObject> fungalObjects = new List<GameObject>();
-    private int selectedFungalIndex = 0;
-    private bool joining = false;
 
+    [Header("Fungal Selection")]
+    [SerializeField] private Transform fungalSelectionItemAnchor;
+    [SerializeField] private FungalSelectionItem fungalSelectionItemPrefab;
+    private List<FungalSelectionItem> fungalSelectionItems = new List<FungalSelectionItem>();
+    private int selectedFungalIndex = 0;
+
+    [Header("Player List")]
+    [SerializeField] private Transform playerListItemAnchor;
+    [SerializeField] private PlayerListItem playerListItemPrefab;
+    private List<PlayerListItem> playerListItems = new List<PlayerListItem>();
+
+    private bool joining = false;
 
     private void Awake()
     {
         InitializeButtons();
+        InitializePlayerList();
         InitializeFungals();
         RegisterViewControllerEvents();
 
@@ -82,6 +88,15 @@ public class MainMenuParty : MonoBehaviour
             CycleGameMode();
             gameModeButton.interactable = true;
         });
+    }
+
+    private void InitializePlayerList()
+    {
+        playerListItemAnchor.GetComponentsInChildren(includeInactive: true, playerListItems);
+        foreach (var item in playerListItems)
+        {
+            item.Reset();
+        }
     }
 
     private void InitializeFungals()
@@ -138,33 +153,21 @@ public class MainMenuParty : MonoBehaviour
 
     private void UpdatePlayerList()
     {
-        var playerData = multiplayer.JoinedLobby.Players.Select(player =>
+        var i = 0;
+        foreach (var item in playerListItems)
         {
-            bool isLocalPlayer = player.Id == AuthenticationService.Instance.PlayerId;
-            int fungalIndex = isLocalPlayer ? selectedFungalIndex : GetPlayerFungalIndex(player);
-
-            //Debug.Log(fungalIndex);
-            var targetFungal = fungalCollection.Fungals[fungalIndex];
-            return new ListItemData
+            if (i < multiplayer.JoinedLobby.Players.Count)
             {
-                label = player.Data.TryGetValue("PlayerName", out var playerNameData) ? playerNameData.Value : "Unknown Player",
-                sprite = targetFungal.ActionImage,
-                onClick = () => { },
-                showBadge = multiplayer.JoinedLobby.HostId == player.Id
-            };
+                var player = multiplayer.JoinedLobby.Players[i];
+                item.SetPlayer(player);
+            }
+            else
+            {
+                item.Reset();
+            }
 
-        }).ToList();
-
-        playerList.SetItems(playerData);
-    }
-
-    private int GetPlayerFungalIndex(Unity.Services.Lobbies.Models.Player player)
-    {
-        if (player.Data.TryGetValue("Fungal", out var fungalData) && int.TryParse(fungalData?.Value, out var index))
-        {
-            return Mathf.Clamp(index, 0, fungalCollection.Fungals.Count - 1);
+            i++;
         }
-        return 0;
     }
 
     private async System.Threading.Tasks.Task SelectFungal(int index)
