@@ -16,7 +16,7 @@ public class DisplayName : ScriptableObject
     {
         var name = localData.JsonFile[DISPLAY_NAME_KEY] ?? "";
 
-        Debug.Log($"DisplayName.Initialize {name}");
+        //Debug.Log($"DisplayName.Initialize {name}");
         if (string.IsNullOrWhiteSpace(name.ToString()))
         {
             value = name.ToString();
@@ -33,7 +33,7 @@ public class DisplayName : ScriptableObject
         if (!string.IsNullOrWhiteSpace(value))
         {
             this.value = value;
-            Debug.Log(value);
+            //Debug.Log(value);
             localData.SaveData(DISPLAY_NAME_KEY, value);
             OnDisplayNameChanged?.Invoke();
         }

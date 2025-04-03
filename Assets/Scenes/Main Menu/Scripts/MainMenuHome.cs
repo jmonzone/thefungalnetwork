@@ -17,7 +17,7 @@ public class MainMenuHome : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log($"MainMenuHome.Home {name}");
+        //Debug.Log($"MainMenuHome.Home {name}");
 
         nameInputField.onValueChanged.AddListener(value =>
         {
