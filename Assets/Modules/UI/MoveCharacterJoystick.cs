@@ -3,7 +3,7 @@ using UnityEngine;
 public class MoveCharacterJoystick : MonoBehaviour
 {
     [SerializeField] private VirtualJoystick joystick;
-    [SerializeField] private PlayerReference player;
+    [SerializeField] private PufferballReference player;
     [SerializeField] private float wasdSensitivity;
 
     private void Awake()
@@ -16,12 +16,12 @@ public class MoveCharacterJoystick : MonoBehaviour
     {
         if (!enabled) return;
         //Debug.Log("Joystick_OnJoystickEnd");
-        player.Movement.Stop();
+        player.ClientPlayer.Fungal.Movement.Stop();
     }
 
     private void Update()
     {
-        if (!player.Movement) return;
+        if (!player.ClientPlayer.Fungal) return;
 
         if (Application.isEditor && !joystick.IsActive)
         {
@@ -36,7 +36,7 @@ public class MoveCharacterJoystick : MonoBehaviour
     private void MovePlayer(Vector3 direction)
     {
         if (!enabled) return;
-        if (player.Fungal.IsDead) return;
+        if (player.ClientPlayer.Fungal.IsDead) return;
 
         var translation = direction;
         translation.z = translation.y;
@@ -44,13 +44,6 @@ public class MoveCharacterJoystick : MonoBehaviour
 
         translation = Quaternion.Euler(0, transform.eulerAngles.y, 0) * translation;
 
-        //if (translation == Vector3.zero)
-        //{
-        //    if (player.Movement.Type != Movement.MovementType.IDLE) player.Movement.Stop();
-        //    return;
-        //}
-
-        //Debug.Log("MovePlayer");
-        player.Movement.SetDirection(translation);
+        player.ClientPlayer.Fungal.Movement.SetDirection(translation);
     }
 }

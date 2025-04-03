@@ -7,7 +7,7 @@ public class PufferfishExplosion : MonoBehaviour
 {
     [SerializeField] private PufferballReference pufferball;
     [SerializeField] private Movement movement;
-    [SerializeField] private ParticleSystem particleSystem;
+    [SerializeField] private new ParticleSystem particleSystem;
     [SerializeField] private AudioClip explosionClip;
 
     private Fish fish;

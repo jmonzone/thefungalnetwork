@@ -3,7 +3,7 @@ using UnityEngine.Events;
 
 public class PufferfishTemper : MonoBehaviour
 {
-    [SerializeField] private Renderer renderer;
+    [SerializeField] private new Renderer renderer;
 
     [SerializeField] private float maxTemperDuration = 5f; // Time to reach max temper
     [SerializeField] private int flashCount = 3; // Number of flashes at max temper

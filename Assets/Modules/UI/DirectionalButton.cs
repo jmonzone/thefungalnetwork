@@ -21,7 +21,6 @@ public class DirectionalButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
     public event UnityAction OnPointerUp;
 
     public event UnityAction OnDragStarted;
-    public event UnityAction OnDragCanceled;
     public event UnityAction<Vector3> OnDragUpdated;
     public event UnityAction<Vector3> OnDragCompleted;
 

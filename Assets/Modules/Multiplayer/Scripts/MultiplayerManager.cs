@@ -27,7 +27,7 @@ public class MultiplayerManager : ScriptableObject
     [SerializeField] private DisplayName displayName;
     [SerializeField] private SceneNavigation sceneNavigation;
 
-    public string PlayerName => displayName.Value ?? "Unknown";
+    private string PlayerName => displayName.Value;
     public bool IsSignedIn { get; private set; }
 
     private Lobby joinedLobby;

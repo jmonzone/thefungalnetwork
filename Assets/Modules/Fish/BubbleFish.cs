@@ -4,7 +4,6 @@ using UnityEngine;
 public class BubbleFish : NetworkBehaviour
 {
     [SerializeField] private Bubble bubblePrefab;
-    [SerializeField] private float pitch = 2f;
 
     private Fish fish;
     private Animator animator;

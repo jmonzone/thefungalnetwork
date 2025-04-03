@@ -74,7 +74,7 @@ namespace GURU
     }
 }
 
-public abstract class ListItemUI<T> : ListItemUI where T : ListItemData
+public abstract class ListItemUI<T>: ListItemUI where T : ListItemData
 {
     public override sealed void SetData(ListItemData data)
     {
@@ -82,5 +82,5 @@ public abstract class ListItemUI<T> : ListItemUI where T : ListItemData
         ApplyData(data as T);
     }
 
-    protected abstract void ApplyData<T>(T data);
+    protected abstract void ApplyData(T data);
 }

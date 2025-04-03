@@ -82,7 +82,7 @@ public class MainMenuParty : MonoBehaviour
             navigation.GoBack();
         });
 
-        gameModeButton.onClick.AddListener(async () =>
+        gameModeButton.onClick.AddListener(() =>
         {
             gameModeButton.interactable = false;
             CycleGameMode();

@@ -19,7 +19,6 @@ public class AbilityButton : MonoBehaviour
         directionalButton.OnPointerDown += DirectionalButton_OnPointerDown;
         directionalButton.OnDragUpdated += OnDragUpdated;
         directionalButton.OnDragCompleted += OnDragCompleted;
-        directionalButton.OnDragCanceled += OnDragCanceled;
 
         // If the ability is assigned, subscribe to its events
         if (ability != null)

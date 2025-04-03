@@ -1,12 +1,10 @@
 using System.Collections;
-using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class Pufferfish : NetworkBehaviour
 {
-    [SerializeField] private PlayerReference playerReference;
     [SerializeField] private float minExplosionRadius = 3f;
     [SerializeField] private float maxExplosionRadius = 3f;
     [SerializeField] private float minExplosionDamage = 1f;

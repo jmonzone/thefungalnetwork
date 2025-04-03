@@ -1,15 +1,11 @@
-using System.Linq;
 using Unity.Netcode;
 using Unity.Services.Authentication;
 using UnityEngine;
 
 public class FishingPlayer : NetworkBehaviour
 {
-    [SerializeField] private PlayerReference player;
     [SerializeField] private DisplayName displayName;
     [SerializeField] private MultiplayerManager multiplayer;
-
-    private NetworkFungal networkFungal;
 
     public override void OnNetworkSpawn()
     {
@@ -47,11 +43,4 @@ public class FishingPlayer : NetworkBehaviour
         //Debug.Log(playerSpawner.NetworkObjectId);
         playerSpawner.AddPlayer(NetworkManager.Singleton.LocalClientId, displayName.Value, localPlayerIndex, characterIndex);
     }
-
-    public void AssignFungal(NetworkFungal fungal)
-    {
-        networkFungal = fungal;
-        player.SetMovement(networkFungal);
-    }
-
 }

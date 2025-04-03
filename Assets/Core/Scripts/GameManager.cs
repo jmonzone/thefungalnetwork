@@ -18,8 +18,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private DisplayName displayName;
     [SerializeField] private ItemInventory itemInventory;
     [SerializeField] private FungalInventory fungalInventory;
-    [SerializeField] private Possession possession;
-    [SerializeField] private PlayerReference controller;
     [SerializeField] private Volume volume;
 
 
@@ -48,7 +46,6 @@ public class GameManager : MonoBehaviour
 
             itemInventory.Initialize();
             fungalInventory.Initialize();
-            possession.Initialize();
 
             //controller.Initialize(volume);
 
@@ -58,7 +55,6 @@ public class GameManager : MonoBehaviour
             {
                 itemInventory.Initialize();
                 fungalInventory.Initialize();
-                possession.Initialize();
             };
 
             sceneNavigation.OnSceneNavigationRequest += () =>

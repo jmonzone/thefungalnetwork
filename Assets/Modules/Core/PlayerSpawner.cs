@@ -80,13 +80,6 @@ public class PlayerSpawner : NetworkBehaviour
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out var networkObject))
         {
             var networkFungal = networkObject.GetComponent<NetworkFungal>();
-
-            if (networkFungal.IsOwner)
-            {
-                var fishingPlayer = FindObjectOfType<FishingPlayer>();
-                fishingPlayer.AssignFungal(networkFungal);
-            }
-
             pufferballReference.AddPlayer(clientId, playerIndex, networkFungal);
         }
 

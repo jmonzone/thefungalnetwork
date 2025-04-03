@@ -51,7 +51,7 @@ public class Bubble : NetworkBehaviour
 
                 if (targetFungal != null && !targetFungal.IsDead)
                 {
-                    targetFungal.ModifySpeedServerRpc(0f, 2.25f, showStunAnimation: true);
+                    targetFungal.ModifySpeedServerRpc(0f, stunDuration, showStunAnimation: true);
                     targetFungal.Health.Damage(damage, sourceFungal);
                     Pop();
                 }
