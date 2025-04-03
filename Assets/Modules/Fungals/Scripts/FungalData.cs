@@ -11,6 +11,7 @@ public enum FungalType
 public class FungalData : ScriptableObject
 {
     [SerializeField] private string id;
+    [SerializeField] [TextArea] private string description;
     [SerializeField] private FungalType type;
     [SerializeField] private GameObject prefab;
     [SerializeField] private Sprite actionImage;
@@ -18,6 +19,7 @@ public class FungalData : ScriptableObject
     [SerializeField] private Color eggColor;
 
     public string Id => id;
+    public string Description => description;
     public FungalType Type => type;
     public GameObject Prefab => prefab;
     public Sprite ActionImage => actionImage;

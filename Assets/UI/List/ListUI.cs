@@ -39,7 +39,7 @@ namespace GURU
         /// Sets the items displayed in the list based on the provided data.
         /// </summary>
         /// <param name="data">A list of data representing the items to display.</param>
-        public void SetItems(List<ListItemData> data)
+        public void SetItems<T>(List<T> data) where T : ListItemData
         {
             int existingCount = items.Count;
             int requiredCount = data.Count;

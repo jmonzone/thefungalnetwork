@@ -9,31 +9,59 @@ using UnityEngine.UI;
 
 public class MainMenuParty : MonoBehaviour
 {
-    [SerializeField] private ListUI playerList;
-    [SerializeField] private ListUI fungalList;
-    [SerializeField] private GameObject waitingIndicator;
-    [SerializeField] private Button startButton;
-    [SerializeField] private Button exitButton;
-
-    [SerializeField] private FungalCollection fungalCollection;
+    [Header("Navigation & Managers")]
     [SerializeField] private Navigation navigation;
     [SerializeField] private SceneNavigation sceneNavigation;
     [SerializeField] private MultiplayerManager multiplayer;
+    [SerializeField] private FungalCollection fungalCollection;
 
-    [SerializeField] private Transform fungalSpawnAnchor;
-
+    [Header("UI Elements")]
     [SerializeField] private TextMeshProUGUI gameModeTitle;
     [SerializeField] private TextMeshProUGUI gameModeDescription;
-    [SerializeField] private GameObject hostControls;
+    [SerializeField] private ListUI playerList;
+    [SerializeField] private Button exitButton;
     [SerializeField] private Button gameModeButton;
+    [SerializeField] private Button startButton;
+    [SerializeField] private GameObject waitingIndicator;
+    [SerializeField] private GameObject hostControls;
 
-    [SerializeField] private Button useAiPlayersButton;
-    [SerializeField] private TextMeshProUGUI useAiPlayersText;
+    [Header("Fungal Selection")]
+    [SerializeField] private Transform fungalSpawnAnchor;
+    [SerializeField] private Transform fungalSelectionItemAnchor;
+    [SerializeField] private FungalSelectionItem fungalSelectionItemPrefab;
+    [SerializeField] private TextMeshProUGUI fungalNameText;
+    [SerializeField] private TextMeshProUGUI fungalDescriptionText;
 
-    private Dictionary<int, GameObject> fungalObjects = new Dictionary<int, GameObject>();
+    private List<FungalSelectionItem> fungalSelectionItems = new List<FungalSelectionItem>();
+    private List<GameObject> fungalObjects = new List<GameObject>();
     private int selectedFungalIndex = 0;
+    private bool joining = false;
+
 
     private void Awake()
+    {
+        InitializeButtons();
+        InitializeFungals();
+        RegisterViewControllerEvents();
+
+        var savedIndex = PlayerPrefs.GetInt("FungalIndex", 0);
+        SetSelectedFungalIndex(savedIndex);
+    }
+
+    private void OnEnable()
+    {
+        multiplayer.OnLobbyPoll += MultiplayerManager_OnLobbyPoll;
+        multiplayer.OnLobbyJoined += OnHostChanged;
+        OnHostChanged();
+    }
+
+    private void OnDisable()
+    {
+        multiplayer.OnLobbyPoll -= MultiplayerManager_OnLobbyPoll;
+        multiplayer.OnLobbyJoined -= OnHostChanged;
+    }
+
+    private void InitializeButtons()
     {
         startButton.onClick.AddListener(async () =>
         {
@@ -51,25 +79,26 @@ public class MainMenuParty : MonoBehaviour
         gameModeButton.onClick.AddListener(async () =>
         {
             gameModeButton.interactable = false;
-            // Get the next game mode in the enum sequence
-
-            GameMode[] modes = (GameMode[])Enum.GetValues(typeof(GameMode));
-            int currentIndex = Array.IndexOf(modes, multiplayer.GameMode);
-            int nextIndex = (currentIndex + 1) % modes.Length; // Loop back to the first mode if at the end
-            GameMode nextMode = modes[nextIndex];
-
-            // Update the lobby data with the new mode
-            await multiplayer.UpdateJoinedLobbyData("GameMode", nextMode.ToString());
-
+            CycleGameMode();
             gameModeButton.interactable = true;
         });
+    }
 
-        useAiPlayersButton.onClick.AddListener(async () =>
+    private void InitializeFungals()
+    {
+        fungalSelectionItemAnchor.GetComponentsInChildren(includeInactive: true, fungalSelectionItems);
+
+        for (var i = fungalSelectionItems.Count; i < fungalCollection.Fungals.Count; i++)
         {
-            useAiPlayersButton.interactable = false;
-            await multiplayer.UpdateJoinedLobbyData("UseAI", (!multiplayer.UseAiPlayers).ToString());
-            useAiPlayersButton.interactable = true;
-        });
+            var item = Instantiate(fungalSelectionItemPrefab, fungalSelectionItemAnchor);
+            fungalSelectionItems.Add(item);
+        }
+
+        foreach (var item in fungalSelectionItems)
+        {
+            item.SetIsSelected(false);
+            item.gameObject.SetActive(false);
+        }
 
         for (var i = 0; i < fungalCollection.Fungals.Count; i++)
         {
@@ -77,115 +106,111 @@ public class MainMenuParty : MonoBehaviour
             var prefab = Instantiate(fungal.Prefab, fungalSpawnAnchor);
             prefab.transform.SetPositionAndRotation(fungalSpawnAnchor.position, fungalSpawnAnchor.rotation);
             prefab.SetActive(false);
-            fungalObjects.Add(i, prefab);
+            fungalObjects.Add(prefab);
+
+            var index = i;
+            fungalSelectionItems[i].SetData(fungal, async () => await SelectFungal(index));
         }
-
-        selectedFungalIndex = PlayerPrefs.GetInt("FungalIndex", 0);
-
-        GetComponent<ViewController>().OnFadeInComplete += () =>
-        {
-            fungalObjects[selectedFungalIndex].SetActive(true);
-        };
-
-        GetComponent<ViewController>().OnFadeOutComplete += () =>
-        {
-            fungalObjects[selectedFungalIndex].SetActive(false);
-        };
+    }
+    private void RegisterViewControllerEvents()
+    {
+        var viewController = GetComponent<ViewController>();
+        viewController.OnFadeInComplete += () => fungalObjects[selectedFungalIndex].SetActive(true);
+        viewController.OnFadeOutComplete += () => fungalObjects[selectedFungalIndex].SetActive(false);
     }
 
-    private void OnEnable()
+    private async void CycleGameMode()
     {
-        OnHostChanged();
-        multiplayer.OnLobbyPoll += MultiplayerManager_OnLobbyPoll;
-        multiplayer.OnLobbyJoined += OnHostChanged;
-    }
-
-    private void OnDisable()
-    {
-        multiplayer.OnLobbyPoll -= MultiplayerManager_OnLobbyPoll;
-        multiplayer.OnLobbyJoined -= OnHostChanged;
+        GameMode[] modes = (GameMode[])Enum.GetValues(typeof(GameMode));
+        int currentIndex = Array.IndexOf(modes, multiplayer.GameMode);
+        int nextIndex = (currentIndex + 1) % modes.Length;
+        GameMode nextMode = modes[nextIndex];
+        await multiplayer.UpdateJoinedLobbyData("GameMode", nextMode.ToString());
     }
 
     private void MultiplayerManager_OnLobbyPoll()
     {
+        UpdatePlayerList();
+        HandleLobbyJoin();
+        OnHostChanged();
+        OnGameModeChanged();
+    }
+
+    private void UpdatePlayerList()
+    {
         var playerData = multiplayer.JoinedLobby.Players.Select(player =>
         {
             bool isLocalPlayer = player.Id == AuthenticationService.Instance.PlayerId;
+            int fungalIndex = isLocalPlayer ? selectedFungalIndex : GetPlayerFungalIndex(player);
 
-            int fungalIndex = 0;
-
-            if (isLocalPlayer) fungalIndex = selectedFungalIndex;
-            else
-            {
-                if (player.Data.TryGetValue("Fungal", out var fungalData))
-                {
-                    if (int.TryParse(fungalData?.Value, out var index))
-                    {
-                        fungalIndex = index;
-                    }
-                }
-            }
-
-            fungalIndex = Math.Clamp(fungalIndex, 0, fungalCollection.Fungals.Count - 1);
-
+            //Debug.Log(fungalIndex);
             var targetFungal = fungalCollection.Fungals[fungalIndex];
-
             return new ListItemData
             {
-                label = player.Data.TryGetValue("PlayerName", out var playerNameData)
-                        ? playerNameData.Value
-                        : "Unknown Player",
+                label = player.Data.TryGetValue("PlayerName", out var playerNameData) ? playerNameData.Value : "Unknown Player",
                 sprite = targetFungal.ActionImage,
                 onClick = () => { },
                 showBadge = multiplayer.JoinedLobby.HostId == player.Id
             };
+
         }).ToList();
 
         playerList.SetItems(playerData);
+    }
 
-        var fungalData = fungalCollection.Fungals.Select((fungal, index) => new ListItemData
+    private int GetPlayerFungalIndex(Unity.Services.Lobbies.Models.Player player)
+    {
+        if (player.Data.TryGetValue("Fungal", out var fungalData) && int.TryParse(fungalData?.Value, out var index))
         {
-            label = fungal.Id,
-            sprite = fungal.ActionImage,
-            onClick = async () =>
-            {
-                fungalObjects[selectedFungalIndex].SetActive(false);
-                selectedFungalIndex = index;
-                PlayerPrefs.SetInt("FungalIndex", selectedFungalIndex); // Default to 0 if key doesn't exist
-                fungalObjects[selectedFungalIndex].SetActive(true);
+            return Mathf.Clamp(index, 0, fungalCollection.Fungals.Count - 1);
+        }
+        return 0;
+    }
 
-                MultiplayerManager_OnLobbyPoll();
-                await multiplayer.AddPlayerDataToLobby("Fungal", index.ToString());
-            }
-        }).ToList();
+    private async System.Threading.Tasks.Task SelectFungal(int index)
+    {
+        fungalObjects[selectedFungalIndex].SetActive(false);
+        fungalSelectionItems[selectedFungalIndex].SetIsSelected(false);
 
-        fungalList.SetItems(fungalData);
+        SetSelectedFungalIndex(index);
 
+        fungalObjects[selectedFungalIndex].SetActive(true);
+
+        MultiplayerManager_OnLobbyPoll();
+        await multiplayer.AddPlayerDataToLobby("Fungal", index.ToString());
+    }
+
+    private void SetSelectedFungalIndex(int index)
+    {
+        selectedFungalIndex = Mathf.Clamp(index, 0, fungalCollection.Fungals.Count - 1);
+        PlayerPrefs.SetInt("FungalIndex", selectedFungalIndex);
+
+        fungalSelectionItems[selectedFungalIndex].SetIsSelected(true);
+
+        var fungal = fungalCollection.Fungals[selectedFungalIndex];
+        fungalNameText.text = fungal.name;
+        fungalDescriptionText.text = fungal.Description;
+
+    }
+    private void HandleLobbyJoin()
+    {
         if (!joining && multiplayer.JoinedLobby.Data.ContainsKey("JoinCode") && !string.IsNullOrEmpty(multiplayer.JoinedLobby.Data["JoinCode"].Value))
         {
             if (!multiplayer.IsHost)
             {
-                var joinCode = multiplayer.JoinedLobby.Data["JoinCode"].Value;
-                multiplayer.JoinRelay(joinCode);
+                multiplayer.JoinRelay(multiplayer.JoinedLobby.Data["JoinCode"].Value);
             }
             sceneNavigation.NavigateToScene(1);
             joining = true;
         }
-
-        OnHostChanged();
-        OnGameModeChanged();
-
-        useAiPlayersText.text = $"Use AI Players: {(multiplayer.UseAiPlayers ? "On" : "Off")}";
     }
-
-    private bool joining = false;
 
     private void OnHostChanged()
     {
-        hostControls.SetActive(multiplayer.IsHost);
-
-        startButton.gameObject.SetActive(multiplayer.IsHost);
-        waitingIndicator.SetActive(!multiplayer.IsHost);
+        bool isHost = multiplayer.IsHost;
+        hostControls.SetActive(isHost);
+        startButton.gameObject.SetActive(isHost);
+        waitingIndicator.SetActive(!isHost);
     }
 
     private void OnGameModeChanged()
