@@ -15,7 +15,7 @@ public class ArenaTimer : MonoBehaviour
     private bool isFinalCountdown = false;
     private bool hasEnded = false;
 
-    private float pulseSpeed = 3f;
+    private float pulseSpeed = 2f;
     private float originalFontSize;
 
     private void Awake()
@@ -53,7 +53,6 @@ public class ArenaTimer : MonoBehaviour
         if (currentTime <= 5f && !isFinalCountdown)
         {
             isFinalCountdown = true;
-            // Optional: play SFX, flash, camera shake, etc.
         }
 
         if (currentTime <= 0f && !hasEnded)
@@ -68,27 +67,28 @@ public class ArenaTimer : MonoBehaviour
     {
         if (timerText == null) return;
 
-        if (time <= 5f && time > 0f)
+        int seconds = Mathf.CeilToInt(time);
+
+        if (seconds <= 5 && seconds > 0)
         {
-            int secondsOnly = Mathf.CeilToInt(time);
-            timerText.text = secondsOnly.ToString();
+            timerText.text = seconds.ToString();
 
             float t = Mathf.PingPong(Time.time * pulseSpeed, 1f);
             timerText.color = Color.Lerp(startColor, endColor, t);
-
-            float sizeT = Mathf.PingPong(Time.time * pulseSpeed, 1f);
-            timerText.fontSize = Mathf.Lerp(originalFontSize * 2f, originalFontSize * 2.5f, sizeT);
+            timerText.fontSize = Mathf.Lerp(originalFontSize * 2f, originalFontSize * 2.5f, t);
         }
-        else if (time > 5f)
+        else if (seconds > 5)
         {
-            int minutes = Mathf.FloorToInt(time / 60f);
-            int seconds = Mathf.FloorToInt(time % 60f);
-            timerText.text = $"{minutes}:{seconds:00}";
+            int minutes = seconds / 60;
+            int secs = seconds % 60;
+            timerText.text = $"{minutes}:{secs:00}";
 
             timerText.color = startColor;
             timerText.fontSize = originalFontSize;
         }
     }
+
+
 
     private IEnumerator HandleGameSet()
     {

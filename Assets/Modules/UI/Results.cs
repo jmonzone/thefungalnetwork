@@ -32,14 +32,14 @@ public class Results : MonoBehaviour
 
     private IEnumerator OnGameCompleteRoutine()
     {
-        yield return new WaitForSeconds(1f);
+        moveCharacterJoystick.enabled = false;
+
+        yield return new WaitForSeconds(1.5f);
 
         headerText.color = game.ClientPlayer.IsWinner ? winColor : loseColor;
         headerText.text = game.ClientPlayer.IsWinner ? "Bog Unclogged" : "Bogged Down";
 
         navigation.Navigate(resultsView);
-
-        moveCharacterJoystick.enabled = false;
 
         yield return new WaitForSeconds(3f);
         yield return continueButton.FadeIn(0.5f);
