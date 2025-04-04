@@ -23,7 +23,7 @@ public class MainMenuParty : MonoBehaviour
     [Header("Selected Fungal")]
     [SerializeField] private TextMeshProUGUI fungalNameText;
     [SerializeField] private TextMeshProUGUI fungalDescriptionText;
-    [SerializeField] private Transform fungalSpawnAnchor;
+    [SerializeField] private FungalInteractions fungalInteractions;
     private List<GameObject> fungalObjects = new List<GameObject>();
 
     [Header("Fungal Selection")]
@@ -124,8 +124,8 @@ public class MainMenuParty : MonoBehaviour
         for (var i = 0; i < fungalCollection.Fungals.Count; i++)
         {
             var fungal = fungalCollection.Fungals[i];
-            var prefab = Instantiate(fungal.Prefab, fungalSpawnAnchor);
-            prefab.transform.SetPositionAndRotation(fungalSpawnAnchor.position, fungalSpawnAnchor.rotation);
+            var prefab = Instantiate(fungal.Prefab, fungalInteractions.transform);
+            prefab.transform.SetPositionAndRotation(fungalInteractions.transform.position, fungalInteractions.transform.rotation);
             prefab.SetActive(false);
             fungalObjects.Add(prefab);
 
@@ -188,7 +188,8 @@ public class MainMenuParty : MonoBehaviour
 
         SetSelectedFungalIndex(index);
 
-        fungalObjects[selectedFungalIndex].SetActive(true);
+        var fungal = fungalObjects[selectedFungalIndex];
+        fungal.SetActive(true);
 
         OnMultiplayerLobbyUpdated();
         await multiplayer.AddPlayerDataToLobby("Fungal", index.ToString());
@@ -200,6 +201,7 @@ public class MainMenuParty : MonoBehaviour
         PlayerPrefs.SetInt("FungalIndex", selectedFungalIndex);
 
         fungalSelectionItems[selectedFungalIndex].SetIsSelected(true);
+        fungalInteractions.SetFungal(fungalObjects[selectedFungalIndex]);
 
         var fungal = fungalCollection.Fungals[selectedFungalIndex];
         fungalNameText.text = fungal.name;

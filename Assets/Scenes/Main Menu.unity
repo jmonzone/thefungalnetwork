@@ -2174,6 +2174,12 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 346302035}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &360944122 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5671637318396879657, guid: 149ee12057ca19049bb96dbfe3295cd5,
+    type: 3}
+  m_PrefabInstance: {fileID: 1014980405}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &383949711
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2684,8 +2690,9 @@ GameObject:
   - component: {fileID: 474897158}
   - component: {fileID: 474897161}
   - component: {fileID: 474897160}
+  - component: {fileID: 474897162}
   m_Layer: 0
-  m_Name: Fungal Spawn Anchor
+  m_Name: Fungal Interactions
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2757,6 +2764,21 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 474897157}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &474897162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 474897157}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77bd1d06f9c664112a5201e9f89442d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  placeholder: {fileID: 360944122}
+  rotationSpeed: 500
+  animationTrigger: Clicked
 --- !u!1 &481104917
 GameObject:
   m_ObjectHideFlags: 0
@@ -7971,11 +7993,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8065280742853664535, guid: d6c5567f85683424f8c2ebdd40f049ad,
         type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 25
-      objectReference: {fileID: 0}
-    - target: {fileID: 8065280742853664535, guid: d6c5567f85683424f8c2ebdd40f049ad,
-        type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -9880,10 +9897,9 @@ MonoBehaviour:
   gameModeButton: {fileID: 299823657}
   startButton: {fileID: 1761933090}
   waitingIndicator: {fileID: 8680201845047545609}
-  hostControls: {fileID: 1135355432}
   fungalNameText: {fileID: 1137000411}
   fungalDescriptionText: {fileID: 1441872649}
-  fungalSpawnAnchor: {fileID: 474897158}
+  fungalInteractions: {fileID: 474897162}
   fungalSelectionItemAnchor: {fileID: 830976881}
   fungalSelectionItemPrefab: {fileID: 3789806729501917970, guid: 875ea8146e3334b20849d83ddc19955e,
     type: 3}
