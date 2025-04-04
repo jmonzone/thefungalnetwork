@@ -67,7 +67,7 @@ namespace GURU
 
             button.onClick.RemoveAllListeners();
             button.onClick.AddListener(() => data.onClick());
-            gameObject.SetActive(true);
+            if (gameObject) gameObject.SetActive(true);
 
             if (badgeText) badgeText.enabled = data.showBadge;
         }

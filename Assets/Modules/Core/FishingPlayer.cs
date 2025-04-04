@@ -5,7 +5,7 @@ using UnityEngine;
 public class FishingPlayer : NetworkBehaviour
 {
     [SerializeField] private DisplayName displayName;
-    [SerializeField] private MultiplayerManager multiplayer;
+    [SerializeField] private MultiplayerReference multiplayer;
 
     public override void OnNetworkSpawn()
     {

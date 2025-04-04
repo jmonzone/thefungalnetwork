@@ -7,7 +7,7 @@ public class Leaderboard : MonoBehaviour
     [SerializeField] private PufferballReference pufferball;
     [SerializeField] private Transform leaderboardContainer;
     [SerializeField] private LeaderboardEntry leaderboardEntryPrefab;
-    [SerializeField] private MultiplayerManager multiplayer;
+    [SerializeField] private MultiplayerReference multiplayer;
     [SerializeField] private bool showOnElimination;
 
     private List<LeaderboardEntry> leaderboardEntries = new List<LeaderboardEntry>();

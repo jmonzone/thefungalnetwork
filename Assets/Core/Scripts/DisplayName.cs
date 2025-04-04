@@ -38,16 +38,4 @@ public class DisplayName : ScriptableObject
             OnDisplayNameChanged?.Invoke();
         }
     }
-
-    private string GenerateRandomName()
-    {
-        string[] adjectives = { "Party", "Quick", "Brat", "Lucid", "Fungal", "Bog" };
-        string[] nouns = { "Exit", "Dragon", "Brat", "Wizard", "Warrior", "Fungal" };
-
-        string adjective = adjectives[Random.Range(0, adjectives.Length)];
-        string noun = nouns[Random.Range(0, nouns.Length)];
-        int number = Random.Range(1000, 9999);
-
-        return $"{adjective}{noun}{number}";
-    }
 }

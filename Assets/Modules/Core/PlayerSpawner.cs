@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class PlayerSpawner : NetworkBehaviour
 {
-    [SerializeField] private MultiplayerManager multiplayer;
+    [SerializeField] private MultiplayerReference multiplayer;
     [SerializeField] private MultiplayerArena arena;
     [SerializeField] private FungalCollection fungalCollection;
     [SerializeField] private PufferballReference pufferballReference;

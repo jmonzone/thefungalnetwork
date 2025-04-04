@@ -29,7 +29,7 @@ public class PufferballReference : ScriptableObject
 {
     [SerializeField] private Player clientPlayer;
     [SerializeField] private List<Player> players;
-    [SerializeField] private MultiplayerManager multiplayer;
+    [SerializeField] private MultiplayerReference multiplayer;
 
     public bool isComplete;
     public GameMode gameMode;

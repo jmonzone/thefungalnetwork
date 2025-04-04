@@ -5354,7 +5354,7 @@ PrefabInstance:
     - target: {fileID: 5671637318396879657, guid: 149ee12057ca19049bb96dbfe3295cd5,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5671637318396879658, guid: 149ee12057ca19049bb96dbfe3295cd5,
         type: 3}
@@ -7107,7 +7107,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bc0eedbbccc5408f87695ca2eb6d36a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debug: 0
+  debug: 1
   titleViewController: {fileID: 1234860486}
   partyButton: {fileID: 1311892842}
   partyButtonFade: {fileID: 1311892847}
@@ -8925,6 +8925,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cc5555ddf80f4b369094be3e71c9451, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1556860213 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6402698496550159456, guid: d6c5567f85683424f8c2ebdd40f049ad,
+    type: 3}
+  m_PrefabInstance: {fileID: 1331955606}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1557881424
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9875,9 +9887,10 @@ MonoBehaviour:
   fungalSelectionItemAnchor: {fileID: 830976881}
   fungalSelectionItemPrefab: {fileID: 3789806729501917970, guid: 875ea8146e3334b20849d83ddc19955e,
     type: 3}
-  playerListItemAnchor: {fileID: 1894503764}
+  playerListItemAnchor: {fileID: 1999210269}
   playerListItemPrefab: {fileID: 6662323404895990890, guid: 3f1b57237efd540cdb379e93e8993dd3,
     type: 3}
+  addBotButton: {fileID: 1556860213}
 --- !u!4 &1797788930
 Transform:
   m_ObjectHideFlags: 0

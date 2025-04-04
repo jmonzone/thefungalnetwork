@@ -21,11 +21,20 @@ public enum GameMode
     ELIMINATION
 }
 
+public class LobbyPlayer
+{
+    public FungalData fungal;
+    public string name;
+    public bool isAI;
+    public bool isHost;
+}
+
 [CreateAssetMenu]
-public class MultiplayerManager : ScriptableObject
+public class MultiplayerReference : ScriptableObject
 {
     [SerializeField] private DisplayName displayName;
     [SerializeField] private SceneNavigation sceneNavigation;
+    [SerializeField] private FungalCollection fungalCollection;
 
     private string PlayerName => displayName.Value;
     public bool IsSignedIn { get; private set; }
@@ -37,13 +46,65 @@ public class MultiplayerManager : ScriptableObject
         private set
         {
             joinedLobby = value;
-            OnLobbyUpdated?.Invoke();
+            UpdateLobbyPlayers();
         }
     }
 
-    public event UnityAction OnLobbyUpdated;
+    private void UpdateLobbyPlayers()
+    {
+        //Debug.Log("UpdateLobbyPlayers");
+
+        if (joinedLobby != null)
+        {
+            LobbyPlayers = new List<LobbyPlayer>();
+            foreach (var player in joinedLobby.Players)
+            {
+                var fungalIndex = GetPlayerFungalIndex(player);
+                var lobbyPlayer = new LobbyPlayer
+                {
+                    fungal = fungalCollection.Fungals[fungalIndex],
+                    name = player.Data.TryGetValue("PlayerName", out var playerNameData) ? playerNameData.Value : "Unknown Player",
+                    isAI = false,
+                    isHost = player.Id == JoinedLobby.HostId,
+                };
+
+                LobbyPlayers.Add(lobbyPlayer);
+            }
+
+            List<string> aiPlayerNames = GetCurrentAIPlayerList();
+
+            //Debug.Log($"aiPlayerNames.Count {aiPlayerNames.Count}");
+            foreach (var aiPlayer in aiPlayerNames)
+            {
+                var fungalIndex = 0;
+                var lobbyPlayer = new LobbyPlayer
+                {
+                    fungal = fungalCollection.Fungals[fungalIndex],
+                    name = aiPlayer,
+                    isAI = true,
+                    isHost = false,
+                };
+
+                LobbyPlayers.Add(lobbyPlayer);
+            }
+        }
+
+        OnLobbyUpdated?.Invoke();
+    }
+
+    private int GetPlayerFungalIndex(Unity.Services.Lobbies.Models.Player player)
+    {
+        if (player.Data.TryGetValue("Fungal", out var fungalData) && int.TryParse(fungalData?.Value, out var index))
+        {
+            return Mathf.Clamp(index, 0, fungalCollection.Fungals.Count - 1);
+        }
+        return 0;
+    }
+
+    public List<LobbyPlayer> LobbyPlayers { get; private set; }
+
     public event UnityAction OnLobbyJoined;
-    public event UnityAction OnLobbyPoll;
+    public event UnityAction OnLobbyUpdated;
 
     private const int MAX_PLAYER_COUNT = 4;
 
@@ -93,7 +154,6 @@ public class MultiplayerManager : ScriptableObject
             JoinedLobby = lobby;
             if (IsHost) hostLobby = lobby;
             else hostLobby = null;
-            OnLobbyPoll?.Invoke();
         }
     }
 
@@ -184,7 +244,6 @@ public class MultiplayerManager : ScriptableObject
             });
 
             JoinedLobby = lobby;
-            OnLobbyPoll?.Invoke();
         }
         catch (RelayServiceException e)
         {
@@ -202,7 +261,6 @@ public class MultiplayerManager : ScriptableObject
             });
 
             JoinedLobby = lobby;
-            OnLobbyPoll?.Invoke();
         }
         catch (RelayServiceException e)
         {
@@ -225,7 +283,7 @@ public class MultiplayerManager : ScriptableObject
             });
 
             Debug.Log($"Player data updated: {key} = {value}");
-            OnLobbyPoll?.Invoke();
+            OnLobbyUpdated?.Invoke();
         }
         catch (LobbyServiceException e)
         {
@@ -246,7 +304,6 @@ public class MultiplayerManager : ScriptableObject
             });
 
             JoinedLobby = lobby;
-            OnLobbyPoll?.Invoke();
 
         }
         catch (RelayServiceException e)
@@ -386,15 +443,6 @@ public class MultiplayerManager : ScriptableObject
         }
     }
 
-    public bool UseAiPlayers
-    {
-        get
-        {
-            if (bool.TryParse(GetJoinedLobbyData("UseAI"), out bool useAi)) return useAi;
-            else return default;
-        }
-    }
-
     public async Task CreateLobby()
     {
         try
@@ -499,7 +547,7 @@ public class MultiplayerManager : ScriptableObject
 
             // Remove the player from the lobby
             await LobbyService.Instance.RemovePlayerAsync(joinedLobby.Id, playerId);
-            joinedLobby = null;
+            JoinedLobby = null;
             player = null;
             Debug.Log("Player removed from lobby");
         }
@@ -541,12 +589,8 @@ public class MultiplayerManager : ScriptableObject
 
     }
 
-    /// <summary>
-    /// Adds an AI player to the lobby data.
-    /// </summary>
-    public async Task AddAIPlayer(string aiPlayerName)
+    public async Task AddAIPlayer()
     {
-        //Debug.Log($"AddAIPlayer {aiPlayerName}");
         if (JoinedLobby == null)
         {
             Debug.LogWarning("No joined lobby to add AI player to.");
@@ -555,20 +599,46 @@ public class MultiplayerManager : ScriptableObject
 
         List<string> aiPlayerNames = GetCurrentAIPlayerList();
 
-        // Add the new AI player
-        aiPlayerNames.Add(aiPlayerName);
+        if (aiPlayerNames.Count >= 8)
+        {
+            Debug.Log("AI player limit reached.");
+            return;
+        }
 
-        // Update the lobby data
+        int attempts = 0;
+        string newAIName;
+
+        do
+        {
+            newAIName = GenerateRandomName();
+            attempts++;
+        }
+        while (aiPlayerNames.Contains(newAIName) && attempts < 20);
+
+        if (aiPlayerNames.Contains(newAIName))
+        {
+            Debug.LogWarning("Failed to generate unique AI name.");
+            return;
+        }
+
+        aiPlayerNames.Add(newAIName);
         await UpdateLobbyAIData(aiPlayerNames);
 
-        //Debug.Log($"AI Player '{aiPlayerName}' added.");
+        Debug.Log($"AI player added: {newAIName}");
+        UpdateLobbyPlayers();
     }
 
-    /// <summary>
-    /// Removes an AI player from the lobby data.
-    /// </summary>
+    private string GenerateRandomName()
+    {
+        string[] nouns = { "gpt", "gmo", "gmw", "nlp", "hbd", "gtg", "omw", "brb" };
+        string noun = nouns[UnityEngine.Random.Range(0, nouns.Length)];
+        return $"fungal {noun}";
+    }
+
     public async Task RemoveAIPlayer(string aiPlayerName)
     {
+        Debug.Log("RemoveAIPlayer " + aiPlayerName);
+
         if (JoinedLobby == null)
         {
             Debug.LogWarning("No joined lobby to remove AI player from.");
@@ -589,11 +659,11 @@ public class MultiplayerManager : ScriptableObject
         {
             Debug.LogWarning($"AI Player '{aiPlayerName}' not found in the list.");
         }
+
+        UpdateLobbyPlayers();
+
     }
 
-    /// <summary>
-    /// Resets the AI player list by clearing all AI players from the lobby data.
-    /// </summary>
     public async Task ResetAIPlayers()
     {
         if (JoinedLobby == null)
@@ -611,9 +681,6 @@ public class MultiplayerManager : ScriptableObject
         Debug.Log("All AI players have been removed.");
     }
 
-    /// <summary>
-    /// Retrieves the current AI player list from lobby data.
-    /// </summary>
     public List<string> GetCurrentAIPlayerList()
     {
         if (JoinedLobby == null)
@@ -640,9 +707,6 @@ public class MultiplayerManager : ScriptableObject
         return new List<string>();
     }
 
-    /// <summary>
-    /// Updates the lobby data with the new AI player list.
-    /// </summary>
     private async Task UpdateLobbyAIData(List<string> aiPlayerNames)
     {
         try

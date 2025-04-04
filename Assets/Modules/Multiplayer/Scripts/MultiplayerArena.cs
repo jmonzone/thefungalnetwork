@@ -5,7 +5,7 @@ using UnityEngine.Events;
 [CreateAssetMenu]
 public class MultiplayerArena : ScriptableObject
 {
-    [SerializeField] private MultiplayerManager multiplayer;
+    [SerializeField] private MultiplayerReference multiplayer;
 
     public List<Transform> Players { get; private set; }
     public List<Transform> SpawnPositions { get; private set; }

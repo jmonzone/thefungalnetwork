@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class PlayerListItem : MonoBehaviour
 {
     [SerializeField] private FungalCollection fungalCollection;
-    [SerializeField] private MultiplayerManager multiplayer;
+    [SerializeField] private MultiplayerReference multiplayer;
 
     [SerializeField] private TextMeshProUGUI playerNameText;
     [SerializeField] private Image playerFungalImage;
@@ -13,33 +13,42 @@ public class PlayerListItem : MonoBehaviour
     [SerializeField] private GameObject inactiveState;
     [SerializeField] private GameObject hostBadge;
 
-    public void SetPlayer(Unity.Services.Lobbies.Models.Player player)
+    [SerializeField] private Image removeButtonImage; 
+    [SerializeField] private Button removeButton;
+
+    private LobbyPlayer player;
+
+    private void Awake()
     {
-        var fungalIndex = GetPlayerFungalIndex(player);
-        var targetFungal = fungalCollection.Fungals[fungalIndex];
+        removeButton.onClick.AddListener(async () =>
+        {
+            Debug.Log("removeButton click");
+            removeButton.interactable = false;
+            await multiplayer.RemoveAIPlayer(player.name);
+            removeButton.interactable = true;
+        });
+    }
 
-        playerNameText.text = player.Data.TryGetValue("PlayerName", out var playerNameData) ? playerNameData.Value : "Unknown Player";
-        playerFungalImage.sprite = targetFungal.ActionImage;
+    public void SetPlayer(LobbyPlayer player)
+    {
+        this.player = player;
 
-        hostBadge.SetActive(multiplayer.JoinedLobby.HostId == player.Id);
+        playerNameText.text = player.name;
+        playerFungalImage.sprite = player.fungal.ActionImage;
+
+        hostBadge.SetActive(player.isHost);
 
         activeState.SetActive(true);
         inactiveState.SetActive(false);
         gameObject.SetActive(true);
+
+        removeButton.enabled = player.isAI;
+        removeButtonImage.enabled = player.isAI;
     }
 
     public void Reset()
     {
         activeState.SetActive(false);
         inactiveState.SetActive(true);
-    }
-
-    private int GetPlayerFungalIndex(Unity.Services.Lobbies.Models.Player player)
-    {
-        if (player.Data.TryGetValue("Fungal", out var fungalData) && int.TryParse(fungalData?.Value, out var index))
-        {
-            return Mathf.Clamp(index, 0, fungalCollection.Fungals.Count - 1);
-        }
-        return 0;
     }
 }

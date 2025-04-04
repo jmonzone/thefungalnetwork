@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using GURU;
 using TMPro;
-using Unity.Services.Authentication;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,7 +9,7 @@ public class MainMenuParty : MonoBehaviour
     [Header("Navigation & Managers")]
     [SerializeField] private Navigation navigation;
     [SerializeField] private SceneNavigation sceneNavigation;
-    [SerializeField] private MultiplayerManager multiplayer;
+    [SerializeField] private MultiplayerReference multiplayer;
     [SerializeField] private FungalCollection fungalCollection;
 
     [Header("UI Elements")]
@@ -39,6 +36,7 @@ public class MainMenuParty : MonoBehaviour
     [Header("Player List")]
     [SerializeField] private Transform playerListItemAnchor;
     [SerializeField] private PlayerListItem playerListItemPrefab;
+    [SerializeField] private Button addBotButton;
     private List<PlayerListItem> playerListItems = new List<PlayerListItem>();
 
     private bool joining = false;
@@ -56,14 +54,14 @@ public class MainMenuParty : MonoBehaviour
 
     private void OnEnable()
     {
-        multiplayer.OnLobbyPoll += MultiplayerManager_OnLobbyPoll;
+        multiplayer.OnLobbyUpdated += OnMultiplayerLobbyUpdated;
         multiplayer.OnLobbyJoined += OnHostChanged;
         OnHostChanged();
     }
 
     private void OnDisable()
     {
-        multiplayer.OnLobbyPoll -= MultiplayerManager_OnLobbyPoll;
+        multiplayer.OnLobbyUpdated -= OnMultiplayerLobbyUpdated;
         multiplayer.OnLobbyJoined -= OnHostChanged;
     }
 
@@ -71,6 +69,7 @@ public class MainMenuParty : MonoBehaviour
     {
         startButton.onClick.AddListener(async () =>
         {
+            startButton.interactable = false;
             await multiplayer.ToggleLobbyLock(true);
             var joinCode = await multiplayer.CreateRelay();
             await multiplayer.AddRelayToLobby(joinCode);
@@ -87,6 +86,14 @@ public class MainMenuParty : MonoBehaviour
             gameModeButton.interactable = false;
             CycleGameMode();
             gameModeButton.interactable = true;
+        });
+
+        addBotButton.onClick.AddListener(async () =>
+        {
+            //Debug.Log("addBotButton click");
+            addBotButton.interactable = false;
+            await multiplayer.AddAIPlayer();
+            addBotButton.interactable = true;
         });
     }
 
@@ -143,7 +150,7 @@ public class MainMenuParty : MonoBehaviour
         await multiplayer.UpdateJoinedLobbyData("GameMode", nextMode.ToString());
     }
 
-    private void MultiplayerManager_OnLobbyPoll()
+    private void OnMultiplayerLobbyUpdated()
     {
         UpdatePlayerList();
         HandleLobbyJoin();
@@ -153,12 +160,13 @@ public class MainMenuParty : MonoBehaviour
 
     private void UpdatePlayerList()
     {
+        //Debug.Log("UpdatePlayerList " + multiplayer.LobbyPlayers.Count);
         var i = 0;
         foreach (var item in playerListItems)
         {
-            if (i < multiplayer.JoinedLobby.Players.Count)
+            if (i < multiplayer.LobbyPlayers.Count)
             {
-                var player = multiplayer.JoinedLobby.Players[i];
+                var player = multiplayer.LobbyPlayers[i];
                 item.SetPlayer(player);
             }
             else
@@ -168,6 +176,8 @@ public class MainMenuParty : MonoBehaviour
 
             i++;
         }
+
+        addBotButton.gameObject.SetActive(multiplayer.LobbyPlayers.Count < 8);
     }
 
     private async System.Threading.Tasks.Task SelectFungal(int index)
@@ -179,7 +189,7 @@ public class MainMenuParty : MonoBehaviour
 
         fungalObjects[selectedFungalIndex].SetActive(true);
 
-        MultiplayerManager_OnLobbyPoll();
+        OnMultiplayerLobbyUpdated();
         await multiplayer.AddPlayerDataToLobby("Fungal", index.ToString());
     }
 

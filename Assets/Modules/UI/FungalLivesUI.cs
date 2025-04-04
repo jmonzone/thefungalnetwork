@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class FungalLivesUI : MonoBehaviour
 {
-    [SerializeField] private MultiplayerManager multiplayer;
+    [SerializeField] private MultiplayerReference multiplayer;
     [SerializeField] private Color emptyColor;
 
     private List<Image> livesIndicator = new List<Image>();

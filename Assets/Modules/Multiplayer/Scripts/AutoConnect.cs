@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class AutoConnect : MonoBehaviour
 {
-    [SerializeField] private MultiplayerManager multiplayer;
+    [SerializeField] private MultiplayerReference multiplayer;
     [SerializeField] private bool addAIPlayer = false;
     [SerializeField] private GameMode gameMode;
 
@@ -21,7 +21,7 @@ public class AutoConnect : MonoBehaviour
             if (multiplayer.IsHost && bool.Parse(value))
             {
                 Debug.Log($"AutoConnect multiplayer.useAI");
-                await multiplayer.AddAIPlayer("fungal GPT");
+                await multiplayer.AddAIPlayer();
             }
 
             multiplayer.StartHostClient();
@@ -52,7 +52,7 @@ public class AutoConnect : MonoBehaviour
                 else
                 {
                     await multiplayer.CreateRelayAndLobby(gameMode);
-                    if (addAIPlayer) await multiplayer.AddAIPlayer("fungal GPT");
+                    if (addAIPlayer) await multiplayer.AddAIPlayer();
                     multiplayer.StartHostClient();
                 }
             });

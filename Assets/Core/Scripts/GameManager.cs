@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Navigation uiNavigation;
     [SerializeField] private SceneNavigation sceneNavigation;
     [SerializeField] private FadeCanvasGroup screenFade;
-    [SerializeField] private MultiplayerManager multiplayer;
+    [SerializeField] private MultiplayerReference multiplayer;
 
     [SerializeField] private DisplayName displayName;
     [SerializeField] private ItemInventory itemInventory;

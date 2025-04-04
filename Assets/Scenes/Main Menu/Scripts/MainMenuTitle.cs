@@ -15,7 +15,7 @@ public class MainMenuTitle : MonoBehaviour
 
     [SerializeField] private Navigation navigation;
     [SerializeField] private SceneNavigation sceneNavigation;
-    [SerializeField] private MultiplayerManager multiplayer;
+    [SerializeField] private MultiplayerReference multiplayer;
 
     [SerializeField] private ViewReference homeView;
     [SerializeField] private ViewReference matchmakingView;

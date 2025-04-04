@@ -9,7 +9,7 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] private ItemInventory inventory;
     [SerializeField] private ItemTags itemTags;
     [SerializeField] private Button exitButton;
-    [SerializeField] private MultiplayerManager multiplayerManager;
+    [SerializeField] private MultiplayerReference multiplayerManager;
 
     private List<InventorySlot> inventorySlots;
 
