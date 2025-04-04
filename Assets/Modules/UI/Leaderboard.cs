@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Leaderboard : MonoBehaviour
 {
-    [SerializeField] private GameReference pufferball;
+    [SerializeField] private GameReference game;
     [SerializeField] private Transform leaderboardContainer;
     [SerializeField] private LeaderboardEntry leaderboardEntryPrefab;
     [SerializeField] private MultiplayerReference multiplayer;
@@ -25,18 +25,18 @@ public class Leaderboard : MonoBehaviour
 
     private void OnEnable()
     {
-        pufferball.OnScoreUpdated += UpdateLeaderboard;
-        pufferball.OnGameComplete += Pufferball_OnGameComplete;
-        pufferball.OnKill += Pufferball_OnKill;
-        pufferball.OnSelfDestruct += Pufferball_OnSelfDestruct;
+        game.OnScoreUpdated += UpdateLeaderboard;
+        game.OnGameComplete += Pufferball_OnGameComplete;
+        game.OnKill += Pufferball_OnKill;
+        game.OnSelfDestruct += Pufferball_OnSelfDestruct;
     }
 
     private void OnDisable()
     {
-        pufferball.OnScoreUpdated -= UpdateLeaderboard;
-        pufferball.OnGameComplete -= Pufferball_OnGameComplete;
-        pufferball.OnKill -= Pufferball_OnKill;
-        pufferball.OnSelfDestruct -= Pufferball_OnSelfDestruct;
+        game.OnScoreUpdated -= UpdateLeaderboard;
+        game.OnGameComplete -= Pufferball_OnGameComplete;
+        game.OnKill -= Pufferball_OnKill;
+        game.OnSelfDestruct -= Pufferball_OnSelfDestruct;
     }
 
     private void Pufferball_OnKill(int arg0, int arg1)
@@ -44,7 +44,7 @@ public class Leaderboard : MonoBehaviour
         UpdateLeaderboard();
     }
 
-    private void Pufferball_OnSelfDestruct(Player arg0)
+    private void Pufferball_OnSelfDestruct(GamePlayer arg0)
     {
         UpdateLeaderboard();
     }
@@ -70,8 +70,8 @@ public class Leaderboard : MonoBehaviour
 
     private void UpdateEliminationLeaderboard()
     {
-        var players = pufferball.Players;
-        var clientPlayer = pufferball.ClientPlayer;
+        var players = game.Players;
+        var clientPlayer = game.ClientPlayer;
 
         // Sort by score descending, client player first if tied
         var sortedPlayers = players
@@ -122,8 +122,8 @@ public class Leaderboard : MonoBehaviour
     {
         //Debug.Log("UpdatePartyLeaderboard");
 
-        var players = pufferball.Players;
-        var clientPlayer = pufferball.ClientPlayer;
+        var players = game.Players;
+        var clientPlayer = game.ClientPlayer;
 
         // Sort by score descending, client player first if tied
         var sortedPlayers = players
@@ -136,10 +136,10 @@ public class Leaderboard : MonoBehaviour
 
         // Check if tied: more than 1 player with the same top score
         bool isTiedAtTop = sortedPlayers.Count > 1 && sortedPlayers[1].Score == topScore;
-
+        isTiedAtTop = false;
 
         // Build leaderboard: top 3 plus client if missing
-        var leaderboardPlayers = sortedPlayers.Take(4).ToList();
+        var leaderboardPlayers = sortedPlayers.Take(1).ToList();
 
         if (!leaderboardPlayers.Contains(clientPlayer))
         {

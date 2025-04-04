@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5c38419960fb4760a0cc682bdd28ff9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pufferball: {fileID: 11400000, guid: 08db032ff48be41208a04f1067508370, type: 2}
+  game: {fileID: 11400000, guid: 08db032ff48be41208a04f1067508370, type: 2}
   leaderboardContainer: {fileID: 3252945634195540483}
   leaderboardEntryPrefab: {fileID: 7881553749874988070, guid: 0a7d24f7c65e643d489df11e33beda80,
     type: 3}
@@ -188,11 +188,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3953755712926485004, guid: 0a7d24f7c65e643d489df11e33beda80,
         type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 29.375
-      objectReference: {fileID: 0}
-    - target: {fileID: 3953755712926485004, guid: 0a7d24f7c65e643d489df11e33beda80,
-        type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -276,6 +271,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5578109939972043396, guid: 0a7d24f7c65e643d489df11e33beda80,
+        type: 3}
+      propertyPath: m_fontSizeBase
+      value: 15
+      objectReference: {fileID: 0}
     - target: {fileID: 6551498435158669065, guid: 0a7d24f7c65e643d489df11e33beda80,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -305,6 +305,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Leaderboard Entry
+      objectReference: {fileID: 0}
+    - target: {fileID: 8636564337059722569, guid: 0a7d24f7c65e643d489df11e33beda80,
+        type: 3}
+      propertyPath: m_fontSizeBase
+      value: 15
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

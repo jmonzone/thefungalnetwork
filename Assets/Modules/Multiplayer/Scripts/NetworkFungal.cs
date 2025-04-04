@@ -161,7 +161,7 @@ public class NetworkFungal : NetworkBehaviour
 
     private void InitializePrefab()
     {
-        Debug.Log($"InitializePrefab {name} {player.Value.fungal}");
+        //Debug.Log($"InitializePrefab {name} {player.Value.fungal}");
         data = fungalCollection.Fungals[player.Value.fungal];
         var model = Instantiate(data.Prefab, transform);
         animations = model.AddComponent<MovementAnimations>();

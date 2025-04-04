@@ -5,54 +5,37 @@ using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
-// todo: centralize or distinguish LobbyPlayer and Player objects
-[Serializable]
-public class Player
-{
-    public ulong ClientId;
-    public int Index;
-    public string DisplayName;
-    public NetworkFungal Fungal;
-    public float Score => Fungal.Score;
-    public int Lives => Fungal.Lives;
-    public bool IsWinner = false;
-
-    public Player(ulong clientId, int playerIndex, string displayName, NetworkFungal fungal)
-    {
-        ClientId = clientId;
-        Index = playerIndex;
-        DisplayName = displayName;
-        Fungal = fungal;
-    }
-}
-
-//todo: rename
 [CreateAssetMenu]
 public class GameReference : ScriptableObject
 {
-    [SerializeField] private Player clientPlayer;
-    [SerializeField] private List<Player> players;
     [SerializeField] private MultiplayerReference multiplayer;
+    [SerializeField] private Navigation navigation;
+    [SerializeField] private ViewReference inputView;
+
+    [SerializeField] private GamePlayer clientPlayer;
+    [SerializeField] private List<GamePlayer> players;
 
     public bool isComplete;
     public GameMode gameMode;
 
-    public Player ClientPlayer => clientPlayer;
-    public List<Player> Players => players;
-
-    public event UnityAction OnScoreUpdated;
-    public event UnityAction OnGameComplete;
+    public GamePlayer ClientPlayer => clientPlayer;
+    public List<GamePlayer> Players => players;
 
     public event UnityAction OnClientPlayerAdded;
-    public event UnityAction<Player> OnPlayerAdded;
     public event UnityAction OnAllPlayersAdded;
+
+    public event UnityAction OnGameStart;
+    public event UnityAction OnGameComplete;
+
+    public event UnityAction OnScoreUpdated;
+
     public event UnityAction<int, int> OnKill;
-    public event UnityAction<Player> OnSelfDestruct;
+    public event UnityAction<GamePlayer> OnSelfDestruct;
 
     public void Initialize()
     {
         clientPlayer = null;
-        players = new List<Player>();
+        players = new List<GamePlayer>();
         isComplete = false;
     }
 
@@ -69,7 +52,8 @@ public class GameReference : ScriptableObject
 
         Enum.TryParse(multiplayer.GetJoinedLobbyData("GameMode"), out gameMode);
 
-        var addedPlayer = new Player(clientId, playerIndex, playerName.ToString(), networkFungal);
+        Debug.Log($"addplayer {playerName}");
+        var addedPlayer = new GamePlayer(clientId, playerIndex, playerName.ToString(), networkFungal);
         Players.Add(addedPlayer);
 
         // Sort the list based on the player index
@@ -82,7 +66,6 @@ public class GameReference : ScriptableObject
             OnClientPlayerAdded?.Invoke();
         }
 
-        OnPlayerAdded?.Invoke(addedPlayer);
         if (multiplayer.LobbyPlayers.Count == Players.Count)
         {
             OnAllPlayersAdded?.Invoke();
@@ -90,7 +73,7 @@ public class GameReference : ScriptableObject
 
         if (gameMode== GameMode.PARTY)
         {
-            addedPlayer.Fungal.OnScoreUpdated += Fungal_OnScoreUpdated;
+            addedPlayer.Fungal.OnScoreUpdated += () => OnScoreUpdated?.Invoke();
         }
         else
         {
@@ -121,41 +104,34 @@ public class GameReference : ScriptableObject
         {
             var winner = Players[0];
             winner.IsWinner = true;
-            TriggerWin();
+            EndGame();
         }
         else if (Players.Count > 1 && alivePlayers.Count == 1)
         {
             var winner = alivePlayers[0];
             winner.IsWinner = true;
-            TriggerWin();
+            EndGame();
         }
     }
 
-    private void TriggerWin()
+    public void StartGame()
+    {
+        navigation.Navigate(inputView);
+        OnGameStart?.Invoke();
+    }
+
+    public void EndGame()
     {
         isComplete = true;
         clientPlayer.Fungal.Movement.Stop();
-        OnGameComplete?.Invoke();
-    }
 
+        var highestScore = Players.Max(p => p.Score);
 
-    private void Fungal_OnScoreUpdated()
-    {
-        OnScoreUpdated?.Invoke();
-
-        if (isComplete) return;
         foreach (var player in Players)
         {
-            player.IsWinner = player.Score >= 1000f;
-
-            if (player.IsWinner)
-            {
-                isComplete = true;
-                Debug.Log("GameComplete");
-                clientPlayer.Fungal.Movement.Stop();
-                OnGameComplete?.Invoke();
-                return;
-            }
+            player.IsWinner = player.Score == highestScore;
         }
+
+        OnGameComplete?.Invoke();
     }
 }

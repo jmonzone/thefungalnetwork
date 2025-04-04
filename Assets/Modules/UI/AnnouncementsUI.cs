@@ -35,10 +35,10 @@ public class AnnouncementsUI : MonoBehaviour
     private class Announcement
     {
         public string Message;
-        public Player Player1;
-        public Player Player2; // Optional for single-player announcements
+        public GamePlayer Player1;
+        public GamePlayer Player2; // Optional for single-player announcements
 
-        public Announcement(string message, Player player1, Player player2 = null)
+        public Announcement(string message, GamePlayer player1, GamePlayer player2 = null)
         {
             Message = message;
             Player1 = player1;
@@ -53,7 +53,7 @@ public class AnnouncementsUI : MonoBehaviour
     private bool isAnnouncing = false;
 
 
-    private void PufferballReference_OnSelfDestruct(Player player)
+    private void PufferballReference_OnSelfDestruct(GamePlayer player)
     {
         string announcementMessage = $"{player.DisplayName} slipped up";
 

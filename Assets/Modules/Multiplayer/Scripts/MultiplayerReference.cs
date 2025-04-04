@@ -92,7 +92,7 @@ public class MultiplayerReference : ScriptableObject
         OnLobbyUpdated?.Invoke();
     }
 
-    private int GetPlayerFungalIndex(Unity.Services.Lobbies.Models.Player player)
+    private int GetPlayerFungalIndex(Player player)
     {
         if (player.Data.TryGetValue("Fungal", out var fungalData) && int.TryParse(fungalData?.Value, out var index))
         {
@@ -101,7 +101,7 @@ public class MultiplayerReference : ScriptableObject
         return 0;
     }
 
-    public List<LobbyPlayer> LobbyPlayers { get; private set; }
+    public List<LobbyPlayer> LobbyPlayers { get; private set; } = new List<LobbyPlayer>();
 
     public event UnityAction OnLobbyJoined;
     public event UnityAction OnLobbyUpdated;
@@ -348,9 +348,9 @@ public class MultiplayerReference : ScriptableObject
     }
 
 
-    private Unity.Services.Lobbies.Models.Player player;
+    private Player player;
 
-    private Unity.Services.Lobbies.Models.Player CreatePlayer() => new Unity.Services.Lobbies.Models.Player
+    private Player CreatePlayer() => new Player
     {
         Data = new Dictionary<string, PlayerDataObject>
         {
@@ -376,7 +376,6 @@ public class MultiplayerReference : ScriptableObject
                     { "JoinCode", new DataObject(DataObject.VisibilityOptions.Member, joinCode) },
                     { "HostName", new DataObject(DataObject.VisibilityOptions.Public, PlayerName) },
                     { "GameMode", new DataObject(DataObject.VisibilityOptions.Public, gameMode.ToString())},
-                    { "UseAI", new DataObject(DataObject.VisibilityOptions.Public, "true") }
                 }
             };
 
@@ -457,7 +456,6 @@ public class MultiplayerReference : ScriptableObject
                 {
                     { "HostName", new DataObject(DataObject.VisibilityOptions.Public, PlayerName) },
                     { "GameMode", new DataObject(DataObject.VisibilityOptions.Public, GameMode.PARTY.ToString())},
-                    { "UseAI", new DataObject(DataObject.VisibilityOptions.Public, "true") }
                 },
             };
 
@@ -568,8 +566,8 @@ public class MultiplayerReference : ScriptableObject
         {
             Debug.Log("RemoveRelayFromLobbyData");
             await RemoveRelayFromLobbyData();
-            Debug.Log("ResetAIPlayers");
-            await ResetAIPlayers();
+            //Debug.Log("ResetAIPlayers");
+            //await ResetAIPlayers();
         }
 
         Debug.Log("DisconnectLocalClient");

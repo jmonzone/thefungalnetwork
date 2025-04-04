@@ -44,8 +44,9 @@ public class PlayerListItem : MonoBehaviour
         inactiveState.SetActive(false);
         gameObject.SetActive(true);
 
-        removeButton.enabled = player.isAI;
-        removeButtonImage.enabled = player.isAI;
+        var showRemobeButton = player.isAI && multiplayer.IsHost;
+        removeButton.enabled = showRemobeButton;
+        removeButtonImage.enabled = showRemobeButton;
     }
 
     public void Reset()

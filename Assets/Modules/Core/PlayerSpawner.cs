@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Unity.Collections;
 using Unity.Netcode;
+using Unity.Services.Authentication;
 using UnityEngine;
 
 [Serializable]
@@ -45,10 +46,8 @@ public class PlayerSpawner : NetworkBehaviour
     [SerializeField] private MultiplayerReference multiplayer;
     [SerializeField] private MultiplayerArena arena;
     [SerializeField] private FungalCollection fungalCollection;
-    [SerializeField] private GameReference pufferballReference;
+    [SerializeField] private GameReference game;
     [SerializeField] private NetworkFungal fungalPrefab;
-
-    public event Action<PlayerSpawner> OnSpawnerReady;
 
     public override void OnNetworkSpawn()
     {
@@ -57,26 +56,36 @@ public class PlayerSpawner : NetworkBehaviour
         if (IsServer)
         {
             int i = 0;
-            foreach (var botPLayer in multiplayer.GetBotPlayers())
+            foreach (var bot in multiplayer.GetBotPlayers())
             {
                 // todo: consider adding botClientId to botPlayer obj
                 ulong botClientId = NetworkManager.Singleton.LocalClientId;
-                var rpcPlayer = new LobbyPlayerRPCParam(botPLayer);
-                Debug.Log($"PlayerSpawner {botPLayer.fungal} {rpcPlayer.fungal} ");
+                var rpcPlayer = new LobbyPlayerRPCParam(bot);
+                Debug.Log($"PlayerSpawner {bot.fungal} {rpcPlayer.fungal} ");
                 AddPlayerServerRpc(botClientId, i + multiplayer.JoinedLobby.Players.Count, rpcPlayer);
                 i++;
             }
-
-            OnSpawnerReady?.Invoke(this);
         }
+
+        AddPlayerToSpawner();
+    }
+
+    private void AddPlayerToSpawner()
+    {
+        string localPlayerId = AuthenticationService.Instance.PlayerId;
+
+        var localPlayerIndex = multiplayer.LobbyPlayers.FindIndex(player => player.lobbyId == localPlayerId);
+        var localPlayer = multiplayer.LobbyPlayers[localPlayerIndex];
+
+        var rpcPlayer = new LobbyPlayerRPCParam(localPlayer);
+
+        AddPlayerServerRpc(NetworkManager.Singleton.LocalClientId, localPlayerIndex, rpcPlayer);
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void AddPlayerServerRpc(ulong clientId, int playerIndex, LobbyPlayerRPCParam player)
+    private void AddPlayerServerRpc(ulong clientId, int playerIndex, LobbyPlayerRPCParam player)
     {
-        Debug.Log($"AddPlayerServerRpc {playerIndex} {player.fungal}");
-
-        //Debug.Log("OnPlayerAddedServerRpc");
+        //Debug.Log($"AddPlayerServerRpc {playerIndex} {player.name} {player.fungal}");
 
         var spawnOrigin = arena.SpawnPositions[playerIndex].position;
 
@@ -98,7 +107,7 @@ public class PlayerSpawner : NetworkBehaviour
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out var networkObject))
         {
             var networkFungal = networkObject.GetComponent<NetworkFungal>();
-            pufferballReference.AddPlayer(clientId, player.name, playerIndex, networkFungal);
+            game.AddPlayer(clientId, player.name, playerIndex, networkFungal);
         }
 
         //Debug.Log("Client owner spawned, searching for existing NetworkFungals...");
@@ -110,17 +119,20 @@ public class PlayerSpawner : NetworkBehaviour
             if (networkFungal != null)
             {
                 // Check if a player with the same index already exists
-                if (pufferballReference.Players.Any(player => player.Fungal == networkFungal))
+                if (game.Players.Any(player => player.Fungal == networkFungal))
                 {
                     continue;
                 }
 
                 // Register the fungal with the pufferballReference
-                pufferballReference.AddPlayer(clientId, player.name, networkFungal.Index, networkFungal);
+                game.AddPlayer(clientId, networkFungal.PlayerName, networkFungal.Index, networkFungal);
             }
         }
     }
 
+
+    // todo: consider separating disconnect logic
+    // todo: player spawnere logic can be a part of network prefab?
     private void OnEnable()
     {
         multiplayer.OnDisconnectRequested += NotifyClientsDisconnectServerRpc;

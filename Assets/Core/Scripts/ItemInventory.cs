@@ -25,19 +25,27 @@ public class ItemInventory : ScriptableObject
 
     public void Initialize()
     {
-        items = new List<ItemInstance>();
-
-        if (localData.JsonFile.ContainsKey(INVENTORY_KEY))
+        try
         {
-            foreach (var item in localData.JsonFile[INVENTORY_KEY] as JArray)
+
+            items = new List<ItemInstance>();
+
+            if (localData.JsonFile.ContainsKey(INVENTORY_KEY))
             {
-                if (item is JObject itemJson)
+                foreach (var item in localData.JsonFile[INVENTORY_KEY] as JArray)
                 {
-                    var itemData = itemCollection.Items.Find(item => item.name == itemJson["name"].ToString());
-                    if (itemData) AddToInventory(itemData, (int)itemJson["count"]);
-                    else Debug.LogWarning($"Item {itemJson} not found in game data");
-                };
+                    if (item is JObject itemJson)
+                    {
+                        var itemData = itemCollection.Items.Find(item => item.name == itemJson["name"].ToString());
+                        if (itemData) AddToInventory(itemData, (int)itemJson["count"]);
+                        else Debug.LogWarning($"Item {itemJson} not found in game data");
+                    };
+                }
             }
+        }
+        catch(Exception e)
+        {
+            Debug.LogWarning(e);
         }
     }
 

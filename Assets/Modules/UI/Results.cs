@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Results : MonoBehaviour
 {
-    [SerializeField] private GameReference pufferball;
+    [SerializeField] private GameReference game;
     [SerializeField] private Navigation navigation;
 
     [SerializeField] private ViewReference resultsView;
@@ -17,28 +17,30 @@ public class Results : MonoBehaviour
 
     private void OnEnable()
     {
-        pufferball.OnGameComplete += Pufferball_OnGameComplete;
+        game.OnGameComplete += OnGameComplete;
     }
 
     private void OnDisable()
     {
-        pufferball.OnGameComplete -= Pufferball_OnGameComplete;
+        game.OnGameComplete -= OnGameComplete;
     }
 
-    private void Pufferball_OnGameComplete()
+    private void OnGameComplete()
     {
-        headerText.color = pufferball.ClientPlayer.IsWinner ? winColor : loseColor;
-        headerText.text = pufferball.ClientPlayer.IsWinner ? "Bog Unclogged" : "Bogged Down";
+        StartCoroutine(OnGameCompleteRoutine());
+    }
+
+    private IEnumerator OnGameCompleteRoutine()
+    {
+        yield return new WaitForSeconds(1f);
+
+        headerText.color = game.ClientPlayer.IsWinner ? winColor : loseColor;
+        headerText.text = game.ClientPlayer.IsWinner ? "Bog Unclogged" : "Bogged Down";
 
         navigation.Navigate(resultsView);
 
         moveCharacterJoystick.enabled = false;
 
-        StartCoroutine(FadeInContinueButton());
-    }
-
-    private IEnumerator FadeInContinueButton()
-    {
         yield return new WaitForSeconds(3f);
         yield return continueButton.FadeIn(0.5f);
     }

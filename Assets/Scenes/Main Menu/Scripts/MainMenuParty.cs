@@ -19,7 +19,6 @@ public class MainMenuParty : MonoBehaviour
     [SerializeField] private Button gameModeButton;
     [SerializeField] private Button startButton;
     [SerializeField] private GameObject waitingIndicator;
-    [SerializeField] private GameObject hostControls;
 
     [Header("Selected Fungal")]
     [SerializeField] private TextMeshProUGUI fungalNameText;
@@ -152,6 +151,8 @@ public class MainMenuParty : MonoBehaviour
 
     private void OnMultiplayerLobbyUpdated()
     {
+        if (multiplayer.JoinedLobby == null) return;
+
         UpdatePlayerList();
         HandleLobbyJoin();
         OnHostChanged();
@@ -221,7 +222,8 @@ public class MainMenuParty : MonoBehaviour
     private void OnHostChanged()
     {
         bool isHost = multiplayer.IsHost;
-        hostControls.SetActive(isHost);
+        gameModeButton.gameObject.SetActive(isHost);
+        addBotButton.gameObject.SetActive(isHost);
         startButton.gameObject.SetActive(isHost);
         waitingIndicator.SetActive(!isHost);
     }
@@ -231,7 +233,7 @@ public class MainMenuParty : MonoBehaviour
         switch (multiplayer.GameMode)
         {
             case GameMode.PARTY:
-                gameModeTitle.text = "Party";
+                gameModeTitle.text = "Free for All";
                 gameModeDescription.text = "999, it's a good slime";
                 break;
             case GameMode.ELIMINATION:

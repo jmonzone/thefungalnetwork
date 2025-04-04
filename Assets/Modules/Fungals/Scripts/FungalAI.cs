@@ -223,7 +223,7 @@ public class FungalAI : MonoBehaviour
 
                 try
                 {
-                    targetMovePosition += directionToPlayer* Mathf.Min(Vector3.Distance(targetSlingPosition, playerPos), targetFish.ThrowFish.Range * 0.75f);
+                    targetMovePosition += directionToPlayer * Mathf.Min(Vector3.Distance(targetSlingPosition, playerPos), targetFish.ThrowFish.Range * 0.75f);
                 }
                 catch
                 {
