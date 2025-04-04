@@ -4,7 +4,6 @@ public class FungalInteractions : MonoBehaviour
 {
     [SerializeField] private GameObject placeholder;
     [SerializeField] private float rotationSpeed = 500f;
-    [SerializeField] private string animationTrigger = "Clicked";
 
     private Vector2 startPos;
     private bool isDragging = false;
@@ -34,7 +33,9 @@ public class FungalInteractions : MonoBehaviour
         if (isDragging && Input.GetMouseButton(0))
         {
             Vector2 delta = (Vector2)Input.mousePosition - startPos;
-            transform.Rotate(0, -delta.x * rotationSpeed * Time.deltaTime, 0);
+
+            float platformSpeed = rotationSpeed * (Application.isEditor ? 100f : 1f);
+            transform.Rotate(0, -delta.x * platformSpeed * Time.deltaTime, 0);
             startPos = Input.mousePosition;
         }
 
