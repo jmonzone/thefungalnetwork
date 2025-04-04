@@ -12,7 +12,7 @@ public class AnnouncementsUI : MonoBehaviour
     [SerializeField] private GameObject player2ImageContainer;
     [SerializeField] private TextMeshProUGUI text;
     [SerializeField] private RectTransform announcmentContainer;
-    [SerializeField] private PufferballReference pufferballReference;
+    [SerializeField] private GameReference pufferballReference;
     [SerializeField] private HorizontalLayoutGroup horizontalLayoutGroup;
 
     private void OnEnable()

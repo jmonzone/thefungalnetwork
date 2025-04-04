@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class AllIsBog : MonoBehaviour
 {
-    [SerializeField] private PufferballReference pufferballReference;
+    [SerializeField] private GameReference pufferballReference;
 
     private void Awake()
     {

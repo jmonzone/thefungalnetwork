@@ -22,7 +22,7 @@ public struct ScoreEventArgs : INetworkSerializable
 public class NetworkFungal : NetworkBehaviour
 {
     [SerializeField] private FungalData data;
-    [SerializeField] private PufferballReference pufferball;
+    [SerializeField] private GameReference game;
     [SerializeField] private GameObject stunAnimation;
     [SerializeField] private float respawnDuration = 5f;
     [SerializeField] private FungalCollection fungalCollection;
@@ -49,13 +49,12 @@ public class NetworkFungal : NetworkBehaviour
     public int Index => index.Value;
     public float Score => score.Value;
     public int Lives => lives.Value;
-    public string PlayerName => playerName.Value.ToString();
+    public string PlayerName => player.Value.name.ToString();
+    public bool IsAI => player.Value.isAI;
 
     // Exposed to all clients, replicated by Netcode
-    private NetworkVariable<FixedString64Bytes> playerName = new NetworkVariable<FixedString64Bytes>();
+    private NetworkVariable<LobbyPlayerRPCParam> player = new NetworkVariable<LobbyPlayerRPCParam>();
     private NetworkVariable<int> index = new NetworkVariable<int>();
-    private NetworkVariable<int> fungalIndex = new NetworkVariable<int>(-1);
-    public NetworkVariable<bool> isAI = new NetworkVariable<bool>(false);
 
     private NetworkVariable<float> score = new NetworkVariable<float>();
     private NetworkVariable<int> lives = new NetworkVariable<int>(3);
@@ -75,13 +74,11 @@ public class NetworkFungal : NetworkBehaviour
     public event UnityAction OnPlayerUpdated;
 
     [ServerRpc(RequireOwnership = false)]
-    public void InitializeServerRpc(FixedString64Bytes playerName, int index, int fungalIndex, bool isAI)
+    public void InitializeServerRpc(int index, LobbyPlayerRPCParam player)
     {
         //Debug.Log($"InitializeServerRpc {playerName}");
-        this.playerName.Value = playerName;
-        this.fungalIndex.Value = fungalIndex;
+        this.player.Value = player;
         this.index.Value = index;
-        this.isAI.Value = isAI;
     }
 
     public override void OnNetworkSpawn()
@@ -103,27 +100,23 @@ public class NetworkFungal : NetworkBehaviour
 
         index.OnValueChanged += (old, value) =>
         {
-            name = $"{index.Value}: {playerName.Value}";
+            name = $"{index.Value}: {PlayerName}";
         };
 
-        playerName.OnValueChanged += (old, value) =>
+        player.OnValueChanged += (old, value) =>
         {
             //Debug.Log($"NetworkFungal.OnValueChanged {name} {value}");
-            name = $"{index.Value}: {playerName.Value}";
+            name = $"{index.Value}: {value.name}";
+
+            if (IsAI) ToggleAI(true);
+
             OnPlayerUpdated?.Invoke();
         };
 
         //Debug.Log($"NetworkFungal {name} {playerName.Value}");
-        name = $"{index.Value}: {playerName.Value}";
-        OnPlayerUpdated?.Invoke();
+        name = $"{index.Value}: {PlayerName}";
 
-        isAI.OnValueChanged += (old, value) =>
-        {
-            if (value)
-            {
-                ToggleAI(true);
-            }
-        };
+        OnPlayerUpdated?.Invoke();
 
         score.OnValueChanged += (old, value) =>
         {
@@ -135,9 +128,9 @@ public class NetworkFungal : NetworkBehaviour
         {
             OnLivesChanged?.Invoke();
 
-            if (IsOwner || (IsServer && isAI.Value))
+            if (IsOwner || (IsServer && IsAI))
             {
-                if (pufferball.gameMode == GameMode.ELIMINATION && value > 0 || pufferball.gameMode == GameMode.PARTY)
+                if (game.gameMode == GameMode.ELIMINATION && value > 0 || game.gameMode == GameMode.PARTY)
                 {
                     StartCoroutine(RespawnRoutine());
                 }
@@ -145,13 +138,13 @@ public class NetworkFungal : NetworkBehaviour
         };
 
         //Debug.Log($"NetworkFungal.OnNetworkSpawn {fungalIndex.Value}");
-        if (fungalIndex.Value != -1)
+        if (!string.IsNullOrEmpty(player.Value.lobbyId.ToString()))
         {
             InitializePrefab();
         }
         else
         {
-            fungalIndex.OnValueChanged += (previousValue, newValue) =>
+            player.OnValueChanged += (previousValue, newValue) =>
             {
                 InitializePrefab();
             };
@@ -160,7 +153,7 @@ public class NetworkFungal : NetworkBehaviour
 
     private void ToggleAI(bool value)
     {
-        if (IsOwner && isAI.Value)
+        if (IsOwner && IsAI)
         {
             fungalAI.enabled = value;
         }
@@ -168,7 +161,8 @@ public class NetworkFungal : NetworkBehaviour
 
     private void InitializePrefab()
     {
-        data = fungalCollection.Fungals[fungalIndex.Value];
+        Debug.Log($"InitializePrefab {name} {player.Value.fungal}");
+        data = fungalCollection.Fungals[player.Value.fungal];
         var model = Instantiate(data.Prefab, transform);
         animations = model.AddComponent<MovementAnimations>();
         materialFlasher = model.AddComponent<MaterialFlasher>();
@@ -190,7 +184,7 @@ public class NetworkFungal : NetworkBehaviour
 
     private void Update()
     {
-        if (IsOwner && !isAI.Value && Input.GetKeyUp(KeyCode.L))
+        if (IsOwner && !IsAI && Input.GetKeyUp(KeyCode.L))
         {
             DieServerRpc(true);
         }

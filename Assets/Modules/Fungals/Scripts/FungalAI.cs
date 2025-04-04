@@ -13,7 +13,7 @@ public class FungalAI : MonoBehaviour
         THROW_FISH,
     }
 
-    [SerializeField] private PufferballReference pufferball;
+    [SerializeField] private GameReference pufferball;
     [SerializeField] private FungalState currentState;
 
     [SerializeField] private float minDashInterval = 2f; // Minimum time between dashes

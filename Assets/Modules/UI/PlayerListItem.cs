@@ -22,9 +22,9 @@ public class PlayerListItem : MonoBehaviour
     {
         removeButton.onClick.AddListener(async () =>
         {
-            Debug.Log("removeButton click");
+            //Debug.Log("removeButton click");
             removeButton.interactable = false;
-            await multiplayer.RemoveAIPlayer(player.name);
+            await multiplayer.RemoveAIPlayer(player);
             removeButton.interactable = true;
         });
     }
@@ -33,7 +33,7 @@ public class PlayerListItem : MonoBehaviour
     {
         this.player = player;
 
-        playerNameText.text = player.name;
+        playerNameText.text = player.name.ToString();
 
         var targetFungal = fungalCollection.Fungals[player.fungal];
         playerFungalImage.sprite = targetFungal.ActionImage;

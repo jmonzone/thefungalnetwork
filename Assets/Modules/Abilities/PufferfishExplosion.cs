@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 public class PufferfishExplosion : MonoBehaviour
 {
-    [SerializeField] private PufferballReference pufferball;
+    [SerializeField] private GameReference pufferball;
     [SerializeField] private Movement movement;
     [SerializeField] private new ParticleSystem particleSystem;
     [SerializeField] private AudioClip explosionClip;

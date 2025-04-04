@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class FungalThrow : Ability
 {
-    [SerializeField] private PufferballReference pufferballReference;
+    [SerializeField] private GameReference pufferballReference;
 
     private FishPickup fishPickup;
 

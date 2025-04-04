@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class AbilityButton : MonoBehaviour
 {
-    [SerializeField] private PufferballReference playerReference;
+    [SerializeField] private GameReference playerReference;
     [SerializeField] private DirectionalButton directionalButton;
     [SerializeField] private AbilityCastIndicator abilityCastIndicator;
     [SerializeField] private CooldownHandler cooldownHandler;

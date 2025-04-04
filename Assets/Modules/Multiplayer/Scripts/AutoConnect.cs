@@ -9,19 +9,19 @@ public class AutoConnect : MonoBehaviour
     [SerializeField] private bool addAIPlayer = false;
     [SerializeField] private GameMode gameMode;
 
-    private async void Start()
+    private void Start()
     {
         if (multiplayer.JoinedLobby != null)
         {
-            Debug.Log($"AutoConnect multiplayer.IsHost: {multiplayer.IsHost}");
+            //Debug.Log($"AutoConnect multiplayer.IsHost: {multiplayer.IsHost}");
             var value = multiplayer.GetJoinedLobbyData("UseAI");
             if (string.IsNullOrEmpty(value)) value = "true";
-            Debug.Log($"AutoConnect multiplayer.value: {value}");
+            //Debug.Log($"AutoConnect multiplayer.value: {value}");
 
             if (multiplayer.IsHost && bool.Parse(value))
             {
-                Debug.Log($"AutoConnect multiplayer.useAI");
-                await multiplayer.AddAIPlayer();
+                //Debug.Log($"AutoConnect multiplayer.useAI");
+                //await multiplayer.AddAIPlayer();
             }
 
             multiplayer.StartHostClient();
@@ -52,7 +52,7 @@ public class AutoConnect : MonoBehaviour
                 else
                 {
                     await multiplayer.CreateRelayAndLobby(gameMode);
-                    if (addAIPlayer) await multiplayer.AddAIPlayer();
+                    //if (addAIPlayer) await multiplayer.AddAIPlayer();
                     multiplayer.StartHostClient();
                 }
             });

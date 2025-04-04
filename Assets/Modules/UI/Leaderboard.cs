@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Leaderboard : MonoBehaviour
 {
-    [SerializeField] private PufferballReference pufferball;
+    [SerializeField] private GameReference pufferball;
     [SerializeField] private Transform leaderboardContainer;
     [SerializeField] private LeaderboardEntry leaderboardEntryPrefab;
     [SerializeField] private MultiplayerReference multiplayer;

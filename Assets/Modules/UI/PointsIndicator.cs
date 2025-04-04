@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PointsIndicator : MonoBehaviour
 {
-    [SerializeField] private PufferballReference pufferballReference;
+    [SerializeField] private GameReference pufferballReference;
     [SerializeField] private Transform pointsTextAnchor;
     [SerializeField] private List<Color> colors;
 

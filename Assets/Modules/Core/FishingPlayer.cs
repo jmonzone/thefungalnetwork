@@ -34,13 +34,14 @@ public class FishingPlayer : NetworkBehaviour
 
         string localPlayerId = AuthenticationService.Instance.PlayerId;
 
-        var localPlayerIndex = multiplayer.JoinedLobby.Players.FindIndex(player => player.Id == localPlayerId);
-        var localPlayer = multiplayer.JoinedLobby.Players[localPlayerIndex];
+        var localPlayerIndex = multiplayer.LobbyPlayers.FindIndex(player => player.lobbyId == localPlayerId);
+        var localPlayer = multiplayer.LobbyPlayers[localPlayerIndex];
 
-        var characterIndex = localPlayer.Data.TryGetValue("Fungal", out var fungalData)
-                ? int.TryParse(fungalData?.Value, out var index) ? index : 0 : 0;
+        var rpcPlayer = new LobbyPlayerRPCParam(localPlayer);
 
         //Debug.Log(playerSpawner.NetworkObjectId);
-        playerSpawner.AddPlayer(NetworkManager.Singleton.LocalClientId, displayName.Value, localPlayerIndex, characterIndex);
+        Debug.Log($"FishingPLayer.AddPlayerToSpawner {localPlayer.fungal} {rpcPlayer.fungal} ");
+
+        playerSpawner.AddPlayerServerRpc(NetworkManager.Singleton.LocalClientId, localPlayerIndex, rpcPlayer);
     }
 }

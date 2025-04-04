@@ -1,16 +1,51 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
+
+[Serializable]
+public struct LobbyPlayerRPCParam : INetworkSerializable
+{
+    public FixedString64Bytes lobbyId;
+    public int fungal;
+    public FixedString64Bytes name;
+    public bool isAI;
+    public bool isHost;
+
+    // Constructor from LobbyPlayer
+    public LobbyPlayerRPCParam(LobbyPlayer player)
+    {
+        lobbyId = new FixedString64Bytes(player.lobbyId);
+        fungal = player.fungal;
+        name = new FixedString64Bytes(player.name);
+        isAI = player.isAI;
+        isHost = player.isHost;
+    }
+
+    // Convert back to LobbyPlayer
+    public LobbyPlayer ToLobbyPlayer()
+    {
+        return new LobbyPlayer(lobbyId.ToString(), fungal, name.ToString(), isAI, isHost);
+    }
+
+    // Netcode serialization
+    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+    {
+        serializer.SerializeValue(ref lobbyId);
+        serializer.SerializeValue(ref fungal);
+        serializer.SerializeValue(ref name);
+        serializer.SerializeValue(ref isAI);
+        serializer.SerializeValue(ref isHost);
+    }
+}
 
 public class PlayerSpawner : NetworkBehaviour
 {
     [SerializeField] private MultiplayerReference multiplayer;
     [SerializeField] private MultiplayerArena arena;
     [SerializeField] private FungalCollection fungalCollection;
-    [SerializeField] private PufferballReference pufferballReference;
+    [SerializeField] private GameReference pufferballReference;
     [SerializeField] private NetworkFungal fungalPrefab;
 
     public event Action<PlayerSpawner> OnSpawnerReady;
@@ -21,66 +56,49 @@ public class PlayerSpawner : NetworkBehaviour
 
         if (IsServer)
         {
-            //var selectedFungals = new HashSet<int>();
-
-            //// Collect already selected fungal indices
-            //foreach (var player in multiplayer.JoinedLobby.Players)
-            //    if (player.Data.TryGetValue("Fungal", out var fungalData) &&
-            //        int.TryParse(fungalData?.Value, out var index))
-            //        selectedFungals.Add(index);
-
-            //// Get available indices
-            //var availableFungals = Enumerable.Range(0, fungalCollection.Fungals.Count)
-            //                                 .Where(i => !selectedFungals.Contains(i))
-            //                                 .ToList();
-
-            //int i = 0;
-            //foreach (var aiPlayer in multiplayer.GetCurrentAIPlayerList())
-            //{
-            //    ulong aiClientId = NetworkManager.Singleton.LocalClientId;
-            //    int fungalIndex = availableFungals.Any() ? availableFungals.PopRandom() : UnityEngine.Random.Range(0, fungalCollection.Fungals.Count);
-
-            //    AddPlayer(aiClientId, aiPlayer, i + multiplayer.JoinedLobby.Players.Count, fungalIndex, isAI: true);
-            //    i++;
-            //}
+            int i = 0;
+            foreach (var botPLayer in multiplayer.GetBotPlayers())
+            {
+                // todo: consider adding botClientId to botPlayer obj
+                ulong botClientId = NetworkManager.Singleton.LocalClientId;
+                var rpcPlayer = new LobbyPlayerRPCParam(botPLayer);
+                Debug.Log($"PlayerSpawner {botPLayer.fungal} {rpcPlayer.fungal} ");
+                AddPlayerServerRpc(botClientId, i + multiplayer.JoinedLobby.Players.Count, rpcPlayer);
+                i++;
+            }
 
             OnSpawnerReady?.Invoke(this);
         }
     }
 
-
-    public void AddPlayer(ulong clientId, string playerName, int playerIndex, int fungalIndex, bool isAI = false)
-    {
-        //Debug.Log("AddPlayer");
-        OnPlayerAddedServerRpc(clientId, playerName, playerIndex, fungalIndex, isAI);
-    }
-
     [ServerRpc(RequireOwnership = false)]
-    private void OnPlayerAddedServerRpc(ulong clientId, FixedString64Bytes playerName, int playerIndex, int fungalIndex, bool isAI = false)
+    public void AddPlayerServerRpc(ulong clientId, int playerIndex, LobbyPlayerRPCParam player)
     {
+        Debug.Log($"AddPlayerServerRpc {playerIndex} {player.fungal}");
+
         //Debug.Log("OnPlayerAddedServerRpc");
-       
+
         var spawnOrigin = arena.SpawnPositions[playerIndex].position;
 
         var spawnPosition = spawnOrigin;
 
         var networkFungal = Instantiate(fungalPrefab, spawnPosition, Quaternion.identity);
         networkFungal.NetworkObject.SpawnWithOwnership(clientId);
-        networkFungal.InitializeServerRpc(playerName, playerIndex, fungalIndex, isAI);
+        networkFungal.InitializeServerRpc(playerIndex, player);
 
-        if (!isAI)
+        if (!player.isAI)
         {
-            OnPlayerAddedClientRpc(clientId, playerIndex, networkFungal.NetworkObjectId);
+            OnPlayerAddedClientRpc(clientId, playerIndex, player, networkFungal.NetworkObjectId);
         }
     }
 
     [ClientRpc]
-    private void OnPlayerAddedClientRpc(ulong clientId, int playerIndex, ulong networkObjectId)
+    private void OnPlayerAddedClientRpc(ulong clientId, int playerIndex, LobbyPlayerRPCParam player, ulong networkObjectId)
     {
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out var networkObject))
         {
             var networkFungal = networkObject.GetComponent<NetworkFungal>();
-            pufferballReference.AddPlayer(clientId, playerIndex, networkFungal);
+            pufferballReference.AddPlayer(clientId, player.name, playerIndex, networkFungal);
         }
 
         //Debug.Log("Client owner spawned, searching for existing NetworkFungals...");
@@ -98,7 +116,7 @@ public class PlayerSpawner : NetworkBehaviour
                 }
 
                 // Register the fungal with the pufferballReference
-                pufferballReference.AddPlayer(clientId, networkFungal.Index, networkFungal);
+                pufferballReference.AddPlayer(clientId, player.name, networkFungal.Index, networkFungal);
             }
         }
     }

@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
+// todo: centralize or distinguish LobbyPlayer and Player objects
 [Serializable]
 public class Player
 {
@@ -24,8 +26,9 @@ public class Player
     }
 }
 
+//todo: rename
 [CreateAssetMenu]
-public class PufferballReference : ScriptableObject
+public class GameReference : ScriptableObject
 {
     [SerializeField] private Player clientPlayer;
     [SerializeField] private List<Player> players;
@@ -53,7 +56,9 @@ public class PufferballReference : ScriptableObject
         isComplete = false;
     }
 
-    public void AddPlayer(ulong clientId, int playerIndex, NetworkFungal networkFungal)
+    // todo: pass LobbyPlayer object
+    // todo: add clientID field to LobbyPlayer
+    public void AddPlayer(ulong clientId, FixedString64Bytes playerName, int playerIndex, NetworkFungal networkFungal)
     {
         // Check if a player with the same index already exists
         if (Players.Any(player => player.Fungal == networkFungal))
@@ -64,17 +69,16 @@ public class PufferballReference : ScriptableObject
 
         Enum.TryParse(multiplayer.GetJoinedLobbyData("GameMode"), out gameMode);
 
-        var localPlayerName = "";
-
-        var addedPlayer = new Player(clientId, playerIndex, localPlayerName, networkFungal);
+        var addedPlayer = new Player(clientId, playerIndex, playerName.ToString(), networkFungal);
         Players.Add(addedPlayer);
 
         // Sort the list based on the player index
         Players.Sort((player1, player2) => player1.Index.CompareTo(player2.Index));
 
-        if (networkFungal.IsOwner && !networkFungal.isAI.Value)
+        if (networkFungal.IsOwner && !networkFungal.IsAI)
         {
             clientPlayer = addedPlayer;
+            Debug.Log("OnClientPlayerAdded");
             OnClientPlayerAdded?.Invoke();
         }
 

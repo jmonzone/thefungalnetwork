@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class Score : MonoBehaviour
 {
-    [SerializeField] private PufferballReference pufferball;
+    [SerializeField] private GameReference pufferball;
     [SerializeField] private List<Color> colors;
 
     [SerializeField] private RectTransform barContainer;

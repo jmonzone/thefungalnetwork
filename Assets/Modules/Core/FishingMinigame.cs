@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class FishingMinigame : MonoBehaviour
 {
-    [SerializeField] private PufferballReference playerReference;
+    [SerializeField] private GameReference playerReference;
     [SerializeField] private CameraController cameraController;
     [SerializeField] private CinemachineVirtualCamera arenaCamera;
 

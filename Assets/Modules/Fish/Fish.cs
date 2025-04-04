@@ -6,7 +6,7 @@ using UnityEngine.Events;
 
 public class Fish : NetworkBehaviour
 {
-    [SerializeField] private PufferballReference pufferballReference;
+    [SerializeField] private GameReference pufferballReference;
     [SerializeField] private float swimSpeed = 1f;
     [SerializeField] private bool useTrajectory = false;
 

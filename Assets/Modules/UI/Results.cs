@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Results : MonoBehaviour
 {
-    [SerializeField] private PufferballReference pufferball;
+    [SerializeField] private GameReference pufferball;
     [SerializeField] private Navigation navigation;
 
     [SerializeField] private ViewReference resultsView;

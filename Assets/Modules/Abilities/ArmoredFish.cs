@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ArmoredFish : MonoBehaviour
 {
-    [SerializeField] private PufferballReference pufferballReference;
+    [SerializeField] private GameReference pufferballReference;
     [SerializeField] private NetworkObject armorPrefab;
 
     private void Awake()

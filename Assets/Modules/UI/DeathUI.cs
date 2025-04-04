@@ -4,7 +4,7 @@ using UnityEngine;
 public class DeathUI : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private PufferballReference minigameReference; // The ScriptableObject with the timer
+    [SerializeField] private GameReference minigameReference; // The ScriptableObject with the timer
     [SerializeField] private TextMeshProUGUI timerText; // Assign your UI Text here
     [SerializeField] private FadeCanvasGroup deathUI;
 
