@@ -34,7 +34,9 @@ public class PlayerListItem : MonoBehaviour
         this.player = player;
 
         playerNameText.text = player.name;
-        playerFungalImage.sprite = player.fungal.ActionImage;
+
+        var targetFungal = fungalCollection.Fungals[player.fungal];
+        playerFungalImage.sprite = targetFungal.ActionImage;
 
         hostBadge.SetActive(player.isHost);
 

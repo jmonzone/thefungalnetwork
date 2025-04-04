@@ -21,28 +21,28 @@ public class PlayerSpawner : NetworkBehaviour
 
         if (IsServer)
         {
-            var selectedFungals = new HashSet<int>();
+            //var selectedFungals = new HashSet<int>();
 
-            // Collect already selected fungal indices
-            foreach (var player in multiplayer.JoinedLobby.Players)
-                if (player.Data.TryGetValue("Fungal", out var fungalData) &&
-                    int.TryParse(fungalData?.Value, out var index))
-                    selectedFungals.Add(index);
+            //// Collect already selected fungal indices
+            //foreach (var player in multiplayer.JoinedLobby.Players)
+            //    if (player.Data.TryGetValue("Fungal", out var fungalData) &&
+            //        int.TryParse(fungalData?.Value, out var index))
+            //        selectedFungals.Add(index);
 
-            // Get available indices
-            var availableFungals = Enumerable.Range(0, fungalCollection.Fungals.Count)
-                                             .Where(i => !selectedFungals.Contains(i))
-                                             .ToList();
+            //// Get available indices
+            //var availableFungals = Enumerable.Range(0, fungalCollection.Fungals.Count)
+            //                                 .Where(i => !selectedFungals.Contains(i))
+            //                                 .ToList();
 
-            int i = 0;
-            foreach (var aiPlayer in multiplayer.GetCurrentAIPlayerList())
-            {
-                ulong aiClientId = NetworkManager.Singleton.LocalClientId;
-                int fungalIndex = availableFungals.Any() ? availableFungals.PopRandom() : UnityEngine.Random.Range(0, fungalCollection.Fungals.Count);
+            //int i = 0;
+            //foreach (var aiPlayer in multiplayer.GetCurrentAIPlayerList())
+            //{
+            //    ulong aiClientId = NetworkManager.Singleton.LocalClientId;
+            //    int fungalIndex = availableFungals.Any() ? availableFungals.PopRandom() : UnityEngine.Random.Range(0, fungalCollection.Fungals.Count);
 
-                AddPlayer(aiClientId, aiPlayer, i + multiplayer.JoinedLobby.Players.Count, fungalIndex, isAI: true);
-                i++;
-            }
+            //    AddPlayer(aiClientId, aiPlayer, i + multiplayer.JoinedLobby.Players.Count, fungalIndex, isAI: true);
+            //    i++;
+            //}
 
             OnSpawnerReady?.Invoke(this);
         }

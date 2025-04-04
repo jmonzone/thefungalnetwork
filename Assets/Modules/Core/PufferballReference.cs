@@ -64,7 +64,7 @@ public class PufferballReference : ScriptableObject
 
         Enum.TryParse(multiplayer.GetJoinedLobbyData("GameMode"), out gameMode);
 
-        var localPlayerName = multiplayer.GetAllPlayerNames()[playerIndex];
+        var localPlayerName = "";
 
         var addedPlayer = new Player(clientId, playerIndex, localPlayerName, networkFungal);
         Players.Add(addedPlayer);
@@ -79,7 +79,7 @@ public class PufferballReference : ScriptableObject
         }
 
         OnPlayerAdded?.Invoke(addedPlayer);
-        if (multiplayer.GetAllPlayerNames().Count == Players.Count)
+        if (multiplayer.LobbyPlayers.Count == Players.Count)
         {
             OnAllPlayersAdded?.Invoke();
         }
