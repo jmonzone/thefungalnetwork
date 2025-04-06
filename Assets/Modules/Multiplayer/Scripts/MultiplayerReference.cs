@@ -647,10 +647,12 @@ public class MultiplayerReference : ScriptableObject
         return allIndices.Except(usedByHumans).FirstOrDefault();
     }
 
+    private int index = 0;
     private string GenerateRandomName()
     {
         string[] nouns = { "gpt", "gmo", "gmw", "nlp", "hbd", "gtg", "omw", "brb" };
-        string noun = nouns[UnityEngine.Random.Range(0, nouns.Length)];
+        string noun = nouns[index % nouns.Length];
+        index++;
         return $"fungal {noun}";
     }
 
