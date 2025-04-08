@@ -200,10 +200,12 @@ public class MultiplayerReference : ScriptableObject
         }
     }
 
-    public async Task CreateRelayAndLobby(GameMode gameMode)
+    public async Task CreateRelayAndLobby(GameMode gameMode, int fungalIndex)
     {
         var joinCode = await CreateRelay();
-        await CreateLobby(joinCode, gameMode);
+
+        var player = CreatePlayer(fungalIndex);
+        await CreateLobby(player, joinCode, gameMode);
 
     }
 
@@ -350,20 +352,20 @@ public class MultiplayerReference : ScriptableObject
 
     private Player player;
 
-    private Player CreatePlayer() => new Player
+    private Player CreatePlayer(int fungalIndex = -1) => new Player
     {
         Data = new Dictionary<string, PlayerDataObject>
         {
             { "PlayerName", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, PlayerName) },
-            { "Fungal",new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, PlayerPrefs.GetInt("FungalIndex", 0).ToString()) }
+            { "Fungal",new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, (fungalIndex == -1 ? PlayerPrefs.GetInt("FungalIndex", 0) : fungalIndex).ToString()) }
         }
     };
 
-    public async Task CreateLobby(string joinCode, GameMode gameMode)
+    public async Task CreateLobby(Player player, string joinCode, GameMode gameMode)
     {
         try
         {
-            player = CreatePlayer();
+            this.player = player;
             var clientId = NetworkManager.Singleton.LocalClientId;
             player.Data["NetworkId"] = new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, clientId.ToString());
 

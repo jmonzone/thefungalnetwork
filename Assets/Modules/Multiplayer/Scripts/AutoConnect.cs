@@ -4,10 +4,14 @@ using UnityEngine;
 
 public class AutoConnect : MonoBehaviour
 {
+    [Header("Services")]
     [SerializeField] private MultiplayerReference multiplayer;
-    [SerializeField] private List<FungalData> botPlayers;
     [SerializeField] private FungalCollection fungalCollection;
+
+    [Header("Battle Options")]
     [SerializeField] private GameMode gameMode;
+    [SerializeField] private FungalData startingFungal;
+    [SerializeField] private List<FungalData> botPlayers;
 
     private IEnumerator Start()
     {
@@ -34,10 +38,12 @@ public class AutoConnect : MonoBehaviour
                     }
                     else
                     {
-                        await multiplayer.CreateRelayAndLobby(gameMode);
+                        var index = fungalCollection.Fungals.IndexOf(startingFungal);
+                        await multiplayer.CreateRelayAndLobby(gameMode, index);
+
                         foreach(var botFungal in botPlayers)
                         {
-                            var index = fungalCollection.Fungals.IndexOf(botFungal);
+                            index = fungalCollection.Fungals.IndexOf(botFungal);
                             await multiplayer.AddAIPlayer(index);
                         }
 
