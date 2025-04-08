@@ -11,8 +11,9 @@ public class AllIsBog : MonoBehaviour
     [SerializeField] private FadeCanvasGroup canvasGroup;
 
     [Header("UI")]
+    [SerializeField] private FungalThrow fungalThrow;
     [SerializeField] private AbilityButton fishButton;
-    [SerializeField] private AbilityButton dashButton;
+    [SerializeField] private AbilityButton fungalAbilityButton;
     [SerializeField] private FishingRodUI fishingRodUI;
     [SerializeField] private MoveCharacterJoystick moveCharacterJoystick;
 
@@ -37,18 +38,19 @@ public class AllIsBog : MonoBehaviour
 
     private void PlayerReference_OnClientPlayerAdded()
     {
-        //var fungalThrow = game.ClientPlayer.Fungal.GetComponent<FungalThrow>();
-        //fishingRodUI.AssignFishingRod(fungalThrow);
-        //fishButton.AssignAbility(fungalThrow);
+        var throwAbility = Instantiate(fungalThrow);
+        throwAbility.Initialize(game.ClientPlayer.Fungal);
 
-        //todo: centralize
+        fishingRodUI.AssignFishingRod(throwAbility);
+        fishButton.AssignAbility(throwAbility);
+
         var abilityTemplate = game.ClientPlayer.Fungal.Data.Ability;
         var fungalAbility = Instantiate(abilityTemplate);
         fungalAbility.Initialize(game.ClientPlayer.Fungal);
         fungalAbility.OnAbilityStart += () => moveCharacterJoystick.enabled = false;
         fungalAbility.OnAbilityComplete += () => moveCharacterJoystick.enabled = true;
 
-        dashButton.AssignAbility(fungalAbility);
+        fungalAbilityButton.AssignAbility(fungalAbility);
 
     }
 
@@ -61,7 +63,7 @@ public class AllIsBog : MonoBehaviour
     {
         //if (!Application.isEditor)
         //{
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(1f);
             yield return canvasGroup.FadeOut();
         //}
         arenaCamera.Priority = 0;

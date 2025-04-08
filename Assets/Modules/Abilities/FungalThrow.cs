@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 
+[CreateAssetMenu(menuName = "Fungals/Ability/Throw")]
 public class FungalThrow : Ability
 {
     private FishPickup fishPickup;
