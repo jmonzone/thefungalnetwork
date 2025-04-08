@@ -241,7 +241,9 @@ public class Movement : MonoBehaviour
         float heightOffset = Mathf.Sin(progress * Mathf.PI) * trajectoryHeight;
 
         targetPosition = new Vector3(currentPosition.x, heightOffset, currentPosition.z);
-        UpdateLookDirection(targetPosition - transform.position);
+
+        var lookDirection = targetPosition - transform.position;
+        UpdateLookDirection(lookDirection);
 
         // Set the final position with calculated height
         transform.position = targetPosition;
@@ -250,11 +252,16 @@ public class Movement : MonoBehaviour
         if (progress >= 1f)
         {
             Stop();
+
+            Debug.Log("Stopping, updating look direction " + lookDirection);
+            lookDirection.y = 0;
+            UpdateLookDirection(lookDirection.normalized, force: true);
+
             OnDestinationReached?.Invoke();
         }
     }
 
-    private void UpdateLookDirection(Vector3 direction)
+    private void UpdateLookDirection(Vector3 direction, bool force = false)
     {
         var lookDirection = direction;
 
@@ -262,7 +269,8 @@ public class Movement : MonoBehaviour
         {
             // Smoothly rotate using Slerp (Spherical Linear Interpolation)
             Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
-            lookTransform.rotation = Quaternion.Slerp(lookTransform.rotation, targetRotation, rotationSpeed * SpeedDelta);
+            if (force) lookTransform.rotation = targetRotation;
+            else lookTransform.rotation = Quaternion.Slerp(lookTransform.rotation, targetRotation, rotationSpeed * SpeedDelta);
         }
     }
 

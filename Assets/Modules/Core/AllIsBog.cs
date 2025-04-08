@@ -10,6 +10,7 @@ public class AllIsBog : MonoBehaviour
 
     [SerializeField] private FadeCanvasGroup canvasGroup;
 
+    [Header("UI")]
     [SerializeField] private AbilityButton fishButton;
     [SerializeField] private AbilityButton dashButton;
     [SerializeField] private FishingRodUI fishingRodUI;
@@ -40,11 +41,17 @@ public class AllIsBog : MonoBehaviour
         fishingRodUI.AssignFishingRod(fungalThrow);
         fishButton.AssignAbility(fungalThrow);
 
-        var fungalDash = game.ClientPlayer.Fungal.GetComponent<FungalDash>();
-        dashButton.AssignAbility(fungalDash);
-        fungalDash.OnDashStart += () => moveCharacterJoystick.enabled = false;
-        fungalDash.OnDashComplete += () => moveCharacterJoystick.enabled = true;
-        
+        //todo: centralize
+        //var fungalDash = game.ClientPlayer.Fungal.GetComponent<FungalDash>();
+        //dashButton.AssignAbility(fungalDash);
+        //fungalDash.OnDashStart += () => moveCharacterJoystick.enabled = false;
+        //fungalDash.OnDashComplete += () => moveCharacterJoystick.enabled = true;
+
+        var fungalFlight = game.ClientPlayer.Fungal.GetComponent<FungalFlight>();
+        dashButton.AssignAbility(fungalFlight);
+        fungalFlight.OnFlightStart += () => moveCharacterJoystick.enabled = false;
+        fungalFlight.OnFlightComplete += () => moveCharacterJoystick.enabled = true;
+
     }
 
     private void PlayerReference_OnPlayerUpdated()
