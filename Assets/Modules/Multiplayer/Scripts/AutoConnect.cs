@@ -1,10 +1,12 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class AutoConnect : MonoBehaviour
 {
     [SerializeField] private MultiplayerReference multiplayer;
-    [SerializeField] private bool addAIPlayer = false;
+    [SerializeField] private List<FungalData> botPlayers;
+    [SerializeField] private FungalCollection fungalCollection;
     [SerializeField] private GameMode gameMode;
 
     private IEnumerator Start()
@@ -33,7 +35,12 @@ public class AutoConnect : MonoBehaviour
                     else
                     {
                         await multiplayer.CreateRelayAndLobby(gameMode);
-                        if (addAIPlayer) await multiplayer.AddAIPlayer();
+                        foreach(var botFungal in botPlayers)
+                        {
+                            var index = fungalCollection.Fungals.IndexOf(botFungal);
+                            await multiplayer.AddAIPlayer(index);
+                        }
+
                         multiplayer.StartHostClient();
                     }
                 });

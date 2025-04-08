@@ -585,7 +585,7 @@ public class MultiplayerReference : ScriptableObject
 
     }
 
-    public async Task AddAIPlayer()
+    public async Task AddAIPlayer(int fungalIndex = -1)
     {
         if (JoinedLobby == null)
         {
@@ -608,7 +608,7 @@ public class MultiplayerReference : ScriptableObject
         }
 
         var lobbyId = Guid.NewGuid().ToString("N");
-        var fungal = GetAvailableFungalIndex();
+        var fungal = fungalIndex == -1 ? GetAvailableFungalIndex() : fungalIndex;
         var lobbyPlayer = new LobbyPlayer(lobbyId, fungal, newAIName, true, false);
 
         aiPlayerNames.Add(lobbyPlayer);
