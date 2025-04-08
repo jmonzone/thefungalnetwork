@@ -37,9 +37,9 @@ public class AllIsBog : MonoBehaviour
 
     private void PlayerReference_OnClientPlayerAdded()
     {
-        var fungalThrow = game.ClientPlayer.Fungal.GetComponent<FungalThrow>();
-        fishingRodUI.AssignFishingRod(fungalThrow);
-        fishButton.AssignAbility(fungalThrow);
+        //var fungalThrow = game.ClientPlayer.Fungal.GetComponent<FungalThrow>();
+        //fishingRodUI.AssignFishingRod(fungalThrow);
+        //fishButton.AssignAbility(fungalThrow);
 
         //todo: centralize
         //var fungalDash = game.ClientPlayer.Fungal.GetComponent<FungalDash>();
@@ -47,10 +47,13 @@ public class AllIsBog : MonoBehaviour
         //fungalDash.OnDashStart += () => moveCharacterJoystick.enabled = false;
         //fungalDash.OnDashComplete += () => moveCharacterJoystick.enabled = true;
 
-        var fungalFlight = game.ClientPlayer.Fungal.GetComponent<FungalFlight>();
+        var abilityTemplate = game.ClientPlayer.Fungal.Data.Ability;
+        var fungalFlight = Instantiate(abilityTemplate);
+        fungalFlight.Initialize(game.ClientPlayer.Fungal);
+        fungalFlight.OnAbilityStart += () => moveCharacterJoystick.enabled = false;
+        fungalFlight.OnAbilityComplete += () => moveCharacterJoystick.enabled = true;
+
         dashButton.AssignAbility(fungalFlight);
-        fungalFlight.OnFlightStart += () => moveCharacterJoystick.enabled = false;
-        fungalFlight.OnFlightComplete += () => moveCharacterJoystick.enabled = true;
 
     }
 

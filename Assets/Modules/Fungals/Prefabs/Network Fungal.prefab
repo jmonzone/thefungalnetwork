@@ -209,9 +209,6 @@ GameObject:
   - component: {fileID: 779741349755401041}
   - component: {fileID: 1801879712863114737}
   - component: {fileID: 117501078218232890}
-  - component: {fileID: 7645941639448045315}
-  - component: {fileID: 8107556039497871619}
-  - component: {fileID: 1652441052272165006}
   m_Layer: 10
   m_Name: Network Fungal
   m_TagString: Untagged
@@ -563,60 +560,6 @@ MonoBehaviour:
   currentState: 0
   minDashInterval: 0.5
   maxDashInterval: 2
---- !u!114 &7645941639448045315
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2941250707292126303}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ba750423ae11484f96157f59689a48a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  radius: 1
-  castCooldown: 3
-  dashRange: 3
-  dashSpeed: 7.5
-  dashAudio:
-  - {fileID: 8300000, guid: eece8f19a989f4b6ca108b3a2906d19d, type: 3}
-  - {fileID: 8300000, guid: 27f92a5234c7747e8b26b6158009ba5d, type: 3}
-  - {fileID: 8300000, guid: 937f9cf9beb4a4bc3a4d41b15e01aef3, type: 3}
-  - {fileID: 8300000, guid: b71ee5e9badb14dafa1a3529bf1e7b3b, type: 3}
-  trailRenderers: {fileID: 2850911616725606102}
---- !u!114 &8107556039497871619
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2941250707292126303}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 093cb938b406040d8954d63af51debb7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  radius: 1
-  castCooldown: 2
-  pufferballReference: {fileID: 11400000, guid: 08db032ff48be41208a04f1067508370,
-    type: 2}
---- !u!114 &1652441052272165006
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2941250707292126303}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f905b6a7c9d84820a9f33bb26ce28a8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  radius: 1
-  castCooldown: 2
-  flightRange: 4
-  flightSpeed: 4
 --- !u!1 &3479753527524024102
 GameObject:
   m_ObjectHideFlags: 0
@@ -649,10 +592,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1596952997321645555}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 31.8, y: -7.5}
-  m_SizeDelta: {x: 15, y: 15}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 15, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5137322730701589102
 CanvasRenderer:
@@ -832,9 +775,9 @@ RectTransform:
   - {fileID: 8764301325082761873}
   m_Father: {fileID: 2119651691225576486}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: -67.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 63.6, y: 15}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &454946094003990888
@@ -1322,10 +1265,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1596952997321645555}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 16.8, y: -7.5}
-  m_SizeDelta: {x: 15, y: 15}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 15, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &417123109145439497
 CanvasRenderer:
@@ -1656,10 +1599,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1596952997321645555}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 46.8, y: -7.5}
-  m_SizeDelta: {x: 15, y: 15}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 15, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8859449786088907180
 CanvasRenderer:

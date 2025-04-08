@@ -1,12 +1,17 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 
-public abstract class Ability : MonoBehaviour
+public abstract class Ability : ScriptableObject
 {
+    [SerializeField] private string id;
+    [SerializeField] [TextArea] private string description;
+    [SerializeField] private Sprite image;
+
     [SerializeField] protected float radius = 1f;
     [SerializeField] private float castCooldown = 2f;
+
     private CooldownModel cooldownModel;
-    protected NetworkFungal networkFungal;
+    protected NetworkFungal fungal;
 
     public bool IsAvailable { get; private set; } = true;
     public bool IsOnCooldown => cooldownModel.IsOnCooldown;
@@ -22,14 +27,27 @@ public abstract class Ability : MonoBehaviour
     public event UnityAction OnAvailabilityChanged;
     public event UnityAction OnCancel;
 
+
+    public event UnityAction OnAbilityStart;
+    public event UnityAction OnAbilityComplete;
+
     public virtual void PrepareAbility() { }
     public virtual void ChargeAbility() { }
-    public abstract void CastAbility(Vector3 direction);
 
-    protected virtual void Awake()
+    public virtual void Initialize(NetworkFungal fungal)
     {
-        networkFungal = GetComponent<NetworkFungal>();
+        this.fungal = fungal;
         cooldownModel = new CooldownModel(castCooldown);
+    }
+
+    public virtual void CastAbility(Vector3 targetPosition)
+    {
+        OnAbilityStart?.Invoke();
+    }
+
+    protected void CompleteAbility()
+    {
+        OnAbilityComplete?.Invoke();
     }
 
     protected void CancelAbility()

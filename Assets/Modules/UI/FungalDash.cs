@@ -11,30 +11,26 @@ public class FungalDash : Ability
     [SerializeField] private List<AudioClip> dashAudio;
     [SerializeField] private GameObject trailRenderers;
 
-    private Movement movement;
-    private NetworkFungal fungal;
+    private Movement movement => fungal.Movement;
     private ClientNetworkTransform networkTransform;
     private AudioSource audioSource;
 
     public override float Range => dashRange;
-    public override Vector3 DefaultTargetPosition => transform.position + transform.forward * dashRange;
+    public override Vector3 DefaultTargetPosition => fungal.transform.position + fungal.transform.forward * dashRange;
     public override bool UseTrajectory => false;
 
-    public event UnityAction OnDashStart;
-    public event UnityAction OnDashComplete;
 
-    protected override void Awake()
+    public override void Initialize(NetworkFungal fungal)
     {
-        base.Awake();
-        movement = GetComponent<Movement>();
-        fungal = GetComponent<NetworkFungal>();
-        networkTransform = GetComponent<ClientNetworkTransform>();
-        audioSource = GetComponent<AudioSource>();
+        base.Initialize(fungal);
+
+        networkTransform = fungal.GetComponent<ClientNetworkTransform>();
+        audioSource = fungal.GetComponent<AudioSource>();
     }
 
     public override void CastAbility(Vector3 targetPosition)
     {
-        OnDashStart?.Invoke();
+        base.CastAbility(targetPosition);
 
         void OnDestinationReached()
         {
@@ -43,7 +39,7 @@ public class FungalDash : Ability
 
             networkTransform.Interpolate = true;
             trailRenderers.SetActive(false);
-            OnDashComplete?.Invoke();
+            CompleteAbility();
         }
 
         trailRenderers.SetActive(true);
@@ -57,6 +53,6 @@ public class FungalDash : Ability
         audioSource.clip = audioClip;
         audioSource.Play();
 
-        StartCoroutine(Cooldown.StartCooldown());
+        fungal.StartCoroutine(Cooldown.StartCooldown());
     }
 }

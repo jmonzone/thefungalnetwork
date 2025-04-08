@@ -25,8 +25,8 @@ public class NetworkFungal : NetworkBehaviour
     [SerializeField] private GameObject stunAnimation;
     [SerializeField] private float respawnDuration = 5f;
     [SerializeField] private FungalCollection fungalCollection;
-
     [SerializeField] private float baseSpeed = 3f;
+
     public float BaseSpeed => 3f;
 
     public FungalData Data => data;

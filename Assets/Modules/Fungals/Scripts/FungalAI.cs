@@ -34,7 +34,7 @@ public class FungalAI : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         fungal = GetComponent<NetworkFungal>();
-        dash = GetComponent<FungalDash>();
+        //dash = GetComponent<FungalDash>();
         allFish = FindObjectsOfType<Fish>().ToList();
         fishPickup = GetComponent<FishPickup>();
 
@@ -44,7 +44,7 @@ public class FungalAI : MonoBehaviour
 
     private void Start()
     {
-        nextDashTime = dash.Cooldown.Cooldown;
+        //nextDashTime = dash.Cooldown.Cooldown;
         SetState(FungalState.FIND_FISH); // Start moving
     }
 

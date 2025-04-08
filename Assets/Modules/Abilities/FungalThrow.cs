@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class FungalThrow : Ability
 {
-    [SerializeField] private GameReference pufferballReference;
-
     private FishPickup fishPickup;
 
     public event Action<Fish> OnFishChanged;
@@ -12,24 +10,13 @@ public class FungalThrow : Ability
     public override bool UseTrajectory => fishPickup.Fish.UseTrajectory;
     public override float Range => fishPickup.Fish.ThrowFish.Range;
 
-    private void Start()
+    public override void Initialize(NetworkFungal fungal)
     {
-        if (pufferballReference.ClientPlayer != null)
-        {
-            PufferballReference_OnPlayerRegistered();
-        }
-        else
-        {
-            pufferballReference.OnClientPlayerAdded += PufferballReference_OnPlayerRegistered;
-        }
-    }
-
-    private void PufferballReference_OnPlayerRegistered()
-    {
-        pufferballReference.OnClientPlayerAdded -= PufferballReference_OnPlayerRegistered;
-        fishPickup = pufferballReference.ClientPlayer.Fungal.GetComponent<FishPickup>();
+        base.Initialize(fungal);
+        fishPickup = fungal.GetComponent<FishPickup>();
         fishPickup.OnFishChanged += FishPickup_OnFishChanged;
         fishPickup.OnFishReleased += FishPickup_OnFishReleased;
+
         ToggleAvailable(false);
     }
 
@@ -67,6 +54,7 @@ public class FungalThrow : Ability
 
     public override void CastAbility(Vector3 targetPosition)
     {
+        base.CastAbility(targetPosition);
         fishPickup.Sling(targetPosition);
     }
 
@@ -74,8 +62,8 @@ public class FungalThrow : Ability
     {
         get
         {
-            Vector3 origin = pufferballReference.ClientPlayer.Fungal.transform.position;
-            Vector3 forwardTarget = origin + pufferballReference.ClientPlayer.Fungal.transform.forward * Range;
+            Vector3 origin = fungal.transform.position;
+            Vector3 forwardTarget = origin + fungal.transform.forward * Range;
             float searchRadius = Range;
             LayerMask targetLayer = ~0;
 
@@ -88,7 +76,7 @@ public class FungalThrow : Ability
                 NetworkFungal fungal = collider.GetComponent<NetworkFungal>();
                 if (fungal == null) continue;
                 if (fungal.IsDead) continue;
-                if (fungal == pufferballReference.ClientPlayer.Fungal) continue;
+                if (this.fungal == fungal) continue;
 
                 float distance = Vector3.Distance(origin, fungal.transform.position);
                 if (distance < closestDistance)

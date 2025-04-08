@@ -1,5 +1,4 @@
-﻿using Unity.Netcode;
-using UnityEngine;
+﻿using UnityEngine;
 
 public enum FungalType
 {
@@ -17,6 +16,7 @@ public class FungalData : ScriptableObject
     [SerializeField] private Sprite actionImage;
     [SerializeField] private Color actionColor;
     [SerializeField] private Color eggColor;
+    [SerializeField] private Ability ability;
 
     public string Id => id;
     public string Description => description;
@@ -25,5 +25,5 @@ public class FungalData : ScriptableObject
     public Sprite ActionImage => actionImage;
     public Color ActionColor => actionColor;
     public Color EggColor => eggColor;
-
+    public Ability Ability => ability;
 }
