@@ -35,10 +35,17 @@ public class ArenaTimer : MonoBehaviour
 
     private void StartTimer()
     {
-        currentTime = gameDuration;
-        isRunning = true;
-        isFinalCountdown = false;
-        hasEnded = false;
+        if (game.gameMode == GameMode.PARTY)
+        {
+            currentTime = gameDuration;
+            isRunning = true;
+            isFinalCountdown = false;
+            hasEnded = false;
+        }
+        else
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     private void Update()
