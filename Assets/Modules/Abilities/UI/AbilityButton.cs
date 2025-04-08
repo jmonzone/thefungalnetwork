@@ -102,22 +102,42 @@ public class AbilityButton : MonoBehaviour
 
         isDown = true;
         ability.PrepareAbility();
-        abilityCastIndicator.ShowIndicator(ability.UseTrajectory);
-        abilityCastIndicator.ShowTargetIndicator(ability.UseTrajectory);
+
+        if (ability is DirectionalAbility directionalAbility)
+        {
+            abilityCastIndicator.ShowIndicator(directionalAbility.UseTrajectory);
+            abilityCastIndicator.ShowTargetIndicator(directionalAbility.UseTrajectory);
+        }
     }
 
     private void DirectionalButton_OnPointerUp()
     {
-        if (ability == null || ability.IsOnCooldown) return;
-        CastAbility(ability.DefaultTargetPosition);
+        if (ability == null) return;
+
+        if (ability is DirectionalAbility directionalAbility)
+        {
+            CastDirectionalAbility(directionalAbility, directionalAbility.DefaultTargetPosition);
+        }
+        else
+        {
+            CastSelfTargetAbility();
+        }
     }
 
-    private void CastAbility(Vector3 targetPosition)
+    private void CastSelfTargetAbility()
     {
         if (ability == null) return;
 
         isDown = false;
-        ability.CastAbility(targetPosition);
+        ability.CastAbility();
+    }
+
+    private void CastDirectionalAbility(DirectionalAbility directionalAbility, Vector3 targetPosition)
+    {
+        if (ability == null) return;
+
+        isDown = false;
+        directionalAbility.CastAbility(targetPosition);
         abilityCastIndicator.HideIndicator();
     }
 
@@ -126,16 +146,27 @@ public class AbilityButton : MonoBehaviour
     {
         if (ability == null) return;
 
-        var clampedDirection = Vector3.ClampMagnitude(direction, ability.Range);
-        var startPosition = playerReference.ClientPlayer.Fungal.transform.position;
-        targetPosition = startPosition + clampedDirection;
-        targetPosition.y = 0; // Keep in the XZ plane
+        if (ability is DirectionalAbility directionalAbility)
+        {
+            var clampedDirection = Vector3.ClampMagnitude(direction, directionalAbility.Range);
+            var startPosition = playerReference.ClientPlayer.Fungal.transform.position;
+            targetPosition = startPosition + clampedDirection;
+            targetPosition.y = 0; // Keep in the XZ plane      
+        }
     }
 
     private void OnDragCompleted(Vector3 direction)
     {
         if (ability == null || ability.IsOnCooldown) return;
-        CastAbility(targetPosition);
+
+        if (ability is DirectionalAbility directionalAbility)
+        {
+            CastDirectionalAbility(directionalAbility, directionalAbility.DefaultTargetPosition);
+        }
+        else
+        {
+            CastSelfTargetAbility();
+        }
     }
 
     private void OnDragCanceled()
@@ -150,10 +181,14 @@ public class AbilityButton : MonoBehaviour
         {
             ability.ChargeAbility();
 
-            // Use the target position either from the drag or default
-            var targetPos = directionalButton.DragStarted ? this.targetPosition : ability.DefaultTargetPosition;
-            abilityCastIndicator.UpdateIndicator(playerReference.ClientPlayer.Fungal.transform.position, targetPos, ability.Range);
-            abilityCastIndicator.SetTargetIndicatorRadius(ability.Radius);
+
+            if (ability is DirectionalAbility directionalAbility)
+            {
+                // Use the target position either from the drag or default
+                var targetPos = directionalButton.DragStarted ? targetPosition : directionalAbility.DefaultTargetPosition;
+                abilityCastIndicator.UpdateIndicator(playerReference.ClientPlayer.Fungal.transform.position, targetPos, directionalAbility.Range);
+                abilityCastIndicator.SetTargetIndicatorRadius(ability.Radius);
+            }
         }
     }
 

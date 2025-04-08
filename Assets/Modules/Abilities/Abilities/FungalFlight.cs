@@ -2,7 +2,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Fungals/Ability/Flight")]
-public class FungalFlight : Ability, IMovementAbility
+public class FungalFlight : DirectionalAbility, IMovementAbility
 {
     [SerializeField] private float flightRange = 4f;
     [SerializeField] private float flightSpeed = 10f;
@@ -43,7 +43,5 @@ public class FungalFlight : Ability, IMovementAbility
 
         Movement.SetSpeed(flightSpeed);
         Movement.SetTrajectoryMovement(targetPosition);
-
-        fungal.StartCoroutine(Cooldown.StartCooldown());
     }
 }

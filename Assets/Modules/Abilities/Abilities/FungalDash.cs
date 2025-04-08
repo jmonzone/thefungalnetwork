@@ -8,7 +8,7 @@ public interface IMovementAbility
 }
 
 [CreateAssetMenu(menuName = "Fungals/Ability/Dash")]
-public class FungalDash : Ability, IMovementAbility
+public class FungalDash : DirectionalAbility, IMovementAbility
 {
     [SerializeField] private float dashRange = 3f;
     [SerializeField] private float dashSpeed = 7.5f;
@@ -55,7 +55,5 @@ public class FungalDash : Ability, IMovementAbility
         var audioClip = dashAudio.GetRandomItem();
         audioSource.clip = audioClip;
         audioSource.Play();
-
-        fungal.StartCoroutine(Cooldown.StartCooldown());
     }
 }

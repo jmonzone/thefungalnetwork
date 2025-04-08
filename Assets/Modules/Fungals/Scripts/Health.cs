@@ -22,10 +22,10 @@ public class Health : NetworkBehaviour
     [SerializeField] private float maxHealth = 100f;
 
     private NetworkVariable<float> currentHealth = new NetworkVariable<float>();
-    private float currentShield;
+    private NetworkVariable<float> currentShield = new NetworkVariable<float>();
 
     public float CurrentHealth => currentHealth.Value;
-    public float CurrentShield => currentShield;
+    public float CurrentShield => currentShield.Value;
     public float MaxHealth => maxHealth;
 
     public event UnityAction<DamageEventArgs> OnDamaged;
@@ -71,12 +71,23 @@ public class Health : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void OnDamageServerRpc(float damage, ulong sourceId)
     {
-        //Debug.Log($"OnDamageServerRpc {damage} {sourceId} {currentHealth.Value}");
-
         if (currentHealth.Value == 0) return;
 
-        currentHealth.Value = Mathf.Clamp(currentHealth.Value - damage, 0, maxHealth);
+        float remainingDamage = damage;
 
+        // Step 1: Damage the shield first
+        if (currentShield.Value > 0)
+        {
+            float shieldDamage = Mathf.Min(currentShield.Value, remainingDamage);
+            SetShield(currentShield.Value - shieldDamage);
+            remainingDamage -= shieldDamage;
+        }
+
+        // Step 2: If damage remains, apply it to health
+        if (remainingDamage > 0)
+        {
+            currentHealth.Value = Mathf.Clamp(currentHealth.Value - remainingDamage, 0, maxHealth);
+        }
 
         var knockout = currentHealth.Value <= 0;
 
@@ -120,7 +131,7 @@ public class Health : NetworkBehaviour
 
     public void SetShield(float shield)
     {
-        currentShield = Mathf.Max(0, shield);
+        currentShield.Value = Mathf.Max(0, shield);
         OnShieldChanged?.Invoke();
     }
 }

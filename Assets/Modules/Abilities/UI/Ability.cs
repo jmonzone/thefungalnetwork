@@ -1,6 +1,18 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 
+public abstract class DirectionalAbility : Ability
+{
+    public abstract Vector3 DefaultTargetPosition { get; }
+    public abstract float Range { get; }
+    public abstract bool UseTrajectory { get; }
+
+    public virtual void CastAbility(Vector3 targetPosition)
+    {
+        base.CastAbility();
+    }
+}
+
 public abstract class Ability : ScriptableObject
 {
     [SerializeField] private string id;
@@ -24,16 +36,8 @@ public abstract class Ability : ScriptableObject
     public CooldownModel Cooldown => cooldownModel;
     public float Radius => radius;
 
-    public abstract Vector3 DefaultTargetPosition { get; }
-
-    // todo: set input type directional or trajectory
-    public abstract bool UseTrajectory { get; }
-    public abstract float Range { get; }
-
     public event UnityAction OnAvailabilityChanged;
     public event UnityAction OnCancel;
-
-
     public event UnityAction OnAbilityStart;
     public event UnityAction OnAbilityComplete;
 
@@ -46,9 +50,10 @@ public abstract class Ability : ScriptableObject
         cooldownModel = new CooldownModel(castCooldown);
     }
 
-    public virtual void CastAbility(Vector3 targetPosition)
+    public virtual void CastAbility()
     {
         OnAbilityStart?.Invoke();
+        fungal.StartCoroutine(Cooldown.StartCooldown());
     }
 
     protected void CompleteAbility()

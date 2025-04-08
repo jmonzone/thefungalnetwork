@@ -106,6 +106,11 @@ public class FungalAI : MonoBehaviour
 
         while (true)
         {
+            if (!(ability is DirectionalAbility) && !ability.IsOnCooldown)
+            {
+                ability.CastAbility();
+            }
+
             switch (currentState)
             {
                 case FungalState.FIND_FISH:
@@ -115,6 +120,7 @@ public class FungalAI : MonoBehaviour
                     yield return ThrowFish();
                     break;
             }
+
             yield return null;
         }
     }
@@ -127,27 +133,22 @@ public class FungalAI : MonoBehaviour
 
     private IEnumerator FindAndPickUpFish()
     {
-        while (currentState == FungalState.FIND_FISH)
+        targetFish = allFish
+                 .Where(fish => !fish.IsPickedUp.Value && IsOnNavMesh(fish.transform.position))
+                 .OrderBy(fish => Vector3.Distance(transform.position, fish.transform.position))
+                 .FirstOrDefault();
+
+        if (targetFish != null)
         {
-            targetFish = allFish
-                .Where(fish => !fish.IsPickedUp.Value && IsOnNavMesh(fish.transform.position))
-                .OrderBy(fish => Vector3.Distance(transform.position, fish.transform.position))
-                .FirstOrDefault();
-
-            if (targetFish != null)
-            {
-                yield return UseMoveAction(targetFish.transform.position);
-            }
-
-            if (fishPickup.Fish)
-            {
-                SetState(FungalState.THROW_FISH);
-                yield break;
-            }
-
-
-            yield return null;
+            yield return UseMoveAction(targetFish.transform.position);
         }
+
+        if (fishPickup.Fish)
+        {
+            SetState(FungalState.THROW_FISH);
+        }
+
+        yield return null;
     }
 
     private Vector3 GetDashTargetPosition(IMovementAbility movementAbility, Vector3 targetPosition)
@@ -175,7 +176,7 @@ public class FungalAI : MonoBehaviour
         agent.speed = fungal.Movement.CalculatedSpeed;
         agent.SetDestination(targetPosition);
 
-        if (ability is IMovementAbility movementAbility)
+        if (ability is IMovementAbility movementAbility && ability is DirectionalAbility directionalAbility)
         {
 
             float cooldownTime = ability.Cooldown.RemainingTime; // Get cooldown time
@@ -186,8 +187,10 @@ public class FungalAI : MonoBehaviour
                 Debug.Log("Fungal AI Casting ability");
 
                 agent.enabled = false;
+
                 Vector3 dashTargetPosition = GetDashTargetPosition(movementAbility, targetPosition);
-                ability.CastAbility(dashTargetPosition);
+                directionalAbility.CastAbility(dashTargetPosition);
+
                 lastDashTime = Time.time;  // Update last dash time
 
                 // Randomize the next dash interval within the defined range
@@ -202,45 +205,39 @@ public class FungalAI : MonoBehaviour
 
     private IEnumerator ThrowFish()
     {
-        yield return new WaitForSeconds(1.5f);
-
-        while (currentState == FungalState.THROW_FISH && fishPickup.Fish)
-        {
-            targetFungal = game.Players
+        targetFungal = game.Players
                 .Where(player => player.Fungal != fungal && !player.Fungal.IsDead) // Exclude self
                 .OrderBy(player => Vector3.Distance(transform.position, player.Fungal.transform.position))
                 .FirstOrDefault()?.Fungal;
 
-            if (targetFungal != null)
+        if (targetFungal != null && fishPickup.Fish)
+        {
+            var playerPos = transform.position;
+            var targetSlingPosition = targetFungal.transform.position + targetFungal.Movement.SpeedDelta * targetFungal.transform.forward;
+
+            var directionToPlayer = (playerPos - targetSlingPosition).normalized;
+
+            // Clamp the movement position within maxRange
+            var targetMovePosition = targetSlingPosition;
+
+            targetMovePosition += directionToPlayer * Mathf.Min(Vector3.Distance(targetSlingPosition, playerPos), fishPickup.Fish.ThrowFish.Range * 0.75f);
+
+            // Check if the closest valid position is within range of the sling position
+            if (NavMesh.SamplePosition(targetMovePosition, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
             {
-                var playerPos = transform.position;
-                var targetSlingPosition = targetFungal.transform.position + targetFungal.Movement.SpeedDelta * targetFungal.transform.forward;
+                yield return UseMoveAction(hit.position);
 
-                var directionToPlayer = (playerPos - targetSlingPosition).normalized;
-
-                // Clamp the movement position within maxRange
-                var targetMovePosition = targetSlingPosition;
-
-                targetMovePosition += directionToPlayer * Mathf.Min(Vector3.Distance(targetSlingPosition, playerPos), fishPickup.Fish.ThrowFish.Range * 0.75f);
-
-                // Check if the closest valid position is within range of the sling position
-                if (NavMesh.SamplePosition(targetMovePosition, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
+                if (Vector3.Distance(agent.transform.position, hit.position) < 0.05f)
                 {
-                    yield return UseMoveAction(hit.position);
-
-                    if (Vector3.Distance(agent.transform.position, hit.position) < 0.05f)
-                    {
-                        // Once at the destination, sling the fish
-                        fishPickup.Sling(targetSlingPosition);
-                        yield break;
-                    }
+                    // Once at the destination, sling the fish
+                    fishPickup.Sling(targetSlingPosition);
                 }
             }
-
-            yield return null;
         }
-
-        SetState(FungalState.FIND_FISH);
+        else
+        {
+            SetState(FungalState.FIND_FISH);
+        }
     }
 
     private void SetState(FungalState state)

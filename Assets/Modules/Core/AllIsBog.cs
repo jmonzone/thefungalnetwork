@@ -49,8 +49,12 @@ public class AllIsBog : MonoBehaviour
         var abilityTemplate = game.ClientPlayer.Fungal.Data.Ability;
         var fungalAbility = Instantiate(abilityTemplate);
         fungalAbility.Initialize(game.ClientPlayer.Fungal);
-        fungalAbility.OnAbilityStart += () => moveCharacterJoystick.enabled = false;
-        fungalAbility.OnAbilityComplete += () => moveCharacterJoystick.enabled = true;
+
+        if (fungalAbility is IMovementAbility movementAbility)
+        {
+            fungalAbility.OnAbilityStart += () => moveCharacterJoystick.enabled = false;
+            fungalAbility.OnAbilityComplete += () => moveCharacterJoystick.enabled = true;
+        }
 
         fungalAbilityButton.AssignAbility(fungalAbility);
 
