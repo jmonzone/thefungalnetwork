@@ -1,6 +1,5 @@
 ﻿using Unity.Multiplayer.Samples.Utilities.ClientAuthority;
 using UnityEngine;
-using UnityEngine.Events;
 
 [CreateAssetMenu(menuName = "Fungals/Ability/Flight")]
 public class FungalFlight : Ability

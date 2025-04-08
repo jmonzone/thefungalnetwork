@@ -42,18 +42,13 @@ public class AllIsBog : MonoBehaviour
         //fishButton.AssignAbility(fungalThrow);
 
         //todo: centralize
-        //var fungalDash = game.ClientPlayer.Fungal.GetComponent<FungalDash>();
-        //dashButton.AssignAbility(fungalDash);
-        //fungalDash.OnDashStart += () => moveCharacterJoystick.enabled = false;
-        //fungalDash.OnDashComplete += () => moveCharacterJoystick.enabled = true;
-
         var abilityTemplate = game.ClientPlayer.Fungal.Data.Ability;
-        var fungalFlight = Instantiate(abilityTemplate);
-        fungalFlight.Initialize(game.ClientPlayer.Fungal);
-        fungalFlight.OnAbilityStart += () => moveCharacterJoystick.enabled = false;
-        fungalFlight.OnAbilityComplete += () => moveCharacterJoystick.enabled = true;
+        var fungalAbility = Instantiate(abilityTemplate);
+        fungalAbility.Initialize(game.ClientPlayer.Fungal);
+        fungalAbility.OnAbilityStart += () => moveCharacterJoystick.enabled = false;
+        fungalAbility.OnAbilityComplete += () => moveCharacterJoystick.enabled = true;
 
-        dashButton.AssignAbility(fungalFlight);
+        dashButton.AssignAbility(fungalAbility);
 
     }
 

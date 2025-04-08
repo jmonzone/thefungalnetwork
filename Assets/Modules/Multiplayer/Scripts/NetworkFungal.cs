@@ -23,6 +23,7 @@ public class NetworkFungal : NetworkBehaviour
     [SerializeField] private FungalData data;
     [SerializeField] private GameReference game;
     [SerializeField] private GameObject stunAnimation;
+    [SerializeField] private GameObject trailRenderers;
     [SerializeField] private float respawnDuration = 5f;
     [SerializeField] private FungalCollection fungalCollection;
     [SerializeField] private float baseSpeed = 3f;
@@ -32,6 +33,7 @@ public class NetworkFungal : NetworkBehaviour
     public FungalData Data => data;
     public Health Health { get; private set; }
     public Movement Movement { get; private set; }
+    public GameObject TrailRenderers => trailRenderers;
 
     public float RemainingRespawnTime { get; private set; }
 

@@ -1,24 +1,22 @@
 using System.Collections.Generic;
 using Unity.Multiplayer.Samples.Utilities.ClientAuthority;
 using UnityEngine;
-using UnityEngine.Events;
 
+[CreateAssetMenu(menuName = "Fungals/Ability/Dash")]
 public class FungalDash : Ability
 {
     [SerializeField] private float dashRange = 3f;
     [SerializeField] private float dashSpeed = 7.5f;
 
     [SerializeField] private List<AudioClip> dashAudio;
-    [SerializeField] private GameObject trailRenderers;
 
-    private Movement movement => fungal.Movement;
+    private Movement Movement => fungal.Movement;
     private ClientNetworkTransform networkTransform;
     private AudioSource audioSource;
 
     public override float Range => dashRange;
     public override Vector3 DefaultTargetPosition => fungal.transform.position + fungal.transform.forward * dashRange;
     public override bool UseTrajectory => false;
-
 
     public override void Initialize(NetworkFungal fungal)
     {
@@ -34,20 +32,20 @@ public class FungalDash : Ability
 
         void OnDestinationReached()
         {
-            movement.SetSpeed(fungal.BaseSpeed);
-            movement.OnDestinationReached -= OnDestinationReached;
+            Movement.SetSpeed(fungal.BaseSpeed);
+            Movement.OnDestinationReached -= OnDestinationReached;
 
             networkTransform.Interpolate = true;
-            trailRenderers.SetActive(false);
+            fungal.TrailRenderers.SetActive(false);
             CompleteAbility();
         }
 
-        trailRenderers.SetActive(true);
+        fungal.TrailRenderers.SetActive(true);
         networkTransform.Interpolate = false;
-        movement.OnDestinationReached += OnDestinationReached;
+        Movement.OnDestinationReached += OnDestinationReached;
 
-        movement.SetSpeed(dashSpeed);
-        movement.SetTargetPosition(targetPosition);
+        Movement.SetSpeed(dashSpeed);
+        Movement.SetTargetPosition(targetPosition);
 
         var audioClip = dashAudio.GetRandomItem();
         audioSource.clip = audioClip;
