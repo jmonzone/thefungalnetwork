@@ -9,6 +9,7 @@ public class Leaderboard : MonoBehaviour
     [SerializeField] private LeaderboardEntry leaderboardEntryPrefab;
     [SerializeField] private MultiplayerReference multiplayer;
     [SerializeField] private bool showOnElimination;
+    [SerializeField] private bool showAllPlayers;
 
     private List<LeaderboardEntry> leaderboardEntries = new List<LeaderboardEntry>();
 
@@ -139,7 +140,7 @@ public class Leaderboard : MonoBehaviour
         isTiedAtTop = false;
 
         // Build leaderboard: top 3 plus client if missing
-        var leaderboardPlayers = sortedPlayers.Take(1).ToList();
+        var leaderboardPlayers = showAllPlayers ? sortedPlayers : sortedPlayers.Take(3).ToList();
 
         if (!leaderboardPlayers.Contains(clientPlayer))
         {

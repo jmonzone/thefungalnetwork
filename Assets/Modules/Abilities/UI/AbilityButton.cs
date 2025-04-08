@@ -161,7 +161,7 @@ public class AbilityButton : MonoBehaviour
 
         if (ability is DirectionalAbility directionalAbility)
         {
-            CastDirectionalAbility(directionalAbility, directionalAbility.DefaultTargetPosition);
+            CastDirectionalAbility(directionalAbility, targetPosition);
         }
         else
         {
