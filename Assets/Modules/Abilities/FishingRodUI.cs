@@ -11,22 +11,22 @@ public class FishingRodUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI abilityText;
     [SerializeField] private Color defaultBackgroundColor;
 
-    private FungalThrow fungalTHrow;
+    private FungalThrow fungalThrow;
 
     public void AssignFishingRod(FungalThrow fungalThrow)
     {
         // Ensure the previous listener is removed if the button was already assigned
-        if (fungalTHrow != null)
+        if (this.fungalThrow != null)
         {
-            fungalTHrow.OnFishChanged -= HandleFishChanged;
+            this.fungalThrow.OnFishChanged -= HandleFishChanged;
         }
 
-        fungalTHrow = fungalThrow;
+        this.fungalThrow = fungalThrow;
 
         // Subscribe to the events only if the button is not null
-        if (fungalTHrow != null)
+        if (this.fungalThrow != null)
         {
-            fungalTHrow.OnFishChanged += HandleFishChanged;
+            this.fungalThrow.OnFishChanged += HandleFishChanged;
         }
         else
         {
@@ -36,9 +36,9 @@ public class FishingRodUI : MonoBehaviour
 
     private void OnDisable()
     {
-        if (fungalTHrow != null)
+        if (fungalThrow != null)
         {
-            fungalTHrow.OnFishChanged -= HandleFishChanged;
+            fungalThrow.OnFishChanged -= HandleFishChanged;
         }
     }
 

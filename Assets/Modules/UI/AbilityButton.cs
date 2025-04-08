@@ -1,4 +1,6 @@
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AbilityButton : MonoBehaviour
 {
@@ -6,6 +8,11 @@ public class AbilityButton : MonoBehaviour
     [SerializeField] private DirectionalButton directionalButton;
     [SerializeField] private AbilityCastIndicator abilityCastIndicator;
     [SerializeField] private CooldownHandler cooldownHandler;
+
+    [Header("UI")]
+    [SerializeField] private Image abilityIcon;
+    [SerializeField] private Image abilityBackground;
+    [SerializeField] private TextMeshProUGUI abilityText;
 
     private Ability ability;
     private bool isDown = false;
@@ -65,6 +72,10 @@ public class AbilityButton : MonoBehaviour
         }
 
         ability = newAbility;
+
+        abilityText.text = ability.Id;
+        abilityBackground.color = ability.BackgroundColor;
+        abilityIcon.sprite = ability.Image;
 
         // Subscribe to new ability events
         if (ability != null)
