@@ -23,7 +23,7 @@ public class FungalAI : MonoBehaviour
 
     private NavMeshAgent agent;
     private NetworkFungal fungal;
-    private FungalDash dash;
+    private Ability ability;
     private List<Fish> allFish = new List<Fish>();
     private Fish targetFish;
     private FishPickup fishPickup;
@@ -34,7 +34,11 @@ public class FungalAI : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         fungal = GetComponent<NetworkFungal>();
-        //dash = GetComponent<FungalDash>();
+
+        var abilityTemplate = fungal.Data.Ability;
+        ability = Instantiate(abilityTemplate);
+        ability.Initialize(fungal);
+
         allFish = FindObjectsOfType<Fish>().ToList();
         fishPickup = GetComponent<FishPickup>();
 
@@ -146,67 +150,54 @@ public class FungalAI : MonoBehaviour
         }
     }
 
-    private Vector3 GetDashTargetPosition(Vector3 targetPosition)
+    private Vector3 GetDashTargetPosition(IMovementAbility movementAbility, Vector3 targetPosition)
     {
-        // Calculate the direction vector from the current position to the target
-        Vector3 directionToTarget = targetPosition - transform.position;
+        float maxRange = movementAbility.Range;
+        Vector3 origin = transform.position;
 
-        // Create a NavMeshPath and calculate the path to the target
-        NavMeshPath path = new NavMeshPath();
-        agent.CalculatePath(targetPosition, path);
+        // Direction from origin to target
+        Vector3 direction = (targetPosition - origin).normalized;
+        Vector3 intendedPosition = origin + direction * maxRange;
 
-        // If the path is valid and complete
-        if (path.status == NavMeshPathStatus.PathComplete && path.corners.Length > 1)
+        // Sample the NavMesh to find the nearest valid point within a radius
+        if (NavMesh.SamplePosition(intendedPosition, out NavMeshHit hit, maxRange, NavMesh.AllAreas))
         {
-            // Get the first corner after the current position (path.corners[1] is the next valid corner)
-            Vector3 nextPathPoint = path.corners[1];
-
-            // Calculate the distance of the full dash (distance between the current position and the next valid corner)
-            float dashDistance = Vector3.Distance(transform.position, nextPathPoint);
-
-            // If the dash distance is within the range, use the path
-            if (dashDistance <= dash.Range)
-            {
-                return nextPathPoint;
-            }
-            else
-            {
-                // If the path is longer than the dash range, return the position based on the dash range
-                return transform.position + directionToTarget.normalized * dash.Range;
-            }
+            return hit.position;
         }
-        else
-        {
-            // If no valid path is found, fallback to a direct dash in the direction of the target
-            return transform.position + directionToTarget.normalized * dash.Range;
-        }
+
+        // If no valid position found, return current position
+        return origin;
     }
+
 
     private IEnumerator UseMoveAction(Vector3 targetPosition)
     {
         agent.speed = fungal.Movement.CalculatedSpeed;
         agent.SetDestination(targetPosition);
 
-        Vector3 dashTargetPosition = GetDashTargetPosition(targetPosition);
-
-        float cooldownTime = dash.Cooldown.RemainingTime; // Get cooldown time
-
-        // Check if the dash is ready (not on cooldown) and enough time has passed
-        if (!dash.IsOnCooldown && Time.time >= lastDashTime + nextDashTime + cooldownTime)
+        if (ability is IMovementAbility movementAbility)
         {
-            StartCoroutine(dash.Cooldown.StartCooldown());
 
-            agent.enabled = false;
-            dash.CastAbility(dashTargetPosition);
-            lastDashTime = Time.time;  // Update last dash time
+            float cooldownTime = ability.Cooldown.RemainingTime; // Get cooldown time
 
-            // Randomize the next dash interval within the defined range
-            nextDashTime = Random.Range(minDashInterval, maxDashInterval);
+            // Check if the dash is ready (not on cooldown) and enough time has passed
+            if (!ability.IsOnCooldown && Time.time >= lastDashTime + nextDashTime + cooldownTime)
+            {
+                Debug.Log("Fungal AI Casting ability");
 
-            yield return new WaitUntil(() => fungal.Movement.IsAtDestination);
-            agent.enabled = true;
+                agent.enabled = false;
+                Vector3 dashTargetPosition = GetDashTargetPosition(movementAbility, targetPosition);
+                ability.CastAbility(dashTargetPosition);
+                lastDashTime = Time.time;  // Update last dash time
 
+                // Randomize the next dash interval within the defined range
+                nextDashTime = Random.Range(minDashInterval, maxDashInterval);
+
+                yield return new WaitUntil(() => fungal.Movement.IsAtDestination);
+                agent.enabled = true;
+            }
         }
+        
     }
 
     private IEnumerator ThrowFish()

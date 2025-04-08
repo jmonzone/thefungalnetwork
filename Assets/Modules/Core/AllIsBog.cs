@@ -36,6 +36,8 @@ public class AllIsBog : MonoBehaviour
         game.OnAllPlayersAdded -= PlayerReference_OnPlayerUpdated;
     }
 
+
+    // todo: centralize ability instance cration with fungalAI
     private void PlayerReference_OnClientPlayerAdded()
     {
         var throwAbility = Instantiate(fungalThrow);

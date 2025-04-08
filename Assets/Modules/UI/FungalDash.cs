@@ -2,8 +2,13 @@ using System.Collections.Generic;
 using Unity.Multiplayer.Samples.Utilities.ClientAuthority;
 using UnityEngine;
 
+public interface IMovementAbility
+{
+    public float Range { get; }
+}
+
 [CreateAssetMenu(menuName = "Fungals/Ability/Dash")]
-public class FungalDash : Ability
+public class FungalDash : Ability, IMovementAbility
 {
     [SerializeField] private float dashRange = 3f;
     [SerializeField] private float dashSpeed = 7.5f;

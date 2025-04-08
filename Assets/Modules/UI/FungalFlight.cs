@@ -2,7 +2,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Fungals/Ability/Flight")]
-public class FungalFlight : Ability
+public class FungalFlight : Ability, IMovementAbility
 {
     [SerializeField] private float flightRange = 4f;
     [SerializeField] private float flightSpeed = 10f;
