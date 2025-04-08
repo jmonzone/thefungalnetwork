@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +12,7 @@ public class FungalAI : MonoBehaviour
         THROW_FISH,
     }
 
-    [SerializeField] private GameReference pufferball;
+    [SerializeField] private GameReference game;
     [SerializeField] private FungalState currentState;
 
     [SerializeField] private float minDashInterval = 2f; // Minimum time between dashes
@@ -38,6 +37,9 @@ public class FungalAI : MonoBehaviour
         dash = GetComponent<FungalDash>();
         allFish = FindObjectsOfType<Fish>().ToList();
         fishPickup = GetComponent<FishPickup>();
+
+        fungal.OnDeath += _ => StopAI();
+        fungal.OnRespawnComplete += () => StartAI();
     }
 
     private void Start()
@@ -48,49 +50,55 @@ public class FungalAI : MonoBehaviour
 
     private void OnEnable()
     {
-        agent.enabled = true;
-
-        // Ensure AI starts on the NavMesh
-        if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 5f, NavMesh.AllAreas))
-        {
-            agent.Warp(hit.position); // Teleport AI to valid NavMesh point
-        }
-        else
-        {
-            Debug.LogError("AI is outside the NavMesh!");
-        }
-
-        agent.isStopped = false; // Make sure it's not paused
-
-        // Start the coroutine when the object is enabled
-        fungalStateCoroutine = StartCoroutine(FungalStateMachine());
-
-        pufferball.OnGameComplete += Pufferball_OnGameComplete;
+        game.OnGameStart += StartAI;
+        game.OnGameComplete += StopAI;
     }
 
     private void OnDisable()
     {
-        //Debug.Log($"FungalAI Disabling {name}");
+        game.OnGameStart -= StartAI;
+        game.OnGameComplete -= StopAI;
+    }
+
+    private void StartAI()
+    {
+        if (fungal.IsOwner && fungal.IsAI)
+        {
+            agent.enabled = true;
+
+            // Ensure AI starts on the NavMesh
+            if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 5f, NavMesh.AllAreas))
+            {
+                agent.Warp(hit.position); // Teleport AI to valid NavMesh point
+            }
+            else
+            {
+                Debug.LogError("AI is outside the NavMesh!");
+            }
+
+            agent.isStopped = false; // Make sure it's not paused
+
+            // Start the coroutine when the object is enabled
+            fungalStateCoroutine = StartCoroutine(FungalStateMachine());
+        }
+    }
+
+    private void StopAI()
+    {
         agent.enabled = false;
+
         // Stop the coroutine when the object is disabled
         if (fungalStateCoroutine != null)
         {
             StopCoroutine(fungalStateCoroutine);
             fungalStateCoroutine = null;
         }
-
-        pufferball.OnGameComplete -= Pufferball_OnGameComplete;
     }
 
-    private void Pufferball_OnGameComplete()
-    {
-        //Debug.Log($"Pufferball_OnGameComplete Disabling {name}");
-        enabled = false;
-    }
 
     private IEnumerator FungalStateMachine()
     {
-        yield return new WaitForSeconds(4f);
+        yield return new WaitForSeconds(2f);
 
         while (true)
         {
@@ -194,7 +202,7 @@ public class FungalAI : MonoBehaviour
             lastDashTime = Time.time;  // Update last dash time
 
             // Randomize the next dash interval within the defined range
-            nextDashTime = UnityEngine.Random.Range(minDashInterval, maxDashInterval);
+            nextDashTime = Random.Range(minDashInterval, maxDashInterval);
 
             yield return new WaitUntil(() => fungal.Movement.IsAtDestination);
             agent.enabled = true;
@@ -206,7 +214,7 @@ public class FungalAI : MonoBehaviour
     {
         while (currentState == FungalState.THROW_FISH)
         {
-            targetFungal = pufferball.Players
+            targetFungal = game.Players
                 .Where(player => player.Fungal != fungal && !player.Fungal.IsDead) // Exclude self
                 .OrderBy(player => Vector3.Distance(transform.position, player.Fungal.transform.position))
                 .FirstOrDefault()?.Fungal;

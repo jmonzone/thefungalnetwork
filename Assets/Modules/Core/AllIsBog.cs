@@ -18,7 +18,8 @@ public class AllIsBog : MonoBehaviour
     private void Awake()
     {
         game.Initialize();
-        if (!Application.isEditor) canvasGroup.gameObject.SetActive(true);
+        //if (!Application.isEditor)
+        canvasGroup.gameObject.SetActive(true);
     }
 
     private void OnEnable()
@@ -53,11 +54,11 @@ public class AllIsBog : MonoBehaviour
 
     private IEnumerator StartGame()
     {
-        if (!Application.isEditor)
-        {
+        //if (!Application.isEditor)
+        //{
             yield return new WaitForSeconds(2f);
             yield return canvasGroup.FadeOut();
-        }
+        //}
         arenaCamera.Priority = 0;
         cameraController.Target = game.ClientPlayer.Fungal.transform;
         yield return new WaitForSeconds(1f);

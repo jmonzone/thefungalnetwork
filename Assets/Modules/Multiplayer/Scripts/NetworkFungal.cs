@@ -1,5 +1,4 @@
 using System.Collections;
-using Unity.Collections;
 using Unity.Multiplayer.Samples.Utilities.ClientAuthority;
 using Unity.Netcode;
 using UnityEngine;
@@ -44,7 +43,6 @@ public class NetworkFungal : NetworkBehaviour
     private ClientNetworkTransform networkTransform;
     private MovementAnimations animations;
     private MaterialFlasher materialFlasher;
-    private FungalAI fungalAI;
 
     public int Index => index.Value;
     public float Score => score.Value;
@@ -92,7 +90,6 @@ public class NetworkFungal : NetworkBehaviour
         Movement.OnTypeChanged += Movement_OnTypeChanged;
 
         networkTransform = GetComponent<ClientNetworkTransform>();
-        fungalAI = GetComponent<FungalAI>();
 
         spawnPosition = transform.position;
 
@@ -107,9 +104,6 @@ public class NetworkFungal : NetworkBehaviour
         {
             //Debug.Log($"NetworkFungal.OnValueChanged {name} {value}");
             name = $"{index.Value}: {value.name}";
-
-            if (IsAI) ToggleAI(true);
-
             OnPlayerUpdated?.Invoke();
         };
 
@@ -148,14 +142,6 @@ public class NetworkFungal : NetworkBehaviour
             {
                 InitializePrefab();
             };
-        }
-    }
-
-    private void ToggleAI(bool value)
-    {
-        if (IsOwner && IsAI)
-        {
-            fungalAI.enabled = value;
         }
     }
 
@@ -203,7 +189,6 @@ public class NetworkFungal : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     private void DieServerRpc(bool selfDestruct)
     {
-        //Debug.Log("DieClientRpc");
         if (selfDestruct) selfDestructs.Value++;
 
         lives.Value--;
@@ -214,8 +199,6 @@ public class NetworkFungal : NetworkBehaviour
     [ClientRpc]
     private void DieClientRpc(bool selfDestruct)
     {
-        ToggleAI(false);
-        //Debug.Log("DieClientRpc");
         IsDead = true;
         animations.PlayDeathAnimation();
         materialFlasher.FlashColor(Color.red);
@@ -261,8 +244,6 @@ public class NetworkFungal : NetworkBehaviour
             networkTransform.Interpolate = false;
             transform.position = spawnPosition;
             networkTransform.Interpolate = true;
-
-            ToggleAI(true);
         }
 
         animations.PlaySpawnAnimation();
