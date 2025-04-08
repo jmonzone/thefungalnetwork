@@ -145,6 +145,7 @@ public class MainMenuParty : MonoBehaviour
         GameMode[] modes = (GameMode[])Enum.GetValues(typeof(GameMode));
         int currentIndex = Array.IndexOf(modes, multiplayer.GameMode);
         int nextIndex = (currentIndex + 1) % modes.Length;
+
         GameMode nextMode = modes[nextIndex];
         await multiplayer.UpdateJoinedLobbyData("GameMode", nextMode.ToString());
     }
@@ -224,8 +225,9 @@ public class MainMenuParty : MonoBehaviour
     private void OnHostChanged()
     {
         bool isHost = multiplayer.IsHost;
+
         gameModeButton.gameObject.SetActive(isHost);
-        addBotButton.gameObject.SetActive(isHost);
+        addBotButton.gameObject.SetActive(isHost && multiplayer.LobbyPlayers.Count < 8);
         startButton.gameObject.SetActive(isHost);
         waitingIndicator.SetActive(!isHost);
     }
