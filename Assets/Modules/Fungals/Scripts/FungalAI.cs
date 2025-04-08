@@ -137,7 +137,6 @@ public class FungalAI : MonoBehaviour
 
             if (fishPickup.Fish)
             {
-                yield return new WaitForSeconds(1.5f);
                 SetState(FungalState.THROW_FISH);
                 yield break;
             }
@@ -212,7 +211,9 @@ public class FungalAI : MonoBehaviour
 
     private IEnumerator ThrowFish()
     {
-        while (currentState == FungalState.THROW_FISH)
+        yield return new WaitForSeconds(1.5f);
+
+        while (currentState == FungalState.THROW_FISH && fishPickup.Fish)
         {
             targetFungal = game.Players
                 .Where(player => player.Fungal != fungal && !player.Fungal.IsDead) // Exclude self
@@ -229,14 +230,7 @@ public class FungalAI : MonoBehaviour
                 // Clamp the movement position within maxRange
                 var targetMovePosition = targetSlingPosition;
 
-                try
-                {
-                    targetMovePosition += directionToPlayer * Mathf.Min(Vector3.Distance(targetSlingPosition, playerPos), targetFish.ThrowFish.Range * 0.75f);
-                }
-                catch
-                {
-                    Debug.LogWarning($"Failed {targetFish} {targetFish.ThrowFish}");
-                }
+                targetMovePosition += directionToPlayer * Mathf.Min(Vector3.Distance(targetSlingPosition, playerPos), fishPickup.Fish.ThrowFish.Range * 0.75f);
 
                 // Check if the closest valid position is within range of the sling position
                 if (NavMesh.SamplePosition(targetMovePosition, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
@@ -247,7 +241,6 @@ public class FungalAI : MonoBehaviour
                     {
                         // Once at the destination, sling the fish
                         fishPickup.Sling(targetSlingPosition);
-                        SetState(FungalState.FIND_FISH);
                         yield break;
                     }
                 }
@@ -255,6 +248,8 @@ public class FungalAI : MonoBehaviour
 
             yield return null;
         }
+
+        SetState(FungalState.FIND_FISH);
     }
 
     private void SetState(FungalState state)
