@@ -36,7 +36,6 @@ public class NetworkFungal : NetworkBehaviour
     public FungalData Data => data;
     public Health Health { get; private set; }
     public Movement Movement { get; private set; }
-    public GameObject ShieldRenderer => shieldRenderer;
 
     public float RemainingRespawnTime { get; private set; }
 
@@ -75,6 +74,7 @@ public class NetworkFungal : NetworkBehaviour
     public event UnityAction OnScoreUpdated;
     public event UnityAction<ScoreEventArgs> OnScoreTriggered;
     public event UnityAction OnPlayerUpdated;
+    public event UnityAction OnDataUpdated;
 
     [ServerRpc(RequireOwnership = false)]
     public void InitializeServerRpc(int index, LobbyPlayerRPCParam player)
@@ -92,7 +92,7 @@ public class NetworkFungal : NetworkBehaviour
         Movement = GetComponent<Movement>();
         Movement.SetSpeed(baseSpeed);
 
-        Movement.OnTypeChanged += Movement_OnTypeChanged;
+        if (IsOwner) Movement.OnTypeChanged += Movement_OnTypeChanged;
 
         networkTransform = GetComponent<ClientNetworkTransform>();
 
@@ -136,13 +136,14 @@ public class NetworkFungal : NetworkBehaviour
             }
         };
 
-        //Debug.Log($"NetworkFungal.OnNetworkSpawn {fungalIndex.Value}");
         if (!string.IsNullOrEmpty(player.Value.lobbyId.ToString()))
         {
             InitializePrefab();
         }
         else
         {
+            Debug.Log($"waiting to initialize");
+
             player.OnValueChanged += (previousValue, newValue) =>
             {
                 InitializePrefab();
@@ -152,12 +153,13 @@ public class NetworkFungal : NetworkBehaviour
 
     private void InitializePrefab()
     {
-        //Debug.Log($"InitializePrefab {name} {player.Value.fungal}");
+        Debug.Log($"InitializePrefab {name} {player.Value.fungal}");
         data = fungalCollection.Fungals[player.Value.fungal];
         var model = Instantiate(data.Prefab, transform);
         animations = model.AddComponent<MovementAnimations>();
         materialFlasher = model.AddComponent<MaterialFlasher>();
         materialFlasher.flashDuration = 0.5f;
+        OnDataUpdated?.Invoke();
     }
 
     private void Health_OnDamaged(DamageEventArgs args)
@@ -294,23 +296,19 @@ public class NetworkFungal : NetworkBehaviour
 
     private void Movement_OnTypeChanged()
     {
-        if (IsOwner) SyncMovementTypeServerRpc((int)Movement.Type);
+        SetAnimationsIsMovingServerRpc(Movement.Type != Movement.MovementType.IDLE);
     }
 
-    
     [ServerRpc]
-    private void SyncMovementTypeServerRpc(int type)
+    private void SetAnimationsIsMovingServerRpc(bool isMoving)
     {
-        SyncMovementTypeClientRpc(type);
+        SetAnimationsIsMovingClientRpc(isMoving);
     }
 
     [ClientRpc]
-    private void SyncMovementTypeClientRpc(int type)
+    private void SetAnimationsIsMovingClientRpc(bool isMoving)
     {
-        var castedType = (Movement.MovementType)type;
-        if (!IsOwner) Movement.SetType(castedType);
-
-        animations.SetIsMoving(castedType != Movement.MovementType.IDLE);
+        animations.SetIsMoving(isMoving);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -359,5 +357,22 @@ public class NetworkFungal : NetworkBehaviour
     private void ToggleTrailRenderersClientRpc(bool value)
     {
         trailRenderers.SetActive(value);
+    }
+
+    public void ToggleShieldRenderers(bool value)
+    {
+        ToggleShieldRendererServerRpc(value);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void ToggleShieldRendererServerRpc(bool value)
+    {
+        ToggleShieldRenderersClientRpc(value);
+    }
+
+    [ClientRpc]
+    private void ToggleShieldRenderersClientRpc(bool value)
+    {
+        shieldRenderer.SetActive(value);
     }
 }

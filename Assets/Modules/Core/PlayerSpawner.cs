@@ -110,7 +110,7 @@ public class PlayerSpawner : NetworkBehaviour
             game.AddPlayer(clientId, player.name, playerIndex, networkFungal);
         }
 
-        //Debug.Log("Client owner spawned, searching for existing NetworkFungals...");
+        Debug.Log("Client owner spawned, searching for existing NetworkFungals...");
 
         // Find all existing NetworkFungal objects using the SpawnManager
         foreach (var spawnedObject in NetworkManager.Singleton.SpawnManager.SpawnedObjects.Values)
@@ -125,7 +125,7 @@ public class PlayerSpawner : NetworkBehaviour
                 }
 
                 // Register the fungal with the pufferballReference
-                game.AddPlayer(clientId, networkFungal.PlayerName, networkFungal.Index, networkFungal);
+                game.AddPlayer(networkFungal.OwnerClientId, networkFungal.PlayerName, networkFungal.Index, networkFungal);
             }
         }
     }

@@ -25,6 +25,8 @@ public class WorldToScreenTracker : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (!target) return;
+
         target.position = anchor.position + Vector3.up * 2.4f;
 
         // Convert target world position to screen space

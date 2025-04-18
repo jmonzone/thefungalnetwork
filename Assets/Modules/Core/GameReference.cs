@@ -22,6 +22,7 @@ public class GameReference : ScriptableObject
     public List<GamePlayer> Players => players;
 
     public event UnityAction OnClientPlayerAdded;
+    public event UnityAction OnClientDataInitialized;
     public event UnityAction OnAllPlayersAdded;
 
     public event UnityAction OnGameStart;
@@ -52,7 +53,7 @@ public class GameReference : ScriptableObject
 
         Enum.TryParse(multiplayer.GetJoinedLobbyData("GameMode"), out gameMode);
 
-        Debug.Log($"addplayer {playerName}");
+        Debug.Log($"addplayer {clientId} {playerName} {playerIndex} {networkFungal.name}");
         var addedPlayer = new GamePlayer(clientId, playerIndex, playerName.ToString(), networkFungal);
         Players.Add(addedPlayer);
 
@@ -62,7 +63,11 @@ public class GameReference : ScriptableObject
         if (networkFungal.IsOwner && !networkFungal.IsAI)
         {
             clientPlayer = addedPlayer;
-            Debug.Log("OnClientPlayerAdded");
+
+            if (networkFungal.Data) OnClientDataInitialized?.Invoke();
+            else networkFungal.OnDataUpdated += OnClientDataInitialized;
+
+            Debug.Log($"OnClientPlayerAdded");
             OnClientPlayerAdded?.Invoke();
         }
 

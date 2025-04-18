@@ -29,6 +29,7 @@ public class MoveCharacterJoystick : MonoBehaviour
             var y = Input.GetAxis("Vertical");
 
             var direction = wasdSensitivity * new Vector3(x, y);
+
             MovePlayer(direction);
         }
     }

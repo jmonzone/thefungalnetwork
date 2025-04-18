@@ -378,7 +378,7 @@ MonoBehaviour:
   SyncPositionX: 1
   SyncPositionY: 1
   SyncPositionZ: 1
-  SyncRotAngleX: 0
+  SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 0
   SyncScaleX: 0
@@ -561,7 +561,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92d7d102b888e4ceaa21d1983d3ea9f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data: {fileID: 11400000, guid: ba230be9a25454447bd331346bd38ac1, type: 2}
+  data: {fileID: 0}
   game: {fileID: 11400000, guid: 08db032ff48be41208a04f1067508370, type: 2}
   fungalCollection: {fileID: 11400000, guid: 1d49e170120fe4ab1befd22e62e1ea65, type: 2}
   stunAnimation: {fileID: 7684853891565658531}
@@ -601,6 +601,7 @@ MonoBehaviour:
   type: 0
   baseSpeed: 4
   rotationSpeed: 5
+  useSmoothDirection: 0
   directionSmoothTime: 0.1
   obstacleLayer:
     serializedVersion: 2

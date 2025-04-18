@@ -17,6 +17,7 @@ public class Movement : MonoBehaviour
     [SerializeField] private MovementType type = MovementType.IDLE;
     [SerializeField] private float baseSpeed = 5f;
     [SerializeField] private float rotationSpeed = 5f;
+    [SerializeField] private bool useSmoothDirection = true;
     [SerializeField] private float directionSmoothTime = 0.1f;  // Tweak for more/less drift
     [SerializeField] private LayerMask obstacleLayer;
     [SerializeField] private Transform lookTransform;
@@ -97,9 +98,14 @@ public class Movement : MonoBehaviour
 
     public void SetType(MovementType type)
     {
-        //Debug.Log($"{name}.Movement {type}");
+        var previousType = this.type;
         this.type = type;
-        OnTypeChanged?.Invoke();
+
+        if (previousType != type)
+        {
+            Debug.Log($"{name}.Movement.OnTypeChanged {previousType} -> {type}");
+            OnTypeChanged?.Invoke();
+        }
     }
 
     public void SetSpeed(float speed)
@@ -139,19 +145,29 @@ public class Movement : MonoBehaviour
     // Directional Movement
     public void SetDirection(Vector3 direction)
     {
-        this.inputDirection = direction;
-        SetType(MovementType.DIRECTIONAL);
+        if (direction.magnitude > 0.01f)
+        {
+            this.inputDirection = direction;
+            SetType(MovementType.DIRECTIONAL);
+        }
+        else
+        {
+            Stop();
+        }
     }
 
     private void MoveInDirection()
     {
-        //todo: add conditional to drift or not
-        // Smoothly interpolate the currentDirection towards the target direction
-        currentDirection = Vector3.SmoothDamp(currentDirection, inputDirection, ref directionSmoothVelocity, directionSmoothTime);
+        if (useSmoothDirection)
+        {
+            // Smoothly interpolate the currentDirection towards the target direction
+            currentDirection = Vector3.SmoothDamp(currentDirection, inputDirection, ref directionSmoothVelocity, directionSmoothTime);
+        }
+        else
+        {
+            currentDirection = inputDirection;
+        }
 
-        UpdateLookDirection(currentDirection);
-
-        // Optional: once drift slows enough, go idle
         if (currentDirection.magnitude > 0.01f)
         {
             transform.position += SpeedDelta * currentDirection;
@@ -160,6 +176,8 @@ public class Movement : MonoBehaviour
         {
             Stop();
         }
+
+        UpdateLookDirection(currentDirection);
     }
 
     // Positional Movement

@@ -18,7 +18,7 @@ public class FungalShield : Ability
     {
         base.CastAbility();
 
-        fungal.ShieldRenderer.SetActive(true);
+        fungal.ToggleShieldRenderers(true);
         fungal.Health.SetShield(shieldPower);
 
         fungal.Health.OnShieldChanged += Health_OnShieldChanged;
@@ -43,7 +43,7 @@ public class FungalShield : Ability
     {
         if (fungal.Health.CurrentShield == 0)
         {
-            fungal.ShieldRenderer.SetActive(false);
+            fungal.ToggleShieldRenderers(false);
             CompleteAbility();
 
             fungal.Health.OnShieldChanged -= Health_OnShieldChanged;

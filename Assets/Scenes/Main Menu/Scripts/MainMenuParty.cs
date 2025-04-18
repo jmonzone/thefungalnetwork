@@ -53,6 +53,7 @@ public class MainMenuParty : MonoBehaviour
 
     private void OnEnable()
     {
+        startButton.interactable = true;
         multiplayer.OnLobbyUpdated += OnMultiplayerLobbyUpdated;
         multiplayer.OnLobbyJoined += OnHostChanged;
         OnHostChanged();

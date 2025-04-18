@@ -36,6 +36,7 @@ public class MovementAnimations : MonoBehaviour
 
     public void SetIsMoving(bool value)
     {
+        //Debug.Log($"SetIsMoving {movement.name} {isMoving}");
         isMoving = value;
     }
 

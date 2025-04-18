@@ -26,22 +26,23 @@ public class AllIsBog : MonoBehaviour
 
     private void OnEnable()
     {
-        game.OnClientPlayerAdded += PlayerReference_OnClientPlayerAdded;
-        game.OnAllPlayersAdded += PlayerReference_OnPlayerUpdated;
+        game.OnClientDataInitialized += UpdateUIAbilityButtons;
+        game.OnAllPlayersAdded += OnAllPlayersAdded;
     }
 
     private void OnDisable()
     {
-        game.OnClientPlayerAdded -= PlayerReference_OnClientPlayerAdded;
-        game.OnAllPlayersAdded -= PlayerReference_OnPlayerUpdated;
+        game.OnClientDataInitialized -= UpdateUIAbilityButtons;
+        game.OnAllPlayersAdded -= OnAllPlayersAdded;
     }
 
-
     // todo: centralize ability instance cration with fungalAI
-    private void PlayerReference_OnClientPlayerAdded()
+    private void UpdateUIAbilityButtons()
     {
         var throwAbility = Instantiate(fungalThrow);
         throwAbility.Initialize(game.ClientPlayer.Fungal);
+
+        Debug.Log($"PlayerReference_OnClientPlayerAdded {game.ClientPlayer.Fungal.Data.Id} {game.ClientPlayer.Fungal.Data.Ability.Id}");
 
         fishingRodUI.AssignFishingRod(throwAbility);
         fishButton.AssignAbility(throwAbility);
@@ -60,7 +61,7 @@ public class AllIsBog : MonoBehaviour
 
     }
 
-    private void PlayerReference_OnPlayerUpdated()
+    private void OnAllPlayersAdded()
     {
         StartCoroutine(StartGame());
     }
