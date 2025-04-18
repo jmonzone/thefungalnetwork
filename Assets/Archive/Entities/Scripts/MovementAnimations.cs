@@ -2,12 +2,12 @@ using UnityEngine;
 
 public class MovementAnimations : MonoBehaviour
 {
-    [SerializeField] private float animationSpeed = 1;
+    private float animationSpeed = 0.5f;
 
     private Movement movement;
     private Animator animator;
 
-    public bool IsMoving { get; private set; }
+    public bool isMoving;
     public float AnimationSpeed => animationSpeed;
 
     private void Awake()
@@ -20,12 +20,10 @@ public class MovementAnimations : MonoBehaviour
     {
         if (!animator) return;
 
-        IsMoving = movement.Type != Movement.MovementType.IDLE;
-
         // Set parameters locally
-        animator.SetBool("isMoving", IsMoving);
+        animator.SetBool("isMoving", isMoving);
 
-        if (IsMoving)
+        if (isMoving)
         {
             float curvedSpeed = 1f - (1f / (1f + movement.CalculatedSpeed * 0.2f));
             animator.speed = animationSpeed * Mathf.Lerp(1f, 2f, curvedSpeed);
@@ -34,6 +32,11 @@ public class MovementAnimations : MonoBehaviour
         {
             animator.speed = animationSpeed; // Default idle speed
         }
+    }
+
+    public void SetIsMoving(bool value)
+    {
+        isMoving = value;
     }
 
     public void PlayHitAnimation()

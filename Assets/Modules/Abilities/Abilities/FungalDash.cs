@@ -41,11 +41,11 @@ public class FungalDash : DirectionalAbility, IMovementAbility
             Movement.OnDestinationReached -= OnDestinationReached;
 
             networkTransform.Interpolate = true;
-            fungal.TrailRenderers.SetActive(false);
+            fungal.ToggleTrailRenderers(false);
             CompleteAbility();
         }
 
-        fungal.TrailRenderers.SetActive(true);
+        fungal.ToggleTrailRenderers(true);
         networkTransform.Interpolate = false;
         Movement.OnDestinationReached += OnDestinationReached;
 

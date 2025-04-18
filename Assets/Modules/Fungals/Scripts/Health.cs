@@ -49,6 +49,11 @@ public class Health : NetworkBehaviour
                 OnHealthDepleted?.Invoke();
             }
         };
+
+        currentShield.OnValueChanged += (previousValue, newValue) =>
+        {
+            OnShieldChanged?.Invoke();
+        };
     }
 
     public void Replenish()
@@ -131,7 +136,12 @@ public class Health : NetworkBehaviour
 
     public void SetShield(float shield)
     {
+        OnShieldChangedServerRpc(shield);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void OnShieldChangedServerRpc(float shield)
+    {
         currentShield.Value = Mathf.Max(0, shield);
-        OnShieldChanged?.Invoke();
     }
 }

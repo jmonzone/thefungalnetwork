@@ -15,7 +15,7 @@ public class ArmoredFish : MonoBehaviour
     [ServerRpc(RequireOwnership = false)]
     private void SpawnArmorServerRpc()
     {
-        pufferballReference.ClientPlayer.Fungal.AddShieldServerRpc(2f);
+        //pufferballReference.ClientPlayer.Fungal.AddShieldServerRpc(2f);
 
         var armor = Instantiate(armorPrefab, pufferballReference.ClientPlayer.Fungal.transform.position, Quaternion.identity);
         armor.Spawn();

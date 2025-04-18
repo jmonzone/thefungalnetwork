@@ -36,7 +36,6 @@ public class NetworkFungal : NetworkBehaviour
     public FungalData Data => data;
     public Health Health { get; private set; }
     public Movement Movement { get; private set; }
-    public GameObject TrailRenderers => trailRenderers;
     public GameObject ShieldRenderer => shieldRenderer;
 
     public float RemainingRespawnTime { get; private set; }
@@ -190,6 +189,8 @@ public class NetworkFungal : NetworkBehaviour
                 label = "Debug"
             });
         }
+
+
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -306,19 +307,10 @@ public class NetworkFungal : NetworkBehaviour
     [ClientRpc]
     private void SyncMovementTypeClientRpc(int type)
     {
-        if (!IsOwner) Movement.SetType((Movement.MovementType)type);
-    }
+        var castedType = (Movement.MovementType)type;
+        if (!IsOwner) Movement.SetType(castedType);
 
-    [ServerRpc(RequireOwnership = false)]
-    public void AddShieldServerRpc(float value)
-    {
-        AddShieldClientRpc(value);
-    }
-
-    [ClientRpc]
-    private void AddShieldClientRpc(float value)
-    {
-        Health.SetShield(Health.CurrentShield + value);
+        animations.SetIsMoving(castedType != Movement.MovementType.IDLE);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -350,5 +342,22 @@ public class NetworkFungal : NetworkBehaviour
     {
         if (showStunAnimation) stunAnimation.SetActive(false);
         Movement.ResetSpeedModifier();
+    }
+
+    public void ToggleTrailRenderers(bool value)
+    {
+        ToggleTrailRenderersServerRpc(value);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void ToggleTrailRenderersServerRpc(bool value)
+    {
+        ToggleTrailRenderersClientRpc(value);
+    }
+
+    [ClientRpc]
+    private void ToggleTrailRenderersClientRpc(bool value)
+    {
+        trailRenderers.SetActive(value);
     }
 }
