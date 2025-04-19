@@ -68,11 +68,8 @@ public class AllIsBog : MonoBehaviour
 
     private IEnumerator StartGame()
     {
-        //if (!Application.isEditor)
-        //{
-            yield return new WaitForSeconds(1f);
-            yield return canvasGroup.FadeOut();
-        //}
+        yield return new WaitForSeconds(1f);
+        yield return canvasGroup.FadeOut();
         arenaCamera.Priority = 0;
         cameraController.Target = game.ClientPlayer.Fungal.transform;
         yield return new WaitForSeconds(1f);
