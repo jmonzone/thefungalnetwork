@@ -79,7 +79,7 @@ public class GameReference : ScriptableObject
             addedPlayer.Fungal.OnLivesChanged += Fungal_OnDeath;
         }
 
-        addedPlayer.Fungal.OnDeath += selfDestruct =>
+        addedPlayer.Fungal.Fungal.OnDeath += selfDestruct =>
         {
             if (selfDestruct) OnSelfDestruct?.Invoke(addedPlayer);
         };

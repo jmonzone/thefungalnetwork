@@ -33,10 +33,10 @@ public class NetworkFungal : NetworkBehaviour
     private MovementAnimations Animations => Fungal.Animations;
     private MaterialFlasher MaterialFlasher => Fungal.MaterialFlasher;
 
-    public float RemainingRespawnTime { get; private set; }
-
     //todo: make separate death component
-    public bool IsDead { get; private set; }
+    public bool IsDead => Fungal.IsDead;
+
+    public float RemainingRespawnTime { get; private set; }
 
     private Vector3 spawnPosition;
 
@@ -61,8 +61,6 @@ public class NetworkFungal : NetworkBehaviour
     public int SelfDestructs => selfDestructs.Value;
 
     public event UnityAction OnRespawnStart;
-    public event UnityAction OnRespawnComplete;
-    public event UnityAction<bool> OnDeath;
     public event UnityAction OnLivesChanged;
     public event UnityAction<int, int> OnKill;
     public event UnityAction OnScoreUpdated;
@@ -199,12 +197,7 @@ public class NetworkFungal : NetworkBehaviour
     [ClientRpc]
     private void DieClientRpc(bool selfDestruct)
     {
-        IsDead = true;
-        Animations.PlayDeathAnimation();
-        MaterialFlasher.FlashColor(Color.red);
-
-        Movement.Stop();
-        OnDeath?.Invoke(selfDestruct);
+        Fungal.Die(selfDestruct);
     }
 
     private IEnumerator RespawnRoutine()
@@ -232,7 +225,7 @@ public class NetworkFungal : NetworkBehaviour
     [ClientRpc]
     private void RespawnClientRpc()
     {
-        IsDead = false;
+        Fungal.Respawn();
 
         if (IsServer)
         {
@@ -245,10 +238,6 @@ public class NetworkFungal : NetworkBehaviour
             transform.position = spawnPosition;
             networkTransform.Interpolate = true;
         }
-
-        Animations.PlaySpawnAnimation();
-        MaterialFlasher.FlashColor(Color.white);
-        OnRespawnComplete?.Invoke();
     }
 
     [ServerRpc(RequireOwnership = false)]

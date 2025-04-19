@@ -16,7 +16,7 @@ public class FishPickup : NetworkBehaviour
         base.OnNetworkSpawn();
 
         fungal = GetComponent<NetworkFungal>();
-        fungal.OnDeath += _ => Fungal_OnDeath();
+        fungal.Fungal.OnDeath += _ => Fungal_OnDeath();
 
         requestedFish = null;
     }

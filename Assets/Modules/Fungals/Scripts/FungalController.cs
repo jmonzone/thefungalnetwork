@@ -18,8 +18,13 @@ public class FungalController : MonoBehaviour
     public MovementAnimations Animations { get; private set; }
     public MaterialFlasher MaterialFlasher { get; private set; }
 
+    //todo: make separate death component
+    public bool IsDead { get; private set; }
+
     public event UnityAction<bool> OnShieldToggled;
     public event UnityAction<bool> OnTrailToggled;
+    public event UnityAction<bool> OnDeath;
+    public event UnityAction OnRespawnComplete;
 
     private void Awake()
     {
@@ -38,6 +43,29 @@ public class FungalController : MonoBehaviour
         Animations = model.AddComponent<MovementAnimations>();
         MaterialFlasher = model.AddComponent<MaterialFlasher>();
         MaterialFlasher.flashDuration = 0.5f;
+    }
+
+    public void Respawn()
+    {
+        IsDead = false;
+        Movement.enabled = true;
+
+        Animations.PlaySpawnAnimation();
+        MaterialFlasher.FlashColor(Color.white);
+        OnRespawnComplete?.Invoke();
+    }
+
+    public void Die(bool selfDestruct)
+    {
+        IsDead = true;
+        Movement.enabled = false;
+
+        Animations.PlayDeathAnimation();
+        MaterialFlasher.FlashColor(Color.red);
+
+        Movement.Stop();
+
+        OnDeath?.Invoke(selfDestruct);
     }
 
     public void ToggleShieldRenderers(bool value)

@@ -38,8 +38,9 @@ public class FungalAI : MonoBehaviour
         allFish = FindObjectsOfType<Fish>().ToList();
         fishPickup = GetComponent<FishPickup>();
 
-        fungal.OnDeath += _ => StopAI();
-        fungal.OnRespawnComplete += () => StartAI();
+        var fungalController = GetComponent<FungalController>();
+        fungalController.OnDeath += _ => StopAI();
+        fungalController.OnRespawnComplete += () => StartAI();
     }
 
     private void Start()

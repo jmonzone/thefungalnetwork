@@ -22,7 +22,7 @@ public class DeathUI : MonoBehaviour
         minigameReference.OnClientPlayerAdded -= MinigameReference_OnClientPlayerAdded;
 
         minigameReference.ClientPlayer.Fungal.OnRespawnStart += MinigameReference_OnRespawnStart;
-        minigameReference.ClientPlayer.Fungal.OnRespawnComplete += MinigameReference_OnRespawnComplete;
+        minigameReference.ClientPlayer.Fungal.Fungal.OnRespawnComplete += MinigameReference_OnRespawnComplete;
         enabled = true;
     }
 

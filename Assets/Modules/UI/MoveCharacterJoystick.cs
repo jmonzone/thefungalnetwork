@@ -38,7 +38,6 @@ public class MoveCharacterJoystick : MonoBehaviour
     private void MovePlayer(Vector3 direction)
     {
         if (!enabled) return;
-        //if (player.enabled) return;
 
         var translation = direction;
         translation.z = translation.y;

@@ -48,16 +48,16 @@ public class AbilityButton : MonoBehaviour
     {
         if (ability == null) return;
 
-        //fungal.OnDeath += Fungal_OnDeath;
-        //fungal.OnRespawnComplete += UpdateAbility;
+        ability.Fungal.OnDeath += Fungal_OnDeath;
+        ability.Fungal.OnRespawnComplete += UpdateAbility;
     }
 
     private void OnDisable()
     {
         if (ability == null) return;
 
-        //fungal.OnDeath -= Fungal_OnDeath;
-        //fungal.OnRespawnComplete -= UpdateAbility;
+        ability.Fungal.OnDeath -= Fungal_OnDeath;
+        ability.Fungal.OnRespawnComplete -= UpdateAbility;
     }
 
     // Ability Management
