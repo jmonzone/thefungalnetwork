@@ -11,12 +11,20 @@ public class FungalThrow : DirectionalAbility
     public override bool UseTrajectory => fishPickup.Fish.UseTrajectory;
     public override float Range => fishPickup.Fish.ThrowFish.Range;
 
-    public override void Initialize(NetworkFungal fungal)
+    public override void Initialize(FungalController fungal)
     {
         base.Initialize(fungal);
         fishPickup = fungal.GetComponent<FishPickup>();
-        fishPickup.OnFishChanged += FishPickup_OnFishChanged;
-        fishPickup.OnFishReleased += FishPickup_OnFishReleased;
+
+        if (fishPickup)
+        {
+            fishPickup.OnFishChanged += FishPickup_OnFishChanged;
+            fishPickup.OnFishReleased += FishPickup_OnFishReleased;
+        }
+        else
+        {
+            Debug.Log($"Missing FishPickup component");
+        }
 
         ToggleAvailable(false);
     }
@@ -63,8 +71,8 @@ public class FungalThrow : DirectionalAbility
     {
         get
         {
-            Vector3 origin = fungal.transform.position;
-            Vector3 forwardTarget = origin + fungal.transform.forward * Range;
+            Vector3 origin = Fungal.transform.position;
+            Vector3 forwardTarget = origin + Fungal.transform.forward * Range;
             float searchRadius = Range;
             LayerMask targetLayer = ~0;
 
@@ -77,7 +85,7 @@ public class FungalThrow : DirectionalAbility
                 NetworkFungal fungal = collider.GetComponent<NetworkFungal>();
                 if (fungal == null) continue;
                 if (fungal.IsDead) continue;
-                if (this.fungal == fungal) continue;
+                if (this.Fungal == fungal) continue;
 
                 float distance = Vector3.Distance(origin, fungal.transform.position);
                 if (distance < closestDistance)

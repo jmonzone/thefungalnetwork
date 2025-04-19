@@ -9,8 +9,6 @@ using UnityEngine.Events;
 public class GameReference : ScriptableObject
 {
     [SerializeField] private MultiplayerReference multiplayer;
-    [SerializeField] private Navigation navigation;
-    [SerializeField] private ViewReference inputView;
 
     [SerializeField] private GamePlayer clientPlayer;
     [SerializeField] private List<GamePlayer> players;
@@ -22,7 +20,6 @@ public class GameReference : ScriptableObject
     public List<GamePlayer> Players => players;
 
     public event UnityAction OnClientPlayerAdded;
-    public event UnityAction OnClientDataInitialized;
     public event UnityAction OnAllPlayersAdded;
 
     public event UnityAction OnGameStart;
@@ -63,9 +60,6 @@ public class GameReference : ScriptableObject
         if (networkFungal.IsOwner && !networkFungal.IsAI)
         {
             clientPlayer = addedPlayer;
-
-            if (networkFungal.Data) OnClientDataInitialized?.Invoke();
-            else networkFungal.OnDataUpdated += OnClientDataInitialized;
 
             Debug.Log($"OnClientPlayerAdded");
             OnClientPlayerAdded?.Invoke();
@@ -121,7 +115,6 @@ public class GameReference : ScriptableObject
 
     public void StartGame()
     {
-        navigation.Navigate(inputView);
         OnGameStart?.Invoke();
     }
 

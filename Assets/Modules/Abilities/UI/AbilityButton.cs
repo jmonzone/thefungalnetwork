@@ -4,7 +4,6 @@ using UnityEngine.UI;
 
 public class AbilityButton : MonoBehaviour
 {
-    [SerializeField] private GameReference playerReference;
     [SerializeField] private DirectionalButton directionalButton;
     [SerializeField] private AbilityCastIndicator abilityCastIndicator;
     [SerializeField] private CooldownHandler cooldownHandler;
@@ -47,18 +46,18 @@ public class AbilityButton : MonoBehaviour
     // Event Subscription/Unsubscription
     private void OnEnable()
     {
-        if (playerReference.ClientPlayer?.Fungal == null || ability == null) return;
+        if (ability == null) return;
 
-        playerReference.ClientPlayer.Fungal.OnDeath += Fungal_OnDeath;
-        playerReference.ClientPlayer.Fungal.OnRespawnComplete += UpdateAbility;
+        //fungal.OnDeath += Fungal_OnDeath;
+        //fungal.OnRespawnComplete += UpdateAbility;
     }
 
     private void OnDisable()
     {
-        if (playerReference.ClientPlayer?.Fungal == null || ability == null) return;
+        if (ability == null) return;
 
-        playerReference.ClientPlayer.Fungal.OnDeath -= Fungal_OnDeath;
-        playerReference.ClientPlayer.Fungal.OnRespawnComplete -= UpdateAbility;
+        //fungal.OnDeath -= Fungal_OnDeath;
+        //fungal.OnRespawnComplete -= UpdateAbility;
     }
 
     // Ability Management
@@ -149,7 +148,7 @@ public class AbilityButton : MonoBehaviour
         if (ability is DirectionalAbility directionalAbility)
         {
             var clampedDirection = Vector3.ClampMagnitude(direction, directionalAbility.Range);
-            var startPosition = playerReference.ClientPlayer.Fungal.transform.position;
+            var startPosition = ability.Fungal.transform.position;
             targetPosition = startPosition + clampedDirection;
             targetPosition.y = 0; // Keep in the XZ plane      
         }
@@ -186,7 +185,7 @@ public class AbilityButton : MonoBehaviour
             {
                 // Use the target position either from the drag or default
                 var targetPos = directionalButton.DragStarted ? targetPosition : directionalAbility.DefaultTargetPosition;
-                abilityCastIndicator.UpdateIndicator(playerReference.ClientPlayer.Fungal.transform.position, targetPos, directionalAbility.Range);
+                abilityCastIndicator.UpdateIndicator(ability.Fungal.transform.position, targetPos, directionalAbility.Range);
                 abilityCastIndicator.SetTargetIndicatorRadius(ability.Radius);
             }
         }

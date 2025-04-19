@@ -1,27 +1,19 @@
-using System.Collections;
-using Cinemachine;
 using UnityEngine;
-
 
 public class Grove : MonoBehaviour
 {
-    [SerializeField] private FadeCanvasGroup canvasGroup;
-    [SerializeField] private CinemachineVirtualCamera arenaCamera;
-    [SerializeField] private CameraController cameraController;
+    [SerializeField] private FungalController fungal;
+    [SerializeField] private MoveCharacterJoystick joystick;
 
-    [SerializeField] private GameObject fungal;
+    private void Awake()
+    {
+        fungal.InitializePrefab(2);
+        joystick.player = fungal.Movement;
+    }
 
     private void Start()
     {
-        StartCoroutine(StartGame());
-    }
-
-    private IEnumerator StartGame()
-    {
-        yield return new WaitForSeconds(1f);
-        yield return canvasGroup.FadeOut();
-
-        arenaCamera.Priority = 0;
-        cameraController.Target = fungal.transform;
-    }
+        var initializeController = GetComponent<InitializeController>();
+        initializeController.Initialize(fungal);
+    }    
 }

@@ -2655,6 +2655,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fungal Controller
       objectReference: {fileID: 0}
+    - target: {fileID: 4528828365495214589, guid: d7c0967b468c543679259928bb175fc9,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5839182076126366316, guid: d7c0967b468c543679259928bb175fc9,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2710,12 +2715,30 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d7c0967b468c543679259928bb175fc9, type: 3}
---- !u!1 &781579330 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2941250707292126303, guid: d7c0967b468c543679259928bb175fc9,
+--- !u!114 &781579334 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3325272597309751410, guid: d7c0967b468c543679259928bb175fc9,
     type: 3}
   m_PrefabInstance: {fileID: 781579329}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31c87108264554a99a582980bf170550, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &781579336 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 368056120384183254, guid: d7c0967b468c543679259928bb175fc9,
+    type: 3}
+  m_PrefabInstance: {fileID: 781579329}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d46d4f8fc98774fc0807011983349422, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &827813981
 GameObject:
   m_ObjectHideFlags: 0
@@ -4306,6 +4329,18 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1663372012}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1663372018 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8208207798765233014, guid: 0828a55f3188145edbcaf3f9a20d53a9,
+    type: 3}
+  m_PrefabInstance: {fileID: 1663372012}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1663372014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1524895b687a944cfb3beaf1d43ca3a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1663372021
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4860,6 +4895,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1851915126}
   - component: {fileID: 1851915127}
+  - component: {fileID: 1851915128}
   m_Layer: 0
   m_Name: Grove
   m_TagString: Untagged
@@ -4897,10 +4933,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e47506fb9be6744fa99cb82100cf2e0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canvasGroup: {fileID: 827813983}
+  fungal: {fileID: 781579336}
+  joystick: {fileID: 6163485878806447941}
+--- !u!114 &1851915128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1851915123}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 690f879d962d94025a8a256b7e392397, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fungalThrow: {fileID: 11400000, guid: b5c72208b21814df89bdeed4d863ef45, type: 2}
+  fishButton: {fileID: 1663372018}
+  fungalAbilityButton: {fileID: 7451435924019975919}
+  fishingRodUI: {fileID: 1663372021}
+  moveCharacterJoystick: {fileID: 6163485878806447941}
+  loadingCanvas: {fileID: 827813983}
   arenaCamera: {fileID: 515190391}
   cameraController: {fileID: 731434114}
-  fungal: {fileID: 781579330}
+  navigation: {fileID: 11400000, guid: 7af35f01730a846d692adda4734cddd3, type: 2}
+  inputView: {fileID: 11400000, guid: 8b7c25a127d9b494ebf93f64f5dc8a6f, type: 2}
 --- !u!1 &1860022255
 GameObject:
   m_ObjectHideFlags: 0
@@ -11314,8 +11370,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   joystick: {fileID: 3229456022335916232}
-  game: {fileID: 11400000, guid: 08db032ff48be41208a04f1067508370, type: 2}
   wasdSensitivity: 0.9
+  player: {fileID: 781579334}
 --- !u!1 &6170048451706310360
 GameObject:
   m_ObjectHideFlags: 0
@@ -12231,6 +12287,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 7451435924019975913}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &7451435924019975919 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8208207798765233014, guid: 0828a55f3188145edbcaf3f9a20d53a9,
+    type: 3}
+  m_PrefabInstance: {fileID: 7451435924019975913}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1524895b687a944cfb3beaf1d43ca3a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &7479458099986479875
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -9,7 +9,7 @@ public class FungalShield : Ability
 
     private Coroutine shieldTimerCoroutine;
 
-    public override void Initialize(NetworkFungal fungal)
+    public override void Initialize(FungalController fungal)
     {
         base.Initialize(fungal);
     }
@@ -18,14 +18,14 @@ public class FungalShield : Ability
     {
         base.CastAbility();
 
-        fungal.ToggleShieldRenderers(true);
-        fungal.Health.SetShield(shieldPower);
+        Fungal.ToggleShieldRenderers(true);
+        Fungal.Health.SetShield(shieldPower);
 
-        fungal.Health.OnShieldChanged += Health_OnShieldChanged;
+        Fungal.Health.OnShieldChanged += Health_OnShieldChanged;
 
-        if (shieldTimerCoroutine != null) fungal.StopCoroutine(shieldTimerCoroutine);
+        if (shieldTimerCoroutine != null) Fungal.StopCoroutine(shieldTimerCoroutine);
 
-        shieldTimerCoroutine = fungal.StartCoroutine(ShieldDurationTimer(shieldDuration));
+        shieldTimerCoroutine = Fungal.StartCoroutine(ShieldDurationTimer(shieldDuration));
     }
 
     private IEnumerator ShieldDurationTimer(float duration)
@@ -33,24 +33,24 @@ public class FungalShield : Ability
         yield return new WaitForSeconds(duration);
 
         // Shield still active? Expire it
-        if (fungal.Health.CurrentShield > 0)
+        if (Fungal.Health.CurrentShield > 0)
         {
-            fungal.Health.SetShield(0f); // This will trigger OnShieldChanged
+            Fungal.Health.SetShield(0f); // This will trigger OnShieldChanged
         }
     }
 
     private void Health_OnShieldChanged()
     {
-        if (fungal.Health.CurrentShield == 0)
+        if (Fungal.Health.CurrentShield == 0)
         {
-            fungal.ToggleShieldRenderers(false);
+            Fungal.ToggleShieldRenderers(false);
             CompleteAbility();
 
-            fungal.Health.OnShieldChanged -= Health_OnShieldChanged;
+            Fungal.Health.OnShieldChanged -= Health_OnShieldChanged;
 
             if (shieldTimerCoroutine != null)
             {
-                fungal.StopCoroutine(shieldTimerCoroutine);
+                Fungal.StopCoroutine(shieldTimerCoroutine);
                 shieldTimerCoroutine = null;
             }
         }

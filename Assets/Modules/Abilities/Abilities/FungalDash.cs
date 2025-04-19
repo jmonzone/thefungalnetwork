@@ -15,15 +15,15 @@ public class FungalDash : DirectionalAbility, IMovementAbility
 
     [SerializeField] private List<AudioClip> dashAudio;
 
-    private Movement Movement => fungal.Movement;
+    private Movement Movement => Fungal.Movement;
     private ClientNetworkTransform networkTransform;
     private AudioSource audioSource;
 
     public override float Range => dashRange;
-    public override Vector3 DefaultTargetPosition => fungal.transform.position + fungal.transform.forward * dashRange;
+    public override Vector3 DefaultTargetPosition => Fungal.transform.position + Fungal.transform.forward * dashRange;
     public override bool UseTrajectory => false;
 
-    public override void Initialize(NetworkFungal fungal)
+    public override void Initialize(FungalController fungal)
     {
         base.Initialize(fungal);
 
@@ -37,15 +37,15 @@ public class FungalDash : DirectionalAbility, IMovementAbility
 
         void OnDestinationReached()
         {
-            Movement.SetSpeed(fungal.BaseSpeed);
+            Movement.SetSpeed(Fungal.BaseSpeed);
             Movement.OnDestinationReached -= OnDestinationReached;
 
             networkTransform.Interpolate = true;
-            fungal.ToggleTrailRenderers(false);
+            Fungal.ToggleTrailRenderers(false);
             CompleteAbility();
         }
 
-        fungal.ToggleTrailRenderers(true);
+        Fungal.ToggleTrailRenderers(true);
         networkTransform.Interpolate = false;
         Movement.OnDestinationReached += OnDestinationReached;
 

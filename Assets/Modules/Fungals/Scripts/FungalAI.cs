@@ -46,7 +46,7 @@ public class FungalAI : MonoBehaviour
     {
         var abilityTemplate = fungal.Data.Ability;
         ability = Instantiate(abilityTemplate);
-        ability.Initialize(fungal);
+        ability.Initialize(fungal.Fungal);
 
         //nextDashTime = dash.Cooldown.Cooldown;
         SetState(FungalState.FIND_FISH); // Start moving

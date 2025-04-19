@@ -29,8 +29,8 @@ public abstract class Ability : ScriptableObject
     [SerializeField] private float castCooldown = 2f;
 
     private CooldownModel cooldownModel;
-    protected NetworkFungal fungal;
 
+    public FungalController Fungal { get; protected set; }
     public bool IsAvailable { get; private set; } = true;
     public bool IsOnCooldown => cooldownModel.IsOnCooldown;
     public CooldownModel Cooldown => cooldownModel;
@@ -44,16 +44,16 @@ public abstract class Ability : ScriptableObject
     public virtual void PrepareAbility() { }
     public virtual void ChargeAbility() { }
 
-    public virtual void Initialize(NetworkFungal fungal)
+    public virtual void Initialize(FungalController fungal)
     {
-        this.fungal = fungal;
+        this.Fungal = fungal;
         cooldownModel = new CooldownModel(castCooldown);
     }
 
     public virtual void CastAbility()
     {
         OnAbilityStart?.Invoke();
-        fungal.StartCoroutine(Cooldown.StartCooldown());
+        Fungal.StartCoroutine(Cooldown.StartCooldown());
     }
 
     protected void CompleteAbility()
