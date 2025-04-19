@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class FishingRodUI : MonoBehaviour
+public class FungalThrowUI : MonoBehaviour
 {
     [Header("UI")]
     [SerializeField] private Image abilityOutline;
@@ -19,7 +19,7 @@ public class FishingRodUI : MonoBehaviour
         // Ensure the previous listener is removed if the button was already assigned
         if (this.fungalThrow != null)
         {
-            this.fungalThrow.OnFishChanged -= HandleFishChanged;
+            this.fungalThrow.OnFishChanged -= UpdateView;
         }
 
         this.fungalThrow = fungalThrow;
@@ -27,7 +27,7 @@ public class FishingRodUI : MonoBehaviour
         // Subscribe to the events only if the button is not null
         if (this.fungalThrow != null)
         {
-            this.fungalThrow.OnFishChanged += HandleFishChanged;
+            this.fungalThrow.OnFishChanged += UpdateView;
         }
         else
         {
@@ -39,11 +39,11 @@ public class FishingRodUI : MonoBehaviour
     {
         if (fungalThrow != null)
         {
-            fungalThrow.OnFishChanged -= HandleFishChanged;
+            fungalThrow.OnFishChanged -= UpdateView;
         }
     }
 
-    private void HandleFishChanged(Fish fish)
+    private void UpdateView(Fish fish)
     {
         Debug.Log($"HandleFishChanged {fish?.name ?? null}");
         if (fish != null)

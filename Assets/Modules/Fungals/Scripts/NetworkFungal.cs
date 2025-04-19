@@ -139,7 +139,7 @@ public class NetworkFungal : NetworkBehaviour
         }
         else
         {
-            Debug.Log($"waiting to initialize");
+            //Debug.Log($"waiting to initialize");
 
             player.OnValueChanged += (previousValue, newValue) =>
             {

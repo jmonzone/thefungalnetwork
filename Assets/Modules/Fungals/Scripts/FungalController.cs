@@ -31,7 +31,7 @@ public class FungalController : MonoBehaviour
 
     public void InitializePrefab(int fungal)
     {
-        Debug.Log($"InitializePrefab {name} {fungal}");
+        //Debug.Log($"InitializePrefab {name} {fungal}");
         data = fungalCollection.Fungals[fungal];
 
         var model = Instantiate(data.Prefab, transform);

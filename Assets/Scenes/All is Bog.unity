@@ -1099,6 +1099,18 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &234206679 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1690924548315045417, guid: 0828a55f3188145edbcaf3f9a20d53a9,
+    type: 3}
+  m_PrefabInstance: {fileID: 1663372012}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &243306014
 GameObject:
   m_ObjectHideFlags: 0
@@ -8210,6 +8222,18 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1663372012}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1663372018 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8208207798765233014, guid: 0828a55f3188145edbcaf3f9a20d53a9,
+    type: 3}
+  m_PrefabInstance: {fileID: 1663372012}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1663372014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1524895b687a944cfb3beaf1d43ca3a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1663372021
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8219,10 +8243,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1663372014}
   m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e6c068f04c954816810ac35e7c0eeb0, type: 3}
+  m_Script: {fileID: 11500000, guid: a60736d6c1cc44946aaf9b63aa6d6fae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  abilityOutline: {fileID: 0}
+  abilityOutline: {fileID: 234206679}
   abilityBackground: {fileID: 2044522549}
   abilityIcon: {fileID: 75240126}
   fishIcon: {fileID: 1310766032}
@@ -8910,16 +8934,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 690f879d962d94025a8a256b7e392397, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fungalThrow: {fileID: 11400000, guid: b5c72208b21814df89bdeed4d863ef45, type: 2}
-  fishButton: {fileID: 7451435924019975919}
-  fungalAbilityButton: {fileID: 7451435924019975919}
-  fishingRodUI: {fileID: 1663372021}
-  moveCharacterJoystick: {fileID: 6163485878806447941}
   loadingCanvas: {fileID: 827813983}
   arenaCamera: {fileID: 515190391}
   cameraController: {fileID: 731434114}
   navigation: {fileID: 11400000, guid: 7af35f01730a846d692adda4734cddd3, type: 2}
   inputView: {fileID: 11400000, guid: 8b7c25a127d9b494ebf93f64f5dc8a6f, type: 2}
+  moveCharacterJoystick: {fileID: 6163485878806447941}
+  fungalAbilityButton: {fileID: 7451435924019975919}
+  fungalThrowButton: {fileID: 1663372018}
+  fungalThrowUI: {fileID: 1663372021}
+  fungalThrow: {fileID: 11400000, guid: b5c72208b21814df89bdeed4d863ef45, type: 2}
 --- !u!1 &1860022255
 GameObject:
   m_ObjectHideFlags: 0

@@ -50,7 +50,7 @@ public class GameReference : ScriptableObject
 
         Enum.TryParse(multiplayer.GetJoinedLobbyData("GameMode"), out gameMode);
 
-        Debug.Log($"addplayer {clientId} {playerName} {playerIndex} {networkFungal.name}");
+        //Debug.Log($"addplayer {clientId} {playerName} {playerIndex} {networkFungal.name}");
         var addedPlayer = new GamePlayer(clientId, playerIndex, playerName.ToString(), networkFungal);
         Players.Add(addedPlayer);
 

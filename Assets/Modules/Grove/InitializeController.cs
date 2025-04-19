@@ -5,45 +5,37 @@ using UnityEngine.Events;
 
 public class InitializeController : MonoBehaviour
 {
-    [Header("UI")]
-    [SerializeField] private FungalThrow fungalThrow;
-    [SerializeField] private AbilityButton fishButton;
-    [SerializeField] private AbilityButton fungalAbilityButton;
-    [SerializeField] private FishingRodUI fishingRodUI;
-    [SerializeField] private MoveCharacterJoystick moveCharacterJoystick;
-
-    [Header("Views")]
+    [Header("References")]
     [SerializeField] private FadeCanvasGroup loadingCanvas;
     [SerializeField] private CinemachineVirtualCamera arenaCamera;
     [SerializeField] private CameraController cameraController;
-
     [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference inputView;
+
+    [Header("UI")]
+    [SerializeField] private MoveCharacterJoystick moveCharacterJoystick;
+    [SerializeField] private AbilityButton fungalAbilityButton;
+    [SerializeField] private AbilityButton fungalThrowButton;
+    [SerializeField] private FungalThrowUI fungalThrowUI;
+    [SerializeField] private FungalThrow fungalThrow;
 
     private FungalController fungal;
 
     private void Start()
     {
-        Debug.Log($"InitializeController.Start");
         loadingCanvas.gameObject.SetActive(true);
     }
 
     public void Initialize(FungalController fungal, UnityAction onComplete = null)
     {
-        Debug.Log($"InitializeController.Initialize");
         this.fungal = fungal;
         StartCoroutine(InitializeRoutine(onComplete));
     }
 
     private IEnumerator InitializeRoutine(UnityAction onComplete)
     {
-        Debug.Log($"InitializeController.InitializeRoutine");
-
         yield return new WaitForSeconds(1f);
-        Debug.Log($"InitializeController.InitializeRoutine.WaitForSeconds");
         yield return loadingCanvas.FadeOut();
-        Debug.Log($"InitializeController.InitializeRoutine.FadeOut");
-
 
         arenaCamera.Priority = 0;
         cameraController.Target = fungal.transform;
@@ -65,8 +57,9 @@ public class InitializeController : MonoBehaviour
 
         Debug.Log($"PlayerReference_OnClientPlayerAdded {fungal.Data.Id} {fungal.Data.Ability.Id}");
 
-        fishingRodUI.AssignFishingRod(throwAbility);
-        fishButton.AssignAbility(throwAbility);
+        fungalThrowUI.AssignFishingRod(throwAbility);
+        fungalThrowButton.AssignAbility(throwAbility);
+
 
         var abilityTemplate = fungal.Data.Ability;
         var fungalAbility = Instantiate(abilityTemplate);

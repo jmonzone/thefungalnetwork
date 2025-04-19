@@ -23,7 +23,7 @@ public class FungalThrow : DirectionalAbility
         }
         else
         {
-            Debug.Log($"Missing FishPickup component");
+            Debug.LogWarning($"Missing FishPickup component");
         }
 
         ToggleAvailable(false);
