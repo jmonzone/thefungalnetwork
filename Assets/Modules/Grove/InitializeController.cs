@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using Cinemachine;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class InitializeController : MonoBehaviour
 {
@@ -21,21 +22,28 @@ public class InitializeController : MonoBehaviour
 
     private FungalController fungal;
 
-    private void Awake()
+    private void Start()
     {
+        Debug.Log($"InitializeController.Start");
         loadingCanvas.gameObject.SetActive(true);
     }
 
-    public void Initialize(FungalController fungal)
+    public void Initialize(FungalController fungal, UnityAction onComplete = null)
     {
+        Debug.Log($"InitializeController.Initialize");
         this.fungal = fungal;
-        StartCoroutine(InitializeRoutine());
+        StartCoroutine(InitializeRoutine(onComplete));
     }
 
-    private IEnumerator InitializeRoutine()
+    private IEnumerator InitializeRoutine(UnityAction onComplete)
     {
+        Debug.Log($"InitializeController.InitializeRoutine");
+
         yield return new WaitForSeconds(1f);
+        Debug.Log($"InitializeController.InitializeRoutine.WaitForSeconds");
         yield return loadingCanvas.FadeOut();
+        Debug.Log($"InitializeController.InitializeRoutine.FadeOut");
+
 
         arenaCamera.Priority = 0;
         cameraController.Target = fungal.transform;
@@ -46,6 +54,7 @@ public class InitializeController : MonoBehaviour
 
         navigation.Navigate(inputView);
 
+        onComplete?.Invoke();
     }
 
     // todo: centralize ability instance cration with fungalAI

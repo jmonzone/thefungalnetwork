@@ -25,6 +25,6 @@ public class AllIsBog : MonoBehaviour
         joystick.player = game.ClientPlayer.Fungal.Movement;
 
         var initializeController = GetComponent<InitializeController>();
-        initializeController.Initialize(game.ClientPlayer.Fungal.Fungal);
+        initializeController.Initialize(game.ClientPlayer.Fungal.Fungal, game.StartGame);
     }
 }
