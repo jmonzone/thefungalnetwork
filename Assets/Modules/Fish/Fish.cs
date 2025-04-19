@@ -138,8 +138,17 @@ public class Fish : NetworkBehaviour
     public void ReturnToRadialMovement()
     {
         Debug.Log($"ReturnToRadialMovement {name}");
+        StartCoroutine(RespawnRoutine());
+    }
+
+    private IEnumerator RespawnRoutine()
+    {
+        yield return Movement.ScaleOverTime(0.1f, 0f);
+        yield return new WaitForSeconds(2f);
+        transform.position = networkPosition.Value;
         Movement.SetSpeed(swimSpeed);
         Movement.StartRadialMovement(networkPosition.Value, true);
+        yield return Movement.ScaleOverTime(0.5f, 1f);
         OnRespawnServerRpc();
         OnRespawn?.Invoke();
     }

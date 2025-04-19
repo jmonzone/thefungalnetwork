@@ -101,7 +101,7 @@ public class CooldownHandler : MonoBehaviour
 
     private void OnCooldownComplete()
     {
-        SetInteractable(true);
+        SetInteractable(ability.IsAvailable);
         cooldownText.gameObject.SetActive(false);
     }
 

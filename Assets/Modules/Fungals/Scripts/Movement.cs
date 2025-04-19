@@ -22,6 +22,7 @@ public class Movement : MonoBehaviour
     [SerializeField] private LayerMask obstacleLayer;
     [SerializeField] private Transform lookTransform;
     [SerializeField] private Transform scaleTransform;
+    private Vector3 originalScale;
 
     public Transform ScaleTransform => scaleTransform;
     private Vector3 inputDirection;
@@ -67,6 +68,7 @@ public class Movement : MonoBehaviour
 
         if (!lookTransform) lookTransform = transform;
         if (!scaleTransform) scaleTransform = transform.GetChild(0);
+        originalScale = scaleTransform.localScale;
     }
 
     private void Update()
@@ -103,7 +105,7 @@ public class Movement : MonoBehaviour
 
         if (previousType != type)
         {
-            Debug.Log($"{name}.Movement.OnTypeChanged {previousType} -> {type}");
+            //Debug.Log($"{name}.Movement.OnTypeChanged {previousType} -> {type}");
             OnTypeChanged?.Invoke();
         }
     }
@@ -298,6 +300,13 @@ public class Movement : MonoBehaviour
         SetType(MovementType.IDLE);
     }
 
+    private float scaleFactor = 1f;
+
+    public IEnumerator ScaleOverTime(float duration, float endScale)
+    {
+        yield return ScaleOverTime(duration, scaleFactor, endScale);
+    }
+
     // Generalized scaling coroutine
     public IEnumerator ScaleOverTime(float duration, float startScale, float endScale)
     {
@@ -322,18 +331,25 @@ public class Movement : MonoBehaviour
     [SerializeField] private float lockedYValue = 1f;  // Locked value for Y
     [SerializeField] private float lockedZValue = 1f;  // Locked value for Z
 
-    public void SetScaleFactor(float scaleFactor)
+    public void SetScaleFactor(float factor)
     {
-        float x = lockX ? lockedXValue : scaleFactor;
-        float y = lockY ? lockedYValue : scaleFactor;
-        float z = lockZ ? lockedZValue : scaleFactor;
+        scaleFactor = factor;
+        SetTargetScale(originalScale * factor);
+    }
 
-        scaleTransform.localScale = new Vector3(x, y, z);
+    public void SetTargetScale(Vector3 targetScale)
+    {
+        // Final scale adjustment
+        float finalX = lockX ? lockedXValue : targetScale.x;
+        float finalY = lockY ? lockedYValue : targetScale.y;
+        float finalZ = lockZ ? lockedZValue : targetScale.z;
+
+        scaleTransform.localScale = new Vector3(finalX, finalY, finalZ);
     }
 
     public void ResetScaleFactor()
     {
-        SetScaleFactor(1);
+        SetTargetScale(originalScale);
     }
 
 }

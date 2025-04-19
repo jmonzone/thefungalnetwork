@@ -25,7 +25,7 @@ public class WorldToScreenTracker : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (!target) return;
+        if (!target || !anchor) return;
 
         target.position = anchor.position + Vector3.up * 2.4f;
 

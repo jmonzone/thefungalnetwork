@@ -36,7 +36,7 @@ public class Bubble : NetworkBehaviour
     }
     private IEnumerator InflateRoutine()
     {
-        yield return movement.ScaleOverTime(inflateSpeed, 0, 2.5f);
+        yield return movement.ScaleOverTime(inflateSpeed, 0, 1);
         yield return new WaitForSeconds(autoPopTime);
         Pop();
     }

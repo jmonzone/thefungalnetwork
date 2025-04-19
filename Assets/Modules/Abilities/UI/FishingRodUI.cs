@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class FishingRodUI : MonoBehaviour
 {
     [Header("UI")]
+    [SerializeField] private Image abilityOutline;
     [SerializeField] private Image abilityBackground;
     [SerializeField] private Image abilityIcon;
     [SerializeField] private Image fishIcon;
@@ -44,6 +45,7 @@ public class FishingRodUI : MonoBehaviour
 
     private void HandleFishChanged(Fish fish)
     {
+        Debug.Log($"HandleFishChanged {fish?.name ?? null}");
         if (fish != null)
         {
             abilityBackground.color = fish.BackgroundColor;
