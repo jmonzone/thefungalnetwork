@@ -27,7 +27,7 @@ public class FungalFlight : DirectionalAbility, IMovementAbility
 
         void OnDestinationReached()
         {
-            Debug.Log("OnDestinationReached");
+            //Debug.Log("OnDestinationReached");
             Movement.SetSpeed(Fungal.BaseSpeed);
             Movement.OnDestinationReached -= OnDestinationReached;
 
@@ -35,7 +35,7 @@ public class FungalFlight : DirectionalAbility, IMovementAbility
             CompleteAbility();
         }
 
-        Debug.Log($"CastAbility {targetPosition}");
+        //Debug.Log($"CastAbility {targetPosition}");
 
         //networkTransform.Interpolate = false;
         Movement.OnDestinationReached += OnDestinationReached;

@@ -31,13 +31,13 @@ public class FishSpawner : MonoBehaviour
         {
             var targetFish = GetFishToSpawn();
             var fishController = Instantiate(targetFish.Prefab, spawnPosition.Position, Quaternion.identity, transform);
-            fishController.Initialize(spawnPosition.Bounds);
+            //fishController.Initialize(spawnPosition.Bounds);
             objectCount++;
 
             OnFishSpawned?.Invoke(fishController);
 
             // Subscribe to disable event
-            fishController.OnCaught += HandleFishDisabled;
+            //fishController.OnCaught += HandleFishDisabled;
 
             timer = 0;
         }

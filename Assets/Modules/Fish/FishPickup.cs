@@ -1,38 +1,33 @@
-using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class FishPickup : NetworkBehaviour
+public class FishPickup : MonoBehaviour
 {
-    public Fish Fish { get; private set; }
-    private NetworkFungal fungal;
-    private Fish requestedFish;
+    private FungalController fungal;
+
+    public FishController Fish { get; private set; }
 
     public event UnityAction OnFishChanged;
     public event UnityAction OnFishReleased;
 
-    public override void OnNetworkSpawn()
+    private void Awake()
     {
-        base.OnNetworkSpawn();
-
-        fungal = GetComponent<NetworkFungal>();
-        fungal.Fungal.OnDeath += _ => Fungal_OnDeath();
-
-        requestedFish = null;
+        fungal = GetComponent<FungalController>();
+        fungal.OnDeath += _ => Fungal_OnDeath();
     }
 
     private void Fungal_OnDeath()
     {
         if (Fish)
         {
-            Fish.ReturnToRadialMovement();
+            Fish.Respawn();
             RemoveFish();
         }
     }
 
     private void Update()
     {
-        if (IsOwner && !Fish && !fungal.IsDead && !requestedFish) TryPickUpFish();
+        if (!Fish && !fungal.IsDead) TryPickUpFish();
     }
 
     private void TryPickUpFish()
@@ -41,49 +36,22 @@ public class FishPickup : NetworkBehaviour
 
         foreach (Collider hit in hits)
         {
-            var fish = hit.GetComponentInParent<Fish>();
-            if (fish != null && !fish.IsPickedUp.Value)
+            var fish = hit.GetComponentInParent<FishController>();
+            if (fish != null && !fish.IsPickedUp)
             {
-                requestedFish = fish;
-                fish.OnPickUpRequest += Fish_OnPickUpRequest;
-                fish.RequestPickUpServerRpc(NetworkObjectId);
+                Fish = fish;
+                fish.PickUp(transform);
+                OnFishChanged?.Invoke();
                 break;
             }
         }
-    }
-
-    private void Fish_OnPickUpRequest(bool success)
-    {
-        requestedFish.OnPickUpRequest -= Fish_OnPickUpRequest;
-
-        if (success)
-        {
-            var networkPufferfish = requestedFish.GetComponent<Pufferfish>(); // Ensure it's the correct one
-            if (networkPufferfish != null)
-            {
-                networkPufferfish.OnMaxTemperReached += NetworkPufferfish_OnMaxTemperReached;
-                networkPufferfish.StartTemperServerRpc();
-            }
-
-            Fish = requestedFish;
-
-            fungal.AddToScoreServerRpc(new ScoreEventArgs
-            {
-                value = Fish.Score,
-                position = Fish.transform.position,
-                label = "Catch"
-            });
-            OnFishChanged?.Invoke();
-        }
-
-        requestedFish = null;
     }
 
     public void Sling(Vector3 targetPosition)
     {
         if (Fish)
         {
-            Fish.GetComponent<ThrowFish>().Throw(targetPosition);
+            Fish.ThrowFish.Throw(targetPosition);
             RemoveFish();
         }
     }

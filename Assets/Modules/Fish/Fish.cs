@@ -7,13 +7,10 @@ using UnityEngine.Events;
 public class Fish : NetworkBehaviour
 {
     [SerializeField] private GameReference pufferballReference;
-    [SerializeField] private float swimSpeed = 1f;
-    [SerializeField] private bool useTrajectory = false;
 
     [SerializeField] private Sprite icon;
     [SerializeField] private string abilityName;
     [SerializeField] private Color backgroundColor;
-    [SerializeField] private float score;
 
     [SerializeField] private float audioPitch;
     [SerializeField] private List<AudioClip> audioClips;
@@ -21,24 +18,14 @@ public class Fish : NetworkBehaviour
     public Sprite Icon => icon;
     public string AbilityName => abilityName;
     public Color BackgroundColor => backgroundColor;
-    public float Score => score;
-    public bool UseTrajectory => useTrajectory;
 
     public Movement Movement { get; private set; }
-    public ThrowFish ThrowFish { get; private set; }
 
     private AudioSource audioSource;
-
-
-    private NetworkVariable<Vector3> networkPosition = new NetworkVariable<Vector3>(
-        Vector3.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server
-    );
 
     public NetworkVariable<ulong> PickedUpFungalId = new NetworkVariable<ulong>();
     public NetworkVariable<bool> IsPickedUp = new NetworkVariable<bool>(false);
 
-    public event UnityAction<bool> OnPickUpRequest;
-    public event UnityAction OnPrepareThrow;
     public event UnityAction OnPickup;
     public event UnityAction OnRespawn;
 
@@ -47,12 +34,9 @@ public class Fish : NetworkBehaviour
         base.OnNetworkSpawn();
         Movement = GetComponent<Movement>();
         audioSource = GetComponent<AudioSource>();
-        ThrowFish = GetComponent<ThrowFish>();
 
-        if (IsServer)
-        {
-            networkPosition.Value = transform.position; // Set initial position on the server
-        }
+        var fishController = GetComponent<FishController>();
+        if (IsOwner) fishController.OnRespawnComplete += OnRespawnServerRpc;
     }
 
     public void Catch(Transform bobber)
@@ -60,12 +44,6 @@ public class Fish : NetworkBehaviour
         Movement.SetSpeed(10);
         Movement.Follow(bobber);
         RequestCatchServerRpc(NetworkManager.Singleton.LocalClientId);
-    }
-
-
-    public void PrepareThrow()
-    {
-        OnPrepareThrow?.Invoke();
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -127,30 +105,9 @@ public class Fish : NetworkBehaviour
                 Movement.SetSpeed(10);
                 Movement.Follow(networkObject.transform);
                 OnPickup?.Invoke();  // Trigger pickup event only on the owning client
-                OnPickUpRequest?.Invoke(true);
                 return;
             }
         }
-
-        OnPickUpRequest?.Invoke(false);
-    }
-
-    public void ReturnToRadialMovement()
-    {
-        Debug.Log($"ReturnToRadialMovement {name}");
-        StartCoroutine(RespawnRoutine());
-    }
-
-    private IEnumerator RespawnRoutine()
-    {
-        yield return Movement.ScaleOverTime(0.1f, 0f);
-        yield return new WaitForSeconds(2f);
-        transform.position = networkPosition.Value;
-        Movement.SetSpeed(swimSpeed);
-        Movement.StartRadialMovement(networkPosition.Value, true);
-        yield return Movement.ScaleOverTime(0.5f, 1f);
-        OnRespawnServerRpc();
-        OnRespawn?.Invoke();
     }
 
     [ServerRpc(RequireOwnership = false)]

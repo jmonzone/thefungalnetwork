@@ -55,7 +55,7 @@ public class InitializeController : MonoBehaviour
         var throwAbility = Instantiate(fungalThrow);
         throwAbility.Initialize(fungal);
 
-        Debug.Log($"PlayerReference_OnClientPlayerAdded {fungal.Data.Id} {fungal.Data.Ability.Id}");
+        //Debug.Log($"PlayerReference_OnClientPlayerAdded {fungal.Data.Id} {fungal.Data.Ability.Id}");
 
         fungalThrowUI.AssignFishingRod(throwAbility);
         fungalThrowButton.AssignAbility(throwAbility);

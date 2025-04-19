@@ -6,7 +6,7 @@ public class FungalThrow : DirectionalAbility
 {
     private FishPickup fishPickup;
 
-    public event Action<Fish> OnFishChanged;
+    public event Action<FishController> OnFishChanged;
 
     public override bool UseTrajectory => fishPickup.Fish.UseTrajectory;
     public override float Range => fishPickup.Fish.ThrowFish.Range;

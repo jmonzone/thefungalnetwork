@@ -88,7 +88,7 @@ public class AbilityButton : MonoBehaviour
 
     private void UpdateAbility()
     {
-        Debug.Log($"UpdateAbility {name}");
+        //Debug.Log($"UpdateAbility {name}");
 
         if (ability != null)
         {

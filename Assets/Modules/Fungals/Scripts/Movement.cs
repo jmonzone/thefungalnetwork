@@ -273,7 +273,7 @@ public class Movement : MonoBehaviour
         {
             Stop();
 
-            Debug.Log("Stopping, updating look direction " + lookDirection);
+            //Debug.Log("Stopping, updating look direction " + lookDirection);
             lookDirection.y = 0;
             UpdateLookDirection(lookDirection.normalized, force: true);
 

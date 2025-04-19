@@ -43,7 +43,7 @@ public class FungalThrowUI : MonoBehaviour
         }
     }
 
-    private void UpdateView(Fish fish)
+    private void UpdateView(FishController fish)
     {
         Debug.Log($"HandleFishChanged {fish?.name ?? null}");
         if (fish != null)

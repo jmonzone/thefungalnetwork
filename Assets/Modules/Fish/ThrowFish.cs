@@ -8,7 +8,7 @@ public class ThrowFish : MonoBehaviour
     [SerializeField] private float throwSpeed = 2f;
     [SerializeField] private float throwDistance = 10f;
 
-    private Fish fish;
+    private FishController fish;
     private Movement movement;
 
     public float Radius => radius;
@@ -21,7 +21,7 @@ public class ThrowFish : MonoBehaviour
 
     private void Awake()
     {
-        fish = GetComponent<Fish>();
+        fish = GetComponent<FishController>();
         movement = GetComponent<Movement>();
         enabled = false;
     }
@@ -67,7 +67,7 @@ public class ThrowFish : MonoBehaviour
     {
         Debug.Log($"ThrowFish Movement_OnDestinationReached {name}");
         enabled = false;
-        if (respawnOnThrow) fish.ReturnToRadialMovement();
+        if (respawnOnThrow) fish.Respawn();
         OnThrowComplete?.Invoke();
     }
 

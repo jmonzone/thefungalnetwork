@@ -5,13 +5,13 @@ public class BubbleFish : NetworkBehaviour
 {
     [SerializeField] private Bubble bubblePrefab;
 
-    private Fish fish;
+    private FishController fish;
     private Animator animator;
 
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-        fish = GetComponent<Fish>();
+        fish = GetComponent<FishController>();
 
         var throwFish = GetComponent<ThrowFish>();
         throwFish.OnThrowComplete += () => InflateServerRpc(NetworkObject.OwnerClientId, throwFish.TargetPosition);
@@ -39,7 +39,7 @@ public class BubbleFish : NetworkBehaviour
 
             if (IsOwner)
             {
-                bubble.StartInflate(fish.PickedUpFungalId.Value);
+                //bubble.StartInflate(fish.PickedUpFungalId.Value);
                 Invoke(nameof(ReturnFish), 1f);
             }
         }
@@ -47,6 +47,6 @@ public class BubbleFish : NetworkBehaviour
 
     private void ReturnFish()
     {
-        fish.ReturnToRadialMovement();
+        fish.Respawn();
     }
 }

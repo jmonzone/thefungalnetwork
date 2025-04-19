@@ -11,7 +11,7 @@ public class Pufferfish : NetworkBehaviour
     [SerializeField] private float maxExplosionDamage = 3f;
 
     private Movement movement;
-    private Fish fish;
+    private FishController fish;
     private PufferfishExplosion pufferfishExplosion;
     private PufferfishTemper pufferfishTemper;
     private ThrowFish throwFish;
@@ -28,7 +28,7 @@ public class Pufferfish : NetworkBehaviour
     {
         movement = GetComponent<Movement>();
 
-        fish = GetComponent<Fish>();
+        fish = GetComponent<FishController>();
         fish.OnPrepareThrow += StartTemperServerRpc;
 
         throwFish = GetComponent<ThrowFish>();
@@ -87,7 +87,7 @@ public class Pufferfish : NetworkBehaviour
     private IEnumerator RespawnRoutine()
     {
         yield return new WaitForSeconds(1f);
-        fish.ReturnToRadialMovement();
+        fish.Respawn();
     }
 
     private void HandleMaxTemperReached()
