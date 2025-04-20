@@ -9,6 +9,7 @@ public class FishController : MonoBehaviour
     [SerializeField] private float swimSpeed = 1f;
     [SerializeField] private float score;
     [SerializeField] private bool useTrajectory = false;
+    [SerializeField] private bool isPickedUp = false;
 
     [Header("UI")]
     [SerializeField] private Sprite icon;
@@ -23,7 +24,7 @@ public class FishController : MonoBehaviour
     public ThrowFish ThrowFish { get; private set; }
     public FungalController Fungal { get; private set; }
 
-    public bool IsPickedUp { get; private set; }
+    public bool IsPickedUp => isPickedUp;
     public float Score => score;
     public bool UseTrajectory => useTrajectory;
 
@@ -66,7 +67,7 @@ public class FishController : MonoBehaviour
         OnRespawnComplete?.Invoke();
 
         Fungal = null;
-        IsPickedUp = false;
+        isPickedUp = false;
     }
 
     public void PrepareThrow()
@@ -85,7 +86,7 @@ public class FishController : MonoBehaviour
     {
         Fungal = fungal;
 
-        IsPickedUp = true;
+        isPickedUp = true;
 
         audioSource.clip = audioClips.GetRandomItem();
         audioSource.pitch = audioPitch;

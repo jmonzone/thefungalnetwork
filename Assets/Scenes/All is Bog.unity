@@ -813,6 +813,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Network Water Fish
       objectReference: {fileID: 0}
+    - target: {fileID: 1817668168344640724, guid: 3fe5b649181db4cddb72d6276197347d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6691262473650406403, guid: 3fe5b649181db4cddb72d6276197347d,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -8778,9 +8783,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   multiplayer: {fileID: 11400000, guid: 408255eed57604ff491c1da858247ecd, type: 2}
   fungalCollection: {fileID: 11400000, guid: 1d49e170120fe4ab1befd22e62e1ea65, type: 2}
-  gameMode: 0
+  gameMode: 1
   startingFungal: {fileID: 11400000, guid: e55bb12acd0c94c28b3adeb85bc6687e, type: 2}
-  botPlayers: []
+  botPlayers:
+  - {fileID: 11400000, guid: bee5befd1ad6e494d9f5b1515e258ab2, type: 2}
 --- !u!114 &1851915125
 MonoBehaviour:
   m_ObjectHideFlags: 0

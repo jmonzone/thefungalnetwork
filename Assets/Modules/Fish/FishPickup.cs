@@ -4,8 +4,9 @@ using UnityEngine.Events;
 public class FishPickup : MonoBehaviour
 {
     private FungalController fungal;
+    [SerializeField] private FishController fish;
 
-    public FishController Fish { get; private set; }
+    public FishController Fish => fish;
 
     public event UnityAction OnFishChanged;
     public event UnityAction OnFishReleased;
@@ -23,6 +24,7 @@ public class FishPickup : MonoBehaviour
 
     private void TryPickUpFish()
     {
+        Debug.Log("Picking up fish");
         Collider[] hits = Physics.OverlapSphere(transform.position, 0.5f); // Small detection radius
 
         foreach (Collider hit in hits)
@@ -30,7 +32,7 @@ public class FishPickup : MonoBehaviour
             var fish = hit.GetComponentInParent<FishController>();
             if (fish != null && !fish.IsPickedUp)
             {
-                Fish = fish;
+                this.fish = fish;
                 fish.PickUp(fungal);
                 OnFishChanged?.Invoke();
                 break;
@@ -64,7 +66,7 @@ public class FishPickup : MonoBehaviour
             //networkPufferfish.OnMaxTemperReached -= NetworkPufferfish_OnMaxTemperReached;
         }
 
-        Fish = null;
+        fish = null;
         OnFishChanged?.Invoke();
     }
 
