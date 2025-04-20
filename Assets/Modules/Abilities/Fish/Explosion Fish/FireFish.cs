@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 
 public class FireFish : MonoBehaviour
 {
@@ -24,7 +25,7 @@ public class FireFish : MonoBehaviour
 
     private void Start()
     {
-        fish.ThrowFish.OnThrowComplete += OnThrowComplete;
+        fish.ThrowFish.OnThrowComplete += StartExplosion;
         pufferfishExplosion.OnExplodeComplete += PufferfishExplosion_OnExplodeComplete;
     }
 
@@ -39,7 +40,7 @@ public class FireFish : MonoBehaviour
         fish.ThrowFish.SetRadius(ExplosionRadius);
     }
 
-    private void OnThrowComplete()
+    public void StartExplosion()
     {
         movement.Stop();
         pufferfishExplosion.StartExplosionAnimation(ExplosionRadius);

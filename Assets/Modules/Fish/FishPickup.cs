@@ -58,10 +58,10 @@ public class FishPickup : MonoBehaviour
 
     private void RemoveFish()
     {
-        var networkPufferfish = Fish.GetComponent<Pufferfish>(); // Ensure it's the correct one
+        var networkPufferfish = Fish.GetComponent<NetworkFireFish>(); // Ensure it's the correct one
         if (networkPufferfish != null)
         {
-            networkPufferfish.OnMaxTemperReached -= NetworkPufferfish_OnMaxTemperReached;
+            //networkPufferfish.OnMaxTemperReached -= NetworkPufferfish_OnMaxTemperReached;
         }
 
         Fish = null;
