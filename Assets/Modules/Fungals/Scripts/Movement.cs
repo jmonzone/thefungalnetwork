@@ -128,6 +128,8 @@ public class Movement : MonoBehaviour
     // Follow Target Movement
     public void Follow(Transform newTarget)
     {
+        Debug.Log($"Follow {newTarget.name}");
+
         target = newTarget;
         SetType(MovementType.FOLLOW);
     }
@@ -142,6 +144,7 @@ public class Movement : MonoBehaviour
         // Update direction and position
         UpdateLookDirection(target.position + rotatedOffset - transform.position);
         transform.position = Vector3.MoveTowards(transform.position, target.position + rotatedOffset, SpeedDelta);
+
     }
 
     // Directional Movement

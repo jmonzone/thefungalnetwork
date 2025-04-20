@@ -21,6 +21,7 @@ public class FishController : MonoBehaviour
 
     public Movement Movement { get; private set; }
     public ThrowFish ThrowFish { get; private set; }
+    public FungalController Fungal { get; private set; }
 
     public bool IsPickedUp { get; private set; }
     public float Score => score;
@@ -31,10 +32,9 @@ public class FishController : MonoBehaviour
     public Color BackgroundColor => backgroundColor;
 
     private AudioSource audioSource;
-
-
     private Vector3 spawnPosition;
 
+    public event UnityAction OnPickedUp;
     public event UnityAction OnRespawnComplete;
     public event UnityAction OnPrepareThrow;
 
@@ -64,6 +64,9 @@ public class FishController : MonoBehaviour
         yield return Movement.ScaleOverTime(0.5f, 1f);
 
         OnRespawnComplete?.Invoke();
+
+        Fungal = null;
+        IsPickedUp = false;
     }
 
     public void PrepareThrow()
@@ -71,8 +74,17 @@ public class FishController : MonoBehaviour
         OnPrepareThrow?.Invoke();
     }
 
-    public void PickUp(Transform fungal)
+    public void PickUp(FungalController fungal)
     {
+        Debug.Log("PickUp");
+        HandlePickup(fungal);
+        OnPickedUp?.Invoke();
+    }
+
+    public void HandlePickup(FungalController fungal)
+    {
+        Fungal = fungal;
+
         IsPickedUp = true;
 
         audioSource.clip = audioClips.GetRandomItem();
@@ -80,6 +92,6 @@ public class FishController : MonoBehaviour
         audioSource.Play();
 
         Movement.SetSpeed(10);
-        Movement.Follow(fungal);
+        Movement.Follow(fungal.transform);
     }
 }

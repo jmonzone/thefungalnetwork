@@ -24,8 +24,8 @@ public class FungalAI : MonoBehaviour
     private NavMeshAgent agent;
     private NetworkFungal fungal;
     private Ability ability;
-    private List<Fish> allFish = new List<Fish>();
-    private Fish targetFish;
+    private List<FishController> allFish = new List<FishController>();
+    private FishController targetFish;
     private FishPickup fishPickup;
     private NetworkFungal targetFungal;
     private Coroutine fungalStateCoroutine;
@@ -35,7 +35,7 @@ public class FungalAI : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         fungal = GetComponent<NetworkFungal>();
 
-        allFish = FindObjectsOfType<Fish>().ToList();
+        allFish = FindObjectsOfType<FishController>().ToList();
         fishPickup = GetComponent<FishPickup>();
 
         var fungalController = GetComponent<FungalController>();
@@ -135,7 +135,7 @@ public class FungalAI : MonoBehaviour
     private IEnumerator FindAndPickUpFish()
     {
         targetFish = allFish
-                 .Where(fish => !fish.IsPickedUp.Value && IsOnNavMesh(fish.transform.position))
+                 .Where(fish => !fish.IsPickedUp && IsOnNavMesh(fish.transform.position))
                  .OrderBy(fish => Vector3.Distance(transform.position, fish.transform.position))
                  .FirstOrDefault();
 

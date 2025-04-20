@@ -1,22 +1,13 @@
-using System.Collections;
 using Unity.Netcode;
-using UnityEngine;
 using UnityEngine.Events;
 
 public class Pufferfish : NetworkBehaviour
 {
-    [SerializeField] private float minExplosionRadius = 3f;
-    [SerializeField] private float maxExplosionRadius = 3f;
-    [SerializeField] private float minExplosionDamage = 1f;
-    [SerializeField] private float maxExplosionDamage = 3f;
-
     private Movement movement;
     private FishController fish;
     private PufferfishExplosion pufferfishExplosion;
     private PufferfishTemper pufferfishTemper;
     private ThrowFish throwFish;
-
-    public float ExplosionRadius => pufferfishTemper.Temper * (maxExplosionRadius - minExplosionRadius) + minExplosionRadius;
 
     public event UnityAction OnMaxTemperReached;
 
@@ -45,7 +36,7 @@ public class Pufferfish : NetworkBehaviour
     {
         if (IsOwner)
         {
-            throwFish.SetRadius(ExplosionRadius);
+            //throwFish.SetRadius(ExplosionRadius);
         }
 
         if (IsServer)
@@ -79,15 +70,9 @@ public class Pufferfish : NetworkBehaviour
     {
         if (IsOwner)
         {
-            StartCoroutine(RespawnRoutine());
+            //StartCoroutine(RespawnRoutine());
             StopTemperServerRpc();
         }
-    }
-
-    private IEnumerator RespawnRoutine()
-    {
-        yield return new WaitForSeconds(1f);
-        fish.Respawn();
     }
 
     private void HandleMaxTemperReached()
@@ -116,7 +101,7 @@ public class Pufferfish : NetworkBehaviour
         if (IsOwner)
         {
             movement.Stop();
-            ExplodeServerRpc(ExplosionRadius);
+            //ExplodeServerRpc(ExplosionRadius);
         }
     }
 
@@ -129,8 +114,8 @@ public class Pufferfish : NetworkBehaviour
     [ClientRpc]
     private void ExplodeClientRpc(float radius)
     {
-        pufferfishExplosion.StartExplosionAnimation(radius);
-        float damage = pufferfishTemper.Temper * (maxExplosionDamage - minExplosionDamage) + minExplosionDamage;
-        if (IsOwner) pufferfishExplosion.EnableDamage(damage);
+        //pufferfishExplosion.StartExplosionAnimation(radius);
+        //float damage = pufferfishTemper.Temper * (maxExplosionDamage - minExplosionDamage) + minExplosionDamage;
+        //if (IsOwner) pufferfishExplosion.EnableDamage(damage);
     }
 }

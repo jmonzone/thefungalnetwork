@@ -16,15 +16,6 @@ public class FishPickup : MonoBehaviour
         fungal.OnDeath += _ => Fungal_OnDeath();
     }
 
-    private void Fungal_OnDeath()
-    {
-        if (Fish)
-        {
-            Fish.Respawn();
-            RemoveFish();
-        }
-    }
-
     private void Update()
     {
         if (!Fish && !fungal.IsDead) TryPickUpFish();
@@ -37,13 +28,22 @@ public class FishPickup : MonoBehaviour
         foreach (Collider hit in hits)
         {
             var fish = hit.GetComponentInParent<FishController>();
-            if (fish != null && !fish.IsPickedUp)
+            if (fish != null && !fish.IsPickedUp && !fungal.IsDead)
             {
                 Fish = fish;
-                fish.PickUp(transform);
+                fish.PickUp(fungal);
                 OnFishChanged?.Invoke();
                 break;
             }
+        }
+    }
+
+    private void Fungal_OnDeath()
+    {
+        if (Fish)
+        {
+            Fish.Respawn();
+            RemoveFish();
         }
     }
 

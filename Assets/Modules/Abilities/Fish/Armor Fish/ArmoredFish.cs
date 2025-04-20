@@ -8,8 +8,8 @@ public class ArmoredFish : MonoBehaviour
 
     private void Awake()
     {
-        var fish = GetComponent<Fish>();
-        fish.OnPickup += SpawnArmorServerRpc;
+        //var fish = GetComponent<NetworkFish>();
+        //fish.OnPickup += SpawnArmorServerRpc;
     }
 
     [ServerRpc(RequireOwnership = false)]

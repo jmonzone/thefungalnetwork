@@ -10,6 +10,7 @@ public class FungalController : MonoBehaviour
     [SerializeField] private GameObject shieldRenderer;
     [SerializeField] private GameObject trailRenderers;
 
+    public ulong Id { get; private set; }
     public FungalData Data => data;
     public float BaseSpeed => 3f;
 

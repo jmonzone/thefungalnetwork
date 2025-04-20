@@ -89,6 +89,9 @@ public class NetworkFungal : NetworkBehaviour
 
         if (IsOwner) Movement.OnTypeChanged += Movement_OnTypeChanged;
 
+        var fishPickup = GetComponent<FishPickup>();
+        fishPickup.enabled = IsOwner;
+
         networkTransform = GetComponent<ClientNetworkTransform>();
 
         spawnPosition = transform.position;

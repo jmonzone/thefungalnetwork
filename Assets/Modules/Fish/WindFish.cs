@@ -13,7 +13,7 @@ public class WindFish : NetworkBehaviour
     [SerializeField] private AudioClip audioClip;
     [SerializeField] private float audioPitch = 1.5f;
 
-    private Fish fish;
+    private FishController fish;
     private HitDetector hitDetector;
     private AudioSource audioSource;
     private Material originalMaterial;
@@ -22,7 +22,7 @@ public class WindFish : NetworkBehaviour
     {
         base.OnNetworkSpawn();
 
-        fish = GetComponent<Fish>();
+        fish = GetComponent<FishController>();
         hitDetector = GetComponent<HitDetector>();
         audioSource = GetComponent<AudioSource>();
 
@@ -74,7 +74,7 @@ public class WindFish : NetworkBehaviour
 
     private IEnumerator ThrowFishUpdate()
     {
-        var sourceFungal = fish.PickedUpFungalId.Value;
+        var sourceFungal = fish.Fungal.Id;
 
         var hasHit = false;
 

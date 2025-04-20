@@ -10,7 +10,7 @@ public class PufferfishExplosion : MonoBehaviour
     [SerializeField] private new ParticleSystem particleSystem;
     [SerializeField] private AudioClip explosionClip;
 
-    private Fish fish;
+    private FishController fish;
     private AudioSource audioSource;
     private HitDetector hitDetector;
 
@@ -18,7 +18,7 @@ public class PufferfishExplosion : MonoBehaviour
 
     private void Awake()
     {
-        fish = GetComponent<Fish>();
+        fish = GetComponent<FishController>();
         audioSource = GetComponent<AudioSource>();
         hitDetector = GetComponent<HitDetector>();
     }
@@ -43,7 +43,7 @@ public class PufferfishExplosion : MonoBehaviour
                 if (fungal != null && !fungal.IsDead)
                 {
                     fungal.ModifySpeedServerRpc(0, 0.5f);
-                    fungal.Health.Damage(damage, fish.PickedUpFungalId.Value);
+                    fungal.Health.Damage(damage, fish.Fungal.Id);
                     hits.Add(hit);
                     return;
                 }
