@@ -5307,14 +5307,14 @@ GameObject:
   m_Component:
   - component: {fileID: 8509736622436039212}
   - component: {fileID: 8155383831253438545}
+  - component: {fileID: 2774039480892393551}
+  - component: {fileID: 6767651255589689632}
   - component: {fileID: 9001229688840039229}
   - component: {fileID: 104772771618064470}
   - component: {fileID: 7290316461581926753}
-  - component: {fileID: 6767651255589689632}
-  - component: {fileID: 2774039480892393551}
+  - component: {fileID: 7337650879998956205}
   - component: {fileID: 6724794663338872766}
   - component: {fileID: 5828864311738929914}
-  - component: {fileID: 7337650879998956205}
   m_Layer: 0
   m_Name: Fire Fish
   m_TagString: Untagged
@@ -5357,6 +5357,38 @@ MonoBehaviour:
   maxExplosionRadius: 3
   minExplosionDamage: 1
   maxExplosionDamage: 3
+--- !u!114 &2774039480892393551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4560751212198832292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9ba66556c37d4863bed5375330ee2ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pufferball: {fileID: 11400000, guid: 08db032ff48be41208a04f1067508370, type: 2}
+  movement: {fileID: 2416454784390664286}
+  particleSystem: {fileID: 8638674173236786817}
+  explosionClip: {fileID: 8300000, guid: fd98a48b7cef641478a76c1fa8c732c6, type: 3}
+--- !u!114 &6767651255589689632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4560751212198832292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ae5249c76a0c417f895cb11b033163c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  renderer: {fileID: 6108376862157910779}
+  maxTemperDuration: 6
+  flashCount: 5
+  flashDuration: 2
 --- !u!114 &9001229688840039229
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5427,7 +5459,7 @@ MonoBehaviour:
   respawnOnThrow: 0
   throwSpeed: 1
   throwDistance: 6
---- !u!114 &6767651255589689632
+--- !u!114 &7337650879998956205
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5436,29 +5468,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 4560751212198832292}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ae5249c76a0c417f895cb11b033163c, type: 3}
+  m_Script: {fileID: 11500000, guid: 7e6af63182e3e4a5fb417f1266663ab2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  renderer: {fileID: 6108376862157910779}
-  maxTemperDuration: 6
-  flashCount: 5
-  flashDuration: 2
---- !u!114 &2774039480892393551
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4560751212198832292}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9ba66556c37d4863bed5375330ee2ad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pufferball: {fileID: 11400000, guid: 08db032ff48be41208a04f1067508370, type: 2}
-  movement: {fileID: 2416454784390664286}
-  particleSystem: {fileID: 8638674173236786817}
-  explosionClip: {fileID: 8300000, guid: fd98a48b7cef641478a76c1fa8c732c6, type: 3}
+  radiusIndicator: {fileID: 6047455802489071344}
 --- !u!114 &6724794663338872766
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5567,19 +5580,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &7337650879998956205
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4560751212198832292}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e6af63182e3e4a5fb417f1266663ab2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  radiusIndicator: {fileID: 6047455802489071344}
 --- !u!1 &6047455802489071344
 GameObject:
   m_ObjectHideFlags: 0

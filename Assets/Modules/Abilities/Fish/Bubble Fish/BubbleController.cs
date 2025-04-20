@@ -2,7 +2,7 @@ using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
-public class Bubble : NetworkBehaviour
+public class BubbleController : MonoBehaviour
 {
     [SerializeField] private float autoPopTime = 3f;
     [SerializeField] private float popDuration = 0.3f;
@@ -18,9 +18,8 @@ public class Bubble : NetworkBehaviour
     private AudioSource audioSource;
     private Material bubbleMaterial;
 
-    public override void OnNetworkSpawn()
+    private void Awake()
     {
-        base.OnNetworkSpawn();
         movement = GetComponent<Movement>();
         hitDetector = GetComponent<HitDetector>();
         audioSource = GetComponent<AudioSource>();
@@ -38,48 +37,48 @@ public class Bubble : NetworkBehaviour
     {
         yield return movement.ScaleOverTime(inflateSpeed, 0, 1);
         yield return new WaitForSeconds(autoPopTime);
-        Pop();
+        //Pop();
     }
 
     private void Update()
     {
-        if (IsOwner && !isPopped)  // Check the NetworkVariable's value
-        {
-            hitDetector.CheckHits(movement.ScaleTransform.lossyScale.x / 2f, hit =>
-            {
-                var targetFungal = hit.GetComponent<NetworkFungal>();
+        //if (IsOwner && !isPopped)  // Check the NetworkVariable's value
+        //{
+        //    hitDetector.CheckHits(movement.ScaleTransform.lossyScale.x / 2f, hit =>
+        //    {
+        //        var targetFungal = hit.GetComponent<NetworkFungal>();
 
-                if (targetFungal != null && !targetFungal.IsDead)
-                {
-                    targetFungal.ModifySpeedServerRpc(0f, stunDuration, showStunAnimation: true);
-                    targetFungal.Health.Damage(damage, sourceFungal);
-                    Pop();
-                }
-            });
-        }
+        //        if (targetFungal != null && !targetFungal.IsDead)
+        //        {
+        //            targetFungal.ModifySpeedServerRpc(0f, stunDuration, showStunAnimation: true);
+        //            targetFungal.Health.Damage(damage, sourceFungal);
+        //            Pop();
+        //        }
+        //    });
+        //}
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    public void PopServerRpc()
-    {
-        PopClientRpc();
-    }
+    //[ServerRpc(RequireOwnership = false)]
+    //public void PopServerRpc()
+    //{
+    //    PopClientRpc();
+    //}
 
-    [ClientRpc]
-    private void PopClientRpc()
-    {
-        if (IsOwner) Pop();
-    }
+    //[ClientRpc]
+    //private void PopClientRpc()
+    //{
+    //    if (IsOwner) Pop();
+    //}
 
-    private void Pop()
-    {
-        if (IsOwner)
-        {
-            isPopped = true;
-            StopAllCoroutines();
-            StartCoroutine(PopAnimation());
-        }
-    }
+    //private void Pop()
+    //{
+    //    if (IsOwner)
+    //    {
+    //        isPopped = true;
+    //        StopAllCoroutines();
+    //        StartCoroutine(PopAnimation());
+    //    }
+    //}
 
     private IEnumerator PopAnimation()
     {

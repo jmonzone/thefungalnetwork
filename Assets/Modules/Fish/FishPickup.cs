@@ -28,7 +28,7 @@ public class FishPickup : MonoBehaviour
         foreach (Collider hit in hits)
         {
             var fish = hit.GetComponentInParent<FishController>();
-            if (fish != null && !fish.IsPickedUp && !fungal.IsDead)
+            if (fish != null && !fish.IsPickedUp)
             {
                 Fish = fish;
                 fish.PickUp(fungal);

@@ -9,9 +9,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5067775030032462675}
+  - component: {fileID: 9216382453131044261}
   - component: {fileID: 3415864868633631580}
   - component: {fileID: 1963655374833320312}
   - component: {fileID: 5006214080417949926}
+  - component: {fileID: 2931393610905869263}
   - component: {fileID: 393717912617169996}
   m_Layer: 0
   m_Name: Water Fish
@@ -37,6 +39,20 @@ Transform:
   - {fileID: 3544251095298689162}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!114 &9216382453131044261
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 266238903152798596}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58d1451805b434d2ba2b5c5971658e1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bubblePrefab: {fileID: 7247058412354992946, guid: 54d7343e7cae74330990483e4345d1f0,
+    type: 3}
 --- !u!114 &3415864868633631580
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -107,6 +123,19 @@ MonoBehaviour:
   respawnOnThrow: 0
   throwSpeed: 0.75
   throwDistance: 6
+--- !u!114 &2931393610905869263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 266238903152798596}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e6af63182e3e4a5fb417f1266663ab2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radiusIndicator: {fileID: 5751374449631990361}
 --- !u!82 &393717912617169996
 AudioSource:
   m_ObjectHideFlags: 0

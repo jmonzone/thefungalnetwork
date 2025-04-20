@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.Events;
 
 public class FireFish : MonoBehaviour
 {
@@ -9,7 +8,6 @@ public class FireFish : MonoBehaviour
     [SerializeField] private float maxExplosionDamage = 3f;
 
     private FishController fish;
-    private Movement movement;
     private PufferfishExplosion pufferfishExplosion;
     private PufferfishTemper pufferfishTemper;
 
@@ -18,7 +16,6 @@ public class FireFish : MonoBehaviour
     private void Awake()
     {
         fish = GetComponent<FishController>();
-        movement = GetComponent<Movement>();
         pufferfishExplosion = GetComponent<PufferfishExplosion>();
         pufferfishTemper = GetComponent<PufferfishTemper>();
     }
@@ -42,7 +39,6 @@ public class FireFish : MonoBehaviour
 
     public void StartExplosion()
     {
-        movement.Stop();
         pufferfishExplosion.StartExplosionAnimation(ExplosionRadius);
         float damage = pufferfishTemper.Temper * (maxExplosionDamage - minExplosionDamage) + minExplosionDamage;
         pufferfishExplosion.EnableDamage(damage);
