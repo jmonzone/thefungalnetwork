@@ -53,7 +53,7 @@ public class FungalAI : MonoBehaviour
         ability.Initialize(fungal);
 
         //nextDashTime = dash.Cooldown.Cooldown;
-        StartAI();
+        //StartAI();
     }
 
     public void StartAI()

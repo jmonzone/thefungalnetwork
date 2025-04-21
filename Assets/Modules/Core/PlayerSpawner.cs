@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Unity.Collections;
 using Unity.Netcode;
@@ -95,10 +96,7 @@ public class PlayerSpawner : NetworkBehaviour
         networkFungal.NetworkObject.SpawnWithOwnership(clientId);
         networkFungal.InitializeServerRpc(playerIndex, player);
 
-        if (!player.isAI)
-        {
-            OnPlayerAddedClientRpc(clientId, playerIndex, player, networkFungal.NetworkObjectId);
-        }
+        OnPlayerAddedClientRpc(clientId, playerIndex, player, networkFungal.NetworkObjectId);
     }
 
     [ClientRpc]
@@ -135,11 +133,21 @@ public class PlayerSpawner : NetworkBehaviour
     // todo: player spawnere logic can be a part of network prefab?
     private void OnEnable()
     {
+        game.OnGameStart += Game_OnGameStart;
         multiplayer.OnDisconnectRequested += NotifyClientsDisconnectServerRpc;
+    }
+
+    private void Game_OnGameStart()
+    {
+        game.Players.ForEach(player =>
+        {
+            if (player.Fungal.IsAI) player.Fungal.GetComponent<FungalAI>().StartAI();
+        });
     }
 
     private void OnDisable()
     {
+        game.OnGameStart -= Game_OnGameStart;
         multiplayer.OnDisconnectRequested -= NotifyClientsDisconnectServerRpc;
     }
 

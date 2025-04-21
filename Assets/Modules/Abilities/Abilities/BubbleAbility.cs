@@ -21,6 +21,6 @@ public class BubbleAbility : DirectionalAbility, IMovementAbility
     {
         base.CastAbility(targetPosition);
 
-        var bubble = Instantiate(bubblePrefab, targetPosition, Quaternion.identity);
+        Fungal.SpawnObject(bubblePrefab.gameObject, targetPosition);
     }
 }

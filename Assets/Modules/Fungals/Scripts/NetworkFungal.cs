@@ -24,6 +24,7 @@ public class NetworkFungal : NetworkBehaviour
     [SerializeField] private FungalCollection fungalCollection;
 
     [SerializeField] private GameObject stunAnimation;
+    [SerializeField] private NetworkObject bubblePrefab;
 
     [SerializeField] private float respawnDuration = 5f;
 
@@ -87,6 +88,8 @@ public class NetworkFungal : NetworkBehaviour
         {
             Fungal.OnShieldToggled += ToggleShieldRendererServerRpc;
             Fungal.OnTrailToggled += ToggleTrailRenderersServerRpc;
+            Fungal.OnRequestObjectSpawn -= Fungal.HandleObjectSpawn;
+            Fungal.OnRequestObjectSpawn += (obj, position) => SpawnBubbleServerRpc(position);
         }
 
         if (IsOwner) Movement.OnTypeChanged += Movement_OnTypeChanged;
@@ -351,5 +354,12 @@ public class NetworkFungal : NetworkBehaviour
     private void ToggleShieldRenderersClientRpc(bool value)
     {
         if (!IsOwner) Fungal.ToggleShieldRenderers(value);
+    }
+
+    [ServerRpc]
+    private void SpawnBubbleServerRpc(Vector3 targetPosition)
+    {
+        var bubble  = Instantiate(bubblePrefab, targetPosition, Quaternion.identity);
+        bubble.SpawnWithOwnership(OwnerClientId);
     }
 }

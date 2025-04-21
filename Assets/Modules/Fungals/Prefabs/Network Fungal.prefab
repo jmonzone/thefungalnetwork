@@ -203,10 +203,15 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7164026299921768914, guid: d7c0967b468c543679259928bb175fc9, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2941250707292126303, guid: d7c0967b468c543679259928bb175fc9,
+        type: 3}
+      insertIndex: 5
+      addedObject: {fileID: 7765396812823641856}
     - targetCorrespondingSourceObject: {fileID: 2941250707292126303, guid: d7c0967b468c543679259928bb175fc9,
         type: 3}
       insertIndex: -1
@@ -223,10 +228,6 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 6152876390624166473}
-    - targetCorrespondingSourceObject: {fileID: 2941250707292126303, guid: d7c0967b468c543679259928bb175fc9,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3261650969849865433}
   m_SourcePrefab: {fileID: 100100000, guid: d7c0967b468c543679259928bb175fc9, type: 3}
 --- !u!1 &2888442274819128007 stripped
 GameObject:
@@ -240,6 +241,22 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 4806426123281636196}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &7765396812823641856
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7665884097736042299}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ca72cecd509f4fc996a12ff65e12846, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  game: {fileID: 11400000, guid: 08db032ff48be41208a04f1067508370, type: 2}
+  currentState: 0
+  minDashInterval: 2
+  maxDashInterval: 5
 --- !u!114 &-1646212996277195182
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -317,23 +334,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   game: {fileID: 11400000, guid: 08db032ff48be41208a04f1067508370, type: 2}
-  fungalCollection: {fileID: 0}
+  fungalCollection: {fileID: 11400000, guid: 1d49e170120fe4ab1befd22e62e1ea65, type: 2}
   stunAnimation: {fileID: 2888442274819128007}
+  bubblePrefab: {fileID: -6219131967459917753, guid: 62b1b2dfb1e9d401b9f37bec7ca6b3c7,
+    type: 3}
   respawnDuration: 5
   kills:
     m_InternalValue: 0
   selfDestructs:
     m_InternalValue: 0
---- !u!114 &3261650969849865433
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7665884097736042299}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec5c261224e9c4b4dbdb053d91342a04, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 10

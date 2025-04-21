@@ -21,6 +21,7 @@ public class FungalController : MonoBehaviour
     //todo: make separate death component
     public bool IsDead { get; private set; }
 
+    public event UnityAction<GameObject, Vector3> OnRequestObjectSpawn;
     public event UnityAction<bool> OnShieldToggled;
     public event UnityAction<bool> OnTrailToggled;
     public event UnityAction<bool> OnDeath;
@@ -32,6 +33,8 @@ public class FungalController : MonoBehaviour
         Movement.SetSpeed(baseSpeed);
 
         Health = GetComponent<Health>();
+
+        OnRequestObjectSpawn += HandleObjectSpawn;
 
         if (data) InitializePrefab(data);
     }
@@ -80,5 +83,15 @@ public class FungalController : MonoBehaviour
     {
         trailRenderers.SetActive(value);
         OnTrailToggled?.Invoke(value);
+    }
+
+    public void SpawnObject(GameObject obj, Vector3 position)
+    {
+        OnRequestObjectSpawn?.Invoke(obj, position);
+    }
+
+    public void HandleObjectSpawn(GameObject obj, Vector3 position)
+    {
+        Instantiate(obj, position, Quaternion.identity);
     }
 }
