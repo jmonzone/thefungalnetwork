@@ -80,6 +80,7 @@ public class NetworkFungal : NetworkBehaviour
         base.OnNetworkSpawn();
 
         Fungal = GetComponent<FungalController>();
+        Fungal.Id = NetworkObjectId;
 
         if (IsOwner)
         {

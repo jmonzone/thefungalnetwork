@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class WindFish : NetworkBehaviour
+public class NetworkWindFish : NetworkBehaviour
 {
     [SerializeField] private float damage;
     [SerializeField] private float hitStun = 0.5f;
@@ -89,7 +89,7 @@ public class WindFish : NetworkBehaviour
                 var targetFungal = hit.GetComponent<NetworkFungal>();
 
                 if (targetFungal == null) return;
-                if (targetFungal.NetworkObjectId == sourceFungal) return;
+                if (targetFungal.Fungal == fish.Fungal) return;
                 if (targetFungal.IsDead) return;
 
                 targetFungal.ModifySpeedServerRpc(0f, hitStun, showStunAnimation: false);
