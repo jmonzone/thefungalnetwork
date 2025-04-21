@@ -20,7 +20,7 @@ public class WaterFish : MonoBehaviour
 
     private void Start()
     {
-        fish.ThrowFish.OnThrowComplete += () => OnSpawnBubble?.Invoke(fish.ThrowFish.TargetPosition);
+        //fish.ThrowFish.OnThrowComplete += () => OnSpawnBubble?.Invoke(fish.ThrowFish.TargetPosition);
     }
 
     public void HandleSpawnBubble(Vector3 targetPosition)
