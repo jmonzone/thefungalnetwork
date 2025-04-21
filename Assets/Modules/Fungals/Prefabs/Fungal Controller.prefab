@@ -306,7 +306,7 @@ GameObject:
   - component: {fileID: 3373934044534024445}
   - component: {fileID: 3325272597309751410}
   - component: {fileID: 1300127874603640330}
-  - component: {fileID: 6218863080102938004}
+  - component: {fileID: 7164026299921768914}
   - component: {fileID: 5946154774523704756}
   - component: {fileID: 8610307119214488969}
   - component: {fileID: 4843370089600157221}
@@ -415,22 +415,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fish: {fileID: 0}
---- !u!114 &6218863080102938004
+--- !u!114 &7164026299921768914
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2941250707292126303}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6ca72cecd509f4fc996a12ff65e12846, type: 3}
+  m_Script: {fileID: 11500000, guid: bbce86bc619cd4eb183d48e11a219d03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  game: {fileID: 11400000, guid: 08db032ff48be41208a04f1067508370, type: 2}
+  game: {fileID: 0}
   currentState: 0
-  minDashInterval: 0.5
-  maxDashInterval: 2
+  minDashInterval: 2
+  maxDashInterval: 5
 --- !u!54 &5946154774523704756
 Rigidbody:
   m_ObjectHideFlags: 0

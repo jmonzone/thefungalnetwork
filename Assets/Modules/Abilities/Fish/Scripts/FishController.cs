@@ -6,15 +6,11 @@ using UnityEngine.Events;
 public class FishController : MonoBehaviour
 {
     [Header("Customization")]
+    [SerializeField] private Ability ability;
     [SerializeField] private float swimSpeed = 1f;
     [SerializeField] private float score;
     [SerializeField] private bool useTrajectory = false;
     [SerializeField] private bool isPickedUp = false;
-
-    [Header("UI")]
-    [SerializeField] private Sprite icon;
-    [SerializeField] private string abilityName;
-    [SerializeField] private Color backgroundColor;
 
     [Header("Audio")]
     [SerializeField] private float audioPitch;
@@ -28,9 +24,7 @@ public class FishController : MonoBehaviour
     public float Score => score;
     public bool UseTrajectory => useTrajectory;
 
-    public Sprite Icon => icon;
-    public string AbilityName => abilityName;
-    public Color BackgroundColor => backgroundColor;
+    public Ability Ability => ability;
 
     private AudioSource audioSource;
     private Vector3 spawnPosition;

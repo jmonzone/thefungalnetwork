@@ -20,6 +20,7 @@ public class InitializeController : MonoBehaviour
     [SerializeField] private FungalThrow fungalThrow;
 
     private FungalController fungal;
+    private FishPickup fishPickup;
 
     private void Start()
     {
@@ -52,13 +53,25 @@ public class InitializeController : MonoBehaviour
     // todo: centralize ability instance cration with fungalAI
     private void UpdateUIAbilityButtons()
     {
-        var throwAbility = Instantiate(fungalThrow);
-        throwAbility.Initialize(fungal);
+        fishPickup = fungal.GetComponent<FishPickup>();
+
+        if (fishPickup)
+        {
+            fishPickup.OnFishChanged += FishPickup_OnFishChanged;
+            fishPickup.OnFishReleased += FishPickup_OnFishReleased;
+        }
+        else
+        {
+            Debug.LogWarning($"Missing FishPickup component");
+        }
+
+        //var throwAbility = Instantiate(fungalThrow);
+        //throwAbility.Initialize(fungal);
 
         //Debug.Log($"PlayerReference_OnClientPlayerAdded {fungal.Data.Id} {fungal.Data.Ability.Id}");
 
-        fungalThrowUI.AssignFishingRod(throwAbility);
-        fungalThrowButton.AssignAbility(throwAbility);
+        fungalThrowUI.UpdateView(null);
+        //fungalThrowButton.AssignAbility(throwAbility);
 
 
         var abilityTemplate = fungal.Data.Ability;
@@ -72,5 +85,17 @@ public class InitializeController : MonoBehaviour
         }
 
         fungalAbilityButton.AssignAbility(fungalAbility);
+    }
+
+    private void FishPickup_OnFishReleased()
+    {
+        fungalThrowUI.UpdateView(null);
+    }
+
+    private void FishPickup_OnFishChanged()
+    {
+        fishPickup.Fish.Ability.Initialize(fungal);
+        fungalThrowButton.AssignAbility(fishPickup.Fish.Ability);
+        fungalThrowUI.UpdateView(fishPickup.Fish);
     }
 }

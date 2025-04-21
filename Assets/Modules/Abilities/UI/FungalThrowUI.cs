@@ -12,49 +12,17 @@ public class FungalThrowUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI abilityText;
     [SerializeField] private Color defaultBackgroundColor;
 
-    private FungalThrow fungalThrow;
-
-    public void AssignFishingRod(FungalThrow fungalThrow)
-    {
-        // Ensure the previous listener is removed if the button was already assigned
-        if (this.fungalThrow != null)
-        {
-            this.fungalThrow.OnFishChanged -= UpdateView;
-        }
-
-        this.fungalThrow = fungalThrow;
-
-        // Subscribe to the events only if the button is not null
-        if (this.fungalThrow != null)
-        {
-            this.fungalThrow.OnFishChanged += UpdateView;
-        }
-        else
-        {
-            Debug.LogError("FishingRodButton is not assigned correctly.");
-        }
-    }
-
-    private void OnDisable()
-    {
-        if (fungalThrow != null)
-        {
-            fungalThrow.OnFishChanged -= UpdateView;
-        }
-    }
-
-    private void UpdateView(FishController fish)
+    public  void UpdateView(FishController fish)
     {
         Debug.Log($"HandleFishChanged {fish?.name ?? null}");
         if (fish != null)
         {
-            abilityBackground.color = fish.BackgroundColor;
-            abilityText.text = fish.AbilityName;
-            fishIcon.sprite = fish.Icon;
+            abilityBackground.color = fish.Ability.BackgroundColor;
+            abilityText.text = fish.Ability.Id;
+            fishIcon.sprite = fish.Ability.Image;
 
             abilityIcon.gameObject.SetActive(false);
             fishIcon.gameObject.SetActive(true);
-
         }
         else
         {
