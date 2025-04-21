@@ -4,7 +4,6 @@ using UnityEngine.Events;
 public class FungalController : MonoBehaviour
 {
     [SerializeField] private FungalData data;
-    [SerializeField] private FungalCollection fungalCollection;
 
     [SerializeField] private float baseSpeed = 3f;
     [SerializeField] private GameObject shieldRenderer;
@@ -33,12 +32,14 @@ public class FungalController : MonoBehaviour
         Movement.SetSpeed(baseSpeed);
 
         Health = GetComponent<Health>();
+
+        if (data) InitializePrefab(data);
     }
 
-    public void InitializePrefab(int fungal)
+    public void InitializePrefab(FungalData fungal)
     {
         //Debug.Log($"InitializePrefab {name} {fungal}");
-        data = fungalCollection.Fungals[fungal];
+        data = fungal;
 
         var model = Instantiate(data.Prefab, transform);
         Animations = model.AddComponent<MovementAnimations>();

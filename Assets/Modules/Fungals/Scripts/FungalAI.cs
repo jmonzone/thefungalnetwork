@@ -22,20 +22,23 @@ public class FungalAI : MonoBehaviour
     private float nextDashTime = 0f; // Next randomized dash time
 
     private NavMeshAgent agent;
-    private NetworkFungal fungal;
+    private FungalController fungal;
     private Ability ability;
     private List<FishController> allFish = new List<FishController>();
     private FishController targetFish;
     private FishPickup fishPickup;
-    private NetworkFungal targetFungal;
+    private List<FungalController> allFungals = new List<FungalController>();
+    private FungalController targetFungal;
     private Coroutine fungalStateCoroutine;
 
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
-        fungal = GetComponent<NetworkFungal>();
+        fungal = GetComponent<FungalController>();
 
         allFish = FindObjectsOfType<FishController>().ToList();
+        allFungals = FindObjectsOfType<FungalController>().ToList();
+
         fishPickup = GetComponent<FishPickup>();
 
         var fungalController = GetComponent<FungalController>();
@@ -47,48 +50,36 @@ public class FungalAI : MonoBehaviour
     {
         var abilityTemplate = fungal.Data.Ability;
         ability = Instantiate(abilityTemplate);
-        ability.Initialize(fungal.Fungal);
+        ability.Initialize(fungal);
 
         //nextDashTime = dash.Cooldown.Cooldown;
-        SetState(FungalState.FIND_FISH); // Start moving
+        StartAI();
     }
 
-    private void OnEnable()
+    public void StartAI()
     {
-        game.OnGameStart += StartAI;
-        game.OnGameComplete += StopAI;
-    }
+        //if isOwwner && is ai
+        agent.enabled = true;
 
-    private void OnDisable()
-    {
-        game.OnGameStart -= StartAI;
-        game.OnGameComplete -= StopAI;
-    }
-
-    private void StartAI()
-    {
-        if (fungal.IsOwner && fungal.IsAI)
+        // Ensure AI starts on the NavMesh
+        if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 5f, NavMesh.AllAreas))
         {
-            agent.enabled = true;
-
-            // Ensure AI starts on the NavMesh
-            if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 5f, NavMesh.AllAreas))
-            {
-                agent.Warp(hit.position); // Teleport AI to valid NavMesh point
-            }
-            else
-            {
-                Debug.LogError("AI is outside the NavMesh!");
-            }
-
-            agent.isStopped = false; // Make sure it's not paused
-
-            // Start the coroutine when the object is enabled
-            fungalStateCoroutine = StartCoroutine(FungalStateMachine());
+            agent.Warp(hit.position); // Teleport AI to valid NavMesh point
         }
+        else
+        {
+            Debug.LogError("AI is outside the NavMesh!");
+        }
+
+        agent.isStopped = false; // Make sure it's not paused
+
+        SetState(FungalState.FIND_FISH); // Start moving
+
+        // Start the coroutine when the object is enabled
+        fungalStateCoroutine = StartCoroutine(FungalStateMachine());
     }
 
-    private void StopAI()
+    public void StopAI()
     {
         agent.enabled = false;
 
@@ -206,10 +197,10 @@ public class FungalAI : MonoBehaviour
 
     private IEnumerator ThrowFish()
     {
-        targetFungal = game.Players
-                .Where(player => player.Fungal != fungal && !player.Fungal.IsDead) // Exclude self
-                .OrderBy(player => Vector3.Distance(transform.position, player.Fungal.transform.position))
-                .FirstOrDefault()?.Fungal;
+        targetFungal = allFungals
+                .Where(fungal => this.fungal != fungal && !fungal.IsDead) // Exclude self
+                .OrderBy(fungal => Vector3.Distance(transform.position, fungal.transform.position))
+                .FirstOrDefault();
 
         if (targetFungal != null && fishPickup.Fish)
         {

@@ -39,10 +39,10 @@ public class PufferfishExplosion : MonoBehaviour
             {
                 if (hits.Contains(hit)) return;
 
-                var fungal = hit.GetComponent<NetworkFungal>();
+                var fungal = hit.GetComponent<FungalController>();
                 if (fungal != null && !fungal.IsDead)
                 {
-                    fungal.ModifySpeedServerRpc(0, 0.5f);
+                    //fungal.ModifySpeedServerRpc(0, 0.5f);
                     fungal.Health.Damage(damage, fish.Fungal.Id);
                     hits.Add(hit);
                     return;

@@ -42,9 +42,6 @@ public class MoveCharacterJoystick : MonoBehaviour
         if (!enabled) return;
         if (!player) return;
 
-        Debug.Log($"MoveCharacterJoystick.MovePlayer {player.name}");
-
-
         var translation = direction;
         translation.z = translation.y;
         translation.y = 0;

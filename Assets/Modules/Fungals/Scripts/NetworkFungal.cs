@@ -21,6 +21,7 @@ public struct ScoreEventArgs : INetworkSerializable
 public class NetworkFungal : NetworkBehaviour
 {
     [SerializeField] private GameReference game;
+    [SerializeField] private FungalCollection fungalCollection;
 
     [SerializeField] private GameObject stunAnimation;
 
@@ -152,7 +153,9 @@ public class NetworkFungal : NetworkBehaviour
 
     private void InitializePrefab()
     {
-        Fungal.InitializePrefab(player.Value.fungal);
+        var data = fungalCollection.Fungals[player.Value.fungal];
+
+        Fungal.InitializePrefab(data);
     }
 
     private void Health_OnDamaged(DamageEventArgs args)
@@ -233,7 +236,7 @@ public class NetworkFungal : NetworkBehaviour
 
         if (IsServer)
         {
-            Health.Replenish();
+            Health.ReplenishHealth();
         }
 
         if (IsOwner)

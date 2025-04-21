@@ -17,131 +17,91 @@ public struct DamageEventArgs : INetworkSerializable
     }
 }
 
-public class Health : NetworkBehaviour
+public class Health : MonoBehaviour
 {
     [SerializeField] private float maxHealth = 100f;
+    [SerializeField] private float currentHealth = 100f;
+    [SerializeField] private float currentShield = 0f;
 
-    private NetworkVariable<float> currentHealth = new NetworkVariable<float>();
-    private NetworkVariable<float> currentShield = new NetworkVariable<float>();
-
-    public float CurrentHealth => currentHealth.Value;
-    public float CurrentShield => currentShield.Value;
+    public float CurrentHealth => currentHealth;
+    public float CurrentShield => currentShield;
     public float MaxHealth => maxHealth;
 
-    public event UnityAction<DamageEventArgs> OnDamaged;
     public event UnityAction OnHealthChanged;
     public event UnityAction OnHealthDepleted;
+    public event UnityAction<float> OnHealthChangeRequested;
+
+    public event UnityAction<DamageEventArgs> OnDamaged;
+    public event UnityAction<float, ulong> OnDamageRequested;
+
+    public event UnityAction<float> OnShieldChangeRequested;
     public event UnityAction OnShieldChanged;
 
-    public override void OnNetworkSpawn()
+    private void Awake()
     {
-        base.OnNetworkSpawn();
-
-        //Debug.Log($"HealthOnNetworkSpawn {IsOwner}");
-        if (IsServer) Replenish();
-
-        currentHealth.OnValueChanged += (previousValue, newValue) =>
-        {
-            OnHealthChanged?.Invoke();
-
-            if (previousValue > 0 && currentHealth.Value <= 0)
-            {
-                OnHealthDepleted?.Invoke();
-            }
-        };
-
-        currentShield.OnValueChanged += (previousValue, newValue) =>
-        {
-            OnShieldChanged?.Invoke();
-        };
+        OnHealthChangeRequested += ApplyHealthChange;
+        OnShieldChangeRequested += ApplyShieldChange;
     }
 
-    public void Replenish()
+    public void SetHealth(float health)
     {
-        OnReplenishServerRpc();
+        OnHealthChangeRequested?.Invoke(health);
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void OnReplenishServerRpc()
+    public void ReplenishHealth()
     {
-        currentHealth.Value = maxHealth;
+        SetHealth(maxHealth);
+    }
+
+    public void ApplyHealthChange(float value)
+    {
+        currentHealth = value;
+
+        OnHealthChanged?.Invoke();
+
+        if (currentHealth <= 0)
+        {
+            OnHealthDepleted?.Invoke();
+        }
     }
 
     public void Damage(float damage, ulong sourceId)
     {
-        //Debug.Log($"Damage {damage} {sourceId}");
-        OnDamageServerRpc(damage, sourceId);
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void OnDamageServerRpc(float damage, ulong sourceId)
-    {
-        if (currentHealth.Value == 0) return;
+        if (currentHealth <= 0) return;
 
         float remainingDamage = damage;
 
         // Step 1: Damage the shield first
-        if (currentShield.Value > 0)
+        if (currentShield > 0)
         {
-            float shieldDamage = Mathf.Min(currentShield.Value, remainingDamage);
-            SetShield(currentShield.Value - shieldDamage);
+            float shieldDamage = Mathf.Min(currentShield, remainingDamage);
+            SetShield(currentShield - shieldDamage);
             remainingDamage -= shieldDamage;
         }
 
         // Step 2: If damage remains, apply it to health
         if (remainingDamage > 0)
         {
-            currentHealth.Value = Mathf.Clamp(currentHealth.Value - remainingDamage, 0, maxHealth);
+            SetHealth(Mathf.Clamp(currentHealth - remainingDamage, 0, maxHealth));
         }
 
-        var knockout = currentHealth.Value <= 0;
-
-        var fungal = GetComponentInParent<NetworkFungal>();
-
-        var args = new DamageEventArgs()
-        {
-            lethal = knockout,
-            target = fungal.Index,
-            source = fungal.Index,
-        };
-
-        if (sourceId != NetworkObjectId)
-        {
-            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(sourceId, out var networkObject))
-            {
-                var networkFungal = networkObject.GetComponent<NetworkFungal>();
-
-                args.source = networkFungal.Index;
-
-                if (knockout) networkFungal.OnKillServerRpc(transform.position, fungal.Index);
-                else networkFungal.AddToScoreServerRpc(new ScoreEventArgs
-                {
-                    value = 35f,
-                    position = transform.position,
-                    label = "Hit"
-                });
-            }
-        }
-
-        
-
-        OnDamageClientRpc(args);
+        //Debug.Log($"Damage {damage} {sourceId}");
+        OnDamageRequested?.Invoke(damage, sourceId);
     }
 
-    [ClientRpc]
-    private void OnDamageClientRpc(DamageEventArgs args)
+    public void ApplyDamage(DamageEventArgs args)
     {
         OnDamaged?.Invoke(args);
     }
 
     public void SetShield(float shield)
     {
-        OnShieldChangedServerRpc(shield);
+        OnShieldChangeRequested?.Invoke(shield);
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void OnShieldChangedServerRpc(float shield)
+    public void ApplyShieldChange(float shield)
     {
-        currentShield.Value = Mathf.Max(0, shield);
+        currentShield = shield;
+        OnShieldChanged?.Invoke();
     }
 }

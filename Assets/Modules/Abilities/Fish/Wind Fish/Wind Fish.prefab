@@ -197,8 +197,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4477107793749174207}
+  - component: {fileID: 8814834570616820474}
   - component: {fileID: 1760715003310591976}
   - component: {fileID: 3645973067451150403}
+  - component: {fileID: 6601083432656313668}
   - component: {fileID: 7537672409765792746}
   - component: {fileID: 3166198113318741629}
   m_Layer: 0
@@ -225,6 +227,20 @@ Transform:
   - {fileID: 740625050527629210}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!114 &8814834570616820474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3192204060082833405}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e0fee9a2cb5c45d4be86bc8e75b4be0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 3
+  hitStun: 0.5
 --- !u!114 &1760715003310591976
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -280,6 +296,18 @@ MonoBehaviour:
   lockedXValue: 1
   lockedYValue: 1
   lockedZValue: 1
+--- !u!114 &6601083432656313668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3192204060082833405}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7c8c21a395f3462fb6919c7a7adaf7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &7537672409765792746
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -708,6 +736,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4477107793749174207}
     m_Modifications:
+    - target: {fileID: -289466013045972496, guid: 1beb41e0250e4614083647926ced612e,
+        type: 3}
+      propertyPath: m_Radius
+      value: 0.25
+      objectReference: {fileID: 0}
     - target: {fileID: -289466013045972496, guid: 1beb41e0250e4614083647926ced612e,
         type: 3}
       propertyPath: m_IsTrigger
