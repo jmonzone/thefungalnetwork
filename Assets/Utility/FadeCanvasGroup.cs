@@ -5,7 +5,7 @@ using UnityEngine.Events;
 [RequireComponent(typeof(CanvasGroup))]
 public class FadeCanvasGroup : MonoBehaviour
 {
-    [SerializeField] private float duration = 1f;
+    private float duration = 0.5f;
     private CanvasGroup canvasGroup;
 
     public bool IsVisible

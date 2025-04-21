@@ -4,9 +4,6 @@ using UnityEngine.UI;
 
 public class MainMenuHome : MonoBehaviour
 {
-    [SerializeField] private Navigation navigation;
-    [SerializeField] private ViewReference matchmakingView;
-
     [SerializeField] private DisplayName displayName;
     [SerializeField] private TMP_InputField nameInputField;
     [SerializeField] private TextMeshProUGUI validationText;
@@ -29,15 +26,5 @@ public class MainMenuHome : MonoBehaviour
         });
 
         nameInputField.text = displayName.Value;
-
-        partyButton.onClick.AddListener(() =>
-        {
-            navigation.Navigate(matchmakingView);
-        });
-    }
-
-    private void OnEnable()
-    {
-        
     }
 }
