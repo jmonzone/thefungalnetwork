@@ -37,10 +37,15 @@ public class FireFish : MonoBehaviour
         fish.ThrowFish.SetRadius(ExplosionRadius);
     }
 
-    public void StartExplosion()
+    private void StartExplosion()
     {
-        pufferfishExplosion.StartExplosionAnimation(ExplosionRadius);
+        ShowExplosionAnimation();
         float damage = pufferfishTemper.Temper * (maxExplosionDamage - minExplosionDamage) + minExplosionDamage;
         pufferfishExplosion.EnableDamage(damage);
+    }
+
+    public void ShowExplosionAnimation()
+    {
+        pufferfishExplosion.StartExplosionAnimation(ExplosionRadius);
     }
 }

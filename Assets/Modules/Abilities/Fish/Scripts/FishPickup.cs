@@ -24,7 +24,7 @@ public class FishPickup : MonoBehaviour
 
     private void TryPickUpFish()
     {
-        Debug.Log("Picking up fish");
+        //Debug.Log("Picking up fish");
         Collider[] hits = Physics.OverlapSphere(transform.position, 0.5f); // Small detection radius
 
         foreach (Collider hit in hits)

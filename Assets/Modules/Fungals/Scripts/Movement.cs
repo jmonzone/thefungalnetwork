@@ -128,7 +128,7 @@ public class Movement : MonoBehaviour
     // Follow Target Movement
     public void Follow(Transform newTarget)
     {
-        Debug.Log($"Follow {newTarget.name}");
+        //Debug.Log($"Follow {newTarget.name}");
 
         target = newTarget;
         SetType(MovementType.FOLLOW);

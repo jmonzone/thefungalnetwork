@@ -7,8 +7,10 @@ public class MoveCharacterJoystick : MonoBehaviour
 
     public Movement player;
 
-    private void Awake()
+    private void Start()
     {
+        Debug.Log($"MoveCharacterJoystick.Start {player.name}");
+
         joystick.OnJoystickUpdate += MovePlayer;
         joystick.OnJoystickEnd += Joystick_OnJoystickEnd;
     }
@@ -38,6 +40,10 @@ public class MoveCharacterJoystick : MonoBehaviour
     private void MovePlayer(Vector3 direction)
     {
         if (!enabled) return;
+        if (!player) return;
+
+        Debug.Log($"MoveCharacterJoystick.MovePlayer {player.name}");
+
 
         var translation = direction;
         translation.z = translation.y;

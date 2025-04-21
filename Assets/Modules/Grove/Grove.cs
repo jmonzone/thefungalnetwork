@@ -8,12 +8,13 @@ public class Grove : MonoBehaviour
     private void Awake()
     {
         fungal.InitializePrefab(2);
-        joystick.player = fungal.Movement;
     }
 
     private void Start()
     {
         var initializeController = GetComponent<InitializeController>();
         initializeController.Initialize(fungal);
-    }    
+
+        joystick.player = fungal.Movement;
+    }
 }

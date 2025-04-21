@@ -23,6 +23,6 @@ public class NetworkFireFish : NetworkBehaviour
     [ClientRpc]
     private void OnThrowCompleteClientRpc()
     {
-        if (!IsOwner) fireFish.StartExplosion();
+        if (!IsOwner) fireFish.ShowExplosionAnimation();
     }
 }

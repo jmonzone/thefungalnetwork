@@ -68,6 +68,8 @@ public class NetworkFish : NetworkBehaviour
     [ClientRpc]
     private void FishController_OnPickedUpClientRpc(ulong objectId, ulong pickUpClientId)
     {
+        Debug.Log($"FishController_OnPickedUpClientRpc {NetworkManager.Singleton.LocalClientId} {pickUpClientId}");
+
         if (NetworkManager.Singleton.LocalClientId != pickUpClientId)
         {
             if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(objectId, out var networkObject))

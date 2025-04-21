@@ -51,7 +51,7 @@ public class FishController : MonoBehaviour
     //todo: centralize with Fungal Controller
     public void Respawn()
     {
-        Debug.Log($"ReturnToRadialMovement {name}");
+        //Debug.Log($"ReturnToRadialMovement {name}");
         StartCoroutine(RespawnRoutine());
     }
 

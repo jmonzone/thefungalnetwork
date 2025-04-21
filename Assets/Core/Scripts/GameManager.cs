@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
             // displayName needs to be initalized before multiplayer;
             multiplayer.Initialize();
 
-            itemInventory.Initialize();
+            //itemInventory.Initialize();
             fungalInventory.Initialize();
 
             //controller.Initialize(volume);

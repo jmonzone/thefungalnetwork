@@ -75,7 +75,48 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 348911762511341436}
+    - targetCorrespondingSourceObject: {fileID: 3662397074617317899, guid: 54d7343e7cae74330990483e4345d1f0,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5183145502010192727}
   m_SourcePrefab: {fileID: 100100000, guid: 54d7343e7cae74330990483e4345d1f0, type: 3}
+--- !u!1 &3177953686935746606 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3662397074617317899, guid: 54d7343e7cae74330990483e4345d1f0,
+    type: 3}
+  m_PrefabInstance: {fileID: 2218355652228284965}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5183145502010192727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3177953686935746606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df2868252ab5c4d1da357e8f11f1b524, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UseUnreliableDeltas: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 1
+  SyncScaleY: 1
+  SyncScaleZ: 1
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  UseQuaternionSynchronization: 0
+  UseQuaternionCompression: 0
+  UseHalfFloatPrecision: 0
+  InLocalSpace: 0
+  Interpolate: 1
+  SlerpPosition: 0
 --- !u!1 &7136052476096656682 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 9061655168520926991, guid: 54d7343e7cae74330990483e4345d1f0,
@@ -120,4 +161,4 @@ MonoBehaviour:
   inflateSpeed: 0.5
   stunDuration: 2.25
   damage: 3
-  audioClip: {fileID: 0}
+  audioClip: {fileID: 8300000, guid: 42b6dd2e4fd3847ae8d9e5b94446454e, type: 3}
