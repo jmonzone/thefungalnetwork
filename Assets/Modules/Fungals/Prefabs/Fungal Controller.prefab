@@ -354,6 +354,8 @@ MonoBehaviour:
   baseSpeed: 3
   shieldRenderer: {fileID: 703176343855909365}
   trailRenderers: {fileID: 2850911616725606102}
+  stunAnimation: {fileID: 7684853891565658531}
+  IsBot: 0
 --- !u!114 &3373934044534024445
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -392,6 +394,7 @@ MonoBehaviour:
   lookTransform: {fileID: 0}
   scaleTransform: {fileID: 0}
   followOffset: {x: 0, y: 0, z: 0}
+  target: {fileID: 0}
   stopDistance: 0.4
   circleRadius: 5
   trajectoryHeight: 2.5
@@ -429,8 +432,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   game: {fileID: 11400000, guid: 08db032ff48be41208a04f1067508370, type: 2}
   currentState: 0
-  minDashInterval: 0.5
-  maxDashInterval: 2
+  minDashInterval: 2
+  maxDashInterval: 5
+  targetFish: {fileID: 0}
+  allFish: []
+  targetFungal: {fileID: 0}
+  allFungals: []
 --- !u!54 &5946154774523704756
 Rigidbody:
   m_ObjectHideFlags: 0

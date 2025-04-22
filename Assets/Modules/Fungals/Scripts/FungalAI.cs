@@ -22,10 +22,8 @@ public class FungalAI : MonoBehaviour
     private float nextDashTime = 0f; // Next randomized dash time
 
     private NavMeshAgent agent;
-    private Movement movement;
     private FungalController fungal;
     private Ability ability;
-
 
     private FishPickup fishPickup;
     private Coroutine fungalStateCoroutine;
@@ -37,22 +35,18 @@ public class FungalAI : MonoBehaviour
     [SerializeField] private FungalController targetFungal;
     [SerializeField] private List<FungalController> allFungals = new List<FungalController>();
 
-
     private void Awake()
     {
-        movement = GetComponent<Movement>();
         agent = GetComponent<NavMeshAgent>();
-        //agent.isStopped = true;
         fungal = GetComponent<FungalController>();
 
         allFish = FindObjectsOfType<FishController>().ToList();
 
         fishPickup = GetComponent<FishPickup>();
 
-        var fungalController = GetComponent<FungalController>();
-        fungalController.OnInitialized += FungalController_OnInitialized;
-        fungalController.OnDeath += _ => StopAI();
-        fungalController.OnRespawnComplete += () => StartAI();
+        fungal.OnInitialized += FungalController_OnInitialized;
+        fungal.OnDeath += _ => StopAI();
+        fungal.OnRespawnComplete += () => StartAI();
     }
 
     private void FungalController_OnInitialized()
@@ -64,6 +58,8 @@ public class FungalAI : MonoBehaviour
 
     public void StartAI()
     {
+        if (!fungal.IsBot) return;
+
         allFungals = FindObjectsOfType<FungalController>().ToList();
 
         //if isOwwner && is ai
@@ -151,20 +147,26 @@ public class FungalAI : MonoBehaviour
         yield return null;
     }
 
-    private Vector3 GetDashTargetPosition(Vector3 targetPosition, IMovementAbility movementAbility )
+    private Vector3 GetDashTargetPosition(Vector3 targetPosition, IMovementAbility movementAbility)
     {
         Vector3 origin = transform.position;
         Vector3 direction = targetPosition - origin;
 
-        Vector3 intendedPosition = direction.magnitude <= movementAbility.Range
-            ? targetPosition
-            : origin + direction.normalized * movementAbility.Range;
+        float distanceToTarget = direction.magnitude;
 
-        // If the ability ignores obstacles, just go straight and sample NavMesh
+        Vector3 intendedPosition = origin + direction.normalized * movementAbility.Range;
+
+
+        // If the ability ignores obstacles, just use the direct target or capped range
         if (movementAbility.IgnoreObstacles)
         {
+            intendedPosition = distanceToTarget <= movementAbility.Range
+                ? targetPosition
+                : origin + direction.normalized * movementAbility.Range;
+
             return intendedPosition;
         }
+
 
         // If path is clear, use it
         if (!NavMesh.Raycast(origin, intendedPosition, out _, NavMesh.AllAreas) &&
@@ -208,7 +210,6 @@ public class FungalAI : MonoBehaviour
         {
 
             float cooldownTime = ability.Cooldown.RemainingTime; // Get cooldown time
-
 
             // Check if the dash is ready (not on cooldown) and enough time has passed
             if (!ability.IsOnCooldown && Time.time >= lastDashTime + nextDashTime + cooldownTime)

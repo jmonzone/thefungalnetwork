@@ -53,7 +53,7 @@ public class WindFish : MonoBehaviour
                 if (targetFungal == fish.Fungal) return;
                 if (targetFungal.IsDead) return;
 
-                //targetFungal.ModifySpeedServerRpc(0f, hitStun, showStunAnimation: false);
+                targetFungal.ModifySpeed(0f, hitStun, showStunAnimation: false);
                 targetFungal.Health.Damage(damage, sourceFungal);
                 Debug.Log($"WindFish damage {targetFungal.name}");
 

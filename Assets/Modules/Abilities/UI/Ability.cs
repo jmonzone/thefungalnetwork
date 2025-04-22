@@ -20,7 +20,6 @@ public abstract class Ability : ScriptableObject
     [SerializeField] private Color backgroundColor;
     [SerializeField] private Sprite image;
 
-
     public string Id => id;
     public Color BackgroundColor => backgroundColor;
     public Sprite Image => image;

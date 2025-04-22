@@ -144,7 +144,7 @@ public class PlayerSpawner : NetworkBehaviour
     {
         game.Players.ForEach(player =>
         {
-            if (player.Fungal.IsAI)
+            if (player.Fungal.Fungal.IsBot)
             {
                 player.Fungal.GetComponent<FungalAI>().StopAI();
             }
@@ -155,7 +155,7 @@ public class PlayerSpawner : NetworkBehaviour
     {
         game.Players.ForEach(player =>
         {
-            if (player.Fungal.IsAI)
+            if (player.Fungal.Fungal.IsBot)
             {
                 player.Fungal.GetComponent<FungalAI>().StartAI();
             }

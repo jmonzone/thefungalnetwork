@@ -23,8 +23,6 @@ public class NetworkFungal : NetworkBehaviour
     [SerializeField] private GameReference game;
     [SerializeField] private FungalCollection fungalCollection;
 
-    [SerializeField] private GameObject stunAnimation;
-
     [SerializeField] private float respawnDuration = 5f;
 
     public FungalController Fungal { get; private set; }
@@ -47,7 +45,6 @@ public class NetworkFungal : NetworkBehaviour
     public float Score => score.Value;
     public int Lives => lives.Value;
     public string PlayerName => player.Value.name.ToString();
-    public bool IsAI => player.Value.isAI;
 
     // Exposed to all clients, replicated by Netcode
     private NetworkVariable<LobbyPlayerRPCParam> player = new NetworkVariable<LobbyPlayerRPCParam>();
@@ -88,9 +85,12 @@ public class NetworkFungal : NetworkBehaviour
             Fungal.OnDeath += DieServerRpc;
             Fungal.OnShieldToggled += ToggleShieldRendererServerRpc;
             Fungal.OnTrailToggled += ToggleTrailRenderersServerRpc;
+            Movement.OnTypeChanged += Movement_OnTypeChanged;
         }
 
-        if (IsOwner) Movement.OnTypeChanged += Movement_OnTypeChanged;
+        Fungal.HandleSpeedModifier = HandleSpeedModiferServerRpc;
+        Fungal.HandleSpeedReset = HandleSpeedResetServerRpc;
+
 
         var fishPickup = GetComponent<FishPickup>();
         fishPickup.enabled = IsOwner;
@@ -126,7 +126,7 @@ public class NetworkFungal : NetworkBehaviour
         {
             OnLivesChanged?.Invoke();
 
-            if (IsOwner || (IsServer && IsAI))
+            if (IsOwner || (IsServer && Fungal.IsBot))
             {
                 if (game.gameMode == GameMode.ELIMINATION && value > 0 || game.gameMode == GameMode.PARTY)
                 {
@@ -154,14 +154,15 @@ public class NetworkFungal : NetworkBehaviour
     {
         var data = fungalCollection.Fungals[player.Value.fungal];
 
+        Fungal.IsBot = player.Value.isAI;
         Fungal.InitializePrefab(data);
     }
 
     private void Update()
     {
-        if (IsOwner && !IsAI && Input.GetKeyUp(KeyCode.L))
+        if (IsOwner && !Fungal.IsBot && Input.GetKeyUp(KeyCode.L))
         {
-            DieServerRpc(true);
+            Fungal.Die(true);
         }
 
         if (IsOwner && Input.GetKeyUp(KeyCode.P))
@@ -278,34 +279,27 @@ public class NetworkFungal : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void ModifySpeedServerRpc(float modifer, float duration, bool showStunAnimation = false)
+    private void HandleSpeedModiferServerRpc(float modifer, bool showStunAnimation = false)
     {
-        ModifySpeedClientRpc(modifer, showStunAnimation);
-        StartCoroutine(ResetSpeedClientRpcRoutine(duration, showStunAnimation));
-    }
-
-    private IEnumerator ResetSpeedClientRpcRoutine(float duration, bool showStunAnimatio)
-    {
-        yield return new WaitForSeconds(duration);
-        ResetSpeedClientRpc(showStunAnimatio);
+        HandleSpeedModifierClientRpc(modifer, showStunAnimation);
     }
 
     [ClientRpc]
-    private void ModifySpeedClientRpc(float modifer, bool showStunAnimation)
+    private void HandleSpeedModifierClientRpc(float modifer, bool showStunAnimation)
     {
-        if (showStunAnimation) stunAnimation.SetActive(true);
+        Fungal.ApplySpeedModifier(modifer, showStunAnimation);
+    }
 
-        if (IsOwner)
-        {
-            Movement.SetSpeedModifier(modifer);
-        }
+    [ServerRpc(RequireOwnership = false)]
+    private void HandleSpeedResetServerRpc(bool showStunAnimation = false)
+    {
+        HandleSpeedResetClientRpc(showStunAnimation);
     }
 
     [ClientRpc]
-    private void ResetSpeedClientRpc(bool showStunAnimation)
+    private void HandleSpeedResetClientRpc(bool showStunAnimation)
     {
-        if (showStunAnimation) stunAnimation.SetActive(false);
-        Movement.ResetSpeedModifier();
+        Fungal.ApplySpeedReset(showStunAnimation);
     }
 
     [ServerRpc(RequireOwnership = false)]

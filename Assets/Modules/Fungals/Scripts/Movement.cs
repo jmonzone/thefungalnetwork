@@ -105,7 +105,7 @@ public class Movement : MonoBehaviour
 
         if (previousType != type)
         {
-            Debug.Log($"{name}.Movement.OnTypeChanged {previousType} -> {type}");
+            //Debug.Log($"{name}.Movement.OnTypeChanged {previousType} -> {type}");
             OnTypeChanged?.Invoke();
         }
     }

@@ -448,6 +448,7 @@ MonoBehaviour:
   lookTransform: {fileID: 6064752512426821706}
   scaleTransform: {fileID: 6064752512426821706}
   followOffset: {x: 0, y: 0, z: 0}
+  target: {fileID: 0}
   stopDistance: 0.1
   circleRadius: 5
   trajectoryHeight: 3
@@ -5353,8 +5354,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eea0fe8ac6c394a8b9788de6a4c58a85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minExplosionRadius: 3
-  maxExplosionRadius: 3
+  minExplosionRadius: 2
+  maxExplosionRadius: 2
   minExplosionDamage: 4
   maxExplosionDamage: 6
 --- !u!114 &2774039480892393551
@@ -5434,6 +5435,7 @@ MonoBehaviour:
   lookTransform: {fileID: 6108376861962000126}
   scaleTransform: {fileID: 0}
   followOffset: {x: 0, y: 1, z: 0}
+  target: {fileID: 0}
   stopDistance: 0.1
   circleRadius: 1
   trajectoryHeight: 2

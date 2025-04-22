@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -8,8 +9,11 @@ public class FungalController : MonoBehaviour
     [SerializeField] private float baseSpeed = 3f;
     [SerializeField] private GameObject shieldRenderer;
     [SerializeField] private GameObject trailRenderers;
+    [SerializeField] private GameObject stunAnimation;
 
     public ulong Id { get; set; }
+    public bool IsBot;
+
     public FungalData Data => data;
     public float BaseSpeed => 3f;
 
@@ -22,10 +26,15 @@ public class FungalController : MonoBehaviour
     public bool IsDead { get; private set; }
 
     public event UnityAction OnInitialized;
+    public event UnityAction OnSpeedModified;
     public event UnityAction<bool> OnShieldToggled;
     public event UnityAction<bool> OnTrailToggled;
     public event UnityAction<bool> OnDeath;
     public event UnityAction OnRespawnComplete;
+
+
+    public UnityAction<float, bool> HandleSpeedModifier;
+    public UnityAction<bool> HandleSpeedReset;
 
     private void Awake()
     {
@@ -34,6 +43,9 @@ public class FungalController : MonoBehaviour
 
         Health = GetComponent<Health>();
         Health.OnDamaged += Health_OnDamaged;
+
+        HandleSpeedModifier = ApplySpeedModifier;
+        HandleSpeedReset = ApplySpeedReset;
 
         if (data) InitializePrefab(data);
     }
@@ -97,5 +109,30 @@ public class FungalController : MonoBehaviour
     {
         trailRenderers.SetActive(value);
         OnTrailToggled?.Invoke(value);
+    }
+
+
+    public void ModifySpeed(float modifer, float duration, bool showStunAnimation)
+    {
+        StartCoroutine(ResetSpeed(duration, showStunAnimation));
+        HandleSpeedModifier?.Invoke(modifer, showStunAnimation);
+    }
+
+    public void ApplySpeedModifier(float modifer, bool showStunAnimation)
+    {
+        if (showStunAnimation) stunAnimation.SetActive(true);
+        Movement.SetSpeedModifier(modifer);
+    }
+
+    private IEnumerator ResetSpeed(float duration, bool showStunAnimation)
+    {
+        yield return new WaitForSeconds(duration);
+        HandleSpeedReset?.Invoke(showStunAnimation);
+    }
+
+    public void ApplySpeedReset(bool showStunAnimation)
+    {
+        if (showStunAnimation) stunAnimation.SetActive(false);
+        Movement.ResetSpeedModifier();
     }
 }

@@ -214,10 +214,10 @@ public class MainMenuParty : MonoBehaviour
     {
         if (!joining && multiplayer.JoinedLobby.Data.ContainsKey("JoinCode") && !string.IsNullOrEmpty(multiplayer.JoinedLobby.Data["JoinCode"].Value))
         {
-            if (!multiplayer.IsHost)
-            {
-                multiplayer.JoinRelay(multiplayer.JoinedLobby.Data["JoinCode"].Value);
-            }
+            //if (!multiplayer.IsHost)
+            //{
+            //    multiplayer.JoinRelay(multiplayer.JoinedLobby.Data["JoinCode"].Value);
+            //}
             sceneNavigation.NavigateToScene(1);
             joining = true;
         }

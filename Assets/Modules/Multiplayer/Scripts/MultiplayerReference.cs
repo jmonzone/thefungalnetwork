@@ -320,7 +320,7 @@ public class MultiplayerReference : ScriptableObject
         else NetworkManager.Singleton.StartClient();
     }
 
-    public async void JoinRelay(string joinCode)
+    public async Task JoinRelay(string joinCode)
     {
         try
         {

@@ -57,7 +57,7 @@ public class GameReference : ScriptableObject
         // Sort the list based on the player index
         Players.Sort((player1, player2) => player1.Index.CompareTo(player2.Index));
 
-        if (networkFungal.IsOwner && !networkFungal.IsAI)
+        if (networkFungal.IsOwner && !networkFungal.Fungal.IsBot)
         {
             clientPlayer = addedPlayer;
 

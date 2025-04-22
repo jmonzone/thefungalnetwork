@@ -47,11 +47,11 @@ public class NetworkBubble : NetworkBehaviour
         {
             hitDetector.CheckHits(movement.ScaleTransform.lossyScale.x / 2f, hit =>
             {
-                var targetFungal = hit.GetComponent<NetworkFungal>();
+                var targetFungal = hit.GetComponent<FungalController>();
 
                 if (targetFungal != null && !targetFungal.IsDead)
                 {
-                    targetFungal.ModifySpeedServerRpc(0f, stunDuration, showStunAnimation: true);
+                    targetFungal.ModifySpeed(0f, stunDuration, showStunAnimation: true);
                     targetFungal.Health.Damage(damage, sourceFungal);
                     Pop();
                 }

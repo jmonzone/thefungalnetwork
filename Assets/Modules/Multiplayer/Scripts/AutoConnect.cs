@@ -30,11 +30,17 @@ public class AutoConnect : MonoBehaviour
                     if (lobbies.Count > 0)
                     {
                         var value = await multiplayer.TryJoinLobbyById(lobbies[0].Id);
+
                         if (value)
                         {
                             var joinCode = multiplayer.JoinedLobby.Data["JoinCode"].Value;
-                            multiplayer.JoinRelay(joinCode);
+
+                            Debug.Log($"joining {joinCode}");
+
+                            await multiplayer.JoinRelay(joinCode);
                         }
+
+                        multiplayer.StartHostClient();
                     }
                     else
                     {
