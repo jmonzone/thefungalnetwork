@@ -85,13 +85,14 @@ public class FungalController : MonoBehaviour
         OnTrailToggled?.Invoke(value);
     }
 
-    public void SpawnObject(GameObject obj, Vector3 position)
+    public void SpawnObject(GameObject prefab, Vector3 position)
     {
-        OnRequestObjectSpawn?.Invoke(obj, position);
+        OnRequestObjectSpawn?.Invoke(prefab, position);
     }
 
-    public void HandleObjectSpawn(GameObject obj, Vector3 position)
+    public void HandleObjectSpawn(GameObject prefab, Vector3 position)
     {
-        Instantiate(obj, position, Quaternion.identity);
+        Instantiate(prefab, position, Quaternion.identity);
     }
+
 }

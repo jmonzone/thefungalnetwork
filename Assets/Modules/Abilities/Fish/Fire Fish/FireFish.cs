@@ -41,7 +41,7 @@ public class FireFish : MonoBehaviour
     {
         ShowExplosionAnimation();
         float damage = pufferfishTemper.Temper * (maxExplosionDamage - minExplosionDamage) + minExplosionDamage;
-        pufferfishExplosion.EnableDamage(damage);
+        pufferfishExplosion.EnableDamage(damage, fish.Fungal.Id);
     }
 
     public void ShowExplosionAnimation()

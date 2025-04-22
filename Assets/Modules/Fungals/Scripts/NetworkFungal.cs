@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using Unity.Multiplayer.Samples.Utilities.ClientAuthority;
 using Unity.Netcode;
 using UnityEngine;
@@ -24,7 +25,8 @@ public class NetworkFungal : NetworkBehaviour
     [SerializeField] private FungalCollection fungalCollection;
 
     [SerializeField] private GameObject stunAnimation;
-    [SerializeField] private NetworkObject bubblePrefab;
+    [SerializeField] private List<GameObject> prefabs;
+    [SerializeField] private List<NetworkObject> networkPrefabs;
 
     [SerializeField] private float respawnDuration = 5f;
 
@@ -89,7 +91,7 @@ public class NetworkFungal : NetworkBehaviour
             Fungal.OnShieldToggled += ToggleShieldRendererServerRpc;
             Fungal.OnTrailToggled += ToggleTrailRenderersServerRpc;
             Fungal.OnRequestObjectSpawn -= Fungal.HandleObjectSpawn;
-            Fungal.OnRequestObjectSpawn += (obj, position) => SpawnBubbleServerRpc(position);
+            Fungal.OnRequestObjectSpawn += SpawnBubble;
         }
 
         if (IsOwner) Movement.OnTypeChanged += Movement_OnTypeChanged;
@@ -356,10 +358,20 @@ public class NetworkFungal : NetworkBehaviour
         if (!IsOwner) Fungal.ToggleShieldRenderers(value);
     }
 
-    [ServerRpc]
-    private void SpawnBubbleServerRpc(Vector3 targetPosition)
+    private void SpawnBubble(GameObject prefab, Vector3 targetPosition)
     {
-        var bubble  = Instantiate(bubblePrefab, targetPosition, Quaternion.identity);
-        bubble.SpawnWithOwnership(OwnerClientId);
+        var index = prefabs.IndexOf(prefab);
+        RequestSpawnServerRpc(index, targetPosition);
+    }
+
+
+    [ServerRpc(RequireOwnership = false)]
+    private void RequestSpawnServerRpc(int prefabIndex, Vector3 position, ServerRpcParams rpcParams = default)
+    {
+        var go = Instantiate(networkPrefabs[prefabIndex], position, Quaternion.identity);
+        go.GetComponent<NetworkObject>().SpawnWithOwnership(rpcParams.Receive.SenderClientId);
+
+        var projectile = go.GetComponent<IProjectile>();
+        if (projectile != null) projectile.Initialize();
     }
 }

@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class PufferfishExplosion : MonoBehaviour
+public interface IProjectile
 {
-    [SerializeField] private GameReference pufferball;
-    [SerializeField] private Movement movement;
+    public void Initialize();
+}
+
+public class PufferfishExplosion : MonoBehaviour, IProjectile
+{
     [SerializeField] private new ParticleSystem particleSystem;
     [SerializeField] private AudioClip explosionClip;
 
-    private FishController fish;
+    private Movement movement;
     private AudioSource audioSource;
     private HitDetector hitDetector;
 
@@ -18,22 +21,27 @@ public class PufferfishExplosion : MonoBehaviour
 
     private void Awake()
     {
-        fish = GetComponent<FishController>();
+        movement = GetComponent<Movement>();
         audioSource = GetComponent<AudioSource>();
         hitDetector = GetComponent<HitDetector>();
     }
 
-    public void EnableDamage(float damage)
+    public void Initialize()
     {
-        StartCoroutine(DamageRoutine(damage));
+        StartExplosionAnimation();
+    }
+
+    public void EnableDamage(float damage, ulong id)
+    {
+        StartCoroutine(DamageRoutine(damage, id));
     }
 
     //todo: reuselogic across bubble, wind fish and pufferfish
-    private IEnumerator DamageRoutine(float damage)
+    private IEnumerator DamageRoutine(float damage, ulong id)
     {
         List<Collider> hits = new List<Collider>();
 
-        while (movement.gameObject.activeSelf)
+        while (gameObject.activeSelf)
         {
             hitDetector.CheckHits(movement.transform.localScale.x / 2f, hit =>
             {
@@ -43,7 +51,7 @@ public class PufferfishExplosion : MonoBehaviour
                 if (fungal != null && !fungal.IsDead)
                 {
                     //fungal.ModifySpeedServerRpc(0, 0.5f);
-                    fungal.Health.Damage(damage, fish.Fungal.Id);
+                    fungal.Health.Damage(damage, id);
                     hits.Add(hit);
                     return;
                 }
@@ -72,14 +80,14 @@ public class PufferfishExplosion : MonoBehaviour
 
     public IEnumerator ExplosionRoutine(float radius)
     {
-        movement.gameObject.SetActive(true);
+        gameObject.SetActive(true);
         particleSystem.Play();
         yield return movement.ScaleOverTime(0.2f, 0, 2f * radius);
         OnExplodeComplete?.Invoke();
         yield return new WaitForSeconds(0.5f);
         GetComponent<TelegraphTrajectory>().HideIndicator();
         yield return movement.ScaleOverTime(0.1f, 2f * radius, 0);
-        movement.gameObject.SetActive(false);
+        gameObject.SetActive(false);
         particleSystem.Stop();
     }
 }
