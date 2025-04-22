@@ -72,13 +72,13 @@ public class AbilityButton : MonoBehaviour
 
         ability = newAbility;
 
-        abilityText.text = ability.Id;
-        abilityBackground.color = ability.BackgroundColor;
-        abilityIcon.sprite = ability.Image;
-
         // Subscribe to new ability events
         if (ability != null)
         {
+            abilityText.text = ability.Id;
+            abilityBackground.color = ability.BackgroundColor;
+            abilityIcon.sprite = ability.Image;
+
             ability.OnCancel += OnDragCanceled;
             ability.OnAvailabilityChanged += UpdateAbility;
             cooldownHandler.AssignCooldownModel(ability);

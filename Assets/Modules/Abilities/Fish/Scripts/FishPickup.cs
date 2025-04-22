@@ -14,12 +14,12 @@ public class FishPickup : MonoBehaviour
     private void Awake()
     {
         fungal = GetComponent<FungalController>();
-        fungal.OnDeath += _ => Fungal_OnDeath();
+        fungal.OnDeath += _ => ReleaseFish();
     }
 
     private void Update()
     {
-        if (!Fish && !fungal.IsDead) TryPickUpFish();
+        if (!fungal.IsDead) TryPickUpFish();
     }
 
     private void TryPickUpFish()
@@ -30,8 +30,9 @@ public class FishPickup : MonoBehaviour
         foreach (Collider hit in hits)
         {
             var fish = hit.GetComponentInParent<FishController>();
-            if (fish != null && !fish.IsPickedUp)
+            if (fish != null && this.fish != fish && !fish.IsPickedUp)
             {
+                ReleaseFish();
                 this.fish = fish;
                 fish.PickUp(fungal);
                 OnFishChanged?.Invoke();
@@ -40,7 +41,7 @@ public class FishPickup : MonoBehaviour
         }
     }
 
-    private void Fungal_OnDeath()
+    private void ReleaseFish()
     {
         if (Fish)
         {
@@ -68,11 +69,5 @@ public class FishPickup : MonoBehaviour
 
         fish = null;
         OnFishChanged?.Invoke();
-    }
-
-    private void NetworkPufferfish_OnMaxTemperReached()
-    {
-        RemoveFish();
-        OnFishReleased?.Invoke();
     }
 }

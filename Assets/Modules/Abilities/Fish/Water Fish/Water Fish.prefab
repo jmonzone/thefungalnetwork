@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5067775030032462675}
-  - component: {fileID: 9216382453131044261}
   - component: {fileID: 3415864868633631580}
   - component: {fileID: 1963655374833320312}
   - component: {fileID: 5006214080417949926}
@@ -39,20 +38,6 @@ Transform:
   - {fileID: 3544251095298689162}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
---- !u!114 &9216382453131044261
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 266238903152798596}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58d1451805b434d2ba2b5c5971658e1d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bubblePrefab: {fileID: 5124931222090160186, guid: 54d7343e7cae74330990483e4345d1f0,
-    type: 3}
 --- !u!114 &3415864868633631580
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65,14 +50,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b54965bd37bcc473cbe4dc0a87e48f7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ability: {fileID: 11400000, guid: 94303b03817424fcbb42de7de5241476, type: 2}
   swimSpeed: 1
   score: 20
   useTrajectory: 1
   isPickedUp: 0
-  icon: {fileID: 21300000, guid: 149bc3940087f4455852ae65825b7816, type: 3}
-  abilityName: Bubble Trap
-  backgroundColor: {r: 0.9764706, g: 0.78431374, b: 0.101960786, a: 1}
-  ability: {fileID: 11400000, guid: 94303b03817424fcbb42de7de5241476, type: 2}
   audioPitch: 0.5
   audioClips:
   - {fileID: 8300000, guid: 7a0b78009323b41338e6be504410951e, type: 3}

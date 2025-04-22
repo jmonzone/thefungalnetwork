@@ -70,6 +70,7 @@ public class InitializeController : MonoBehaviour
 
         //Debug.Log($"PlayerReference_OnClientPlayerAdded {fungal.Data.Id} {fungal.Data.Ability.Id}");
 
+        fungalThrowButton.AssignAbility(null);
         fungalThrowUI.UpdateView(null);
         //fungalThrowButton.AssignAbility(throwAbility);
 
@@ -94,8 +95,16 @@ public class InitializeController : MonoBehaviour
 
     private void FishPickup_OnFishChanged()
     {
-        fishPickup.Fish.Ability.Initialize(fungal);
-        fungalThrowButton.AssignAbility(fishPickup.Fish.Ability);
-        fungalThrowUI.UpdateView(fishPickup.Fish);
+        if (fishPickup.Fish)
+        {
+            fishPickup.Fish.Ability.Initialize(fungal);
+            fungalThrowButton.AssignAbility(fishPickup.Fish.Ability);
+            fungalThrowUI.UpdateView(fishPickup.Fish);
+        }
+        else
+        {
+            fungalThrowButton.AssignAbility(null);
+            fungalThrowUI.UpdateView(null);
+        }
     }
 }
