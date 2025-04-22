@@ -5,8 +5,8 @@ using UnityEngine.Events;
 public struct DamageEventArgs : INetworkSerializable
 {
     public bool lethal;
-    public int source;
-    public int target;
+    public ulong source;
+    public ulong target;
     public bool SelfInflicted => source == target;
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
@@ -32,7 +32,7 @@ public class Health : MonoBehaviour
     public event UnityAction<float> OnHealthChangeRequested;
 
     public event UnityAction<DamageEventArgs> OnDamaged;
-    public event UnityAction<float, ulong> OnDamageRequested;
+    public event UnityAction<DamageEventArgs> OnDamageRequested;
 
     public event UnityAction<float> OnShieldChangeRequested;
     public event UnityAction OnShieldChanged;
@@ -41,6 +41,7 @@ public class Health : MonoBehaviour
     {
         OnHealthChangeRequested += ApplyHealthChange;
         OnShieldChangeRequested += ApplyShieldChange;
+        OnDamageRequested += ApplyDamage;
     }
 
     public void SetHealth(float health)
@@ -85,8 +86,19 @@ public class Health : MonoBehaviour
             SetHealth(Mathf.Clamp(currentHealth - remainingDamage, 0, maxHealth));
         }
 
+        var knockout = currentHealth <= 0;
+
+        var fungal = GetComponent<FungalController>();
+
+        var args = new DamageEventArgs()
+        {
+            lethal = knockout,
+            target = fungal.Id,
+            source = sourceId,
+        };
+
         //Debug.Log($"Damage {damage} {sourceId}");
-        OnDamageRequested?.Invoke(damage, sourceId);
+        OnDamageRequested?.Invoke(args);
     }
 
     public void ApplyDamage(DamageEventArgs args)

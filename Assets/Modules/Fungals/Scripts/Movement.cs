@@ -38,7 +38,7 @@ public class Movement : MonoBehaviour
 
     [Header("Follow Target Settings")]
     [SerializeField] private Vector3 followOffset;
-    private Transform target;
+    [SerializeField] private Transform target;
 
 
     [Header("Move To Position Settings")]

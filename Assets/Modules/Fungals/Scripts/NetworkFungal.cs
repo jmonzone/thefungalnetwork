@@ -85,6 +85,7 @@ public class NetworkFungal : NetworkBehaviour
 
         if (IsOwner)
         {
+            Fungal.OnDeath += DieServerRpc;
             Fungal.OnShieldToggled += ToggleShieldRendererServerRpc;
             Fungal.OnTrailToggled += ToggleTrailRenderersServerRpc;
         }
@@ -97,8 +98,6 @@ public class NetworkFungal : NetworkBehaviour
         networkTransform = GetComponent<ClientNetworkTransform>();
 
         spawnPosition = transform.position;
-
-        Health.OnDamaged += Health_OnDamaged;
 
         index.OnValueChanged += (old, value) =>
         {
@@ -158,19 +157,6 @@ public class NetworkFungal : NetworkBehaviour
         Fungal.InitializePrefab(data);
     }
 
-    private void Health_OnDamaged(DamageEventArgs args)
-    {
-        if (args.lethal)
-        {
-            if (IsServer) DieServerRpc(args.SelfInflicted);
-        }
-        else
-        {
-            Animations.PlayHitAnimation();
-            MaterialFlasher.FlashColor(Color.red);
-        }
-    }
-
     private void Update()
     {
         if (IsOwner && !IsAI && Input.GetKeyUp(KeyCode.L))
@@ -198,13 +184,6 @@ public class NetworkFungal : NetworkBehaviour
 
         lives.Value--;
         score.Value = Mathf.FloorToInt(score.Value / 2f);
-        DieClientRpc(selfDestruct);
-    }
-
-    [ClientRpc]
-    private void DieClientRpc(bool selfDestruct)
-    {
-        Fungal.Die(selfDestruct);
     }
 
     private IEnumerator RespawnRoutine()

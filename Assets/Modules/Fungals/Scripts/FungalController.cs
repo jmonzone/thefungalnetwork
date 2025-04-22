@@ -21,6 +21,7 @@ public class FungalController : MonoBehaviour
     //todo: make separate death component
     public bool IsDead { get; private set; }
 
+    public event UnityAction OnInitialized;
     public event UnityAction<bool> OnShieldToggled;
     public event UnityAction<bool> OnTrailToggled;
     public event UnityAction<bool> OnDeath;
@@ -32,8 +33,22 @@ public class FungalController : MonoBehaviour
         Movement.SetSpeed(baseSpeed);
 
         Health = GetComponent<Health>();
+        Health.OnDamaged += Health_OnDamaged;
 
         if (data) InitializePrefab(data);
+    }
+
+    private void Health_OnDamaged(DamageEventArgs args)
+    {
+        if (args.lethal)
+        {
+            Die(args.SelfInflicted);
+        }
+        else
+        {
+            Animations.PlayHitAnimation();
+            MaterialFlasher.FlashColor(Color.red);
+        }
     }
 
     public void InitializePrefab(FungalData fungal)
@@ -45,6 +60,8 @@ public class FungalController : MonoBehaviour
         Animations = model.AddComponent<MovementAnimations>();
         MaterialFlasher = model.AddComponent<MaterialFlasher>();
         MaterialFlasher.flashDuration = 0.5f;
+
+        OnInitialized?.Invoke();
     }
 
     public void Respawn()

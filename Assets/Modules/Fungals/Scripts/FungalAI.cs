@@ -24,12 +24,18 @@ public class FungalAI : MonoBehaviour
     private NavMeshAgent agent;
     private FungalController fungal;
     private Ability ability;
-    private List<FishController> allFish = new List<FishController>();
-    private FishController targetFish;
+
+
     private FishPickup fishPickup;
-    private List<FungalController> allFungals = new List<FungalController>();
-    private FungalController targetFungal;
     private Coroutine fungalStateCoroutine;
+
+    [Header("Debug")]
+    [SerializeField] private FishController targetFish;
+    [SerializeField] private List<FishController> allFish = new List<FishController>();
+
+    [SerializeField] private FungalController targetFungal;
+    [SerializeField] private List<FungalController> allFungals = new List<FungalController>();
+
 
     private void Awake()
     {
@@ -37,27 +43,26 @@ public class FungalAI : MonoBehaviour
         fungal = GetComponent<FungalController>();
 
         allFish = FindObjectsOfType<FishController>().ToList();
-        allFungals = FindObjectsOfType<FungalController>().ToList();
 
         fishPickup = GetComponent<FishPickup>();
 
         var fungalController = GetComponent<FungalController>();
+        fungalController.OnInitialized += FungalController_OnInitialized;
         fungalController.OnDeath += _ => StopAI();
         fungalController.OnRespawnComplete += () => StartAI();
     }
 
-    private void Start()
+    private void FungalController_OnInitialized()
     {
         var abilityTemplate = fungal.Data.Ability;
         ability = Instantiate(abilityTemplate);
         ability.Initialize(fungal);
-
-        //nextDashTime = dash.Cooldown.Cooldown;
-        StartAI();
     }
 
     public void StartAI()
     {
+        allFungals = FindObjectsOfType<FungalController>().ToList();
+
         //if isOwwner && is ai
         agent.enabled = true;
 
@@ -202,27 +207,30 @@ public class FungalAI : MonoBehaviour
                 .OrderBy(fungal => Vector3.Distance(transform.position, fungal.transform.position))
                 .FirstOrDefault();
 
-        if (targetFungal != null && fishPickup.Fish)
+        if (fishPickup.Fish)
         {
-            var playerPos = transform.position;
-            var targetSlingPosition = targetFungal.transform.position + targetFungal.Movement.SpeedDelta * targetFungal.transform.forward;
-
-            var directionToPlayer = (playerPos - targetSlingPosition).normalized;
-
-            // Clamp the movement position within maxRange
-            var targetMovePosition = targetSlingPosition;
-
-            targetMovePosition += directionToPlayer * Mathf.Min(Vector3.Distance(targetSlingPosition, playerPos), fishPickup.Fish.ThrowFish.Range * 0.75f);
-
-            // Check if the closest valid position is within range of the sling position
-            if (NavMesh.SamplePosition(targetMovePosition, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
+            if (targetFungal)
             {
-                yield return UseMoveAction(hit.position);
+                var playerPos = transform.position;
+                var targetSlingPosition = targetFungal.transform.position + targetFungal.Movement.SpeedDelta * targetFungal.transform.forward;
 
-                if (Vector3.Distance(agent.transform.position, hit.position) < 0.05f)
+                var directionToPlayer = (playerPos - targetSlingPosition).normalized;
+
+                // Clamp the movement position within maxRange
+                var targetMovePosition = targetSlingPosition;
+
+                targetMovePosition += directionToPlayer * Mathf.Min(Vector3.Distance(targetSlingPosition, playerPos), fishPickup.Fish.ThrowFish.Range * 0.75f);
+
+                // Check if the closest valid position is within range of the sling position
+                if (NavMesh.SamplePosition(targetMovePosition, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
                 {
-                    // Once at the destination, sling the fish
-                    fishPickup.Sling(targetSlingPosition);
+                    yield return UseMoveAction(hit.position);
+
+                    if (Vector3.Distance(agent.transform.position, hit.position) < 0.05f)
+                    {
+                        // Once at the destination, sling the fish
+                        fishPickup.Sling(targetSlingPosition);
+                    }
                 }
             }
         }

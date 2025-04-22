@@ -135,11 +135,37 @@ public class PlayerSpawner : NetworkBehaviour
     // todo: player spawnere logic can be a part of network prefab?
     private void OnEnable()
     {
+        game.OnGameStart += Game_OnGameStart;
+        game.OnGameComplete += Game_OnGameComplete;
         multiplayer.OnDisconnectRequested += NotifyClientsDisconnectServerRpc;
+    }
+
+    private void Game_OnGameComplete()
+    {
+        game.Players.ForEach(player =>
+        {
+            if (player.Fungal.IsAI)
+            {
+                player.Fungal.GetComponent<FungalAI>().StopAI();
+            }
+        });
+    }
+
+    private void Game_OnGameStart()
+    {
+        game.Players.ForEach(player =>
+        {
+            if (player.Fungal.IsAI)
+            {
+                player.Fungal.GetComponent<FungalAI>().StartAI();
+            }
+        });
     }
 
     private void OnDisable()
     {
+        game.OnGameStart -= Game_OnGameStart;
+        game.OnGameComplete -= Game_OnGameComplete;
         multiplayer.OnDisconnectRequested -= NotifyClientsDisconnectServerRpc;
     }
 
