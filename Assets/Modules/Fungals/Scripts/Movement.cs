@@ -53,6 +53,7 @@ public class Movement : MonoBehaviour
     private bool reverseDirection;
 
     [Header("Trajectory Movement Settings")]
+    [SerializeField] private bool useTrajectoryLookDirection;
     [SerializeField] private float trajectoryHeight = 3f; // Height of the trajectory
     [SerializeField] private float trajectoryDuration = 2f; // Duration of the movement in seconds
     private Vector3 trajectoryStartPosition;
@@ -266,7 +267,7 @@ public class Movement : MonoBehaviour
         targetPosition = new Vector3(currentPosition.x, heightOffset, currentPosition.z);
 
         var lookDirection = targetPosition - transform.position;
-        UpdateLookDirection(lookDirection);
+        if (useTrajectoryLookDirection) UpdateLookDirection(lookDirection);
 
         // Set the final position with calculated height
         transform.position = targetPosition;
@@ -278,7 +279,7 @@ public class Movement : MonoBehaviour
 
             //Debug.Log("Stopping, updating look direction " + lookDirection);
             lookDirection.y = 0;
-            UpdateLookDirection(lookDirection.normalized, force: true);
+            if (useTrajectoryLookDirection) UpdateLookDirection(lookDirection.normalized, force: true);
 
             OnDestinationReached?.Invoke();
         }

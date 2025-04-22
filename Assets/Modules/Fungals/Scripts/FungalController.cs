@@ -94,7 +94,7 @@ public class FungalController : MonoBehaviour
     {
         var go = Instantiate(prefab, transform.position + Vector3.up, Quaternion.identity);
 
-        var projectile = go.GetComponent<IProjectile>();
+        var projectile = go.GetComponent<ProjectileController>();
         if (projectile != null) projectile.Initialize(position);
     }
 

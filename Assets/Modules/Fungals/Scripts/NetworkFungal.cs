@@ -371,7 +371,7 @@ public class NetworkFungal : NetworkBehaviour
         var go = Instantiate(networkPrefabs[prefabIndex], transform.position + Vector3.up, Quaternion.identity);
         go.GetComponent<NetworkObject>().SpawnWithOwnership(rpcParams.Receive.SenderClientId);
 
-        var projectile = go.GetComponent<IProjectile>();
+        var projectile = go.GetComponent<ProjectileController>();
         if (projectile != null) projectile.Initialize(position);
     }
 }

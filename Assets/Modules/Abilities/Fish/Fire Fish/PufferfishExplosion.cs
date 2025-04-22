@@ -3,13 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public interface IProjectile
-{
-    public void Initialize(Vector3 targetPosition);
-    public event UnityAction<Vector3> OnInitialized;
-}
-
-public class PufferfishExplosion : MonoBehaviour, IProjectile
+public class PufferfishExplosion : MonoBehaviour
 {
     [SerializeField] private new ParticleSystem particleSystem;
     [SerializeField] private AudioClip explosionClip;
@@ -28,15 +22,9 @@ public class PufferfishExplosion : MonoBehaviour, IProjectile
         hitDetector = GetComponent<HitDetector>();
     }
 
-    public void Initialize(Vector3 targetPosition)
-    {
-        movement.SetTrajectoryMovement(targetPosition);
-        GetComponent<TelegraphTrajectory>().ShowIndicator(targetPosition, 1f);
-    }
-
     private void OnEnable()
     {
-        movement.OnDestinationReached += Movement_OnDestinationReached; ;
+        movement.OnDestinationReached += Movement_OnDestinationReached;
     }
 
     private void OnDisable()
