@@ -368,10 +368,10 @@ public class NetworkFungal : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     private void RequestSpawnServerRpc(int prefabIndex, Vector3 position, ServerRpcParams rpcParams = default)
     {
-        var go = Instantiate(networkPrefabs[prefabIndex], position, Quaternion.identity);
+        var go = Instantiate(networkPrefabs[prefabIndex], transform.position + Vector3.up, Quaternion.identity);
         go.GetComponent<NetworkObject>().SpawnWithOwnership(rpcParams.Receive.SenderClientId);
 
         var projectile = go.GetComponent<IProjectile>();
-        if (projectile != null) projectile.Initialize();
+        if (projectile != null) projectile.Initialize(position);
     }
 }

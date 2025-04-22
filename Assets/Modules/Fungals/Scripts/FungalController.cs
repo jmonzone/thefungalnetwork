@@ -92,7 +92,10 @@ public class FungalController : MonoBehaviour
 
     public void HandleObjectSpawn(GameObject prefab, Vector3 position)
     {
-        Instantiate(prefab, position, Quaternion.identity);
+        var go = Instantiate(prefab, transform.position + Vector3.up, Quaternion.identity);
+
+        var projectile = go.GetComponent<IProjectile>();
+        if (projectile != null) projectile.Initialize(position);
     }
 
 }

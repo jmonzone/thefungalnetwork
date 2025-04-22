@@ -5,7 +5,8 @@ using UnityEngine.Events;
 
 public interface IProjectile
 {
-    public void Initialize();
+    public void Initialize(Vector3 targetPosition);
+    public event UnityAction<Vector3> OnInitialized;
 }
 
 public class PufferfishExplosion : MonoBehaviour, IProjectile
@@ -18,6 +19,7 @@ public class PufferfishExplosion : MonoBehaviour, IProjectile
     private HitDetector hitDetector;
 
     public event UnityAction OnExplodeComplete;
+    public event UnityAction<Vector3> OnInitialized;
 
     private void Awake()
     {
@@ -26,7 +28,23 @@ public class PufferfishExplosion : MonoBehaviour, IProjectile
         hitDetector = GetComponent<HitDetector>();
     }
 
-    public void Initialize()
+    public void Initialize(Vector3 targetPosition)
+    {
+        movement.SetTrajectoryMovement(targetPosition);
+        GetComponent<TelegraphTrajectory>().ShowIndicator(targetPosition, 1f);
+    }
+
+    private void OnEnable()
+    {
+        movement.OnDestinationReached += Movement_OnDestinationReached; ;
+    }
+
+    private void OnDisable()
+    {
+        movement.OnDestinationReached -= Movement_OnDestinationReached;
+    }
+
+    private void Movement_OnDestinationReached()
     {
         StartExplosionAnimation();
     }

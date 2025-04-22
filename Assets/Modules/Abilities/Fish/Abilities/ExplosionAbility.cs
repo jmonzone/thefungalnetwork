@@ -27,6 +27,5 @@ public class ExplosionAbility : DirectionalAbility, IMovementAbility
         base.CastAbility(targetPosition);
 
         Fungal.SpawnObject(explosion.gameObject, targetPosition);
-
     }
 }
