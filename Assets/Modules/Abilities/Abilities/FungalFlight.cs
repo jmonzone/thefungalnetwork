@@ -11,6 +11,7 @@ public class FungalFlight : DirectionalAbility, IMovementAbility
     public override bool UseTrajectory => true;
 
     public override float Range => flightRange;
+    public bool IgnoreObstacles => true;
 
     private Movement Movement => Fungal.Movement;
     //private ClientNetworkTransform networkTransform;

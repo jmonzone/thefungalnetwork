@@ -31,6 +31,8 @@ public abstract class Ability : ScriptableObject
     private CooldownModel cooldownModel;
 
     public FungalController Fungal { get; protected set; }
+
+    public bool InUse { get; private set; }
     public bool IsAvailable { get; private set; } = true;
     public bool IsOnCooldown => cooldownModel.IsOnCooldown;
     public CooldownModel Cooldown => cooldownModel;
@@ -54,15 +56,19 @@ public abstract class Ability : ScriptableObject
     {
         OnAbilityStart?.Invoke();
         Fungal.StartCoroutine(Cooldown.StartCooldown());
+
+        InUse = true;
     }
 
     protected void CompleteAbility()
     {
+        InUse = false;
         OnAbilityComplete?.Invoke();
     }
 
     protected void CancelAbility()
     {
+        InUse = false;
         OnCancel?.Invoke();
     }
 

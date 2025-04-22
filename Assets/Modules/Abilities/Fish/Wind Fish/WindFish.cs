@@ -20,6 +20,12 @@ public class WindFish : MonoBehaviour
     private void Start()
     {
         fish.ThrowFish.OnThrowStart += ThrowFish_OnThrowStart;
+        fish.ThrowFish.OnThrowComplete += ThrowFish_OnThrowComplete;
+    }
+
+    private void ThrowFish_OnThrowComplete()
+    {
+        StopAllCoroutines();
     }
 
     private void ThrowFish_OnThrowStart(Vector3 arg0)

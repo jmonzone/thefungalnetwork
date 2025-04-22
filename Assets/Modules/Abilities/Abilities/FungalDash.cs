@@ -5,6 +5,7 @@ using UnityEngine;
 public interface IMovementAbility
 {
     public float Range { get; }
+    public bool IgnoreObstacles { get; }
 }
 
 [CreateAssetMenu(menuName = "Fungals/Ability/Dash")]
@@ -20,6 +21,7 @@ public class FungalDash : DirectionalAbility, IMovementAbility
     private AudioSource audioSource;
 
     public override float Range => dashRange;
+    public bool IgnoreObstacles => false;
     public override Vector3 DefaultTargetPosition => Fungal.transform.position + Fungal.transform.forward * dashRange;
     public override bool UseTrajectory => false;
 

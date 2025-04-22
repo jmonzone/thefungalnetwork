@@ -22,6 +22,7 @@ public class FungalAI : MonoBehaviour
     private float nextDashTime = 0f; // Next randomized dash time
 
     private NavMeshAgent agent;
+    private Movement movement;
     private FungalController fungal;
     private Ability ability;
 
@@ -39,7 +40,9 @@ public class FungalAI : MonoBehaviour
 
     private void Awake()
     {
+        movement = GetComponent<Movement>();
         agent = GetComponent<NavMeshAgent>();
+        //agent.isStopped = true;
         fungal = GetComponent<FungalController>();
 
         allFish = FindObjectsOfType<FishController>().ToList();
@@ -148,35 +151,64 @@ public class FungalAI : MonoBehaviour
         yield return null;
     }
 
-    private Vector3 GetDashTargetPosition(IMovementAbility movementAbility, Vector3 targetPosition)
+    private Vector3 GetDashTargetPosition(Vector3 targetPosition, IMovementAbility movementAbility )
     {
-        float maxRange = movementAbility.Range;
         Vector3 origin = transform.position;
+        Vector3 direction = targetPosition - origin;
 
-        // Direction from origin to target
-        Vector3 direction = (targetPosition - origin).normalized;
-        Vector3 intendedPosition = origin + direction * maxRange;
+        Vector3 intendedPosition = direction.magnitude <= movementAbility.Range
+            ? targetPosition
+            : origin + direction.normalized * movementAbility.Range;
 
-        // Sample the NavMesh to find the nearest valid point within a radius
-        if (NavMesh.SamplePosition(intendedPosition, out NavMeshHit hit, maxRange, NavMesh.AllAreas))
+        // If the ability ignores obstacles, just go straight and sample NavMesh
+        if (movementAbility.IgnoreObstacles)
         {
-            return hit.position;
+            return intendedPosition;
         }
 
-        // If no valid position found, return current position
-        return origin;
+        // If path is clear, use it
+        if (!NavMesh.Raycast(origin, intendedPosition, out _, NavMesh.AllAreas) &&
+            NavMesh.SamplePosition(intendedPosition, out NavMeshHit directHit, 1f, NavMesh.AllAreas))
+        {
+            return directHit.position;
+        }
+
+        // Else, check nearby directions
+        Vector3 bestPosition = origin;
+        float closestDistance = float.MaxValue;
+
+        for (int i = -4; i <= 4; i++)
+        {
+            float angle = i * 22.5f; // Spread across ±90°
+            Vector3 testDir = Quaternion.Euler(0, angle, 0) * direction.normalized;
+            Vector3 testPos = origin + testDir * movementAbility.Range;
+
+            if (!NavMesh.Raycast(origin, testPos, out _, NavMesh.AllAreas) &&
+                NavMesh.SamplePosition(testPos, out NavMeshHit hit, 1f, NavMesh.AllAreas))
+            {
+                float distance = Vector3.Distance(hit.position, targetPosition);
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    bestPosition = hit.position;
+                }
+            }
+        }
+
+        return bestPosition;
     }
+
 
 
     private IEnumerator UseMoveAction(Vector3 targetPosition)
     {
-        agent.speed = fungal.Movement.CalculatedSpeed;
-        agent.SetDestination(targetPosition);
+        yield return null;
 
         if (ability is IMovementAbility movementAbility && ability is DirectionalAbility directionalAbility)
         {
 
             float cooldownTime = ability.Cooldown.RemainingTime; // Get cooldown time
+
 
             // Check if the dash is ready (not on cooldown) and enough time has passed
             if (!ability.IsOnCooldown && Time.time >= lastDashTime + nextDashTime + cooldownTime)
@@ -185,7 +217,7 @@ public class FungalAI : MonoBehaviour
 
                 agent.enabled = false;
 
-                Vector3 dashTargetPosition = GetDashTargetPosition(movementAbility, targetPosition);
+                Vector3 dashTargetPosition = GetDashTargetPosition(targetPosition, movementAbility);
                 directionalAbility.CastAbility(dashTargetPosition);
 
                 lastDashTime = Time.time;  // Update last dash time
@@ -193,55 +225,88 @@ public class FungalAI : MonoBehaviour
                 // Randomize the next dash interval within the defined range
                 nextDashTime = Random.Range(minDashInterval, maxDashInterval);
 
-                yield return new WaitUntil(() => fungal.Movement.IsAtDestination);
+                yield return new WaitWhile(() => directionalAbility.InUse);
+
                 agent.enabled = true;
             }
         }
-        
+
+        agent.SetDestination(targetPosition);
     }
+
+    private float timeInSlingRange = 0f;
+    private float requiredTimeInRange = 0.5f;
+    private float comfortableRange;
 
     private IEnumerator ThrowFish()
     {
         targetFungal = allFungals
-                .Where(fungal => this.fungal != fungal && !fungal.IsDead) // Exclude self
-                .OrderBy(fungal => Vector3.Distance(transform.position, fungal.transform.position))
-                .FirstOrDefault();
+            .Where(f => f != fungal && !f.IsDead)
+            .OrderBy(f => Vector3.Distance(transform.position, f.transform.position))
+            .FirstOrDefault();
 
-        if (fishPickup.Fish)
+        if (!fishPickup.Fish)
         {
-            if (targetFungal)
-            {
-                var playerPos = transform.position;
-                var targetSlingPosition = targetFungal.transform.position + targetFungal.Movement.SpeedDelta * targetFungal.transform.forward;
+            SetState(FungalState.FIND_FISH);
+            yield break;
+        }
 
-                var directionToPlayer = (playerPos - targetSlingPosition).normalized;
+        if (!targetFungal)
+            yield break;
 
-                // Clamp the movement position within maxRange
-                var targetMovePosition = targetSlingPosition;
+        comfortableRange = fishPickup.Fish.ThrowFish.Range * 0.75f;
 
-                targetMovePosition += directionToPlayer * Mathf.Min(Vector3.Distance(targetSlingPosition, playerPos), fishPickup.Fish.ThrowFish.Range * 0.75f);
+        Vector3 predictedTarget = targetFungal.transform.position + targetFungal.Movement.SpeedDelta * targetFungal.transform.forward;
+        float distance = Vector3.Distance(transform.position, predictedTarget);
 
-                // Check if the closest valid position is within range of the sling position
-                if (NavMesh.SamplePosition(targetMovePosition, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
-                {
-                    yield return UseMoveAction(hit.position);
+        timeInSlingRange += Time.deltaTime;
 
-                    if (Vector3.Distance(agent.transform.position, hit.position) < 0.05f)
-                    {
-                        // Once at the destination, sling the fish
-                        fishPickup.Sling(targetSlingPosition);
-                    }
-                }
-            }
+        // Calculate initial angle based on the direction to the target
+        Vector3 directionToTarget = predictedTarget - transform.position;
+        float initialAngle = Mathf.Atan2(directionToTarget.z, directionToTarget.x); // Angle in radians around the Y-axis
+
+        if (distance > comfortableRange)
+        {
+            // Move toward predicted target but not too close
+            Vector3 direction = (predictedTarget - transform.position).normalized;
+            Vector3 stopShortPosition = predictedTarget - direction * comfortableRange;
+            yield return UseMoveAction(stopShortPosition); // No yield needed here
         }
         else
         {
-            SetState(FungalState.FIND_FISH);
+            // If within comfortable range, start circling around the target
+            Vector3 circleCenter = targetFungal.transform.position;
+            float circleRadius = comfortableRange / 2; // Adjust radius based on desired circle size
+
+            // Update angle over time, starting from the initial angle
+            float angle = initialAngle + (Time.time * 30f); // 30f adjusts the speed of rotation
+            Vector3 offset = new Vector3(Mathf.Cos(angle) * circleRadius, 0f, Mathf.Sin(angle) * circleRadius);
+            Vector3 circularPosition = circleCenter + offset;
+
+            yield return UseMoveAction(circularPosition); // Move to a circular position around the target
+
+            if (timeInSlingRange >= requiredTimeInRange)
+            {
+                // Use NavMeshAgent.Raycast to check if there is a clear path
+                if (fishPickup.Fish.UseTrajectory || !agent.Raycast(targetFungal.transform.position, out NavMeshHit hit))
+                {
+                    fishPickup.Sling(predictedTarget);
+                }
+            }
         }
+        yield break;
     }
+
 
     private void SetState(FungalState state)
     {
         currentState = state;
+
+        switch (state)
+        {
+            case FungalState.THROW_FISH:
+                timeInSlingRange = 0f;
+                break;
+        }
     }
 }
