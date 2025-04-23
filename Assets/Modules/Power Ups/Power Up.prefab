@@ -62,7 +62,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 7b26e281b3c384c4a864821a328dba54, type: 2}
+  - {fileID: 2100000, guid: b25ccfaa9e3804e0ba6223039c571fde, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -115,6 +115,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4972096522007109033}
   - component: {fileID: 4146883234451132291}
+  - component: {fileID: 1262238484610162644}
   m_Layer: 0
   m_Name: Power Up
   m_TagString: Untagged
@@ -152,6 +153,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ability: {fileID: 11400000, guid: 1291c085bda6a49369653b5fa82ceff3, type: 2}
+--- !u!114 &1262238484610162644
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8392844265651033122}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bdad48e54ee84200abce591f61c0906, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  axis: {x: 0, y: 1, z: 0}
+  rotationSpeed: 50
 --- !u!1001 &5830716655942254223
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -168,12 +183,12 @@ PrefabInstance:
     - target: {fileID: 3509172582149382292, guid: 490ddbc0ee2bfca45b4ced41e7146879,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 3509172582149382292, guid: 490ddbc0ee2bfca45b4ced41e7146879,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.1
       objectReference: {fileID: 0}
     - target: {fileID: 3509172582149382292, guid: 490ddbc0ee2bfca45b4ced41e7146879,
         type: 3}

@@ -18,7 +18,11 @@ public class PowerUp : MonoBehaviour
             var fungal = hit.GetComponentInParent<FungalController>();
             if (fungal)
             {
-                fungal.ApplyAbility(ability);
+                var abilityTemplate = ability;
+                var fungalAbility = Instantiate(abilityTemplate);
+                fungalAbility.Initialize(fungal);
+
+                fungal.ApplyAbility(fungalAbility);
                 hasBeenCollected = true;
                 Destroy(gameObject); // Remove the power-up object from the scene
                 break;

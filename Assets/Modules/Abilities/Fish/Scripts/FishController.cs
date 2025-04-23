@@ -84,7 +84,7 @@ public class FishController : MonoBehaviour
 
     public void PickUp(FungalController fungal)
     {
-        Debug.Log("PickUp");
+        //Debug.Log("PickUp");
         HandlePickup(fungal);
         OnPickedUp?.Invoke();
     }

@@ -7,14 +7,13 @@ public class LoadingUI : MonoBehaviour
 
     private string[] loadingMessages = new string[]
     {
-        "hey coach, get me out of this hell",
-        "a moment of heaven, a lifetime of pain",
+        "hey coach, get me out of this please",
         "the love never ends, is it good or bog?",
         "where is the so called party grove?",
         "in the bog rooms we all fam",
         "when will you wake up and realize it's all bog",
         "oops here they are again, hiding in flesh",
-        "careful otherwise they feed of the poision",
+        "careful otherwise they feed off the poision",
         "roads to isolation and wrath are well worn",
         "the previous footsteps have all been villainized",
         "the only antidote is to spill blood and tears",
@@ -22,7 +21,8 @@ public class LoadingUI : MonoBehaviour
         "don't tell me we need another seance",
         "what you seek already exists, hidden behind a door",
         "lost in focus, seeing each other, but not the truth",
-        "no escape, the exit is gone, will freedom be drawn"
+        "no escape, the exit is gone, will freedom be drawn",
+        "its not an ending, its completion"
     };
 
     private void OnEnable()

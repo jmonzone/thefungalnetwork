@@ -5,25 +5,23 @@ using UnityEngine.Events;
 public class FungalController : MonoBehaviour
 {
     [SerializeField] private FungalData data;
-
     [SerializeField] private float baseSpeed = 3f;
     [SerializeField] private GameObject shieldRenderer;
     [SerializeField] private GameObject trailRenderers;
     [SerializeField] private GameObject stunAnimation;
 
-    public ulong Id { get; set; }
-    public bool IsBot;
-
     public FungalData Data => data;
     public float BaseSpeed => 3f;
+
+    public ulong Id { get; set; }
+    public bool IsBot { get; set; }
+    public bool IsDead { get; private set; }
+    public Ability Ability { get; private set; }
 
     public Movement Movement { get; private set; }
     public Health Health { get; private set; }
     public MovementAnimations Animations { get; private set; }
     public MaterialFlasher MaterialFlasher { get; private set; }
-
-    //todo: make separate death component
-    public bool IsDead { get; private set; }
 
     public event UnityAction OnInitialized;
     public event UnityAction OnSpeedModified;
@@ -31,6 +29,8 @@ public class FungalController : MonoBehaviour
     public event UnityAction<bool> OnTrailToggled;
     public event UnityAction<bool> OnDeath;
     public event UnityAction OnRespawnComplete;
+
+    public event UnityAction OnAbilityAdded;
 
 
     public UnityAction<float, bool> HandleSpeedModifier;
@@ -143,6 +143,7 @@ public class FungalController : MonoBehaviour
 
     public void ApplyAbility(Ability ability)
     {
-
+        Ability = ability;
+        OnAbilityAdded?.Invoke();
     }
 }

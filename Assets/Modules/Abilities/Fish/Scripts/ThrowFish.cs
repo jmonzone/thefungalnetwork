@@ -65,7 +65,7 @@ public class ThrowFish : MonoBehaviour
 
     private void Movement_OnDestinationReached()
     {
-        Debug.Log($"ThrowFish Movement_OnDestinationReached {name}");
+        //Debug.Log($"ThrowFish Movement_OnDestinationReached {name}");
         enabled = false;
         if (respawnOnThrow) fish.Respawn();
         OnThrowComplete?.Invoke();

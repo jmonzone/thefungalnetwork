@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class FungalThrowUI : MonoBehaviour
 {
     [Header("UI")]
+    [SerializeField] private Button button;
     [SerializeField] private Image abilityOutline;
     [SerializeField] private Image abilityBackground;
     [SerializeField] private Image abilityIcon;
@@ -37,6 +38,10 @@ public class FungalThrowUI : MonoBehaviour
 
     private void OnDisable()
     {
+        abilityBackground.color = defaultBackgroundColor;
+        abilityIcon.gameObject.SetActive(true);
+        fishIcon.gameObject.SetActive(false);
+
         if (fungalThrow != null)
         {
             fungalThrow.OnFishChanged -= UpdateView;
@@ -54,7 +59,6 @@ public class FungalThrowUI : MonoBehaviour
 
             abilityIcon.gameObject.SetActive(false);
             fishIcon.gameObject.SetActive(true);
-
         }
         else
         {
@@ -64,4 +68,5 @@ public class FungalThrowUI : MonoBehaviour
             abilityText.text = "No Fish Available";
         }
     }
+
 }

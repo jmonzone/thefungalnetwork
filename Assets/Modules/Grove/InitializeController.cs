@@ -29,6 +29,8 @@ public class InitializeController : MonoBehaviour
     public void Initialize(FungalController fungal, UnityAction onComplete = null)
     {
         this.fungal = fungal;
+        this.fungal.OnAbilityAdded += Fungal_OnAbilityAdded;
+
         StartCoroutine(InitializeRoutine(onComplete));
     }
 
@@ -72,5 +74,11 @@ public class InitializeController : MonoBehaviour
         }
 
         fungalAbilityButton.AssignAbility(fungalAbility);
+    }
+
+    private void Fungal_OnAbilityAdded()
+    {
+        fungalThrowUI.enabled = false;
+        fungalThrowButton.AssignAbility(fungal.Ability);
     }
 }
