@@ -18,11 +18,14 @@ public class AutoConnect : MonoBehaviour
     {
         if (multiplayer.JoinedLobby != null)
         {
+            Debug.Log("multiplayer.StartHostClient");
             multiplayer.StartHostClient();
         }
         else
         {
-            yield return new WaitForSeconds(3f);
+            Debug.Log("multiplayer.SignIn");
+
+            yield return new WaitForSeconds(2f);
 
             multiplayer.SignIn(() =>
             {

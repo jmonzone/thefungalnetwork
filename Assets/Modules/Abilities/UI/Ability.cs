@@ -1,18 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 
-public abstract class DirectionalAbility : Ability
-{
-    public abstract Vector3 DefaultTargetPosition { get; }
-    public abstract float Range { get; }
-    public abstract bool UseTrajectory { get; }
-
-    public virtual void CastAbility(Vector3 targetPosition)
-    {
-        base.CastAbility();
-    }
-}
-
 public abstract class Ability : ScriptableObject
 {
     [SerializeField] private string id;

@@ -61,12 +61,14 @@ public class GameReference : ScriptableObject
         {
             clientPlayer = addedPlayer;
 
-            //Debug.Log($"OnClientPlayerAdded");
+            Debug.Log($"GameReference.OnClientPlayerAdded");
             OnClientPlayerAdded?.Invoke();
         }
 
         if (multiplayer.LobbyPlayers.Count == Players.Count)
         {
+            Debug.Log($"GameReference.OnAllPlayersAdded");
+
             OnAllPlayersAdded?.Invoke();
         }
 
