@@ -9,7 +9,7 @@ public class MoveCharacterJoystick : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log($"MoveCharacterJoystick.Start {player.name}");
+        //Debug.Log($"MoveCharacterJoystick.Start {player.name}");
 
         joystick.OnJoystickUpdate += MovePlayer;
         joystick.OnJoystickEnd += Joystick_OnJoystickEnd;

@@ -61,7 +61,7 @@ public class GameReference : ScriptableObject
         {
             clientPlayer = addedPlayer;
 
-            Debug.Log($"OnClientPlayerAdded");
+            //Debug.Log($"OnClientPlayerAdded");
             OnClientPlayerAdded?.Invoke();
         }
 

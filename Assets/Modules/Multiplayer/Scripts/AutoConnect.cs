@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class AutoConnect : MonoBehaviour
@@ -29,25 +30,36 @@ public class AutoConnect : MonoBehaviour
                 {
                     if (lobbies.Count > 0)
                     {
-                        var value = await multiplayer.TryJoinLobbyById(lobbies[0].Id);
+                        bool joined = false;
 
-                        if (value)
+                        while (!joined)
                         {
-                            var joinCode = multiplayer.JoinedLobby.Data["JoinCode"].Value;
+                            var value = await multiplayer.TryJoinLobbyById(lobbies[0].Id);
 
-                            Debug.Log($"joining {joinCode}");
+                            if (value)
+                            {
+                                var joinCode = multiplayer.JoinedLobby.Data["JoinCode"].Value;
 
-                            await multiplayer.JoinRelay(joinCode);
+                                Debug.Log($"joining {joinCode}");
+
+                                await multiplayer.JoinRelay(joinCode);
+
+                                multiplayer.StartHostClient();
+                                joined = true;
+                            }
+                            else
+                            {
+                                Debug.Log("Join attempt failed, retrying in 1 second...");
+                                await Task.Delay(2000);
+                            }
                         }
-
-                        multiplayer.StartHostClient();
                     }
                     else
                     {
                         var index = fungalCollection.Fungals.IndexOf(startingFungal);
                         await multiplayer.CreateRelayAndLobby(gameMode, index);
 
-                        foreach(var botFungal in botPlayers)
+                        foreach (var botFungal in botPlayers)
                         {
                             index = fungalCollection.Fungals.IndexOf(botFungal);
                             await multiplayer.AddAIPlayer(index);
@@ -59,4 +71,5 @@ public class AutoConnect : MonoBehaviour
             });
         }
     }
+
 }

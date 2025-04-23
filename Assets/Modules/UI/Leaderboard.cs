@@ -57,7 +57,7 @@ public class Leaderboard : MonoBehaviour
 
     private void UpdateLeaderboard()
     {
-        Debug.Log($"updating leaderboard {multiplayer.GameMode }");
+        //Debug.Log($"updating leaderboard {multiplayer.GameMode }");
 
         if (multiplayer.GameMode == GameMode.PARTY)
         {
