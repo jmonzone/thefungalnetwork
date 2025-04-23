@@ -32,12 +32,16 @@ public class WaterFish : MonoBehaviour
     {
         var bubble = Instantiate(bubblePrefab, targetPosition, Quaternion.identity);
 
-        animator.Play("Jump");
-
-        Invoke(nameof(ReturnFish), 1f);
+        HandleBubbleSpawn();
         return bubble;
     }
 
+    public void HandleBubbleSpawn()
+    {
+        animator.Play("Jump");
+        Invoke(nameof(ReturnFish), 1f);
+
+    }
     private void ReturnFish()
     {
         fish.Respawn();

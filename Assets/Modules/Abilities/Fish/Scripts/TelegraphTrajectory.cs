@@ -6,7 +6,7 @@ public class TelegraphTrajectory : MonoBehaviour
 {
     [SerializeField] private GameObject radiusIndicator;
 
-    public event UnityAction OnIndicatorShow;
+    public event UnityAction<Vector3, float> OnIndicatorShow;
     public event UnityAction OnIndicatorHide;
 
     private void Awake()
@@ -24,11 +24,12 @@ public class TelegraphTrajectory : MonoBehaviour
         radiusIndicator.SetActive(true);
         radiusIndicator.transform.localScale = 2f * radius * Vector3.one;
 
-        OnIndicatorShow?.Invoke();
+        OnIndicatorShow?.Invoke(targetPosition, radius);
     }
 
     public void HideIndicator()
     {
         radiusIndicator.SetActive(false);
+        OnIndicatorHide?.Invoke();
     }
 }

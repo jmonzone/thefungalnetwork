@@ -42,7 +42,6 @@ public class FungalController : MonoBehaviour
         Movement.SetSpeed(baseSpeed);
 
         Health = GetComponent<Health>();
-        Health.OnDamaged += Health_OnDamaged;
 
         HandleSpeedModifier = ApplySpeedModifier;
         HandleSpeedReset = ApplySpeedReset;
@@ -50,8 +49,14 @@ public class FungalController : MonoBehaviour
         if (data) InitializePrefab(data);
     }
 
+    private void Start()
+    {
+        Health.OnDamaged += Health_OnDamaged;
+    }
+
     private void Health_OnDamaged(DamageEventArgs args)
     {
+        Debug.Log($"Health_OnDamaged {args.lethal}");
         if (args.lethal)
         {
             Die(args.SelfInflicted);

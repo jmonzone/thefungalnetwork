@@ -25,5 +25,13 @@ public class NetworkWaterFish : NetworkBehaviour
     {
         var bubble = waterFish.CreateBubble(targetPosition);
         bubble.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId);
+
+        HandleSpawnBubbleClientRpc();
+    }
+
+    [ClientRpc]
+    private void HandleSpawnBubbleClientRpc()
+    {
+        if (IsOwner) waterFish.HandleBubbleSpawn();
     }
 }

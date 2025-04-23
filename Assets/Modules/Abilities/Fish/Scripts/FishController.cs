@@ -44,8 +44,12 @@ public class FishController : MonoBehaviour
         Movement = GetComponent<Movement>();
         ThrowFish = GetComponent<ThrowFish>();
         audioSource = GetComponent<AudioSource>();
+        SetSpawnPosition(transform.position);
+    }
 
-        spawnPosition = transform.position;
+    public void SetSpawnPosition(Vector3 position)
+    {
+        spawnPosition = position;
     }
 
     //todo: centralize with Fungal Controller
@@ -65,7 +69,10 @@ public class FishController : MonoBehaviour
         yield return Movement.ScaleOverTime(0.5f, 1f);
 
         OnRespawnComplete?.Invoke();
+    }
 
+    public void HandleRespawn()
+    {
         Fungal = null;
         isPickedUp = false;
     }

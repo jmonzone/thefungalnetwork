@@ -23,9 +23,6 @@ public class NetworkHealth : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void OnDamageServerRpc(DamageEventArgs args)
     {
-        if (health.CurrentHealth <= 0) return;
-
-
         var fungal = GetComponentInParent<NetworkFungal>();
 
         if (args.source != NetworkObjectId)
@@ -43,12 +40,14 @@ public class NetworkHealth : NetworkBehaviour
                 });
             }
         }
+
+        OnDamageClientRpc(args);
     }
 
     [ClientRpc]
-    public void OnDamageClientRpc()
+    public void OnDamageClientRpc(DamageEventArgs args)
     {
-
+        health.ApplyDamage(args);
     }
 
     [ServerRpc(RequireOwnership = false)]
