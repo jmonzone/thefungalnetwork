@@ -140,4 +140,9 @@ public class FungalController : MonoBehaviour
         if (showStunAnimation) stunAnimation.SetActive(false);
         Movement.ResetSpeedModifier();
     }
+
+    public void ApplyAbility(Ability ability)
+    {
+
+    }
 }
