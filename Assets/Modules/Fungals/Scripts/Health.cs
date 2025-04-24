@@ -80,14 +80,17 @@ public class Health : MonoBehaviour
             remainingDamage -= shieldDamage;
         }
 
+        var health = currentHealth;
+
         // Step 2: If damage remains, apply it to health
         if (remainingDamage > 0)
         {
+            health = Mathf.Clamp(currentHealth - remainingDamage, 0, maxHealth);
             SetHealth(Mathf.Clamp(currentHealth - remainingDamage, 0, maxHealth));
         }
 
-        var knockout = currentHealth <= 0;
-
+        var knockout = health <= 0;
+        
         var fungal = GetComponent<FungalController>();
 
         var args = new DamageEventArgs()

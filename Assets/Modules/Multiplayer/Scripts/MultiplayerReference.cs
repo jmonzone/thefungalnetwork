@@ -457,7 +457,7 @@ public class MultiplayerReference : ScriptableObject
                 Data = new Dictionary<string, DataObject>()
                 {
                     { "HostName", new DataObject(DataObject.VisibilityOptions.Public, PlayerName) },
-                    { "GameMode", new DataObject(DataObject.VisibilityOptions.Public, GameMode.PARTY.ToString())},
+                    { "GameMode", new DataObject(DataObject.VisibilityOptions.Public, GameMode.ELIMINATION.ToString())},
                 },
             };
 

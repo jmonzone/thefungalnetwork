@@ -9,20 +9,16 @@ public class LoadingUI : MonoBehaviour
     {
         "hey coach, get me out of this please",
         "the love never ends, is it good or bog?",
-        "where is the so called party grove?",
+        "where is this so called party grove?",
         "in the bog rooms we all fam",
         "when will you wake up and realize it's all bog",
         "oops here they are again, hiding in flesh",
-        "careful otherwise they feed off the poision",
-        "roads to isolation and wrath are well worn",
-        "the previous footsteps have all been villainized",
+        "careful, they feed off the poision",
         "the only antidote is to spill blood and tears",
-        "the mark of empathy is provided to those who walked",
         "don't tell me we need another seance",
-        "what you seek already exists, hidden behind a door",
         "lost in focus, seeing each other, but not the truth",
-        "no escape, the exit is gone, will freedom be drawn",
-        "its not an ending, its completion"
+        "no escape, the exit is gone, freedom is a draw",
+        "it's not an ending, its completion"
     };
 
     private void OnEnable()
