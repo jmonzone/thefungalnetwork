@@ -11,6 +11,8 @@ public class NetworkFish : NetworkBehaviour
 
         fish = GetComponent<FishController>();
         fish.OnPickedUp += FishController_OnPickedUp;
+
+        fish.OnRespawnComplete -= fish.HandleRespawn;
         fish.OnRespawnComplete += HandleRespawnServerRpc;
 
         fish.SetSpawnPosition(transform.position);

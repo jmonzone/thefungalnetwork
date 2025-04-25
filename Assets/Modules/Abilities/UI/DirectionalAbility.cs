@@ -38,7 +38,9 @@ public abstract class DirectionalAbility : Ability
                 }
             }
 
-            return closestFungal != null ? closestFungal.transform.position : forwardTarget;
+            var targetPosition = closestFungal != null ? closestFungal.transform.position : forwardTarget;
+            targetPosition.y = 0;
+            return targetPosition;
         }
     }
 }

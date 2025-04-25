@@ -35,32 +35,20 @@ public class WindFish : MonoBehaviour
 
     public IEnumerator ThrowFishUpdate()
     {
-        var sourceFungal = fish.Fungal.Id;
+        List<FungalController> hits = new List<FungalController>();
 
-        var hasHit = false;
-
-        List<Collider> hits = new List<Collider>();
-
-        while (!hasHit)
+        while (true)
         {
-            hitDetector.CheckHits(1f, hit =>
-            {
-                if (hits.Contains(hit)) return;
-
-                var targetFungal = hit.GetComponent<FungalController>();
-
-                if (targetFungal == null) return;
-                if (targetFungal == fish.Fungal) return;
-                if (targetFungal.IsDead) return;
-
-                targetFungal.ModifySpeed(0f, hitStun, showStunAnimation: false);
-                targetFungal.Health.Damage(damage, sourceFungal);
-                Debug.Log($"WindFish damage {targetFungal.name}");
-
-                hits.Add(hit);
-                hasHit = true;
-            });
-
+            hitDetector.CheckFungalHits(1f, damage, hitStun, fish.Fungal,
+                onHit: hit =>
+                {
+                    hits.Add(hit);
+                },
+                isValid: (fungal) =>
+                {
+                    return !hits.Contains(fungal);
+                });
+            
             yield return null;
         }
     }

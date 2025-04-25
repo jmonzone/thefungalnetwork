@@ -28,9 +28,9 @@ Transform:
   m_GameObject: {fileID: 124465296158630013}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: 0, y: 0.75, z: 0}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 4972096522007109033}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -192,13 +192,28 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3509172582149382292, guid: 490ddbc0ee2bfca45b4ced41e7146879,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3509172582149382292, guid: 490ddbc0ee2bfca45b4ced41e7146879,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3509172582149382292, guid: 490ddbc0ee2bfca45b4ced41e7146879,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3509172582149382292, guid: 490ddbc0ee2bfca45b4ced41e7146879,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3509172582149382292, guid: 490ddbc0ee2bfca45b4ced41e7146879,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.1
+      value: 0.15
       objectReference: {fileID: 0}
     - target: {fileID: 3509172582149382292, guid: 490ddbc0ee2bfca45b4ced41e7146879,
         type: 3}
@@ -239,6 +254,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3509172582149382292, guid: 490ddbc0ee2bfca45b4ced41e7146879,
+        type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3509172582149382295, guid: 490ddbc0ee2bfca45b4ced41e7146879,
         type: 3}

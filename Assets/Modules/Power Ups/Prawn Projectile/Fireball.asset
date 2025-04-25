@@ -10,16 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8a7462955e9f144a5be53eff1b781479, type: 3}
-  m_Name: Prawn Projectile
+  m_Name: Fireball
   m_EditorClassIdentifier: 
-  id: Prawn Puh
-  description: Shoots prawns in a target direction
-  backgroundColor: {r: 0.990566, g: 0.6620874, b: 0.31305623, a: 1}
-  image: {fileID: 21300000, guid: 40ef02666947a41079b4f9d9f2955c95, type: 3}
+  id: Boom Blast
+  description: Shoots fireball
+  backgroundColor: {r: 0.99215686, g: 0.97540396, b: 0.31372547, a: 1}
+  image: {fileID: 21300000, guid: 34b228c1f68134c7c82bf560c8730aa0, type: 3}
   radius: 1
-  castCooldown: 0.5
-  projectilePrefab: {fileID: 2555890173058867351, guid: dd902506e623740f2a488d4ff7a1458b,
+  castCooldown: 1
+  projectilePrefab: {fileID: 2555890173058867351, guid: 2bd2de9d66c44487fa6147fa71c0a9d9,
     type: 3}
   range: 5
-  damage: 2
-  hitStun: 0.25
+  damage: 3
+  hitStun: 0.5
+  useTrajectory: 1
+  isExplosion: 1

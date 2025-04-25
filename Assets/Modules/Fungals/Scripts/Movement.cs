@@ -53,10 +53,10 @@ public class Movement : MonoBehaviour
     private bool reverseDirection;
 
     [Header("Trajectory Movement Settings")]
+    [SerializeField] private bool updateLookTrajectory = true;
     [SerializeField] private float trajectoryHeight = 3f; // Height of the trajectory
     [SerializeField] private float trajectoryDuration = 2f; // Duration of the movement in seconds
     private Vector3 trajectoryStartPosition;
-    private Vector3 trajectoryEndPosition;
     private float trajectoryTimeElapsed;
 
     public event UnityAction OnTypeChanged;
@@ -245,7 +245,7 @@ public class Movement : MonoBehaviour
     public void SetTrajectoryMovement(Vector3 endPosition)
     {
         trajectoryStartPosition = transform.position;
-        trajectoryEndPosition = endPosition;
+        targetPosition = endPosition;
         //trajectoryHeight = height;
         //trajectoryDuration = duration;
         trajectoryTimeElapsed = 0f;
@@ -258,25 +258,29 @@ public class Movement : MonoBehaviour
         float progress = Mathf.Clamp01(trajectoryTimeElapsed / trajectoryDuration);
 
         // Calculate the position on the XZ plane with constant speed
-        Vector3 currentPosition = Vector3.Lerp(trajectoryStartPosition, trajectoryEndPosition, progress);
+        Vector3 currentPosition = Vector3.Lerp(trajectoryStartPosition, targetPosition, progress);
 
         // Calculate the height using a simple curve (parabola-like trajectory)
         float heightOffset = Mathf.Sin(progress * Mathf.PI) * trajectoryHeight;
 
-        targetPosition = new Vector3(currentPosition.x, heightOffset, currentPosition.z);
+        var nextPosition = new Vector3(currentPosition.x, heightOffset, currentPosition.z);
 
-        var lookDirection = targetPosition - transform.position;
-        UpdateLookDirection(lookDirection);
+
+        var lookDirection = nextPosition - transform.position;
+
+        if (updateLookTrajectory)
+        {
+            UpdateLookDirection(lookDirection);
+        }
 
         // Set the final position with calculated height
-        transform.position = targetPosition;
+        transform.position = nextPosition;
 
         // If the movement is complete, stop the movement
         if (progress >= 1f)
         {
             Stop();
 
-            //Debug.Log("Stopping, updating look direction " + lookDirection);
             lookDirection.y = 0;
             UpdateLookDirection(lookDirection.normalized, force: true);
 

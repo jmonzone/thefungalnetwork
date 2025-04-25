@@ -47,6 +47,11 @@ public class FishController : MonoBehaviour
         SetSpawnPosition(transform.position);
     }
 
+    private void Start()
+    {
+        OnRespawnComplete += HandleRespawn;
+    }
+
     public void SetSpawnPosition(Vector3 position)
     {
         spawnPosition = position;
