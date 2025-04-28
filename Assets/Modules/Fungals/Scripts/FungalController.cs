@@ -141,9 +141,16 @@ public class FungalController : MonoBehaviour
         Movement.ResetSpeedModifier();
     }
 
-    public void ApplyAbility(Ability ability)
+    public bool TryApplyAbility(Ability abilityToApply)
     {
-        Ability = ability;
-        OnAbilityAdded?.Invoke();
+        if (!Ability || Ability.Id != abilityToApply.Id)
+        {
+            Ability = Instantiate(abilityToApply);
+            Ability.Initialize(this);
+            OnAbilityAdded?.Invoke();
+            return true;
+        }
+        else return false;
+       
     }
 }

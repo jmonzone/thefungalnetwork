@@ -10,8 +10,14 @@ public class PowerUp : MonoBehaviour
     private float detectionRadius = 1.5f;
     private bool hasBeenCollected = false;
 
+    private void Awake()
+    {
+        if (!ability) Debug.LogWarning("No ability on power up?");
+    }
+
     void Update()
     {
+        if (!ability) return;
         if (hasBeenCollected) return;
 
         Collider[] hits = Physics.OverlapSphere(transform.position, detectionRadius);
@@ -19,13 +25,8 @@ public class PowerUp : MonoBehaviour
         foreach (Collider hit in hits)
         {
             var fungal = hit.GetComponentInParent<FungalController>();
-            if (fungal)
+            if (fungal && fungal.TryApplyAbility(ability))
             {
-                var abilityTemplate = ability;
-                var fungalAbility = Instantiate(abilityTemplate);
-                fungalAbility.Initialize(fungal);
-
-                fungal.ApplyAbility(fungalAbility);
                 hasBeenCollected = true;
                 StartCoroutine(ResetAfterDelay());
                 break;
