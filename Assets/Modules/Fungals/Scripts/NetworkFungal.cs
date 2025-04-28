@@ -73,9 +73,13 @@ public class NetworkFungal : NetworkBehaviour
         Fungal = GetComponent<FungalController>();
         Fungal.Id = NetworkObjectId;
 
+        if (IsServer)
+        {
+            Fungal.OnDeath += OnDeath;
+        }
+
         if (IsOwner)
         {
-            Fungal.OnDeath += DieServerRpc;
             Fungal.OnShieldToggled += ToggleShieldRendererServerRpc;
             Fungal.OnTrailToggled += ToggleTrailRenderersServerRpc;
             Movement.OnTypeChanged += Movement_OnTypeChanged;
@@ -83,7 +87,8 @@ public class NetworkFungal : NetworkBehaviour
 
         Fungal.HandleSpeedModifier = HandleSpeedModiferServerRpc;
         Fungal.HandleSpeedReset = HandleSpeedResetServerRpc;
-        Fungal.HandleRespawn = HandleRespawnServerRpc;
+        Fungal.HandleRespawn = IsOwner ? HandleRespawnServerRpc : null;
+        Fungal.HandleDeath = IsOwner ? HandleDeathServerRpc : null;
 
 
         var fishPickup = GetComponent<FishPickup>();
@@ -167,17 +172,26 @@ public class NetworkFungal : NetworkBehaviour
                 label = "Debug"
             });
         }
-
-
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void DieServerRpc(bool selfDestruct)
+    private void OnDeath(bool selfDestruct)
     {
         if (selfDestruct) selfDestructs.Value++;
 
         lives.Value--;
         score.Value = Mathf.FloorToInt(score.Value / 2f);
+    }
+
+    [ServerRpc]
+    private void HandleDeathServerRpc(bool selfDestruct)
+    {
+        HandleDeathClientRpc(selfDestruct);
+    }
+
+    [ClientRpc]
+    private void HandleDeathClientRpc(bool selfDestruct)
+    {
+        Fungal.ApplyDeath(selfDestruct);
     }
 
     [ServerRpc(RequireOwnership = false)]

@@ -42,6 +42,8 @@ public class FungalController : MonoBehaviour
 
     public UnityAction<float, bool> HandleSpeedModifier;
     public UnityAction<bool> HandleSpeedReset;
+
+    public UnityAction<bool> HandleDeath;
     public UnityAction HandleRespawn;
 
     private void Awake()
@@ -53,6 +55,7 @@ public class FungalController : MonoBehaviour
 
         HandleSpeedModifier = ApplySpeedModifier;
         HandleSpeedReset = ApplySpeedReset;
+        HandleDeath = ApplyDeath;
         HandleRespawn = ApplyRespawn;
 
         if (data) InitializePrefab(data);
@@ -127,6 +130,11 @@ public class FungalController : MonoBehaviour
     }
 
     public void Die(bool selfDestruct)
+    {
+        HandleDeath?.Invoke(selfDestruct);
+    }
+
+    public void ApplyDeath(bool selfDestruct)
     {
         IsDead = true;
         Movement.enabled = false;
