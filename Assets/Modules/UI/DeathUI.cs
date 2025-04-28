@@ -21,7 +21,7 @@ public class DeathUI : MonoBehaviour
     {
         minigameReference.OnClientPlayerAdded -= MinigameReference_OnClientPlayerAdded;
 
-        minigameReference.ClientPlayer.Fungal.OnRespawnStart += MinigameReference_OnRespawnStart;
+        minigameReference.ClientPlayer.Fungal.Fungal.OnRespawnStart += MinigameReference_OnRespawnStart;
         minigameReference.ClientPlayer.Fungal.Fungal.OnRespawnComplete += MinigameReference_OnRespawnComplete;
         enabled = true;
     }
@@ -42,7 +42,7 @@ public class DeathUI : MonoBehaviour
         if (minigameReference == null || timerText == null)
             return;
 
-        float timeRemaining = minigameReference.ClientPlayer.Fungal.RemainingRespawnTime;
+        float timeRemaining = minigameReference.ClientPlayer.Fungal.Fungal.RemainingRespawnTime;
 
         // If you want the UI to disappear when timer is zero
         if (hideWhenZero && timeRemaining <= 0f)

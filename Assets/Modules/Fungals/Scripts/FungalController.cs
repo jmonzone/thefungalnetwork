@@ -6,6 +6,7 @@ public class FungalController : MonoBehaviour
 {
     [SerializeField] private FungalData data;
     [SerializeField] private float baseSpeed = 3f;
+    [SerializeField] private float respawnDuration = 5f;
     [SerializeField] private GameObject shieldRenderer;
     [SerializeField] private GameObject trailRenderers;
     [SerializeField] private GameObject stunAnimation;
@@ -15,6 +16,10 @@ public class FungalController : MonoBehaviour
 
     public ulong Id { get; set; }
     public bool IsBot { get; set; }
+    public Vector3 SpawnPosition { get; set; }
+    public float RemainingRespawnTime { get; private set; }
+    public bool CanRespawn { get; set; } = true;
+
     public bool IsDead { get; private set; }
     public Ability Ability { get; private set; }
 
@@ -28,6 +33,8 @@ public class FungalController : MonoBehaviour
     public event UnityAction<bool> OnShieldToggled;
     public event UnityAction<bool> OnTrailToggled;
     public event UnityAction<bool> OnDeath;
+
+    public event UnityAction OnRespawnStart;
     public event UnityAction OnRespawnComplete;
 
     public event UnityAction OnAbilityAdded;
@@ -35,6 +42,7 @@ public class FungalController : MonoBehaviour
 
     public UnityAction<float, bool> HandleSpeedModifier;
     public UnityAction<bool> HandleSpeedReset;
+    public UnityAction HandleRespawn;
 
     private void Awake()
     {
@@ -45,12 +53,15 @@ public class FungalController : MonoBehaviour
 
         HandleSpeedModifier = ApplySpeedModifier;
         HandleSpeedReset = ApplySpeedReset;
+        HandleRespawn = ApplyRespawn;
 
         if (data) InitializePrefab(data);
     }
 
     private void Start()
     {
+        SpawnPosition = transform.position;
+
         Health.OnDamaged += Health_OnDamaged;
     }
 
@@ -81,7 +92,31 @@ public class FungalController : MonoBehaviour
         OnInitialized?.Invoke();
     }
 
-    public void Respawn()
+    private IEnumerator RespawnRoutine()
+    {
+        OnRespawnStart?.Invoke();
+        RemainingRespawnTime = respawnDuration;
+
+        while (RemainingRespawnTime > 0f)
+        {
+            yield return null; // Wait for next frame
+            RemainingRespawnTime -= Time.deltaTime;
+        }
+
+        RemainingRespawnTime = 0f;
+
+        HandleRespawn?.Invoke();
+    }
+
+    private void ApplyRespawn()
+    {
+        Health.ReplenishHealth();
+        transform.position = SpawnPosition;
+
+        ApplyRespawnEffects();
+    }
+
+    public void ApplyRespawnEffects()
     {
         IsDead = false;
         Movement.enabled = true;
@@ -102,6 +137,8 @@ public class FungalController : MonoBehaviour
         Movement.Stop();
 
         OnDeath?.Invoke(selfDestruct);
+
+        if (CanRespawn) StartCoroutine(RespawnRoutine());
     }
 
     public void ToggleShieldRenderers(bool value)

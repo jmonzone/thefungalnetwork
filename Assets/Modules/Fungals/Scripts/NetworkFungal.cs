@@ -23,21 +23,15 @@ public class NetworkFungal : NetworkBehaviour
     [SerializeField] private GameReference game;
     [SerializeField] private FungalCollection fungalCollection;
 
-    [SerializeField] private float respawnDuration = 5f;
 
     public FungalController Fungal { get; private set; }
     public FungalData Data => Fungal.Data;
     public Health Health => Fungal.Health;
     public Movement Movement => Fungal.Movement;
     private MovementAnimations Animations => Fungal.Animations;
-    private MaterialFlasher MaterialFlasher => Fungal.MaterialFlasher;
 
     //todo: make separate death component
     public bool IsDead => Fungal.IsDead;
-
-    public float RemainingRespawnTime { get; private set; }
-
-    private Vector3 spawnPosition;
 
     private ClientNetworkTransform networkTransform;
 
@@ -58,7 +52,6 @@ public class NetworkFungal : NetworkBehaviour
     public int Kills => kills.Value;
     public int SelfDestructs => selfDestructs.Value;
 
-    public event UnityAction OnRespawnStart;
     public event UnityAction OnLivesChanged;
     public event UnityAction<int, int> OnKill;
     public event UnityAction OnScoreUpdated;
@@ -90,14 +83,13 @@ public class NetworkFungal : NetworkBehaviour
 
         Fungal.HandleSpeedModifier = HandleSpeedModiferServerRpc;
         Fungal.HandleSpeedReset = HandleSpeedResetServerRpc;
+        Fungal.HandleRespawn = HandleRespawnServerRpc;
 
 
         var fishPickup = GetComponent<FishPickup>();
         fishPickup.enabled = IsOwner;
 
         networkTransform = GetComponent<ClientNetworkTransform>();
-
-        spawnPosition = transform.position;
 
         index.OnValueChanged += (old, value) =>
         {
@@ -122,18 +114,19 @@ public class NetworkFungal : NetworkBehaviour
             OnScoreUpdated?.Invoke();
         };
 
-        lives.OnValueChanged += (old, value) =>
+        if (game.gameMode == GameMode.ELIMINATION)
         {
-            OnLivesChanged?.Invoke();
-
-            if (IsOwner || (IsServer && Fungal.IsBot))
+            lives.OnValueChanged += (old, value) =>
             {
-                if (game.gameMode == GameMode.ELIMINATION && value > 0 || game.gameMode == GameMode.PARTY)
+                OnLivesChanged?.Invoke();
+
+                if (IsOwner)
                 {
-                    StartCoroutine(RespawnRoutine());
+                    Fungal.CanRespawn = value > 0;
                 }
-            }
-        };
+            };
+        }
+            
 
         if (!string.IsNullOrEmpty(player.Value.lobbyId.ToString()))
         {
@@ -187,42 +180,23 @@ public class NetworkFungal : NetworkBehaviour
         score.Value = Mathf.FloorToInt(score.Value / 2f);
     }
 
-    private IEnumerator RespawnRoutine()
-    {
-        OnRespawnStart?.Invoke();
-        RemainingRespawnTime = respawnDuration;
-
-        while (RemainingRespawnTime > 0f)
-        {
-            yield return null; // Wait for next frame
-            RemainingRespawnTime -= Time.deltaTime;
-        }
-
-        RemainingRespawnTime = 0f;
-
-        RespawnServerRpc();
-    }
-
     [ServerRpc(RequireOwnership = false)]
-    public void RespawnServerRpc()
+    public void HandleRespawnServerRpc()
     {
-        RespawnClientRpc();
+        HandleRespawnClientRpc();
     }
 
     [ClientRpc]
-    private void RespawnClientRpc()
+    private void HandleRespawnClientRpc()
     {
-        Fungal.Respawn();
-
-        if (IsServer)
-        {
-            Health.ReplenishHealth();
-        }
+        Fungal.ApplyRespawnEffects();
 
         if (IsOwner)
         {
+            Health.ReplenishHealth();
+
             networkTransform.Interpolate = false;
-            transform.position = spawnPosition;
+            transform.position = Fungal.SpawnPosition;
             networkTransform.Interpolate = true;
         }
     }
