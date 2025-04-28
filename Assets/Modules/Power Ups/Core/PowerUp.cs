@@ -1,8 +1,11 @@
+using System.Collections;
 using UnityEngine;
 
 public class PowerUp : MonoBehaviour
 {
     [SerializeField] private Ability ability;
+    [SerializeField] private float resetDelay = 3f; // seconds until it resets
+    [SerializeField] private Movement render;
 
     private float detectionRadius = 1.5f;
     private bool hasBeenCollected = false;
@@ -24,9 +27,19 @@ public class PowerUp : MonoBehaviour
 
                 fungal.ApplyAbility(fungalAbility);
                 hasBeenCollected = true;
-                Destroy(gameObject); // Remove the power-up object from the scene
+                StartCoroutine(ResetAfterDelay());
                 break;
             }
         }
+    }
+
+    private IEnumerator ResetAfterDelay()
+    {
+        yield return render.ScaleOverTime(0.25f, 0f);
+        render.gameObject.SetActive(false);
+        yield return new WaitForSeconds(resetDelay);
+        render.gameObject.SetActive(true);
+        yield return render.ScaleOverTime(0.25f, 1f);
+        hasBeenCollected = false;
     }
 }
