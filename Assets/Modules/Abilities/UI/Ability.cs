@@ -37,7 +37,7 @@ public abstract class Ability : ScriptableObject
 
     public virtual void Initialize(FungalController fungal)
     {
-        this.Fungal = fungal;
+        Fungal = fungal;
         cooldownModel = new CooldownModel(castCooldown);
     }
 

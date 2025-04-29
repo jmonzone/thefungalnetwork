@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
@@ -11,6 +12,10 @@ public class FungalController : MonoBehaviour
     [SerializeField] private GameObject shieldRenderer;
     [SerializeField] private GameObject trailRenderers;
     [SerializeField] private GameObject stunAnimation;
+    [SerializeField] private Material outlineMaterialPrefab;
+
+    private Renderer modelRenderer;
+    private Material outlineMaterial;
 
     public FungalData Data => data;
     public float BaseSpeed => 3f;
@@ -38,7 +43,7 @@ public class FungalController : MonoBehaviour
     public event UnityAction OnRespawnStart;
     public event UnityAction OnRespawnComplete;
 
-    public event UnityAction OnAbilityAdded;
+    public event UnityAction OnAbilityAssigned;
 
     public UnityAction<float, bool> HandleSpeedModifier;
     public UnityAction<bool> HandleSpeedReset;
@@ -92,6 +97,21 @@ public class FungalController : MonoBehaviour
         data = fungal;
 
         var model = Instantiate(data.Prefab, transform);
+        modelRenderer = model.GetComponentInChildren<Renderer>();
+
+        // Get existing materials and make a new array with one extra slot
+        var originalMats = modelRenderer.sharedMaterials;
+        Material[] newMats = new Material[originalMats.Length + 1];
+
+        // Create a runtime copy of the outline material
+        outlineMaterial = new Material(outlineMaterialPrefab);
+        outlineMaterial.SetFloat("_OutlineThickness", 0f); // Set thickness to 0
+
+        // Assign the outline material first (rendered behind others)
+        newMats[0] = originalMats[0];
+        newMats[1] = outlineMaterial;
+        modelRenderer.materials = newMats;
+
         Animations = model.AddComponent<MovementAnimations>();
         MaterialFlasher = model.AddComponent<MaterialFlasher>();
         MaterialFlasher.flashDuration = 0.5f;
@@ -197,11 +217,25 @@ public class FungalController : MonoBehaviour
         else return false;
     }
 
-    public void ApplyAbility(Ability abilityToApply)
+    List<Ability> cachedAbilities = new List<Ability>();
+    public void AssignAbility(Ability abilityToAssign)
     {
-        Ability = Instantiate(abilityToApply);
-        Ability.Initialize(this);
-        OnAbilityAdded?.Invoke();
+        var cachedAbility = cachedAbilities.Find(ability => ability.Id == abilityToAssign.Id);
+        if (cachedAbility)
+        {
+            Ability = cachedAbility;
+        }
+        else
+        {
+            Ability = Instantiate(abilityToAssign);
+            Ability.Initialize(this);
+            cachedAbilities.Add(Ability);
+        }
+
+        outlineMaterial.SetFloat("_OutlineThickness", 0.001f); // Set thickness to 0
+        outlineMaterial.SetColor("_OutlineColor", abilityToAssign.BackgroundColor);
+
+        OnAbilityAssigned?.Invoke();
     }
 
     public void RequestSpawnObject(GameObject prefab, Vector3 spawnPosition)
@@ -223,7 +257,7 @@ public class FungalController : MonoBehaviour
     {
         Debug.Log("OnObjectSpawned");
 
-        if (Ability is PrawnProjectile projectileAbility)
+        if (Ability is ProjectileAbility projectileAbility)
         {
             projectileAbility.AssignProjectile(obj.GetComponent<Projectile>());
         }

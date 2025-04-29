@@ -7,6 +7,7 @@ public class PowerUp : MonoBehaviour
     [SerializeField] private Ability ability;
     [SerializeField] private float resetDelay = 3f; // seconds until it resets
     [SerializeField] private Movement render;
+    [SerializeField] private GameObject placeholder;
 
     private float detectionRadius = 1.5f;
     private bool hasBeenCollected = false;
@@ -17,6 +18,7 @@ public class PowerUp : MonoBehaviour
     private void Awake()
     {
         if (ability) AssignAbility(ability);
+        if (placeholder) placeholder.SetActive(false);
 
         HandleCollection = fungal =>
         {
@@ -30,7 +32,7 @@ public class PowerUp : MonoBehaviour
     public void AssignAbility(Ability ability)
     {
         this.ability = ability;
-        Instantiate(ability.Prefab, render.transform);
+        Instantiate(ability.Prefab, render.transform, false);
     }
 
     private void Update()
@@ -56,7 +58,7 @@ public class PowerUp : MonoBehaviour
         if (hasBeenCollected) return;
 
         hasBeenCollected = true;
-        fungal.ApplyAbility(ability);
+        fungal.AssignAbility(ability);
     }
 
     public void StartRespawn()

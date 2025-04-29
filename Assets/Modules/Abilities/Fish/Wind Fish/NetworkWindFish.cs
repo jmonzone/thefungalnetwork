@@ -23,8 +23,8 @@ public class NetworkWindFish : NetworkBehaviour
         audioSource = GetComponent<AudioSource>();
 
         var throwFish = GetComponent<ThrowFish>();
-        throwFish.OnThrowStart += OnThrowStartServerRpc;
-        throwFish.OnThrowComplete += OnThrowCompleteServerRpc;
+        throwFish.OnTrajectoryStart += OnThrowStartServerRpc;
+        throwFish.OnTrajectoryComplete += OnThrowCompleteServerRpc;
 
         originalMaterial = fishRenderer.material;
     }

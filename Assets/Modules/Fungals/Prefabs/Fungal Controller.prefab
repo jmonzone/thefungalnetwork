@@ -352,10 +352,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data: {fileID: 0}
   baseSpeed: 3
+  respawnDuration: 5
   shieldRenderer: {fileID: 703176343855909365}
   trailRenderers: {fileID: 2850911616725606102}
   stunAnimation: {fileID: 7684853891565658531}
-  IsBot: 0
+  outlineMaterialPrefab: {fileID: 2100000, guid: 1c96d6daa42984ceabfaf13f91215b61,
+    type: 2}
 --- !u!114 &3373934044534024445
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -397,6 +399,7 @@ MonoBehaviour:
   target: {fileID: 0}
   stopDistance: 0.4
   circleRadius: 5
+  updateLookTrajectory: 1
   trajectoryHeight: 2.5
   trajectoryDuration: 2
   lockX: 0

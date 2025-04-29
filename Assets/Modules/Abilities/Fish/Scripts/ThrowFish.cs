@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public class ThrowFish : MonoBehaviour
+public class ThrowFish : MonoBehaviour, ITrajectory
 {
     [SerializeField] private float radius;
     [SerializeField] private bool respawnOnThrow = true;
@@ -16,8 +16,8 @@ public class ThrowFish : MonoBehaviour
 
     public Vector3 TargetPosition { get; private set; }
 
-    public event UnityAction<Vector3> OnThrowStart;
-    public event UnityAction OnThrowComplete;
+    public event UnityAction<Vector3> OnTrajectoryStart;
+    public event UnityAction OnTrajectoryComplete;
 
     private void Awake()
     {
@@ -60,7 +60,7 @@ public class ThrowFish : MonoBehaviour
         }
 
         TargetPosition = targetPosition;
-        OnThrowStart?.Invoke(targetPosition);
+        OnTrajectoryStart?.Invoke(targetPosition);
     }
 
     private void Movement_OnDestinationReached()
@@ -68,7 +68,7 @@ public class ThrowFish : MonoBehaviour
         //Debug.Log($"ThrowFish Movement_OnDestinationReached {name}");
         enabled = false;
         if (respawnOnThrow) fish.Respawn();
-        OnThrowComplete?.Invoke();
+        OnTrajectoryComplete?.Invoke();
     }
 
     public void SetRadius(float radius)

@@ -22,7 +22,7 @@ public class FireFish : MonoBehaviour
 
     private void Start()
     {
-        fish.ThrowFish.OnThrowComplete += StartExplosion;
+        fish.ThrowFish.OnTrajectoryComplete += StartExplosion;
         pufferfishExplosion.OnExplodeComplete += PufferfishExplosion_OnExplodeComplete;
     }
 

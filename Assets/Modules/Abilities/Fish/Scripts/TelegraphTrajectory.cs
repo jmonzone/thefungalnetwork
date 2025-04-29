@@ -2,6 +2,13 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
 
+public interface ITrajectory
+{
+    public float Radius { get; }
+    public event UnityAction<Vector3> OnTrajectoryStart;
+    public event UnityAction OnTrajectoryComplete;
+}
+
 public class TelegraphTrajectory : MonoBehaviour
 {
     [SerializeField] private GameObject radiusIndicator;
@@ -11,10 +18,13 @@ public class TelegraphTrajectory : MonoBehaviour
 
     private void Awake()
     {
-        var throwFish = GetComponent<ThrowFish>();
+        var trajectory = GetComponent<ITrajectory>();
 
-        throwFish.OnThrowStart += targetPosition => ShowIndicator(targetPosition, throwFish.Radius);
-        throwFish.OnThrowComplete += HideIndicator;
+        if (trajectory != null)
+        {
+            trajectory.OnTrajectoryStart += targetPosition => ShowIndicator(targetPosition, trajectory.Radius);
+            trajectory.OnTrajectoryComplete += HideIndicator;
+        }
     }
 
     public void ShowIndicator(Vector3 targetPosition, float radius)

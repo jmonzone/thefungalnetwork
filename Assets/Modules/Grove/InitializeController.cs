@@ -29,7 +29,7 @@ public class InitializeController : MonoBehaviour
     public void Initialize(FungalController fungal, UnityAction onComplete = null)
     {
         this.fungal = fungal;
-        this.fungal.OnAbilityAdded += Fungal_OnAbilityAdded;
+        this.fungal.OnAbilityAssigned += Fungal_OnAbilityAdded;
 
         StartCoroutine(InitializeRoutine(onComplete));
     }

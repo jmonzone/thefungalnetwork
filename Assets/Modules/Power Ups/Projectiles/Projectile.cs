@@ -1,21 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
-public class Projectile : MonoBehaviour
+//todo: separate types of projectiles
+public class Projectile : MonoBehaviour, ITrajectory
 {
     [SerializeField] private float damage;
     [SerializeField] private float hitStun = 0.5f;
-
+    [SerializeField] private float radius;
     [SerializeField] private bool useTrajectory;
     [SerializeField] private bool isExplosion;
 
     public FungalController Fungal { get; private set; }
     public bool InMotion { get; private set; }
 
+    float ITrajectory.Radius => radius;
+
     private Movement movement;
     private HitDetector hitDetector;
 
+    public event UnityAction<Vector3> OnTrajectoryStart;
+
+    public event UnityAction OnTrajectoryComplete;
     private void Awake()
     {
         hitDetector = GetComponent<HitDetector>();
@@ -75,11 +82,12 @@ public class Projectile : MonoBehaviour
 
             List<FungalController> hits = new List<FungalController>();
 
-            while (true)
+            while (movement.ScaleTransform.localScale.x > 0)
             {
-                hitDetector.CheckFungalHits(transform.localScale.x / 2f, damage, hitStun, Fungal,
+                hitDetector.CheckFungalHits(movement.ScaleTransform.localScale.x / 2f, damage, hitStun, Fungal,
                     onHit: hit =>
                     {
+                        Debug.Log("hit explosion");
                         hits.Add(hit);
                     },
                     isValid: (fungal) =>
@@ -93,12 +101,18 @@ public class Projectile : MonoBehaviour
 
         IEnumerator HandleExplosionSize()
         {
+            InMotion = true;
+            OnTrajectoryStart?.Invoke(targetPosition);
+            yield return movement.ScaleOverTime(0.1f, 1f);
             // Wait until it either hits or reaches destination
             yield return new WaitUntil(() => movement.IsAtDestination);
-            Debug.Log($"landed {targetPosition}");
-            yield return movement.ScaleOverTime(0.2f, 0, 2f * 2);
+
+            OnTrajectoryComplete?.Invoke();
+
+            yield return movement.ScaleOverTime(0.2f, 0, 2f * radius);
             yield return new WaitForSeconds(0.5f);
-            yield return movement.ScaleOverTime(0.1f, 2f * 2, 0);
+            yield return movement.ScaleOverTime(0.1f, 2f * radius, 0);
+            InMotion = false;
         }
 
         if (isExplosion)

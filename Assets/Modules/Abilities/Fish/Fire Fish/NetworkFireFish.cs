@@ -11,7 +11,7 @@ public class NetworkFireFish : NetworkBehaviour
         fireFish = GetComponent<FireFish>();
 
         var fish = GetComponent<FishController>();
-        fish.ThrowFish.OnThrowComplete += OnThrowCompleteServerRpc;
+        fish.ThrowFish.OnTrajectoryComplete += OnThrowCompleteServerRpc;
     }
 
     [ServerRpc]

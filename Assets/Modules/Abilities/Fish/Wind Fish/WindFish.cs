@@ -19,8 +19,8 @@ public class WindFish : MonoBehaviour
 
     private void Start()
     {
-        fish.ThrowFish.OnThrowStart += ThrowFish_OnThrowStart;
-        fish.ThrowFish.OnThrowComplete += ThrowFish_OnThrowComplete;
+        fish.ThrowFish.OnTrajectoryStart += ThrowFish_OnThrowStart;
+        fish.ThrowFish.OnTrajectoryComplete += ThrowFish_OnThrowComplete;
     }
 
     private void ThrowFish_OnThrowComplete()

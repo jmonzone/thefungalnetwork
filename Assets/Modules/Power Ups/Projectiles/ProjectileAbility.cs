@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Fungals/Power Ups/Prawn Projectile")]
-public class PrawnProjectile : DirectionalAbility
+[CreateAssetMenu(menuName = "Fungals/Power Ups/New Projectile Ability")]
+public class ProjectileAbility : DirectionalAbility
 {
     [SerializeField] private Movement projectilePrefab;
     [SerializeField] private float range;
@@ -27,7 +27,7 @@ public class PrawnProjectile : DirectionalAbility
     }
 
     public override void CastAbility(Vector3 targetPosition)
-    {
+    {   
         base.CastAbility();
 
         projectileIndex = (projectileIndex + 1) % Projectiles.Count;
