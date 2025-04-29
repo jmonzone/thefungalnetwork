@@ -123,7 +123,7 @@ public class NetworkFungal : NetworkBehaviour
             OnScoreUpdated?.Invoke();
         };
 
-        if (game.gameMode == GameMode.ELIMINATION)
+        if (game.gameMode != GameMode.PARTY)
         {
             lives.OnValueChanged += (old, value) =>
             {

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class AllIsBog : MonoBehaviour
@@ -9,7 +10,7 @@ public class AllIsBog : MonoBehaviour
 
     private void Awake()
     {
-        game.Initialize(powerUpAnchors);
+        game.Initialize(powerUpAnchors.Where(anchor => anchor.gameObject.activeSelf).ToList());
 
         foreach(var anchor in powerUpAnchors)
         {

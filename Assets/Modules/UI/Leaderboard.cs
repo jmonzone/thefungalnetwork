@@ -20,7 +20,7 @@ public class Leaderboard : MonoBehaviour
 
     private void Start()
     {
-        if (multiplayer.GameMode == GameMode.ELIMINATION) gameObject.SetActive(showOnElimination);
+        if (multiplayer.GameMode != GameMode.PARTY) gameObject.SetActive(showOnElimination);
         UpdateLeaderboard();
     }
 

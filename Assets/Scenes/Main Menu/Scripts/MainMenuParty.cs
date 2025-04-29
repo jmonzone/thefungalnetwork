@@ -221,7 +221,7 @@ public class MainMenuParty : MonoBehaviour
                 await multiplayer.JoinRelay(multiplayer.JoinedLobby.Data["JoinCode"].Value);
             }
 
-            sceneNavigation.NavigateToScene(1);
+            sceneNavigation.NavigateToScene(multiplayer.GameMode == GameMode.POWERS ? 2 : 1);
         }
     }
 
@@ -246,6 +246,10 @@ public class MainMenuParty : MonoBehaviour
             case GameMode.ELIMINATION:
                 gameModeTitle.text = "Elimination";
                 gameModeDescription.text = "Be the last Fungal standing";
+                break;
+            case GameMode.POWERS:
+                gameModeTitle.text = "Elements";
+                gameModeDescription.text = "Are in your element?";
                 break;
         }
     }

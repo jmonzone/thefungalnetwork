@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Unity.Collections;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using Unity.Networking.Transport.Relay;
@@ -20,7 +19,8 @@ using UnityEngine.Events;
 public enum GameMode
 {
     PARTY,
-    ELIMINATION
+    ELIMINATION,
+    POWERS
 }
 
 [Serializable]
