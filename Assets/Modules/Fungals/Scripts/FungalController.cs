@@ -232,7 +232,7 @@ public class FungalController : MonoBehaviour
             cachedAbilities.Add(Ability);
         }
 
-        outlineMaterial.SetFloat("_OutlineThickness", 0.001f); // Set thickness to 0
+        outlineMaterial.SetFloat("_OutlineThickness", 0.002f); // Set thickness to 0
         outlineMaterial.SetColor("_OutlineColor", abilityToAssign.BackgroundColor);
 
         OnAbilityAssigned?.Invoke();

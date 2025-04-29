@@ -76,7 +76,7 @@ public class PlayerSpawner : NetworkBehaviour
             {
                 var networkPowerUp = Instantiate(networkPowerUpPrefab, anchor.position, Quaternion.identity);
                 networkPowerUp.NetworkObject.Spawn();
-                networkPowerUp.AssignAbilityServerRpc(0);
+                networkPowerUp.AssignAbilityServerRpc(i);
                 i++;
             }
         }

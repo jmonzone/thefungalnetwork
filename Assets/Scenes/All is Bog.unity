@@ -5363,9 +5363,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1120369928}
-  - component: {fileID: 1120369927}
-  - component: {fileID: 1120369925}
-  - component: {fileID: 1120369926}
   m_Layer: 0
   m_Name: Power Up Anchor
   m_TagString: Untagged
@@ -5373,93 +5370,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1120369925
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1120369924}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 371812796
-  InScenePlacedSourceGlobalObjectIdHash: 0
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
---- !u!114 &1120369926
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1120369924}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df2868252ab5c4d1da357e8f11f1b524, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  UseUnreliableDeltas: 0
-  SyncPositionX: 1
-  SyncPositionY: 1
-  SyncPositionZ: 1
-  SyncRotAngleX: 1
-  SyncRotAngleY: 1
-  SyncRotAngleZ: 1
-  SyncScaleX: 1
-  SyncScaleY: 1
-  SyncScaleZ: 1
-  PositionThreshold: 0.001
-  RotAngleThreshold: 0.01
-  ScaleThreshold: 0.01
-  UseQuaternionSynchronization: 0
-  UseQuaternionCompression: 0
-  UseHalfFloatPrecision: 0
-  InLocalSpace: 0
-  Interpolate: 1
-  SlerpPosition: 0
---- !u!114 &1120369927
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1120369924}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31c87108264554a99a582980bf170550, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  type: 0
-  baseSpeed: 5
-  rotationSpeed: 5
-  useSmoothDirection: 1
-  directionSmoothTime: 0.1
-  obstacleLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  lookTransform: {fileID: 0}
-  scaleTransform: {fileID: 1120369928}
-  followOffset: {x: 0, y: 0, z: 0}
-  target: {fileID: 0}
-  stopDistance: 0.1
-  circleRadius: 5
-  updateLookTrajectory: 1
-  trajectoryHeight: 3
-  trajectoryDuration: 2
-  lockX: 0
-  lockY: 0
-  lockZ: 0
-  lockedXValue: 1
-  lockedYValue: 1
-  lockedZValue: 1
 --- !u!4 &1120369928
 Transform:
   m_ObjectHideFlags: 0
@@ -5559,8 +5469,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1153396328}
-  - component: {fileID: 1153396327}
-  - component: {fileID: 1153396326}
   m_Layer: 0
   m_Name: Power Up Anchor
   m_TagString: Untagged
@@ -5568,72 +5476,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1153396326
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1153396325}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df2868252ab5c4d1da357e8f11f1b524, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  UseUnreliableDeltas: 0
-  SyncPositionX: 1
-  SyncPositionY: 1
-  SyncPositionZ: 1
-  SyncRotAngleX: 1
-  SyncRotAngleY: 1
-  SyncRotAngleZ: 1
-  SyncScaleX: 1
-  SyncScaleY: 1
-  SyncScaleZ: 1
-  PositionThreshold: 0.001
-  RotAngleThreshold: 0.01
-  ScaleThreshold: 0.01
-  UseQuaternionSynchronization: 0
-  UseQuaternionCompression: 0
-  UseHalfFloatPrecision: 0
-  InLocalSpace: 0
-  Interpolate: 1
-  SlerpPosition: 0
---- !u!114 &1153396327
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1153396325}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31c87108264554a99a582980bf170550, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  type: 0
-  baseSpeed: 5
-  rotationSpeed: 5
-  useSmoothDirection: 1
-  directionSmoothTime: 0.1
-  obstacleLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  lookTransform: {fileID: 0}
-  scaleTransform: {fileID: 1153396328}
-  followOffset: {x: 0, y: 0, z: 0}
-  target: {fileID: 0}
-  stopDistance: 0.1
-  circleRadius: 5
-  updateLookTrajectory: 1
-  trajectoryHeight: 3
-  trajectoryDuration: 2
-  lockX: 0
-  lockY: 0
-  lockZ: 0
-  lockedXValue: 1
-  lockedYValue: 1
-  lockedZValue: 1
 --- !u!4 &1153396328
 Transform:
   m_ObjectHideFlags: 0
