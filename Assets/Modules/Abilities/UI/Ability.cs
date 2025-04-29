@@ -7,10 +7,12 @@ public abstract class Ability : ScriptableObject
     [SerializeField] [TextArea] private string description;
     [SerializeField] private Color backgroundColor;
     [SerializeField] private Sprite image;
+    [SerializeField] private GameObject prefab;
 
     public string Id => id;
     public Color BackgroundColor => backgroundColor;
     public Sprite Image => image;
+    public GameObject Prefab => prefab;
 
     [SerializeField] protected float radius = 1f;
     [SerializeField] private float castCooldown = 2f;

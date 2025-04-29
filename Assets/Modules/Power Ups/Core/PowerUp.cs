@@ -16,7 +16,6 @@ public class PowerUp : MonoBehaviour
 
     private void Awake()
     {
-        if (!ability) Debug.LogWarning("No ability on power up?");
         HandleCollection = fungal =>
         {
             ApplyCollectLogic(fungal);
@@ -24,6 +23,12 @@ public class PowerUp : MonoBehaviour
         };
 
         HandleRespawn = ApplyRespawn;
+    }
+
+    public void AssignAbility(Ability ability)
+    {
+        this.ability = ability;
+        Instantiate(ability.Prefab, render.transform);
     }
 
     private void Update()

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Unity.Collections;
 using Unity.Netcode;
@@ -49,6 +50,10 @@ public class PlayerSpawner : NetworkBehaviour
     [SerializeField] private GameReference game;
     [SerializeField] private NetworkFungal fungalPrefab;
 
+    [Header("Power Ups")]
+    [SerializeField] private List<PowerUp> powerUps;
+    [SerializeField] private List<Ability> abilities;
+
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
@@ -65,6 +70,12 @@ public class PlayerSpawner : NetworkBehaviour
                 AddPlayerServerRpc(botClientId, i + multiplayer.JoinedLobby.Players.Count, rpcPlayer);
                 i++;
             }
+        }
+
+        for(var i = 0; i < powerUps.Count; i++)
+        {
+            var ability = abilities[i];
+            powerUps[i].AssignAbility(ability);
         }
 
         AddPlayerToSpawner();
