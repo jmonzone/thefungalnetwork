@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PowerUp : MonoBehaviour
 {
@@ -10,12 +11,22 @@ public class PowerUp : MonoBehaviour
     private float detectionRadius = 1.5f;
     private bool hasBeenCollected = false;
 
+    public UnityAction<FungalController> HandleCollection;
+    public UnityAction HandleRespawn;
+
     private void Awake()
     {
         if (!ability) Debug.LogWarning("No ability on power up?");
+        HandleCollection = fungal =>
+        {
+            ApplyCollectLogic(fungal);
+            StartRespawn();
+        };
+
+        HandleRespawn = ApplyRespawn;
     }
 
-    void Update()
+    private void Update()
     {
         if (!ability) return;
         if (hasBeenCollected) return;
@@ -25,22 +36,35 @@ public class PowerUp : MonoBehaviour
         foreach (Collider hit in hits)
         {
             var fungal = hit.GetComponentInParent<FungalController>();
-            if (fungal && fungal.TryApplyAbility(ability))
+            if (fungal && fungal.CanApplyAbility(ability))
             {
-                hasBeenCollected = true;
-                StartCoroutine(ResetAfterDelay());
+                HandleCollection?.Invoke(fungal);
                 break;
             }
         }
     }
 
+    public void ApplyCollectLogic(FungalController fungal)
+    {
+        hasBeenCollected = true;
+        fungal.ApplyAbility(ability);
+    }
+
+    public void StartRespawn()
+    {
+        StartCoroutine(ResetAfterDelay());
+    }
+
     private IEnumerator ResetAfterDelay()
     {
         yield return render.ScaleOverTime(0.25f, 0f);
-        render.gameObject.SetActive(false);
         yield return new WaitForSeconds(resetDelay);
-        render.gameObject.SetActive(true);
         yield return render.ScaleOverTime(0.25f, 1f);
+        HandleRespawn?.Invoke();
+    }
+
+    public void ApplyRespawn()
+    {
         hasBeenCollected = false;
     }
 }

@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using Unity.Multiplayer.Samples.Utilities.ClientAuthority;
 using Unity.Netcode;
 using UnityEngine;
@@ -23,15 +24,15 @@ public class NetworkFungal : NetworkBehaviour
     [SerializeField] private GameReference game;
     [SerializeField] private FungalCollection fungalCollection;
 
+    //todo: make separate prefab map collection
+    [SerializeField] private List<GameObject> localPrefabs;
+    [SerializeField] private List<NetworkObject> networkPrefabs;
 
     public FungalController Fungal { get; private set; }
     public FungalData Data => Fungal.Data;
     public Health Health => Fungal.Health;
     public Movement Movement => Fungal.Movement;
     private MovementAnimations Animations => Fungal.Animations;
-
-    //todo: make separate death component
-    public bool IsDead => Fungal.IsDead;
 
     private ClientNetworkTransform networkTransform;
 
@@ -89,7 +90,11 @@ public class NetworkFungal : NetworkBehaviour
         Fungal.HandleSpeedReset = HandleSpeedResetServerRpc;
         Fungal.HandleRespawn = IsOwner ? HandleRespawnServerRpc : null;
         Fungal.HandleDeath = IsOwner ? HandleDeathServerRpc : null;
-
+        Fungal.HandleSpawnObject = (obj, position) =>
+        {
+            var index = localPrefabs.IndexOf(obj);
+            HandleSpawnObjectServerRpc(OwnerClientId, index, position);
+        };
 
         var fishPickup = GetComponent<FishPickup>();
         fishPickup.enabled = IsOwner;
@@ -312,5 +317,25 @@ public class NetworkFungal : NetworkBehaviour
     private void ToggleShieldRenderersClientRpc(bool value)
     {
         if (!IsOwner) Fungal.ToggleShieldRenderers(value);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void HandleSpawnObjectServerRpc(ulong clientId, int index, Vector3 spawnPosition)
+    {
+        var spawnedObj = Instantiate(networkPrefabs[index], spawnPosition, Quaternion.identity);
+        spawnedObj.transform.GetChild(0).localScale = Vector3.zero;
+        spawnedObj.SpawnWithOwnership(clientId);
+        HandleSpawnObjectClientRpc(spawnedObj.NetworkObjectId);
+    }
+
+    [ClientRpc]
+    private void HandleSpawnObjectClientRpc(ulong networkObjectId)
+    {
+        Debug.Log("HandleSpawnObjectClientRpc");
+
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out var networkObject))
+        {
+            Fungal.OnObjectSpawned(networkObject.gameObject);
+        }
     }
 }

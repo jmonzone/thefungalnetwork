@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -39,12 +40,13 @@ public class FungalController : MonoBehaviour
 
     public event UnityAction OnAbilityAdded;
 
-
     public UnityAction<float, bool> HandleSpeedModifier;
     public UnityAction<bool> HandleSpeedReset;
 
     public UnityAction<bool> HandleDeath;
     public UnityAction HandleRespawn;
+
+    public UnityAction<GameObject, Vector3> HandleSpawnObject;
 
     private void Awake()
     {
@@ -55,8 +57,10 @@ public class FungalController : MonoBehaviour
 
         HandleSpeedModifier = ApplySpeedModifier;
         HandleSpeedReset = ApplySpeedReset;
+
         HandleDeath = ApplyDeath;
         HandleRespawn = ApplyRespawn;
+        HandleSpawnObject = SpawnObject;
 
         if (data) InitializePrefab(data);
     }
@@ -186,16 +190,42 @@ public class FungalController : MonoBehaviour
         Movement.ResetSpeedModifier();
     }
 
-    public bool TryApplyAbility(Ability abilityToApply)
+    public bool CanApplyAbility(Ability abilityToApply)
     {
-        if (!Ability || Ability.Id != abilityToApply.Id)
-        {
-            Ability = Instantiate(abilityToApply);
-            Ability.Initialize(this);
-            OnAbilityAdded?.Invoke();
-            return true;
-        }
+        if (!Ability) return true;
+        else if (Ability.Id != abilityToApply.Id) return true;
         else return false;
-       
+    }
+
+    public void ApplyAbility(Ability abilityToApply)
+    {
+        Ability = Instantiate(abilityToApply);
+        Ability.Initialize(this);
+        OnAbilityAdded?.Invoke();
+    }
+
+    public void RequestSpawnObject(GameObject prefab, Vector3 spawnPosition)
+    {
+        Debug.Log("RequestSpawnObject");
+
+        HandleSpawnObject?.Invoke(prefab, spawnPosition);
+    }
+
+    private void SpawnObject(GameObject prefab, Vector3 spawnPosition)
+    {
+        Debug.Log("SpawnObject");
+
+        var projectile = Instantiate(prefab, spawnPosition, Quaternion.identity);
+        OnObjectSpawned(projectile);
+    }
+
+    public void OnObjectSpawned(GameObject obj)
+    {
+        Debug.Log("OnObjectSpawned");
+
+        if (Ability is PrawnProjectile projectileAbility)
+        {
+            projectileAbility.AssignProjectile(obj.GetComponent<Projectile>());
+        }
     }
 }
