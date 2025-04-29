@@ -13,6 +13,8 @@ public class GameReference : ScriptableObject
     [SerializeField] private GamePlayer clientPlayer;
     [SerializeField] private List<GamePlayer> players;
 
+    public List<Transform> PowerUpAnchors { get; private set; }
+
     public bool isComplete;
     public GameMode gameMode;
 
@@ -30,11 +32,12 @@ public class GameReference : ScriptableObject
     public event UnityAction<int, int> OnKill;
     public event UnityAction<GamePlayer> OnSelfDestruct;
 
-    public void Initialize()
+    public void Initialize(List<Transform> powerUpAnchors)
     {
         clientPlayer = null;
         players = new List<GamePlayer>();
         isComplete = false;
+        PowerUpAnchors = powerUpAnchors;
     }
 
     // todo: pass LobbyPlayer object

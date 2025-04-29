@@ -1,13 +1,20 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class AllIsBog : MonoBehaviour
 {
     [SerializeField] private GameReference game;
     [SerializeField] private MoveCharacterJoystick joystick;
+    [SerializeField] private List<Transform> powerUpAnchors;
 
     private void Awake()
     {
-        game.Initialize();
+        game.Initialize(powerUpAnchors);
+
+        foreach(var anchor in powerUpAnchors)
+        {
+            anchor.gameObject.SetActive(false);
+        }
     }
 
     private void OnEnable()

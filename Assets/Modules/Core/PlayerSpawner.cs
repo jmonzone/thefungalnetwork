@@ -51,8 +51,8 @@ public class PlayerSpawner : NetworkBehaviour
     [SerializeField] private NetworkFungal fungalPrefab;
 
     [Header("Power Ups")]
-    [SerializeField] private List<PowerUp> powerUps;
-    [SerializeField] private List<Ability> abilities;
+    [SerializeField] private NetworkPowerUp networkPowerUpPrefab;
+    [SerializeField] private PowerUpCollection powerUpCollection;
 
     public override void OnNetworkSpawn()
     {
@@ -70,16 +70,20 @@ public class PlayerSpawner : NetworkBehaviour
                 AddPlayerServerRpc(botClientId, i + multiplayer.JoinedLobby.Players.Count, rpcPlayer);
                 i++;
             }
-        }
 
-        for(var i = 0; i < powerUps.Count; i++)
-        {
-            var ability = abilities[i];
-            powerUps[i].AssignAbility(ability);
+            i = 0;
+            foreach (var anchor in game.PowerUpAnchors)
+            {
+                var networkPowerUp = Instantiate(networkPowerUpPrefab, anchor.position, Quaternion.identity);
+                networkPowerUp.NetworkObject.Spawn();
+                networkPowerUp.AssignAbilityServerRpc(0);
+                i++;
+            }
         }
 
         AddPlayerToSpawner();
     }
+
 
     private void AddPlayerToSpawner()
     {

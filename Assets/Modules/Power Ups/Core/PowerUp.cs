@@ -16,6 +16,8 @@ public class PowerUp : MonoBehaviour
 
     private void Awake()
     {
+        if (ability) AssignAbility(ability);
+
         HandleCollection = fungal =>
         {
             ApplyCollectLogic(fungal);
@@ -51,6 +53,8 @@ public class PowerUp : MonoBehaviour
 
     public void ApplyCollectLogic(FungalController fungal)
     {
+        if (hasBeenCollected) return;
+
         hasBeenCollected = true;
         fungal.ApplyAbility(ability);
     }
