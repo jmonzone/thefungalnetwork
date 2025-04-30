@@ -17,7 +17,7 @@ public abstract class Ability : ScriptableObject
     [SerializeField] protected float radius = 1f;
     [SerializeField] private float castCooldown = 2f;
 
-    private CooldownModel cooldownModel;
+    [SerializeField] private CooldownModel cooldownModel;
 
     public FungalController Fungal { get; protected set; }
 

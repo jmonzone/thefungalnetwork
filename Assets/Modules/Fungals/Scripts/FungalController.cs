@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -13,6 +12,9 @@ public class FungalController : MonoBehaviour
     [SerializeField] private GameObject trailRenderers;
     [SerializeField] private GameObject stunAnimation;
     [SerializeField] private Material outlineMaterialPrefab;
+
+    [Header("Debug")]
+    [SerializeField] private Ability ability;
 
     private Renderer modelRenderer;
     private Material outlineMaterial;
@@ -27,7 +29,7 @@ public class FungalController : MonoBehaviour
     public bool CanRespawn { get; set; } = true;
 
     public bool IsDead { get; private set; }
-    public Ability Ability { get; private set; }
+    public Ability Ability => ability;
 
     public Movement Movement { get; private set; }
     public Health Health { get; private set; }
@@ -79,7 +81,7 @@ public class FungalController : MonoBehaviour
 
     private void Health_OnDamaged(DamageEventArgs args)
     {
-        Debug.Log($"Health_OnDamaged {args.lethal}");
+        //Debug.Log($"Health_OnDamaged {args.lethal}");
         if (args.lethal)
         {
             Die(args.SelfInflicted);
@@ -223,11 +225,11 @@ public class FungalController : MonoBehaviour
         var cachedAbility = cachedAbilities.Find(ability => ability.Id == abilityToAssign.Id);
         if (cachedAbility)
         {
-            Ability = cachedAbility;
+            ability = cachedAbility;
         }
         else
         {
-            Ability = Instantiate(abilityToAssign);
+            ability = Instantiate(abilityToAssign);
             Ability.Initialize(this);
             cachedAbilities.Add(Ability);
         }
@@ -240,14 +242,14 @@ public class FungalController : MonoBehaviour
 
     public void RequestSpawnObject(GameObject prefab, Vector3 spawnPosition)
     {
-        Debug.Log("RequestSpawnObject");
+        //Debug.Log("RequestSpawnObject");
 
         HandleSpawnObject?.Invoke(prefab, spawnPosition);
     }
 
     private void SpawnObject(GameObject prefab, Vector3 spawnPosition)
     {
-        Debug.Log("SpawnObject");
+        //Debug.Log("SpawnObject");
 
         var projectile = Instantiate(prefab, spawnPosition, Quaternion.identity);
         OnObjectSpawned(projectile);
@@ -255,7 +257,7 @@ public class FungalController : MonoBehaviour
 
     public void OnObjectSpawned(GameObject obj)
     {
-        Debug.Log("OnObjectSpawned");
+        //Debug.Log("OnObjectSpawned");
 
         if (Ability is ProjectileAbility projectileAbility)
         {

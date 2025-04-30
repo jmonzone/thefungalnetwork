@@ -54,7 +54,7 @@ public class HitDetector : MonoBehaviour
                 if (targetFungal.IsDead) continue;
                 if (isValid != null && !isValid(targetFungal)) continue;
 
-                Debug.Log("damaged");
+                //Debug.Log("damaged");
                 targetFungal.ModifySpeed(0f, hitStun, showStunAnimation: false);
                 targetFungal.Health.Damage(damage, source.Id);
 

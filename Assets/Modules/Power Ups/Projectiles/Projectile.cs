@@ -38,6 +38,7 @@ public class Projectile : MonoBehaviour, ITrajectory
 
     public void ShootProjectile(Vector3 startPosition, Vector3 targetPosition)
     {
+        //Debug.Log("shooting " + name);
         transform.position = startPosition;
 
         if (useTrajectory)
@@ -87,7 +88,7 @@ public class Projectile : MonoBehaviour, ITrajectory
                 hitDetector.CheckFungalHits(movement.ScaleTransform.localScale.x / 2f, damage, hitStun, Fungal,
                     onHit: hit =>
                     {
-                        Debug.Log("hit explosion");
+                        //Debug.Log("hit explosion");
                         hits.Add(hit);
                     },
                     isValid: (fungal) =>
@@ -103,9 +104,15 @@ public class Projectile : MonoBehaviour, ITrajectory
         {
             InMotion = true;
             OnTrajectoryStart?.Invoke(targetPosition);
+
+
             yield return movement.ScaleOverTime(0.1f, 1f);
+
+            //Debug.Log($"Handle explosion scale complete {movement.IsAtDestination}");
             // Wait until it either hits or reaches destination
             yield return new WaitUntil(() => movement.IsAtDestination);
+
+            //Debug.Log("Handle explosion complete");
 
             OnTrajectoryComplete?.Invoke();
 

@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class PowerUp : MonoBehaviour
+public class PowerUp : MonoBehaviour, IAbilityHolder
 {
     [SerializeField] private Ability ability;
     [SerializeField] private float resetDelay = 3f; // seconds until it resets
@@ -14,6 +14,13 @@ public class PowerUp : MonoBehaviour
 
     public UnityAction<FungalController> HandleCollection;
     public UnityAction HandleRespawn;
+
+    bool IAbilityHolder.CanBePickedUp(FungalController fungal)
+    {
+        return ability && fungal.CanApplyAbility(ability) && !hasBeenCollected;
+    }
+
+    Vector3 IAbilityHolder.Position => transform.position;
 
     private void Awake()
     {

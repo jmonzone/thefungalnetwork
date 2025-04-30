@@ -2,29 +2,34 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
+using System;
 
+[Serializable]
 public class CooldownModel
 {
-    public float Cooldown { get; private set; }
-    public bool IsOnCooldown { get; private set; }
-    public float RemainingTime { get; private set; }
+    [SerializeField] private float cooldown;
+    [SerializeField] private float remainingTime; 
+    [SerializeField] private bool isOnCooldown;
+    public float Cooldown => cooldown;
+    public bool IsOnCooldown => isOnCooldown;
+    public float RemainingTime => remainingTime;
 
     // Event to notify when cooldown progress is updated
-    public event System.Action OnCooldownStart;
-    public event System.Action<float> OnCooldownUpdate;
-    public event System.Action OnCooldownComplete;
+    public event Action OnCooldownStart;
+    public event Action<float> OnCooldownUpdate;
+    public event Action OnCooldownComplete;
 
     public CooldownModel(float cooldown)
     {
-        Cooldown = cooldown;
+        this.cooldown = cooldown;
     }
 
     public IEnumerator StartCooldown()
     {
         if (!IsOnCooldown)
         {
-            IsOnCooldown = true;
-            RemainingTime = Cooldown;
+            isOnCooldown = true;
+            remainingTime = Cooldown;
             OnCooldownStart?.Invoke();
 
             while (RemainingTime > 0)
@@ -34,13 +39,13 @@ public class CooldownModel
                 // Invoke the event to notify listeners
                 OnCooldownUpdate?.Invoke(progress);
 
-                RemainingTime -= Time.deltaTime;
+                remainingTime -= Time.deltaTime;
                 yield return null;
             }
 
             OnCooldownUpdate?.Invoke(1);
 
-            IsOnCooldown = false;
+            isOnCooldown = false;
             // Notify that cooldown is complete
             OnCooldownComplete?.Invoke();
         }

@@ -4,35 +4,30 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
+public interface IAbilityHolder
+{
+    public bool CanBePickedUp(FungalController fungal);
+    public Vector3 Position { get; }
+}
+
 public class FungalAI : MonoBehaviour
 {
-    private enum FungalState
-    {
-        FIND_FISH,
-        THROW_FISH,
-    }
-
     [SerializeField] private GameReference game;
-    [SerializeField] private FungalState currentState;
-
-    [SerializeField] private float minDashInterval = 2f; // Minimum time between dashes
-    [SerializeField] private float maxDashInterval = 5f; // Maximum time between dashes
-
-    private float lastDashTime = 0f;  // Stores the last dash time
-    private float nextDashTime = 0f; // Next randomized dash time
 
     [SerializeField] private bool autoStartAI = false;
 
     private NavMeshAgent agent;
     private FungalController fungal;
-    private Ability ability;
+    private Ability innateFungalAbility;
 
     private FishPickup fishPickup;
     private Coroutine fungalStateCoroutine;
 
+    private Vector3 targetPosition;
+
     [Header("Debug")]
-    [SerializeField] private FishController targetFish;
-    [SerializeField] private List<FishController> allFish = new List<FishController>();
+    private IAbilityHolder targetAbilityHolder;
+    private List<IAbilityHolder> allAbilityHolders = new List<IAbilityHolder>();
 
     [SerializeField] private FungalController targetFungal;
     [SerializeField] private List<FungalController> allFungals = new List<FungalController>();
@@ -42,25 +37,31 @@ public class FungalAI : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         fungal = GetComponent<FungalController>();
 
-        allFish = FindObjectsOfType<FishController>().ToList();
+        allAbilityHolders = FindObjectsOfType<MonoBehaviour>()
+            .OfType<IAbilityHolder>()
+            .ToList();
+
+        Debug.Log(allAbilityHolders.Count);
 
         fishPickup = GetComponent<FishPickup>();
 
         fungal.OnInitialized += FungalController_OnInitialized;
-        fungal.OnDeath += _ => StopAI();
-        fungal.OnRespawnComplete += () => StartAI();
     }
 
-    private void Start()
+    private IEnumerator Start()
     {
-        if (autoStartAI) StartAI();
+        if (autoStartAI)
+        {
+            yield return new WaitForSeconds(2f);
+            StartAI();
+        }
     }
 
     private void FungalController_OnInitialized()
     {
         var abilityTemplate = fungal.Data.Ability;
-        ability = Instantiate(abilityTemplate);
-        ability.Initialize(fungal);
+        innateFungalAbility = Instantiate(abilityTemplate);
+        innateFungalAbility.Initialize(fungal);
     }
 
     public void StartAI()
@@ -82,10 +83,25 @@ public class FungalAI : MonoBehaviour
 
         agent.isStopped = false; // Make sure it's not paused
 
-        SetState(FungalState.FIND_FISH); // Start moving
-
         // Start the coroutine when the object is enabled
         fungalStateCoroutine = StartCoroutine(FungalStateMachine());
+
+        fungal.OnDeath += Fungal_OnDeath;
+    }
+
+    private void Fungal_OnDeath(bool arg0)
+    {
+        StopAI();
+
+        fungal.OnDeath -= Fungal_OnDeath;
+        fungal.OnRespawnComplete += Fungal_OnRespawnComplete;
+    }
+
+    private void Fungal_OnRespawnComplete()
+    {
+        StartAI();
+
+        fungal.OnRespawnComplete -= Fungal_OnRespawnComplete;
     }
 
     public void StopAI()
@@ -100,6 +116,54 @@ public class FungalAI : MonoBehaviour
         }
     }
 
+    private bool HasAbility => fishPickup.Fish || fungal.Ability;
+
+    private float AbilityRange
+    {
+        get
+        {
+            if (fishPickup.Fish) return fishPickup.Fish.ThrowFish.Range;
+            else if (fungal.Ability is DirectionalAbility directionalAbility)
+            {
+                return directionalAbility.Range;
+            }
+            else return Mathf.Infinity;
+        }
+    }
+
+    private bool HasClearPath
+    {
+        get
+        {
+            if (!HasAbility) return false;
+            if (!targetFungal) return false;
+
+            if (Vector3.Distance(transform.position, targetFungal.transform.position) > AbilityRange) return false;
+
+            bool useTrajectory = fishPickup.Fish?.UseTrajectory == true || (fungal.Ability is DirectionalAbility da && da.UseTrajectory);
+            return useTrajectory || !agent.Raycast(targetFungal.transform.position, out _);
+        }
+    }
+
+    private bool CanUsePowerUpAbility
+    {
+        get
+        {
+            if (!HasAbility) return false;
+            if (!targetFungal) return false;
+            if (!HasClearPath) return false;
+            if (IsWaitingToUseAbility) return false;
+            return true;
+        }
+    }
+
+    private bool IsWaitingToUseAbility
+    {
+        get
+        {
+            return fungal.Ability && Time.time < lastAbilityTime + nextAbilityDelay;
+        }
+    }
 
     private IEnumerator FungalStateMachine()
     {
@@ -107,49 +171,105 @@ public class FungalAI : MonoBehaviour
 
         while (true)
         {
-            if (!(ability is DirectionalAbility) && !ability.IsOnCooldown)
+            if (!(innateFungalAbility is DirectionalAbility) && !innateFungalAbility.IsOnCooldown)
             {
-                ability.CastAbility();
+                innateFungalAbility.CastAbility();
             }
 
-            switch (currentState)
+            targetFungal = allFungals
+                   .Where(f => f != fungal && !f.IsDead)
+                   .OrderBy(f => Vector3.Distance(transform.position, f.transform.position))
+                   .FirstOrDefault();
+
+            if (!HasAbility)
             {
-                case FungalState.FIND_FISH:
-                    yield return FindAndPickUpFish();
-                    break;
-                case FungalState.THROW_FISH:
-                    yield return ThrowFish();
-                    break;
+                targetAbilityHolder = allAbilityHolders
+                .Where(target => target.CanBePickedUp(fungal) && IsOnNavMesh(target.Position))
+                .OrderBy(target => Vector3.Distance(transform.position, target.Position))
+                .FirstOrDefault();
+
+                if (targetAbilityHolder != null) targetPosition = targetAbilityHolder.Position;
+            }
+            else if (!targetFungal)
+            {
+
+            }
+            else if (!HasClearPath)
+            {
+                Vector3 toTarget = targetFungal.transform.position - transform.position;
+                float distance = toTarget.magnitude;
+
+                // Normalize and multiply to stop 'range' units from the target
+                Vector3 direction = toTarget.normalized;
+                targetPosition = targetFungal.transform.position - direction * AbilityRange;
+            }
+            else if (IsWaitingToUseAbility)
+            {
+                float distanceToCached = Vector3.Distance(transform.position, cachedTargetPosition);
+                float distanceFromCachedToTarget = Vector3.Distance(cachedTargetPosition, targetFungal.transform.position);
+
+                float avoidDistance = AbilityRange * 0.75f;
+                bool isCachedInRange = distanceFromCachedToTarget <= AbilityRange && distanceFromCachedToTarget >= avoidDistance;
+                bool hasReachedCached = distanceToCached < 0.5f;
+
+                if (!isCachedInRange || hasReachedCached)
+                {
+                    // Get the direction from AI to target
+                    Vector3 toAI = (transform.position - targetFungal.transform.position).normalized;
+
+                    // Randomize angle around this direction
+                    float baseAngle = Mathf.Atan2(toAI.z, toAI.x);
+                    float angleOffset = Random.Range(-45f, 45f) * Mathf.Deg2Rad;
+                    float finalAngle = baseAngle + angleOffset;
+
+                    // Calculate the new target position with offset
+                    float radius = Random.Range(avoidDistance, AbilityRange);
+                    cachedTargetPosition = targetFungal.transform.position + new Vector3(Mathf.Cos(finalAngle), 0, Mathf.Sin(finalAngle)) * radius;
+                }
+
+                targetPosition = cachedTargetPosition;
+
+            }
+            else if (CanUsePowerUpAbility)
+            {
+                if (fishPickup.Fish != null) fishPickup.Sling(targetFungal.transform.position);
+                else if (fungal.Ability is DirectionalAbility directional)
+                {
+                    directional.CastAbility(targetFungal.transform.position);
+                    lastAbilityTime = Time.time;
+                    nextAbilityDelay = directional.Cooldown.Cooldown + Random.Range(minAbilityDelay, maxAbilityDelay);
+                }
             }
 
-            yield return null;
+            yield return UseMoveAction(targetPosition);
         }
     }
 
-    // Helper function to check if the position is valid on the NavMesh
-    private bool IsOnNavMesh(Vector3 position)
-    {
-        return NavMesh.SamplePosition(position, out NavMeshHit hit, 1.0f, NavMesh.AllAreas);
-    }
+    private float lastAbilityTime = 0f;
+    private float nextAbilityDelay = 0f;
+    [SerializeField] private float minAbilityDelay = 1f;
+    [SerializeField] private float maxAbilityDelay = 3f;
 
-    private IEnumerator FindAndPickUpFish()
-    {
-        targetFish = allFish
-                 .Where(fish => !fish.IsPickedUp && IsOnNavMesh(fish.transform.position))
-                 .OrderBy(fish => Vector3.Distance(transform.position, fish.transform.position))
-                 .FirstOrDefault();
+    private Vector3 cachedTargetPosition = Vector3.positiveInfinity;
 
-        if (targetFish != null)
+    private IEnumerator UseMoveAction(Vector3 targetPosition)
+    {
+        if (innateFungalAbility is IMovementAbility movementAbility && innateFungalAbility is DirectionalAbility directionalAbility && !directionalAbility.IsOnCooldown)
         {
-            yield return UseMoveAction(targetFish.transform.position);
+            if (Vector3.Distance(transform.position, targetPosition) > directionalAbility.Range)
+            {
+                agent.enabled = false;
+
+                Vector3 dashTargetPosition = GetDashTargetPosition(targetPosition, movementAbility);
+                directionalAbility.CastAbility(dashTargetPosition);
+
+                yield return new WaitWhile(() => directionalAbility.InUse);
+
+                agent.enabled = true;
+            }
         }
 
-        if (fishPickup.Fish)
-        {
-            SetState(FungalState.THROW_FISH);
-        }
-
-        yield return null;
+        agent.SetDestination(targetPosition);
     }
 
     private Vector3 GetDashTargetPosition(Vector3 targetPosition, IMovementAbility movementAbility)
@@ -205,114 +325,9 @@ public class FungalAI : MonoBehaviour
         return bestPosition;
     }
 
-
-
-    private IEnumerator UseMoveAction(Vector3 targetPosition)
+    // Helper function to check if the position is valid on the NavMesh
+    private bool IsOnNavMesh(Vector3 position)
     {
-        yield return null;
-
-        if (ability is IMovementAbility movementAbility && ability is DirectionalAbility directionalAbility)
-        {
-
-            float cooldownTime = ability.Cooldown.RemainingTime; // Get cooldown time
-
-            // Check if the dash is ready (not on cooldown) and enough time has passed
-            if (!ability.IsOnCooldown && Time.time >= lastDashTime + nextDashTime + cooldownTime)
-            {
-                Debug.Log("Fungal AI Casting ability");
-
-                agent.enabled = false;
-
-                Vector3 dashTargetPosition = GetDashTargetPosition(targetPosition, movementAbility);
-                directionalAbility.CastAbility(dashTargetPosition);
-
-                lastDashTime = Time.time;  // Update last dash time
-
-                // Randomize the next dash interval within the defined range
-                nextDashTime = Random.Range(minDashInterval, maxDashInterval);
-
-                yield return new WaitWhile(() => directionalAbility.InUse);
-
-                agent.enabled = true;
-            }
-        }
-
-        agent.SetDestination(targetPosition);
-    }
-
-    private float timeInSlingRange = 0f;
-    private float requiredTimeInRange = 0.5f;
-    private float comfortableRange;
-
-    private IEnumerator ThrowFish()
-    {
-        targetFungal = allFungals
-            .Where(f => f != fungal && !f.IsDead)
-            .OrderBy(f => Vector3.Distance(transform.position, f.transform.position))
-            .FirstOrDefault();
-
-        if (!fishPickup.Fish)
-        {
-            SetState(FungalState.FIND_FISH);
-            yield break;
-        }
-
-        if (!targetFungal)
-            yield break;
-
-        comfortableRange = fishPickup.Fish.ThrowFish.Range * 0.75f;
-
-        Vector3 predictedTarget = targetFungal.transform.position + targetFungal.Movement.SpeedDelta * targetFungal.transform.forward;
-        float distance = Vector3.Distance(transform.position, predictedTarget);
-
-        timeInSlingRange += Time.deltaTime;
-
-        // Calculate initial angle based on the direction to the target
-        Vector3 directionToTarget = predictedTarget - transform.position;
-        float initialAngle = Mathf.Atan2(directionToTarget.z, directionToTarget.x); // Angle in radians around the Y-axis
-
-        if (distance > comfortableRange)
-        {
-            // Move toward predicted target but not too close
-            Vector3 direction = (predictedTarget - transform.position).normalized;
-            Vector3 stopShortPosition = predictedTarget - direction * comfortableRange;
-            yield return UseMoveAction(stopShortPosition); // No yield needed here
-        }
-        else
-        {
-            // If within comfortable range, start circling around the target
-            Vector3 circleCenter = targetFungal.transform.position;
-            float circleRadius = comfortableRange / 2; // Adjust radius based on desired circle size
-
-            // Update angle over time, starting from the initial angle
-            float angle = initialAngle + (Time.time * 30f); // 30f adjusts the speed of rotation
-            Vector3 offset = new Vector3(Mathf.Cos(angle) * circleRadius, 0f, Mathf.Sin(angle) * circleRadius);
-            Vector3 circularPosition = circleCenter + offset;
-
-            yield return UseMoveAction(circularPosition); // Move to a circular position around the target
-
-            if (timeInSlingRange >= requiredTimeInRange)
-            {
-                // Use NavMeshAgent.Raycast to check if there is a clear path
-                if (fishPickup.Fish.UseTrajectory || !agent.Raycast(targetFungal.transform.position, out NavMeshHit hit))
-                {
-                    fishPickup.Sling(predictedTarget);
-                }
-            }
-        }
-        yield break;
-    }
-
-
-    private void SetState(FungalState state)
-    {
-        currentState = state;
-
-        switch (state)
-        {
-            case FungalState.THROW_FISH:
-                timeInSlingRange = 0f;
-                break;
-        }
+        return NavMesh.SamplePosition(position, out NavMeshHit hit, 1.0f, NavMesh.AllAreas);
     }
 }

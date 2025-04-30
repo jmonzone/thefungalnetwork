@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class FishController : MonoBehaviour
+public class FishController : MonoBehaviour, IAbilityHolder
 {
     [Header("Customization")]
     [SerializeField] private float swimSpeed = 1f;
@@ -31,6 +31,13 @@ public class FishController : MonoBehaviour
     public Sprite Icon => icon;
     public string AbilityName => abilityName;
     public Color BackgroundColor => backgroundColor;
+
+    bool IAbilityHolder.CanBePickedUp(FungalController fungal)
+    {
+        return !isPickedUp;
+    }
+
+    Vector3 IAbilityHolder.Position => transform.position;
 
     private AudioSource audioSource;
     private Vector3 spawnPosition;

@@ -244,6 +244,8 @@ public class Movement : MonoBehaviour
     // Trajectory Movement
     public void SetTrajectoryMovement(Vector3 endPosition)
     {
+        //Debug.Log("Started trajectory");
+
         trajectoryStartPosition = transform.position;
         targetPosition = endPosition;
         //trajectoryHeight = height;
@@ -279,6 +281,10 @@ public class Movement : MonoBehaviour
         // If the movement is complete, stop the movement
         if (progress >= 1f)
         {
+            //Debug.Log("Ended trajectory");
+
+            transform.position = targetPosition;
+
             Stop();
 
             lookDirection.y = 0;
