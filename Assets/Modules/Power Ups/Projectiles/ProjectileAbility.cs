@@ -16,6 +16,8 @@ public class ProjectileAbility : DirectionalAbility
 
     private int projectileIndex = -1;
 
+    private int uses = 0;
+
     public override void Initialize(FungalController fungal)
     {
         base.Initialize(fungal);
@@ -26,6 +28,12 @@ public class ProjectileAbility : DirectionalAbility
         }
     }
 
+    public override void OnReassigned()
+    {
+        base.OnReassigned();
+        uses = 0;
+    }
+
     public override void CastAbility(Vector3 targetPosition)
     {   
         base.CastAbility();
@@ -33,6 +41,10 @@ public class ProjectileAbility : DirectionalAbility
         projectileIndex = (projectileIndex + 1) % Projectiles.Count;
 
         Projectiles[projectileIndex].ShootProjectile(Fungal.transform.position, targetPosition);
+
+        uses++;
+
+        if (uses >= 3) Fungal.AssignAbility(null);
     }
 
     public void AssignProjectile(Projectile projectile)

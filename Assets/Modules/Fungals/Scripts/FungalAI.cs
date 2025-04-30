@@ -54,7 +54,7 @@ public class FungalAI : MonoBehaviour
             }
         };
 
-        fungal.OnAbilityAssigned += () =>
+        fungal.OnAbilityChanged += () =>
         {
             lastAbilityTime = Time.time;
             nextAbilityDelay = Random.Range(minAbilityDelay, maxAbilityDelay);

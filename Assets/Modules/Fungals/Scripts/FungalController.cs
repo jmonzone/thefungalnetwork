@@ -45,7 +45,7 @@ public class FungalController : MonoBehaviour
     public event UnityAction OnRespawnStart;
     public event UnityAction OnRespawnComplete;
 
-    public event UnityAction OnAbilityAssigned;
+    public event UnityAction OnAbilityChanged;
 
     public UnityAction<float, bool> HandleSpeedModifier;
     public UnityAction<bool> HandleSpeedReset;
@@ -222,22 +222,31 @@ public class FungalController : MonoBehaviour
     List<Ability> cachedAbilities = new List<Ability>();
     public void AssignAbility(Ability abilityToAssign)
     {
-        var cachedAbility = cachedAbilities.Find(ability => ability.Id == abilityToAssign.Id);
-        if (cachedAbility)
+        if (!abilityToAssign)
         {
-            ability = cachedAbility;
+            ability = null;
+            outlineMaterial.SetFloat("_OutlineThickness", 0f); // Set thickness to 0
         }
         else
         {
-            ability = Instantiate(abilityToAssign);
-            Ability.Initialize(this);
-            cachedAbilities.Add(Ability);
+            var cachedAbility = cachedAbilities.Find(ability => ability.Id == abilityToAssign.Id);
+            if (cachedAbility)
+            {
+                ability = cachedAbility;
+                Ability.Initialize(this);
+            }
+            else
+            {
+                ability = Instantiate(abilityToAssign);
+                Ability.Initialize(this);
+                cachedAbilities.Add(Ability);
+            }
+
+            outlineMaterial.SetFloat("_OutlineThickness", 0.002f); // Set thickness to 0
+            outlineMaterial.SetColor("_OutlineColor", abilityToAssign.BackgroundColor);
         }
 
-        outlineMaterial.SetFloat("_OutlineThickness", 0.002f); // Set thickness to 0
-        outlineMaterial.SetColor("_OutlineColor", abilityToAssign.BackgroundColor);
-
-        OnAbilityAssigned?.Invoke();
+        OnAbilityChanged?.Invoke();
     }
 
     public void RequestSpawnObject(GameObject prefab, Vector3 spawnPosition)

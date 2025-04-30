@@ -41,6 +41,10 @@ public abstract class Ability : ScriptableObject
         cooldownModel = new CooldownModel(castCooldown);
     }
 
+    public virtual void OnReassigned()
+    {
+    }
+
     public virtual void CastAbility()
     {
         OnAbilityStart?.Invoke();

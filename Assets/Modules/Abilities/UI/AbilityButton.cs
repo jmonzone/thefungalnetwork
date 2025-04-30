@@ -12,10 +12,13 @@ public class AbilityButton : MonoBehaviour
     [SerializeField] private Image abilityIcon;
     [SerializeField] private Image abilityBackground;
     [SerializeField] private TextMeshProUGUI abilityText;
+    [SerializeField] private GameObject abilityTextContainer;
 
     private Ability ability;
     private bool isDown = false;
     private Vector3 targetPosition;
+
+    private Color defaultColor;
 
     // Initialization
     private void Awake()
@@ -32,6 +35,8 @@ public class AbilityButton : MonoBehaviour
             ability.OnCancel += OnDragCanceled;
             ability.OnAvailabilityChanged += UpdateAbility;
         }
+
+        defaultColor = abilityBackground.color;
     }
 
     private void Start()
@@ -72,18 +77,26 @@ public class AbilityButton : MonoBehaviour
 
         ability = newAbility;
 
-        abilityText.text = ability.Id;
-        abilityBackground.color = ability.BackgroundColor;
-        abilityIcon.sprite = ability.Image;
-
         // Subscribe to new ability events
         if (ability != null)
         {
             ability.OnCancel += OnDragCanceled;
             ability.OnAvailabilityChanged += UpdateAbility;
+
+            abilityText.text = ability.Id;
+            abilityBackground.color = ability.BackgroundColor;
+            abilityIcon.sprite = ability.Image;
+
             cooldownHandler.AssignCooldownModel(ability);
             UpdateAbility(); // Update ability state
         }
+        else
+        {
+            abilityBackground.color = defaultColor;
+        }
+
+        abilityIcon.enabled = ability != null;
+        abilityTextContainer.SetActive(ability != null);
     }
 
     private void UpdateAbility()
