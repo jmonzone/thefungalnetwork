@@ -45,6 +45,21 @@ public class FungalAI : MonoBehaviour
 
         fishPickup = GetComponent<FishPickup>();
 
+        fishPickup.OnFishChanged += () =>
+        {
+            if (fishPickup.Fish)
+            {
+                lastAbilityTime = Time.time;
+                nextAbilityDelay = Random.Range(minAbilityDelay, maxAbilityDelay);
+            }
+        };
+
+        fungal.OnAbilityAssigned += () =>
+        {
+            lastAbilityTime = Time.time;
+            nextAbilityDelay = Random.Range(minAbilityDelay, maxAbilityDelay);
+        };
+
         fungal.OnInitialized += FungalController_OnInitialized;
     }
 
@@ -55,6 +70,11 @@ public class FungalAI : MonoBehaviour
             yield return new WaitForSeconds(2f);
             StartAI();
         }
+    }
+
+    private void Update()
+    {
+        agent.speed = fungal.Movement.CalculatedSpeed;
     }
 
     private void FungalController_OnInitialized()
@@ -161,7 +181,7 @@ public class FungalAI : MonoBehaviour
     {
         get
         {
-            return fungal.Ability && Time.time < lastAbilityTime + nextAbilityDelay;
+            return Time.time < lastAbilityTime + nextAbilityDelay;
         }
     }
 
@@ -194,16 +214,7 @@ public class FungalAI : MonoBehaviour
             {
 
             }
-            else if (!HasClearPath)
-            {
-                Vector3 toTarget = targetFungal.transform.position - transform.position;
-                float distance = toTarget.magnitude;
-
-                // Normalize and multiply to stop 'range' units from the target
-                Vector3 direction = toTarget.normalized;
-                targetPosition = targetFungal.transform.position - direction * AbilityRange;
-            }
-            else if (IsWaitingToUseAbility)
+            else if (!HasClearPath || IsWaitingToUseAbility)
             {
                 float distanceToCached = Vector3.Distance(transform.position, cachedTargetPosition);
                 float distanceFromCachedToTarget = Vector3.Distance(cachedTargetPosition, targetFungal.transform.position);
@@ -232,7 +243,12 @@ public class FungalAI : MonoBehaviour
             }
             else if (CanUsePowerUpAbility)
             {
-                if (fishPickup.Fish != null) fishPickup.Sling(targetFungal.transform.position);
+                if (fishPickup.Fish != null)
+                {
+                    fishPickup.Sling(targetFungal.transform.position);
+                    lastAbilityTime = Time.time;
+                    nextAbilityDelay = Random.Range(minAbilityDelay, maxAbilityDelay);
+                }
                 else if (fungal.Ability is DirectionalAbility directional)
                 {
                     directional.CastAbility(targetFungal.transform.position);
@@ -245,10 +261,11 @@ public class FungalAI : MonoBehaviour
         }
     }
 
-    private float lastAbilityTime = 0f;
-    private float nextAbilityDelay = 0f;
     [SerializeField] private float minAbilityDelay = 1f;
     [SerializeField] private float maxAbilityDelay = 3f;
+
+    private float lastAbilityTime = 0f;
+    private float nextAbilityDelay = 0f;
 
     private Vector3 cachedTargetPosition = Vector3.positiveInfinity;
 

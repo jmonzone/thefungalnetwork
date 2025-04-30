@@ -358,6 +358,7 @@ MonoBehaviour:
   stunAnimation: {fileID: 7684853891565658531}
   outlineMaterialPrefab: {fileID: 2100000, guid: 1c96d6daa42984ceabfaf13f91215b61,
     type: 2}
+  ability: {fileID: 0}
 --- !u!114 &3373934044534024445
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -428,19 +429,17 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2941250707292126303}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6ca72cecd509f4fc996a12ff65e12846, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   game: {fileID: 11400000, guid: 08db032ff48be41208a04f1067508370, type: 2}
-  currentState: 0
-  minDashInterval: 2
-  maxDashInterval: 5
-  targetFish: {fileID: 0}
-  allFish: []
+  autoStartAI: 0
   targetFungal: {fileID: 0}
   allFungals: []
+  minAbilityDelay: 1
+  maxAbilityDelay: 3
 --- !u!54 &5946154774523704756
 Rigidbody:
   m_ObjectHideFlags: 0
