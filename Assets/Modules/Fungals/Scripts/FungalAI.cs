@@ -21,6 +21,8 @@ public class FungalAI : MonoBehaviour
     private float lastDashTime = 0f;  // Stores the last dash time
     private float nextDashTime = 0f; // Next randomized dash time
 
+    [SerializeField] private bool autoStartAI = false;
+
     private NavMeshAgent agent;
     private FungalController fungal;
     private Ability ability;
@@ -49,6 +51,11 @@ public class FungalAI : MonoBehaviour
         fungal.OnRespawnComplete += () => StartAI();
     }
 
+    private void Start()
+    {
+        if (autoStartAI) StartAI();
+    }
+
     private void FungalController_OnInitialized()
     {
         var abilityTemplate = fungal.Data.Ability;
@@ -58,11 +65,9 @@ public class FungalAI : MonoBehaviour
 
     public void StartAI()
     {
-        if (!fungal.IsBot) return;
-
         allFungals = FindObjectsOfType<FungalController>().ToList();
 
-        //if isOwwner && is ai
+        //if isOwner && isAi
         agent.enabled = true;
 
         // Ensure AI starts on the NavMesh
