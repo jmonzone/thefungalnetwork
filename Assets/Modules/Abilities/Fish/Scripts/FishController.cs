@@ -10,6 +10,7 @@ public class FishController : MonoBehaviour, IAbilityHolder
     [SerializeField] private float score;
     [SerializeField] private bool isPickedUp = false;
     [SerializeField] private FungalThrow fishAbility;
+    [SerializeField] private float respawnTime = 1f;
 
     [Header("Audio")]
     [SerializeField] private float audioPitch;
@@ -65,7 +66,7 @@ public class FishController : MonoBehaviour, IAbilityHolder
     private IEnumerator RespawnRoutine()
     {
         yield return Movement.ScaleOverTime(0.1f, 0f);
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(respawnTime);
         transform.position = spawnPosition;
         Movement.SetSpeed(swimSpeed);
         Movement.StartRadialMovement(spawnPosition, true);
