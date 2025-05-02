@@ -16,7 +16,6 @@ public class InitializeController : MonoBehaviour
     [SerializeField] private MoveCharacterJoystick moveCharacterJoystick;
     [SerializeField] private AbilityButton fungalAbilityButton;
     [SerializeField] private AbilityButton fungalThrowButton;
-    [SerializeField] private FungalThrow fungalThrow;
 
     private FungalController fungal;
 
@@ -53,15 +52,6 @@ public class InitializeController : MonoBehaviour
     // todo: centralize ability instance cration with fungalAI
     private void UpdateUIAbilityButtons()
     {
-        //var throwAbility = Instantiate(fungalThrow);
-        //throwAbility.Initialize(fungal);
-
-        //Debug.Log($"PlayerReference_OnClientPlayerAdded {fungal.Data.Id} {fungal.Data.Ability.Id}");
-
-        //fungalThrowUI.AssignFishingRod(throwAbility);
-        //fungalThrowButton.AssignAbility(throwAbility);
-
-
         var abilityTemplate = fungal.Data.Ability;
         var fungalAbility = Instantiate(abilityTemplate);
         fungalAbility.Initialize(fungal);
