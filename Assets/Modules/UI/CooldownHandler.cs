@@ -73,11 +73,31 @@ public class CooldownHandler : MonoBehaviour
     // Assign the CooldownModel externally
     public void AssignCooldownModel(Ability ability)
     {
+        void OnAvailabilityChanged() => SetInteractable(ability.IsAvailable);
+
+        if (this.ability)
+        {
+            this.ability.OnAvailabilityChanged -= OnAvailabilityChanged;
+            this.ability.Cooldown.OnCooldownStart -= OnCooldownStart;
+            this.ability.Cooldown.OnCooldownUpdate -= OnCooldownUpdate;
+            this.ability.Cooldown.OnCooldownComplete -= OnCooldownComplete;
+        }
+
         this.ability = ability;
-        ability.OnAvailabilityChanged += () => SetInteractable(ability.IsAvailable);
-        ability.Cooldown.OnCooldownStart += OnCooldownStart;
-        ability.Cooldown.OnCooldownUpdate += OnCooldownUpdate;
-        ability.Cooldown.OnCooldownComplete += OnCooldownComplete;
+
+        if (this.ability)
+        {
+            this.ability.OnAvailabilityChanged += OnAvailabilityChanged;
+            this.ability.Cooldown.OnCooldownStart += OnCooldownStart;
+            this.ability.Cooldown.OnCooldownUpdate += OnCooldownUpdate;
+            this.ability.Cooldown.OnCooldownComplete += OnCooldownComplete;
+            SetInteractable(true);
+        }
+        else
+        {
+            cooldownRadial.gameObject.SetActive(false);
+            cooldownText.gameObject.SetActive(false);
+        }
     }
 
     public void SetInteractable(bool value)

@@ -13,6 +13,8 @@ public class AbilityButton : MonoBehaviour
     [SerializeField] private Image abilityBackground;
     [SerializeField] private TextMeshProUGUI abilityText;
     [SerializeField] private GameObject abilityTextContainer;
+    [SerializeField] private GameObject outline;
+    [SerializeField] private CanvasGroup canvasGroup;
 
     private Ability ability;
     private bool isDown = false;
@@ -41,11 +43,7 @@ public class AbilityButton : MonoBehaviour
 
     private void Start()
     {
-        // Initialize cooldown handler if ability is assigned
-        if (ability != null)
-        {
-            cooldownHandler.AssignCooldownModel(ability);
-        }
+        UpdateAbility();
     }
 
     // Event Subscription/Unsubscription
@@ -78,34 +76,35 @@ public class AbilityButton : MonoBehaviour
         ability = newAbility;
 
         // Subscribe to new ability events
-        if (ability != null)
+        if (ability)
         {
             ability.OnCancel += OnDragCanceled;
             ability.OnAvailabilityChanged += UpdateAbility;
-
-            abilityText.text = ability.Id;
-            abilityBackground.color = ability.BackgroundColor;
-            abilityIcon.sprite = ability.Image;
-
-            cooldownHandler.AssignCooldownModel(ability);
-            UpdateAbility(); // Update ability state
-        }
-        else
-        {
-            abilityBackground.color = defaultColor;
         }
 
-        abilityIcon.enabled = ability != null;
-        abilityTextContainer.SetActive(ability != null);
+        UpdateAbility();
     }
 
     private void UpdateAbility()
     {
-        //Debug.Log($"UpdateAbility {name}");
+        directionalButton.enabled = ability && ability.IsAvailable;
 
-        if (ability != null)
+        outline.SetActive(ability);
+        cooldownHandler.AssignCooldownModel(ability);
+        abilityIcon.enabled = ability;
+        abilityTextContainer.SetActive(ability);
+
+        canvasGroup.alpha = ability ? 1f : 0.5f;
+
+        if (ability)
         {
-            directionalButton.enabled = ability.IsAvailable;
+            abilityText.text = ability.Id;
+            abilityBackground.color = ability.BackgroundColor;
+            abilityIcon.sprite = ability.Image;
+        }
+        else
+        {
+            abilityBackground.color = defaultColor;
         }
     }
 

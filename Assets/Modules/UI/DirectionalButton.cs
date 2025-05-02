@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -9,12 +8,11 @@ public class DirectionalButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
 {
     [SerializeField] private Button button;
     [SerializeField] private float sensitivity = 0.01f;
-    [SerializeField] private CanvasGroup canvasGroup;
-    [SerializeField] private Image outline;
     [SerializeField] private GameObject background;
 
     private Vector3 initalPosition;
     private Vector3 direction;
+
     public bool DragStarted { get; private set; }
 
     public event UnityAction OnPointerDown;
@@ -24,14 +22,6 @@ public class DirectionalButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
     public event UnityAction<Vector3> OnDragUpdated;
     public event UnityAction<Vector3> OnDragCompleted;
 
-    private void Awake()
-    {
-        //button.onClick.AddListener(() =>
-        //{
-        //    OnClick?.Invoke();
-        //});
-    }
-
     private void Update()
     {
         if (DragStarted) OnDragUpdated?.Invoke(direction);
@@ -40,15 +30,11 @@ public class DirectionalButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
     private void OnEnable()
     {
         button.enabled = true;
-        outline.gameObject.SetActive(true);
-        canvasGroup.alpha = 1;
     }
 
     private void OnDisable()
     {
         button.enabled = false;
-        outline.gameObject.SetActive(false);
-        canvasGroup.alpha = 0.25f;
     }
 
     void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
@@ -88,36 +74,6 @@ public class DirectionalButton : MonoBehaviour, IBeginDragHandler, IDragHandler,
         background.SetActive(false);
 
         OnDragCompleted?.Invoke(direction);
-
-        //if (IsPointerOverThisButton(eventData))
-        //{
-        //    OnDragCanceled?.Invoke();
-        //}
-        //else
-        //{
-        //    OnDragCompleted?.Invoke(direction);
-        //}
-    }
-
-    /// <summary>
-    /// Checks if the pointer is still over this button.
-    /// </summary>
-    private bool IsPointerOverThisButton(PointerEventData eventData)
-    {
-        PointerEventData pointerData = new PointerEventData(EventSystem.current)
-        {
-            position = eventData.position
-        };
-
-        List<RaycastResult> results = new List<RaycastResult>();
-        EventSystem.current.RaycastAll(pointerData, results);
-
-        foreach (var result in results)
-        {
-            if (result.gameObject == button.targetGraphic.gameObject) return true;
-        }
-
-        return false;
     }
 
     void IPointerUpHandler.OnPointerUp(PointerEventData eventData)

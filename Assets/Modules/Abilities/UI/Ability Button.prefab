@@ -92,7 +92,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2290551914852081765
 RectTransform:
   m_ObjectHideFlags: 0
@@ -328,7 +328,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4882857042540922999}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -403,9 +403,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   button: {fileID: 7287537353395686783}
   sensitivity: 0.025
-  canvasGroup: {fileID: 4801755814819211124}
-  outline: {fileID: 1690924548315045417}
-  background: {fileID: 4836598262162767343}
+  background: {fileID: 0}
 --- !u!114 &8208207798765233014
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -425,6 +423,8 @@ MonoBehaviour:
   abilityBackground: {fileID: 1007619363269504283}
   abilityText: {fileID: 6622195553377977331}
   abilityTextContainer: {fileID: 5621099670894454713}
+  outline: {fileID: 1908743720110280166}
+  canvasGroup: {fileID: 2968657043784920822}
 --- !u!114 &6040470693871806624
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -451,7 +451,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4882857042540922999}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0.5
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -520,7 +520,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Ability Name
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b4e44b235567b440caf4e04d3269a48c, type: 2}
   m_sharedMaterial: {fileID: -4893521127105691677, guid: b4e44b235567b440caf4e04d3269a48c,
@@ -605,7 +605,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8490265356716163966
 RectTransform:
   m_ObjectHideFlags: 0
@@ -636,7 +636,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 571616542659724972}
-  - component: {fileID: 4801755814819211124}
   m_Layer: 5
   m_Name: Ability Group
   m_TagString: Untagged
@@ -666,18 +665,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!225 &4801755814819211124
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6411482618208243042}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
 --- !u!1 &6452633449499306514
 GameObject:
   m_ObjectHideFlags: 0
@@ -865,7 +852,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8573494712113830936}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
