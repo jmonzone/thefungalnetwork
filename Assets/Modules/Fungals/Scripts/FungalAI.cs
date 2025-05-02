@@ -22,16 +22,13 @@ public class FungalAI : MonoBehaviour
     private Coroutine fungalStateCoroutine;
 
     private Vector3 targetPosition;
-
-
+    private Vector3 cachedTargetPosition;
 
     [SerializeField] private float minAbilityDelay = 1f;
     [SerializeField] private float maxAbilityDelay = 3f;
 
     private float lastAbilityTime = 0f;
     private float nextAbilityDelay = 0f;
-
-    private Vector3 cachedTargetPosition = Vector3.positiveInfinity;
 
     [Header("Debug")]
     private IAbilityHolder targetAbilityHolder;
@@ -44,10 +41,6 @@ public class FungalAI : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         fungal = GetComponent<FungalController>();
-
-        allAbilityHolders = FindObjectsOfType<MonoBehaviour>()
-            .OfType<IAbilityHolder>()
-            .ToList();
 
         fungal.OnAbilityChanged += () =>
         {
@@ -82,6 +75,11 @@ public class FungalAI : MonoBehaviour
     public void StartAI()
     {
         allFungals = FindObjectsOfType<FungalController>().ToList();
+
+
+        allAbilityHolders = FindObjectsOfType<MonoBehaviour>()
+            .OfType<IAbilityHolder>()
+            .ToList();
 
         //if isOwner && isAi
         agent.enabled = true;
@@ -200,7 +198,10 @@ public class FungalAI : MonoBehaviour
                 .OrderBy(target => Vector3.Distance(transform.position, target.Position))
                 .FirstOrDefault();
 
-                if (targetAbilityHolder != null) targetPosition = targetAbilityHolder.Position;
+                if (targetAbilityHolder != null)
+                {
+                    targetPosition = targetAbilityHolder.Position;
+                }
             }
             else if (!targetFungal)
             {

@@ -165,6 +165,8 @@ public class FungalController : MonoBehaviour
         IsDead = true;
         Movement.enabled = false;
 
+        AssignAbility(null);
+
         Animations.PlayDeathAnimation();
         MaterialFlasher.FlashColor(Color.red);
 
