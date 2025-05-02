@@ -128,11 +128,14 @@ public class GameReference : ScriptableObject
         isComplete = true;
         clientPlayer.Fungal.Movement.Stop();
 
-        var highestScore = Players.Max(p => p.Score);
-
-        foreach (var player in Players)
+        if (gameMode == GameMode.PARTY)
         {
-            player.IsWinner = player.Score == highestScore;
+            var highestScore = Players.Max(p => p.Score);
+
+            foreach (var player in Players)
+            {
+                player.IsWinner = player.Score == highestScore;
+            }
         }
 
         OnGameComplete?.Invoke();

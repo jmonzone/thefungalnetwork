@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39e012bb66b794791b236bd1d4616878, type: 3}
+  m_Name: Prawn Projectile
+  m_EditorClassIdentifier: 
+  id: Prawn Puh
+  description: Shoots prawns in a target direction
+  backgroundColor: {r: 0.9764706, g: 0.5716215, b: 0.10196079, a: 1}
+  image: {fileID: 21300000, guid: 40ef02666947a41079b4f9d9f2955c95, type: 3}
+  prefab: {fileID: 309580472262235975, guid: d725c5e48a4db413e88fa3ce4764ec02, type: 3}
+  radius: 1
+  castCooldown: 0.5
+  cooldownModel:
+    cooldown: 0
+    remainingTime: 0
+    isOnCooldown: 0
+  projectilePrefab: {fileID: 2555890173058867351, guid: dd902506e623740f2a488d4ff7a1458b,
+    type: 3}
+  range: 5
+  maxCount: 3
+  useTrajectory: 0

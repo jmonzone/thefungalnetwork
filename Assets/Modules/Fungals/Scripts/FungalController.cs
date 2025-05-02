@@ -14,7 +14,8 @@ public class FungalController : MonoBehaviour
     [SerializeField] private Material outlineMaterialPrefab;
 
     [Header("Debug")]
-    [SerializeField] private Ability ability;
+    [SerializeField] private Ability externalAbility;
+    [SerializeField] private Ability innateAbility;
 
     private Renderer modelRenderer;
     private Material outlineMaterial;
@@ -29,14 +30,14 @@ public class FungalController : MonoBehaviour
     public bool CanRespawn { get; set; } = true;
 
     public bool IsDead { get; private set; }
-    public Ability Ability => ability;
+    public Ability ExternalAbility => externalAbility;
+    public Ability InnateAbility => innateAbility;
 
     public Movement Movement { get; private set; }
     public Health Health { get; private set; }
     public MovementAnimations Animations { get; private set; }
     public MaterialFlasher MaterialFlasher { get; private set; }
 
-    public event UnityAction OnInitialized;
     public event UnityAction OnSpeedModified;
     public event UnityAction<bool> OnShieldToggled;
     public event UnityAction<bool> OnTrailToggled;
@@ -54,6 +55,7 @@ public class FungalController : MonoBehaviour
     public UnityAction HandleRespawn;
 
     public UnityAction<GameObject, Vector3> HandleSpawnObject;
+    public UnityAction<GameObject> OnObjectHasSpawned;
 
     private void Awake()
     {
@@ -118,7 +120,9 @@ public class FungalController : MonoBehaviour
         MaterialFlasher = model.AddComponent<MaterialFlasher>();
         MaterialFlasher.flashDuration = 0.5f;
 
-        OnInitialized?.Invoke();
+        var abilityTemplate = Data.Ability;
+        innateAbility = Instantiate(abilityTemplate);
+        innateAbility.Initialize(this);
     }
 
     private IEnumerator RespawnRoutine()
@@ -216,10 +220,14 @@ public class FungalController : MonoBehaviour
 
     public bool CanApplyAbility(Ability abilityToApply)
     {
-        if (!ability) return true;
-        else if (ability is FungalThrow) return false;
-        else if (ability.Id != abilityToApply.Id) return true;
-        else return false;
+        if (IsDead) return false;
+        else if (externalAbility)
+        {
+            if (externalAbility is FungalThrow) return false;
+            else if (externalAbility.Id == abilityToApply.Id) return false;
+            else return true;
+        }
+        else return true;
     }
 
     List<Ability> cachedAbilities = new List<Ability>();
@@ -227,7 +235,7 @@ public class FungalController : MonoBehaviour
     {
         if (!abilityToAssign)
         {
-            ability = null;
+            externalAbility = null;
             outlineMaterial.SetFloat("_OutlineThickness", 0f); // Set thickness to 0
         }
         else
@@ -235,14 +243,14 @@ public class FungalController : MonoBehaviour
             var cachedAbility = cachedAbilities.Find(ability => ability.Id == abilityToAssign.Id);
             if (cachedAbility)
             {
-                ability = cachedAbility;
-                ability.OnReassigned();
+                externalAbility = cachedAbility;
+                externalAbility.OnReassigned();
             }
             else
             {
-                ability = Instantiate(abilityToAssign);
-                ability.Initialize(this);
-                cachedAbilities.Add(Ability);
+                externalAbility = Instantiate(abilityToAssign);
+                externalAbility.Initialize(this);
+                cachedAbilities.Add(ExternalAbility);
             }
 
 
@@ -271,10 +279,6 @@ public class FungalController : MonoBehaviour
     public void OnObjectSpawned(GameObject obj)
     {
         //Debug.Log("OnObjectSpawned");
-
-        if (Ability is ProjectileAbility projectileAbility)
-        {
-            projectileAbility.AssignProjectile(obj.GetComponent<Projectile>());
-        }
+        OnObjectHasSpawned?.Invoke(obj);
     }
 }

@@ -81,6 +81,9 @@ public class CooldownHandler : MonoBehaviour
             this.ability.Cooldown.OnCooldownStart -= OnCooldownStart;
             this.ability.Cooldown.OnCooldownUpdate -= OnCooldownUpdate;
             this.ability.Cooldown.OnCooldownComplete -= OnCooldownComplete;
+
+            cooldownRadial.gameObject.SetActive(false);
+            cooldownText.gameObject.SetActive(false);
         }
 
         this.ability = ability;
@@ -92,11 +95,6 @@ public class CooldownHandler : MonoBehaviour
             this.ability.Cooldown.OnCooldownUpdate += OnCooldownUpdate;
             this.ability.Cooldown.OnCooldownComplete += OnCooldownComplete;
             SetInteractable(true);
-        }
-        else
-        {
-            cooldownRadial.gameObject.SetActive(false);
-            cooldownText.gameObject.SetActive(false);
         }
     }
 

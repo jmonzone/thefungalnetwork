@@ -52,22 +52,18 @@ public class InitializeController : MonoBehaviour
     // todo: centralize ability instance cration with fungalAI
     private void UpdateUIAbilityButtons()
     {
-        var abilityTemplate = fungal.Data.Ability;
-        var fungalAbility = Instantiate(abilityTemplate);
-        fungalAbility.Initialize(fungal);
-
-        if (fungalAbility is IMovementAbility movementAbility)
+        if (fungal.InnateAbility is IMovementAbility movementAbility)
         {
-            fungalAbility.OnAbilityStart += () => moveCharacterJoystick.enabled = false;
-            fungalAbility.OnAbilityComplete += () => moveCharacterJoystick.enabled = true;
+            fungal.InnateAbility.OnAbilityStart += () => moveCharacterJoystick.enabled = false;
+            fungal.InnateAbility.OnAbilityComplete += () => moveCharacterJoystick.enabled = true;
         }
 
-        fungalAbilityButton.AssignAbility(fungalAbility);
+        fungalAbilityButton.AssignAbility(fungal.InnateAbility);
     }
 
     private void OnAbilityChanged()
     {
         //fungalThrowUI.enabled = false;
-        fungalThrowButton.AssignAbility(fungal.Ability);
+        fungalThrowButton.AssignAbility(fungal.ExternalAbility);
     }
 }
