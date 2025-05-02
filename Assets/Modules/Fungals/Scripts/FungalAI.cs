@@ -47,6 +47,8 @@ public class FungalAI : MonoBehaviour
             lastAbilityTime = Time.time;
             nextAbilityDelay = Random.Range(minAbilityDelay, maxAbilityDelay);
         };
+
+        fungal.OnInitialized += FungalController_OnInitialized;
     }
 
     private IEnumerator Start()
@@ -61,6 +63,13 @@ public class FungalAI : MonoBehaviour
     private void Update()
     {
         agent.speed = fungal.Movement.CalculatedSpeed;
+    }
+
+    private void FungalController_OnInitialized()
+    {
+        var abilityTemplate = fungal.Data.Ability;
+        innateFungalAbility = Instantiate(abilityTemplate);
+        innateFungalAbility.Initialize(fungal);
     }
 
     public void StartAI()
@@ -124,7 +133,7 @@ public class FungalAI : MonoBehaviour
     {
         get
         {
-            if (fungal.ExternalAbility is DirectionalAbility directionalAbility)
+            if (fungal.Ability is DirectionalAbility directionalAbility)
             {
                 return directionalAbility.Range;
             }
@@ -136,12 +145,12 @@ public class FungalAI : MonoBehaviour
     {
         get
         {
-            if (!fungal.ExternalAbility) return false;
+            if (!fungal.Ability) return false;
             if (!targetFungal) return false;
 
             if (Vector3.Distance(transform.position, targetFungal.transform.position) > AbilityRange) return false;
 
-            bool useTrajectory = fungal.ExternalAbility is DirectionalAbility da && da.UseTrajectory;
+            bool useTrajectory = fungal.Ability is DirectionalAbility da && da.UseTrajectory;
             return useTrajectory || !agent.Raycast(targetFungal.transform.position, out _);
         }
     }
@@ -150,7 +159,7 @@ public class FungalAI : MonoBehaviour
     {
         get
         {
-            if (!fungal.ExternalAbility) return false;
+            if (!fungal.Ability) return false;
             if (!targetFungal) return false;
             if (!HasClearPath) return false;
             if (IsWaitingToUseAbility) return false;
@@ -182,7 +191,7 @@ public class FungalAI : MonoBehaviour
                    .OrderBy(f => Vector3.Distance(transform.position, f.transform.position))
                    .FirstOrDefault();
 
-            if (!fungal.ExternalAbility)
+            if (!fungal.Ability)
             {
                 targetAbilityHolder = allAbilityHolders
                 .Where(target => target.CanBePickedUp(fungal) && IsOnNavMesh(target.Position))
@@ -227,7 +236,7 @@ public class FungalAI : MonoBehaviour
             }
             else if (CanUsePowerUpAbility)
             {
-                if (fungal.ExternalAbility is DirectionalAbility directional)
+                if (fungal.Ability is DirectionalAbility directional)
                 {
                     directional.CastAbility(targetFungal.transform.position);
                     lastAbilityTime = Time.time;

@@ -22,27 +22,7 @@ public class ProjectileAbility : DirectionalAbility
     {
         base.Initialize(fungal);
 
-        var maxCount = 2;
-        var received = 0;
-
-        void AssignProjectile(GameObject obj)
-        {
-            Debug.Log("AssignProjectile " + name);
-
-            var projectile = obj.GetComponent<Projectile>();
-            Projectiles.Add(projectile);
-            projectile.Initialize(Fungal, useTrajectory);
-
-            received++;
-            if (received >= maxCount)
-            {
-                Fungal.OnObjectHasSpawned -= AssignProjectile;
-            }
-        }
-
-        Fungal.OnObjectHasSpawned += AssignProjectile;
-
-        for (var i = 0; i < maxCount; i++)
+        for(var i = 0; i < 2; i++)
         {
             Fungal.RequestSpawnObject(projectilePrefab.gameObject, fungal.transform.position);
         }
@@ -65,5 +45,11 @@ public class ProjectileAbility : DirectionalAbility
         uses++;
 
         if (uses >= maxCount) RemoveAbility();
+    }
+
+    public void AssignProjectile(Projectile projectile)
+    {
+        Projectiles.Add(projectile);
+        projectile.Initialize(Fungal, useTrajectory);
     }
 }
