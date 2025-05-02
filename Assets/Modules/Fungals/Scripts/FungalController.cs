@@ -216,8 +216,9 @@ public class FungalController : MonoBehaviour
 
     public bool CanApplyAbility(Ability abilityToApply)
     {
-        if (!Ability) return true;
-        else if (Ability.Id != abilityToApply.Id) return true;
+        if (!ability) return true;
+        else if (ability is FungalThrow) return false;
+        else if (ability.Id != abilityToApply.Id) return true;
         else return false;
     }
 
