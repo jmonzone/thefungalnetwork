@@ -67,7 +67,7 @@ public class PowerUp : MonoBehaviour, IAbilityHolder
         if (hasBeenCollected) return;
 
         hasBeenCollected = true;
-        fungal.AssignAbility(ability);
+        fungal.AssignAbility(AbilitySlot.EXTERNAL, ability);
     }
 
     public void StartRespawn()

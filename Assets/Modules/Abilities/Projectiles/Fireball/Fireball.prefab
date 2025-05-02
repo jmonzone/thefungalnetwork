@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7807657548873092731}
   - component: {fileID: -980590626273703185}
+  - component: {fileID: -4316812985357477859}
   - component: {fileID: 2555890173058867351}
   - component: {fileID: 6474704967514259393}
   - component: {fileID: -5906931164935023938}
@@ -52,8 +53,19 @@ MonoBehaviour:
   damage: 4
   hitStun: 0.75
   radius: 1.75
-  useTrajectory: 1
-  isExplosion: 1
+  hitDetector: {fileID: 0}
+--- !u!114 &-4316812985357477859
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3153819117690242737}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6dead12b8c89f472982c28e40539e8f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &2555890173058867351
 MonoBehaviour:
   m_ObjectHideFlags: 0

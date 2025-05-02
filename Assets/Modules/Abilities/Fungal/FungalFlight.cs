@@ -14,31 +14,21 @@ public class FungalFlight : DirectionalAbility, IMovementAbility
     public bool IgnoreObstacles => true;
 
     private Movement Movement => Fungal.Movement;
-    //private ClientNetworkTransform networkTransform;
 
-    public override void Initialize(FungalController fungal)
+
+    protected override void OnAbilityCasted(Vector3 targetPosition)
     {
-        base.Initialize(fungal);
-        //networkTransform = fungal.GetComponent<ClientNetworkTransform>();
-    }
-
-    public override void CastAbility(Vector3 targetPosition)
-    {
-        base.CastAbility(targetPosition);
-
         void OnDestinationReached()
         {
             //Debug.Log("OnDestinationReached");
             Movement.SetSpeed(Fungal.BaseSpeed);
             Movement.OnDestinationReached -= OnDestinationReached;
 
-            //networkTransform.Interpolate = true;
             CompleteAbility();
         }
 
         //Debug.Log($"CastAbility {targetPosition}");
 
-        //networkTransform.Interpolate = false;
         Movement.OnDestinationReached += OnDestinationReached;
 
         Movement.SetSpeed(flightSpeed);

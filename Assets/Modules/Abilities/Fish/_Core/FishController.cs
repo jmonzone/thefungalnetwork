@@ -96,7 +96,7 @@ public class FishController : MonoBehaviour, IAbilityHolder
     public void HandlePickup(FungalController fungal)
     {
         Fungal = fungal;
-        Fungal.AssignAbility(fishAbility);
+        Fungal.AssignAbility(AbilitySlot.EXTERNAL, fishAbility);
 
         isPickedUp = true;
 

@@ -5,7 +5,10 @@ using UnityEngine;
 public class ProjectileAbility : DirectionalAbility
 {
     [SerializeField] private Movement projectilePrefab;
-    [SerializeField] private float range;
+    [SerializeField] private float speed = 3f;
+    [SerializeField] private float range = 3f;
+
+    [SerializeField] private bool useMaxCount = false;
     [SerializeField] private int maxCount = 3;
     [SerializeField] private bool useTrajectory;
 
@@ -18,11 +21,11 @@ public class ProjectileAbility : DirectionalAbility
 
     private int uses = 0;
 
-    public override void Initialize(FungalController fungal)
+    public override void Initialize(FungalController fungal, AbilitySlot index)
     {
-        base.Initialize(fungal);
+        base.Initialize(fungal, index);
 
-        var maxCount = 2;
+        var objectPoolCount = 2;
         var received = 0;
 
         void AssignProjectile(GameObject obj)
@@ -32,9 +35,10 @@ public class ProjectileAbility : DirectionalAbility
             var projectile = obj.GetComponent<Projectile>();
             Projectiles.Add(projectile);
             projectile.Initialize(Fungal, useTrajectory);
+            projectile.Movement.SetSpeed(speed);
 
             received++;
-            if (received >= maxCount)
+            if (received >= objectPoolCount)
             {
                 Fungal.OnObjectHasSpawned -= AssignProjectile;
             }
@@ -42,28 +46,30 @@ public class ProjectileAbility : DirectionalAbility
 
         Fungal.OnObjectHasSpawned += AssignProjectile;
 
-        for (var i = 0; i < maxCount; i++)
+        for (var i = 0; i < objectPoolCount; i++)
         {
             Fungal.RequestSpawnObject(projectilePrefab.gameObject, fungal.transform.position);
         }
     }
 
-    public override void OnReassigned()
+    public override void OnReassigned(AbilitySlot slot)
     {
-        base.OnReassigned();
+        base.OnReassigned(slot);
         uses = 0;
     }
 
-    public override void CastAbility(Vector3 targetPosition)
-    {   
-        base.CastAbility();
-
+    protected override void OnAbilityCasted(Vector3 targetPosition)
+    {
         projectileIndex = (projectileIndex + 1) % Projectiles.Count;
 
         Projectiles[projectileIndex].ShootProjectile(Fungal.transform.position, targetPosition);
 
         uses++;
 
-        if (uses >= maxCount) RemoveAbility();
+        if (useMaxCount && uses >= maxCount)
+        {
+            Debug.Log("remove");
+            RemoveAbility();
+        }
     }
 }

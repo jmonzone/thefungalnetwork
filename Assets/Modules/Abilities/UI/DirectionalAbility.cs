@@ -5,10 +5,21 @@ public abstract class DirectionalAbility : Ability
     public abstract float Range { get; }
     public abstract bool UseTrajectory { get; }
 
-    public virtual void CastAbility(Vector3 targetPosition)
+    public void CastAbility(Vector3 targetPosition)
     {
         base.CastAbility();
+
+        if (UseTrajectory) OnAbilityCasted(targetPosition);
+        else
+        {
+            var direction = targetPosition - Fungal.transform.position;
+            var fixedPosition = Fungal.transform.position + direction.normalized * Range;
+            OnAbilityCasted(fixedPosition);
+        }
     }
+
+    protected abstract void OnAbilityCasted(Vector3 targetPosition);
+
 
     public virtual Vector3 DefaultTargetPosition
     {

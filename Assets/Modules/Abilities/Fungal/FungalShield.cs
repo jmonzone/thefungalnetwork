@@ -9,11 +9,6 @@ public class FungalShield : Ability
 
     private Coroutine shieldTimerCoroutine;
 
-    public override void Initialize(FungalController fungal)
-    {
-        base.Initialize(fungal);
-    }
-
     public override void CastAbility()
     {
         base.CastAbility();

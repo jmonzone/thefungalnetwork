@@ -25,18 +25,16 @@ public class FungalDash : DirectionalAbility, IMovementAbility
     public override Vector3 DefaultTargetPosition => Fungal.transform.position + Fungal.transform.forward * dashRange;
     public override bool UseTrajectory => false;
 
-    public override void Initialize(FungalController fungal)
+    public override void Initialize(FungalController fungal, AbilitySlot index)
     {
-        base.Initialize(fungal);
+        base.Initialize(fungal, index);
 
         networkTransform = fungal.GetComponent<ClientNetworkTransform>();
         audioSource = fungal.GetComponent<AudioSource>();
     }
 
-    public override void CastAbility(Vector3 targetPosition)
+    protected override void OnAbilityCasted(Vector3 targetPosition)
     {
-        base.CastAbility(targetPosition);
-
         void OnDestinationReached()
         {
             Movement.SetSpeed(Fungal.BaseSpeed);

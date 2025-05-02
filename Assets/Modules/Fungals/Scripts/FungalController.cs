@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+public enum AbilitySlot
+{
+    INTERNAL,
+    EXTERNAL
+}
+
 public class FungalController : MonoBehaviour
 {
     [SerializeField] private FungalData data;
@@ -122,7 +128,7 @@ public class FungalController : MonoBehaviour
 
         var abilityTemplate = Data.Ability;
         innateAbility = Instantiate(abilityTemplate);
-        innateAbility.Initialize(this);
+        innateAbility.Initialize(this, 0);
     }
 
     private IEnumerator RespawnRoutine()
@@ -169,7 +175,7 @@ public class FungalController : MonoBehaviour
         IsDead = true;
         Movement.enabled = false;
 
-        AssignAbility(null);
+        AssignAbility(AbilitySlot.EXTERNAL, null);
 
         Animations.PlayDeathAnimation();
         MaterialFlasher.FlashColor(Color.red);
@@ -231,34 +237,64 @@ public class FungalController : MonoBehaviour
     }
 
     List<Ability> cachedAbilities = new List<Ability>();
-    public void AssignAbility(Ability abilityToAssign)
+
+    // index: 1 = external, 2 = internal
+    public void AssignAbility(AbilitySlot abilitySlot, Ability abilityToAssign)
     {
+        ref Ability targetAbility = ref GetAbilityByIndex(abilitySlot);
+
         if (!abilityToAssign)
         {
-            externalAbility = null;
-            outlineMaterial.SetFloat("_OutlineThickness", 0f); // Set thickness to 0
+            targetAbility = null;
+
+            if (abilitySlot == AbilitySlot.EXTERNAL)
+            {
+                outlineMaterial.SetFloat("_OutlineThickness", 0f);
+            }
         }
         else
         {
-            var cachedAbility = cachedAbilities.Find(ability => ability.Id == abilityToAssign.Id);
+            var cachedAbility = cachedAbilities.Find(a => a.Id == abilityToAssign.Id);
+            Ability assignedInstance;
+
             if (cachedAbility)
             {
-                externalAbility = cachedAbility;
-                externalAbility.OnReassigned();
+                assignedInstance = cachedAbility;
+                assignedInstance.OnReassigned(abilitySlot);
             }
             else
             {
-                externalAbility = Instantiate(abilityToAssign);
-                externalAbility.Initialize(this);
-                cachedAbilities.Add(ExternalAbility);
+                assignedInstance = Instantiate(abilityToAssign);
+                assignedInstance.Initialize(this, abilitySlot);
+                cachedAbilities.Add(assignedInstance);
             }
 
+            targetAbility = assignedInstance;
 
-            outlineMaterial.SetFloat("_OutlineThickness", 0.002f); // Set thickness to 0
-            outlineMaterial.SetColor("_OutlineColor", abilityToAssign.BackgroundColor);
+            if (abilitySlot == AbilitySlot.EXTERNAL)
+            {
+                outlineMaterial.SetFloat("_OutlineThickness", 0.002f);
+                outlineMaterial.SetColor("_OutlineColor", abilityToAssign.BackgroundColor);
+            }
         }
 
         OnAbilityChanged?.Invoke();
+    }
+
+    public void RemoveAbility(AbilitySlot slot)
+    {
+        AssignAbility(slot, null);
+    }
+    // Helper function to get reference to the ability field by index
+    private ref Ability GetAbilityByIndex(AbilitySlot slot)
+    {
+        switch (slot)
+        {
+            case AbilitySlot.EXTERNAL: return ref externalAbility;
+            case AbilitySlot.INTERNAL: return ref innateAbility;
+            default:
+                throw new System.ArgumentOutOfRangeException(nameof(slot), "Invalid ability index. Must be 1 or 2.");
+        }
     }
 
     public void RequestSpawnObject(GameObject prefab, Vector3 spawnPosition)

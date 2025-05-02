@@ -9,6 +9,7 @@ public abstract class Ability : ScriptableObject
     [SerializeField] private Sprite image;
     [SerializeField] private GameObject prefab;
 
+    public AbilitySlot Slot { get; private set; }
     public string Id => id;
     public Color BackgroundColor => backgroundColor;
     public Sprite Image => image;
@@ -35,14 +36,15 @@ public abstract class Ability : ScriptableObject
     public virtual void PrepareAbility() { }
     public virtual void ChargeAbility() { }
 
-    public virtual void Initialize(FungalController fungal)
+    public virtual void Initialize(FungalController fungal, AbilitySlot slot)
     {
         Fungal = fungal;
-        OnReassigned();
+        OnReassigned(Slot);
     }
 
-    public virtual void OnReassigned()
+    public virtual void OnReassigned(AbilitySlot slot)
     {
+        Slot = slot;
         cooldownModel = new CooldownModel(castCooldown);
     }
 
@@ -74,6 +76,6 @@ public abstract class Ability : ScriptableObject
 
     protected void RemoveAbility()
     {
-        Fungal.AssignAbility(null);
+        Fungal.RemoveAbility(Slot);
     }
 }

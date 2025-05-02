@@ -11,9 +11,9 @@ public class FungalThrow : DirectionalAbility
     public override bool UseTrajectory => useTrajectory;
     public override float Range => range;
 
-    public override void Initialize(FungalController fungal)
+    public override void Initialize(FungalController fungal, AbilitySlot index)
     {
-        base.Initialize(fungal);
+        base.Initialize(fungal, index);
         fishPickup = fungal.GetComponent<FishPickup>();
 
         if (fishPickup)
@@ -60,9 +60,8 @@ public class FungalThrow : DirectionalAbility
         }
     }
 
-    public override void CastAbility(Vector3 targetPosition)
+    protected override void OnAbilityCasted(Vector3 targetPosition)
     {
-        base.CastAbility(targetPosition);
         fishPickup.Sling(targetPosition);
         RemoveAbility();
     }
