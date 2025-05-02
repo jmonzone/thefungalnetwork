@@ -8,13 +8,8 @@ public class FishController : MonoBehaviour, IAbilityHolder
     [Header("Customization")]
     [SerializeField] private float swimSpeed = 1f;
     [SerializeField] private float score;
-    [SerializeField] private bool useTrajectory = false;
     [SerializeField] private bool isPickedUp = false;
-
-    [Header("UI")]
-    [SerializeField] private Sprite icon;
-    [SerializeField] private string abilityName;
-    [SerializeField] private Color backgroundColor;
+    [SerializeField] private FungalThrow fishAbility;
 
     [Header("Audio")]
     [SerializeField] private float audioPitch;
@@ -23,14 +18,10 @@ public class FishController : MonoBehaviour, IAbilityHolder
     public Movement Movement { get; private set; }
     public ThrowFish ThrowFish { get; private set; }
     public FungalController Fungal { get; private set; }
+    public FungalThrow Ability => fishAbility;
 
     public bool IsPickedUp => isPickedUp;
     public float Score => score;
-    public bool UseTrajectory => useTrajectory;
-
-    public Sprite Icon => icon;
-    public string AbilityName => abilityName;
-    public Color BackgroundColor => backgroundColor;
 
     bool IAbilityHolder.CanBePickedUp(FungalController fungal)
     {
@@ -104,6 +95,7 @@ public class FishController : MonoBehaviour, IAbilityHolder
     public void HandlePickup(FungalController fungal)
     {
         Fungal = fungal;
+        Fungal.AssignAbility(fishAbility);
 
         isPickedUp = true;
 

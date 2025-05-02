@@ -19,11 +19,19 @@ public class FungalAI : MonoBehaviour
     private NavMeshAgent agent;
     private FungalController fungal;
     private Ability innateFungalAbility;
-
-    private FishPickup fishPickup;
     private Coroutine fungalStateCoroutine;
 
     private Vector3 targetPosition;
+
+
+
+    [SerializeField] private float minAbilityDelay = 1f;
+    [SerializeField] private float maxAbilityDelay = 3f;
+
+    private float lastAbilityTime = 0f;
+    private float nextAbilityDelay = 0f;
+
+    private Vector3 cachedTargetPosition = Vector3.positiveInfinity;
 
     [Header("Debug")]
     private IAbilityHolder targetAbilityHolder;
@@ -40,19 +48,6 @@ public class FungalAI : MonoBehaviour
         allAbilityHolders = FindObjectsOfType<MonoBehaviour>()
             .OfType<IAbilityHolder>()
             .ToList();
-
-        Debug.Log(allAbilityHolders.Count);
-
-        fishPickup = GetComponent<FishPickup>();
-
-        fishPickup.OnFishChanged += () =>
-        {
-            if (fishPickup.Fish)
-            {
-                lastAbilityTime = Time.time;
-                nextAbilityDelay = Random.Range(minAbilityDelay, maxAbilityDelay);
-            }
-        };
 
         fungal.OnAbilityChanged += () =>
         {
@@ -136,18 +131,15 @@ public class FungalAI : MonoBehaviour
         }
     }
 
-    private bool HasAbility => fishPickup.Fish || fungal.Ability;
-
     private float AbilityRange
     {
         get
         {
-            if (fishPickup.Fish) return fishPickup.Fish.ThrowFish.Range;
-            else if (fungal.Ability is DirectionalAbility directionalAbility)
+            if (fungal.Ability is DirectionalAbility directionalAbility)
             {
                 return directionalAbility.Range;
             }
-            else return Mathf.Infinity;
+            else return 3f;
         }
     }
 
@@ -155,12 +147,12 @@ public class FungalAI : MonoBehaviour
     {
         get
         {
-            if (!HasAbility) return false;
+            if (!fungal.Ability) return false;
             if (!targetFungal) return false;
 
             if (Vector3.Distance(transform.position, targetFungal.transform.position) > AbilityRange) return false;
 
-            bool useTrajectory = fishPickup.Fish?.UseTrajectory == true || (fungal.Ability is DirectionalAbility da && da.UseTrajectory);
+            bool useTrajectory = fungal.Ability is DirectionalAbility da && da.UseTrajectory;
             return useTrajectory || !agent.Raycast(targetFungal.transform.position, out _);
         }
     }
@@ -169,7 +161,7 @@ public class FungalAI : MonoBehaviour
     {
         get
         {
-            if (!HasAbility) return false;
+            if (!fungal.Ability) return false;
             if (!targetFungal) return false;
             if (!HasClearPath) return false;
             if (IsWaitingToUseAbility) return false;
@@ -201,7 +193,7 @@ public class FungalAI : MonoBehaviour
                    .OrderBy(f => Vector3.Distance(transform.position, f.transform.position))
                    .FirstOrDefault();
 
-            if (!HasAbility)
+            if (!fungal.Ability)
             {
                 targetAbilityHolder = allAbilityHolders
                 .Where(target => target.CanBePickedUp(fungal) && IsOnNavMesh(target.Position))
@@ -243,13 +235,7 @@ public class FungalAI : MonoBehaviour
             }
             else if (CanUsePowerUpAbility)
             {
-                if (fishPickup.Fish != null)
-                {
-                    fishPickup.Sling(targetFungal.transform.position);
-                    lastAbilityTime = Time.time;
-                    nextAbilityDelay = Random.Range(minAbilityDelay, maxAbilityDelay);
-                }
-                else if (fungal.Ability is DirectionalAbility directional)
+                if (fungal.Ability is DirectionalAbility directional)
                 {
                     directional.CastAbility(targetFungal.transform.position);
                     lastAbilityTime = Time.time;
@@ -260,14 +246,6 @@ public class FungalAI : MonoBehaviour
             yield return UseMoveAction(targetPosition);
         }
     }
-
-    [SerializeField] private float minAbilityDelay = 1f;
-    [SerializeField] private float maxAbilityDelay = 3f;
-
-    private float lastAbilityTime = 0f;
-    private float nextAbilityDelay = 0f;
-
-    private Vector3 cachedTargetPosition = Vector3.positiveInfinity;
 
     private IEnumerator UseMoveAction(Vector3 targetPosition)
     {

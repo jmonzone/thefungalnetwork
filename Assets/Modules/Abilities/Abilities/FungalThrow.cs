@@ -4,12 +4,12 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Fungals/Ability/Throw")]
 public class FungalThrow : DirectionalAbility
 {
+    [SerializeField] private bool useTrajectory = false;
+    [SerializeField] private float range = 4f;
     private FishPickup fishPickup;
 
-    public event Action<FishController> OnFishChanged;
-
-    public override bool UseTrajectory => fishPickup.Fish.UseTrajectory;
-    public override float Range => fishPickup.Fish?.ThrowFish.Range ?? 0;
+    public override bool UseTrajectory => useTrajectory;
+    public override float Range => range;
 
     public override void Initialize(FungalController fungal)
     {
@@ -37,7 +37,6 @@ public class FungalThrow : DirectionalAbility
     private void FishPickup_OnFishChanged()
     {
         var fish = fishPickup.Fish;
-        OnFishChanged?.Invoke(fish);
         ToggleAvailable(fish);
     }
 
@@ -65,5 +64,6 @@ public class FungalThrow : DirectionalAbility
     {
         base.CastAbility(targetPosition);
         fishPickup.Sling(targetPosition);
+        RemoveAbility();
     }
 }

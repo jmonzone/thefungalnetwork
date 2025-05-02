@@ -209,18 +209,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 63133154}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &75240126 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2280936492193010949, guid: 0828a55f3188145edbcaf3f9a20d53a9,
-    type: 3}
-  m_PrefabInstance: {fileID: 1663372012}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &85055749 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4637034189228814, guid: c72f3f8a9daab2442b7dd148c087d333,
@@ -3889,22 +3877,22 @@ PrefabInstance:
     - target: {fileID: 960364465530910674, guid: d7c0967b468c543679259928bb175fc9,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 960364465530910674, guid: d7c0967b468c543679259928bb175fc9,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 960364465530910674, guid: d7c0967b468c543679259928bb175fc9,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 960364465530910674, guid: d7c0967b468c543679259928bb175fc9,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -65
       objectReference: {fileID: 0}
     - target: {fileID: 1159053092736699381, guid: d7c0967b468c543679259928bb175fc9,
         type: 3}
@@ -3959,7 +3947,7 @@ PrefabInstance:
     - target: {fileID: 2941250707292126303, guid: d7c0967b468c543679259928bb175fc9,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4528828365495214589, guid: d7c0967b468c543679259928bb175fc9,
         type: 3}
@@ -4782,11 +4770,7 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1310766031}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4882857042540922999, guid: 0828a55f3188145edbcaf3f9a20d53a9,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1663372021}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0828a55f3188145edbcaf3f9a20d53a9, type: 3}
 --- !u!224 &1663372013 stripped
 RectTransform:
@@ -4794,38 +4778,13 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1663372012}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1663372014 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4882857042540922999, guid: 0828a55f3188145edbcaf3f9a20d53a9,
-    type: 3}
-  m_PrefabInstance: {fileID: 1663372012}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1663372021
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1663372014}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a60736d6c1cc44946aaf9b63aa6d6fae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  button: {fileID: 0}
-  abilityOutline: {fileID: 1975272379}
-  abilityBackground: {fileID: 2044522549}
-  abilityIcon: {fileID: 75240126}
-  fishIcon: {fileID: 1310766032}
-  abilityText: {fileID: 2068143058}
-  defaultBackgroundColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!114 &1663372024 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8208207798765233014, guid: 0828a55f3188145edbcaf3f9a20d53a9,
     type: 3}
   m_PrefabInstance: {fileID: 1663372012}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1663372014}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1524895b687a944cfb3beaf1d43ca3a8, type: 3}
@@ -5129,7 +5088,6 @@ MonoBehaviour:
   moveCharacterJoystick: {fileID: 6163485878806447941}
   fungalAbilityButton: {fileID: 7451435924019975919}
   fungalThrowButton: {fileID: 1663372024}
-  fungalThrowUI: {fileID: 1663372021}
   fungalThrow: {fileID: 11400000, guid: b5c72208b21814df89bdeed4d863ef45, type: 2}
 --- !u!1 &1860022255
 GameObject:
@@ -5224,18 +5182,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 5546786574687110784}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1975272379 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1690924548315045417, guid: 0828a55f3188145edbcaf3f9a20d53a9,
-    type: 3}
-  m_PrefabInstance: {fileID: 1663372012}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2016030640
 GameObject:
   m_ObjectHideFlags: 0
@@ -5276,30 +5222,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 3922429793139210870}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2044522549 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1007619363269504283, guid: 0828a55f3188145edbcaf3f9a20d53a9,
-    type: 3}
-  m_PrefabInstance: {fileID: 1663372012}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &2068143058 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6622195553377977331, guid: 0828a55f3188145edbcaf3f9a20d53a9,
-    type: 3}
-  m_PrefabInstance: {fileID: 1663372012}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &2106305925 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4637034189228814, guid: c72f3f8a9daab2442b7dd148c087d333,
@@ -8875,7 +8797,7 @@ PrefabInstance:
     - target: {fileID: 3192204060082833405, guid: f636afbc05b684c50949d8ba28567f1a,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4477107793749174207, guid: f636afbc05b684c50949d8ba28567f1a,
         type: 3}
@@ -10226,47 +10148,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 416316721201386052}
     m_Modifications:
-    - target: {fileID: 1007619363269504283, guid: 0828a55f3188145edbcaf3f9a20d53a9,
-        type: 3}
-      propertyPath: m_Color.b
-      value: 0.48584908
-      objectReference: {fileID: 0}
-    - target: {fileID: 1007619363269504283, guid: 0828a55f3188145edbcaf3f9a20d53a9,
-        type: 3}
-      propertyPath: m_Color.g
-      value: 0.56502765
-      objectReference: {fileID: 0}
-    - target: {fileID: 1007619363269504283, guid: 0828a55f3188145edbcaf3f9a20d53a9,
-        type: 3}
-      propertyPath: m_Color.r
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2280936492193010949, guid: 0828a55f3188145edbcaf3f9a20d53a9,
-        type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 00af8a8f5572142c6bd37f2acbf58623,
-        type: 3}
-    - target: {fileID: 2280936492193010949, guid: 0828a55f3188145edbcaf3f9a20d53a9,
-        type: 3}
-      propertyPath: m_Color.a
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2280936492193010949, guid: 0828a55f3188145edbcaf3f9a20d53a9,
-        type: 3}
-      propertyPath: m_Color.b
-      value: 0.70980394
-      objectReference: {fileID: 0}
-    - target: {fileID: 2280936492193010949, guid: 0828a55f3188145edbcaf3f9a20d53a9,
-        type: 3}
-      propertyPath: m_Color.g
-      value: 0.9529412
-      objectReference: {fileID: 0}
-    - target: {fileID: 2280936492193010949, guid: 0828a55f3188145edbcaf3f9a20d53a9,
-        type: 3}
-      propertyPath: m_Color.r
-      value: 0.9490196
-      objectReference: {fileID: 0}
     - target: {fileID: 3776348127722597415, guid: 0828a55f3188145edbcaf3f9a20d53a9,
         type: 3}
       propertyPath: m_Pivot.x
@@ -10377,26 +10258,6 @@ PrefabInstance:
       propertyPath: background
       value: 
       objectReference: {fileID: 180947232}
-    - target: {fileID: 6622195553377977331, guid: 0828a55f3188145edbcaf3f9a20d53a9,
-        type: 3}
-      propertyPath: m_text
-      value: Fungal Dash
-      objectReference: {fileID: 0}
-    - target: {fileID: 6622195553377977331, guid: 0828a55f3188145edbcaf3f9a20d53a9,
-        type: 3}
-      propertyPath: m_fontSize
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 8208207798765233014, guid: 0828a55f3188145edbcaf3f9a20d53a9,
-        type: 3}
-      propertyPath: ability
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 8208207798765233014, guid: 0828a55f3188145edbcaf3f9a20d53a9,
-        type: 3}
-      propertyPath: useTrajectory
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8208207798765233014, guid: 0828a55f3188145edbcaf3f9a20d53a9,
         type: 3}
       propertyPath: abilityCastIndicator

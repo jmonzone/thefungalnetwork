@@ -38,11 +38,12 @@ public abstract class Ability : ScriptableObject
     public virtual void Initialize(FungalController fungal)
     {
         Fungal = fungal;
-        cooldownModel = new CooldownModel(castCooldown);
+        OnReassigned();
     }
 
     public virtual void OnReassigned()
     {
+        cooldownModel = new CooldownModel(castCooldown);
     }
 
     public virtual void CastAbility()
@@ -69,5 +70,10 @@ public abstract class Ability : ScriptableObject
     {
         IsAvailable = value;
         OnAvailabilityChanged?.Invoke();
+    }
+
+    protected void RemoveAbility()
+    {
+        Fungal.AssignAbility(null);
     }
 }

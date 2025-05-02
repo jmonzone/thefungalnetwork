@@ -233,14 +233,15 @@ public class FungalController : MonoBehaviour
             if (cachedAbility)
             {
                 ability = cachedAbility;
-                Ability.Initialize(this);
+                ability.OnReassigned();
             }
             else
             {
                 ability = Instantiate(abilityToAssign);
-                Ability.Initialize(this);
+                ability.Initialize(this);
                 cachedAbilities.Add(Ability);
             }
+
 
             outlineMaterial.SetFloat("_OutlineThickness", 0.002f); // Set thickness to 0
             outlineMaterial.SetColor("_OutlineColor", abilityToAssign.BackgroundColor);

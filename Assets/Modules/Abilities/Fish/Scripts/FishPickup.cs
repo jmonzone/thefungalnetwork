@@ -7,7 +7,6 @@ public class FishPickup : MonoBehaviour
     private FungalController fungal;
     [SerializeField] private FishController fish;
 
-    [Obsolete("Should eventually make fish pick up assign ability to fungal")]
     public FishController Fish => fish;
 
     public event UnityAction OnFishChanged;

@@ -6,7 +6,7 @@ public class ProjectileAbility : DirectionalAbility
 {
     [SerializeField] private Movement projectilePrefab;
     [SerializeField] private float range;
-
+    [SerializeField] private int maxCount = 3;
     [SerializeField] private bool useTrajectory;
 
     public override float Range => range;
@@ -44,7 +44,7 @@ public class ProjectileAbility : DirectionalAbility
 
         uses++;
 
-        if (uses >= 3) Fungal.AssignAbility(null);
+        if (uses >= maxCount) RemoveAbility();
     }
 
     public void AssignProjectile(Projectile projectile)

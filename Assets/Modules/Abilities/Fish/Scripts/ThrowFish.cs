@@ -43,7 +43,7 @@ public class ThrowFish : MonoBehaviour, ITrajectory
         targetPosition.y = 0; // Keep on the ground
         movement.SetSpeed(throwSpeed);
 
-        if (fish.UseTrajectory)
+        if (fish.Ability.UseTrajectory)
         {
             movement.SetTrajectoryMovement(targetPosition); // Move towards the target
         }
