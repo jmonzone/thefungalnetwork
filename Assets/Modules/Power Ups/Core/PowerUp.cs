@@ -39,7 +39,9 @@ public class PowerUp : MonoBehaviour, IAbilityHolder
     public void AssignAbility(Ability ability)
     {
         this.ability = ability;
-        Instantiate(ability.Prefab, render.transform, false);
+        var icon = Instantiate(ability.Prefab, render.transform);
+        icon.transform.localPosition = Vector3.zero;
+
     }
 
     private void Update()

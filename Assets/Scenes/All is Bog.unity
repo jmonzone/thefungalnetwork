@@ -520,18 +520,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &75240126 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2280936492193010949, guid: 0828a55f3188145edbcaf3f9a20d53a9,
-    type: 3}
-  m_PrefabInstance: {fileID: 1663372012}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &82661305 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4741473621726338, guid: e86571f2f1251004b98a744302eca0b1,
@@ -1081,18 +1069,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3e2dbb057a8c44ffd84eddd1aa2fdbcc, type: 3}
---- !u!114 &234206679 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1690924548315045417, guid: 0828a55f3188145edbcaf3f9a20d53a9,
-    type: 3}
-  m_PrefabInstance: {fileID: 1663372012}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &243306014
 GameObject:
   m_ObjectHideFlags: 0
@@ -8105,13 +8081,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a60736d6c1cc44946aaf9b63aa6d6fae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  button: {fileID: 0}
-  abilityOutline: {fileID: 234206679}
-  abilityBackground: {fileID: 2044522549}
-  abilityIcon: {fileID: 75240126}
-  fishIcon: {fileID: 1310766032}
-  abilityText: {fileID: 2068143058}
-  defaultBackgroundColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!4 &1765053163 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4637034189228814, guid: c72f3f8a9daab2442b7dd148c087d333,
@@ -8478,8 +8447,7 @@ MonoBehaviour:
   fungalCollection: {fileID: 11400000, guid: 1d49e170120fe4ab1befd22e62e1ea65, type: 2}
   gameMode: 1
   startingFungal: {fileID: 11400000, guid: e55bb12acd0c94c28b3adeb85bc6687e, type: 2}
-  botPlayers:
-  - {fileID: 11400000, guid: ba230be9a25454447bd331346bd38ac1, type: 2}
+  botPlayers: []
 --- !u!114 &1851915125
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8536,8 +8504,6 @@ MonoBehaviour:
   moveCharacterJoystick: {fileID: 6163485878806447941}
   fungalAbilityButton: {fileID: 7451435924019975919}
   fungalThrowButton: {fileID: 1663372018}
-  fungalThrowUI: {fileID: 1663372021}
-  fungalThrow: {fileID: 11400000, guid: b5c72208b21814df89bdeed4d863ef45, type: 2}
 --- !u!1 &1860022255
 GameObject:
   m_ObjectHideFlags: 0
@@ -9096,30 +9062,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 3922429793139210870}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2044522549 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1007619363269504283, guid: 0828a55f3188145edbcaf3f9a20d53a9,
-    type: 3}
-  m_PrefabInstance: {fileID: 1663372012}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &2068143058 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6622195553377977331, guid: 0828a55f3188145edbcaf3f9a20d53a9,
-    type: 3}
-  m_PrefabInstance: {fileID: 1663372012}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &2106305925 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4637034189228814, guid: c72f3f8a9daab2442b7dd148c087d333,
