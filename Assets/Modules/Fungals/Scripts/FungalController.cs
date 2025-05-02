@@ -126,9 +126,13 @@ public class FungalController : MonoBehaviour
         MaterialFlasher = model.AddComponent<MaterialFlasher>();
         MaterialFlasher.flashDuration = 0.5f;
 
-        var abilityTemplate = Data.Ability;
+        var abilityTemplate = Data.Ability1;
         innateAbility = Instantiate(abilityTemplate);
-        innateAbility.Initialize(this, 0);
+        innateAbility.Initialize(this, AbilitySlot.INTERNAL);
+
+        var abilityTemplate2 = Data.Ability2;
+        externalAbility = Instantiate(abilityTemplate2);
+        externalAbility.Initialize(this, AbilitySlot.EXTERNAL);
     }
 
     private IEnumerator RespawnRoutine()
@@ -241,6 +245,8 @@ public class FungalController : MonoBehaviour
     // index: 1 = external, 2 = internal
     public void AssignAbility(AbilitySlot abilitySlot, Ability abilityToAssign)
     {
+        Debug.Log("AssignAbility " + abilitySlot + " " + abilityToAssign?.name ?? "null");
+
         ref Ability targetAbility = ref GetAbilityByIndex(abilitySlot);
 
         if (!abilityToAssign)
@@ -285,6 +291,7 @@ public class FungalController : MonoBehaviour
     {
         AssignAbility(slot, null);
     }
+
     // Helper function to get reference to the ability field by index
     private ref Ability GetAbilityByIndex(AbilitySlot slot)
     {

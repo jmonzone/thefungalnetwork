@@ -39,11 +39,12 @@ public abstract class Ability : ScriptableObject
     public virtual void Initialize(FungalController fungal, AbilitySlot slot)
     {
         Fungal = fungal;
-        OnReassigned(Slot);
+        OnReassigned(slot);
     }
 
     public virtual void OnReassigned(AbilitySlot slot)
     {
+        //Debug.Log(name + " " + slot);
         Slot = slot;
         cooldownModel = new CooldownModel(castCooldown);
     }
@@ -76,6 +77,7 @@ public abstract class Ability : ScriptableObject
 
     protected void RemoveAbility()
     {
+        //Debug.Log("Removed " + Slot);
         Fungal.RemoveAbility(Slot);
     }
 }

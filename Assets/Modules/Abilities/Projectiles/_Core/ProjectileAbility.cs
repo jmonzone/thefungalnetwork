@@ -56,6 +56,7 @@ public class ProjectileAbility : DirectionalAbility
     {
         base.OnReassigned(slot);
         uses = 0;
+        projectileIndex = -1;
     }
 
     protected override void OnAbilityCasted(Vector3 targetPosition)

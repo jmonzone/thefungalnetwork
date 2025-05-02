@@ -16,7 +16,8 @@ public class FungalData : ScriptableObject
     [SerializeField] private Sprite actionImage;
     [SerializeField] private Color actionColor;
     [SerializeField] private Color eggColor;
-    [SerializeField] private Ability ability;
+    [SerializeField] private Ability ability1;
+    [SerializeField] private Ability ability2;
 
     public string Id => id;
     public string Description => description;
@@ -25,5 +26,6 @@ public class FungalData : ScriptableObject
     public Sprite ActionImage => actionImage;
     public Color ActionColor => actionColor;
     public Color EggColor => eggColor;
-    public Ability Ability => ability;
+    public Ability Ability1 => ability1;
+    public Ability Ability2 => ability2;
 }

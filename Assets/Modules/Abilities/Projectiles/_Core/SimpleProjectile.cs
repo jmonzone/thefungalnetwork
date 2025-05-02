@@ -34,7 +34,7 @@ public class SimpleProjectile: MonoBehaviour, IProjectileBehavior
 
     private IEnumerator SimpleSize()
     {
-        Debug.Log("Sized");
+        //Debug.Log("Sized");
         projectile.InMotion = true;
         yield return projectile.Movement.ScaleOverTime(0.1f, 1f);
 
