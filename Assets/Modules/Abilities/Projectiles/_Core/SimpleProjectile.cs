@@ -13,6 +13,7 @@ public class SimpleProjectile: MonoBehaviour, IProjectileBehavior
 
     public void Shoot(Vector3 startPosition, Vector3 targetPosition)
     {
+        hasHitOrArrived = false;
         projectile.Movement.SetTargetPosition(targetPosition);
 
         StopAllCoroutines();

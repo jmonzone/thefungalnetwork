@@ -69,7 +69,7 @@ public class ProjectileAbility : DirectionalAbility
 
         if (useMaxCount && uses >= maxCount)
         {
-            Debug.Log("remove");
+            //Debug.Log("remove");
             RemoveAbility();
         }
     }

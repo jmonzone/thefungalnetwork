@@ -126,13 +126,8 @@ public class FungalController : MonoBehaviour
         MaterialFlasher = model.AddComponent<MaterialFlasher>();
         MaterialFlasher.flashDuration = 0.5f;
 
-        var abilityTemplate = Data.Ability1;
-        innateAbility = Instantiate(abilityTemplate);
-        innateAbility.Initialize(this, AbilitySlot.INTERNAL);
-
-        var abilityTemplate2 = Data.Ability2;
-        externalAbility = Instantiate(abilityTemplate2);
-        externalAbility.Initialize(this, AbilitySlot.EXTERNAL);
+        AssignAbility(AbilitySlot.INTERNAL, Data.Ability1);
+        AssignAbility(AbilitySlot.EXTERNAL, Data.Ability2);
     }
 
     private IEnumerator RespawnRoutine()
@@ -240,48 +235,34 @@ public class FungalController : MonoBehaviour
         else return true;
     }
 
-    List<Ability> cachedAbilities = new List<Ability>();
+    private readonly List<Ability> cachedAbilities = new();
 
-    // index: 1 = external, 2 = internal
-    public void AssignAbility(AbilitySlot abilitySlot, Ability abilityToAssign)
+    public void AssignAbility(AbilitySlot slot, Ability ability)
     {
-        Debug.Log("AssignAbility " + abilitySlot + " " + abilityToAssign?.name ?? "null");
+        ref Ability target = ref GetAbilityByIndex(slot);
 
-        ref Ability targetAbility = ref GetAbilityByIndex(abilitySlot);
-
-        if (!abilityToAssign)
+        if (!ability)
         {
-            targetAbility = null;
-
-            if (abilitySlot == AbilitySlot.EXTERNAL)
-            {
-                outlineMaterial.SetFloat("_OutlineThickness", 0f);
-            }
+            target = null;
+            SetOutline(slot, null);
         }
         else
         {
-            var cachedAbility = cachedAbilities.Find(a => a.Id == abilityToAssign.Id);
-            Ability assignedInstance;
+            Ability assigned = cachedAbilities.Find(a => a.Id == ability.Id);
 
-            if (cachedAbility)
+            if (!assigned)
             {
-                assignedInstance = cachedAbility;
-                assignedInstance.OnReassigned(abilitySlot);
+                assigned = Instantiate(ability);
+                assigned.Initialize(this, slot);
+                cachedAbilities.Add(assigned);
             }
             else
             {
-                assignedInstance = Instantiate(abilityToAssign);
-                assignedInstance.Initialize(this, abilitySlot);
-                cachedAbilities.Add(assignedInstance);
+                assigned.OnReassigned(slot);
             }
 
-            targetAbility = assignedInstance;
-
-            if (abilitySlot == AbilitySlot.EXTERNAL)
-            {
-                outlineMaterial.SetFloat("_OutlineThickness", 0.002f);
-                outlineMaterial.SetColor("_OutlineColor", abilityToAssign.BackgroundColor);
-            }
+            target = assigned;
+            SetOutline(slot, ability);
         }
 
         OnAbilityChanged?.Invoke();
@@ -289,7 +270,22 @@ public class FungalController : MonoBehaviour
 
     public void RemoveAbility(AbilitySlot slot)
     {
-        AssignAbility(slot, null);
+        AssignAbility(slot, slot == AbilitySlot.EXTERNAL ? data.Ability2 : null);
+    }
+
+    private void SetOutline(AbilitySlot slot, Ability ability)
+    {
+        if (slot != AbilitySlot.EXTERNAL) return;
+
+        if (ability == null || data.Ability2.Id == ability.Id)
+        {
+            outlineMaterial.SetFloat("_OutlineThickness", 0f);
+        }
+        else
+        {
+            outlineMaterial.SetFloat("_OutlineThickness", 0.002f);
+            outlineMaterial.SetColor("_OutlineColor", ability.BackgroundColor);
+        }
     }
 
     // Helper function to get reference to the ability field by index
