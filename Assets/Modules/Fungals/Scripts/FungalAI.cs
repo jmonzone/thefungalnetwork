@@ -18,7 +18,6 @@ public class FungalAI : MonoBehaviour
 
     private NavMeshAgent agent;
     private FungalController fungal;
-    private Ability innateFungalAbility;
     private Coroutine fungalStateCoroutine;
 
     private Vector3 targetPosition;
@@ -172,9 +171,9 @@ public class FungalAI : MonoBehaviour
 
         while (true)
         {
-            if (!(innateFungalAbility is DirectionalAbility) && !innateFungalAbility.IsOnCooldown)
+            if (!(fungal.InnateAbility is DirectionalAbility) && !fungal.InnateAbility.IsOnCooldown)
             {
-                innateFungalAbility.CastAbility();
+                fungal.InnateAbility.CastAbility();
             }
 
             targetFungal = allFungals
@@ -241,7 +240,7 @@ public class FungalAI : MonoBehaviour
 
     private IEnumerator UseMoveAction(Vector3 targetPosition)
     {
-        if (innateFungalAbility is IMovementAbility movementAbility && innateFungalAbility is DirectionalAbility directionalAbility && !directionalAbility.IsOnCooldown)
+        if (fungal.InnateAbility is IMovementAbility movementAbility && fungal.InnateAbility is DirectionalAbility directionalAbility && !directionalAbility.IsOnCooldown)
         {
             if (Vector3.Distance(transform.position, targetPosition) > directionalAbility.Range)
             {

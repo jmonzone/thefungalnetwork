@@ -277,7 +277,7 @@ public class FungalController : MonoBehaviour
     {
         if (slot != AbilitySlot.EXTERNAL) return;
 
-        if (ability == null || data.Ability2.Id == ability.Id)
+        if (ability == null || data.Ability2?.Id == ability.Id)
         {
             outlineMaterial.SetFloat("_OutlineThickness", 0f);
         }
