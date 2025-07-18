@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,6 +24,8 @@ public class MainMenuTitle : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI versionText;
 
+    [SerializeField] private CinemachineVirtualCamera virtualCamera;
+
     private void Awake()
     {
         versionText.text = $"Version {Application.version}";
@@ -35,8 +38,21 @@ public class MainMenuTitle : MonoBehaviour
         partyButton.onClick.AddListener(() =>
         {
             StopAllCoroutines();
-            navigation.Navigate(homeView);
+            StartCoroutine(GoToIntro());
         });
+    }
+
+    private IEnumerator GoToIntro()
+    {
+        var dolly = virtualCamera.GetCinemachineComponent<CinemachineTrackedDolly>();
+
+        while (dolly.m_PathPosition < 1f)
+        {
+            dolly.m_PathPosition += Time.deltaTime * 0.5f;
+            yield return null;
+        }
+
+        sceneNavigation.NavigateToScene(3);
     }
 
     private IEnumerator ShowTitle()
@@ -76,6 +92,13 @@ public class MainMenuTitle : MonoBehaviour
             });
         }
 
+        StartCoroutine(NavigateToInitialUI(targetUI));
+    }
+
+    private IEnumerator NavigateToInitialUI(ViewReference targetUI)
+    {
+        yield return new WaitForSeconds(2f);
         navigation.Navigate(targetUI);
+
     }
 }
