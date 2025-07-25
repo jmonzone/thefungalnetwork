@@ -6,7 +6,7 @@ using UnityEngine.Rendering;
 // with persistent global data across scenes
 public class GameManager : MonoBehaviour
 {
-    private static GameManager instance;
+    public static GameManager Instance;
 
     [Header("Services")]
     [SerializeField] private LocalData localData;
@@ -23,14 +23,14 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        if (instance)
+        if (Instance)
         {
             Destroy(gameObject);
             return;
         }
         else
         {
-            instance = this;
+            Instance = this;
 
             // order of initialization matters here, ability cast as of now
             // needs to be initialized before localdata.inventory does
@@ -49,7 +49,7 @@ public class GameManager : MonoBehaviour
 
             //controller.Initialize(volume);
 
-            DontDestroyOnLoad(instance);
+            DontDestroyOnLoad(Instance);
 
             localData.OnReset += () =>
             {

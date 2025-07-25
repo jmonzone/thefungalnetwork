@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 
 public class InitialUI : MonoBehaviour
 {
     [SerializeField] private SceneNavigation sceneNavigation;
     [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference initalUI;
+
+    public event UnityAction OnInitialUIShown;
 
     private void OnEnable()
     {
@@ -18,7 +21,7 @@ public class InitialUI : MonoBehaviour
 
     private void ShowInitialUI()
     {
-        Debug.Log("showing");
         navigation.Navigate(initalUI);
+        OnInitialUIShown?.Invoke();
     }
 }
