@@ -17,7 +17,7 @@ public class InventoryController : MonoBehaviour
 
     private void Awake()
     {
-        var mushrooms = FindObjectsOfType<InteractableMushroom>();
+        var mushrooms = FindObjectsOfType<InteractableMushroom>(true);
         foreach(var mushroom in mushrooms)
         {
             mushroom.OnCollect += () =>

@@ -7,6 +7,8 @@ public class IntroSequence : MonoBehaviour
     [SerializeField] private CinemachineVirtualCamera virtualCamera;
     [SerializeField] private SceneNavigation sceneNavigation;
 
+    public const string INTRO_COMPLETE_KEY = "introComplete";
+
     private IEnumerator Start()
     {
         yield return new WaitForSeconds(2f);
@@ -24,6 +26,7 @@ public class IntroSequence : MonoBehaviour
             yield return null;
         }
 
-        sceneNavigation.NavigateToScene(3);
+        PlayerPrefs.SetInt(INTRO_COMPLETE_KEY, 1);
+        sceneNavigation.NavigateToScene(Launcher.MENU_SCENE_INDEX);
     }
 }

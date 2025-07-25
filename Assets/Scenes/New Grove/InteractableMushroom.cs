@@ -5,6 +5,8 @@ using UnityEngine.Events;
 public class InteractableMushroom : MonoBehaviour, IInteractable, ICollectable
 {
     public ScaleController scaleController;
+    public ScaleController indicatorScaleController;
+
     public float respawnDelay = 5f;
 
     private bool isInteractable = true;

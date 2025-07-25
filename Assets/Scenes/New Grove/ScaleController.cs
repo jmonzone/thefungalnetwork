@@ -6,7 +6,7 @@ public class ScaleController : MonoBehaviour
     public float scaleDuration = 0.3f;
     private Vector3 originalScale;
 
-    void Start()
+    private void Awake()
     {
         originalScale = transform.localScale;
     }
@@ -29,6 +29,7 @@ public class ScaleController : MonoBehaviour
     public IEnumerator ScaleUp()
     {
         gameObject.SetActive(true);
+        yield return null;
 
         // Respawn and scale up
         float elapsed = 0f;
