@@ -4,12 +4,7 @@ using UnityEngine;
 public class ScaleController : MonoBehaviour
 {
     public float scaleDuration = 0.3f;
-    private Vector3 originalScale;
-
-    private void Awake()
-    {
-        originalScale = transform.localScale;
-    }
+    private Vector3 originalScale = Vector3.one;
 
     public IEnumerator ScaleDown()
     {
@@ -28,8 +23,8 @@ public class ScaleController : MonoBehaviour
 
     public IEnumerator ScaleUp()
     {
+        transform.localScale = Vector3.zero;
         gameObject.SetActive(true);
-        yield return null;
 
         // Respawn and scale up
         float elapsed = 0f;

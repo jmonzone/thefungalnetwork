@@ -11,6 +11,8 @@ public class InteractableMushroom : MonoBehaviour, IInteractable, ICollectable
 
     private bool isInteractable = true;
 
+    Transform IInteractable.Transform => transform;
+
     public event UnityAction OnInteractionStart;
     public event UnityAction OnInteractionComplete;
     public event UnityAction OnCollect;

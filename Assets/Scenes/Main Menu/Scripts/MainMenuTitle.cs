@@ -50,7 +50,7 @@ public class MainMenuTitle : MonoBehaviour
 
     private IEnumerator NavigateToInitialUI()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(3f);
         navigation.Navigate(titleViewReference);
 
     }

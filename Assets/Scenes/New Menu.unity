@@ -934,7 +934,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &284484275
 Transform:
   m_ObjectHideFlags: 0
@@ -1429,7 +1429,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &497082455
 Transform:
   m_ObjectHideFlags: 0
@@ -2648,13 +2648,13 @@ PrefabInstance:
     - target: {fileID: 8142101640044107070, guid: 8901b198e42e04a0c895ac101328e2ce,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8142101640044107070, guid: 8901b198e42e04a0c895ac101328e2ce,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 11400000, guid: 7af35f01730a846d692adda4734cddd3,
+      objectReference: {fileID: 11400000, guid: 5c885c9a984a3470684bef7e76ca5c2a,
         type: 2}
     - target: {fileID: 8142101640044107070, guid: 8901b198e42e04a0c895ac101328e2ce,
         type: 3}
@@ -2664,23 +2664,27 @@ PrefabInstance:
     - target: {fileID: 8142101640044107070, guid: 8901b198e42e04a0c895ac101328e2ce,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Navigate
+      value: NavigateToScene
       objectReference: {fileID: 0}
     - target: {fileID: 8142101640044107070, guid: 8901b198e42e04a0c895ac101328e2ce,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: Navigation, Assembly-CSharp
+      value: SceneNavigation, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 8142101640044107070, guid: 8901b198e42e04a0c895ac101328e2ce,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8142101640044107070, guid: 8901b198e42e04a0c895ac101328e2ce,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
       value: 
-      objectReference: {fileID: 11400000, guid: 227df233736184388a3c550ebfccf26c,
-        type: 2}
+      objectReference: {fileID: 0}
     - target: {fileID: 8142101640044107070, guid: 8901b198e42e04a0c895ac101328e2ce,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: ViewReference, Assembly-CSharp
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 8680201845920829135, guid: 8901b198e42e04a0c895ac101328e2ce,
         type: 3}
@@ -4771,7 +4775,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2099876289
 Transform:
   m_ObjectHideFlags: 0

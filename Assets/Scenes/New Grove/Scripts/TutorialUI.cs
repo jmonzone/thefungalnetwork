@@ -107,11 +107,6 @@ public class TutorialUI : MonoBehaviour
             StartCoroutine(mushroom.scaleController.ScaleUp());
             yield return new WaitForSeconds(0.5f);
         }
-
-        //foreach (var mushroom in mushrooms)
-        //{
-        //    StartCoroutine(mushroom.indicatorScaleController.ScaleUp());
-        //}
     }
 
     private string GetTextForStage(TutorialStage stage)
