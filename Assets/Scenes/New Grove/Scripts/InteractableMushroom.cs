@@ -11,12 +11,18 @@ public class InteractableMushroom : MonoBehaviour, IInteractable, ICollectable
 
     private bool isInteractable = true;
 
-    Transform IInteractable.Transform => transform;
+    public Transform Transform => transform;
 
     public event UnityAction OnInteractionStart;
     public event UnityAction OnInteractionComplete;
     public event UnityAction OnCollect;
 
+    private AudioSource audioSource;
+
+    private void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
 
     public void OnBaseInteraction()
     {
@@ -30,13 +36,12 @@ public class InteractableMushroom : MonoBehaviour, IInteractable, ICollectable
     {
         OnInteractionStart?.Invoke();
         yield return scaleController.ScaleDown();
-        
 
         OnInteractionComplete?.Invoke();
         OnCollect?.Invoke();
+        audioSource.Play();
         yield return new WaitForSeconds(respawnDelay);
         yield return scaleController.ScaleUp();
-
 
         isInteractable = true;
     }

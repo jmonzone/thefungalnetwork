@@ -54,12 +54,8 @@ public class TutorialUI : MonoBehaviour
     {
         currentStage = tutorialStage;
 
-        yield return new WaitForSeconds(2f);
-
         if (currentStage <= TutorialStage.Movement)
             yield return Stage_Movement();
-
-        yield return new WaitForSeconds(2f);
 
         if (currentStage <= TutorialStage.InteractionPrompt)
             yield return Stage_InteractionPrompt();

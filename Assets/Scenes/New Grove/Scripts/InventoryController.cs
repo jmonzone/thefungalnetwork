@@ -6,6 +6,7 @@ using UnityEngine.Events;
 
 public interface ICollectable
 {
+    public Transform Transform { get; }
     public event UnityAction OnCollect;
 }
 
@@ -13,7 +14,9 @@ public class InventoryController : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI mushroomCountText;
 
-    private int mushroomCount;
+    public int MushroomCount { get; private set; }
+    public event UnityAction<ICollectable> OnCollect;
+    public event UnityAction<int> OnMushroomCountChanged;
 
     private void Awake()
     {
@@ -22,9 +25,18 @@ public class InventoryController : MonoBehaviour
         {
             mushroom.OnCollect += () =>
             {
-                mushroomCount++;
-                mushroomCountText.text = mushroomCount.ToString();
+                MushroomCount++;
+                mushroomCountText.text = MushroomCount.ToString();
+                OnMushroomCountChanged?.Invoke(MushroomCount);
+                OnCollect?.Invoke(mushroom);
             };
         }
+    }
+
+    public void ConsumeMushroom(int count)
+    {
+        MushroomCount -= count;
+        mushroomCountText.text = MushroomCount.ToString();
+        OnMushroomCountChanged?.Invoke(MushroomCount);
     }
 }

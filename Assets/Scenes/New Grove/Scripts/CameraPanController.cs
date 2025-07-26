@@ -66,12 +66,12 @@ public class CameraPanController : MonoBehaviour
             float moveX = inputDelta.x * panSpeed * (invertX ? 1 : -1);
             float moveZ = inputDelta.y * panSpeed * (invertZ ? 1 : -1);
 
-            Vector3 panDelta = new Vector3(moveX, 0f, moveZ);
+            Vector3 panDelta = new Vector3(moveX, moveZ);
             targetPosition += panDelta;
 
             // Clamp target position to bounds
             targetPosition.x = Mathf.Clamp(targetPosition.x, panLimitX.x, panLimitX.y);
-            targetPosition.z = Mathf.Clamp(targetPosition.z, panLimitZ.x, panLimitZ.y);
+            targetPosition.y = Mathf.Clamp(targetPosition.y, panLimitZ.x, panLimitZ.y);
         }
 
         // Smoothly move the camera
