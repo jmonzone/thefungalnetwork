@@ -15,6 +15,7 @@ public class InteractableMushroom : MonoBehaviour, IInteractable, ICollectable
 
     public event UnityAction OnInteractionStart;
     public event UnityAction OnInteractionComplete;
+
     public event UnityAction OnCollect;
 
     private AudioSource audioSource;

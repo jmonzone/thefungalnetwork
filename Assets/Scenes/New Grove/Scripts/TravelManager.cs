@@ -21,7 +21,7 @@ public class TravelManager : MonoBehaviour
 
         unlockButton.onClick.AddListener(() =>
         {
-            inventoryController.ConsumeMushroom(5);
+            inventoryController.SetMushroomCount(inventoryController.MushroomCount - 5);
             light1.gameObject.SetActive(true);
             light2.gameObject.SetActive(false);
             unlockButton.gameObject.SetActive(false);
