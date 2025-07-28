@@ -7,7 +7,6 @@ public class InteractableNPC : MonoBehaviour, IInteractable
 {
     [SerializeField] private InventoryController inventoryController;
     [SerializeField] private CameraPanController cameraPanController;
-    [SerializeField] private FadeCanvasGroup dialogueView;
     [SerializeField] private TextMeshProUGUI dialogueHeaderText;
     [SerializeField] private TextMeshProUGUI dialogueText;
     [SerializeField] [TextArea] private string level1Dialogue;
@@ -15,6 +14,13 @@ public class InteractableNPC : MonoBehaviour, IInteractable
     [SerializeField] private Button continueButton;
     [SerializeField] private FadeCanvasGroup touchIndicator;
     [SerializeField] private Animator animator;
+
+    [SerializeField] private ViewReference dialogueView;
+    [SerializeField] private ViewReference interactionView;
+    [SerializeField] private Button talkButton;
+
+    [SerializeField] private Navigation navigation;
+    //[SerializeField] private Button 
 
     public Transform Transform => transform;
 
@@ -27,8 +33,12 @@ public class InteractableNPC : MonoBehaviour, IInteractable
 
         continueButton.onClick.AddListener(() =>
         {
-            StopAllCoroutines();
-            StartCoroutine(dialogueView.FadeOut());
+            navigation.GoBack();
+        });
+
+        talkButton.onClick.AddListener(() =>
+        {
+            navigation.Navigate(dialogueView);
         });
     }
 
@@ -57,6 +67,6 @@ public class InteractableNPC : MonoBehaviour, IInteractable
         cameraPanController.CenterTargetInView(transform);
 
         if (touchIndicator.gameObject.activeSelf) StartCoroutine(touchIndicator.FadeOut());
-        StartCoroutine(dialogueView.FadeIn());
+        navigation.Navigate(interactionView);
     }
 }
