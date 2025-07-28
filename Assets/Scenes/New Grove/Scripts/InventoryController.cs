@@ -17,6 +17,7 @@ public class InventoryController : MonoBehaviour
     [SerializeField] private Slider insightSlider;
     [SerializeField] private Image[] rainbowImages; // Assign the 2 images in inspector
     private Color[] rainbowImagesOriginalColors;
+    [SerializeField] private RotateObject magicCircleRotation;
 
     public Color highlightColorA = Color.cyan;  // Dimmer or base pulse
     public Color highlightColorB = Color.white; // Brighter or target pulse
@@ -31,6 +32,7 @@ public class InventoryController : MonoBehaviour
     public int MushroomCount { get; private set; }
     public event UnityAction<ICollectable> OnCollect;
     public event UnityAction<int> OnMushroomCountChanged;
+    public event UnityAction OnInsightGained;
 
     private void Awake()
     {
@@ -68,8 +70,12 @@ public class InventoryController : MonoBehaviour
         mushroomCountText.text = MushroomCount.ToString();
         OnMushroomCountChanged?.Invoke(MushroomCount);
 
+        magicCircleRotation.enabled = MushroomCount >= insightSlider.maxValue;
+
         if (MushroomCount >= insightSlider.maxValue)
         {
+            OnInsightGained?.Invoke();
+
             if (pulseRoutine == null)
             {
                 if (transitionRoutine != null)
