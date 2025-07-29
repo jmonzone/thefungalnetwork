@@ -10,6 +10,8 @@ public class Navigation : ScriptableObject
     [SerializeField] private SceneNavigation sceneNavigation;
 
     private ViewReference currentView;
+    public ViewReference CurrentView => currentView;
+
     private Stack<ViewReference> history;
 
     public Stack<ViewReference> History => history;

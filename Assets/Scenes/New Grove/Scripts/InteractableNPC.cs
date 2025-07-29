@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class InteractableNPC : MonoBehaviour, IInteractable
 {
     [SerializeField] private InventoryController inventoryController;
+    [SerializeField] private InteractionUI interactionUI;
     [SerializeField] private CameraPanController cameraPanController;
     [SerializeField] private TextMeshProUGUI dialogueHeaderText;
     [SerializeField] private TextMeshProUGUI dialogueText;
@@ -17,7 +18,7 @@ public class InteractableNPC : MonoBehaviour, IInteractable
 
     [SerializeField] private ViewReference dialogueView;
     [SerializeField] private ViewReference interactionView;
-    [SerializeField] private Button talkButton;
+    [SerializeField] private InteractionButton talkButton;
 
     [SerializeField] private Navigation navigation;
     //[SerializeField] private Button 
@@ -29,23 +30,28 @@ public class InteractableNPC : MonoBehaviour, IInteractable
 
     private void Awake()
     {
-        inventoryController.OnInsightGained += InventoryController_OnInsightGained;
-
+        //inventoryController.OnInsightGained += InventoryController_OnInsightGained;
+        interactionUI.OnButtonUnlockable += InteractionUI_OnButtonUnlockable;
         continueButton.onClick.AddListener(() =>
         {
             navigation.GoBack();
         });
 
-        talkButton.onClick.AddListener(() =>
+        talkButton.OnInteractionClicked += () =>
         {
             navigation.Navigate(dialogueView);
-        });
+        };
     }
 
-    private void InventoryController_OnInsightGained()
+    private void InteractionUI_OnButtonUnlockable()
     {
-        StartCoroutine(touchIndicator.FadeIn());
+        if (!touchIndicator.IsVisible) StartCoroutine(touchIndicator.FadeIn());
     }
+
+    //private void InventoryController_OnInsightGained()
+    //{
+    //    StartCoroutine(touchIndicator.FadeIn());
+    //}
 
     public void OnBaseInteraction()
     {

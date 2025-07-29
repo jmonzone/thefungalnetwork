@@ -41,8 +41,8 @@ public class InteractionController : MonoBehaviour
 
             if (interactable != null)
             {
-                interactable.OnBaseInteraction();
                 OnInteractionStart?.Invoke(interactable.Transform.position);
+                interactable.OnBaseInteraction();
                 return;
             }
 
