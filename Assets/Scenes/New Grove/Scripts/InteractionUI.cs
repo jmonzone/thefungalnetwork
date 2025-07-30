@@ -7,7 +7,6 @@ using UnityEngine.UI;
 public class InteractionUI : MonoBehaviour
 {
     [SerializeField] private InventoryController inventoryController;
-    [SerializeField] private List<InteractionButton> interactionButtons;
     [SerializeField] private InteractionController interactionController;
     [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference interactionView;
@@ -17,12 +16,21 @@ public class InteractionUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI interactableNameText;
     [SerializeField] private TextMeshProUGUI levelText;
 
-    private int level = 0;
+    [SerializeField] private Button awakenButton;
+    [SerializeField] private TextMeshProUGUI awakenCostText;
+
+    [SerializeField] private GameObject interactionButtonsContainer;
+
+    private List<InteractionButton> interactionButtons = new List<InteractionButton>();
+
+    private Interactable interactable;
 
     public event UnityAction OnButtonUnlockable;
 
     private void Awake()
     {
+        interactionButtonsContainer.GetComponentsInChildren(true, interactionButtons);
+
         interactionController.OnInteractableSelected += InteractionController_OnInteractableSelected;
         interactionController.OnGroundSelected += _ =>
         {
@@ -31,30 +39,80 @@ public class InteractionUI : MonoBehaviour
 
         inventoryController.OnMushroomCountChanged += InventoryController_OnMushroomCountChanged;
 
-        levelText.text = "Bogged Down";
-
         foreach (var button in interactionButtons)
         {
             button.OnUnlocked += () =>
             {
                 inventoryController.SetMushroomCount(inventoryController.MushroomCount - button.Cost);
-                level++;
-                levelText.text = $"Level {level}";
+                interactable.IncreaseLevel();
+                levelText.text = $"Level {interactable.Level}";
             };
         }
+
+        awakenButton.onClick.AddListener(() =>
+        {
+            if (interactable)
+            {
+                inventoryController.SetMushroomCount(inventoryController.MushroomCount - interactable.AwakenCost);
+                interactable.Awaken();
+                UpdateView();
+            }
+        });
     }
 
     private void InteractionController_OnInteractableSelected(Interactable interactable)
     {
+        this.interactable = interactable;
+
+        UpdateView();
+    }
+
+    private void UpdateView()
+    {
+        if (!interactable) return;
+
         interactableNameText.text = interactable.Id;
         interactableImage.sprite = interactable.Sprite;
         interactableImage.rectTransform.anchoredPosition = interactable.SpritePosition;
         interactableImage.rectTransform.sizeDelta = interactable.SpriteSize;
+
+        if (interactable.Level == 0)
+        {
+            levelText.text = $"Asleep";
+            awakenButton.interactable = inventoryController.MushroomCount >= interactable.AwakenCost;
+            awakenCostText.text = interactable.AwakenCost.ToString();
+
+            awakenButton.gameObject.SetActive(true);
+            interactionButtonsContainer.SetActive(false);
+        }
+        else
+        {
+            levelText.text = $"Level {interactable.Level}";
+            awakenButton.gameObject.SetActive(false);
+            interactionButtonsContainer.SetActive(true);
+        }
+
+        for (var i = 0; i < interactionButtons.Count; i++)
+        {
+            if (interactable.Interactions.Count > i)
+            {
+                interactionButtons[i].gameObject.SetActive(true);
+            }
+            else
+            {
+                interactionButtons[i].gameObject.SetActive(false);
+            }
+        }
     }
 
     private void InventoryController_OnMushroomCountChanged(int count)
     {
-        foreach(var button in interactionButtons)
+        if (interactable)
+        {
+            awakenButton.interactable = inventoryController.MushroomCount >= interactable.AwakenCost;
+        }
+
+        foreach (var button in interactionButtons)
         {
             if (!button.Unlocked && count >= button.Cost)
             {

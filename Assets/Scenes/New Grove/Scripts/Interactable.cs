@@ -1,5 +1,13 @@
-﻿using TMPro;
+﻿using System;
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+
+[Serializable]
+public class Interaction
+{
+    public string interactionName;
+}
 
 public class Interactable : MonoBehaviour, IInteractable
 {
@@ -8,17 +16,22 @@ public class Interactable : MonoBehaviour, IInteractable
     [SerializeField] private Vector2 spritePosition;
     [SerializeField] private Vector2 spriteSize;
     [SerializeField] private int level;
+    [SerializeField] private int awakenCost = 5;
 
+    [SerializeField] private List<Interaction> interactions;
 
     public string Id => id;
     public Sprite Sprite => sprite;
     public Vector2 SpritePosition => spritePosition;
     public Vector2 SpriteSize => spriteSize;
-
     public int Level => level;
+    public int AwakenCost => awakenCost;
+
+    public List<Interaction> Interactions => interactions;
+
     public Transform Transform => transform;
 
-    [SerializeField] private InteractionUI interactionUI;
+    [SerializeField] private InventoryController inventoryController;
     [SerializeField] private CameraPanController cameraPanController;
     [SerializeField] private TextMeshProUGUI dialogueHeaderText;
     [SerializeField] private TextMeshProUGUI dialogueText;
@@ -30,10 +43,18 @@ public class Interactable : MonoBehaviour, IInteractable
     [SerializeField] [TextArea] private string level1Dialogue;
     [SerializeField] [TextArea] private string level2Dialogue;
 
-
     private void Awake()
     {
-        interactionUI.OnButtonUnlockable += InteractionUI_OnButtonUnlockable;
+        inventoryController.OnMushroomCountChanged += InventoryController_OnMushroomCountChanged;
+    }
+
+    private void InventoryController_OnMushroomCountChanged(int count)
+    {
+        if (level == 0 && count >= awakenCost && !touchIndicator.IsVisible)
+        {
+            StartCoroutine(touchIndicator.FadeIn());
+            inventoryController.OnMushroomCountChanged -= InventoryController_OnMushroomCountChanged;
+        }
     }
 
     public void OnBaseInteraction()
@@ -47,7 +68,7 @@ public class Interactable : MonoBehaviour, IInteractable
         }
         else
         {
-            dialogueHeaderText.text = name;
+            dialogueHeaderText.text = id;
             dialogueText.text = level2Dialogue;
         }
 
@@ -60,9 +81,13 @@ public class Interactable : MonoBehaviour, IInteractable
         }
     }
 
-
-    private void InteractionUI_OnButtonUnlockable()
+    public void Awaken()
     {
-        if (!touchIndicator.IsVisible) StartCoroutine(touchIndicator.FadeIn());
+        IncreaseLevel();
+    }
+
+    public void IncreaseLevel()
+    {
+        level++;
     }
 }
