@@ -48,6 +48,8 @@ public class InteractionUI : MonoBehaviour
     {
         interactableNameText.text = interactable.Id;
         interactableImage.sprite = interactable.Sprite;
+        interactableImage.rectTransform.anchoredPosition = interactable.SpritePosition;
+        interactableImage.rectTransform.sizeDelta = interactable.SpriteSize;
     }
 
     private void InventoryController_OnMushroomCountChanged(int count)

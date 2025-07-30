@@ -1,12 +1,22 @@
 ﻿using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class Interactable : MonoBehaviour, IInteractable
 {
     [SerializeField] private string id;
     [SerializeField] private Sprite sprite;
+    [SerializeField] private Vector2 spritePosition;
+    [SerializeField] private Vector2 spriteSize;
     [SerializeField] private int level;
+
+
+    public string Id => id;
+    public Sprite Sprite => sprite;
+    public Vector2 SpritePosition => spritePosition;
+    public Vector2 SpriteSize => spriteSize;
+
+    public int Level => level;
+    public Transform Transform => transform;
 
     [SerializeField] private InteractionUI interactionUI;
     [SerializeField] private CameraPanController cameraPanController;
@@ -20,10 +30,6 @@ public class Interactable : MonoBehaviour, IInteractable
     [SerializeField] [TextArea] private string level1Dialogue;
     [SerializeField] [TextArea] private string level2Dialogue;
 
-    public string Id => id;
-    public Sprite Sprite => sprite;
-    public int Level => level;
-    public Transform Transform => transform;
 
     private void Awake()
     {
