@@ -90,7 +90,8 @@ public class FrogAssist : MonoBehaviour
 
     private IEnumerator LookAtTargetOverTime(Transform target, float duration)
     {
-        Quaternion startRotation = transform.rotation;
+        var rotatable = transform.GetChild(0);
+        Quaternion startRotation = rotatable.rotation;
 
         Vector3 direction = (target.position - transform.position).normalized;
         direction.y = 0f; // Keep rotation flat
@@ -103,12 +104,12 @@ public class FrogAssist : MonoBehaviour
 
         while (elapsed < duration)
         {
-            transform.rotation = Quaternion.Lerp(startRotation, targetRotation, elapsed / duration);
+            rotatable.rotation = Quaternion.Lerp(startRotation, targetRotation, elapsed / duration);
             elapsed += Time.deltaTime;
             yield return null;
         }
 
-        transform.rotation = targetRotation;
+        rotatable.rotation = targetRotation;
     }
 
     [SerializeField] private float scaleFactor = 0.25f;

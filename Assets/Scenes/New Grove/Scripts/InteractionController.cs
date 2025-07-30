@@ -5,8 +5,6 @@ public interface IInteractable
 {
     Transform Transform { get; }
     void OnBaseInteraction();
-    event UnityAction OnInteractionStart;
-    event UnityAction OnInteractionComplete;
 }
 
 public class InteractionController : MonoBehaviour
@@ -15,14 +13,15 @@ public class InteractionController : MonoBehaviour
 
     private Camera mainCamera;
 
-    public event UnityAction<Vector3> OnInteractionStart;
+    public event UnityAction<Interactable> OnInteractableSelected;
+    public event UnityAction<Vector3> OnGroundSelected;
 
-    void Awake()
+    private void Awake()
     {
         mainCamera = Camera.main;
     }
 
-    void Update()
+    private void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
@@ -31,26 +30,26 @@ public class InteractionController : MonoBehaviour
         }
     }
 
-    void TryInteract(Vector3 screenPosition)
+    private void TryInteract(Vector3 screenPosition)
     {
         Ray ray = mainCamera.ScreenPointToRay(screenPosition);
 
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
-            IInteractable interactable = hit.transform.GetComponentInParent<IInteractable>();
+            var interactables = hit.transform.GetComponentsInParent<IInteractable>();
 
-            if (interactable != null)
+            foreach(var interactable in interactables)
             {
-                OnInteractionStart?.Invoke(interactable.Transform.position);
+                if (interactable is Interactable inter) OnInteractableSelected?.Invoke(inter);
                 interactable.OnBaseInteraction();
-                return;
             }
 
+            if (interactables.Length > 0) return;
         }
 
         if (Physics.Raycast(ray, out hit, 100f, groundMask))
         {
-            OnInteractionStart?.Invoke(hit.point);
+            OnGroundSelected?.Invoke(hit.point);
         }
     }
 }

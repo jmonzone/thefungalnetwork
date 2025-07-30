@@ -10,10 +10,11 @@ public class TouchIndicatorWorld : MonoBehaviour
 
     private void Awake()
     {
-        interactionController.OnInteractionStart += InteractionController_OnInteractionStart;
+        interactionController.OnInteractableSelected += interactable => OnInteractionStarted(interactable.transform.position);
+        interactionController.OnGroundSelected += OnInteractionStarted;
     }
 
-    private void InteractionController_OnInteractionStart(Vector3 position)
+    private void OnInteractionStarted(Vector3 position)
     {
         indicatorRender.transform.position = position;
         indicatorRender.SetActive(true);

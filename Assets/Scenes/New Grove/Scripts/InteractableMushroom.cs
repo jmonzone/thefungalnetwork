@@ -5,7 +5,6 @@ using UnityEngine.Events;
 public class InteractableMushroom : MonoBehaviour, IInteractable, ICollectable
 {
     public ScaleController scaleController;
-    public ScaleController indicatorScaleController;
 
     public float respawnDelay = 5f;
 
@@ -13,9 +12,6 @@ public class InteractableMushroom : MonoBehaviour, IInteractable, ICollectable
 
     public bool IsInteractable => isInteractable;
     public Transform Transform => transform;
-
-    public event UnityAction OnInteractionStart;
-    public event UnityAction OnInteractionComplete;
 
     public event UnityAction OnCollect;
 
@@ -36,12 +32,11 @@ public class InteractableMushroom : MonoBehaviour, IInteractable, ICollectable
 
     private IEnumerator HandleInteraction()
     {
-        OnInteractionStart?.Invoke();
         yield return scaleController.ScaleDown();
 
-        OnInteractionComplete?.Invoke();
         OnCollect?.Invoke();
         audioSource.Play();
+
         yield return new WaitForSeconds(respawnDelay);
         yield return scaleController.ScaleUp();
 

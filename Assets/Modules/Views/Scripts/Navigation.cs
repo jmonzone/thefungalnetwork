@@ -88,7 +88,6 @@ public class Navigation : ScriptableObject
 
     public void GoBack()
     {
-        Debug.Log("going back");
         if (history.Count > 1)
         {
             history.Pop();

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class InteractionUI : MonoBehaviour
 {
@@ -11,6 +12,9 @@ public class InteractionUI : MonoBehaviour
     [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference interactionView;
     [SerializeField] private ViewReference dialogueView;
+
+    [SerializeField] private Image interactableImage;
+    [SerializeField] private TextMeshProUGUI interactableNameText;
     [SerializeField] private TextMeshProUGUI levelText;
 
     private int level = 0;
@@ -19,7 +23,8 @@ public class InteractionUI : MonoBehaviour
 
     private void Awake()
     {
-        interactionController.OnInteractionStart += _ =>
+        interactionController.OnInteractableSelected += InteractionController_OnInteractableSelected;
+        interactionController.OnGroundSelected += _ =>
         {
             if (navigation.CurrentView == interactionView) navigation.GoBack();
         };
@@ -39,6 +44,12 @@ public class InteractionUI : MonoBehaviour
         }
     }
 
+    private void InteractionController_OnInteractableSelected(Interactable interactable)
+    {
+        interactableNameText.text = interactable.Id;
+        interactableImage.sprite = interactable.Sprite;
+    }
+
     private void InventoryController_OnMushroomCountChanged(int count)
     {
         foreach(var button in interactionButtons)
@@ -48,6 +59,7 @@ public class InteractionUI : MonoBehaviour
                 Debug.Log("OnButtonUnlockable");
                 OnButtonUnlockable?.Invoke();
             }
+
             button.SetInteractable(button.Unlocked || count >= button.Cost);
         }
     }

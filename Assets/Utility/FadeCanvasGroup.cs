@@ -13,7 +13,7 @@ public class FadeCanvasGroup : MonoBehaviour
         get
         {
             if (!canvasGroup) canvasGroup = GetComponent<CanvasGroup>();
-            return canvasGroup.alpha > 0;
+            return gameObject.activeSelf && canvasGroup.alpha > 0;
         }
     }
 
