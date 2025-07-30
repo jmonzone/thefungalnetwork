@@ -19,6 +19,8 @@ public class InteractableNPC : MonoBehaviour, IInteractable
     [SerializeField] private ViewReference dialogueView;
     [SerializeField] private ViewReference interactionView;
     [SerializeField] private InteractionButton talkButton;
+    [SerializeField] private InteractionButton assistButton;
+    [SerializeField] private FrogAssist frogAssist;
 
     [SerializeField] private Navigation navigation;
     //[SerializeField] private Button 
@@ -40,6 +42,12 @@ public class InteractableNPC : MonoBehaviour, IInteractable
         talkButton.OnInteractionClicked += () =>
         {
             navigation.Navigate(dialogueView);
+        };
+
+        assistButton.OnInteractionClicked += () =>
+        {
+            if (!frogAssist.AssistActive) frogAssist.StartAssistMode();
+            else frogAssist.StopAssistMode();
         };
     }
 

@@ -10,6 +10,7 @@ public class InteractionButton : MonoBehaviour
     [SerializeField] private int cost = 20;
     [SerializeField] private bool unlocked = false;
 
+    [SerializeField] private Button button;
     [SerializeField] private GameObject costContainer;
     [SerializeField] private TextMeshProUGUI costText;
     [SerializeField] private TextMeshProUGUI interactionLabel;
@@ -18,21 +19,15 @@ public class InteractionButton : MonoBehaviour
 
     public int Cost => cost;
     public bool Unlocked => unlocked;
-    private Button button;
 
     public event UnityAction OnInteractionClicked;
     public event UnityAction OnUnlocked;
 
     private void Awake()
     {
-        button = GetComponent<Button>();
         button.onClick.AddListener(() =>
         {
-            if (unlocked)
-            {
-                OnInteractionClicked?.Invoke();
-            }
-            else
+            if (!unlocked)
             {
                 unlocked = true;
                 costContainer.SetActive(false);
@@ -40,6 +35,12 @@ public class InteractionButton : MonoBehaviour
                 lockImage.gameObject.SetActive(false);
                 OnUnlocked?.Invoke();
             }
+
+            if (unlocked)
+            {
+                OnInteractionClicked?.Invoke();
+            }
+            
         });
 
         SetCost(cost);
