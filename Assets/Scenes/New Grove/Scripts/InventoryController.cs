@@ -13,6 +13,7 @@ public interface ICollectable
 
 public class InventoryController : MonoBehaviour
 {
+    [SerializeField] private int mushroomCount = 0;
     [SerializeField] private TextMeshProUGUI mushroomCountText;
     [SerializeField] private Slider insightSlider;
     [SerializeField] private Image[] rainbowImages; // Assign the 2 images in inspector
@@ -29,7 +30,7 @@ public class InventoryController : MonoBehaviour
     private Coroutine pulseRoutine;
     private Coroutine transitionRoutine;
 
-    public int MushroomCount { get; private set; }
+    public int MushroomCount => mushroomCount;
     public event UnityAction<ICollectable> OnCollect;
     public event UnityAction<int> OnMushroomCountChanged;
     public event UnityAction OnInsightGained;
@@ -60,7 +61,7 @@ public class InventoryController : MonoBehaviour
 
     public void SetMushroomCount(int value)
     {
-        MushroomCount = value;
+        mushroomCount = value;
 
         // Start the lerp coroutine
         if (sliderLerpRoutine != null) StopCoroutine(sliderLerpRoutine);

@@ -41,9 +41,11 @@ public class InteractionUI : MonoBehaviour
 
         foreach (var button in interactionButtons)
         {
+            button.OnInteractionClicked += () => button.Interaction.OnInteractionStart(interactable);
+
             button.OnUnlocked += () =>
             {
-                inventoryController.SetMushroomCount(inventoryController.MushroomCount - button.Cost);
+                inventoryController.SetMushroomCount(inventoryController.MushroomCount - button.Interaction.cost);
                 interactable.IncreaseLevel();
                 levelText.text = $"Level {interactable.Level}";
             };
@@ -96,6 +98,8 @@ public class InteractionUI : MonoBehaviour
         {
             if (interactable.Interactions.Count > i)
             {
+                var interaction = interactable.Interactions[i];
+                interactionButtons[i].SetInteraction(interaction);
                 interactionButtons[i].gameObject.SetActive(true);
             }
             else
@@ -105,23 +109,12 @@ public class InteractionUI : MonoBehaviour
         }
     }
 
+
     private void InventoryController_OnMushroomCountChanged(int count)
     {
         if (interactable)
         {
             awakenButton.interactable = inventoryController.MushroomCount >= interactable.AwakenCost;
         }
-
-        foreach (var button in interactionButtons)
-        {
-            if (!button.Unlocked && count >= button.Cost)
-            {
-                Debug.Log("OnButtonUnlockable");
-                OnButtonUnlockable?.Invoke();
-            }
-
-            button.SetInteractable(button.Unlocked || count >= button.Cost);
-        }
     }
-
 }

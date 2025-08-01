@@ -746,15 +746,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 75251042}
-  - component: {fileID: 75251044}
-  - component: {fileID: 75251043}
   m_Layer: 5
-  m_Name: Dialogue UI
+  m_Name: Dialogue UI Rect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &75251042
 RectTransform:
   m_ObjectHideFlags: 0
@@ -768,8 +766,8 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2075582810}
-  - {fileID: 1695818707}
   - {fileID: 1107766698}
+  - {fileID: 1695818707}
   - {fileID: 1829735248}
   - {fileID: 1454621656}
   m_Father: {fileID: 440252797}
@@ -777,32 +775,8 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 0, y: 400}
-  m_SizeDelta: {x: 850, y: 550}
+  m_SizeDelta: {x: 800, y: 550}
   m_Pivot: {x: 0.5, y: 0}
---- !u!114 &75251043
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 75251041}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6830e4b21d8854d7dac9573cb944041a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!225 &75251044
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 75251041}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
 --- !u!1 &81624638
 GameObject:
   m_ObjectHideFlags: 0
@@ -2037,10 +2011,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1042487085}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 650, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 150, y: -7.915001}
+  m_SizeDelta: {x: 650, y: 75.01}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &281470650
 MonoBehaviour:
@@ -3930,6 +3904,7 @@ GameObject:
   m_Component:
   - component: {fileID: 399686872}
   - component: {fileID: 399686873}
+  - component: {fileID: 399686874}
   m_Layer: 0
   m_Name: Dialogue UI
   m_TagString: Untagged
@@ -3966,6 +3941,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewReference: {fileID: 11400000, guid: 227df233736184388a3c550ebfccf26c, type: 2}
+--- !u!114 &399686874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 399686871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e753995f600bd44afb1843332eb8d069, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  reference: {fileID: 11400000, guid: 66db6a8c7a0524bd8b89b88de939507f, type: 2}
+  speakerText: {fileID: 1107766699}
+  dialogueText: {fileID: 1695818708}
+  navigation: {fileID: 11400000, guid: 7af35f01730a846d692adda4734cddd3, type: 2}
+  continueButton: {fileID: 1454621657}
 --- !u!1001 &407805249
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4538,8 +4530,10 @@ GameObject:
   - component: {fileID: 440252800}
   - component: {fileID: 440252799}
   - component: {fileID: 440252798}
+  - component: {fileID: 440252802}
+  - component: {fileID: 440252801}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: Dialogue UI Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4628,6 +4622,30 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &440252801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 440252796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6830e4b21d8854d7dac9573cb944041a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!225 &440252802
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 440252796}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1001 &452919159
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9185,9 +9203,9 @@ RectTransform:
   - {fileID: 1395667983}
   m_Father: {fileID: 1867747387}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 787.5, y: -100}
   m_SizeDelta: {x: 300, y: 150}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &1042487086
@@ -9576,7 +9594,7 @@ GameObject:
   - component: {fileID: 1107766700}
   - component: {fileID: 1107766699}
   m_Layer: 5
-  m_Name: Dialogue Name Text
+  m_Name: Dialogue Speaker Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10587,12 +10605,12 @@ GameObject:
   - component: {fileID: 1258417127}
   - component: {fileID: 1258417126}
   m_Layer: 5
-  m_Name: Interaction UI Fade Canvas Group
+  m_Name: Interaction UI Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1258417122
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10893,9 +10911,9 @@ RectTransform:
   - {fileID: 631728581}
   m_Father: {fileID: 1867747387}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 12.5, y: -100}
   m_SizeDelta: {x: 300, y: 300}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &1290825312
@@ -11227,7 +11245,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1334551341}
   m_Layer: 5
-  m_Name: Interaction UI
+  m_Name: Interaction UI Rect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11686,9 +11704,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 557497485}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 120, y: -50}
   m_SizeDelta: {x: 30, y: 50}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1371955559
@@ -11827,10 +11845,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1042487085}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 650, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 150, y: -82.925}
+  m_SizeDelta: {x: 650, y: 59.16}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1395667984
 MonoBehaviour:
@@ -12067,9 +12085,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 557497485}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 65, y: -25}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1419763042
@@ -15922,6 +15940,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64e1539a25b1941a2962a8b7c9f0ce45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mushroomCount: 20
   mushroomCountText: {fileID: 686040958}
   insightSlider: {fileID: 511589811}
   rainbowImages:
@@ -16534,10 +16553,10 @@ RectTransform:
   - {fileID: 1042487085}
   m_Father: {fileID: 158380199}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 200}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 400, y: -50}
+  m_SizeDelta: {x: 800, y: 200}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1867747388
 MonoBehaviour:
@@ -17331,13 +17350,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f28a7f24abee34f22a7c74d2505c401d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  continueButton: {fileID: 1454621657}
   animator: {fileID: 1783996666}
   dialogueView: {fileID: 11400000, guid: 227df233736184388a3c550ebfccf26c, type: 2}
-  talkButton: {fileID: 7573602405863071764}
   assistButton: {fileID: 1077917130}
   frogAssist: {fileID: 1941584484}
-  navigation: {fileID: 11400000, guid: 7af35f01730a846d692adda4734cddd3, type: 2}
 --- !u!114 &1941584484
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17378,28 +17394,21 @@ MonoBehaviour:
   spriteSize: {x: 200, y: 200}
   level: 0
   awakenCost: 5
+  dialogue: 'i''ve been trying to contact you about...
+
+
+    oh wait, i''m a frog,
+    do i croak or ribbit?
+
+
+    idkkkk its getting pretty boggy in here'
   interactions:
-  - interactionName: Inquire
-  - interactionName: Assist
+  - {fileID: 11400000, guid: 955b8cb73426040ca899fa440dcf33ea, type: 2}
   inventoryController: {fileID: 1851915128}
   cameraPanController: {fileID: 1446848728}
-  dialogueHeaderText: {fileID: 1107766699}
-  dialogueText: {fileID: 1695818708}
   touchIndicator: {fileID: 855772108}
   navigation: {fileID: 11400000, guid: 7af35f01730a846d692adda4734cddd3, type: 2}
   interactionView: {fileID: 11400000, guid: bf93a810ef257422c814ea20d09b76ec, type: 2}
-  level1Dialogue: '*croaks with awe*
-
-
-    *ribbits with despair*'
-  level2Dialogue: 'heyyyy heyyy where the hell am i?
-
-
-    ??! you can finally hear
-    me ?111!!
-
-
-    oh geez, croak, ribbit, finally...'
 --- !u!1 &1965840291
 GameObject:
   m_ObjectHideFlags: 3
@@ -17606,8 +17615,8 @@ Transform:
   - {fileID: 63133155}
   - {fileID: 503185058}
   - {fileID: 818851464}
-  - {fileID: 399686872}
   - {fileID: 1817524000}
+  - {fileID: 399686872}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2016030642
@@ -18089,7 +18098,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.27058825, g: 0.14509805, b: 0.28235295, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.9019608}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -18253,10 +18262,10 @@ RectTransform:
   - {fileID: 557497485}
   m_Father: {fileID: 158380199}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 150}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 400, y: -450}
+  m_SizeDelta: {x: 800, y: 150}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &2088825022
 MonoBehaviour:
@@ -19152,21 +19161,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fungal Tree
       objectReference: {fileID: 0}
-    - target: {fileID: 4468886359601061546, guid: b5a65936c7fe74e3ca085c517af15846,
-        type: 3}
-      propertyPath: dialogueText
-      value: 
-      objectReference: {fileID: 1695818708}
-    - target: {fileID: 4468886359601061546, guid: b5a65936c7fe74e3ca085c517af15846,
-        type: 3}
-      propertyPath: interactionUI
-      value: 
-      objectReference: {fileID: 1817524002}
-    - target: {fileID: 4468886359601061546, guid: b5a65936c7fe74e3ca085c517af15846,
-        type: 3}
-      propertyPath: dialogueHeaderText
-      value: 
-      objectReference: {fileID: 1107766699}
     - target: {fileID: 4468886359601061546, guid: b5a65936c7fe74e3ca085c517af15846,
         type: 3}
       propertyPath: cameraPanController
@@ -20244,18 +20238,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a6cc66d0a73444f75a82e14664f118ef, type: 3}
---- !u!114 &7573602405863071764 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7354548233968164592, guid: a6cc66d0a73444f75a82e14664f118ef,
-    type: 3}
-  m_PrefabInstance: {fileID: 7573602405863071763}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e22827854cb604dab9cedad3913106f6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &7747084659983459943
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-[Serializable]
-public class Interaction
+public abstract class Interaction : ScriptableObject
 {
     public string interactionName;
+    public bool unlocked;
+    public int cost;
+
+    public abstract void OnInteractionStart(Interactable interactable);
 }
 
 public class Interactable : MonoBehaviour, IInteractable
@@ -17,6 +20,7 @@ public class Interactable : MonoBehaviour, IInteractable
     [SerializeField] private Vector2 spriteSize;
     [SerializeField] private int level;
     [SerializeField] private int awakenCost = 5;
+    [SerializeField] [TextArea] private string dialogue;
 
     [SerializeField] private List<Interaction> interactions;
 
@@ -33,15 +37,12 @@ public class Interactable : MonoBehaviour, IInteractable
 
     [SerializeField] private InventoryController inventoryController;
     [SerializeField] private CameraPanController cameraPanController;
-    [SerializeField] private TextMeshProUGUI dialogueHeaderText;
-    [SerializeField] private TextMeshProUGUI dialogueText;
     [SerializeField] private FadeCanvasGroup touchIndicator;
 
     [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference interactionView;
 
-    [SerializeField] [TextArea] private string level1Dialogue;
-    [SerializeField] [TextArea] private string level2Dialogue;
+    public string Dialogue => dialogue;
 
     private void Awake()
     {
@@ -61,16 +62,6 @@ public class Interactable : MonoBehaviour, IInteractable
     {
         StopAllCoroutines();
 
-        if (level == 0)
-        {
-            dialogueHeaderText.text = "???";
-            dialogueText.text = level1Dialogue;
-        }
-        else
-        {
-            dialogueHeaderText.text = id;
-            dialogueText.text = level2Dialogue;
-        }
 
         cameraPanController.CenterTargetInView(transform);
 

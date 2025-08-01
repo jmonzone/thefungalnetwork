@@ -7,8 +7,7 @@ using UnityEngine.UI;
 
 public class InteractionButton : MonoBehaviour
 {
-    [SerializeField] private int cost = 20;
-    [SerializeField] private bool unlocked = false;
+    [SerializeField] private Interaction interaction;
 
     [SerializeField] private Button button;
     [SerializeField] private GameObject costContainer;
@@ -16,9 +15,7 @@ public class InteractionButton : MonoBehaviour
     [SerializeField] private TextMeshProUGUI interactionLabel;
     [SerializeField] private Image lockImage;
 
-
-    public int Cost => cost;
-    public bool Unlocked => unlocked;
+    public Interaction Interaction => interaction;
 
     public event UnityAction OnInteractionClicked;
     public event UnityAction OnUnlocked;
@@ -27,34 +24,35 @@ public class InteractionButton : MonoBehaviour
     {
         button.onClick.AddListener(() =>
         {
-            if (!unlocked)
+            if (!interaction.unlocked)
             {
-                unlocked = true;
-                costContainer.SetActive(false);
-                interactionLabel.gameObject.SetActive(true);
-                lockImage.gameObject.SetActive(false);
+                interaction.unlocked = true;
+                UpdateView();
                 OnUnlocked?.Invoke();
             }
 
-            if (unlocked)
+            if (interaction.unlocked)
             {
                 OnInteractionClicked?.Invoke();
             }
             
         });
-
-        SetCost(cost);
     }
 
-
-    public void SetCost(int cost)
+    public void SetInteraction(Interaction interaction)
     {
-        this.cost = cost;
-        costText.text = cost.ToString();
+        this.interaction = interaction;
+        button.interactable = interaction.unlocked;
+        costText.text = interaction.cost.ToString();
+        UpdateView();
     }
 
-    public void SetInteractable(bool value)
+    private void UpdateView()
     {
-        button.interactable = value;
+        if (interaction == null) return;
+        interactionLabel.gameObject.SetActive(interaction.unlocked);
+        lockImage.gameObject.SetActive(!interaction.unlocked);
+        costContainer.SetActive(!interaction.unlocked);
+
     }
 }

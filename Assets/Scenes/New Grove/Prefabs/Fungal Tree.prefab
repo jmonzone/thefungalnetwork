@@ -50,29 +50,19 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: a7bb0020552b447278e887e40a358ecb, type: 3}
   spritePosition: {x: 0, y: 125}
   spriteSize: {x: 500, y: 500}
-  level: 0
+  level: 1
   awakenCost: 20
+  dialogue: 'lost? do you need a pick me up?
+
+
+    where would you like to go?'
   interactions:
-  - interactionName: Inquire
-  interactionUI: {fileID: 0}
+  - {fileID: 11400000, guid: 955b8cb73426040ca899fa440dcf33ea, type: 2}
+  inventoryController: {fileID: 0}
   cameraPanController: {fileID: 0}
-  dialogueHeaderText: {fileID: 0}
-  dialogueText: {fileID: 0}
   touchIndicator: {fileID: 2408651148181272223}
   navigation: {fileID: 11400000, guid: 7af35f01730a846d692adda4734cddd3, type: 2}
   interactionView: {fileID: 11400000, guid: bf93a810ef257422c814ea20d09b76ec, type: 2}
-  level1Dialogue: '*croaks with awe*
-
-
-    *ribbits with despair*'
-  level2Dialogue: 'heyyyy heyyy where the hell am i?
-
-
-    ??! you can finally hear
-    me ?111!!
-
-
-    oh geez, croak, ribbit, finally...'
 --- !u!1001 &2333680034895948527
 PrefabInstance:
   m_ObjectHideFlags: 0
