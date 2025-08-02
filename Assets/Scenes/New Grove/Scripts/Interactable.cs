@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Cinemachine;
 using TMPro;
 using UnityEngine;
 
@@ -23,6 +24,11 @@ public class Interactable : MonoBehaviour, IInteractable
     [SerializeField] [TextArea] private string dialogue;
 
     [SerializeField] private List<Interaction> interactions;
+    [SerializeField] private CinemachineVirtualCamera virtualCamera;
+
+    [SerializeField] private bool isTree;
+    [SerializeField] private Animator eyeballAnimator;
+    public bool IsTree => isTree;
 
     public string Id => id;
     public Sprite Sprite => sprite;
@@ -38,9 +44,6 @@ public class Interactable : MonoBehaviour, IInteractable
     [SerializeField] private InventoryController inventoryController;
     [SerializeField] private CameraPanController cameraPanController;
     [SerializeField] private FadeCanvasGroup touchIndicator;
-
-    [SerializeField] private Navigation navigation;
-    [SerializeField] private ViewReference interactionView;
 
     public string Dialogue => dialogue;
 
@@ -61,15 +64,17 @@ public class Interactable : MonoBehaviour, IInteractable
     public void OnBaseInteraction()
     {
         StopAllCoroutines();
-
+        if (virtualCamera) virtualCamera.Priority = 11;
+        eyeballAnimator.enabled = true;
 
         cameraPanController.CenterTargetInView(transform);
 
         if (touchIndicator.gameObject.activeSelf) StartCoroutine(touchIndicator.FadeOut());
-        if (navigation.CurrentView != interactionView)
-        {
-            navigation.Navigate(interactionView);
-        }
+    }
+
+    public void OnUnselect()
+    {
+        if (virtualCamera) virtualCamera.Priority = 9;
     }
 
     public void Awaken()

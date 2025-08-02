@@ -32,10 +32,7 @@ public class InteractionUI : MonoBehaviour
         interactionButtonsContainer.GetComponentsInChildren(true, interactionButtons);
 
         interactionController.OnInteractableSelected += InteractionController_OnInteractableSelected;
-        interactionController.OnGroundSelected += _ =>
-        {
-            if (navigation.CurrentView == interactionView) navigation.GoBack();
-        };
+        interactionController.OnGroundSelected += _ => InteractionController_OnInteractableSelected(null);
 
         inventoryController.OnMushroomCountChanged += InventoryController_OnMushroomCountChanged;
 
@@ -64,7 +61,19 @@ public class InteractionUI : MonoBehaviour
 
     private void InteractionController_OnInteractableSelected(Interactable interactable)
     {
+        if (this.interactable && this.interactable != interactable)
+        {
+            interactable.OnUnselect();
+        }
+
         this.interactable = interactable;
+
+        if (interactable && navigation.CurrentView != interactionView)
+        {
+            if (interactable.IsTree) return;
+            navigation.Navigate(interactionView);
+        }
+        else if (!interactable && navigation.CurrentView == interactionView) navigation.GoBack();
 
         UpdateView();
     }
