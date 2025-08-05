@@ -15,6 +15,8 @@ public class InteractionUI : MonoBehaviour
     [SerializeField] private Image interactableImage;
     [SerializeField] private TextMeshProUGUI interactableNameText;
     [SerializeField] private TextMeshProUGUI levelText;
+    [SerializeField] private TextMeshProUGUI dialogueSpeakerText;
+    [SerializeField] private TextMeshProUGUI dialogueBodyText;
 
     [SerializeField] private Button awakenButton;
     [SerializeField] private TextMeshProUGUI awakenCostText;
@@ -68,14 +70,20 @@ public class InteractionUI : MonoBehaviour
 
         this.interactable = interactable;
 
+        UpdateView();
+
         if (interactable && navigation.CurrentView != interactionView)
         {
-            if (interactable.IsTree) return;
-            navigation.Navigate(interactionView);
+            if (interactable.IsTree) Invoke(nameof(StartTreeDialogue), 3f);
+            else navigation.Navigate(interactionView);
         }
         else if (!interactable && navigation.CurrentView == interactionView) navigation.GoBack();
+    }
 
-        UpdateView();
+
+    private void StartTreeDialogue()
+    {
+        interactable.Interactions[0].OnInteractionStart(interactable);
     }
 
     private void UpdateView()
@@ -86,7 +94,7 @@ public class InteractionUI : MonoBehaviour
         interactableImage.sprite = interactable.Sprite;
         interactableImage.rectTransform.anchoredPosition = interactable.SpritePosition;
         interactableImage.rectTransform.sizeDelta = interactable.SpriteSize;
-
+        
         if (interactable.Level == 0)
         {
             levelText.text = $"Asleep";

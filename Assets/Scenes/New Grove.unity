@@ -879,7 +879,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 400}
+  m_AnchoredPosition: {x: 0, y: 500}
   m_SizeDelta: {x: 800, y: 550}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!1 &81624638
@@ -4843,7 +4843,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &440252797
 RectTransform:
   m_ObjectHideFlags: 0
@@ -16005,10 +16005,12 @@ MonoBehaviour:
   interactionController: {fileID: 1851915127}
   navigation: {fileID: 11400000, guid: 7af35f01730a846d692adda4734cddd3, type: 2}
   interactionView: {fileID: 11400000, guid: bf93a810ef257422c814ea20d09b76ec, type: 2}
-  dialogueView: {fileID: 11400000, guid: bf93a810ef257422c814ea20d09b76ec, type: 2}
+  dialogueView: {fileID: 11400000, guid: 227df233736184388a3c550ebfccf26c, type: 2}
   interactableImage: {fileID: 631728582}
   interactableNameText: {fileID: 281470650}
   levelText: {fileID: 1395667984}
+  dialogueSpeakerText: {fileID: 0}
+  dialogueBodyText: {fileID: 0}
   awakenButton: {fileID: 2088825022}
   awakenCostText: {fileID: 1371955559}
   interactionButtonsContainer: {fileID: 997851151}
@@ -18530,6 +18532,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2079081716}
   - component: {fileID: 2079081717}
+  - component: {fileID: 2079081718}
   m_Layer: 0
   m_Name: Eyeball
   m_TagString: Untagged
@@ -18546,7 +18549,7 @@ Transform:
   m_GameObject: {fileID: 2079081715}
   serializedVersion: 2
   m_LocalRotation: {x: 0.0052444087, y: -0.95801204, z: 0.017558433, w: 0.28614208}
-  m_LocalPosition: {x: -1.618, y: 6.352, z: 0.641}
+  m_LocalPosition: {x: -1.089, y: 6.539, z: 0.812}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -18575,6 +18578,102 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!82 &2079081718
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2079081715}
+  m_Enabled: 0
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 42b6dd2e4fd3847ae8d9e5b94446454e, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &2082985729
 GameObject:
   m_ObjectHideFlags: 0
@@ -19615,8 +19714,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4468886359601061546, guid: b5a65936c7fe74e3ca085c517af15846,
         type: 3}
+      propertyPath: id
+      value: The Tree
+      objectReference: {fileID: 0}
+    - target: {fileID: 4468886359601061546, guid: b5a65936c7fe74e3ca085c517af15846,
+        type: 3}
       propertyPath: isTree
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4468886359601061546, guid: b5a65936c7fe74e3ca085c517af15846,
+        type: 3}
+      propertyPath: dialogue
+      value: "\u29D6  :      \xD8    \u0394  \n  \u2720      VI           \u232C\n 
+        X  II  I     \u27CA     \u2234"
       objectReference: {fileID: 0}
     - target: {fileID: 4468886359601061546, guid: b5a65936c7fe74e3ca085c517af15846,
         type: 3}
