@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8786283415181752013}
   - component: {fileID: 3561720526247708165}
   - component: {fileID: 1155590162126435906}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Collectable Mushroom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -48,7 +48,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scaleController: {fileID: 3561720526247708165}
-  indicatorScaleController: {fileID: 0}
   respawnDelay: 5
 --- !u!114 &3561720526247708165
 MonoBehaviour:
@@ -173,7 +172,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1293605270326194, guid: c72f3f8a9daab2442b7dd148c087d333, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1293605270326194, guid: c72f3f8a9daab2442b7dd148c087d333, type: 3}
       propertyPath: m_IsActive
@@ -244,7 +243,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: e235b1804ceee49e983cf4ccf4edf56e, type: 2}
+      objectReference: {fileID: 2100000, guid: 68075ad18923541c38dcdfe7e9a5940f, type: 2}
     - target: {fileID: 23318464693688554, guid: c72f3f8a9daab2442b7dd148c087d333,
         type: 3}
       propertyPath: m_Materials.Array.data[1]
@@ -253,7 +252,7 @@ PrefabInstance:
     - target: {fileID: 5561886568020876385, guid: c72f3f8a9daab2442b7dd148c087d333,
         type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

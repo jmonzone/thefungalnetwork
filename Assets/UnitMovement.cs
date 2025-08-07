@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class CharacterMovement : MonoBehaviour
+public class UnitMovement : MonoBehaviour
 {
     [SerializeField] private float movementSpeed = 5f;
     [SerializeField] private float rotationSpeed = 100f;
@@ -13,13 +13,15 @@ public class CharacterMovement : MonoBehaviour
 
     public event UnityAction<bool> OnIsMovingHasChanged;
 
-    public void MoveToPosition(Vector3 targetPosition)
+    public void StartMovement(Vector3 targetPosition)
     {
+        Debug.Log("StartMovement");
+
         StopAllCoroutines();
         StartCoroutine(MovementRoutine(targetPosition));
     }
 
-    private IEnumerator MovementRoutine(Vector3 targetPosition)
+    public IEnumerator MovementRoutine(Vector3 targetPosition)
     {
         isMoving = true;
         OnIsMovingHasChanged?.Invoke(isMoving);
@@ -30,11 +32,7 @@ public class CharacterMovement : MonoBehaviour
             direction.y = 0;
             transform.position += movementSpeed * Time.deltaTime * direction.normalized;
 
-            if (direction != Vector3.zero)
-            {
-                var targetRotation = Quaternion.LookRotation(direction);
-                lookTransform.rotation = Quaternion.Slerp(lookTransform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-            }
+            if (direction.magnitude > 0) lookTransform.forward = direction;
             yield return null;
         }
 

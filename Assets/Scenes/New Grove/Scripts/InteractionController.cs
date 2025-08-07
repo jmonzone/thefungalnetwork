@@ -9,11 +9,15 @@ public interface IInteractable
 
 public class InteractionController : MonoBehaviour
 {
-    public LayerMask groundMask;
+    [SerializeField] private UnitController selectedUnit;
+    [SerializeField] private LayerMask interactableMask;
+    [SerializeField] private LayerMask groundMask;
 
     private Camera mainCamera;
 
-    private Interactable selectedInteractable;
+    private Vector3 startInput;
+    private bool isDragging = false;
+
 
     public event UnityAction<Interactable> OnInteractableSelected;
     public event UnityAction<Vector3> OnGroundSelected;
@@ -27,52 +31,61 @@ public class InteractionController : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
+            startInput = Input.mousePosition;
+            isDragging = false;
+        }
+
+        if (Input.GetMouseButton(0))
+        {
+            var inputDelta = Input.mousePosition - startInput;
+            if (inputDelta.magnitude > 0.1f) isDragging = true;
+        }
+
+        if (Input.GetMouseButtonUp(0) && !isDragging)
+        {
             Vector3 inputPos = Input.mousePosition;
 
-            if (selectedInteractable)
+            Ray ray = mainCamera.ScreenPointToRay(inputPos);
+
+            if (selectedUnit)
             {
-                var movement = selectedInteractable.GetComponent<CharacterMovement>();
+                var forage = selectedUnit.GetComponent<UnitForage>();
+                if (forage)
+                {
+                    if (Physics.Raycast(ray, out RaycastHit hit, 1000f, interactableMask))
+                    {
+                        var forageable = hit.transform.GetComponentInParent<Forageable>();
+                        if (forageable)
+                        {
+                            forage.StartForage(forageable);
+                            return;
+                        }
+                    }
+                }
+
+
+                var movement = selectedUnit.GetComponent<UnitMovement>();
                 if (movement)
                 {
-                    Ray ray = mainCamera.ScreenPointToRay(inputPos);
-
-                    if (Physics.Raycast(ray, out RaycastHit hit, 100f, groundMask))
+                    if (Physics.Raycast(ray, out RaycastHit hit, 1000f, groundMask))
                     {
-                        movement.MoveToPosition(hit.point);
+                        movement.StartMovement(hit.point);
+                        return;
                     }
                 }
             }
             else
             {
-                TryInteract(inputPos);
-            }
-        }
-    }
-
-    private void TryInteract(Vector3 screenPosition)
-    {
-        Ray ray = mainCamera.ScreenPointToRay(screenPosition);
-
-        if (Physics.Raycast(ray, out RaycastHit hit))
-        {
-            var interactables = hit.transform.GetComponentsInParent<IInteractable>();
-
-            foreach(var interactable in interactables)
-            {
-                if (interactable is Interactable inter)
+                if (Physics.Raycast(ray, out RaycastHit hit, 1000f, interactableMask))
                 {
-                    selectedInteractable = inter;
-                    //OnInteractableSelected?.Invoke(inter);
+                    var unit = hit.transform.GetComponentInParent<UnitController>();
+                    if (unit)
+                    {
+                        unit.Select();
+                        selectedUnit = unit;
+                    }
                 }
-                interactable.OnBaseInteraction();
             }
-
-            if (interactables.Length > 0) return;
-        }
-
-        if (Physics.Raycast(ray, out hit, 100f, groundMask))
-        {
-            OnGroundSelected?.Invoke(hit.point);
         }
     }
 }

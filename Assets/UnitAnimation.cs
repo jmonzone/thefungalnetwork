@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterAnimation : MonoBehaviour
+public class UnitAnimation : MonoBehaviour
 {
     private Animator animator;
 
@@ -10,8 +10,16 @@ public class CharacterAnimation : MonoBehaviour
     {
         animator = GetComponentInChildren<Animator>();
 
-        var movement = GetComponent<CharacterMovement>();
+        var unit = GetComponent<UnitController>();
+        unit.OnSelected += Unit_OnSelected;
+
+        var movement = GetComponent<UnitMovement>();
         movement.OnIsMovingHasChanged += Movement_OnIsMovingHasChanged;
+    }
+
+    private void Unit_OnSelected()
+    {
+        animator.Play("Jump");
     }
 
     private void Movement_OnIsMovingHasChanged(bool isMoving)

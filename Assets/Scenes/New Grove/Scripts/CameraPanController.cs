@@ -15,6 +15,8 @@ public class CameraPanController : MonoBehaviour
     private Vector3 velocity = Vector3.zero;
     private bool isPanning;
 
+    public Vector2 inputDelta; 
+
     void Start()
     {
         targetPosition = transform.position;
@@ -22,7 +24,7 @@ public class CameraPanController : MonoBehaviour
 
     void Update()
     {
-        Vector2 inputDelta = Vector2.zero;
+        inputDelta = Vector2.zero;
 
         // Touch Input
         if (Input.touchCount == 1)
@@ -66,12 +68,12 @@ public class CameraPanController : MonoBehaviour
             float moveX = inputDelta.x * panSpeed * (invertX ? 1 : -1);
             float moveZ = inputDelta.y * panSpeed * (invertY ? 1 : -1);
 
-            Vector3 panDelta = new Vector3(moveX, moveZ);
+            Vector3 panDelta = new Vector3(moveX, 0, moveZ);
             targetPosition += panDelta;
 
             // Clamp target position to bounds
             targetPosition.x = Mathf.Clamp(targetPosition.x, panLimitX.x, panLimitX.y);
-            targetPosition.y = Mathf.Clamp(targetPosition.y, panLimitY.x, panLimitY.y);
+            targetPosition.z = Mathf.Clamp(targetPosition.z, panLimitY.x, panLimitY.y);
         }
 
         // Smoothly move the camera
@@ -103,7 +105,7 @@ public class CameraPanController : MonoBehaviour
 
         // Clamp within pan limits on X and Y
         desiredCamPos.x = Mathf.Clamp(desiredCamPos.x, panLimitX.x, panLimitX.y);
-        desiredCamPos.y = Mathf.Clamp(desiredCamPos.y, panLimitY.x, panLimitY.y);
+        desiredCamPos.z = Mathf.Clamp(desiredCamPos.y, panLimitY.x, panLimitY.y);
 
         // Keep Z as is
         desiredCamPos.z = camPos.z;
