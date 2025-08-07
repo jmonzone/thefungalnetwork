@@ -4843,7 +4843,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &440252797
 RectTransform:
   m_ObjectHideFlags: 0
@@ -16288,7 +16288,6 @@ GameObject:
   - component: {fileID: 1851915126}
   - component: {fileID: 1851915127}
   - component: {fileID: 1851915128}
-  - component: {fileID: 1851915129}
   m_Layer: 0
   m_Name: Grove
   m_TagString: Untagged
@@ -16350,24 +16349,6 @@ MonoBehaviour:
   pulseSpeed: 0.75
   transitionDuration: 0.4
   sliderLerpSpeed: 4
---- !u!114 &1851915129
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1851915123}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 084b987919c72462695f3f018b8f6aac, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  inventoryController: {fileID: 1851915128}
-  unlockButton: {fileID: 1678702513}
-  chargedTreeMaterial: {fileID: 2100000, guid: 6cfb10446c085437896adf54caccef17, type: 2}
-  light1: {fileID: 1748373550}
-  light2: {fileID: 583607916}
-  treeRenderer: {fileID: 2031757356}
 --- !u!1 &1852834815
 GameObject:
   m_ObjectHideFlags: 0
@@ -17712,6 +17693,8 @@ GameObject:
   - component: {fileID: 1941584485}
   - component: {fileID: 1941584483}
   - component: {fileID: 1941584484}
+  - component: {fileID: 1941584486}
+  - component: {fileID: 1941584487}
   m_Layer: 0
   m_Name: Interactable Frog
   m_TagString: Untagged
@@ -17808,6 +17791,34 @@ MonoBehaviour:
   inventoryController: {fileID: 1851915128}
   cameraPanController: {fileID: 1446848728}
   touchIndicator: {fileID: 855772108}
+--- !u!114 &1941584486
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1941584481}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d665ec460aa5243ea89c72f5e2c644d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementSpeed: 5
+  rotationSpeed: 100
+  isMoving: 0
+  lookTransform: {fileID: 1783996669}
+--- !u!114 &1941584487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1941584481}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19c55727f012c465387bea941bdc8b8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1965840291
 GameObject:
   m_ObjectHideFlags: 3
@@ -18164,12 +18175,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2029847456}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &2031757356 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 4320928578786402695, guid: b5a65936c7fe74e3ca085c517af15846,
-    type: 3}
-  m_PrefabInstance: {fileID: 2328578699890120328}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2035333508
 PrefabInstance:
   m_ObjectHideFlags: 0

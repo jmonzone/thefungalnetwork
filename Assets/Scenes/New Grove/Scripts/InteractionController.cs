@@ -13,6 +13,8 @@ public class InteractionController : MonoBehaviour
 
     private Camera mainCamera;
 
+    private Interactable selectedInteractable;
+
     public event UnityAction<Interactable> OnInteractableSelected;
     public event UnityAction<Vector3> OnGroundSelected;
 
@@ -26,7 +28,24 @@ public class InteractionController : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             Vector3 inputPos = Input.mousePosition;
-            TryInteract(inputPos);
+
+            if (selectedInteractable)
+            {
+                var movement = selectedInteractable.GetComponent<CharacterMovement>();
+                if (movement)
+                {
+                    Ray ray = mainCamera.ScreenPointToRay(inputPos);
+
+                    if (Physics.Raycast(ray, out RaycastHit hit, 100f, groundMask))
+                    {
+                        movement.MoveToPosition(hit.point);
+                    }
+                }
+            }
+            else
+            {
+                TryInteract(inputPos);
+            }
         }
     }
 
@@ -40,7 +59,11 @@ public class InteractionController : MonoBehaviour
 
             foreach(var interactable in interactables)
             {
-                if (interactable is Interactable inter) OnInteractableSelected?.Invoke(inter);
+                if (interactable is Interactable inter)
+                {
+                    selectedInteractable = inter;
+                    //OnInteractableSelected?.Invoke(inter);
+                }
                 interactable.OnBaseInteraction();
             }
 
