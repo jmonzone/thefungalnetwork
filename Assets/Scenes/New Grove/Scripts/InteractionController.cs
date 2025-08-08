@@ -23,6 +23,8 @@ public class InteractionController : MonoBehaviour
         mainCamera = Camera.main;
     }
 
+    private float raycastMaxDistance = 100f;
+
     private void Update()
     {
         if (Input.GetMouseButtonDown(0))
@@ -43,12 +45,24 @@ public class InteractionController : MonoBehaviour
 
             Ray ray = mainCamera.ScreenPointToRay(inputPos);
 
+            if (Physics.Raycast(ray, out RaycastHit hit, raycastMaxDistance, interactableMask))
+            {
+                var tree = hit.transform.GetComponentInParent<TreeController>();
+                if (tree)
+                {
+                    cameraPanController.CenterTargetInView(tree.transform);
+                    tree.OnSelect();
+                    OnEntitySelected?.Invoke(tree.transform);
+                    return;
+                }
+            }
+
             if (selectedUnit)
             {
                 var forage = selectedUnit.GetComponent<UnitForage>();
                 if (forage)
                 {
-                    if (Physics.Raycast(ray, out RaycastHit hit, 1000f, interactableMask))
+                    if (Physics.Raycast(ray, out hit, raycastMaxDistance, interactableMask))
                     {
                         var forageable = hit.transform.GetComponentInParent<Forageable>();
                         if (forageable)
@@ -60,11 +74,10 @@ public class InteractionController : MonoBehaviour
                     }
                 }
 
-
                 var movement = selectedUnit.GetComponent<UnitMovement>();
                 if (movement)
                 {
-                    if (Physics.Raycast(ray, out RaycastHit hit, 1000f, groundMask))
+                    if (Physics.Raycast(ray, out hit, raycastMaxDistance, groundMask))
                     {
                         movement.StartMovement(hit.point);
                         OnGroundSelected?.Invoke(hit.point);
@@ -74,7 +87,7 @@ public class InteractionController : MonoBehaviour
             }
             else
             {
-                if (Physics.Raycast(ray, out RaycastHit hit, 1000f, interactableMask))
+                if (Physics.Raycast(ray, out hit, 1000f, interactableMask))
                 {
                     var unit = hit.transform.GetComponentInParent<UnitController>();
                     if (unit)
