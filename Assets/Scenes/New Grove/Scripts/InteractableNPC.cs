@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class InteractableNPC : MonoBehaviour, IInteractable
+public class InteractableNPC : MonoBehaviour
 {
     [SerializeField] private Animator animator;
 

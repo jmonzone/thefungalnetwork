@@ -10,20 +10,20 @@ public class TouchIndicatorWorld : MonoBehaviour
 
     private void Awake()
     {
-        interactionController.OnInteractableSelected += interactable => OnInteractionStarted(interactable.transform.position);
-        interactionController.OnGroundSelected += OnInteractionStarted;
+        interactionController.OnEntitySelected += entity => ShowIndicator(entity.position, false);
+        interactionController.OnGroundSelected += position => ShowIndicator(position, false);
     }
 
-    private void OnInteractionStarted(Vector3 position)
+    private void ShowIndicator(Vector3 position, bool dissipate)
     {
         indicatorRender.transform.position = position;
         indicatorRender.SetActive(true);
 
         StopAllCoroutines();
-        StartCoroutine(TouchAnimation());
+        StartCoroutine(TouchAnimation(dissipate));
     }
 
-    private IEnumerator TouchAnimation()
+    private IEnumerator TouchAnimation(bool dissipate)
     {
         float honeDuration = 0.3f;
         float fadeDuration = 0.4f;
@@ -61,6 +61,8 @@ public class TouchIndicatorWorld : MonoBehaviour
 
         ringRenderer.transform.localScale = Vector3.one * ringFocus;
         circleRenderer.transform.localScale = Vector3.one * circleFocus;
+
+        if (!dissipate) yield break;
 
         // Dissipate
         elapsed = 0f;

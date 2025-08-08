@@ -33,7 +33,7 @@ public class InteractionUI : MonoBehaviour
     {
         interactionButtonsContainer.GetComponentsInChildren(true, interactionButtons);
 
-        interactionController.OnInteractableSelected += InteractionController_OnInteractableSelected;
+        //interactionController.OnEntitySelected += InteractionController_OnInteractableSelected;
         interactionController.OnGroundSelected += _ => InteractionController_OnInteractableSelected(null);
 
         inventoryController.OnMushroomCountChanged += InventoryController_OnMushroomCountChanged;
@@ -61,23 +61,23 @@ public class InteractionUI : MonoBehaviour
         });
     }
 
-    private void InteractionController_OnInteractableSelected(Interactable interactable)
+    private void InteractionController_OnInteractableSelected(UnitController unit)
     {
-        if (this.interactable && this.interactable != interactable)
-        {
-            interactable.OnUnselect();
-        }
+        //if (this.interactable && this.interactable != unit)
+        //{
+        //    unit.OnUnselect();
+        //}
 
-        this.interactable = interactable;
+        //this.interactable = unit;
 
-        UpdateView();
+        //UpdateView();
 
-        if (interactable && navigation.CurrentView != interactionView)
-        {
-            if (interactable.IsTree) Invoke(nameof(StartTreeDialogue), 3f);
-            else navigation.Navigate(interactionView);
-        }
-        else if (!interactable && navigation.CurrentView == interactionView) navigation.GoBack();
+        //if (unit && navigation.CurrentView != interactionView)
+        //{
+        //    if (unit.IsTree) Invoke(nameof(StartTreeDialogue), 3f);
+        //    else navigation.Navigate(interactionView);
+        //}
+        //else if (!unit && navigation.CurrentView == interactionView) navigation.GoBack();
     }
 
 

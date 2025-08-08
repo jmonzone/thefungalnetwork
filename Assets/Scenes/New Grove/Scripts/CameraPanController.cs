@@ -96,19 +96,19 @@ public class CameraPanController : MonoBehaviour
         Vector3 camPos = transform.position;
 
         Vector3 worldCenter = cam.ScreenToWorldPoint(new Vector3(Screen.width / 2f, Screen.height / 2f, targetScreenPos.z));
-        Vector3 worldTarget = cam.ScreenToWorldPoint(new Vector3(targetScreenPos.x, targetScreenPos.y, targetScreenPos.z));
+        Vector3 worldTarget = cam.ScreenToWorldPoint(new Vector3(targetScreenPos.x, targetScreenPos.y + 25, targetScreenPos.z));
 
         Vector3 worldDelta = worldTarget - worldCenter;
 
         // Move camera opposite to worldDelta on X and Y, keep Z constant
-        Vector3 desiredCamPos = camPos + new Vector3(worldDelta.x, worldDelta.y, 0f);
+        Vector3 desiredCamPos = camPos + new Vector3(worldDelta.x, 0, worldDelta.z);
 
         // Clamp within pan limits on X and Y
         desiredCamPos.x = Mathf.Clamp(desiredCamPos.x, panLimitX.x, panLimitX.y);
-        desiredCamPos.z = Mathf.Clamp(desiredCamPos.y, panLimitY.x, panLimitY.y);
+        desiredCamPos.z = Mathf.Clamp(desiredCamPos.z, panLimitY.x, panLimitY.y);
 
         // Keep Z as is
-        desiredCamPos.z = camPos.z;
+        desiredCamPos.y = camPos.y;
 
         targetPosition = desiredCamPos;
     }

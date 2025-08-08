@@ -26,7 +26,7 @@ public class CollectionPopupManager : MonoBehaviour
         inventoryController.OnCollect += InventoryController_OnCollect;
     }
 
-    private void InventoryController_OnCollect(ICollectable collectable)
+    private void InventoryController_OnCollect(Forageable forageable)
     {
         if (popupPool.Count == 0)
         {
@@ -35,7 +35,7 @@ public class CollectionPopupManager : MonoBehaviour
         }
 
         CollectionPopupUI popup = popupPool.Dequeue();
-        popup.PlayPopup(collectable.Transform.position);
+        popup.PlayPopup(forageable.transform.position);
 
         StartCoroutine(ReturnToPoolAfterDuration(popup, popup.duration));
     }

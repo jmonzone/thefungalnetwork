@@ -31,19 +31,19 @@ public class InventoryController : MonoBehaviour
     private Coroutine transitionRoutine;
 
     public int MushroomCount => mushroomCount;
-    public event UnityAction<ICollectable> OnCollect;
+    public event UnityAction<Forageable> OnCollect;
     public event UnityAction<int> OnMushroomCountChanged;
     public event UnityAction OnInsightGained;
 
     private void Awake()
     {
-        var mushrooms = FindObjectsOfType<InteractableMushroom>(true);
-        foreach(var mushroom in mushrooms)
+        var foragers = FindObjectsOfType<UnitForage>(true);
+        foreach(var forage in foragers)
         {
-            mushroom.OnCollect += () =>
+            forage.OnUnitHasForaged += forageable =>
             {
                 SetMushroomCount(MushroomCount + 1);                
-                OnCollect?.Invoke(mushroom);
+                OnCollect?.Invoke(forageable);
             };
         }
 

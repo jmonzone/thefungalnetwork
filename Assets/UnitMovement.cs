@@ -13,15 +13,15 @@ public class UnitMovement : MonoBehaviour
 
     public event UnityAction<bool> OnIsMovingHasChanged;
 
-    public void StartMovement(Vector3 targetPosition)
+    public void StartMovement(Vector3 targetPosition, UnityAction onComplete = null)
     {
         Debug.Log("StartMovement");
 
         StopAllCoroutines();
-        StartCoroutine(MovementRoutine(targetPosition));
+        StartCoroutine(MoveToPosition(targetPosition, onComplete));
     }
 
-    public IEnumerator MovementRoutine(Vector3 targetPosition)
+    private IEnumerator MoveToPosition(Vector3 targetPosition, UnityAction onComplete = null)
     {
         isMoving = true;
         OnIsMovingHasChanged?.Invoke(isMoving);
@@ -39,5 +39,7 @@ public class UnitMovement : MonoBehaviour
         transform.position = targetPosition;
         isMoving = false;
         OnIsMovingHasChanged?.Invoke(isMoving);
+
+        onComplete?.Invoke();
     }
 }

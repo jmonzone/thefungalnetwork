@@ -1,17 +1,13 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public interface IInteractable
-{
-    Transform Transform { get; }
-    void OnBaseInteraction();
-}
-
 public class InteractionController : MonoBehaviour
 {
     [SerializeField] private UnitController selectedUnit;
     [SerializeField] private LayerMask interactableMask;
     [SerializeField] private LayerMask groundMask;
+
+    [SerializeField] private CameraPanController cameraPanController;
 
     private Camera mainCamera;
 
@@ -19,7 +15,7 @@ public class InteractionController : MonoBehaviour
     private bool isDragging = false;
 
 
-    public event UnityAction<Interactable> OnInteractableSelected;
+    public event UnityAction<Transform> OnEntitySelected;
     public event UnityAction<Vector3> OnGroundSelected;
 
     private void Awake()
@@ -57,6 +53,7 @@ public class InteractionController : MonoBehaviour
                         var forageable = hit.transform.GetComponentInParent<Forageable>();
                         if (forageable)
                         {
+                            OnEntitySelected?.Invoke(forageable.transform);
                             forage.StartForage(forageable);
                             return;
                         }
@@ -70,6 +67,7 @@ public class InteractionController : MonoBehaviour
                     if (Physics.Raycast(ray, out RaycastHit hit, 1000f, groundMask))
                     {
                         movement.StartMovement(hit.point);
+                        OnGroundSelected?.Invoke(hit.point);
                         return;
                     }
                 }
@@ -81,9 +79,11 @@ public class InteractionController : MonoBehaviour
                     var unit = hit.transform.GetComponentInParent<UnitController>();
                     if (unit)
                     {
+                        cameraPanController.CenterTargetInView(unit.transform);
                         unit.Select();
+                        OnEntitySelected?.Invoke(unit.transform);
                         selectedUnit = unit;
-                    }
+}
                 }
             }
         }

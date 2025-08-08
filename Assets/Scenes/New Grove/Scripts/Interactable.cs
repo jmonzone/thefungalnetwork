@@ -13,7 +13,7 @@ public abstract class Interaction : ScriptableObject
     public abstract void OnInteractionStart(Interactable interactable);
 }
 
-public class Interactable : MonoBehaviour, IInteractable
+public class Interactable : MonoBehaviour
 {
     [SerializeField] private string id;
     [SerializeField] private Sprite sprite;

@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class InteractableMushroom : MonoBehaviour, IInteractable, ICollectable
+public class InteractableMushroom : MonoBehaviour, ICollectable
 {
     public ScaleController scaleController;
 
