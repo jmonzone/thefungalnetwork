@@ -10,7 +10,19 @@ public class TouchIndicatorWorld : MonoBehaviour
 
     private void Awake()
     {
-        interactionController.OnEntitySelected += entity => ShowIndicator(entity.position, false);
+        interactionController.OnEntitySelected += entity =>
+        {
+            if (!entity)
+            {
+                StopAllCoroutines();
+                StartCoroutine(DissipateRoutine());
+            }
+            else
+            {
+                ShowIndicator(entity.position, false);
+            }
+        };
+
         interactionController.OnGroundSelected += position => ShowIndicator(position, false);
     }
 
@@ -23,20 +35,16 @@ public class TouchIndicatorWorld : MonoBehaviour
         StartCoroutine(TouchAnimation(dissipate));
     }
 
+    // Ring scales
+    private float ringFocus = 1.0f;
+    private float circleFocus = 0.9f;
+
     private IEnumerator TouchAnimation(bool dissipate)
     {
         float honeDuration = 0.3f;
-        float fadeDuration = 0.4f;
 
-        // Ring scales
         float ringStart = 1.6f;
-        float ringFocus = 1.0f;
-        float ringEnd = 1.3f;
-
-        // Circle scales
         float circleStart = 1.2f;
-        float circleFocus = 0.9f;
-        float circleEnd = 1.0f;
 
         float elapsed = 0f;
 
@@ -62,10 +70,18 @@ public class TouchIndicatorWorld : MonoBehaviour
         ringRenderer.transform.localScale = Vector3.one * ringFocus;
         circleRenderer.transform.localScale = Vector3.one * circleFocus;
 
-        if (!dissipate) yield break;
+        if (dissipate) yield return DissipateRoutine();
 
-        // Dissipate
-        elapsed = 0f;
+    
+    }
+
+    private IEnumerator DissipateRoutine()
+    {
+        float fadeDuration = 0.4f;
+        float ringEnd = 1.3f;
+        float circleEnd = 1.0f;
+
+        float elapsed = 0f;
         while (elapsed < fadeDuration)
         {
             float t = elapsed / fadeDuration;

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Events;
 
 [CreateAssetMenu]
@@ -6,9 +7,12 @@ public class DialogueReference : ScriptableObject
 {
     [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference dialogueView;
+    [SerializeField] private List<string> currentDialogue;
 
+    public List<string> CurrentDialogue => currentDialogue;
+    
     public event UnityAction<string> OnSpeakerChanged;
-    public event UnityAction<string> OnDialogueChanged;
+    public event UnityAction<List<string>> OnDialogueChanged;
 
     public event UnityAction OnDialogeClosed;
 
@@ -17,8 +21,9 @@ public class DialogueReference : ScriptableObject
         OnSpeakerChanged?.Invoke(speaker);
     }
 
-    public void SetDialogue(string dialogue)
+    public void SetDialogue(List<string> dialogue)
     {
+        currentDialogue = dialogue;
         OnDialogueChanged?.Invoke(dialogue);
     }
 

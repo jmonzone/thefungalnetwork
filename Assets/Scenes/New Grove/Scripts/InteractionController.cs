@@ -3,11 +3,14 @@ using UnityEngine.Events;
 
 public class InteractionController : MonoBehaviour
 {
-    [SerializeField] private UnitController selectedUnit;
+    [SerializeField] private Transform selected;
     [SerializeField] private LayerMask interactableMask;
     [SerializeField] private LayerMask groundMask;
 
     [SerializeField] private CameraPanController cameraPanController;
+
+    [SerializeField] private Navigation navigation;
+    [SerializeField] private ViewReference homeView;
 
     private Camera mainCamera;
 
@@ -27,6 +30,8 @@ public class InteractionController : MonoBehaviour
 
     private void Update()
     {
+        if (navigation.CurrentView != homeView) return;
+
         if (Input.GetMouseButtonDown(0))
         {
             startInput = Input.mousePosition;
@@ -44,22 +49,34 @@ public class InteractionController : MonoBehaviour
             Vector3 inputPos = Input.mousePosition;
 
             Ray ray = mainCamera.ScreenPointToRay(inputPos);
+            RaycastHit hit;
 
-            if (Physics.Raycast(ray, out RaycastHit hit, raycastMaxDistance, interactableMask))
+            if (Physics.Raycast(ray, out hit, 1000f, interactableMask))
             {
                 var tree = hit.transform.GetComponentInParent<TreeController>();
-                if (tree && !tree.IsSelected)
+                if (tree && selected != tree.transform)
                 {
                     cameraPanController.CenterTargetInView(tree.transform.position);
                     tree.OnSelect();
-                    OnEntitySelected?.Invoke(tree.transform);
+                    selected = tree.transform;
+                    OnEntitySelected?.Invoke(null);
+                    return;
+                }
+
+                var unit = hit.transform.GetComponentInParent<UnitController>();
+                if (unit && selected != unit.transform)
+                {
+                    cameraPanController.CenterTargetInView(unit.transform.position);
+                    unit.Select();
+                    OnEntitySelected?.Invoke(unit.transform);
+                    selected = unit.transform;
                     return;
                 }
             }
 
-            if (selectedUnit)
+            if (selected)
             {
-                var forage = selectedUnit.GetComponent<UnitForage>();
+                var forage = selected.GetComponent<UnitForage>();
                 if (forage)
                 {
                     if (Physics.Raycast(ray, out hit, raycastMaxDistance, interactableMask))
@@ -74,31 +91,21 @@ public class InteractionController : MonoBehaviour
                         }
                     }
                 }
-
-                var movement = selectedUnit.GetComponent<UnitMovement>();
-                if (movement)
-                {
-                    if (Physics.Raycast(ray, out hit, raycastMaxDistance, groundMask))
-                    {
-                        cameraPanController.CenterTargetInView(hit.point);
-                        movement.StartMovement(hit.point);
-                        OnGroundSelected?.Invoke(hit.point);
-                        return;
-                    }
-                }
             }
-            else
+
+            if (Physics.Raycast(ray, out hit, raycastMaxDistance, groundMask))
             {
-                if (Physics.Raycast(ray, out hit, 1000f, interactableMask))
+                cameraPanController.CenterTargetInView(hit.point);
+                OnGroundSelected?.Invoke(hit.point);
+
+                if (selected)
                 {
-                    var unit = hit.transform.GetComponentInParent<UnitController>();
-                    if (unit)
+                    var movement = selected.GetComponent<UnitMovement>();
+                    if (movement)
                     {
-                        cameraPanController.CenterTargetInView(unit.transform.position);
-                        unit.Select();
-                        OnEntitySelected?.Invoke(unit.transform);
-                        selectedUnit = unit;
-}
+                        movement.StartMovement(hit.point);
+                    }
+                    return;
                 }
             }
         }

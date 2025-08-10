@@ -774,7 +774,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 500}
+  m_AnchoredPosition: {x: 0, y: 550}
   m_SizeDelta: {x: 800, y: 550}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!1 &81624638
@@ -3957,6 +3957,8 @@ MonoBehaviour:
   speakerText: {fileID: 1107766699}
   dialogueText: {fileID: 1695818708}
   continueButton: {fileID: 1454621657}
+  baseSpeed: 0.03
+  punctuationPause: 0.2
 --- !u!1001 &407805249
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4552,7 +4554,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &440252797
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9423,8 +9425,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 80
-  m_fontSizeBase: 80
+  m_fontSize: 100
+  m_fontSizeBase: 100
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -14093,8 +14095,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 37.50006}
-  m_SizeDelta: {x: -100, y: -25}
+  m_AnchoredPosition: {x: 0, y: 37.5}
+  m_SizeDelta: {x: -50, y: -25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1695818708
 MonoBehaviour:
@@ -14116,14 +14118,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'i''ve been trying to contact you about...
+  m_text: 'i''ve been trying to
 
-
-    oh wait, i''m a frog,
-    do i croak or ribbit?
-
-
-    idkkkk its getting pretty boggy in here'
+    oh wait, i''m a frog, '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b4e44b235567b440caf4e04d3269a48c, type: 2}
   m_sharedMaterial: {fileID: -4893521127105691677, guid: b4e44b235567b440caf4e04d3269a48c,
@@ -14151,12 +14148,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 39.6
+  m_fontSize: 65
   m_fontSizeBase: 261
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 39.6
+  m_fontSizeMax: 65
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -15679,7 +15676,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20519c1f0f2b8418dbf21113c22e27d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedUnit: {fileID: 0}
+  selected: {fileID: 0}
   interactableMask:
     serializedVersion: 2
     m_Bits: 256
@@ -15687,6 +15684,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   cameraPanController: {fileID: 1446848728}
+  navigation: {fileID: 11400000, guid: 7af35f01730a846d692adda4734cddd3, type: 2}
+  homeView: {fileID: 11400000, guid: 8738f1e97be914065a0091ac6b397253, type: 2}
 --- !u!114 &1851915128
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19069,6 +19068,75 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Fungal Tree
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782225187683042707, guid: b5a65936c7fe74e3ca085c517af15846,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8487882406260847969, guid: b5a65936c7fe74e3ca085c517af15846,
+        type: 3}
+      propertyPath: initailDialogue.Array.size
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8487882406260847969, guid: b5a65936c7fe74e3ca085c517af15846,
+        type: 3}
+      propertyPath: initailDialogue.Array.data[0]
+      value: 'Hey buddy, look at you!
+
+        Out here looking for the party huh?'
+      objectReference: {fileID: 0}
+    - target: {fileID: 8487882406260847969, guid: b5a65936c7fe74e3ca085c517af15846,
+        type: 3}
+      propertyPath: initailDialogue.Array.data[1]
+      value: 'Well guess what...
+
+        You ARE the party.'
+      objectReference: {fileID: 0}
+    - target: {fileID: 8487882406260847969, guid: b5a65936c7fe74e3ca085c517af15846,
+        type: 3}
+      propertyPath: initailDialogue.Array.data[2]
+      value: 'So let''s get
+
+        this party started.'
+      objectReference: {fileID: 0}
+    - target: {fileID: 8487882406260847969, guid: b5a65936c7fe74e3ca085c517af15846,
+        type: 3}
+      propertyPath: initailDialogue.Array.data[3]
+      value: 'First job... SPORES.
+
+        You''re gonna need
+
+        at least
+        10 of them.'
+      objectReference: {fileID: 0}
+    - target: {fileID: 8487882406260847969, guid: b5a65936c7fe74e3ca085c517af15846,
+        type: 3}
+      propertyPath: initailDialogue.Array.data[4]
+      value: 'Oh wait...
+
+        you already have some?'
+      objectReference: {fileID: 0}
+    - target: {fileID: 8487882406260847969, guid: b5a65936c7fe74e3ca085c517af15846,
+        type: 3}
+      propertyPath: initailDialogue.Array.data[5]
+      value: 'Alright then,
+
+        forget what I said.
+
+        New plan.'
+      objectReference: {fileID: 0}
+    - target: {fileID: 8487882406260847969, guid: b5a65936c7fe74e3ca085c517af15846,
+        type: 3}
+      propertyPath: initailDialogue.Array.data[6]
+      value: 'Hmmm...
+
+        what else do we need?'
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878330857342311414, guid: b5a65936c7fe74e3ca085c517af15846,
+        type: 3}
+      propertyPath: m_Priority
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

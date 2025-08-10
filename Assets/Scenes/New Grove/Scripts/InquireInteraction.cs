@@ -10,7 +10,7 @@ public class InquireInteraction : Interaction
     public override void OnInteractionStart(Interactable interactable)
     {
         dialogueReference.SetSpeaker(interactable.Id);
-        dialogueReference.SetDialogue(interactable.Dialogue);
+        //dialogueReference.SetDialogue(interactable.Dialogue);
         navigation.Navigate(dialogueView);
     }
 }
