@@ -67,7 +67,7 @@ public class Interactable : MonoBehaviour
         if (virtualCamera) virtualCamera.Priority = 11;
         if (eyeballAnimator) eyeballAnimator.enabled = true;
 
-        cameraPanController.CenterTargetInView(transform);
+        cameraPanController.CenterTargetInView(transform.position);
 
         if (touchIndicator.gameObject.activeSelf) StartCoroutine(touchIndicator.FadeOut());
     }

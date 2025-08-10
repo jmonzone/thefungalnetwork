@@ -4,6 +4,10 @@ public class CameraPanController : MonoBehaviour
 {
     public float panSpeed = 0.1f;
     public float smoothTime = 0.2f;
+
+    [SerializeField] private float centeringSmoothTime = 0.1f;
+    [SerializeField] private float panningSmoothTime = 0.2f;
+
     public bool invertX = false;
     public bool invertY = false;
 
@@ -35,6 +39,7 @@ public class CameraPanController : MonoBehaviour
             {
                 lastPanPosition = touch.position;
                 isPanning = true;
+                smoothTime = panningSmoothTime;
             }
             else if (touch.phase == TouchPhase.Moved && isPanning)
             {
@@ -51,6 +56,7 @@ public class CameraPanController : MonoBehaviour
         {
             lastPanPosition = Input.mousePosition;
             isPanning = true;
+            smoothTime = panningSmoothTime;
         }
         else if (Input.GetMouseButton(0) && isPanning)
         {
@@ -80,17 +86,19 @@ public class CameraPanController : MonoBehaviour
         transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothTime);
     }
 
-    public void CenterTargetInView(Transform target)
+    public void CenterTargetInView(Vector3 position)
     {
+        smoothTime = centeringSmoothTime;
+
         Camera cam = Camera.main;
-        if (cam == null || target == null)
+        if (cam == null)
         {
             Debug.LogWarning("Camera or target missing.");
             return;
         }
 
         // Target's current screen position
-        Vector3 targetScreenPos = cam.WorldToScreenPoint(target.position);
+        Vector3 targetScreenPos = cam.WorldToScreenPoint(position);
 
         // Convert screenDelta to world delta at the target's depth
         Vector3 camPos = transform.position;

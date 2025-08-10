@@ -48,9 +48,9 @@ public class InteractionController : MonoBehaviour
             if (Physics.Raycast(ray, out RaycastHit hit, raycastMaxDistance, interactableMask))
             {
                 var tree = hit.transform.GetComponentInParent<TreeController>();
-                if (tree)
+                if (tree && !tree.IsSelected)
                 {
-                    cameraPanController.CenterTargetInView(tree.transform);
+                    cameraPanController.CenterTargetInView(tree.transform.position);
                     tree.OnSelect();
                     OnEntitySelected?.Invoke(tree.transform);
                     return;
@@ -67,6 +67,7 @@ public class InteractionController : MonoBehaviour
                         var forageable = hit.transform.GetComponentInParent<Forageable>();
                         if (forageable)
                         {
+                            cameraPanController.CenterTargetInView(forageable.transform.position);
                             OnEntitySelected?.Invoke(forageable.transform);
                             forage.StartForage(forageable);
                             return;
@@ -79,6 +80,7 @@ public class InteractionController : MonoBehaviour
                 {
                     if (Physics.Raycast(ray, out hit, raycastMaxDistance, groundMask))
                     {
+                        cameraPanController.CenterTargetInView(hit.point);
                         movement.StartMovement(hit.point);
                         OnGroundSelected?.Invoke(hit.point);
                         return;
@@ -92,7 +94,7 @@ public class InteractionController : MonoBehaviour
                     var unit = hit.transform.GetComponentInParent<UnitController>();
                     if (unit)
                     {
-                        cameraPanController.CenterTargetInView(unit.transform);
+                        cameraPanController.CenterTargetInView(unit.transform.position);
                         unit.Select();
                         OnEntitySelected?.Invoke(unit.transform);
                         selectedUnit = unit;
