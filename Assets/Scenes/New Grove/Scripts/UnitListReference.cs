@@ -13,7 +13,7 @@ public class UnitListReference : UIReference
 
     public List<Unit> Units => units;
 
-    public event UnityAction OnUnitsUpdated;
+    public event UnityAction<Unit> OnUnitSummoned;
 
     public void Initialize()
     {
@@ -26,7 +26,8 @@ public class UnitListReference : UIReference
         {
             inventory.DecreaseSporeCount(125);
             units.Add(summonedUnit);
-            OnUnitsUpdated?.Invoke();
+            OnUnitSummoned?.Invoke(summonedUnit);
+            Close();
         }
     }
 }

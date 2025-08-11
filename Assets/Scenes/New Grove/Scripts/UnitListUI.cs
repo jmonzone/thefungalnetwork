@@ -16,13 +16,18 @@ public class UnitListUI : MonoBehaviour
     {
         UpdateView();
         unitListReference.OnShow += UpdateView;
-        unitListReference.OnUnitsUpdated += UpdateView;
+        unitListReference.OnUnitSummoned += UnitListReference_OnUnitSummoned;
+    }
+
+    private void UnitListReference_OnUnitSummoned(Unit arg0)
+    {
+        UpdateView();
     }
 
     private void OnDisable()
     {
         unitListReference.OnShow -= UpdateView;
-        unitListReference.OnUnitsUpdated -= UpdateView;
+        unitListReference.OnUnitSummoned -= UnitListReference_OnUnitSummoned;
     }
 
     private void UpdateView()

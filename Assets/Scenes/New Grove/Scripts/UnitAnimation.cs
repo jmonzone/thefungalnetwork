@@ -6,7 +6,7 @@ public class UnitAnimation : MonoBehaviour
 {
     private Animator animator;
 
-    private void Awake()
+    private void Start()
     {
         animator = GetComponentInChildren<Animator>();
 

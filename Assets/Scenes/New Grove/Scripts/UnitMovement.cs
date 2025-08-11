@@ -13,6 +13,17 @@ public class UnitMovement : MonoBehaviour
 
     public event UnityAction<bool> OnIsMovingHasChanged;
 
+    private void Awake()
+    {
+        var unit = GetComponent<UnitController>();
+        unit.OnInitialized += Unit_OnInitialized;
+    }
+
+    private void Unit_OnInitialized()
+    {
+        if (!lookTransform) lookTransform = transform.GetChild(0);
+    }
+
     public void StartMovement(Vector3 targetPosition, UnityAction onComplete = null)
     {
         Debug.Log("StartMovement");
