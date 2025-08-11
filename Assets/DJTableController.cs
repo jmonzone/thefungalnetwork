@@ -7,6 +7,7 @@ public class DJTableController : InteractableController
     [SerializeField] private InventoryReference inventory;
     [SerializeField] private GameObject render;
     [SerializeField] private DJTableReference djReference;
+    [SerializeField] private BackgroundMusicDelegate backgroundMusic;
 
     private AudioSource audioSource;
 
@@ -46,6 +47,8 @@ public class DJTableController : InteractableController
 
     private IEnumerator PlayAndFadeIn(float duration)
     {
+        backgroundMusic.HideMusic();
+
         float targetVolume = 1; // Store the original volume
         audioSource.volume = 0f;
         audioSource.Play();

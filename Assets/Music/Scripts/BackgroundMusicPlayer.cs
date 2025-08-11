@@ -20,6 +20,13 @@ public class BackgroundMusicPlayer : MonoBehaviour
     private void OnEnable()
     {
         backgroundMusicDelegate.OnMusicRequested += BackgroundMusicDelegate_OnMusicRequested;
+        backgroundMusicDelegate.OnMusicHide += BackgroundMusicDelegate_OnMusicHide;
+    }
+
+    private void BackgroundMusicDelegate_OnMusicHide()
+    {
+        StopAllCoroutines();
+        StartCoroutine(FadeVolume(0f));
     }
 
     private void BackgroundMusicDelegate_OnMusicRequested(AudioClip audioClip)
@@ -32,6 +39,7 @@ public class BackgroundMusicPlayer : MonoBehaviour
     private void OnDisable()
     {
         backgroundMusicDelegate.OnMusicRequested -= BackgroundMusicDelegate_OnMusicRequested;
+        backgroundMusicDelegate.OnMusicHide -= BackgroundMusicDelegate_OnMusicHide;
     }
 
     private IEnumerator TransitionMusic(AudioClip audioClip)
