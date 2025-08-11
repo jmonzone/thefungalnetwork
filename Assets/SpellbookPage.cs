@@ -4,10 +4,20 @@ using UnityEngine.UI;
 
 public class SpellbookPageUI : MonoBehaviour
 {
+    [SerializeField] private SpellbookReference spellbook;
     [SerializeField] private InventoryReference inventory;
     [SerializeField] private Button summonButton;
     [SerializeField] private TextMeshProUGUI notEnoughSporesText;
     [SerializeField] private bool isUnlocked = false;
+
+    private void Awake()
+    {
+        summonButton.onClick.AddListener(() =>
+        {
+            inventory.SummonItem(125);
+            spellbook.Close();
+        });
+    }
 
     private void OnEnable()
     {

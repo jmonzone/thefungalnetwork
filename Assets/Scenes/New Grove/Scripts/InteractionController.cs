@@ -30,7 +30,7 @@ public class InteractionController : MonoBehaviour
 
     private void Update()
     {
-        if (navigation.CurrentView != homeView) return;
+        if (!homeView.Canvas.IsVisible) return;
 
         if (Input.GetMouseButtonDown(0))
         {
