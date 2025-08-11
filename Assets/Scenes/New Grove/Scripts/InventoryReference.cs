@@ -32,10 +32,10 @@ public class InventoryReference : ScriptableObject
         OnSporeCountChanged?.Invoke(sporeCount);
     }
 
-    public void SummonItem(int price)
+    public void SummonItem(Item item)
     {
-        DecreaseSporeCount(price);
-        hasDJTable = true;
+        DecreaseSporeCount(item.Price);
+        if (item.Name == "DJ Table") hasDJTable = true;
         OnItemSummoned?.Invoke();
     }
 }

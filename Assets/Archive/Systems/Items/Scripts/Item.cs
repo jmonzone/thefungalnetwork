@@ -12,9 +12,16 @@ public enum ItemTags
 [CreateAssetMenu]
 public class Item : ScriptableObject
 {
+    [SerializeField] private new string name;
+    [SerializeField] [TextArea] private string description;
     [SerializeField] private Sprite sprite;
-    [SerializeField] private GameObject itemPrefab;
     [SerializeField] private ItemTags itemTags;
+    [SerializeField] private int price;
+    [SerializeField] private GameObject itemPrefab;
+
+    public string Name => name;
+    public string Description => description;
+    public int Price => price;
 
     public Sprite Sprite => sprite;
     public GameObject ItemPrefab => itemPrefab;
