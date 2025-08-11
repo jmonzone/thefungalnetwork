@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -13,8 +11,7 @@ public interface ICollectable
 
 public class InventoryController : MonoBehaviour
 {
-    [SerializeField] private int mushroomCount = 0;
-    [SerializeField] private TextMeshProUGUI mushroomCountText;
+    [SerializeField] private InventoryReference inventory;
     [SerializeField] private Slider insightSlider;
     [SerializeField] private Image[] rainbowImages; // Assign the 2 images in inspector
     private Color[] rainbowImagesOriginalColors;
@@ -30,7 +27,6 @@ public class InventoryController : MonoBehaviour
     private Coroutine pulseRoutine;
     private Coroutine transitionRoutine;
 
-    public int MushroomCount => mushroomCount;
     public event UnityAction<Forageable> OnCollect;
     public event UnityAction<int> OnMushroomCountChanged;
     public event UnityAction OnInsightGained;
@@ -42,7 +38,7 @@ public class InventoryController : MonoBehaviour
         {
             forage.OnUnitHasForaged += forageable =>
             {
-                SetMushroomCount(MushroomCount + 1);                
+                inventory.IncreaseSporeCount();
                 OnCollect?.Invoke(forageable);
             };
         }
@@ -58,22 +54,28 @@ public class InventoryController : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        inventory.OnSporeCountChanged += SetMushroomCount;
+    }
+
+    private void OnDisable()
+    {
+        inventory.OnSporeCountChanged -= SetMushroomCount;
+    }
 
     public void SetMushroomCount(int value)
     {
-        mushroomCount = value;
-
         // Start the lerp coroutine
         if (sliderLerpRoutine != null) StopCoroutine(sliderLerpRoutine);
 
-        sliderLerpRoutine = StartCoroutine(LerpSliderValue(insightSlider.value, MushroomCount));
+        sliderLerpRoutine = StartCoroutine(LerpSliderValue(insightSlider.value, inventory.SporeCount));
 
-        mushroomCountText.text = MushroomCount.ToString();
-        OnMushroomCountChanged?.Invoke(MushroomCount);
+        OnMushroomCountChanged?.Invoke(inventory.SporeCount);
 
-        magicCircleRotation.enabled = MushroomCount >= insightSlider.maxValue;
+        magicCircleRotation.enabled = inventory.SporeCount >= insightSlider.maxValue;
 
-        if (MushroomCount >= insightSlider.maxValue)
+        if (inventory.SporeCount >= insightSlider.maxValue)
         {
             OnInsightGained?.Invoke();
 

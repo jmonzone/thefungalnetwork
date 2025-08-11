@@ -32,7 +32,6 @@ public class UnitForage : MonoBehaviour
         {
             StartCoroutine(ForageRoutine(forageable));
         });
-
     }
 
     private IEnumerator ForageRoutine(Forageable forageable)

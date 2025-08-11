@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private MultiplayerReference multiplayer;
 
     [SerializeField] private DisplayName displayName;
-    [SerializeField] private ItemInventory itemInventory;
+    [SerializeField] private InventoryReference inventory;
     [SerializeField] private FungalInventory fungalInventory;
     [SerializeField] private Volume volume;
 
@@ -31,6 +31,8 @@ public class GameManager : MonoBehaviour
         else
         {
             Instance = this;
+
+            inventory.Initialize();
 
             // order of initialization matters here, ability cast as of now
             // needs to be initialized before localdata.inventory does
@@ -53,7 +55,7 @@ public class GameManager : MonoBehaviour
 
             localData.OnReset += () =>
             {
-                itemInventory.Initialize();
+                inventory.Initialize();
                 fungalInventory.Initialize();
             };
 

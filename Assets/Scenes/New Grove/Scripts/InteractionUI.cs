@@ -44,7 +44,7 @@ public class InteractionUI : MonoBehaviour
 
             button.OnUnlocked += () =>
             {
-                inventoryController.SetMushroomCount(inventoryController.MushroomCount - button.Interaction.cost);
+                //inventoryController.SetMushroomCount(inventoryController.MushroomCount - button.Interaction.cost);
                 interactable.IncreaseLevel();
                 levelText.text = $"Level {interactable.Level}";
             };
@@ -54,7 +54,7 @@ public class InteractionUI : MonoBehaviour
         {
             if (interactable)
             {
-                inventoryController.SetMushroomCount(inventoryController.MushroomCount - interactable.AwakenCost);
+                //inventoryController.SetMushroomCount(inventoryController.MushroomCount - interactable.AwakenCost);
                 interactable.Awaken();
                 UpdateView();
             }
@@ -98,7 +98,7 @@ public class InteractionUI : MonoBehaviour
         if (interactable.Level == 0)
         {
             levelText.text = $"Asleep";
-            awakenButton.interactable = inventoryController.MushroomCount >= interactable.AwakenCost;
+            //awakenButton.interactable = inventoryController.MushroomCount >= interactable.AwakenCost;
             awakenCostText.text = interactable.AwakenCost.ToString();
 
             awakenButton.gameObject.SetActive(true);
@@ -131,7 +131,7 @@ public class InteractionUI : MonoBehaviour
     {
         if (interactable)
         {
-            awakenButton.interactable = inventoryController.MushroomCount >= interactable.AwakenCost;
+            //awakenButton.interactable = inventoryController.MushroomCount >= interactable.AwakenCost;
         }
     }
 }
