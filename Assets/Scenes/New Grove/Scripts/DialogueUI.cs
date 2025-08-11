@@ -79,7 +79,7 @@ public class DialogueUI : MonoBehaviour
         }
 
         // Finished all pages → close dialogue
-        dialogue.CloseDialogue();
+        dialogue.Close();
     }
 
 

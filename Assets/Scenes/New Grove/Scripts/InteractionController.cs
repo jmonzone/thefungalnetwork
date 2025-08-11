@@ -53,12 +53,12 @@ public class InteractionController : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit, 1000f, interactableMask))
             {
-                var tree = hit.transform.GetComponentInParent<TreeController>();
-                if (tree && selected != tree.transform)
+                var interactable = hit.transform.GetComponentInParent<InteractableController>();
+                if (interactable && selected != interactable.transform)
                 {
-                    cameraPanController.CenterTargetInView(tree.transform.position);
-                    tree.OnSelect();
-                    selected = tree.transform;
+                    cameraPanController.CenterTargetInView(interactable.transform.position);
+                    interactable.OnSelect();
+                    selected = interactable.transform;
                     OnEntitySelected?.Invoke(null);
                     return;
                 }

@@ -1,51 +1,34 @@
 using System.Collections.Generic;
-using Cinemachine;
 using UnityEngine;
 
-public class TreeController : MonoBehaviour
+public class TreeController : InteractableController
 {
-    private CinemachineVirtualCamera virtualCamera;
     private Animator eyeballAnimator;
+
     [SerializeField] private DialogueReference dialogue;
     [SerializeField] [TextArea] private List<string> initailDialogue;
 
-    [SerializeField] private bool isSelected = false;
+    protected override UIReference Reference => dialogue;
 
-    public bool IsSelected => isSelected;
-
-    private void Awake()
+    protected override void Awake()
     {
-        virtualCamera = GetComponentInChildren<CinemachineVirtualCamera>();
+        base.Awake();
         eyeballAnimator = GetComponentInChildren<Animator>(true);
-
-        dialogue.OnDialogeClosed += Dialogue_OnDialogeClosed;
     }
 
-    private void Dialogue_OnDialogeClosed()
+    protected override void OnClose()
     {
-        Debug.Log("Unselected");
-
-        virtualCamera.Priority = 0;
+        base.OnClose();
         eyeballAnimator.gameObject.SetActive(false);
         eyeballAnimator.enabled = false;
-
-        Invoke(nameof(Unselect), 2f);
     }
 
-    private void Unselect()
+    public override void OnSelect()
     {
-        isSelected = false;
-    }
-
-    public void OnSelect()
-    {
-        Debug.Log("Selected");
-        virtualCamera.Priority = 100;
+        base.OnSelect();
         eyeballAnimator.gameObject.SetActive(true);
         eyeballAnimator.enabled = true;
         dialogue.SetSpeaker("The Tree");
         dialogue.SetDialogue(initailDialogue);
-        dialogue.ShowDialogue();
-        isSelected = true;
     }
 }
