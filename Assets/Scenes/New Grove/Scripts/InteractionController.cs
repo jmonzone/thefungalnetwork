@@ -105,6 +105,7 @@ public class InteractionController : MonoBehaviour
                     {
                         movement.StartMovement(hit.point);
                     }
+                    else selected = null;
                     return;
                 }
             }
