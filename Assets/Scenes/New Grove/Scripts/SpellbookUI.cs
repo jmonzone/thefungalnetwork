@@ -1,17 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class SpellbookUI : MonoBehaviour
 {
-    [SerializeField] private Button backButton;
     [SerializeField] private SpellbookReference spellbookReference;
 
     private List<SpellbookPageUI> itemViewList = new List<SpellbookPageUI>();
 
     private void Awake()
     {
-        backButton.onClick.AddListener(spellbookReference.Close);
         GetComponentsInChildren(true, itemViewList);
     }
 
