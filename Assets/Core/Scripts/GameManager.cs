@@ -13,11 +13,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Navigation uiNavigation;
     [SerializeField] private SceneNavigation sceneNavigation;
     [SerializeField] private FadeCanvasGroup screenFade;
-    [SerializeField] private MultiplayerReference multiplayer;
 
     [SerializeField] private DisplayName displayName;
     [SerializeField] private InventoryReference inventory;
-    [SerializeField] private FungalInventory fungalInventory;
+    [SerializeField] private UnitListReference unitList;
     [SerializeField] private Volume volume;
 
 
@@ -33,6 +32,7 @@ public class GameManager : MonoBehaviour
             Instance = this;
 
             inventory.Initialize();
+            unitList.Initialize();
 
             // order of initialization matters here, ability cast as of now
             // needs to be initialized before localdata.inventory does
@@ -43,20 +43,13 @@ public class GameManager : MonoBehaviour
 
             displayName.Initialize();
 
-            // displayName needs to be initalized before multiplayer;
-            multiplayer.Initialize();
-
-            //itemInventory.Initialize();
-            fungalInventory.Initialize();
-
-            //controller.Initialize(volume);
 
             DontDestroyOnLoad(Instance);
 
             localData.OnReset += () =>
             {
                 inventory.Initialize();
-                fungalInventory.Initialize();
+                unitList.Initialize();
             };
 
             sceneNavigation.OnSceneNavigationRequest += () =>
@@ -77,6 +70,6 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        multiplayer.DoUpdate();
+        //multiplayer.DoUpdate();
     }
 }

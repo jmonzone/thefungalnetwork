@@ -6,6 +6,7 @@ public abstract class UIReference : ScriptableObject
     [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference dialogueView;
 
+    public event UnityAction OnShow;
     public event UnityAction OnClose;
 
     public void Show()
@@ -13,6 +14,7 @@ public abstract class UIReference : ScriptableObject
         if (navigation.CurrentView != dialogueView)
         {
             navigation.Navigate(dialogueView);
+            OnShow?.Invoke();
         }
     }
 
