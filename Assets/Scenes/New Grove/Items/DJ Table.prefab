@@ -87,7 +87,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5144067981489388366
 Transform:
   m_ObjectHideFlags: 0
@@ -97,7 +97,7 @@ Transform:
   m_GameObject: {fileID: 2099887034778081830}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.5, y: 0.6, z: -2}
+  m_LocalPosition: {x: 1.5, y: 1.1, z: -2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -208,9 +208,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5416845950749899347}
+  - component: {fileID: 5105880481875732411}
   - component: {fileID: 4943839078533630623}
   - component: {fileID: 4567741978577550606}
-  - component: {fileID: 5105880481875732411}
   m_Layer: 8
   m_Name: DJ Table
   m_TagString: Untagged
@@ -227,7 +227,7 @@ Transform:
   m_GameObject: {fileID: 7266006484968317330}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.38268343, z: 0, w: 0.92387956}
-  m_LocalPosition: {x: -2.85, y: 0.5, z: 0.61}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -235,6 +235,19 @@ Transform:
   - {fileID: 6628892577968920449}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 45, z: 0}
+--- !u!114 &5105880481875732411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7266006484968317330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9544f48b9197e405194701f2fe786399, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  overlapHalfExtents: {x: 0.5, y: 0.5, z: 0.5}
 --- !u!114 &4943839078533630623
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -247,11 +260,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9b79a35127154af5be9d0a999e29f93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraPanController: {fileID: 0}
   inventory: {fileID: 11400000, guid: e9c2fc38b99d8404f8495af08b4889fc, type: 2}
-  render: {fileID: 2099887034778081830}
   djReference: {fileID: 11400000, guid: 9d6f191879f2945dead9a618ad02cbfe, type: 2}
-  backgroundMusic: {fileID: 0}
+  backgroundMusic: {fileID: 11400000, guid: ecea86fa0a5654e3382edfbc94e2dc9e, type: 2}
 --- !u!82 &4567741978577550606
 AudioSource:
   m_ObjectHideFlags: 0
@@ -348,18 +359,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &5105880481875732411
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7266006484968317330}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9544f48b9197e405194701f2fe786399, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &5279421296499071722
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1126,8 +1125,39 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7001511926686662300, guid: 7caa736ecd1b94ebd8bc4c45eb195acf,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1115686691713520246}
   m_SourcePrefab: {fileID: 100100000, guid: 7caa736ecd1b94ebd8bc4c45eb195acf, type: 3}
+--- !u!1 &2913296464126157942 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7001511926686662300, guid: 7caa736ecd1b94ebd8bc4c45eb195acf,
+    type: 3}
+  m_PrefabInstance: {fileID: 5279421296499071722}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &1115686691713520246
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2913296464126157942}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.011546169, y: 0.028610213, z: 0.025}
+  m_Center: {x: 0, y: -0.000000011175871, z: -0.01}
 --- !u!4 &5678754150105021697 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 7caa736ecd1b94ebd8bc4c45eb195acf,

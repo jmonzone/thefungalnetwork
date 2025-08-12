@@ -3,9 +3,7 @@ using UnityEngine;
 
 public class DJTableController : InteractableController
 {
-    [SerializeField] private CameraPanController cameraPanController;
     [SerializeField] private InventoryReference inventory;
-    [SerializeField] private GameObject render;
     [SerializeField] private DJTableReference djReference;
     [SerializeField] private BackgroundMusicDelegate backgroundMusic;
 
@@ -17,33 +15,16 @@ public class DJTableController : InteractableController
     {
         base.Awake();
         audioSource = GetComponent<AudioSource>();
+
+        var buildController = GetComponent<BuildController>();
+        buildController.OnBuildComplete += BuildController_OnBuildComplete;
     }
 
-    private void Start()
+    private void BuildController_OnBuildComplete()
     {
-        Inventory_OnItemSummoned();
+        StartCoroutine(PlayAndFadeIn(5f)); // 0.5 seconds fade
     }
 
-    private void OnEnable()
-    {
-        inventory.OnItemSummoned += Inventory_OnItemSummoned;
-    }
-
-    private void OnDisable()
-    {
-        inventory.OnItemSummoned += Inventory_OnItemSummoned;
-    }
-
-    private void Inventory_OnItemSummoned()
-    {
-        render.SetActive(inventory.HasDJTable);
-
-        if (inventory.HasDJTable)
-        {
-            cameraPanController.CenterTargetInView(transform.position);
-            StartCoroutine(PlayAndFadeIn(5f)); // 0.5 seconds fade
-        }
-    }
 
     private IEnumerator PlayAndFadeIn(float duration)
     {

@@ -38,7 +38,7 @@ public class InventoryController : MonoBehaviour
         {
             forage.OnUnitHasForaged += forageable =>
             {
-                inventory.IncreaseSporeCount();
+                inventory.IncreaseSporeCount(forageable.SporeCount);
                 OnCollect?.Invoke(forageable);
             };
         }

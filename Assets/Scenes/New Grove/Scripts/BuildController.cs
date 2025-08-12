@@ -1,5 +1,8 @@
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class BuildController : MonoBehaviour
 {
@@ -7,20 +10,29 @@ public class BuildController : MonoBehaviour
 
     private Camera mainCamera;
 
-    private Material defaultMaterial;
-    private Renderer objectRenderer;
+    private List<Material> defaultMaterials;
+    private List<Renderer> renderers;
     private Collider objectCollider;
 
     const float moveSpeed = 15f; // Lerp speed
+
+    public event UnityAction OnBuildComplete;
 
     private void Awake()
     {
         mainCamera = Camera.main;
 
-        objectRenderer = GetComponentInChildren<Renderer>();
+        renderers = GetComponentsInChildren<Renderer>().ToList();
         objectCollider = GetComponentInChildren<Collider>();
 
-        defaultMaterial = objectRenderer.material;
+        defaultMaterials = new List<Material>();
+
+        // Apply color to all child renderers' materials
+        foreach (var rend in renderers)
+        {
+            var material = rend.materials[0]; // Copies instances
+            defaultMaterials.Add(material);
+        }
     }
 
     public void StartBuild(LayerMask placementMask, LayerMask collisionMask, Material validMaterial, Material invalidMaterial)
@@ -46,8 +58,13 @@ public class BuildController : MonoBehaviour
             // Check collision validity
             bool isValid = IsPlacementValid(targetPosition, placementMask, collisionMask);
 
-            // Update material
-            objectRenderer.material = isValid ? validMaterial : invalidMaterial;
+            var i = 0;
+            // Apply color to all child renderers' materials
+            foreach (var rend in renderers)
+            {
+                rend.material = isValid ? validMaterial : invalidMaterial;
+                i++;
+            }
 
             yield return null;
         }
@@ -102,6 +119,16 @@ public class BuildController : MonoBehaviour
     public void CompleteBuild()
     {
         StopAllCoroutines();
-        objectRenderer.material = defaultMaterial;
+
+        var i = 0;
+
+        // Apply color to all child renderers' materials
+        foreach (var rend in renderers)
+        {
+            rend.material = defaultMaterials[i];
+            var material = rend.materials[0];
+            i++;
+        }
+        OnBuildComplete?.Invoke();
     }
 }
