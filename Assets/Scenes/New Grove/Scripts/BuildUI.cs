@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,8 +11,18 @@ public class BuildUI : MonoBehaviour
     {
         GetComponentsInChildren(true, itemViewList);
 
+        foreach(var itemView in itemViewList)
+        {
+            itemView.OnClick += () => ItemView_OnClick(itemView.Item);
+        }
+
         var viewController = GetComponent<ViewController>();
         viewController.OnFadeInStart += ViewController_OnFadeInStart;
+    }
+
+    private void ItemView_OnClick(Item item)
+    {
+        Instantiate(item.ItemPrefab);
     }
 
     private void ViewController_OnFadeInStart()
