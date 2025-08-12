@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8567669853570305828}
+  - component: {fileID: 5853478713845748009}
   m_Layer: 0
   m_Name: Plant Controller
   m_TagString: Untagged
@@ -32,6 +33,21 @@ Transform:
   - {fileID: 1952768850567855973}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5853478713845748009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7274716744431830007}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9544f48b9197e405194701f2fe786399, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1001 &1952768849056043314
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -168,6 +184,18 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1793355350, guid: 8a60e4a55143da54bb7c25936dedde1e, type: 3}
+      propertyPath: m_LODs.Array.data[1].renderers.Array.data[0].renderer
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1793355350, guid: 8a60e4a55143da54bb7c25936dedde1e, type: 3}
+      propertyPath: m_LODs.Array.data[2].renderers.Array.data[0].renderer
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1793355350, guid: 8a60e4a55143da54bb7c25936dedde1e, type: 3}
+      propertyPath: m_LODs.Array.data[3].renderers.Array.data[0].renderer
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 1793355351, guid: 8a60e4a55143da54bb7c25936dedde1e, type: 3}
       propertyPath: m_LocalScale.x
       value: 1.5
@@ -265,7 +293,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 1396911250, guid: 8a60e4a55143da54bb7c25936dedde1e, type: 3}
+    - {fileID: 513062665, guid: 8a60e4a55143da54bb7c25936dedde1e, type: 3}
+    - {fileID: 1562143361, guid: 8a60e4a55143da54bb7c25936dedde1e, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8a60e4a55143da54bb7c25936dedde1e, type: 3}

@@ -210,6 +210,7 @@ GameObject:
   - component: {fileID: 5416845950749899347}
   - component: {fileID: 4943839078533630623}
   - component: {fileID: 4567741978577550606}
+  - component: {fileID: 5105880481875732411}
   m_Layer: 8
   m_Name: DJ Table
   m_TagString: Untagged
@@ -250,6 +251,7 @@ MonoBehaviour:
   inventory: {fileID: 11400000, guid: e9c2fc38b99d8404f8495af08b4889fc, type: 2}
   render: {fileID: 2099887034778081830}
   djReference: {fileID: 11400000, guid: 9d6f191879f2945dead9a618ad02cbfe, type: 2}
+  backgroundMusic: {fileID: 0}
 --- !u!82 &4567741978577550606
 AudioSource:
   m_ObjectHideFlags: 0
@@ -346,6 +348,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &5105880481875732411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7266006484968317330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9544f48b9197e405194701f2fe786399, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &5279421296499071722
 PrefabInstance:
   m_ObjectHideFlags: 0
