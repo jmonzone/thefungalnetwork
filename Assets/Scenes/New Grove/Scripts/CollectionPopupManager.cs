@@ -35,7 +35,7 @@ public class CollectionPopupManager : MonoBehaviour
         }
 
         CollectionPopupUI popup = popupPool.Dequeue();
-        popup.PlayPopup(forageable.transform.position);
+        popup.PlayPopup(forageable.transform.position, forageable.SporeCount);
 
         StartCoroutine(ReturnToPoolAfterDuration(popup, popup.duration));
     }

@@ -1,8 +1,11 @@
 using UnityEngine;
 using System.Collections;
+using TMPro;
 
 public class CollectionPopupUI : MonoBehaviour
 {
+    [SerializeField] private TextMeshProUGUI countText;
+
     public CanvasGroup canvasGroup;        // For fading
     public RectTransform rectTransform;    // For movement
     public float floatDistance = 50f;      // Vertical move in pixels
@@ -23,8 +26,10 @@ public class CollectionPopupUI : MonoBehaviour
     /// <summary>
     /// Starts the popup animation anchored to a world position.
     /// </summary>
-    public void PlayPopup(Vector3 worldPos)
+    public void PlayPopup(Vector3 worldPos, int count)
     {
+        countText.text = $"+{count}";
+
         mainCamera = Camera.main;
         worldPosition = worldPos;
         isPlaying = true;
