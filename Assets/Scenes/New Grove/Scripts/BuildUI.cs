@@ -5,7 +5,11 @@ using UnityEngine.UI;
 
 public class BuildUI : MonoBehaviour
 {
-    [SerializeField] private LayerMask groundMask; // Assign in Inspector
+    [SerializeField] private LayerMask groundMask;
+    [SerializeField] private LayerMask collisionMask;
+
+    [SerializeField] private Material validMaterial;
+    [SerializeField] private Material invalidMaterial;
 
     [SerializeField] private InventoryReference inventory;
     [SerializeField] private Navigation navigation;
@@ -43,9 +47,9 @@ public class BuildUI : MonoBehaviour
         {
             if (itemContoller)
             {
+                Destroy(itemContoller.gameObject);
                 itemContoller = null;
                 navigation.GoBack();
-                Destroy(itemContoller);
             }
         });
     }
@@ -53,7 +57,7 @@ public class BuildUI : MonoBehaviour
     private void ItemView_OnClick(Item item)
     {
         itemContoller = Instantiate(item.ItemPrefab).GetComponent<BuildController>();
-        itemContoller.StartBuild(groundMask);
+        itemContoller.StartBuild(groundMask, collisionMask, validMaterial, invalidMaterial);
 
         navigation.Navigate(buildView);
 
