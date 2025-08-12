@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class CameraPanController : MonoBehaviour
 {
@@ -28,6 +29,8 @@ public class CameraPanController : MonoBehaviour
 
     void Update()
     {
+        if (EventSystem.current.IsPointerOverGameObject()) return;
+
         inputDelta = Vector2.zero;
 
         // Touch Input
