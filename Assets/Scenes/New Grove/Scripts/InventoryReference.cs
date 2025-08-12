@@ -8,6 +8,8 @@ public class InventoryReference : ScriptableObject
     [SerializeField] private int sporeCount = 0;
     [SerializeField] private int initialSporeCount = 124;
     [SerializeField] private bool hasDJTable = false;
+
+    [SerializeField] private List<Item> initialItems;
     [SerializeField] private List<Item> items;
 
     public int SporeCount => sporeCount;
@@ -19,7 +21,7 @@ public class InventoryReference : ScriptableObject
 
     public void Initialize()
     {
-        items = new List<Item>();
+        items = new List<Item>(initialItems);
         sporeCount = initialSporeCount;
         hasDJTable = false;
     }
