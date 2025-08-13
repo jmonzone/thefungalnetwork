@@ -1,6 +1,12 @@
 using UnityEngine;
 using UnityEngine.Events;
 
+public interface IInteractable
+{
+    public Transform Transform { get; }
+    public void OnSelect();
+}
+
 public class InteractionController : MonoBehaviour
 {
     [SerializeField] private Transform selected;
@@ -53,12 +59,12 @@ public class InteractionController : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit, 1000f, interactableMask))
             {
-                var interactable = hit.transform.GetComponentInParent<InteractableController>();
-                if (interactable && selected != interactable.transform)
+                var interactable = hit.transform.GetComponentInParent<IInteractable>();
+                if (interactable != null && selected != interactable.Transform)
                 {
-                    cameraPanController.CenterTargetInView(interactable.transform.position);
+                    cameraPanController.CenterTargetInView(interactable.Transform.position);
                     interactable.OnSelect();
-                    selected = interactable.transform;
+                    selected = interactable.Transform;
                     OnEntitySelected?.Invoke(null);
                     return;
                 }

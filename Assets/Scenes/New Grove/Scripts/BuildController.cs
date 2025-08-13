@@ -6,8 +6,10 @@ using UnityEngine.Events;
 
 public class BuildController : MonoBehaviour
 {
+    [SerializeField] private Item item;
     [SerializeField] private Vector3 overlapHalfExtents = new Vector3(0.5f, 0.5f, 0.5f);
 
+    public Item Item => item;
     private Camera mainCamera;
 
     private List<Material> defaultMaterials;
@@ -16,7 +18,7 @@ public class BuildController : MonoBehaviour
 
     const float moveSpeed = 15f; // Lerp speed
 
-    public event UnityAction OnBuildComplete;
+    public event UnityAction OnPlaced;
 
     private void Awake()
     {
@@ -33,6 +35,11 @@ public class BuildController : MonoBehaviour
             var material = rend.materials[0]; // Copies instances
             defaultMaterials.Add(material);
         }
+    }
+
+    public void Initialize(Item item)
+    {
+        this.item = item;
     }
 
     public void StartBuild(LayerMask placementMask, LayerMask collisionMask, Material validMaterial, Material invalidMaterial)
@@ -129,6 +136,12 @@ public class BuildController : MonoBehaviour
             var material = rend.materials[0];
             i++;
         }
-        OnBuildComplete?.Invoke();
+
+        Place();
+    }
+
+    public void Place()
+    {
+        OnPlaced?.Invoke();
     }
 }

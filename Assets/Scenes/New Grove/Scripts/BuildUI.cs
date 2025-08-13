@@ -11,6 +11,7 @@ public class BuildUI : MonoBehaviour
     [SerializeField] private Material validMaterial;
     [SerializeField] private Material invalidMaterial;
 
+    [SerializeField] private BuildSystem build;
     [SerializeField] private InventoryReference inventory;
     [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference buildView;
@@ -19,7 +20,7 @@ public class BuildUI : MonoBehaviour
 
     private List<ItemUI> itemViewList = new List<ItemUI>();
 
-    private BuildController itemContoller;
+    private BuildController buildController;
 
     private void Awake()
     {
@@ -35,20 +36,21 @@ public class BuildUI : MonoBehaviour
 
         buildButton.onClick.AddListener(() =>
         {
-            if (itemContoller)
+            if (buildController)
             {
-                itemContoller.CompleteBuild();
-                itemContoller = null;
+                build.AddBuild(buildController.Item, buildController.transform.position);
+                buildController.CompleteBuild();
+                buildController = null;
                 navigation.GoBack();
             }
         });
 
         closeButton.onClick.AddListener(() =>
         {
-            if (itemContoller)
+            if (buildController)
             {
-                Destroy(itemContoller.gameObject);
-                itemContoller = null;
+                Destroy(buildController.gameObject);
+                buildController = null;
                 navigation.GoBack();
             }
         });
@@ -56,8 +58,9 @@ public class BuildUI : MonoBehaviour
 
     private void ItemView_OnClick(Item item)
     {
-        itemContoller = Instantiate(item.ItemPrefab).GetComponent<BuildController>();
-        itemContoller.StartBuild(groundMask, collisionMask, validMaterial, invalidMaterial);
+        buildController = Instantiate(item.ItemPrefab).GetComponent<BuildController>();
+        buildController.Initialize(item);
+        buildController.StartBuild(groundMask, collisionMask, validMaterial, invalidMaterial);
 
         navigation.Navigate(buildView);
 

@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class DJTableController : InteractableController
+public class DJTableController : MonoBehaviour, IInteractable
 {
     [SerializeField] private InventoryReference inventory;
     [SerializeField] private DJTableReference djReference;
@@ -9,15 +9,14 @@ public class DJTableController : InteractableController
 
     private AudioSource audioSource;
 
-    protected override UIReference Reference => djReference;
+    Transform IInteractable.Transform => transform;
 
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
         audioSource = GetComponent<AudioSource>();
 
         var buildController = GetComponent<BuildController>();
-        buildController.OnBuildComplete += BuildController_OnBuildComplete;
+        buildController.OnPlaced += BuildController_OnBuildComplete;
     }
 
     private void BuildController_OnBuildComplete()
@@ -25,6 +24,10 @@ public class DJTableController : InteractableController
         StartCoroutine(PlayAndFadeIn(5f)); // 0.5 seconds fade
     }
 
+    void IInteractable.OnSelect()
+    {
+        djReference.Show();
+    }
 
     private IEnumerator PlayAndFadeIn(float duration)
     {

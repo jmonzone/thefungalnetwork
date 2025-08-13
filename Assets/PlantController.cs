@@ -10,7 +10,7 @@ public class PlantController : MonoBehaviour
     private void Awake()
     {
         var buildController = GetComponent<BuildController>();
-        buildController.OnBuildComplete += BuildController_OnBuildComplete;
+        buildController.OnPlaced += BuildController_OnBuildComplete;
     }
 
     private void BuildController_OnBuildComplete()

@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private FadeCanvasGroup screenFade;
 
     [SerializeField] private DisplayName displayName;
+    [SerializeField] private BuildSystem build;
     [SerializeField] private InventoryReference inventory;
     [SerializeField] private UnitListReference unitList;
     [SerializeField] private Volume volume;
@@ -31,13 +32,16 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
 
-            inventory.Initialize();
-            unitList.Initialize();
 
             // order of initialization matters here, ability cast as of now
             // needs to be initialized before localdata.inventory does
             // or else there is unexpeted behaviour
             localData.Initialize();
+
+            inventory.Initialize();
+            build.Initialize();
+            unitList.Initialize();
+
             
             uiNavigation.Initialize();
 
