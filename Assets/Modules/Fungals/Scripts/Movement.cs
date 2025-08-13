@@ -142,8 +142,15 @@ public class Movement : MonoBehaviour
         Vector3 rotatedOffset = target.rotation * followOffset;
 
         // Update direction and position
-        UpdateLookDirection(target.position + rotatedOffset - transform.position);
-        transform.position = Vector3.MoveTowards(transform.position, target.position + rotatedOffset, SpeedDelta);
+
+        var targetPosition = target.position + rotatedOffset;
+
+        UpdateLookDirection(target.position - transform.position);
+
+        if (Vector3.Distance(transform.position, targetPosition) > stopDistance)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, targetPosition, SpeedDelta);
+        }
 
     }
 
