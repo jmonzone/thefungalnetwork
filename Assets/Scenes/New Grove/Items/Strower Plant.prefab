@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8567669853570305828}
   - component: {fileID: 5853478713845748009}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Strower Plant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9544f48b9197e405194701f2fe786399, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  item: {fileID: 0}
   overlapHalfExtents: {x: 0.5, y: 0.5, z: 0.5}
 --- !u!1001 &1952768849056043314
 PrefabInstance:
@@ -178,6 +179,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Strower_A_01
       objectReference: {fileID: 0}
+    - target: {fileID: 1793355349, guid: 8a60e4a55143da54bb7c25936dedde1e, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 1793355350, guid: 8a60e4a55143da54bb7c25936dedde1e, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -249,6 +254,10 @@ PrefabInstance:
     - target: {fileID: 1793355351, guid: 8a60e4a55143da54bb7c25936dedde1e, type: 3}
       propertyPath: m_ConstrainProportionsScale
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1856237044, guid: 8a60e4a55143da54bb7c25936dedde1e, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1856237047, guid: 8a60e4a55143da54bb7c25936dedde1e, type: 3}
       propertyPath: m_LocalScale.x

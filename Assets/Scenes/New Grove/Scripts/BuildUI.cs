@@ -52,8 +52,19 @@ public class BuildUI : MonoBehaviour
         {
             if (buildController)
             {
-                build.SaveBuild(buildController.Item, buildController.transform.position);
+                build.AddBuild(buildController.Item, buildController.transform.position);
                 buildController.CompleteBuild();
+                buildController = null;
+                navigation.GoBack();
+            }
+        });
+
+        removeButton.onClick.AddListener(() =>
+        {
+            if (buildController)
+            {
+                build.RemoveBuild(buildController.Item);
+                Destroy(buildController.gameObject);
                 buildController = null;
                 navigation.GoBack();
             }
@@ -65,7 +76,6 @@ public class BuildUI : MonoBehaviour
             {
                 Destroy(buildController.gameObject);
                 buildController = null;
-                navigation.GoBack();
             }
         });
     }
@@ -121,7 +131,7 @@ public class BuildUI : MonoBehaviour
             if (Physics.Raycast(ray, out hit, 1000f, interactableMask))
             {
 
-                var buildController = hit.transform.GetComponentInParent<BuildController>();
+                buildController = hit.transform.GetComponentInParent<BuildController>();
                 if (buildController)
                 {
                     cameraPanController.CenterTargetInView(buildController.transform.position);

@@ -94,13 +94,20 @@ public class BuildSystem : ScriptableObject
         localData.SaveData(BUILD_KEY, buildJson);
     }
 
-    public void SaveBuild(Item item, Vector3 position)
+    public void AddBuild(Item item, Vector3 position)
     {
-        // Add a new item if it doesn't exist
-        //Debug.Log($"adding new item {item.name}");
         var buildData = CreateInstance<BuildData>();
         buildData.Initialize(item, position);
         builds.Add(buildData);
+        SaveData();
+
+        OnBuildUpdated?.Invoke();
+    }
+
+    public void RemoveBuild(Item item)
+    {
+        var build = builds.Find(build => build.Item == item);
+        builds.Remove(build);
         SaveData();
 
         OnBuildUpdated?.Invoke();
