@@ -18,7 +18,7 @@ public class PartyLightController : MonoBehaviour
 
     public bool Enabled => lr.enabled;
 
-    void Start()
+    private void Awake()
     {
         lr = GetComponentInChildren<LineRenderer>();
         lr.enabled = false;
