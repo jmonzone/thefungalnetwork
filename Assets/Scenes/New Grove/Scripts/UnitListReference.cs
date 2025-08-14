@@ -32,7 +32,6 @@ public class UnitListReference : UIReference
                     var matchingUnit = unitCollection.Find(item => item.Name == unitJson["name"].ToString());
                     if (matchingUnit)
                     {
-                        Debug.Log("found");
                         units.Add(matchingUnit);
                     }
                     else

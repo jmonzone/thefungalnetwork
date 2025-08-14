@@ -29,14 +29,11 @@ public class BuildSystem : ScriptableObject
             {
                 foreach (var build in localData.JsonFile[BUILD_KEY] as JArray)
                 {
-                    Debug.Log(build);
-
                     if (build is JObject buildJson)
                     {
                         var itemData = inventory.Items.Find(item => item.Name == buildJson["name"].ToString());
                         if (itemData)
                         {
-                            Debug.Log("found");
                             var buildData = CreateInstance<BuildData>();
                             var positionJson = buildJson["position"];
                             var x = (float)positionJson["x"];
