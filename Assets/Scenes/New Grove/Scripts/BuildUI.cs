@@ -38,7 +38,7 @@ public class BuildUI : MonoBehaviour
         {
             if (buildController)
             {
-                build.AddBuild(buildController.Item, buildController.transform.position);
+                build.SaveBuild(buildController.Item, buildController.transform.position);
                 buildController.CompleteBuild();
                 buildController = null;
                 navigation.GoBack();

@@ -97,7 +97,7 @@ public class BuildSystem : ScriptableObject
         localData.SaveData(BUILD_KEY, buildJson);
     }
 
-    public void AddBuild(Item item, Vector3 position)
+    public void SaveBuild(Item item, Vector3 position)
     {
         // Add a new item if it doesn't exist
         //Debug.Log($"adding new item {item.name}");
