@@ -11,6 +11,7 @@ public interface ICollectable
 
 public class InventoryController : MonoBehaviour
 {
+    [SerializeField] private UnitManager unitManager;
     [SerializeField] private InventoryReference inventory;
     [SerializeField] private Slider insightSlider;
     [SerializeField] private Image[] rainbowImages; // Assign the 2 images in inspector
@@ -33,15 +34,8 @@ public class InventoryController : MonoBehaviour
 
     private void Awake()
     {
-        var foragers = FindObjectsOfType<UnitForage>(true);
-        foreach(var forage in foragers)
-        {
-            forage.OnUnitHasForaged += forageable =>
-            {
-                inventory.IncreaseSporeCount(forageable.SporeCount);
-                OnCollect?.Invoke(forageable);
-            };
-        }
+        unitManager.OnUnitSummoned += RegisterUnit;
+
 
         insightSlider.minValue = 0;
         insightSlider.maxValue = 5;
@@ -52,6 +46,27 @@ public class InventoryController : MonoBehaviour
         {
             rainbowImagesOriginalColors[i] = rainbowImages[i].color;
         }
+    }
+
+    private void Start()
+    {
+        foreach (var unit in unitManager.UnitControllers)
+        {
+            RegisterUnit(unit);
+        }
+    }
+
+    private void RegisterUnit(UnitController unit)
+    {
+        var forage = unit.GetComponent<UnitForage>();
+        if (forage)
+        {
+            forage.OnUnitHasForaged += forageable =>
+            {
+                inventory.IncreaseSporeCount(forageable.SporeCount);
+                OnCollect?.Invoke(forageable);
+            };
+        }        
     }
 
     private void OnEnable()

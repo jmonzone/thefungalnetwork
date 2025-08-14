@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class UnitManager : MonoBehaviour
 {
@@ -12,6 +13,9 @@ public class UnitManager : MonoBehaviour
 
     [SerializeField] private Transform unitSpawnAnchor;
     [SerializeField] private CameraPanController cameraPanController;
+
+    public List<UnitController> UnitControllers => unitControllers;
+    public event UnityAction<UnitController> OnUnitSummoned;
 
     private void Awake()
     {
@@ -35,6 +39,7 @@ public class UnitManager : MonoBehaviour
         unitControllers.Add(unitController);
 
         cameraPanController.CenterTargetInView(unitController.transform.position);
+        OnUnitSummoned?.Invoke(unitController);
 
     }
 }
