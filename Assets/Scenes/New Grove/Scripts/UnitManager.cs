@@ -22,19 +22,32 @@ public class UnitManager : MonoBehaviour
         unitControllers = new List<UnitController> { initialUnit };
     }
 
+    private void Start()
+    {
+        foreach(var unit in unitList.Units)
+        {
+            SummonUnit(unit);
+        }   
+    }
+
     private void OnEnable()
     {
-        unitList.OnUnitSummoned += UnitList_OnUnitSummoned;
+        unitList.OnUnitSummoned += SummonUnit;
     }
 
     private void OnDisable()
     {
-        unitList.OnUnitSummoned -= UnitList_OnUnitSummoned;
+        unitList.OnUnitSummoned -= SummonUnit;
     }
 
-    private void UnitList_OnUnitSummoned(Unit unit)
+    private void SummonUnit(Unit unit)
     {
-        var unitController = Instantiate(unitPrefab, unitSpawnAnchor.transform.position, unitSpawnAnchor.transform.rotation);
+        var spawnPosition = unitSpawnAnchor.transform.position;
+        var randomDirection = Random.insideUnitSphere;
+        randomDirection.y = 0;
+        spawnPosition += randomDirection * 2f;
+
+        var unitController = Instantiate(unitPrefab, spawnPosition, unitSpawnAnchor.transform.rotation);
         unitController.Initialize(unit);
         unitControllers.Add(unitController);
 

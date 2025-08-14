@@ -10,7 +10,7 @@ public class UnitListReference : UIReference
     [SerializeField] private InventoryReference inventory;
     [SerializeField] private List<Unit> units;
 
-    [SerializeField] private Unit initialUnit;
+    [SerializeField] private List<Unit> unitCollection;
     [SerializeField] private Unit summonedUnit;
 
     public List<Unit> Units => units;
@@ -21,7 +21,27 @@ public class UnitListReference : UIReference
 
     public void Initialize()
     {
-        units = new List<Unit> { initialUnit };
+        units = new List<Unit>();
+
+        if (localData.JsonFile.ContainsKey(UNIT_KEY))
+        {
+            foreach (var unit in localData.JsonFile[UNIT_KEY] as JArray)
+            {
+                if (unit is JObject unitJson)
+                {
+                    var matchingUnit = unitCollection.Find(item => item.Name == unitJson["name"].ToString());
+                    if (matchingUnit)
+                    {
+                        Debug.Log("found");
+                        units.Add(matchingUnit);
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"Item {unitJson} not found in game data");
+                    }
+                };
+            }
+        }
     }
 
     public void Summon()
