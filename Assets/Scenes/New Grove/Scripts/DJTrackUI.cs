@@ -7,6 +7,7 @@ public class DJTrackUI : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI trackNameText;
     [SerializeField] private TextMeshProUGUI trackTypeText;
+    [SerializeField] private Image trackImage;
     [SerializeField] private Button button;
     [SerializeField] private DJTrack track;
 
@@ -26,5 +27,6 @@ public class DJTrackUI : MonoBehaviour
         this.track = track;
         trackNameText.text = track.TrackName;
         trackTypeText.text = track.TrackType;
+        trackImage.sprite = track.Sprite;
     }
 }

@@ -28,33 +28,40 @@ public class DJTableController : MonoBehaviour, IInteractable
         djReference.Show();
     }
 
-    private float targetVolume1 = 1f; // default full
-    private float targetVolume2 = 1f; // default full
-
     private Coroutine leftCoroutine;
     private Coroutine rightCoroutine;
 
-    public void PlayLeftTrack(AudioClip audioClip, float targetVol = 1f)
+    public void PlayLeftTrack(AudioClip audioClip)
     {
-        targetVolume1 = targetVol;
         audioSource1.clip = audioClip;
         if (leftCoroutine != null) StopCoroutine(leftCoroutine);
-        leftCoroutine = StartCoroutine(PlayAndFadeIn(audioSource1, targetVol, 5f));
+        leftCoroutine = StartCoroutine(PlayAndFadeIn(audioSource1, 1, 5f));
     }
 
-    public void PlayRightTrack(AudioClip audioClip, float targetVol = 1f)
+    public void PlayRightTrack(AudioClip audioClip)
     {
-        targetVolume2 = targetVol;
         audioSource2.clip = audioClip;
         if (rightCoroutine != null) StopCoroutine(rightCoroutine);
-        rightCoroutine = StartCoroutine(PlayAndFadeIn(audioSource2, targetVol, 5f));
+        rightCoroutine = StartCoroutine(PlayAndFadeIn(audioSource2, 0, 5f));
     }
 
     public void SetSlider(float value)
     {
         // value between 0 and 1
-        audioSource1.volume = (1f - value) * targetVolume1;
-        audioSource2.volume = value * targetVolume2;
+        audioSource1.volume = (1f - value);
+        audioSource2.volume = value;
+    }
+
+    public void SetLeftPitch(float value)
+    {
+        // value between 0 and 1
+        audioSource1.pitch = value;
+    }
+
+    public void SetRightPitch(float value)
+    {
+        // value between 0 and 1
+        audioSource2.pitch = value;
     }
 
     private IEnumerator PlayAndFadeIn(AudioSource source, float targetVolume, float duration)

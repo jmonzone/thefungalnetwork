@@ -15,6 +15,7 @@ public class DJTableUI : MonoBehaviour
     [SerializeField] private DJTrack track1;
     [SerializeField] private DJTrack track2;
     [SerializeField] private Slider trackSlider;
+    [SerializeField] private Slider bpmSlider;
 
     [SerializeField] private DJTrackUI leftTrack;
     [SerializeField] private DJTrackUI rightTrack;
@@ -22,6 +23,7 @@ public class DJTableUI : MonoBehaviour
     private Coroutine partyCoroutine;
 
     public float staggerTime = 0.25f; // delay between groups in alternating
+    private float bpm = 135f;
 
     private void Awake()
     {
@@ -46,12 +48,18 @@ public class DJTableUI : MonoBehaviour
 
             if (value > 0.5)
             {
-                currentTrack = rightTrack.Track;
+                StartPartyLights(rightTrack.Track);
             }
             else
             {
-                currentTrack = leftTrack.Track;
+                StartPartyLights(leftTrack.Track);
             }
+        });
+
+        bpmSlider.onValueChanged.AddListener(value =>
+        {
+            bpm = value;
+            UpdateTrackPitch();
         });
     }
 
@@ -72,15 +80,24 @@ public class DJTableUI : MonoBehaviour
         build.OnBuildUpdated -= Build_OnBuildLoaded;
     }
 
+    private void UpdateTrackPitch()
+    {
+        float pitch1 = bpm / leftTrack.Track.Bpm;
+        dJTableController.SetLeftPitch(pitch1);
+        float pitch2 = bpm / rightTrack.Track.Bpm;
+        dJTableController.SetRightPitch(pitch2);
+    }
+
     private void Build_OnBuildLoaded()
     {
         partyLights = FindObjectsOfType<PartyLightController>().ToList();
-        dJTableController = FindObjectOfType<DJTableController>();
 
-        if (dJTableController)
+        if (!dJTableController)
         {
+            dJTableController = FindObjectOfType<DJTableController>();
             dJTableController.PlayLeftTrack(leftTrack.Track.AudioClip);
             dJTableController.PlayRightTrack(rightTrack.Track.AudioClip);
+            UpdateTrackPitch();
             StartPartyLights(leftTrack.Track);
         }
 
@@ -109,13 +126,11 @@ public class DJTableUI : MonoBehaviour
     }
 
     private DJTrack currentTrack;
+
+    private float BeatDuration => 60f / bpm; // seconds per beat
+
     private IEnumerator PartyLightsRoutine()
     {
-
-        float beatDuration = 60f / currentTrack.Bpm; // seconds per beat
-
-        //dJTableController.PlayMusic(track.AudioClip);
-
         while (true)
         {
             switch (currentTrack.PartyMode)
@@ -124,12 +139,12 @@ public class DJTableUI : MonoBehaviour
                     foreach (var light in partyLights)
                         light.SetEnabled(true);
 
-                    yield return new WaitForSeconds(beatDuration);
+                    yield return new WaitForSeconds(BeatDuration);
 
                     foreach (var light in partyLights)
                         light.SetEnabled(false);
 
-                    yield return new WaitForSeconds(beatDuration);
+                    yield return new WaitForSeconds(BeatDuration);
                     break;
 
                 case PartyMode.Alternating:
@@ -142,7 +157,7 @@ public class DJTableUI : MonoBehaviour
                                 partyLights[i].SetEnabled(true);
                         }
 
-                        yield return new WaitForSeconds(beatDuration / 2);
+                        yield return new WaitForSeconds(BeatDuration / 2);
 
                         for (int i = 0; i < partyLights.Count; i++)
                         {
@@ -150,15 +165,24 @@ public class DJTableUI : MonoBehaviour
                                 partyLights[i].SetEnabled(false);
                         }
 
-                        yield return new WaitForSeconds(beatDuration / 2);
+                        yield return new WaitForSeconds(BeatDuration / 2);
                     }
                     break;
 
                 case PartyMode.Strobe:
                     foreach (var light in partyLights)
-                        light.SetEnabled(!light.Enabled);
+                    {
+                        light.SetEnabled(true);
+                    }
 
-                    yield return new WaitForSeconds(beatDuration / 4f); // 4 strobes per beat
+                    yield return new WaitForSeconds(BeatDuration / 4f); // 4 strobes per beat
+
+                    foreach (var light in partyLights)
+                    {
+                        light.SetEnabled(false);
+                    }
+
+                    yield return new WaitForSeconds(BeatDuration / 4f); // 4 strobes per beat
                     break;
             }
         }
