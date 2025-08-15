@@ -80,6 +80,11 @@ public class BuildUI : MonoBehaviour
         });
     }
 
+    private void Start()
+    {
+        build.LoadExistingBuild();
+    }
+
     private void ItemView_OnClick(Item item)
     {
         buildController = Instantiate(item.ItemPrefab).GetComponent<BuildController>();

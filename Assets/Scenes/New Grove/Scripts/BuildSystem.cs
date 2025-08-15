@@ -50,7 +50,7 @@ public class BuildSystem : ScriptableObject
                     };
                 }
 
-                LoadExistingBuild();
+                //LoadExistingBuild();
             }
         }
         catch (Exception e)
@@ -59,7 +59,7 @@ public class BuildSystem : ScriptableObject
         }
     }
 
-    private void LoadExistingBuild()
+    public void LoadExistingBuild()
     {
         foreach (var build in builds)
         {

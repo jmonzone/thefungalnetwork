@@ -95,10 +95,14 @@ public class DJTableUI : MonoBehaviour
         if (!dJTableController)
         {
             dJTableController = FindObjectOfType<DJTableController>();
-            dJTableController.PlayLeftTrack(leftTrack.Track.AudioClip);
-            dJTableController.PlayRightTrack(rightTrack.Track.AudioClip);
-            UpdateTrackPitch();
-            StartPartyLights(leftTrack.Track);
+
+            if (dJTableController)
+            {
+                dJTableController.PlayLeftTrack(leftTrack.Track.AudioClip);
+                dJTableController.PlayRightTrack(rightTrack.Track.AudioClip);
+                UpdateTrackPitch();
+                StartPartyLights(leftTrack.Track);
+            }
         }
 
         for (int i = 0; i < partyLights.Count; i++)

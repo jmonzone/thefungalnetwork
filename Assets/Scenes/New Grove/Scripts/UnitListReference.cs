@@ -7,11 +7,9 @@ using UnityEngine.Events;
 public class UnitListReference : UIReference
 {
     [SerializeField] private LocalData localData;
-    [SerializeField] private InventoryReference inventory;
     [SerializeField] private List<Unit> units;
 
     [SerializeField] private List<Unit> unitCollection;
-    [SerializeField] private Unit summonedUnit;
 
     public List<Unit> Units => units;
 
@@ -41,19 +39,18 @@ public class UnitListReference : UIReference
                 };
             }
         }
+
+        if (units.Count == 0)
+        {
+            AddUnit(unitCollection[0]);
+        }
     }
 
-    public void Summon()
+    public void AddUnit(Unit unit)
     {
-        if (inventory.SporeCount >= 125)
-        {
-            inventory.DecreaseSporeCount(125);
-            units.Add(summonedUnit);
-            OnUnitSummoned?.Invoke(summonedUnit);
-            Close();
-
-            SaveData();
-        }
+        units.Add(unit);
+        OnUnitSummoned?.Invoke(unit);
+        SaveData();
     }
 
     private void SaveData()
