@@ -36,6 +36,8 @@ public class DJTableController : MonoBehaviour, IInteractable
         audioSource1.clip = audioClip;
         if (leftCoroutine != null) StopCoroutine(leftCoroutine);
         leftCoroutine = StartCoroutine(PlayAndFadeIn(audioSource1, 1, 5f));
+
+        backgroundMusic.HideMusic();
     }
 
     public void PlayRightTrack(AudioClip audioClip)
@@ -43,6 +45,8 @@ public class DJTableController : MonoBehaviour, IInteractable
         audioSource2.clip = audioClip;
         if (rightCoroutine != null) StopCoroutine(rightCoroutine);
         rightCoroutine = StartCoroutine(PlayAndFadeIn(audioSource2, 0, 5f));
+
+        backgroundMusic.HideMusic();
     }
 
     public void SetSlider(float value)

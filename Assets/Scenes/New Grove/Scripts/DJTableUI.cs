@@ -100,6 +100,7 @@ public class DJTableUI : MonoBehaviour
             {
                 dJTableController.PlayLeftTrack(leftTrack.Track.AudioClip);
                 dJTableController.PlayRightTrack(rightTrack.Track.AudioClip);
+                dJTableController.SetSlider(0);
                 UpdateTrackPitch();
                 StartPartyLights(leftTrack.Track);
             }
