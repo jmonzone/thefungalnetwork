@@ -13,8 +13,11 @@ public class UnitAnimation : MonoBehaviour
         var unit = GetComponent<UnitController>();
         unit.OnSelected += Unit_OnSelected;
 
-        var movement = GetComponent<UnitMovement>();
-        movement.OnIsMovingHasChanged += Movement_OnIsMovingHasChanged;
+        //var movement = GetComponent<UnitMovement>();
+        //movement.OnIsMovingHasChanged += Movement_OnIsMovingHasChanged;
+
+        var unitAI = GetComponent<UnitAI>();
+        unitAI.OnIsMovingHasChanged += Movement_OnIsMovingHasChanged;
     }
 
     private void Unit_OnSelected()

@@ -165,6 +165,7 @@ GameObject:
   - component: {fileID: 2484340925440686277}
   - component: {fileID: 5859969479758844194}
   - component: {fileID: 4894339631017115430}
+  - component: {fileID: 4259114010329769396}
   m_Layer: 8
   m_Name: Party Lights
   m_TagString: Untagged
@@ -249,6 +250,22 @@ MonoBehaviour:
     m_NumColorKeys: 4
     m_NumAlphaKeys: 2
   colorChangeSpeed: 2
+--- !u!208 &4259114010329769396
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2650813730025943169}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.25, y: 1, z: 0.25}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0.5, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &6100597573814502243
 GameObject:
   m_ObjectHideFlags: 0

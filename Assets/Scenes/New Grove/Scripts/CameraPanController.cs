@@ -1,40 +1,77 @@
+using Cinemachine;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class CameraPanController : MonoBehaviour
 {
-    public float panSpeed = 0.1f;
-    public float smoothTime = 0.2f;
+    private CinemachineVirtualCamera virtualCamera;
 
+    [Header("Pan Settings")]
+    [SerializeField] private float panSpeed = 0.1f;
+    [SerializeField] private float panSmoothTime = 0.2f;
+    [SerializeField] private Vector2 panLimitX = new Vector2(-5f, 5f);  // left/right bounds
+    [SerializeField] private Vector2 panLimitY = new Vector2(-5f, 5f);  // forward/back bounds
     [SerializeField] private float centeringSmoothTime = 0.1f;
-    [SerializeField] private float panningSmoothTime = 0.2f;
 
-    public bool invertX = false;
-    public bool invertY = false;
 
-    public Vector2 panLimitX = new Vector2(-5f, 5f);  // left/right bounds
-    public Vector2 panLimitY = new Vector2(-5f, 5f);  // forward/back bounds
+    [Header("Zoom Settings")]
+    [SerializeField] private float zoomSpeed = 5f;
+    [SerializeField] private float zoomMin = 2f;
+    [SerializeField] private float zoomMax = 15f;
 
+    private bool isPanning;
     private Vector3 lastPanPosition;
     private Vector3 targetPosition;
     private Vector3 velocity = Vector3.zero;
-    private bool isPanning;
 
-    public Vector2 inputDelta; 
+    public Vector2 inputDelta;
 
-    void Start()
+    private void Awake()
     {
         targetPosition = transform.position;
+        virtualCamera = GetComponent<CinemachineVirtualCamera>();
     }
 
-    void Update()
+    private void Update()
     {
         if (EventSystem.current.IsPointerOverGameObject()) return;
         if (Input.touchCount > 0 && EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId)) return;
 
         inputDelta = Vector2.zero;
 
-        // Touch Input
+        // Single touch / mouse panning
+        HandlePanning();
+
+        // Two-finger pinch zoom
+        if (Input.touchCount == 2)
+        {
+            Touch t0 = Input.GetTouch(0);
+            Touch t1 = Input.GetTouch(1);
+
+            Vector2 prevT0 = t0.position - t0.deltaPosition;
+            Vector2 prevT1 = t1.position - t1.deltaPosition;
+
+            float prevDist = (prevT0 - prevT1).magnitude;
+            float currDist = (t0.position - t1.position).magnitude;
+
+            float delta = currDist - prevDist;
+            ZoomCamera(delta * zoomSpeed * Time.deltaTime);
+        }
+
+        // Mouse scroll / trackpad pinch
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
+        if (Mathf.Abs(scroll) > 0.001f)
+        {
+            ZoomCamera(scroll * zoomSpeed);
+        }
+
+        // Smooth panning
+        virtualCamera.transform.position = Vector3.SmoothDamp(virtualCamera.transform.position, targetPosition, ref velocity, panSmoothTime);
+    }
+
+    private void HandlePanning()
+    {
+        // Single touch
         if (Input.touchCount == 1)
         {
             Touch touch = Input.GetTouch(0);
@@ -43,7 +80,6 @@ public class CameraPanController : MonoBehaviour
             {
                 lastPanPosition = touch.position;
                 isPanning = true;
-                smoothTime = panningSmoothTime;
             }
             else if (touch.phase == TouchPhase.Moved && isPanning)
             {
@@ -55,12 +91,11 @@ public class CameraPanController : MonoBehaviour
                 isPanning = false;
             }
         }
-        // Mouse Input
+        // Mouse
         else if (Input.GetMouseButtonDown(0))
         {
             lastPanPosition = Input.mousePosition;
             isPanning = true;
-            smoothTime = panningSmoothTime;
         }
         else if (Input.GetMouseButton(0) && isPanning)
         {
@@ -72,27 +107,24 @@ public class CameraPanController : MonoBehaviour
             isPanning = false;
         }
 
-        // Apply panning logic
+        // Apply panning
         if (inputDelta != Vector2.zero)
         {
-            float moveX = inputDelta.x * panSpeed * (invertX ? 1 : -1);
-            float moveZ = inputDelta.y * panSpeed * (invertY ? 1 : -1);
-
-            Vector3 panDelta = new Vector3(moveX, 0, moveZ);
-            targetPosition += panDelta;
-
-            // Clamp target position to bounds
-            targetPosition.x = Mathf.Clamp(targetPosition.x, panLimitX.x, panLimitX.y);
-            targetPosition.z = Mathf.Clamp(targetPosition.z, panLimitY.x, panLimitY.y);
+            float moveX = inputDelta.x * -panSpeed; // adjust pan sensitivity
+            float moveZ = inputDelta.y * -panSpeed;
+            targetPosition += new Vector3(moveX, 0, moveZ);
         }
+    }
 
-        // Smoothly move the camera
-        transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothTime);
+    private void ZoomCamera(float increment)
+    {
+        float orthoSize = virtualCamera.m_Lens.OrthographicSize - increment;
+        virtualCamera.m_Lens.OrthographicSize = Mathf.Clamp(orthoSize, zoomMin, zoomMax);
     }
 
     public void CenterTargetInView(Vector3 position)
     {
-        smoothTime = centeringSmoothTime;
+        panSmoothTime = centeringSmoothTime;
 
         Camera cam = Camera.main;
         if (cam == null)

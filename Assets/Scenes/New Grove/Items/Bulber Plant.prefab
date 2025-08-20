@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5853478713845748009}
   - component: {fileID: 3793319302200509262}
   - component: {fileID: 2158877144412417340}
+  - component: {fileID: 740659584951333595}
   m_Layer: 8
   m_Name: Bulber Plant
   m_TagString: Untagged
@@ -48,6 +49,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9544f48b9197e405194701f2fe786399, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  item: {fileID: 0}
   overlapHalfExtents: {x: 0.5, y: 0.5, z: 0.5}
 --- !u!114 &3793319302200509262
 MonoBehaviour:
@@ -76,6 +78,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sporeCount: 5
+--- !u!208 &740659584951333595
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7274716744431830007}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.3, y: 0.5, z: 0.3}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0.5, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1001 &3007220894056500488
 PrefabInstance:
   m_ObjectHideFlags: 0
