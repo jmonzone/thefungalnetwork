@@ -53,6 +53,7 @@ public class GameManager : MonoBehaviour
             localData.OnReset += () =>
             {
                 inventory.Initialize();
+                build.Initialize();
                 unitList.Initialize();
             };
 
