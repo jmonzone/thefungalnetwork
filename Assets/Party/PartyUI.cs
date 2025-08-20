@@ -21,9 +21,24 @@ public class PartyUI : MonoBehaviour
         viewController.OnFadeInStart += ViewController_OnFadeInStart;
     }
 
+    private void OnEnable()
+    {
+        partyReference.OnPartyPhaseChanged += PartyReference_OnPartyPhaseChanged;
+    }
+
+    private void OnDisable()
+    {
+        partyReference.OnPartyPhaseChanged -= PartyReference_OnPartyPhaseChanged;
+    }
+
     private void Page_OnPartyReady(PartyData party)
     {
         StartCoroutine(partyReference.StartParty(party));
+    }
+
+    private void PartyReference_OnPartyPhaseChanged(PartyPhase phase)
+    {
+        if (phase == PartyPhase.DOORS_OPEN) StartCoroutine(partyReference.DoorsOpenRoutine());
     }
 
     private void ViewController_OnFadeInStart()
