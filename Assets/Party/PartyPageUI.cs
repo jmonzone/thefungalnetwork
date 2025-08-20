@@ -1,23 +1,30 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class PartyPageUI : MonoBehaviour
 {
     [SerializeField] private BuildSystem build;
-    [SerializeField] private Item djTable;
-    [SerializeField] private Item partyLights;
 
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI levelText;
     [SerializeField] private Image partyImage;
     [SerializeField] private TextMeshProUGUI descriptionText;
     [SerializeField] private Button readyButton;
+    [SerializeField] private PartyData party;
 
     private List<PartyRequirementUI> partyRequirements;
 
+    public event UnityAction<PartyData> OnPartyReady;
+
     private void Awake()
+    {
+        readyButton.onClick.AddListener(() => OnPartyReady?.Invoke(party));
+    }
+
+    public void Initialize()
     {
         partyRequirements = new List<PartyRequirementUI>();
         GetComponentsInChildren(true, partyRequirements);
@@ -25,6 +32,8 @@ public class PartyPageUI : MonoBehaviour
 
     public void SetParty(PartyData party)
     {
+        this.party = party;
+
         nameText.text = party.Name;
         levelText.text = $"Party Level {party.Level}";
         partyImage.sprite = party.Sprite;
@@ -37,9 +46,9 @@ public class PartyPageUI : MonoBehaviour
         {
             var requirementMet = requirement.Type switch
             {
-                PartyRequirementType.MUSIC => build.Contains(djTable),
-                PartyRequirementType.LIGHTS => build.Contains(partyLights),
-                PartyRequirementType.CULTURE => build.CulturePoints >= requirement.CulturePoints,
+                PartyRequirementType.MUSIC => build.Contains(requirement.Item),
+                PartyRequirementType.LIGHTS => build.Contains(requirement.Item),
+                PartyRequirementType.CULTURE => build.CulturePoints >= party.CulturePoints,
                 _ => false,
             };
 
