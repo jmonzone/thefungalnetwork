@@ -6,6 +6,9 @@ using UnityEngine.UI;
 public class PartyPageUI : MonoBehaviour
 {
     [SerializeField] private BuildSystem build;
+    [SerializeField] private Item djTable;
+    [SerializeField] private Item partyLights;
+
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI levelText;
     [SerializeField] private Image partyImage;
@@ -34,9 +37,9 @@ public class PartyPageUI : MonoBehaviour
         {
             var requirementMet = requirement.Type switch
             {
-                PartyRequirementType.MUSIC => true,
-                PartyRequirementType.LIGHTS => true,
-                PartyRequirementType.CULTURE => false,
+                PartyRequirementType.MUSIC => build.Contains(djTable),
+                PartyRequirementType.LIGHTS => build.Contains(partyLights),
+                PartyRequirementType.CULTURE => build.CulturePoints >= requirement.CulturePoints,
                 _ => false,
             };
 

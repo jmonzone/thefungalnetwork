@@ -13,18 +13,19 @@ public enum ItemTags
 public class Item : ScriptableObject
 {
     [SerializeField] private new string name;
-    [SerializeField] [TextArea] private string description;
     [SerializeField] private Sprite sprite;
-    [SerializeField] private ItemTags itemTags;
-    [SerializeField] private int price;
+    [SerializeField] [TextArea] private string description;
     [SerializeField] private GameObject itemPrefab;
+    [SerializeField] private int culturePoints;
+    [SerializeField] private int price;
+    [SerializeField] private ItemTags itemTags;
 
     public string Name => name;
-    public string Description => description;
-    public int Price => price;
-
     public Sprite Sprite => sprite;
+    public string Description => description;
     public GameObject ItemPrefab => itemPrefab;
+    public int CulturePoints => culturePoints;
+    public int Price => price;
 
     public bool HasAllTags(ItemTags requiredTags)
     {

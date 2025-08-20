@@ -12,7 +12,13 @@ public class PartyUI : MonoBehaviour
     {
         GetComponentsInChildren(true, partyPages);
 
-        foreach(var page in partyPages)
+        var viewController = GetComponent<ViewController>();
+        viewController.OnFadeInStart += ViewController_OnFadeInStart;
+    }
+
+    private void ViewController_OnFadeInStart()
+    {
+        foreach (var page in partyPages)
         {
             page.SetParty(initialParty);
         }

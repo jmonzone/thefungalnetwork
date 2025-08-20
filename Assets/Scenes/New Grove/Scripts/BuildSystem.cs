@@ -9,8 +9,10 @@ public class BuildSystem : ScriptableObject
 {
     [SerializeField] private LocalData localData;
     [SerializeField] private InventoryReference inventory;
+    [SerializeField] private int culturePoints;
     [SerializeField] private List<BuildData> builds;
 
+    public int CulturePoints => culturePoints;
     public List<BuildData> Builds => builds;
 
     private const string BUILD_KEY = "build";
@@ -24,6 +26,7 @@ public class BuildSystem : ScriptableObject
         {
 
             builds = new List<BuildData>();
+            culturePoints = 0;
 
             if (localData.JsonFile.ContainsKey(BUILD_KEY))
             {
@@ -42,6 +45,7 @@ public class BuildSystem : ScriptableObject
                             var position = new Vector3(x, y, z);
                             buildData.Initialize(itemData, position);
                             builds.Add(buildData);
+                            culturePoints += buildData.Item.CulturePoints;
                         }
                         else
                         {
@@ -99,6 +103,7 @@ public class BuildSystem : ScriptableObject
         var buildData = CreateInstance<BuildData>();
         buildData.Initialize(item, position);
         builds.Add(buildData);
+        culturePoints += item.CulturePoints;
         SaveData();
 
         OnBuildUpdated?.Invoke();
@@ -108,8 +113,14 @@ public class BuildSystem : ScriptableObject
     {
         var build = builds.Find(build => build.Item == item);
         builds.Remove(build);
+        culturePoints -= item.CulturePoints;
         SaveData();
 
         OnBuildUpdated?.Invoke();
+    }
+
+    public bool Contains(Item item)
+    {
+        return builds.Find(build => build.Item == item);
     }
 }
