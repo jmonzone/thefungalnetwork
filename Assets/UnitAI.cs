@@ -76,33 +76,34 @@ public class UnitAI : MonoBehaviour
         }
     }
 
+    [SerializeField] private float gravitateStrength = 0.5f; // 0 = no gravitation, 1 = full pull to center
+
     private Vector3 GetReachableRandomDestination(Vector3 origin, float radius, int layermask, int maxAttempts = 10)
     {
         for (int i = 0; i < maxAttempts; i++)
         {
-            // Pick a random point within the radius
+            // 1. Pick a random point in a sphere around origin
             Vector3 randomPoint = origin + Random.insideUnitSphere * radius;
 
-            // Project onto NavMesh
+            // 2. Apply gravitation toward the center
+            randomPoint = Vector3.Lerp(randomPoint, Vector3.zero, gravitateStrength);
+
+            // 3. Project onto NavMesh
             if (NavMesh.SamplePosition(randomPoint, out NavMeshHit hit, radius, layermask))
             {
-                // Check if a valid path exists
+                // 4. Check if a valid path exists
                 NavMeshPath path = new NavMeshPath();
                 if (agent.CalculatePath(hit.position, path) && path.status == NavMeshPathStatus.PathComplete)
                 {
-                    Debug.Log("Reachable");
-                    return hit.position; // reachable destination found
+                    return hit.position;
                 }
-                Debug.Log("Not Reachable");
-
             }
         }
 
-        Debug.Log("Max Attempts");
-
-        // Fallback: return current position if no valid point found
+        // Fallback
         return origin;
     }
+
 
 
     // Draw gizmo for destination

@@ -63,8 +63,9 @@ public class DJTableUI : MonoBehaviour
         });
     }
 
-    private void Start()
+    private IEnumerator Start()
     {
+        yield return new WaitForFixedUpdate();
         Build_OnBuildLoaded();
     }
 

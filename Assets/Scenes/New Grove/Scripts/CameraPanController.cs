@@ -16,20 +16,26 @@ public class CameraPanController : MonoBehaviour
 
     [Header("Zoom Settings")]
     [SerializeField] private float zoomSpeed = 5f;
+    [SerializeField] private float zoomSmoothTime = 0.2f;
     [SerializeField] private float zoomMin = 2f;
     [SerializeField] private float zoomMax = 15f;
 
     private bool isPanning;
     private Vector3 lastPanPosition;
     private Vector3 targetPosition;
-    private Vector3 velocity = Vector3.zero;
+    private Vector3 panVelocity = Vector3.zero;
+
+    private float targetOrthoSize;
+    private float zoomVelocity = 0f; // store velocity for SmoothDamp
 
     public Vector2 inputDelta;
 
     private void Awake()
     {
-        targetPosition = transform.position;
         virtualCamera = GetComponent<CinemachineVirtualCamera>();
+
+        targetPosition = transform.position;
+        targetOrthoSize = virtualCamera.m_Lens.OrthographicSize;
     }
 
     private void Update()
@@ -39,8 +45,9 @@ public class CameraPanController : MonoBehaviour
 
         inputDelta = Vector2.zero;
 
-        // Single touch / mouse panning
-        HandlePanning();
+
+        // Mouse scroll / trackpad pinch
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
 
         // Two-finger pinch zoom
         if (Input.touchCount == 2)
@@ -55,18 +62,27 @@ public class CameraPanController : MonoBehaviour
             float currDist = (t0.position - t1.position).magnitude;
 
             float delta = currDist - prevDist;
-            ZoomCamera(delta * zoomSpeed * Time.deltaTime);
+            ZoomCamera(delta * zoomSpeed * 0.1f * Time.deltaTime);
         }
 
-        // Mouse scroll / trackpad pinch
-        float scroll = Input.GetAxis("Mouse ScrollWheel");
-        if (Mathf.Abs(scroll) > 0.001f)
+        else if (Mathf.Abs(scroll) > 0.001f)
         {
             ZoomCamera(scroll * zoomSpeed);
         }
 
+        // Single touch / mouse panning
+        else HandlePanning();
+
         // Smooth panning
-        virtualCamera.transform.position = Vector3.SmoothDamp(virtualCamera.transform.position, targetPosition, ref velocity, panSmoothTime);
+        virtualCamera.transform.position = Vector3.SmoothDamp(virtualCamera.transform.position, targetPosition, ref panVelocity, panSmoothTime);
+
+        // Smoothly interpolate to target size
+        virtualCamera.m_Lens.OrthographicSize = Mathf.SmoothDamp(
+            virtualCamera.m_Lens.OrthographicSize,
+            targetOrthoSize,
+            ref zoomVelocity,
+            zoomSmoothTime // smoothing time in seconds
+        );
     }
 
     private void HandlePanning()
@@ -118,8 +134,7 @@ public class CameraPanController : MonoBehaviour
 
     private void ZoomCamera(float increment)
     {
-        float orthoSize = virtualCamera.m_Lens.OrthographicSize - increment;
-        virtualCamera.m_Lens.OrthographicSize = Mathf.Clamp(orthoSize, zoomMin, zoomMax);
+        targetOrthoSize = Mathf.Clamp(targetOrthoSize - increment, zoomMin, zoomMax);
     }
 
     public void CenterTargetInView(Vector3 position)

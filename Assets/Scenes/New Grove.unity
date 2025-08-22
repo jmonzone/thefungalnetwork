@@ -24681,6 +24681,7 @@ MonoBehaviour:
   panLimitY: {x: -150, y: 50}
   centeringSmoothTime: 0.5
   zoomSpeed: 5
+  zoomSmoothTime: 0.2
   zoomMin: 5
   zoomMax: 15
   inputDelta: {x: 0, y: 0}
@@ -29002,7 +29003,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 2
+          m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -38379,6 +38380,7 @@ GameObject:
   - component: {fileID: 7114347937954583754}
   - component: {fileID: 4890771833833251982}
   - component: {fileID: 7114347937954583753}
+  - component: {fileID: 7114347937954583755}
   m_Layer: 8
   m_Name: Mushroom
   m_TagString: Untagged
@@ -38935,7 +38937,6 @@ Transform:
   - {fileID: 883227725021329582}
   - {fileID: 6747229022518403130}
   - {fileID: 5947109634559817434}
-  - {fileID: 6578898507759691130}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -45, z: 0}
 --- !u!114 &4496741214353491275
@@ -40013,13 +40014,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3689570056335633077}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.77, y: 0, z: 0.12}
+  m_LocalRotation: {x: -0, y: -0.38268343, z: -0, w: 0.92387956}
+  m_LocalPosition: {x: 1.8738331, y: 0, z: 2.0435386}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 709610109662854606}
-  m_Father: {fileID: 4496741214353491274}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &6608920287639609714
 Transform:
@@ -40174,6 +40175,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sporeCount: 1
+--- !u!208 &7114347937954583755
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3689570056335633077}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0.25, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1001 &7128965067456656925
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -40516,7 +40533,7 @@ MonoBehaviour:
   m_LayerMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_UseGeometry: 0
+  m_UseGeometry: 1
   m_DefaultArea: 0
   m_GenerateLinks: 0
   m_IgnoreNavMeshAgent: 1
@@ -40524,7 +40541,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.083333336
+  m_VoxelSize: 0.13333334
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: 9ca8f9f1b668446b3be45d78244631f1, type: 2}
   m_BuildHeightMesh: 0
@@ -40902,5 +40919,6 @@ SceneRoots:
   - {fileID: 253057640}
   - {fileID: 597761869}
   - {fileID: 1941584482}
+  - {fileID: 6578898507759691130}
   - {fileID: 2328578699890120328}
   - {fileID: 4803609507566798300}
