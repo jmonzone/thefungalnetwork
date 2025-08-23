@@ -99,22 +99,24 @@ public class InteractionController : MonoBehaviour
             //    }
             //}
 
-            //if (Physics.Raycast(ray, out hit, raycastMaxDistance, groundMask))
-            //{
-            //    cameraPanController.CenterTargetInView(hit.point);
-            //    OnGroundSelected?.Invoke(hit.point);
+            if (Physics.Raycast(ray, out hit, raycastMaxDistance, groundMask))
+            {
+                cameraPanController.CenterTargetInView(hit.point);
+                OnGroundSelected?.Invoke(hit.point);
 
-            //    if (selected)
-            //    {
-            //        var movement = selected.GetComponent<UnitMovement>();
-            //        if (movement)
-            //        {
-            //            movement.StartMovement(hit.point);
-            //        }
-            //        else selected = null;
-            //        return;
-            //    }
-            //}
+                if (selected)
+                {
+                    //var movement = selected.GetComponent<UnitMovement>();
+                    //if (movement)
+                    //{
+                    //    movement.StartMovement(hit.point);
+                    //}
+                    //else selected = null;
+
+                    selected = null;
+                    return;
+                }
+            }
         }
     }
 }

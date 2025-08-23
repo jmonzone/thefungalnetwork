@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class TouchIndicatorWorld : MonoBehaviour
 {
+    [SerializeField] private DialogueReference dialogue;
     [SerializeField] private InteractionController interactionController;
     [SerializeField] private GameObject indicatorRender;
     [SerializeField] private SpriteRenderer ringRenderer;
@@ -14,8 +15,7 @@ public class TouchIndicatorWorld : MonoBehaviour
         {
             if (!entity)
             {
-                StopAllCoroutines();
-                StartCoroutine(DissipateRoutine());
+                HideIndicator();
             }
             else
             {
@@ -23,7 +23,9 @@ public class TouchIndicatorWorld : MonoBehaviour
             }
         };
 
-        interactionController.OnGroundSelected += position => ShowIndicator(position, false);
+        interactionController.OnGroundSelected += position => ShowIndicator(position, true);
+
+        dialogue.OnDialogueComplete += HideIndicator;
     }
 
     private void ShowIndicator(Vector3 position, bool dissipate)
@@ -33,6 +35,12 @@ public class TouchIndicatorWorld : MonoBehaviour
 
         StopAllCoroutines();
         StartCoroutine(TouchAnimation(dissipate));
+    }
+
+    private void HideIndicator()
+    {
+        StopAllCoroutines();
+        StartCoroutine(DissipateRoutine());
     }
 
     // Ring scales

@@ -19,6 +19,6 @@ public class TreeController : MonoBehaviour, IInteractable
     {
         eyeballAnimator.gameObject.SetActive(true);
         eyeballAnimator.enabled = true;
-        dialogue.ShowDialogue(data);
+        dialogue.StartDialogue(data);
     }
 }

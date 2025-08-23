@@ -21,7 +21,27 @@ public class UnitAI : MonoBehaviour
 
     public event UnityAction<bool> OnIsMovingHasChanged;
 
-    void Start()
+    private void Awake()
+    {
+        var dialogue = GetComponent<UnitDialogue>();
+        dialogue.OnDialogueStart += Dialogue_OnDialogueStart;
+        dialogue.OnDialogueComplete += Dialogue_OnDialogueComplete;
+    }
+
+    private void Dialogue_OnDialogueComplete()
+    {
+        StartCoroutine(WanderRoutine());
+    }
+
+    private void Dialogue_OnDialogueStart()
+    {
+        StopAllCoroutines();
+        agent.SetDestination(transform.position);
+        transform.forward = Vector3.back;
+        OnIsMovingHasChanged?.Invoke(false);
+    }
+
+    private void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         agent.updateRotation = true; // let NavMeshAgent handle rotation smoothly

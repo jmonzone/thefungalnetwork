@@ -12,9 +12,15 @@ public class DialogueUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI dialogueText;
 
     [SerializeField] private Button continueButton;
+    [SerializeField] private Button closeButton;
 
     [SerializeField] private float baseSpeed = 0.03f;             // Normal speed between characters
     [SerializeField] private float punctuationPause = 0.2f;       // Extra pause for punctuation
+
+    private void Awake()
+    {
+        closeButton.onClick.AddListener(CloseDialogue);
+    }
 
     private void OnEnable()
     {
@@ -76,9 +82,14 @@ public class DialogueUI : MonoBehaviour
             yield return new WaitUntil(() => nextPagePressed);
         }
 
-        // Finished all pages → close dialogue
-        dialogue.Close();
+        CloseDialogue();
     }
 
+    private void CloseDialogue()
+    {
+        // Finished all pages → close dialogue
+        dialogue.CompleteDialogue();
+        dialogue.Close();
+    }
 
 }

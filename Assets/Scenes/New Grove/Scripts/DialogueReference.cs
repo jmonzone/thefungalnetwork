@@ -10,10 +10,16 @@ public class DialogueReference : UIReference
     public Unit Unit => unit;
 
     public event UnityAction OnDialogueStart;
+    public event UnityAction OnDialogueComplete;
 
-    public void ShowDialogue(Unit unit)
+    public void StartDialogue(Unit unit)
     {
         this.unit = unit;
         OnDialogueStart?.Invoke();
     }
+
+    public void CompleteDialogue()
+    {
+        OnDialogueComplete?.Invoke();
+    } 
 }
