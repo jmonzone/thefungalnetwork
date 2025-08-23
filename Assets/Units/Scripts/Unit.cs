@@ -1,5 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
+
+[Serializable]
+public class Dialogue
+{
+    [SerializeField] [TextArea] private string text;
+    [SerializeField] private bool showTarotCard = false;
+
+    public string Text => text;
+    public bool ShowTarotCard => showTarotCard;
+}
 
 [CreateAssetMenu]
 public class Unit : ScriptableObject
@@ -7,10 +18,11 @@ public class Unit : ScriptableObject
     [SerializeField] private new string name;
     [SerializeField] private Sprite sprite;
     [SerializeField] private GameObject prefab;
-    [SerializeField] [TextArea] private List<string> dialogue;
+    [SerializeField] private List<Dialogue> dialogueList;
 
     public string Name => name;
     public Sprite Sprite => sprite;
     public GameObject Prefab => prefab;
-    public List<string> Dialogue => dialogue;
+    public List<Dialogue> DialogueList => dialogueList;
+
 }

@@ -23,6 +23,8 @@ public class InteractionController : MonoBehaviour
     private Vector3 startInput;
     private bool isDragging = false;
 
+    private UnitController selectedUnit;
+
 
     public event UnityAction<Transform> OnEntitySelected;
     public event UnityAction<Vector3> OnGroundSelected;
@@ -73,7 +75,9 @@ public class InteractionController : MonoBehaviour
                 if (unit && selected != unit.transform)
                 {
                     cameraPanController.CenterTargetInView(unit.transform.position);
+                    selectedUnit = unit;
                     unit.Select();
+                    unit.OnUnselect += Unit_OnUnselect;
                     OnEntitySelected?.Invoke(unit.transform);
                     selected = unit.transform;
                     return;
@@ -118,5 +122,12 @@ public class InteractionController : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void Unit_OnUnselect()
+    {
+        selectedUnit.OnUnselect += Unit_OnUnselect;
+        selectedUnit = null;
+        selected = null;
     }
 }

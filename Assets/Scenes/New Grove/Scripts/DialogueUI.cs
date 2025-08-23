@@ -17,6 +17,8 @@ public class DialogueUI : MonoBehaviour
     [SerializeField] private float baseSpeed = 0.03f;             // Normal speed between characters
     [SerializeField] private float punctuationPause = 0.2f;       // Extra pause for punctuation
 
+    [SerializeField] private TarotCardUI tarotCard;
+
     private void Awake()
     {
         closeButton.onClick.AddListener(CloseDialogue);
@@ -29,8 +31,8 @@ public class DialogueUI : MonoBehaviour
 
     private void Dialogue_OnDialogueStart()
     {
-        speakerText.text = dialogue.Unit.Name;
-        image.sprite = dialogue.Unit.Sprite;
+        speakerText.text = dialogue.Unit.Data.Name;
+        image.sprite = dialogue.Unit.Data.Sprite;
 
         StopAllCoroutines();
         StartCoroutine(ShowDialogueRoutine());
@@ -50,21 +52,41 @@ public class DialogueUI : MonoBehaviour
         continueButton.onClick.RemoveAllListeners();
         continueButton.onClick.AddListener(() => nextPagePressed = true);
 
-        List<string> pages = dialogue.Unit.Dialogue;
+        List<Dialogue> pages = dialogue.Unit.Data.DialogueList;
 
         for (int p = 0; p < pages.Count; p++)
         {
             dialogueText.text = "";
-            string fullText = pages[p];
-            if (string.IsNullOrEmpty(fullText))
-                continue;
+            Dialogue fullDialogue = pages[p];
+
+            if (fullDialogue.ShowTarotCard)
+            {
+                continueButton.onClick.RemoveAllListeners();
+                continueButton.onClick.AddListener(() =>
+                {
+                    continueButton.interactable = false;
+                    tarotCard.StartFlipCard(() =>
+                    {
+                        continueButton.interactable = true;
+                        //nextPagePressed = true;
+                    });
+                });
+
+                tarotCard.gameObject.SetActive(true);
+            }
+            else
+            {
+                tarotCard.gameObject.SetActive(false);
+            }
+
+            if (string.IsNullOrEmpty(fullDialogue.Text)) continue;
 
             // Typewriter effect with expressive timing
-            for (int i = 0; i < fullText.Length; i++)
+            for (int i = 0; i < fullDialogue.Text.Length; i++)
             {
-                dialogueText.text += fullText[i];
+                dialogueText.text += fullDialogue.Text[i];
 
-                char c = fullText[i];
+                char c = fullDialogue.Text[i];
                 float delay = baseSpeed;
 
                 // Extra pause after punctuation
@@ -72,10 +94,11 @@ public class DialogueUI : MonoBehaviour
                     delay += punctuationPause;
 
                 // Slight random variation for organic feel
-                delay *= UnityEngine.Random.Range(0.9f, 1.3f);
+                delay *= Random.Range(0.9f, 1.3f);
 
                 yield return new WaitForSeconds(delay);
             }
+
 
             // Wait for continue button
             nextPagePressed = false;

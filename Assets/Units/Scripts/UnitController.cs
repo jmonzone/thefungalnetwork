@@ -12,6 +12,7 @@ public class UnitController : MonoBehaviour
 
     public event UnityAction OnInitialized;
     public event UnityAction OnSelected;
+    public event UnityAction OnUnselect;
 
     public void Initialize(Unit data)
     {
@@ -25,5 +26,11 @@ public class UnitController : MonoBehaviour
     {
         isSelected = true;
         OnSelected?.Invoke();
+    }
+
+    public void Unselect()
+    {
+        isSelected = false;
+        OnUnselect?.Invoke();
     }
 }

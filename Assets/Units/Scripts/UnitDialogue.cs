@@ -18,7 +18,7 @@ public class UnitDialogue : MonoBehaviour
 
     private void Unit_OnSelected()
     {
-        dialogue.StartDialogue(unit.Data);
+        dialogue.StartDialogue(unit);
         dialogue.OnDialogueComplete += Dialogue_OnDialogueComplete;
         OnDialogueStart?.Invoke();
     }
