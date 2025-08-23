@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class DialogueUI : MonoBehaviour
 {
+    [SerializeField] private Image image;
     [SerializeField] private DialogueReference dialogue;
     [SerializeField] private TextMeshProUGUI speakerText;
     [SerializeField] private TextMeshProUGUI dialogueText;
@@ -17,25 +18,22 @@ public class DialogueUI : MonoBehaviour
 
     private void OnEnable()
     {
-        dialogue.OnSpeakerChanged += Reference_OnSpeakerChanged;
-        dialogue.OnDialogueChanged += Reference_OnDialogueAssigned;
+        dialogue.OnDialogueStart += Dialogue_OnDialogueStart;
+    }
+
+    private void Dialogue_OnDialogueStart()
+    {
+        speakerText.text = dialogue.Unit.Name;
+        image.sprite = dialogue.Unit.Sprite;
+
+        StopAllCoroutines();
+        StartCoroutine(ShowDialogueRoutine());
+        dialogue.Show();
     }
 
     private void OnDisable()
     {
-        dialogue.OnSpeakerChanged -= Reference_OnSpeakerChanged;
-        dialogue.OnDialogueChanged -= Reference_OnDialogueAssigned;
-    }
-
-    private void Reference_OnSpeakerChanged(string speaker)
-    {
-        speakerText.text = speaker;
-    }
-
-    private void Reference_OnDialogueAssigned(List<string> dialogue)
-    {
-        StopAllCoroutines();
-        StartCoroutine(ShowDialogueRoutine());
+        dialogue.OnDialogueStart -= Dialogue_OnDialogueStart;
     }
 
     private bool nextPagePressed;
@@ -46,7 +44,7 @@ public class DialogueUI : MonoBehaviour
         continueButton.onClick.RemoveAllListeners();
         continueButton.onClick.AddListener(() => nextPagePressed = true);
 
-        List<string> pages = dialogue.CurrentDialogue;
+        List<string> pages = dialogue.Unit.Dialogue;
 
         for (int p = 0; p < pages.Count; p++)
         {

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 [CreateAssetMenu]
 public class Unit : ScriptableObject
@@ -6,8 +7,10 @@ public class Unit : ScriptableObject
     [SerializeField] private new string name;
     [SerializeField] private Sprite sprite;
     [SerializeField] private GameObject prefab;
+    [SerializeField] [TextArea] private List<string> dialogue;
 
     public string Name => name;
     public Sprite Sprite => sprite;
     public GameObject Prefab => prefab;
+    public List<string> Dialogue => dialogue;
 }

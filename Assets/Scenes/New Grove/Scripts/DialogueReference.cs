@@ -5,21 +5,15 @@ using UnityEngine.Events;
 [CreateAssetMenu]
 public class DialogueReference : UIReference
 {
-    [SerializeField] private List<string> currentDialogue;
+    [SerializeField] private Unit unit;
 
-    public List<string> CurrentDialogue => currentDialogue;
-    
-    public event UnityAction<string> OnSpeakerChanged;
-    public event UnityAction<List<string>> OnDialogueChanged;
+    public Unit Unit => unit;
 
-    public void SetSpeaker(string speaker)
+    public event UnityAction OnDialogueStart;
+
+    public void ShowDialogue(Unit unit)
     {
-        OnSpeakerChanged?.Invoke(speaker);
-    }
-
-    public void SetDialogue(List<string> dialogue)
-    {
-        currentDialogue = dialogue;
-        OnDialogueChanged?.Invoke(dialogue);
+        this.unit = unit;
+        OnDialogueStart?.Invoke();
     }
 }

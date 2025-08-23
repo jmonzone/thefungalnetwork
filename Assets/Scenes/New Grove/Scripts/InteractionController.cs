@@ -80,41 +80,41 @@ public class InteractionController : MonoBehaviour
                 }
             }
 
-            if (selected)
-            {
-                var forage = selected.GetComponent<UnitForage>();
-                if (forage)
-                {
-                    if (Physics.Raycast(ray, out hit, raycastMaxDistance, interactableMask))
-                    {
-                        var forageable = hit.transform.GetComponentInParent<Forageable>();
-                        if (forageable)
-                        {
-                            cameraPanController.CenterTargetInView(forageable.transform.position);
-                            OnEntitySelected?.Invoke(forageable.transform);
-                            forage.StartForage(forageable);
-                            return;
-                        }
-                    }
-                }
-            }
+            //if (selected)
+            //{
+            //    var forage = selected.GetComponent<UnitForage>();
+            //    if (forage)
+            //    {
+            //        if (Physics.Raycast(ray, out hit, raycastMaxDistance, interactableMask))
+            //        {
+            //            var forageable = hit.transform.GetComponentInParent<Forageable>();
+            //            if (forageable)
+            //            {
+            //                cameraPanController.CenterTargetInView(forageable.transform.position);
+            //                OnEntitySelected?.Invoke(forageable.transform);
+            //                forage.StartForage(forageable);
+            //                return;
+            //            }
+            //        }
+            //    }
+            //}
 
-            if (Physics.Raycast(ray, out hit, raycastMaxDistance, groundMask))
-            {
-                cameraPanController.CenterTargetInView(hit.point);
-                OnGroundSelected?.Invoke(hit.point);
+            //if (Physics.Raycast(ray, out hit, raycastMaxDistance, groundMask))
+            //{
+            //    cameraPanController.CenterTargetInView(hit.point);
+            //    OnGroundSelected?.Invoke(hit.point);
 
-                if (selected)
-                {
-                    var movement = selected.GetComponent<UnitMovement>();
-                    if (movement)
-                    {
-                        movement.StartMovement(hit.point);
-                    }
-                    else selected = null;
-                    return;
-                }
-            }
+            //    if (selected)
+            //    {
+            //        var movement = selected.GetComponent<UnitMovement>();
+            //        if (movement)
+            //        {
+            //            movement.StartMovement(hit.point);
+            //        }
+            //        else selected = null;
+            //        return;
+            //    }
+            //}
         }
     }
 }

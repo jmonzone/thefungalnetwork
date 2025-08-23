@@ -24,8 +24,8 @@ public class FrogAssist : MonoBehaviour
 
     public void StartAssistMode()
     {
-        if (assistRoutine == null)
-            assistRoutine = StartCoroutine(StartAssist());
+        //if (assistRoutine == null)
+        //    assistRoutine = StartCoroutine(StartAssist());
     }
 
     public void StopAssistMode()
@@ -37,50 +37,50 @@ public class FrogAssist : MonoBehaviour
         }
     }
 
-    private IEnumerator StartAssist()
-    {
-        assistActive = true;
+    //private IEnumerator StartAssist()
+    //{
+    //    assistActive = true;
 
-        while (assistActive)
-        {
-            yield return new WaitForSeconds(interactionInterval);
+    //    while (assistActive)
+    //    {
+    //        yield return new WaitForSeconds(interactionInterval);
 
-            InteractableMushroom target = FindNearestMushroom();
+    //        InteractableMushroom target = FindNearestMushroom();
 
-            if (target != null)
-            {
-                yield return LookAtTargetOverTime(target.transform, 0.5f);
-                yield return ExtendTongueTowards(target.transform);
-                target.OnBaseInteraction();
-                yield return RetractTongue();
+    //        if (target != null)
+    //        {
+    //            yield return LookAtTargetOverTime(target.transform, 0.5f);
+    //            yield return ExtendTongueTowards(target.transform);
+    //            target.OnBaseInteraction();
+    //            yield return RetractTongue();
 
-            }
-        }
-    }
+    //        }
+    //    }
+    //}
 
-    private InteractableMushroom FindNearestMushroom()
-    {
-        Collider[] hits = Physics.OverlapSphere(transform.position, searchRadius, mushroomLayer);
+    //private InteractableMushroom FindNearestMushroom()
+    //{
+    //    Collider[] hits = Physics.OverlapSphere(transform.position, searchRadius, mushroomLayer);
 
-        InteractableMushroom closest = null;
-        float closestDistance = Mathf.Infinity;
+    //    InteractableMushroom closest = null;
+    //    float closestDistance = Mathf.Infinity;
 
-        foreach (var hit in hits)
-        {
-            InteractableMushroom mushroom = hit.GetComponentInParent<InteractableMushroom>();
-            if (mushroom != null && mushroom.IsInteractable)
-            {
-                float distance = Vector3.Distance(transform.position, hit.transform.position);
-                if (distance < closestDistance)
-                {
-                    closest = mushroom;
-                    closestDistance = distance;
-                }
-            }
-        }
+    //    foreach (var hit in hits)
+    //    {
+    //        InteractableMushroom mushroom = hit.GetComponentInParent<InteractableMushroom>();
+    //        if (mushroom != null && mushroom.IsInteractable)
+    //        {
+    //            float distance = Vector3.Distance(transform.position, hit.transform.position);
+    //            if (distance < closestDistance)
+    //            {
+    //                closest = mushroom;
+    //                closestDistance = distance;
+    //            }
+    //        }
+    //    }
 
-        return closest;
-    }
+    //    return closest;
+    //}
 
     private void OnDrawGizmosSelected()
     {
