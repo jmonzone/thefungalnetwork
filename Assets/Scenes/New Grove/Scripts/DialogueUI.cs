@@ -31,6 +31,8 @@ public class DialogueUI : MonoBehaviour
 
     private void Dialogue_OnDialogueStart()
     {
+        tarotCard.gameObject.SetActive(false);
+
         speakerText.text = dialogue.Unit.Data.Name;
         image.sprite = dialogue.Unit.Data.Sprite;
 
@@ -48,10 +50,6 @@ public class DialogueUI : MonoBehaviour
 
     private IEnumerator ShowDialogueRoutine()
     {
-        // Reset button listener so it only affects this dialogue session
-        continueButton.onClick.RemoveAllListeners();
-        continueButton.onClick.AddListener(() => nextPagePressed = true);
-
         List<Dialogue> pages = dialogue.Unit.Data.DialogueList;
 
         for (int p = 0; p < pages.Count; p++)
@@ -59,24 +57,27 @@ public class DialogueUI : MonoBehaviour
             dialogueText.text = "";
             Dialogue fullDialogue = pages[p];
 
-            if (fullDialogue.ShowTarotCard)
-            {
-                continueButton.onClick.RemoveAllListeners();
-                continueButton.onClick.AddListener(() =>
-                {
-                    continueButton.interactable = false;
-                    tarotCard.StartFlipCard(() =>
-                    {
-                        continueButton.interactable = true;
-                        //nextPagePressed = true;
-                    });
-                });
+            continueButton.onClick.RemoveAllListeners();
 
-                tarotCard.gameObject.SetActive(true);
-            }
-            else
+            switch (fullDialogue.Action)
             {
-                tarotCard.gameObject.SetActive(false);
+                case DialogueAction.SHOW_TAROT:
+                    tarotCard.Reset();
+                    continueButton.onClick.AddListener(() =>
+                    {
+                        continueButton.interactable = false;
+                        tarotCard.StartFlipCard(() =>
+                        {
+                            continueButton.interactable = true;
+                            nextPagePressed = true;
+                        });
+                    });
+
+                    tarotCard.gameObject.SetActive(true);
+                    break;
+                default:
+                    continueButton.onClick.AddListener(() => nextPagePressed = true);
+                    break;
             }
 
             if (string.IsNullOrEmpty(fullDialogue.Text)) continue;

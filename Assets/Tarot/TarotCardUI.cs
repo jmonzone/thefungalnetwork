@@ -21,6 +21,11 @@ public class TarotCardUI : MonoBehaviour
         StartCoroutine(FlipCardRoutine(onComplete));
     }
 
+    public void Reset()
+    {
+        FlipCard(true);
+    }
+
     private IEnumerator FlipCardRoutine(UnityAction onComplete)
     {
         var i = 0f;
@@ -32,7 +37,7 @@ public class TarotCardUI : MonoBehaviour
             yield return null;
         }
 
-        FlipCard();
+        FlipCard(!isFaceDown);
 
         while (i < 180f)
         {
@@ -45,11 +50,11 @@ public class TarotCardUI : MonoBehaviour
         onComplete?.Invoke();
     }
 
-    private void FlipCard()
+    private void FlipCard(bool isFaceDown)
     {
-        isFaceDown = !isFaceDown;
+        this.isFaceDown = isFaceDown;
 
-        front.gameObject.SetActive(!isFaceDown);
-        back.gameObject.SetActive(isFaceDown);
+        front.gameObject.SetActive(!this.isFaceDown);
+        back.gameObject.SetActive(this.isFaceDown);
     }
 }

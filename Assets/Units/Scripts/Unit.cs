@@ -2,14 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum DialogueAction
+{
+    DEFAULT,
+    SHOW_TAROT,
+}
+
 [Serializable]
 public class Dialogue
 {
     [SerializeField] [TextArea] private string text;
-    [SerializeField] private bool showTarotCard = false;
+    [SerializeField] private DialogueAction action;
 
     public string Text => text;
-    public bool ShowTarotCard => showTarotCard;
+    public DialogueAction Action => action;
 }
 
 [CreateAssetMenu]
