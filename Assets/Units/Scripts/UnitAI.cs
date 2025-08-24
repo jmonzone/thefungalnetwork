@@ -46,6 +46,10 @@ public class UnitAI : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         agent.updateRotation = true; // let NavMeshAgent handle rotation smoothly
         agent.speed = baseSpeed;
+
+        agent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
+        agent.avoidancePriority = Random.Range(30, 70); // give variation so they don’t all “dance”
+
         startPos = transform.position;
         originalY = startPos.y;
 
