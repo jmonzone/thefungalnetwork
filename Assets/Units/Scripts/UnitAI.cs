@@ -78,39 +78,14 @@ public class UnitAI : MonoBehaviour
         currentState = UnitState.DESTINATION;
 
         StopAllCoroutines();
-        StartCoroutine(MoveToDestination(destination, direction));
-    }
 
-    private IEnumerator MoveToDestination(Vector3 destination, Vector3 direction)
-    {
         agent.SetDestination(destination);
-
-        agent.speed = baseSpeed * Random.Range(0.8f, 1.2f);
-        agent.angularSpeed = Random.Range(turnSpeedMin, turnSpeedMax);
-
-        OnIsMovingHasChanged?.Invoke(true);
-
-        float timeout = 5f; // max time to reach destination
-        float timer = 0f;
-
-        while ((agent.pathPending || agent.remainingDistance > agent.stoppingDistance) && timer < timeout)
-        {
-            // If path is invalid or blocked
-            if (agent.pathStatus == NavMeshPathStatus.PathInvalid)
-            {
-                Debug.Log("Invalid");
-                break;
-            }
-
-            timer += Time.deltaTime;
-            yield return null;
-        }
-
         transform.position = destination;
         transform.forward = direction;
 
         OnIsMovingHasChanged?.Invoke(false);
     }
+
 
     private IEnumerator WanderRoutine()
     {
