@@ -79,8 +79,9 @@ public class DialogueUI : MonoBehaviour
                 case DialogueAction.PLAY_SPORE:
                     continueButton.onClick.AddListener(() =>
                     {
-                        nextPagePressed = true;
+                        CloseDialogue();
                         passTheSpore.StartGame();
+                        StopAllCoroutines();
                     });
                     break;
                 default:

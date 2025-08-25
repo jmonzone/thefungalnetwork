@@ -1,25 +1,26 @@
-using System.Collections;
-using System.Collections.Generic;
 using Cinemachine;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PassTheSpore : MonoBehaviour
 {
     [SerializeField] private UnitManager unitManager;
     [SerializeField] private CinemachineVirtualCamera virtualCamera;
-
+    [SerializeField] private Navigation navigation;
+    [SerializeField] private ViewReference passTheSporeView;
     [SerializeField] private Transform gameCenter;
+    [SerializeField] private Button exitButton;
 
     private void Awake()
     {
         EndGame();
+
+        exitButton.onClick.AddListener(EndGame);
     }
 
     public void StartGame()
     {
         virtualCamera.Priority = 11;
-
-        Debug.Log(unitManager.UnitControllers.Count);
 
         var units = unitManager.UnitControllers;
         int count = units.Count;
@@ -41,10 +42,17 @@ public class PassTheSpore : MonoBehaviour
             ai.SetDestination(destination, -direction); // face toward center
         }
 
+        navigation.Navigate(passTheSporeView);
     }
 
     private void EndGame()
     {
-        virtualCamera.Priority = 10;
+        virtualCamera.Priority = 0;
+
+        foreach(var unit in unitManager.UnitControllers)
+        {
+            var ai = unit.GetComponent<UnitAI>();
+            ai.StartWander();
+        }
     }
 }

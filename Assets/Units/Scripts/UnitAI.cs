@@ -40,7 +40,13 @@ public class UnitAI : MonoBehaviour
 
     private void Dialogue_OnDialogueComplete()
     {
-        if (currentState == UnitState.DIALOGUE) StartCoroutine(WanderRoutine());
+        if (currentState == UnitState.DIALOGUE) StartWander();
+    }
+
+    public void StartWander()
+    {
+        StopAllCoroutines();
+        StartCoroutine(WanderRoutine());
     }
 
     private void Dialogue_OnDialogueStart()
@@ -64,7 +70,7 @@ public class UnitAI : MonoBehaviour
         startPos = transform.position;
         originalY = startPos.y;
 
-        StartCoroutine(WanderRoutine());
+        StartWander();
     }
 
     public void SetDestination(Vector3 destination, Vector3 direction)
@@ -84,7 +90,7 @@ public class UnitAI : MonoBehaviour
 
         OnIsMovingHasChanged?.Invoke(true);
 
-        float timeout = 10f; // max time to reach destination
+        float timeout = 5f; // max time to reach destination
         float timer = 0f;
 
         while ((agent.pathPending || agent.remainingDistance > agent.stoppingDistance) && timer < timeout)
@@ -100,6 +106,7 @@ public class UnitAI : MonoBehaviour
             yield return null;
         }
 
+        transform.position = destination;
         transform.forward = direction;
 
         OnIsMovingHasChanged?.Invoke(false);
