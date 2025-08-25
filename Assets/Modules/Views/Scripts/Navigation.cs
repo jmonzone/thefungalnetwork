@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -8,20 +9,17 @@ public class Navigation : ScriptableObject
 {
     [SerializeField] private List<ViewReference> views;
     [SerializeField] private SceneNavigation sceneNavigation;
+    [SerializeField] private List<ViewReference> history;
 
     private ViewReference currentView;
     public ViewReference CurrentView => currentView;
-
-    private Stack<ViewReference> history;
-
-    public Stack<ViewReference> History => history;
 
     public event UnityAction OnNavigated;
 
     public void Reset()
     {
         currentView = null;
-        history = new Stack<ViewReference>();
+        history = new List<ViewReference>();
 
         foreach (var view in views)
         {
@@ -39,11 +37,6 @@ public class Navigation : ScriptableObject
         {
             if (currentView) currentView.RequestHide();
         };
-    }
-
-    public void InitalizeHistory(IEnumerable<ViewReference> initalViews)
-    {
-        history = new Stack<ViewReference>(initalViews);
     }
 
     public void RegisterView(ViewReference view)
@@ -83,17 +76,44 @@ public class Navigation : ScriptableObject
     private void SetCurrentView(ViewReference view)
     {
         currentView = view;
-        history.Push(view);
+        history.Add(view);
     }
 
     public void GoBack()
     {
+        Debug.Log($"GoBack");
+
         if (history.Count > 1)
         {
-            history.Pop();
-            var targetView = history.Pop();
-            Navigate(targetView);
-        }
+            history.RemoveAt(history.Count - 1);
+            var targetView = history.Last();
 
+            if (targetView)
+            {
+                history.RemoveAt(history.Count - 1);
+                Navigate(targetView);
+            }
+        }
+    }
+
+    public void GoBack(int steps = 1)
+    {
+        Debug.Log($"GoBack {steps}");
+
+        if (history.Count > steps)
+        {
+            ViewReference targetView = null;
+            history.RemoveAt(history.Count - 1);
+
+            while (steps > 0)
+            {
+                Debug.Log($"GoBack.while {steps}");
+                targetView = history.Last();
+                history.RemoveAt(history.Count - 1);
+                steps--;
+            }
+
+            if (targetView) Navigate(targetView);
+        }
     }
 }

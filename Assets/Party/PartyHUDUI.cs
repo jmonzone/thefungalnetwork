@@ -7,7 +7,16 @@ public class PartyHUDUI : MonoBehaviour
     [SerializeField] private PartyReference partyReference;
     [SerializeField] private Slider slider;
     [SerializeField] private TextMeshProUGUI phaseText;
+    [SerializeField] private Button closeButton;
+    [SerializeField] private Navigation navigation;
 
+    private void Awake()
+    {
+        closeButton.onClick.AddListener(() =>
+        {
+            navigation.GoBack(2);
+        });
+    }
     private void OnEnable()
     {
         partyReference.OnPartyStarted += PartyReference_OnPartyStarted;

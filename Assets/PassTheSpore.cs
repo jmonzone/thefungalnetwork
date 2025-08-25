@@ -40,7 +40,7 @@ public class PassTheSpore : MonoBehaviour
             var ai = units[i].GetComponent<UnitAI>();
 
             // Evenly spaced angle around a circle
-            float angle = (i / (float)count) * Mathf.PI * 2f;
+            float angle = (i / (float)count) * Mathf.PI * 2f * -1f;
 
             // Direction from center
             Vector3 direction = new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle));
@@ -62,13 +62,16 @@ public class PassTheSpore : MonoBehaviour
     {
         var unitCount = unitManager.UnitControllers.Count;
         var currentUnitIndex = 0;
+        sporeBall.position = unitManager.UnitControllers[currentUnitIndex % unitCount].transform.position + Vector3.up * 1f;
 
         while (true)
         {
-            sporeBall.position = unitManager.UnitControllers[currentUnitIndex % unitCount].transform.position + Vector3.up * 1f;
-            yield return new WaitUntil(() => Input.GetMouseButtonUp(0));
-            yield return new WaitForEndOfFrame();
-            currentUnitIndex++;
+            if (Input.GetMouseButtonUp(0))
+            {
+                currentUnitIndex++;
+                sporeBall.position = unitManager.UnitControllers[currentUnitIndex % unitCount].transform.position + Vector3.up * 1f;
+            }
+            yield return null;
         }
     }
 

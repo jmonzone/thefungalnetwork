@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.Events;
@@ -48,6 +49,12 @@ public class UnitListReference : UIReference
 
     public void AddUnit(Unit unit)
     {
+        if (!unit)
+        {
+            unit = unitCollection.FirstOrDefault(u => !units.Contains(u))
+               ?? unitCollection.LastOrDefault();
+        }
+
         units.Add(unit);
         OnUnitSummoned?.Invoke(unit);
         SaveData();

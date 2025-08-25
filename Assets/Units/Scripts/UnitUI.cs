@@ -21,7 +21,6 @@ public class UnitUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     [SerializeField] private GameObject summonContainer;
 
     [SerializeField] private InventoryReference inventory;
-    [SerializeField] private Unit summonUnit;
 
     private void Awake()
     {
@@ -29,7 +28,7 @@ public class UnitUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         summonButton.OnBuy += () =>
         {
             inventory.DecreaseSporeCount(125);
-            unitListReference.AddUnit(summonUnit);
+            unitListReference.AddUnit(null);
         };
     }
 

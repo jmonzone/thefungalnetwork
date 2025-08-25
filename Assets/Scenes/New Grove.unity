@@ -19995,6 +19995,8 @@ MonoBehaviour:
   partyReference: {fileID: 11400000, guid: d2092e9896dc047a3939198bb6a0204c, type: 2}
   slider: {fileID: 1184834504}
   phaseText: {fileID: 942851305}
+  closeButton: {fileID: 1622262610}
+  navigation: {fileID: 11400000, guid: 7af35f01730a846d692adda4734cddd3, type: 2}
 --- !u!114 &1170789630
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27481,7 +27483,7 @@ GameObject:
   - component: {fileID: 1622262609}
   - component: {fileID: 1622262610}
   m_Layer: 5
-  m_Name: Pause Button
+  m_Name: Exit Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -27550,19 +27552,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 466107115}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 11400000, guid: 5c885c9a984a3470684bef7e76ca5c2a, type: 2}
-        m_TargetAssemblyTypeName: SceneNavigation, Assembly-CSharp
-        m_MethodName: NavigateToScene
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!4 &1622445369 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4842751938807656, guid: 8bf68561aec61914b8418e72b44a57dd,
@@ -39952,7 +39942,6 @@ SceneRoots:
   - {fileID: 985840385826496797}
   - {fileID: 68235283}
   - {fileID: 1446848727}
-  - {fileID: 192682053}
   - {fileID: 1841194354}
   - {fileID: 1851915126}
   - {fileID: 727239977}
@@ -39968,6 +39957,7 @@ SceneRoots:
   - {fileID: 1477888290}
   - {fileID: 1179457518}
   - {fileID: 513534531}
+  - {fileID: 192682053}
   - {fileID: 1165476430}
   - {fileID: 128109703}
   - {fileID: 4496741214353491274}
