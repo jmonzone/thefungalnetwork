@@ -1,3 +1,4 @@
+using System.Collections;
 using Cinemachine;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,6 +11,7 @@ public class PassTheSpore : MonoBehaviour
     [SerializeField] private ViewReference passTheSporeView;
     [SerializeField] private Transform gameCenter;
     [SerializeField] private Button exitButton;
+    [SerializeField] private Transform sporeBall;
 
     private void Awake()
     {
@@ -43,10 +45,26 @@ public class PassTheSpore : MonoBehaviour
         }
 
         navigation.Navigate(passTheSporeView);
+
+        StartCoroutine(GameRoutine());
+    }
+
+    private IEnumerator GameRoutine()
+    {
+        var currentUnitIndex = 0;
+        while (true)
+        {
+            sporeBall.position = unitManager.UnitControllers[currentUnitIndex % unitManager.UnitControllers.Count].transform.position + Vector3.up * 1f;
+            yield return new WaitUntil(() => Input.GetMouseButtonUp(0));
+            yield return new WaitForEndOfFrame();
+            Debug.Log("PassTheSpore passed");
+            currentUnitIndex++;
+        }
     }
 
     private void EndGame()
     {
+        StopAllCoroutines();
         virtualCamera.Priority = 0;
 
         foreach(var unit in unitManager.UnitControllers)
