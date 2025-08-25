@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -19,6 +17,7 @@ public class PartyReference : ScriptableObject
     [Header("References")]
     [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference partyHUD;
+    [SerializeField] private UnitListReference unitList;
 
     [Header("Data")]
     [SerializeField] private List<PartyData> parties;
@@ -26,7 +25,9 @@ public class PartyReference : ScriptableObject
     [Header("Runtime")]
     [SerializeField] private PartyData currentParty;
     [SerializeField] private bool isActive;
+    [SerializeField] private List<UnitController> guests;
 
+    public List<UnitController> Guests => guests;
     public List<PartyData> Parties => parties;
 
     public PartyData CurrentParty => currentParty;
@@ -66,5 +67,20 @@ public class PartyReference : ScriptableObject
     {
         navigation.GoBack(2);
         isActive = false;
+    }
+
+    public void AddGuest(UnitController guest)
+    {
+        guests.Add(guest);
+    }
+
+    public void ClearGuests()
+    {
+        foreach (var guest in guests)
+        {
+            Destroy(guest.gameObject, 1f); // delay for animation
+        }
+
+        guests = new List<UnitController>();
     }
 }

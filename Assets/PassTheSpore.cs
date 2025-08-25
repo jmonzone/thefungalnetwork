@@ -50,7 +50,7 @@ public class PassTheSpore : MonoBehaviour
         virtualCamera.Priority = 11;
         sporeBall.gameObject.SetActive(true);
 
-        foreach(var unit in unitManager.UnitControllers.Concat(guestManager.Guests))
+        foreach(var unit in unitManager.UnitControllers.Concat(partyReference.Guests))
         {
             players.Add(new PassTheSporePlayer
             {

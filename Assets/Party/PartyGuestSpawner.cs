@@ -10,9 +10,7 @@ public class PartyGuestSpawner : MonoBehaviour
     [SerializeField] private UnitController unitPrefab;
     [SerializeField] private UnitListReference unitListReference;
 
-    [SerializeField] private List<UnitController> guests;
 
-    public List<UnitController> Guests => guests;
 
     private void Awake()
     {
@@ -28,11 +26,7 @@ public class PartyGuestSpawner : MonoBehaviour
                 StartCoroutine(DoorsOpenRoutine());
                 break;
             case PartyPhase.WIND_DOWN:
-                foreach (var guest in guests)
-                {
-                    Destroy(guest.gameObject, 1f); // delay for animation
-                }
-                guests = new List<UnitController>();
+                partyReference.ClearGuests();
                 break;
         }
     }
@@ -57,7 +51,7 @@ public class PartyGuestSpawner : MonoBehaviour
 
             var guest = Instantiate(unitPrefab, spawnAnchor.transform.position, Quaternion.identity);
             guest.Initialize(partyReference.CurrentParty.Guests[i]);
-            guests.Add(guest);
+            partyReference.AddGuest(guest);
         }
     }
 

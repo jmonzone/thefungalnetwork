@@ -2,10 +2,13 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
 using UnityEngine.Events;
+using System.Linq;
 
 [RequireComponent(typeof(NavMeshAgent))]
 public class UnitAI : MonoBehaviour
 {
+    [SerializeField] private PartyReference partyReference;
+
     [Header("Wandering Settings")]
     public float wanderRadius = 10f;           // radius for random destinations
     public float minIdleTime = 1f;             // min pause
@@ -16,7 +19,6 @@ public class UnitAI : MonoBehaviour
 
     private NavMeshAgent agent;
     private Vector3 startPos;
-    private float originalY;
     private Vector3 currentDestination;
 
     private UnitDialogue dialogue;
@@ -62,7 +64,6 @@ public class UnitAI : MonoBehaviour
         agent.avoidancePriority = Random.Range(30, 70); // give variation so they don’t all “dance”
 
         startPos = transform.position;
-        originalY = startPos.y;
 
         StartWander();
     }
@@ -103,6 +104,7 @@ public class UnitAI : MonoBehaviour
     private IEnumerator WanderStep(Vector3 origin, float radius)
     {
         // 1. Pick a random point on NavMesh
+        currentDestination =
         currentDestination = GetReachableRandomDestination(origin, radius, NavMesh.AllAreas);
         agent.SetDestination(currentDestination);
 
@@ -142,6 +144,11 @@ public class UnitAI : MonoBehaviour
     }
 
     [SerializeField] private float gravitateStrength = 0.5f; // 0 = no gravitation, 1 = full pull to center
+
+    //private Vector3 GetRandomGuest()
+    //{
+    //    //var targetGuest = partyReference.Guests.Where
+    //}
 
     private Vector3 GetReachableRandomDestination(Vector3 origin, float radius, int layermask, int maxAttempts = 10)
     {
