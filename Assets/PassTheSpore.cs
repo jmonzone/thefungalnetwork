@@ -93,7 +93,7 @@ public class PassTheSpore : MonoBehaviour
         {
             yield return null;
 
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) || currentPlayer.isDone)
             {
                 // Move to next active player
                 currentPlayer = GetNextActivePlayer(ref currentUnitIndex);
