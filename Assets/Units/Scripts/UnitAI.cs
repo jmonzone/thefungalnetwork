@@ -19,22 +19,33 @@ public class UnitAI : MonoBehaviour
     private float originalY;
     private Vector3 currentDestination;
 
+    private UnitDialogue dialogue;
+
+    private UnitState currentState;
+    private enum UnitState
+    {
+        WANDER,
+        DIALOGUE,
+        DESTINATION
+    }
+
     public event UnityAction<bool> OnIsMovingHasChanged;
 
     private void Awake()
     {
-        var dialogue = GetComponent<UnitDialogue>();
+        dialogue = GetComponent<UnitDialogue>();
         dialogue.OnDialogueStart += Dialogue_OnDialogueStart;
         dialogue.OnDialogueComplete += Dialogue_OnDialogueComplete;
     }
 
     private void Dialogue_OnDialogueComplete()
     {
-        StartCoroutine(WanderRoutine());
+        if (currentState == UnitState.DIALOGUE) StartCoroutine(WanderRoutine());
     }
 
     private void Dialogue_OnDialogueStart()
     {
+        currentState = UnitState.DIALOGUE; 
         StopAllCoroutines();
         agent.SetDestination(transform.position);
         transform.forward = Vector3.back;
@@ -56,15 +67,17 @@ public class UnitAI : MonoBehaviour
         StartCoroutine(WanderRoutine());
     }
 
-    public void SetDestination(Vector3 destination)
+    public void SetDestination(Vector3 destination, Vector3 direction)
     {
+        currentState = UnitState.DESTINATION;
+
         StopAllCoroutines();
-        StartCoroutine(MoveToDestination(destination));
+        StartCoroutine(MoveToDestination(destination, direction));
     }
 
-    private IEnumerator MoveToDestination(Vector3 destination)
+    private IEnumerator MoveToDestination(Vector3 destination, Vector3 direction)
     {
-        agent.SetDestination(currentDestination);
+        agent.SetDestination(destination);
 
         agent.speed = baseSpeed * Random.Range(0.8f, 1.2f);
         agent.angularSpeed = Random.Range(turnSpeedMin, turnSpeedMax);
@@ -87,11 +100,15 @@ public class UnitAI : MonoBehaviour
             yield return null;
         }
 
+        transform.forward = direction;
+
         OnIsMovingHasChanged?.Invoke(false);
     }
 
     private IEnumerator WanderRoutine()
     {
+        currentState = UnitState.WANDER;
+
         while (true)
         {
             // 1. Pick a random point on NavMesh

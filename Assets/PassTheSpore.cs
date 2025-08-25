@@ -10,20 +10,37 @@ public class PassTheSpore : MonoBehaviour
 
     [SerializeField] private Transform gameCenter;
 
+    private void Awake()
+    {
+        EndGame();
+    }
+
     public void StartGame()
     {
         virtualCamera.Priority = 11;
 
         Debug.Log(unitManager.UnitControllers.Count);
 
-        foreach(var unit in unitManager.UnitControllers)
+        var units = unitManager.UnitControllers;
+        int count = units.Count;
+
+        for (int i = 0; i < count; i++)
         {
-            var ai = unit.GetComponent<UnitAI>();
-            var randomDirection = (Vector3)Random.insideUnitCircle.normalized;
-            randomDirection.z = randomDirection.y;
-            randomDirection.y = 0;
-            ai.SetDestination(gameCenter.transform.position + randomDirection * 2f);
+            var ai = units[i].GetComponent<UnitAI>();
+
+            // Evenly spaced angle around a circle
+            float angle = (i / (float)count) * Mathf.PI * 2f;
+
+            // Direction from center
+            Vector3 direction = new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle));
+
+            // Position offset outward from center
+            Vector3 destination = gameCenter.transform.position + direction * 1f;
+
+            // Assign destination + facing direction
+            ai.SetDestination(destination, -direction); // face toward center
         }
+
     }
 
     private void EndGame()
