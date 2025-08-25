@@ -2675,6 +2675,7 @@ MonoBehaviour:
   sporeOuterShell: {fileID: 535099419}
   startColor: {r: 0.79607844, g: 0.972549, b: 0.43529412, a: 1}
   endColor: {r: 1, g: 0.56502765, b: 0.48584908, a: 1}
+  heatDuration: 6
 --- !u!4 &192682053
 Transform:
   m_ObjectHideFlags: 0
@@ -2694,6 +2695,28 @@ Transform:
   - {fileID: 386826575}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &194975030 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2375642026395435090, guid: b5a65936c7fe74e3ca085c517af15846,
+    type: 3}
+  m_PrefabInstance: {fileID: 2328578699890120328}
+  m_PrefabAsset: {fileID: 0}
+--- !u!208 &194975035
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 194975030}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 3.5, y: 3.5, z: 3}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: -0.018000001, y: 2.8730001, z: -0.45800003}
+  m_TimeToStationary: 0.5
 --- !u!1001 &195105031
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4939,6 +4962,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1102675490}
     m_Modifications:
+    - target: {fileID: 2839088792190174496, guid: 652786932bf8d46d3a1fe6d5c4cbe514,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2839088792190174496, guid: 652786932bf8d46d3a1fe6d5c4cbe514,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
@@ -22676,7 +22704,7 @@ Transform:
   m_GameObject: {fileID: 1329972936}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.9238796, z: -0, w: -0.38268325}
-  m_LocalPosition: {x: 0.08, y: 0, z: 1.97}
+  m_LocalPosition: {x: 1.52, y: 0, z: 1.69}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -36855,7 +36883,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2375642026395435090, guid: b5a65936c7fe74e3ca085c517af15846,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 194975035}
   m_SourcePrefab: {fileID: 100100000, guid: b5a65936c7fe74e3ca085c517af15846, type: 3}
 --- !u!1 &2550507569079417665
 GameObject:
@@ -37363,7 +37395,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!64 &3889611923215809799
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -39221,7 +39253,7 @@ Transform:
   m_GameObject: {fileID: 3689570056335633077}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.38268343, z: -0, w: 0.92387956}
-  m_LocalPosition: {x: 1.8738331, y: 0, z: 2.0435386}
+  m_LocalPosition: {x: 2.43, y: 0, z: 2.86}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

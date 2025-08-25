@@ -40,7 +40,21 @@ public class UnitAnimation : MonoBehaviour
         float secondsPerBeat = 60f / dJTableReference.BPM;
         float bpmMultiplier = clipLength / secondsPerBeat;
 
+
         animator.speed = bpmMultiplier;
+
+        animator.Play(clip.name, 0, 0f);
+        animator.Update(0f);
+    }
+
+    public void PlayAnimation(string animationName)
+    {
+        animator.Play(animationName);
+    }
+
+    public void TriggerRespawn()
+    {
+        animator.SetTrigger("Respawn");
     }
 
     private void Unit_OnSelected()
