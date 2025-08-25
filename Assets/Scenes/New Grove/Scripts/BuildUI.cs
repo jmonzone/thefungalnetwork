@@ -25,13 +25,11 @@ public class BuildUI : MonoBehaviour
     private List<ItemUI> itemViewList = new List<ItemUI>();
 
     private BuildController buildController;
-
-
     private Vector3 startInput;
     private bool isDragging;
     private Camera mainCamera;
-    [SerializeField] private LayerMask interactableMask;
 
+    [SerializeField] private LayerMask interactableMask;
 
     private void Awake()
     {

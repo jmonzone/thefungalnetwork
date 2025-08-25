@@ -4,20 +4,14 @@ using UnityEngine;
 
 public class PartyGuestSpawner : MonoBehaviour
 {
-    [SerializeField] private PartyReference partyReference;
-
     [SerializeField] private Transform spawnAnchor;
     [SerializeField] private UnitController unitPrefab;
     [SerializeField] private Unit guestUnit;
 
-    private void OnEnable()
+    private void Awake()
     {
-        partyReference.OnGuestArrived += PartyReference_OnGuestArrived;
-    }
-
-    private void OnDisable()
-    {
-        partyReference.OnGuestArrived -= PartyReference_OnGuestArrived;
+        var partyManager = GetComponent<PartyHUDUI>();
+        partyManager.OnGuestArrived += PartyReference_OnGuestArrived;
     }
 
     private void PartyReference_OnGuestArrived()
