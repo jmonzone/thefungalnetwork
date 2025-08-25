@@ -6,6 +6,8 @@ public class DJTableController : MonoBehaviour, IInteractable
     [SerializeField] private InventoryReference inventory;
     [SerializeField] private DJTableReference djReference;
     [SerializeField] private BackgroundMusicDelegate backgroundMusic;
+    [SerializeField] private Navigation navigation;
+    [SerializeField] private ViewReference djView;
 
     [SerializeField] private AudioSource audioSource1;
     [SerializeField] private AudioSource audioSource2;
@@ -30,7 +32,7 @@ public class DJTableController : MonoBehaviour, IInteractable
 
     void IInteractable.OnSelect()
     {
-        djReference.Show();
+        navigation.Navigate(djView);
     }
 
     private Coroutine leftCoroutine;

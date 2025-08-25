@@ -29,7 +29,6 @@ public abstract class UIReference : ScriptableObject
     }
 }
 
-[CreateAssetMenu]
 public class SpellbookReference : UIReference
 {
     [SerializeField] private List<Item> items;

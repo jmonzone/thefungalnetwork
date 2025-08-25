@@ -7,11 +7,12 @@ using UnityEngine.UI;
 
 public class DJTableUI : MonoBehaviour
 {
+    [SerializeField] private DJTableReference dJTableReference;
     [SerializeField] private BuildSystem build;
 
     [SerializeField] private List<PartyLightController> partyLights;
     [SerializeField] private DJTableController dJTableController;
-
+    
     [SerializeField] private DJTrack track1;
     [SerializeField] private DJTrack track2;
     [SerializeField] private Slider trackSlider;
@@ -23,7 +24,6 @@ public class DJTableUI : MonoBehaviour
     private Coroutine partyCoroutine;
 
     public float staggerTime = 0.25f; // delay between groups in alternating
-    private float bpm = 135f;
 
     private void Awake()
     {
@@ -58,7 +58,7 @@ public class DJTableUI : MonoBehaviour
 
         bpmSlider.onValueChanged.AddListener(value =>
         {
-            bpm = value;
+            dJTableReference.SetBPM(value);
             UpdateTrackPitch();
         });
     }
@@ -83,6 +83,7 @@ public class DJTableUI : MonoBehaviour
 
     private void UpdateTrackPitch()
     {
+        var bpm = dJTableReference.BPM;
         float pitch1 = bpm / leftTrack.Track.Bpm;
         dJTableController.SetLeftPitch(pitch1);
         float pitch2 = bpm / rightTrack.Track.Bpm;
@@ -133,7 +134,7 @@ public class DJTableUI : MonoBehaviour
 
     private DJTrack currentTrack;
 
-    private float BeatDuration => 60f / bpm; // seconds per beat
+    private float BeatDuration => 60f / dJTableReference.BPM; // seconds per beat
 
     private IEnumerator PartyLightsRoutine()
     {
