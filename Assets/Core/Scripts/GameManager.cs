@@ -18,8 +18,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private BuildSystem build;
     [SerializeField] private InventoryReference inventory;
     [SerializeField] private UnitListReference unitList;
+    [SerializeField] private PartyReference partyReference;
     [SerializeField] private Volume volume;
-
 
     private void Awake()
     {
@@ -41,8 +41,9 @@ public class GameManager : MonoBehaviour
             inventory.Initialize();
             build.Initialize();
             unitList.Initialize();
+            partyReference.Initialize();
 
-            
+
             uiNavigation.Initialize();
 
             displayName.Initialize();

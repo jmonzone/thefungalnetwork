@@ -15,17 +15,16 @@ public class PartyHUDUI : MonoBehaviour
 
 
     [SerializeField] private PartyPhase partyPhase;
+
     [SerializeField] private float currentTimer;
     [SerializeField] private float guestTimer;
-    [SerializeField] private bool partyStarted;
 
-    private float numberOfStages = 3;
+    private float numberOfStages = 4;
 
-    public event UnityAction<Unit> OnGuestArrived;
+    public event UnityAction<PartyPhase> OnPhaseChanged;
 
     private void Awake()
     {
-        partyStarted = false;
         closeButton.onClick.AddListener(() =>
         {
             navigation.GoBack(2);
@@ -34,7 +33,7 @@ public class PartyHUDUI : MonoBehaviour
 
     private void Update()
     {
-        if (partyStarted)
+        if (partyReference.IsActive)
         {
             currentTimer += Time.deltaTime;
             slider.value = currentTimer;
@@ -63,7 +62,6 @@ public class PartyHUDUI : MonoBehaviour
 
     private void PartyReference_OnPartyStarted()
     {
-        partyStarted = true;
         currentTimer = 0;
         slider.minValue = 0;
         slider.maxValue = GetTotalPartyDuration();
@@ -90,53 +88,20 @@ public class PartyHUDUI : MonoBehaviour
         return total;
     }
 
-
-
     // Pass in explicit phase durations
     public IEnumerator PartyRoutine()
     {
         for (int i = 0; i < numberOfStages; i++)
         {
+            yield return new WaitUntil(() => partyReference.IsActive);
+
             partyPhase = (PartyPhase)i;
+            OnPhaseChanged?.Invoke(partyPhase);
             float phaseDuration = GetPhaseDuration(partyPhase);
 
-            // Run phase-specific logic
-            switch (partyPhase)
-            {
-                case PartyPhase.DOORS_OPEN:
-                    yield return DoorsOpenRoutine(phaseDuration);
-                    break;
-
-                default:
-                    yield return new WaitForSeconds(phaseDuration);
-                    break;
-            }
+            yield return new WaitForSeconds(phaseDuration);
         }
 
-        partyStarted = false;
         partyReference.StopParty();
-    }
-
-    private IEnumerator DoorsOpenRoutine(float duration)
-    {
-        // Initial delay before the first guest arrives
-        float initialDelay = Random.Range(0.5f, 2f);
-        yield return new WaitForSeconds(initialDelay);
-
-        int guestsToSpawn = partyReference.CurrentParty.Guests.Count;
-        if (guestsToSpawn == 0)
-            yield break;
-
-        // Spread arrivals across the given phase duration
-        float avgInterval = duration / (guestsToSpawn + 1);
-
-        for (int i = 0; i < guestsToSpawn; i++)
-        {
-            float randomizedInterval = avgInterval * Random.Range(0.8f, 1.2f);
-            yield return new WaitForSeconds(randomizedInterval);
-
-            Debug.Log("Spawn Guest " + (i + 1));
-            OnGuestArrived?.Invoke(partyReference.CurrentParty.Guests[i]);
-        }
     }
 }

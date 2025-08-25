@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class PassTheSpore : MonoBehaviour
 {
+    [SerializeField] private PartyReference partyReference;
     [SerializeField] private UnitManager unitManager;
     [SerializeField] private PartyGuestSpawner guestManager;
     [SerializeField] private CinemachineVirtualCamera virtualCamera;
@@ -44,6 +45,8 @@ public class PassTheSpore : MonoBehaviour
 
     public void StartGame()
     {
+        partyReference.PauseParty();
+
         virtualCamera.Priority = 11;
         sporeBall.gameObject.SetActive(true);
 
@@ -185,6 +188,8 @@ public class PassTheSpore : MonoBehaviour
 
     private void EndGame()
     {
+        partyReference.ResumeParty();
+
         navigation.GoBack();
 
         Reset();

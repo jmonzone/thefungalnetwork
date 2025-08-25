@@ -2664,6 +2664,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72f42a3c5619c40d58579cee8ede2e98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  partyReference: {fileID: 0}
   unitManager: {fileID: 2087691131}
   guestManager: {fileID: 1170789630}
   virtualCamera: {fileID: 1901447078}
@@ -20007,7 +20008,6 @@ MonoBehaviour:
   partyPhase: 0
   currentTimer: 0
   guestTimer: 0
-  partyStarted: 0
 --- !u!114 &1170789630
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20020,6 +20020,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 688aedcccf4b943f8b28c6abe2155189, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  partyReference: {fileID: 11400000, guid: d2092e9896dc047a3939198bb6a0204c, type: 2}
   spawnAnchor: {fileID: 1329972940}
   unitPrefab: {fileID: 218634806848664791, guid: e9f8a044aacf9498eb482430f1da38f4,
     type: 3}
