@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -6,20 +5,18 @@ using UnityEngine.Events;
 public class UnitManager : MonoBehaviour
 {
     [SerializeField] private UnitListReference unitList;
-
-    [SerializeField] private List<UnitController> unitControllers;
-    [SerializeField] private UnitController initialUnit;
     [SerializeField] private UnitController unitPrefab;
-
     [SerializeField] private Transform unitSpawnAnchor;
     [SerializeField] private CameraPanController cameraPanController;
+
+    [SerializeField] private List<UnitController> unitControllers;
 
     public List<UnitController> UnitControllers => unitControllers;
     public event UnityAction<UnitController> OnUnitSummoned;
 
     private void Awake()
     {
-        unitControllers = new List<UnitController> { initialUnit };
+        unitControllers = new List<UnitController>();
     }
 
     private void Start()
@@ -53,6 +50,5 @@ public class UnitManager : MonoBehaviour
 
         cameraPanController.CenterTargetInView(unitController.transform.position);
         OnUnitSummoned?.Invoke(unitController);
-
     }
 }

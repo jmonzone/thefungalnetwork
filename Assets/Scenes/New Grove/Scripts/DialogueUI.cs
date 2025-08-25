@@ -18,6 +18,7 @@ public class DialogueUI : MonoBehaviour
     [SerializeField] private float punctuationPause = 0.2f;       // Extra pause for punctuation
 
     [SerializeField] private TarotCardUI tarotCard;
+    [SerializeField] private PassTheSpore passTheSpore;
 
     private void Awake()
     {
@@ -74,6 +75,13 @@ public class DialogueUI : MonoBehaviour
                     });
 
                     tarotCard.gameObject.SetActive(true);
+                    break;
+                case DialogueAction.PLAY_SPORE:
+                    continueButton.onClick.AddListener(() =>
+                    {
+                        nextPagePressed = true;
+                        passTheSpore.StartGame();
+                    });
                     break;
                 default:
                     continueButton.onClick.AddListener(() => nextPagePressed = true);
