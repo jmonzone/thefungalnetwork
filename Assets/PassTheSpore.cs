@@ -12,9 +12,17 @@ public class PassTheSpore : MonoBehaviour
     [SerializeField] private Transform gameCenter;
     [SerializeField] private Button exitButton;
     [SerializeField] private Transform sporeBall;
+    [SerializeField] private Renderer sporeOuterShell;
+
+
+    [SerializeField] private Color startColor;
+    [SerializeField] private Color endColor;
+
+    private Material sporeMaterial;
 
     private void Awake()
     {
+        sporeMaterial = sporeOuterShell.material;
         EndGame();
 
         exitButton.onClick.AddListener(EndGame);
@@ -46,22 +54,38 @@ public class PassTheSpore : MonoBehaviour
 
         navigation.Navigate(passTheSporeView);
 
-        StartCoroutine(GameRoutine());
+        StartCoroutine(GameInput());
+        StartCoroutine(GameUpdate());
     }
 
-    private IEnumerator GameRoutine()
+    private IEnumerator GameInput()
     {
+        var unitCount = unitManager.UnitControllers.Count;
         var currentUnitIndex = 0;
+
         while (true)
         {
-            sporeBall.position = unitManager.UnitControllers[currentUnitIndex % unitManager.UnitControllers.Count].transform.position + Vector3.up * 1f;
+            sporeBall.position = unitManager.UnitControllers[currentUnitIndex % unitCount].transform.position + Vector3.up * 1f;
             yield return new WaitUntil(() => Input.GetMouseButtonUp(0));
             yield return new WaitForEndOfFrame();
-            Debug.Log("PassTheSpore passed");
             currentUnitIndex++;
         }
     }
 
+    private IEnumerator GameUpdate()
+    {
+        sporeMaterial.SetColor("_Outer_Color", startColor);
+
+        var i = 0f;
+        while (true)
+        {
+            sporeMaterial.SetColor("_Outer_Color", Color.Lerp(startColor, endColor, i / 10f));
+            i += Time.deltaTime;
+
+            if (i > 10f) i = 0;
+            yield return null;
+        }
+    }
     private void EndGame()
     {
         StopAllCoroutines();
