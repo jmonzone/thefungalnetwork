@@ -17,6 +17,7 @@ public class InteractionController : MonoBehaviour
 
     [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference homeView;
+    [SerializeField] private ViewReference partyView;
 
     private Camera mainCamera;
 
@@ -38,7 +39,7 @@ public class InteractionController : MonoBehaviour
 
     private void Update()
     {
-        if (!homeView.Canvas.IsVisible) return;
+        if (!homeView.Canvas.IsVisible && !partyView.Canvas.IsVisible) return;
 
         if (Input.GetMouseButtonDown(0))
         {

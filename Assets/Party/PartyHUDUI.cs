@@ -17,18 +17,40 @@ public class PartyHUDUI : MonoBehaviour
     [SerializeField] private PartyPhase partyPhase;
     [SerializeField] private float currentTimer;
     [SerializeField] private float guestTimer;
+    [SerializeField] private bool partyStarted;
 
-    private float numberOfStages = 4;
+    private float numberOfStages = 3;
 
-    public event UnityAction OnGuestArrived;
+    public event UnityAction<Unit> OnGuestArrived;
 
     private void Awake()
     {
+        partyStarted = false;
         closeButton.onClick.AddListener(() =>
         {
             navigation.GoBack(2);
         });
     }
+
+    private void Update()
+    {
+        if (partyStarted)
+        {
+            currentTimer += Time.deltaTime;
+            slider.value = currentTimer;
+            phaseText.text = partyPhase switch
+            {
+                PartyPhase.DOORS_OPEN => "Doors Open",
+                PartyPhase.COCKTAIL_HOUR => "Meet the Fungals!",
+                PartyPhase.EVENT => "Main Event",
+                PartyPhase.WIND_DOWN => "Slow things down",
+                PartyPhase.CLEANUP => "Clean up time!",
+                _ => "error",
+            };
+        }
+
+    }
+
     private void OnEnable()
     {
         partyReference.OnPartyStarted += PartyReference_OnPartyStarted;
@@ -41,67 +63,80 @@ public class PartyHUDUI : MonoBehaviour
 
     private void PartyReference_OnPartyStarted()
     {
+        partyStarted = true;
+        currentTimer = 0;
         slider.minValue = 0;
-        slider.maxValue = partyReference.CurrentParty.Duration;
+        slider.maxValue = GetTotalPartyDuration();
 
         StartCoroutine(PartyRoutine());
     }
 
-    private void Update()
+    private float GetPhaseDuration(PartyPhase phase)
     {
-        slider.value = currentTimer;
-        phaseText.text = partyPhase switch
+        return phase switch
         {
-            PartyPhase.DOORS_OPEN => "Doors Open",
-            PartyPhase.COCKTAIL_HOUR => "Meet the Fungals!",
-            PartyPhase.EVENT => "Main Event",
-            PartyPhase.WIND_DOWN => "Slow things down",
-            PartyPhase.CLEANUP => "Clean up time!",
-            _ => "error",
+            PartyPhase.DOORS_OPEN => 7.5f,
+            _ => 15f,
         };
     }
 
-    public IEnumerator PartyRoutine()
+    private float GetTotalPartyDuration()
     {
-        currentTimer = 0f;
-        for (var i = 0; i < numberOfStages; i++)
+        float total = 0f;
+        for (int i = 0; i < numberOfStages; i++)
         {
-            partyPhase = (PartyPhase)i;
-            if (partyPhase == PartyPhase.DOORS_OPEN)
-            {
-                StartCoroutine(DoorsOpenRoutine());
-            }
-
-            var stageDuration = partyReference.CurrentParty.Duration / numberOfStages;
-
-            while (currentTimer < (i + 1) * stageDuration)
-            {
-                currentTimer += Time.deltaTime;
-                yield return null;
-            }
+            total += GetPhaseDuration((PartyPhase)i);
         }
+        return total;
     }
 
-    public IEnumerator DoorsOpenRoutine()
-    {
-        var stageDuration = partyReference.CurrentParty.Duration / numberOfStages;
 
+
+    // Pass in explicit phase durations
+    public IEnumerator PartyRoutine()
+    {
+        for (int i = 0; i < numberOfStages; i++)
+        {
+            partyPhase = (PartyPhase)i;
+            float phaseDuration = GetPhaseDuration(partyPhase);
+
+            // Run phase-specific logic
+            switch (partyPhase)
+            {
+                case PartyPhase.DOORS_OPEN:
+                    yield return DoorsOpenRoutine(phaseDuration);
+                    break;
+
+                default:
+                    yield return new WaitForSeconds(phaseDuration);
+                    break;
+            }
+        }
+
+        partyStarted = false;
+        partyReference.StopParty();
+    }
+
+    private IEnumerator DoorsOpenRoutine(float duration)
+    {
         // Initial delay before the first guest arrives
         float initialDelay = Random.Range(0.5f, 2f);
         yield return new WaitForSeconds(initialDelay);
 
-        // Spread guest arrivals across the stage duration
-        int guestsToSpawn = partyReference.CurrentParty.NumberOfGuests;
-        float avgInterval = stageDuration / (guestsToSpawn + 1);
+        int guestsToSpawn = partyReference.CurrentParty.Guests.Count;
+        if (guestsToSpawn == 0)
+            yield break;
+
+        // Spread arrivals across the given phase duration
+        float avgInterval = duration / (guestsToSpawn + 1);
 
         for (int i = 0; i < guestsToSpawn; i++)
         {
-            // Add slight random variation to the interval
-            float randomizedInterval = avgInterval * UnityEngine.Random.Range(0.8f, 1.2f);
+            float randomizedInterval = avgInterval * Random.Range(0.8f, 1.2f);
             yield return new WaitForSeconds(randomizedInterval);
 
             Debug.Log("Spawn Guest " + (i + 1));
-            OnGuestArrived?.Invoke();
+            OnGuestArrived?.Invoke(partyReference.CurrentParty.Guests[i]);
         }
     }
 }

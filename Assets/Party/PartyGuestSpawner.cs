@@ -1,12 +1,16 @@
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PartyGuestSpawner : MonoBehaviour
 {
     [SerializeField] private Transform spawnAnchor;
     [SerializeField] private UnitController unitPrefab;
-    [SerializeField] private Unit guestUnit;
+    [SerializeField] private UnitListReference unitListReference;
+
+    [SerializeField] private List<UnitController> guests;
+
+    public List<UnitController> Guests => guests;
 
     private void Awake()
     {
@@ -14,9 +18,11 @@ public class PartyGuestSpawner : MonoBehaviour
         partyManager.OnGuestArrived += PartyReference_OnGuestArrived;
     }
 
-    private void PartyReference_OnGuestArrived()
+    private void PartyReference_OnGuestArrived(Unit guestUnit)
     {
         var guest = Instantiate(unitPrefab, spawnAnchor.transform.position, Quaternion.identity);
         guest.Initialize(guestUnit);
+
+        guests.Add(guest);
     }
 }

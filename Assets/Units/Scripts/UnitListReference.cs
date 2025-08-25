@@ -47,12 +47,24 @@ public class UnitListReference : UIReference
         }
     }
 
+    public Unit GetNewUnit(List<Unit> blackList)
+    {
+        var available = unitCollection.Where(u => !blackList.Contains(u)).ToList();
+
+        if (available.Count > 0)
+        {
+            return available[Random.Range(0, available.Count)];
+        }
+
+        return unitCollection[Random.Range(0, unitCollection.Count)];
+    }
+
+
     public void AddUnit(Unit unit)
     {
         if (!unit)
         {
-            unit = unitCollection.FirstOrDefault(u => !units.Contains(u))
-               ?? unitCollection.LastOrDefault();
+            unit = GetNewUnit(units);
         }
 
         units.Add(unit);

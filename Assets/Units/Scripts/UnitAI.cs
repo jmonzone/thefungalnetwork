@@ -43,12 +43,6 @@ public class UnitAI : MonoBehaviour
         if (currentState == UnitState.DIALOGUE) StartWander();
     }
 
-    public void StartWander()
-    {
-        StopAllCoroutines();
-        StartCoroutine(WanderRoutine());
-    }
-
     private void Dialogue_OnDialogueStart()
     {
         currentState = UnitState.DIALOGUE; 
@@ -86,50 +80,64 @@ public class UnitAI : MonoBehaviour
         OnIsMovingHasChanged?.Invoke(false);
     }
 
+    public void StartWander()
+    {
+        StopAllCoroutines();
+        StartCoroutine(WanderRoutine());
+    }
 
     private IEnumerator WanderRoutine()
     {
         currentState = UnitState.WANDER;
 
+        // First step: from global zero
+        yield return WanderStep(Vector3.zero, 1.5f);
+
+        // Then loop from current position
         while (true)
         {
-            // 1. Pick a random point on NavMesh
-            currentDestination = GetReachableRandomDestination(transform.position, wanderRadius, NavMesh.AllAreas);
-            agent.SetDestination(currentDestination);
+            yield return WanderStep(transform.position, wanderRadius);
+        }
+    }
 
-            // 2. Slightly randomize speed and rotation for organic feel
-            agent.speed = baseSpeed * Random.Range(0.8f, 1.2f);
-            agent.angularSpeed = Random.Range(turnSpeedMin, turnSpeedMax);
+    private IEnumerator WanderStep(Vector3 origin, float radius)
+    {
+        // 1. Pick a random point on NavMesh
+        currentDestination = GetReachableRandomDestination(origin, radius, NavMesh.AllAreas);
+        agent.SetDestination(currentDestination);
 
-            OnIsMovingHasChanged?.Invoke(true);
+        // 2. Randomize speed/rotation for organic feel
+        agent.speed = baseSpeed * Random.Range(0.8f, 1.2f);
+        agent.angularSpeed = Random.Range(turnSpeedMin, turnSpeedMax);
 
-            // 3. Wait until reached destination or fail
-            float timeout = 10f; // max time to reach destination
-            float timer = 0f;
+        OnIsMovingHasChanged?.Invoke(true);
 
-            while ((agent.pathPending || agent.remainingDistance > agent.stoppingDistance) && timer < timeout)
+        // 3. Wait until reached destination or fail
+        float timeout = 10f;
+        float timer = 0f;
+
+        while ((agent.pathPending || agent.remainingDistance > agent.stoppingDistance) && timer < timeout)
+        {
+            if (agent.pathStatus == NavMeshPathStatus.PathInvalid)
             {
-                // If path is invalid or blocked
-                if (agent.pathStatus == NavMeshPathStatus.PathInvalid)
-                {
-                    Debug.Log("Invalid");
-                    break;
-                }
-
-                timer += Time.deltaTime;
-                yield return null;
+                Debug.Log("Invalid path");
+                break;
             }
 
-            OnIsMovingHasChanged?.Invoke(false);
+            timer += Time.deltaTime;
+            yield return null;
+        }
 
-            // 4. Idle for a random duration
-            float idleTime = Random.Range(minIdleTime, maxIdleTime);
-            float elapsed = 0f;
-            while (elapsed < idleTime)
-            {
-                elapsed += Time.deltaTime;
-                yield return null;
-            }
+        OnIsMovingHasChanged?.Invoke(false);
+
+        // 4. Idle for random duration
+        float idleTime = Random.Range(minIdleTime, maxIdleTime);
+        float elapsed = 0f;
+
+        while (elapsed < idleTime)
+        {
+            elapsed += Time.deltaTime;
+            yield return null;
         }
     }
 

@@ -2665,6 +2665,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitManager: {fileID: 2087691131}
+  guestManager: {fileID: 1170789630}
   virtualCamera: {fileID: 1901447078}
   navigation: {fileID: 11400000, guid: 7af35f01730a846d692adda4734cddd3, type: 2}
   passTheSporeView: {fileID: 11400000, guid: 6638f83fc0b514b6e9184b04c4bcc8fa, type: 2}
@@ -3108,7 +3109,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &224444617
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10003,7 +10004,7 @@ SphereCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
@@ -10376,7 +10377,6 @@ GameObject:
   - component: {fileID: 581710140}
   - component: {fileID: 581710143}
   - component: {fileID: 581710142}
-  - component: {fileID: 581710141}
   m_Layer: 8
   m_Name: Cylinder
   m_TagString: Untagged
@@ -10399,29 +10399,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 192682053}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &581710141
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 581710139}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5000001
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
 --- !u!23 &581710142
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -10429,7 +10406,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 581710139}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -19997,6 +19974,10 @@ MonoBehaviour:
   phaseText: {fileID: 942851305}
   closeButton: {fileID: 1622262610}
   navigation: {fileID: 11400000, guid: 7af35f01730a846d692adda4734cddd3, type: 2}
+  partyPhase: 0
+  currentTimer: 0
+  guestTimer: 0
+  partyStarted: 0
 --- !u!114 &1170789630
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20009,11 +19990,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 688aedcccf4b943f8b28c6abe2155189, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  partyReference: {fileID: 11400000, guid: d2092e9896dc047a3939198bb6a0204c, type: 2}
   spawnAnchor: {fileID: 1329972940}
   unitPrefab: {fileID: 218634806848664791, guid: e9f8a044aacf9498eb482430f1da38f4,
     type: 3}
-  guestUnit: {fileID: 11400000, guid: a0789f36ed7f54fe7bb95cee622eeb16, type: 2}
+  unitListReference: {fileID: 11400000, guid: 558326713f6b14f45ab4db31d34472f2, type: 2}
+  guests: []
 --- !u!1 &1178600873
 GameObject:
   m_ObjectHideFlags: 0
@@ -26694,7 +26675,7 @@ SphereCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
@@ -28802,7 +28783,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1703077660
 Transform:
   m_ObjectHideFlags: 0
@@ -32185,6 +32166,7 @@ MonoBehaviour:
   cameraPanController: {fileID: 1446848728}
   navigation: {fileID: 11400000, guid: 7af35f01730a846d692adda4734cddd3, type: 2}
   homeView: {fileID: 11400000, guid: 8738f1e97be914065a0091ac6b397253, type: 2}
+  partyView: {fileID: 11400000, guid: 9bfb1103a1c06425080a014677e9dbed, type: 2}
 --- !u!1 &1852834815
 GameObject:
   m_ObjectHideFlags: 0
@@ -34328,7 +34310,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 0}
-  isSelected: 0
 --- !u!1001 &1946184926
 PrefabInstance:
   m_ObjectHideFlags: 0
