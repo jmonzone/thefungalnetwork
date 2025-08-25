@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class UnitAnimation : MonoBehaviour
@@ -34,16 +35,27 @@ public class UnitAnimation : MonoBehaviour
 
     private void DJTableReference_OnBPMChanged()
     {
-        AnimationClip clip = animator.runtimeAnimatorController.animationClips[0]; // the clip to sync
+        // Get current animation state info on layer 0
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        if (!animator.runtimeAnimatorController.animationClips.Any())
+            return;
 
-        float clipLength = clip.length;
+        // Find the clip currently playing
+        AnimationClip currentClip = animator.runtimeAnimatorController.animationClips
+            .FirstOrDefault(c => stateInfo.IsName(c.name));
+
+
+        if (currentClip == null)
+            return;
+
+        float clipLength = currentClip.length;
         float secondsPerBeat = 60f / dJTableReference.BPM;
         float bpmMultiplier = clipLength / secondsPerBeat;
 
 
         animator.speed = bpmMultiplier;
 
-        animator.Play(clip.name, 0, 0f);
+        animator.Play(currentClip.name, 0, 0f);
         animator.Update(0f);
     }
 
