@@ -5,43 +5,24 @@ public class SporeController : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private InventoryReference inventoryReference;
+    [SerializeField] private SporeReference sporeReference;
 
     [Header("Spore Settings")]
     [SerializeField] private float driftDownDuration = 2f;
 
-    private Camera mainCamera;
-
-    void Start()
-    {
-        mainCamera = Camera.main;
-    }
-
-    private void DetectClick()
-    {
-        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-
-        if (Physics.Raycast(ray, out RaycastHit hit))
-        {
-            var sporeController = hit.collider.GetComponentInParent<SporeController>();
-            if (this == sporeController)
-            {
-                OnSporeClicked();
-            }
-        }
-    }
-
-    private void OnSporeClicked()
+    public void Collect()
     {
         inventoryReference.IncreaseSporeCount(1);
 
         StopAllCoroutines();
 
-        //todo: pool
-        Destroy(gameObject);
+        sporeReference.RemoveSpore(this);
+        gameObject.SetActive(false);
     }
 
     public void LaunchSpore(Vector3 peak, Vector3 landing)
     {
+        sporeReference.RegisterSpore(this);
         StartCoroutine(AnimateSpore(peak, landing));
     }
 

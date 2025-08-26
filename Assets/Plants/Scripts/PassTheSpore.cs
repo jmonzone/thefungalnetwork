@@ -200,7 +200,7 @@ public class PassTheSpore : MonoBehaviour
             animation.TriggerRespawn();
 
             var ai = player.unit.GetComponent<UnitAI>();
-            ai.StartWander();
+            //ai.StartWander();
         }
 
         players = new List<PassTheSporePlayer>();
