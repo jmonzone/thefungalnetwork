@@ -144,16 +144,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3f24cc79155d40e993823da23697530, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  plantModel: {fileID: 1952768850567855973}
-  bounceScale: 1.2
-  bounceDuration: 0.3
   sporePrefab: {fileID: 7815568185827635900, guid: fbabe70b576424174862d137f97f8310,
     type: 3}
   spawnPoint: {fileID: 2942090299528431237}
-  initialUpForce: 2
-  driftStrength: 1
-  fallSpeed: 1
-  emitInterval: 3
+  navMeshSurface: {fileID: 0}
+  dJTableReference: {fileID: 11400000, guid: 3bda1116fcf8f49e696cd21c6b5092da, type: 2}
+  emissionRate: 3
+  launchHeight: 2
+  driftDownDuration: 2
+  landingRadius: 2
+  bounceScale: 1.2
+  bounceDuration: 0.3
 --- !u!208 &7306037012472943993
 NavMeshObstacle:
   m_ObjectHideFlags: 0
