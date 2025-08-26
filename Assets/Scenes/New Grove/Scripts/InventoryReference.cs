@@ -5,6 +5,8 @@ using UnityEngine.Events;
 [CreateAssetMenu]
 public class InventoryReference : ScriptableObject
 {
+    [Header("References")]
+    [SerializeField] private LocalData localData;
     [Header("Settings")]
     [SerializeField] private int initialSporeCount = 124;
     [SerializeField] private List<Item> initialItems;
@@ -19,22 +21,35 @@ public class InventoryReference : ScriptableObject
     public event UnityAction<int> OnSporeCountChanged;
     public event UnityAction OnItemSummoned;
 
+    private const string SPORE_KEY = "spore";
+
     public void Initialize()
     {
         items = new List<Item>(initialItems);
-        sporeCount = initialSporeCount;
+
+        if (localData.JsonFile.ContainsKey(SPORE_KEY))
+        {
+            var sporeJson = localData.JsonFile[SPORE_KEY];
+            sporeCount = (int)sporeJson;
+        }
+        else
+        {
+            sporeCount = initialSporeCount;
+        }
     }
 
     public void IncreaseSporeCount(int value = 1)
     {
         sporeCount += value;
         OnSporeCountChanged?.Invoke(sporeCount);
+        localData.SaveData(SPORE_KEY, sporeCount);
     }
 
     public void DecreaseSporeCount(int value = 1)
     {
         sporeCount -= value;
         OnSporeCountChanged?.Invoke(sporeCount);
+        localData.SaveData(SPORE_KEY, sporeCount);
     }
 
     public void SummonItem(Item item)
