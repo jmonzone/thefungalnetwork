@@ -63,9 +63,8 @@ public class InteractionController : MonoBehaviour
             if (Physics.Raycast(ray, out hit, 1000f, interactableMask))
             {
                 var interactable = hit.transform.GetComponentInParent<IInteractable>();
-                if (interactable != null && selected != interactable.Transform)
+                if (interactable != null)
                 {
-                    cameraPanController.CenterTargetInView(interactable.Transform.position);
                     interactable.OnSelect();
                     selected = interactable.Transform;
                     OnEntitySelected?.Invoke(null);

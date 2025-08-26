@@ -41,6 +41,6 @@ public class UnitParty : MonoBehaviour
     {
         energy += value;
 
-        animator.SetFloat("Energy", energy);
+        //animator.SetFloat("Energy", energy);
     }
 }

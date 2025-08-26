@@ -5,15 +5,15 @@ using UnityEngine.Events;
 [CreateAssetMenu]
 public class InventoryReference : ScriptableObject
 {
-    [SerializeField] private int sporeCount = 0;
+    [Header("Settings")]
     [SerializeField] private int initialSporeCount = 124;
-    [SerializeField] private bool hasDJTable = false;
-
     [SerializeField] private List<Item> initialItems;
+
+    [Header("Runtime")]
+    [SerializeField] private int sporeCount = 0;
     [SerializeField] private List<Item> items;
 
     public int SporeCount => sporeCount;
-    public bool HasDJTable => hasDJTable;
     public List<Item> Items => items;
 
     public event UnityAction<int> OnSporeCountChanged;
@@ -23,7 +23,6 @@ public class InventoryReference : ScriptableObject
     {
         items = new List<Item>(initialItems);
         sporeCount = initialSporeCount;
-        hasDJTable = false;
     }
 
     public void IncreaseSporeCount(int value = 1)
@@ -42,7 +41,6 @@ public class InventoryReference : ScriptableObject
     {
         items.Add(item);
         DecreaseSporeCount(item.Price);
-        if (item.Name == "DJ Table") hasDJTable = true;
         OnItemSummoned?.Invoke();
     }
 }

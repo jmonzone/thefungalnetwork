@@ -154,7 +154,7 @@ public class CameraPanController : MonoBehaviour
         // Convert screenDelta to world delta at the target's depth
         Vector3 camPos = transform.position;
 
-        Vector3 worldCenter = cam.ScreenToWorldPoint(new Vector3(Screen.width / 2f, Screen.height / 2f + 150, targetScreenPos.z));
+        Vector3 worldCenter = cam.ScreenToWorldPoint(new Vector3(Screen.width / 2f, Screen.height / 2f, targetScreenPos.z));
         Vector3 worldTarget = cam.ScreenToWorldPoint(new Vector3(targetScreenPos.x, targetScreenPos.y, targetScreenPos.z));
 
         Vector3 worldDelta = worldTarget - worldCenter;

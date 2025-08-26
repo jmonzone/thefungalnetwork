@@ -81,8 +81,6 @@ public class Navigation : ScriptableObject
 
     public void GoBack()
     {
-        Debug.Log($"GoBack");
-
         if (history.Count > 1)
         {
             history.RemoveAt(history.Count - 1);
@@ -98,8 +96,6 @@ public class Navigation : ScriptableObject
 
     public void GoBack(int steps = 1)
     {
-        Debug.Log($"GoBack {steps}");
-
         if (history.Count > steps)
         {
             ViewReference targetView = null;
@@ -107,7 +103,6 @@ public class Navigation : ScriptableObject
 
             while (steps > 0)
             {
-                Debug.Log($"GoBack.while {steps}");
                 targetView = history.Last();
                 history.RemoveAt(history.Count - 1);
                 steps--;

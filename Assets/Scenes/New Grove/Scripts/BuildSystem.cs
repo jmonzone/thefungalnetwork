@@ -9,6 +9,8 @@ public class BuildSystem : ScriptableObject
 {
     [SerializeField] private LocalData localData;
     [SerializeField] private InventoryReference inventory;
+    [SerializeField] private Item initialItem;
+
     [SerializeField] private int culturePoints;
     [SerializeField] private List<BuildData> builds;
 
@@ -53,8 +55,14 @@ public class BuildSystem : ScriptableObject
                         }
                     };
                 }
-
-                //LoadExistingBuild();
+            }
+            else
+            {
+                var buildData = CreateInstance<BuildData>();
+                var position = new Vector3(-1.25f, 0f, -2.5f);
+                buildData.Initialize(initialItem, position);
+                builds.Add(buildData);
+                culturePoints += buildData.Item.CulturePoints;
             }
         }
         catch (Exception e)
