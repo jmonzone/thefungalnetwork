@@ -8,7 +8,8 @@ public enum UnitState
 {
     IDLE,
     WANDER,
-    SPORE
+    COLLECT_SPORE,
+    HARVEST_PLANT,
 }
 
 [RequireComponent(typeof(NavMeshAgent))]
@@ -17,6 +18,7 @@ public class UnitAI : MonoBehaviour
     [Header("References")]
     [SerializeField] private PartyReference partyReference;
     [SerializeField] private SporeReference sporeReference;
+    [SerializeField] private BuildSystem buildReference;
 
     [Header("Wandering Settings")]
     [SerializeField] private float wanderRadius = 10f;           // radius for random destinations
@@ -73,7 +75,7 @@ public class UnitAI : MonoBehaviour
         if (TryGetClosestSpore(out SporeController closestSpore))
         {
             targetSpore = closestSpore;
-            SetState(UnitState.SPORE);
+            SetState(UnitState.COLLECT_SPORE);
         }
         else
         {
@@ -94,7 +96,7 @@ public class UnitAI : MonoBehaviour
                     closestSpore = spore;
                 }
             }
-            SetState(UnitState.SPORE);
+            SetState(UnitState.COLLECT_SPORE);
             return true;
         }
         else
@@ -121,7 +123,7 @@ public class UnitAI : MonoBehaviour
 
         switch (state)
         {
-            case UnitState.SPORE:
+            case UnitState.COLLECT_SPORE:
                 break;
             case UnitState.WANDER:
                 currentDestination = GetReachableRandomDestination(transform.position, wanderRadius, NavMesh.AllAreas);
@@ -140,7 +142,7 @@ public class UnitAI : MonoBehaviour
         {
             switch (currentState)
             {
-                case UnitState.SPORE:
+                case UnitState.COLLECT_SPORE:
                     agent.SetDestination(targetSpore.transform.position);
                     if (Vector3.Distance(targetSpore.transform.position, transform.position) < 0.5f)
                     {
@@ -149,7 +151,7 @@ public class UnitAI : MonoBehaviour
                         if (TryGetClosestSpore(out SporeController closestSpore))
                         {
                             targetSpore = closestSpore;
-                            SetState(UnitState.SPORE);
+                            SetState(UnitState.COLLECT_SPORE);
                         }
                         else
                         {
