@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu]
-public class BuildData : ScriptableObject
+public class BuildInstance : ScriptableObject
 {
     [SerializeField] private Item item;
     [SerializeField] private Vector3 position;

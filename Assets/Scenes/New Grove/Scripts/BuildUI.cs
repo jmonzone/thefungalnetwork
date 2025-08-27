@@ -50,7 +50,7 @@ public class BuildUI : MonoBehaviour
         {
             if (buildController)
             {
-                build.AddBuild(buildController.Item, buildController.transform.position);
+                build.AddBuild(buildController);
                 buildController.CompleteBuild();
                 buildController = null;
                 navigation.GoBack();
@@ -61,7 +61,7 @@ public class BuildUI : MonoBehaviour
         {
             if (buildController)
             {
-                build.RemoveBuild(buildController.Item);
+                build.RemoveBuild(buildController);
                 Destroy(buildController.gameObject);
                 buildController = null;
                 navigation.GoBack();

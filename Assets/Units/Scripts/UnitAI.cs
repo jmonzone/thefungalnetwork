@@ -29,7 +29,6 @@ public class UnitAI : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private PartyReference partyReference;
-    [SerializeField] private BuildReference buildReference;
 
     [Header("Wandering Settings")]
     [SerializeField] private float wanderRadius = 10f;           // radius for random destinations
@@ -50,7 +49,8 @@ public class UnitAI : MonoBehaviour
     [SerializeField] private float idleElapsedTime;
 
     [SerializeField] private UnitJob currentJob;
-    private IJob job;
+
+    private IJob jobScript;
     
 
     public event UnityAction<bool> OnIsMovingHasChanged;
@@ -68,24 +68,34 @@ public class UnitAI : MonoBehaviour
         agent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
         agent.avoidancePriority = Random.Range(30, 70); // give variation so they don’t all “dance”
 
-        SetCurrentState(UnitState.WANDER);
+        jobScript = currentJob switch
+        {
+            UnitJob.FORAGE => GetComponent<UnitForage>(),
+            UnitJob.GARDEN => GetComponent<UnitGarden>(),
+            _ => GetComponent<UnitForage>(),
+        };
+
+        jobScript.OnIsAbleChanged += Job_OnIsAbleChanged;
+    }
+
+    private void Start()
+    {
+        if (jobScript.IsAble) SetCurrentState(UnitState.JOB);
+        else SetCurrentState(UnitState.WANDER);
+
         StartCoroutine(StateRoutine());
-
-        job = GetComponent<IJob>();
-        job.OnIsAbleChanged += Job_OnIsAbleChanged;
-
     }
 
     private void Job_OnIsAbleChanged()
     {
         if (currentState == UnitState.DIALOGUE) return;
-        if (job.IsAble) SetCurrentState(UnitState.JOB);
+        if (jobScript.IsAble) SetCurrentState(UnitState.JOB);
         else SetCurrentState(UnitState.IDLE);
     }
 
     private void SetDefaultState()
     {
-        if (job.IsAble)
+        if (jobScript.IsAble)
         {
             SetCurrentState(UnitState.JOB);
         }
@@ -135,7 +145,7 @@ public class UnitAI : MonoBehaviour
             switch (currentState)
             {
                 case UnitState.JOB:
-                    agent.SetDestination(job.TargetPosition);
+                    agent.SetDestination(jobScript.TargetPosition);
                     break;
                 case UnitState.WANDER:
                     if (Vector3.Distance(currentDestination, transform.position) < 0.5f)
@@ -208,15 +218,13 @@ public class UnitAI : MonoBehaviour
         return origin;
     }
 
-
-
     // Draw gizmo for destination
     private void OnDrawGizmos()
     {
         if (agent != null)
         {
             Gizmos.color = Color.cyan;
-            Gizmos.DrawSphere(currentDestination, 0.3f);
+            Gizmos.DrawSphere(agent.destination, 0.3f);
             Gizmos.DrawLine(transform.position, currentDestination);
         }
     }

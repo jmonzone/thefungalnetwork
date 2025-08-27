@@ -71,13 +71,11 @@ public class DJTableUI : MonoBehaviour
 
     private void OnEnable()
     {
-        build.OnBuildLoaded += Build_OnBuildLoaded;
         build.OnBuildUpdated += Build_OnBuildLoaded;
     }
 
     private void OnDisable()
     {
-        build.OnBuildLoaded -= Build_OnBuildLoaded;
         build.OnBuildUpdated -= Build_OnBuildLoaded;
     }
 

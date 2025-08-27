@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.Events;
@@ -7,27 +8,32 @@ using UnityEngine.Events;
 [CreateAssetMenu]
 public class BuildReference : ScriptableObject
 {
+    [Header("References")]
     [SerializeField] private LocalData localData;
     [SerializeField] private InventoryReference inventory;
     [SerializeField] private Item initialItem;
 
+    [Header("Runtime")]
     [SerializeField] private int culturePoints;
-    [SerializeField] private List<BuildData> builds;
+    [SerializeField] private List<BuildInstance> buildInstances;
+    [SerializeField] private List<BuildController> buildControllers;
 
     public int CulturePoints => culturePoints;
-    public List<BuildData> Builds => builds;
+    public List<BuildInstance> BuildInstances => buildInstances;
+    public List<BuildController> BuildControllers => buildControllers;
 
     private const string BUILD_KEY = "build";
 
     public event UnityAction OnBuildUpdated;
-    public event UnityAction OnBuildLoaded;
 
     public void Initialize()
     {
+        buildControllers = new List<BuildController>();
+
         try
         {
 
-            builds = new List<BuildData>();
+            buildInstances = new List<BuildInstance>();
             culturePoints = 0;
 
             if (localData.JsonFile.ContainsKey(BUILD_KEY))
@@ -39,14 +45,14 @@ public class BuildReference : ScriptableObject
                         var itemData = inventory.Items.Find(item => item.Name == buildJson["name"].ToString());
                         if (itemData)
                         {
-                            var buildData = CreateInstance<BuildData>();
+                            var buildData = CreateInstance<BuildInstance>();
                             var positionJson = buildJson["position"];
                             var x = (float)positionJson["x"];
                             var y = (float)positionJson["y"];
                             var z = (float)positionJson["z"];
                             var position = new Vector3(x, y, z);
                             buildData.Initialize(itemData, position);
-                            builds.Add(buildData);
+                            buildInstances.Add(buildData);
                             culturePoints += buildData.Item.CulturePoints;
                         }
                         else
@@ -58,10 +64,10 @@ public class BuildReference : ScriptableObject
             }
             else
             {
-                var buildData = CreateInstance<BuildData>();
+                var buildData = CreateInstance<BuildInstance>();
                 var position = new Vector3(-1.25f, 0f, -2.5f);
                 buildData.Initialize(initialItem, position);
-                builds.Add(buildData);
+                buildInstances.Add(buildData);
                 culturePoints += buildData.Item.CulturePoints;
             }
         }
@@ -73,23 +79,24 @@ public class BuildReference : ScriptableObject
 
     public void LoadExistingBuild()
     {
-        foreach (var build in builds)
+        foreach (var build in buildInstances)
         {
             var item = build.Item;
             var buildController = Instantiate(item.ItemPrefab).GetComponent<BuildController>();
             buildController.transform.position = build.Position;
             buildController.Initialize(item);
             buildController.Place();
+            buildControllers.Add(buildController);
         }
 
-        OnBuildLoaded?.Invoke();
+        OnBuildUpdated?.Invoke();
     }
 
     private void SaveData()
     {
         var buildJson = new JArray();
 
-        foreach (var build in Builds)
+        foreach (var build in BuildInstances)
         {
             buildJson.Add(new JObject
             {
@@ -106,22 +113,26 @@ public class BuildReference : ScriptableObject
         localData.SaveData(BUILD_KEY, buildJson);
     }
 
-    public void AddBuild(Item item, Vector3 position)
+    public void AddBuild(BuildController buildController)
     {
-        var buildData = CreateInstance<BuildData>();
-        buildData.Initialize(item, position);
-        builds.Add(buildData);
-        culturePoints += item.CulturePoints;
+        buildControllers.Add(buildController);
+
+        var buildData = CreateInstance<BuildInstance>();
+        buildData.Initialize(buildController.Item, buildController.transform.position);
+        buildInstances.Add(buildData);
+        culturePoints += buildController.Item.CulturePoints;
         SaveData();
 
         OnBuildUpdated?.Invoke();
     }
 
-    public void RemoveBuild(Item item)
+    public void RemoveBuild(BuildController buildController)
     {
-        var build = builds.Find(build => build.Item == item);
-        builds.Remove(build);
-        culturePoints -= item.CulturePoints;
+        buildControllers.Remove(buildController);
+
+        var build = buildInstances.Find(build => build.Item == buildController.Item);
+        buildInstances.Remove(build);
+        culturePoints -= buildController.Item.CulturePoints;
         SaveData();
 
         OnBuildUpdated?.Invoke();
@@ -129,6 +140,11 @@ public class BuildReference : ScriptableObject
 
     public bool Contains(Item item)
     {
-        return builds.Find(build => build.Item == item);
+        return buildInstances.Find(build => build.Item == item);
+    }
+
+    public List<BuildController> FindBuildControllersWhere(Item item)
+    {
+        return buildControllers.Where(build => build.Item == item).ToList();
     }
 }

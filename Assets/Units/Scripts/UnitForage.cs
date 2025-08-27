@@ -11,8 +11,8 @@ public class UnitForage : MonoBehaviour, IJob
     [SerializeField] private bool isAble;
     [SerializeField] private SporeController targetSpore;
 
-    public bool IsAble => isAble;
-    public Vector3 TargetPosition => targetSpore.transform.position;
+    bool IJob.IsAble => isAble;
+    Vector3 IJob.TargetPosition => targetSpore.transform.position;
 
     public event UnityAction OnIsAbleChanged;
 

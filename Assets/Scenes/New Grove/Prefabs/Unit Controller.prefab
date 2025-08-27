@@ -12,8 +12,9 @@ GameObject:
   - component: {fileID: 218634806848664791}
   - component: {fileID: 8906506402799932121}
   - component: {fileID: 4509796270662811225}
-  - component: {fileID: 6605686811852094366}
   - component: {fileID: 4106141727428995005}
+  - component: {fileID: 6605686811852094366}
+  - component: {fileID: 1299118437144298130}
   - component: {fileID: 6701783708521320235}
   - component: {fileID: 1004340933199401876}
   - component: {fileID: 6933896745282238269}
@@ -81,6 +82,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dJTableReference: {fileID: 11400000, guid: 3bda1116fcf8f49e696cd21c6b5092da, type: 2}
+--- !u!114 &4106141727428995005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5390423667600184729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c826b601ca0a4855956725785ff268a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  partyReference: {fileID: 11400000, guid: d2092e9896dc047a3939198bb6a0204c, type: 2}
+  wanderRadius: 5
+  minIdleTime: 2
+  maxIdleTime: 8
+  baseSpeed: 1
+  turnSpeedMin: 1250
+  turnSpeedMax: 1500
+  gravitateStrength: 0.1
+  currentState: 0
+  idleTargetTime: 0
+  idleElapsedTime: 0
+  currentJob: 1
 --- !u!114 &6605686811852094366
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -96,7 +121,7 @@ MonoBehaviour:
   sporeReference: {fileID: 11400000, guid: aada144c7ab1b4304a84a13d3ddc010c, type: 2}
   isAble: 0
   targetSpore: {fileID: 0}
---- !u!114 &4106141727428995005
+--- !u!114 &1299118437144298130
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -105,22 +130,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 5390423667600184729}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c826b601ca0a4855956725785ff268a, type: 3}
+  m_Script: {fileID: 11500000, guid: 0a8efb30783bf4f898845e548b133bef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  partyReference: {fileID: 11400000, guid: d2092e9896dc047a3939198bb6a0204c, type: 2}
   buildReference: {fileID: 11400000, guid: 2526ce71d791f49acb54c441f1370a16, type: 2}
-  wanderRadius: 5
-  minIdleTime: 2
-  maxIdleTime: 8
-  baseSpeed: 1
-  turnSpeedMin: 1250
-  turnSpeedMax: 1500
-  gravitateStrength: 0.1
-  currentState: 0
-  idleTargetTime: 0
-  idleElapsedTime: 0
-  currentJob: 0
+  targetItem: {fileID: 11400000, guid: ec503a2453c1e4547b234275ed982ca8, type: 2}
+  isAble: 0
+  targetBuild: {fileID: 0}
 --- !u!195 &6701783708521320235
 NavMeshAgent:
   m_ObjectHideFlags: 0
