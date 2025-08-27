@@ -119,8 +119,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sporeReference: {fileID: 11400000, guid: aada144c7ab1b4304a84a13d3ddc010c, type: 2}
+  buildReference: {fileID: 11400000, guid: 2526ce71d791f49acb54c441f1370a16, type: 2}
+  targetItem: {fileID: 11400000, guid: ec503a2453c1e4547b234275ed982ca8, type: 2}
   isAble: 0
   targetSpore: {fileID: 0}
+  targetBuild: {fileID: 0}
 --- !u!114 &1299118437144298130
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -135,8 +138,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buildReference: {fileID: 11400000, guid: 2526ce71d791f49acb54c441f1370a16, type: 2}
   targetItem: {fileID: 11400000, guid: ec503a2453c1e4547b234275ed982ca8, type: 2}
+  positionOffset: 1.5
   isAble: 0
-  targetBuild: {fileID: 0}
+  isMoving: 0
+  targetPlant: {fileID: 0}
+  targetPosition: {x: 0, y: 0, z: 0}
 --- !u!195 &6701783708521320235
 NavMeshAgent:
   m_ObjectHideFlags: 0

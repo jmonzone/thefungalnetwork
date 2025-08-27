@@ -9,6 +9,7 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable
     [SerializeField] private SporeController sporePrefab;
     [SerializeField] private Transform spawnPoint;
     [SerializeField] private DJTableReference dJTableReference;
+    [SerializeField] private Transform scaleTransform;
 
     [Header("Spore Settings")]
     [SerializeField] private float emissionRate = 3f;
@@ -25,19 +26,19 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable
 
     private void Awake()
     {
-        startScale = transform.localScale;
+        startScale = scaleTransform.localScale;
     }
 
     void IInteractable.OnSelect()
     {
-        StopAllCoroutines();
-        StartCoroutine(BounceAnimation());
-
         EmitSpore();
     }
 
-    private void EmitSpore()
+    public void EmitSpore()
     {
+        StopAllCoroutines();
+        StartCoroutine(BounceAnimation());
+
         // Create spore
         SporeController spore = Instantiate(sporePrefab, spawnPoint.position, Quaternion.identity);
 
@@ -52,7 +53,7 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable
 
     private IEnumerator BounceAnimation()
     {
-        transform.localScale = startScale;
+        scaleTransform.localScale = startScale;
 
         Vector3 targetScale = startScale * bounceScale;
         float t = 0f;
@@ -62,11 +63,11 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable
         {
             t += Time.deltaTime;
             float progress = t / bounceDuration;
-            transform.localScale = Vector3.Lerp(startScale, targetScale, Mathf.Sin(progress * Mathf.PI));
+            scaleTransform.localScale = Vector3.Lerp(startScale, targetScale, Mathf.Sin(progress * Mathf.PI));
             yield return null;
         }
 
-        transform.localScale = startScale;
+        scaleTransform.localScale = startScale;
     }
 
     private Vector3 FindLandingSpot()

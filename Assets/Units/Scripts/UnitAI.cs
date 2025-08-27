@@ -20,8 +20,10 @@ public enum UnitJob
 public interface IJob
 {
     public bool IsAble { get; }
+    public bool IsMoving { get; }
     public Vector3 TargetPosition { get; }
     public event UnityAction OnIsAbleChanged;
+    public event UnityAction OnIsMovingChanged;
 }
 
 [RequireComponent(typeof(NavMeshAgent))]
@@ -75,48 +77,30 @@ public class UnitAI : MonoBehaviour
             _ => GetComponent<UnitForage>(),
         };
 
-        jobScript.OnIsAbleChanged += Job_OnIsAbleChanged;
+        jobScript.OnIsAbleChanged += SetDefaultState;
+        jobScript.OnIsMovingChanged += UpdateIsMoving;
     }
+
+   
 
     private void Start()
     {
-        if (jobScript.IsAble) SetCurrentState(UnitState.JOB);
-        else SetCurrentState(UnitState.WANDER);
-
+        SetDefaultState();
         StartCoroutine(StateRoutine());
     }
 
-    private void Job_OnIsAbleChanged()
+    private void SetDefaultState()
     {
         if (currentState == UnitState.DIALOGUE) return;
         if (jobScript.IsAble) SetCurrentState(UnitState.JOB);
         else SetCurrentState(UnitState.IDLE);
     }
 
-    private void SetDefaultState()
-    {
-        if (jobScript.IsAble)
-        {
-            SetCurrentState(UnitState.JOB);
-        }
-        else
-        {
-            SetCurrentState(UnitState.IDLE);
-        }
-    }
-
     private void SetCurrentState(UnitState state)
     {
         currentState = state;
 
-        agent.isStopped = state switch
-        {
-            UnitState.IDLE => true,
-            UnitState.DIALOGUE => true,
-            _ => false,
-        };
-
-        OnIsMovingHasChanged?.Invoke(!agent.isStopped);
+        UpdateIsMoving();
 
         agent.speed = baseSpeed * Random.Range(0.8f, 1.2f);
         agent.angularSpeed = Random.Range(turnSpeedMin, turnSpeedMax);
@@ -148,6 +132,14 @@ public class UnitAI : MonoBehaviour
                     agent.SetDestination(jobScript.TargetPosition);
                     break;
                 case UnitState.WANDER:
+                    Vector3 lookDir = (currentDestination - transform.position).normalized;
+                    lookDir.y = 0;
+                    if (lookDir.sqrMagnitude > 0.001f)
+                    {
+                        Quaternion lookRotation = Quaternion.LookRotation(lookDir);
+                        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 10f);
+                    }
+
                     if (Vector3.Distance(currentDestination, transform.position) < 0.5f)
                     {
                         SetCurrentState(UnitState.IDLE);
@@ -166,6 +158,19 @@ public class UnitAI : MonoBehaviour
 
             yield return null;
         }
+    }
+
+    private void UpdateIsMoving()
+    {
+        agent.isStopped = currentState switch
+        {
+            UnitState.IDLE => true,
+            UnitState.DIALOGUE => true,
+            UnitState.JOB => !jobScript.IsMoving,
+            _ => false,
+        };
+
+        OnIsMovingHasChanged?.Invoke(!agent.isStopped);
     }
 
     private void Dialogue_OnDialogueComplete()

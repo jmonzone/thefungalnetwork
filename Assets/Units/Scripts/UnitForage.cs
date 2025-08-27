@@ -6,19 +6,26 @@ public class UnitForage : MonoBehaviour, IJob
 {
     [Header("References")]
     [SerializeField] private SporeReference sporeReference;
+    [SerializeField] private BuildReference buildReference;
+    [SerializeField] private Item targetItem;
 
     [Header("Runtime")]
     [SerializeField] private bool isAble;
     [SerializeField] private SporeController targetSpore;
+    [SerializeField] private BuildController targetBuild;
 
     bool IJob.IsAble => isAble;
+    bool IJob.IsMoving => true;
     Vector3 IJob.TargetPosition => targetSpore.transform.position;
 
     public event UnityAction OnIsAbleChanged;
+    public event UnityAction OnIsMovingChanged;
 
     private void OnEnable()
     {
         sporeReference.OnSporeControllersChanged += FindClosestSpore;
+        buildReference.OnBuildUpdated += BuildReference_OnBuildUpdated;
+        BuildReference_OnBuildUpdated();
     }
 
     private void OnDisable()
@@ -42,6 +49,26 @@ public class UnitForage : MonoBehaviour, IJob
         else targetSpore = null;
 
         isAble = targetSpore;
+        OnIsAbleChanged?.Invoke();
+    }
+
+    private void BuildReference_OnBuildUpdated()
+    {
+        var builds = buildReference.FindBuildControllersWhere(targetItem);
+        if (builds.Count > 0)
+        {
+            targetBuild = builds[0];
+            foreach (var build in builds)
+            {
+                if (Vector3.Distance(transform.position, build.transform.position) < Vector3.Distance(transform.position, targetBuild.transform.position))
+                {
+                    targetBuild = build;
+                }
+            }
+        }
+        else targetBuild = null;
+
+        isAble = targetBuild;
         OnIsAbleChanged?.Invoke();
     }
 
