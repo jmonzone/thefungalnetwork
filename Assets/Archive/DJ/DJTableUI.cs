@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class DJTableUI : MonoBehaviour
 {
     [SerializeField] private DJTableReference dJTableReference;
-    [SerializeField] private BuildSystem build;
+    [SerializeField] private BuildReference build;
 
     [SerializeField] private List<PartyLightController> partyLights;
     [SerializeField] private DJTableController dJTableController;

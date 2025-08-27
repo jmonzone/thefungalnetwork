@@ -2,14 +2,26 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
 using UnityEngine.Events;
-using System.Linq;
 
 public enum UnitState
 {
     IDLE,
     WANDER,
-    COLLECT_SPORE,
-    HARVEST_PLANT,
+    JOB,
+    DIALOGUE,
+}
+
+public enum UnitJob
+{
+    FORAGE,
+    GARDEN
+}
+
+public interface IJob
+{
+    public bool IsAble { get; }
+    public Vector3 TargetPosition { get; }
+    public event UnityAction OnIsAbleChanged;
 }
 
 [RequireComponent(typeof(NavMeshAgent))]
@@ -17,8 +29,7 @@ public class UnitAI : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private PartyReference partyReference;
-    [SerializeField] private SporeReference sporeReference;
-    [SerializeField] private BuildSystem buildReference;
+    [SerializeField] private BuildReference buildReference;
 
     [Header("Wandering Settings")]
     [SerializeField] private float wanderRadius = 10f;           // radius for random destinations
@@ -37,6 +48,9 @@ public class UnitAI : MonoBehaviour
     [SerializeField] private UnitState currentState;
     [SerializeField] private float idleTargetTime;
     [SerializeField] private float idleElapsedTime;
+
+    [SerializeField] private UnitJob currentJob;
+    private IJob job;
     
 
     public event UnityAction<bool> OnIsMovingHasChanged;
@@ -44,8 +58,8 @@ public class UnitAI : MonoBehaviour
     private void Awake()
     {
         dialogue = GetComponent<UnitDialogue>();
-        //dialogue.OnDialogueStart += Dialogue_OnDialogueStart;
-        //dialogue.OnDialogueComplete += Dialogue_OnDialogueComplete;
+        dialogue.OnDialogueStart += Dialogue_OnDialogueStart;
+        dialogue.OnDialogueComplete += Dialogue_OnDialogueComplete;
 
         agent = GetComponent<NavMeshAgent>();
         agent.updateRotation = true; // let NavMeshAgent handle rotation smoothly
@@ -54,65 +68,41 @@ public class UnitAI : MonoBehaviour
         agent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
         agent.avoidancePriority = Random.Range(30, 70); // give variation so they don’t all “dance”
 
-        SetState(UnitState.WANDER);
+        SetCurrentState(UnitState.WANDER);
         StartCoroutine(StateRoutine());
+
+        job = GetComponent<IJob>();
+        job.OnIsAbleChanged += Job_OnIsAbleChanged;
+
     }
 
-    private void OnEnable()
+    private void Job_OnIsAbleChanged()
     {
-        sporeReference.OnSporeControllersChanged += OnSporeControllersChanged;
+        if (currentState == UnitState.DIALOGUE) return;
+        if (job.IsAble) SetCurrentState(UnitState.JOB);
+        else SetCurrentState(UnitState.IDLE);
     }
 
-    private void OnDisable()
+    private void SetDefaultState()
     {
-        sporeReference.OnSporeControllersChanged -= OnSporeControllersChanged;
-    }
-
-    private SporeController targetSpore;
-
-    private void OnSporeControllersChanged()
-    {
-        if (TryGetClosestSpore(out SporeController closestSpore))
+        if (job.IsAble)
         {
-            targetSpore = closestSpore;
-            SetState(UnitState.COLLECT_SPORE);
+            SetCurrentState(UnitState.JOB);
         }
         else
         {
-            targetSpore = closestSpore;
-            SetState(UnitState.WANDER);
+            SetCurrentState(UnitState.IDLE);
         }
     }
 
-    private bool TryGetClosestSpore(out SporeController closestSpore)
-    {
-        if (sporeReference.SporeControllers.Count > 0)
-        {
-            closestSpore = sporeReference.SporeControllers[0];
-            foreach(var spore in sporeReference.SporeControllers)
-            {
-                if (Vector3.Distance(transform.position, spore.transform.position) < Vector3.Distance(transform.position, closestSpore.transform.position))
-                {
-                    closestSpore = spore;
-                }
-            }
-            SetState(UnitState.COLLECT_SPORE);
-            return true;
-        }
-        else
-        {
-            closestSpore = null;
-            return false;
-        }
-    }
-
-    private void SetState(UnitState state)
+    private void SetCurrentState(UnitState state)
     {
         currentState = state;
 
         agent.isStopped = state switch
         {
             UnitState.IDLE => true,
+            UnitState.DIALOGUE => true,
             _ => false,
         };
 
@@ -123,15 +113,17 @@ public class UnitAI : MonoBehaviour
 
         switch (state)
         {
-            case UnitState.COLLECT_SPORE:
+
+            case UnitState.IDLE:
+                idleTargetTime = Random.Range(minIdleTime, maxIdleTime);
+                idleElapsedTime = 0;
+                break;
+            case UnitState.DIALOGUE:
+                transform.forward = Vector3.back;
                 break;
             case UnitState.WANDER:
                 currentDestination = GetReachableRandomDestination(transform.position, wanderRadius, NavMesh.AllAreas);
                 agent.SetDestination(currentDestination);
-                break;
-            case UnitState.IDLE:
-                idleTargetTime = Random.Range(minIdleTime, maxIdleTime);
-                idleElapsedTime = 0;
                 break;
         }
     }
@@ -142,28 +134,13 @@ public class UnitAI : MonoBehaviour
         {
             switch (currentState)
             {
-                case UnitState.COLLECT_SPORE:
-                    agent.SetDestination(targetSpore.transform.position);
-                    if (Vector3.Distance(targetSpore.transform.position, transform.position) < 0.5f)
-                    {
-                        targetSpore.Collect();
-
-                        if (TryGetClosestSpore(out SporeController closestSpore))
-                        {
-                            targetSpore = closestSpore;
-                            SetState(UnitState.COLLECT_SPORE);
-                        }
-                        else
-                        {
-                            targetSpore = closestSpore;
-                            SetState(UnitState.IDLE);
-                        }
-                    }
+                case UnitState.JOB:
+                    agent.SetDestination(job.TargetPosition);
                     break;
                 case UnitState.WANDER:
                     if (Vector3.Distance(currentDestination, transform.position) < 0.5f)
                     {
-                        SetState(UnitState.IDLE);
+                        SetCurrentState(UnitState.IDLE);
                     }
                     break;
 
@@ -172,7 +149,7 @@ public class UnitAI : MonoBehaviour
 
                     if (idleElapsedTime > idleTargetTime)
                     {
-                        SetState(UnitState.WANDER);
+                        SetCurrentState(UnitState.WANDER);
                     }
                     break;
             }
@@ -183,16 +160,12 @@ public class UnitAI : MonoBehaviour
 
     private void Dialogue_OnDialogueComplete()
     {
-        //if (currentState == UnitState.DIALOGUE) StartWander();
+        SetDefaultState();
     }
 
     private void Dialogue_OnDialogueStart()
     {
-        //currentState = UnitState.DIALOGUE; 
-        //StopAllCoroutines();
-        //agent.SetDestination(transform.position);
-        //transform.forward = Vector3.back;
-        //OnIsMovingHasChanged?.Invoke(false);
+        SetCurrentState(UnitState.DIALOGUE);
     }
 
     public void SetDestination(Vector3 destination, Vector3 direction)

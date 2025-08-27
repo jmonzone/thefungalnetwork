@@ -2,46 +2,54 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class UnitForage : MonoBehaviour
+public class UnitForage : MonoBehaviour, IJob
 {
-    [SerializeField] private float forageSpeed = 2f;
+    [Header("References")]
+    [SerializeField] private SporeReference sporeReference;
 
-    private UnitMovement movement;
+    [Header("Runtime")]
+    [SerializeField] private bool isAble;
+    [SerializeField] private SporeController targetSpore;
 
-    public event UnityAction<Forageable> OnUnitHasForaged;
+    public bool IsAble => isAble;
+    public Vector3 TargetPosition => targetSpore.transform.position;
 
-    private void Awake()
+    public event UnityAction OnIsAbleChanged;
+
+    private void OnEnable()
     {
-        movement = GetComponent<UnitMovement>();
-        movement.OnIsMovingHasChanged += Movement_OnIsMovingHasChanged;
+        sporeReference.OnSporeControllersChanged += FindClosestSpore;
     }
 
-    private void Movement_OnIsMovingHasChanged(bool isMoving)
+    private void OnDisable()
     {
-        if (isMoving) StopAllCoroutines();
+        sporeReference.OnSporeControllersChanged -= FindClosestSpore;
     }
 
-    public void StartForage(Forageable forageable)
+    private void FindClosestSpore()
     {
-        Debug.Log("StartForage");
-        StopAllCoroutines();
-
-        var direction = forageable.transform.position - transform.position;
-        var targetPosition = forageable.transform.position - direction.normalized * 1f;
-        movement.StartMovement(targetPosition, () =>
+        if (sporeReference.SporeControllers.Count > 0)
         {
-            StartCoroutine(ForageRoutine(forageable));
-        });
+            targetSpore = sporeReference.SporeControllers[0];
+            foreach (var spore in sporeReference.SporeControllers)
+            {
+                if (Vector3.Distance(transform.position, spore.transform.position) < Vector3.Distance(transform.position, targetSpore.transform.position))
+                {
+                    targetSpore = spore;
+                }
+            }
+        }
+        else targetSpore = null;
+
+        isAble = targetSpore;
+        OnIsAbleChanged?.Invoke();
     }
 
-    private IEnumerator ForageRoutine(Forageable forageable)
+    private void Update()
     {
-        yield return new WaitForFixedUpdate();
-
-        while (true)
+        if (targetSpore && Vector3.Distance(targetSpore.transform.position, transform.position) < 0.5f)
         {
-            OnUnitHasForaged?.Invoke(forageable);
-            yield return new WaitForSeconds(forageSpeed);
+            targetSpore.Collect();
         }
     }
 }

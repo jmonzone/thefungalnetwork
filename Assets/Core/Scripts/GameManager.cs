@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private FadeCanvasGroup screenFade;
 
     [SerializeField] private DisplayName displayName;
-    [SerializeField] private BuildSystem build;
+    [SerializeField] private BuildReference build;
     [SerializeField] private InventoryReference inventory;
     [SerializeField] private UnitListReference unitList;
     [SerializeField] private PartyReference partyReference;

@@ -11,7 +11,7 @@ public class BuildUI : MonoBehaviour
     [SerializeField] private Material validMaterial;
     [SerializeField] private Material invalidMaterial;
 
-    [SerializeField] private BuildSystem build;
+    [SerializeField] private BuildReference build;
     [SerializeField] private InventoryReference inventory;
     [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference buildView;

@@ -93,7 +93,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 429e16007b5ac46ad85b660c4685773e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forageSpeed: 3
+  sporeReference: {fileID: 11400000, guid: aada144c7ab1b4304a84a13d3ddc010c, type: 2}
+  isAble: 0
+  targetSpore: {fileID: 0}
 --- !u!114 &4106141727428995005
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -107,7 +109,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   partyReference: {fileID: 11400000, guid: d2092e9896dc047a3939198bb6a0204c, type: 2}
-  sporeReference: {fileID: 11400000, guid: aada144c7ab1b4304a84a13d3ddc010c, type: 2}
+  buildReference: {fileID: 11400000, guid: 2526ce71d791f49acb54c441f1370a16, type: 2}
   wanderRadius: 5
   minIdleTime: 2
   maxIdleTime: 8
@@ -115,6 +117,10 @@ MonoBehaviour:
   turnSpeedMin: 1250
   turnSpeedMax: 1500
   gravitateStrength: 0.1
+  currentState: 0
+  idleTargetTime: 0
+  idleElapsedTime: 0
+  currentJob: 0
 --- !u!195 &6701783708521320235
 NavMeshAgent:
   m_ObjectHideFlags: 0

@@ -34,9 +34,6 @@ public class InventoryController : MonoBehaviour
 
     private void Awake()
     {
-        unitManager.OnUnitSummoned += RegisterUnit;
-
-
         insightSlider.minValue = 0;
         insightSlider.maxValue = 5;
         insightSlider.value = 0;
@@ -46,27 +43,6 @@ public class InventoryController : MonoBehaviour
         {
             rainbowImagesOriginalColors[i] = rainbowImages[i].color;
         }
-    }
-
-    private void Start()
-    {
-        foreach (var unit in unitManager.UnitControllers)
-        {
-            RegisterUnit(unit);
-        }
-    }
-
-    private void RegisterUnit(UnitController unit)
-    {
-        var forage = unit.GetComponent<UnitForage>();
-        if (forage)
-        {
-            forage.OnUnitHasForaged += forageable =>
-            {
-                inventory.IncreaseSporeCount(forageable.SporeCount);
-                OnCollect?.Invoke(forageable);
-            };
-        }        
     }
 
     private void OnEnable()

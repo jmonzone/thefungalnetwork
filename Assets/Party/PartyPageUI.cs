@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class PartyPageUI : MonoBehaviour
 {
-    [SerializeField] private BuildSystem build;
+    [SerializeField] private BuildReference build;
 
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI levelText;

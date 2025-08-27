@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [CreateAssetMenu]
-public class BuildSystem : ScriptableObject
+public class BuildReference : ScriptableObject
 {
     [SerializeField] private LocalData localData;
     [SerializeField] private InventoryReference inventory;
