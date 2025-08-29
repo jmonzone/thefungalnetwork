@@ -139,6 +139,7 @@ public class CameraPanController : MonoBehaviour
 
     public void CenterTargetInView(Vector3 position)
     {
+        //Debug.Log("Centering");
         panSmoothTime = centeringSmoothTime;
 
         Camera cam = Camera.main;

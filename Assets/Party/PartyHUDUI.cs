@@ -19,6 +19,9 @@ public class PartyHUDUI : MonoBehaviour
     [SerializeField] private float currentTimer;
     [SerializeField] private float guestTimer;
 
+    [SerializeField] private float doorsOpenDuration = 7.5f;
+    [SerializeField] private float defaultPhaseDuration = 15f;
+
     private float numberOfStages = 4;
 
     public event UnityAction<PartyPhase> OnPhaseChanged;
@@ -73,8 +76,8 @@ public class PartyHUDUI : MonoBehaviour
     {
         return phase switch
         {
-            PartyPhase.DOORS_OPEN => 7.5f,
-            _ => 15f,
+            PartyPhase.DOORS_OPEN => doorsOpenDuration,
+            _ => defaultPhaseDuration,
         };
     }
 

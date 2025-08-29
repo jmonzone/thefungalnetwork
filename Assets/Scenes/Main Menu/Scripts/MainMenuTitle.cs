@@ -23,7 +23,9 @@ public class MainMenuTitle : MonoBehaviour
         partyButton.gameObject.SetActive(false);
         titleViewController.OnFadeInComplete += () =>
         {
-            StartCoroutine(ShowTitle());
+            StartCoroutine(partyButtonFade.FadeIn());
+
+            //StartCoroutine(ShowTitle());
         };
     }
 

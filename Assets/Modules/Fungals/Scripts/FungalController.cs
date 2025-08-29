@@ -44,7 +44,7 @@ public class FungalController : MonoBehaviour
     public MovementAnimations Animations { get; private set; }
     public MaterialFlasher MaterialFlasher { get; private set; }
 
-    public event UnityAction OnSpeedModified;
+    //public event UnityAction OnSpeedModified;
     public event UnityAction<bool> OnShieldToggled;
     public event UnityAction<bool> OnTrailToggled;
     public event UnityAction<bool> OnDeath;

@@ -14,33 +14,49 @@ public class GameplayHUD : MonoBehaviour
     [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference cameraView;
 
+    [SerializeField] private PartyReference partyReference;
+
     private Camera mainCamera;
+
     private void Awake()
     {
         mainCamera = Camera.main;
 
-        cameraButton.onClick.AddListener(() =>
-        {
-            // Swap between orthographic and perspective
-            if (mainCamera.orthographic)
-            {
-                cameraPanController.enabled = false;
-                photoVirtualCamera.Priority = 12;
-                navigation.Navigate(cameraView);
-                mainCamera.orthographic = false; // Perspective
-            }
-        });
+        if (cameraButton) cameraButton.onClick.AddListener(UseOrthographicCamera);
+        if (backButton) backButton.onClick.AddListener(UsePerspectiveCamera);
+    }
 
-        backButton.onClick.AddListener(() =>
+    private void OnEnable()
+    {
+        //partyReference.OnPartyStarted += UsePerspectiveCamera;
+        //partyReference.OnPartyComplete += UseOrthographicCamera;
+    }
+
+    private void OnDisable()
+    {
+        //partyReference.OnPartyStarted -= UsePerspectiveCamera;
+        //partyReference.OnPartyComplete -= UseOrthographicCamera;
+    }
+
+    private void UseOrthographicCamera()
+    {
+        // Swap between orthographic and perspective
+        if (!mainCamera.orthographic)
         {
-            // Swap between orthographic and perspective
-            if (!mainCamera.orthographic)
-            {
-                cameraPanController.enabled = true;
-                photoVirtualCamera.Priority = 0;
-                navigation.GoBack();
-                mainCamera.orthographic = true;  // Isometric / orthographic
-            }
-        });
+            cameraPanController.enabled = true;
+            photoVirtualCamera.Priority = 0;
+            mainCamera.orthographic = true;  // Isometric / orthographic
+        }
+    }
+
+    private void UsePerspectiveCamera()
+    {
+        // Swap between orthographic and perspective
+        if (mainCamera.orthographic)
+        {
+            cameraPanController.enabled = false;
+            photoVirtualCamera.Priority = 12;
+            mainCamera.orthographic = false; // Perspective
+        }
     }
 }

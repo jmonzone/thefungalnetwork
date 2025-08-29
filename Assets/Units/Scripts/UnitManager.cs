@@ -48,7 +48,7 @@ public class UnitManager : MonoBehaviour
         unitController.Initialize(unit);
         unitControllers.Add(unitController);
 
-        cameraPanController.CenterTargetInView(unitController.transform.position);
+        //cameraPanController.CenterTargetInView(unitController.transform.position);
         OnUnitSummoned?.Invoke(unitController);
     }
 }

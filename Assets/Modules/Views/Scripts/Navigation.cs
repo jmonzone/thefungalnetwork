@@ -13,6 +13,7 @@ public class Navigation : ScriptableObject
 
     private ViewReference currentView;
     public ViewReference CurrentView => currentView;
+    public int HistoryCount => history.Count;
 
     public event UnityAction OnNavigated;
 

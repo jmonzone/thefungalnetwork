@@ -35,11 +35,14 @@ public class PartyReference : ScriptableObject
 
     public event UnityAction OnPartyStarted;
     public event UnityAction OnPartyPaused;
+    public event UnityAction OnPartyComplete;
+
     public event UnityAction OnPartyResumed;
 
     public void Initialize()
     {
         isActive = false;
+        guests = new List<UnitController>();
     }
 
     public void StartParty(PartyData party)
@@ -65,8 +68,9 @@ public class PartyReference : ScriptableObject
 
     public void StopParty()
     {
-        navigation.GoBack(2);
+        navigation.GoBack(navigation.HistoryCount - 1);
         isActive = false;
+        OnPartyComplete?.Invoke();
     }
 
     public void AddGuest(UnitController guest)

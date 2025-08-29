@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Cinemachine;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class PassTheSpore : MonoBehaviour
@@ -17,6 +18,7 @@ public class PassTheSpore : MonoBehaviour
     [SerializeField] private Button exitButton;
     [SerializeField] private Transform sporeBall;
     [SerializeField] private Renderer sporeOuterShell;
+    [SerializeField] private CameraPanController cameraPanController;
 
     [SerializeField] private Color startColor;
     [SerializeField] private Color endColor;
@@ -34,6 +36,9 @@ public class PassTheSpore : MonoBehaviour
 
     private PassTheSporePlayer currentPlayer;
     private List<PassTheSporePlayer> players = new List<PassTheSporePlayer>();
+    public Vector3 AnchorPosition => gameCenter.transform.position + Vector3.up * 2.5f;
+
+    public event UnityAction OnGameStart;
 
     private void Awake()
     {
@@ -47,7 +52,7 @@ public class PassTheSpore : MonoBehaviour
     {
         partyReference.PauseParty();
 
-        virtualCamera.Priority = 11;
+        //virtualCamera.Priority = 11;
         sporeBall.gameObject.SetActive(true);
 
         foreach(var unit in unitManager.UnitControllers.Concat(partyReference.Guests))
@@ -72,16 +77,19 @@ public class PassTheSpore : MonoBehaviour
             Vector3 direction = new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle));
 
             // Position offset outward from center
-            Vector3 destination = gameCenter.transform.position + direction * 1f;
+            Vector3 destination = gameCenter.position + direction * 1f;
 
             // Assign destination + facing direction
             ai.SetDestination(destination, -direction); // face toward center
         }
 
-        navigation.Navigate(passTheSporeView);
+        cameraPanController.CenterTargetInView(gameCenter.position);
+        //navigation.Navigate(passTheSporeView);
 
         StartCoroutine(GameInput());
         StartCoroutine(GameUpdate());
+
+        OnGameStart?.Invoke();
     }
 
     private IEnumerator GameInput()
@@ -94,16 +102,18 @@ public class PassTheSpore : MonoBehaviour
 
         while (true)
         {
-            yield return null;
+            yield return new WaitForSeconds(1f);
 
-            if (Input.GetMouseButtonDown(0) || currentPlayer.isDone)
-            {
-                // Move to next active player
-                currentPlayer = GetNextActivePlayer(ref currentUnitIndex);
+            //if (Input.GetMouseButtonDown(0) || currentPlayer.isDone)
+            //{
+               
+            //}
 
-                Vector3 targetPos = currentPlayer.unit.transform.position + Vector3.up;
-                yield return TossBall(sporeBall.position, targetPos, 0.5f);
-            }
+            // Move to next active player
+            currentPlayer = GetNextActivePlayer(ref currentUnitIndex);
+
+            Vector3 targetPos = currentPlayer.unit.transform.position + Vector3.up;
+            yield return TossBall(sporeBall.position, targetPos, 0.5f);
         }
     }
 
@@ -190,7 +200,7 @@ public class PassTheSpore : MonoBehaviour
     {
         partyReference.ResumeParty();
 
-        navigation.GoBack();
+        //navigation.GoBack();
 
         Reset();
 
@@ -200,7 +210,7 @@ public class PassTheSpore : MonoBehaviour
             animation.TriggerRespawn();
 
             var ai = player.unit.GetComponent<UnitAI>();
-            //ai.StartWander();
+            ai.StopActivity();
         }
 
         players = new List<PassTheSporePlayer>();
@@ -209,7 +219,7 @@ public class PassTheSpore : MonoBehaviour
     private void Reset()
     {
         StopAllCoroutines();
-        virtualCamera.Priority = 0;
+        //virtualCamera.Priority = 0;
         sporeBall.gameObject.SetActive(false);
     }
 }

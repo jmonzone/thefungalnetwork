@@ -9,6 +9,7 @@ public enum UnitState
     WANDER,
     JOB,
     DIALOGUE,
+    ACTIVITY,
 }
 
 public enum UnitJob
@@ -50,6 +51,7 @@ public class UnitAI : MonoBehaviour
     [SerializeField] private float idleTargetTime;
     [SerializeField] private float idleElapsedTime;
 
+    [SerializeField] private bool doJob = false;
     [SerializeField] private UnitJob currentJob;
 
     private IJob jobScript;
@@ -89,7 +91,7 @@ public class UnitAI : MonoBehaviour
     private void SetDefaultState()
     {
         if (currentState == UnitState.DIALOGUE) return;
-        if (jobScript.IsAble) SetCurrentState(UnitState.JOB);
+        if (doJob && jobScript.IsAble) SetCurrentState(UnitState.JOB);
         else SetCurrentState(UnitState.IDLE);
     }
 
@@ -110,7 +112,9 @@ public class UnitAI : MonoBehaviour
                 idleElapsedTime = 0;
                 break;
             case UnitState.DIALOGUE:
-                transform.forward = Vector3.back;
+                Vector3 targetPos = Camera.main.transform.position;
+                targetPos.y = transform.position.y; // keep upright
+                transform.LookAt(targetPos);
                 break;
             case UnitState.WANDER:
                 currentDestination = GetReachableRandomDestination(transform.position, wanderRadius, NavMesh.AllAreas);
@@ -182,15 +186,15 @@ public class UnitAI : MonoBehaviour
 
     public void SetDestination(Vector3 destination, Vector3 direction)
     {
-        //currentState = UnitState.DESTINATION;
+        SetCurrentState(UnitState.ACTIVITY);
+        agent.SetDestination(destination);
+        transform.position = destination;
+        transform.forward = direction;
+    }
 
-        //StopAllCoroutines();
-
-        //agent.SetDestination(destination);
-        //transform.position = destination;
-        //transform.forward = direction;
-
-        //OnIsMovingHasChanged?.Invoke(false);
+    public void StopActivity()
+    {
+        SetDefaultState();
     }
 
 
