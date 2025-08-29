@@ -105,7 +105,7 @@ MonoBehaviour:
   currentState: 0
   idleTargetTime: 0
   idleElapsedTime: 0
-  currentJob: 1
+  currentJob: 0
 --- !u!114 &6605686811852094366
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -121,9 +121,11 @@ MonoBehaviour:
   sporeReference: {fileID: 11400000, guid: aada144c7ab1b4304a84a13d3ddc010c, type: 2}
   buildReference: {fileID: 11400000, guid: 2526ce71d791f49acb54c441f1370a16, type: 2}
   targetItem: {fileID: 11400000, guid: ec503a2453c1e4547b234275ed982ca8, type: 2}
+  gardenOffset: 1
+  emitInterval: 4
+  emitTimer: 0
   isAble: 0
-  targetSpore: {fileID: 0}
-  targetBuild: {fileID: 0}
+  isMoving: 1
 --- !u!114 &1299118437144298130
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -131,7 +133,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5390423667600184729}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0a8efb30783bf4f898845e548b133bef, type: 3}
   m_Name: 

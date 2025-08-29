@@ -47,7 +47,7 @@ public class VirtualJoystick : MonoBehaviour
             IsActive = true;
             activeTouchIndex = touchIndex;
             startPosition = GetInputPosition();
-            rect.position = startPosition;
+            //rect.position = startPosition;
             OnJoystickStart?.Invoke(startPosition);
         }
 
@@ -55,7 +55,7 @@ public class VirtualJoystick : MonoBehaviour
         if (IsActive && IsInputHeld())
         {
             var direction = Vector3.ClampMagnitude(GetInputPosition() - startPosition, JOYSTICK_LENGTH);
-            joystickRect.position = rect.position + direction;
+            joystickRect.anchoredPosition = direction;
             OnJoystickUpdate?.Invoke(direction * sensitivity);
         }
     }

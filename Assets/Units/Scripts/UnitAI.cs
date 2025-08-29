@@ -53,7 +53,6 @@ public class UnitAI : MonoBehaviour
     [SerializeField] private UnitJob currentJob;
 
     private IJob jobScript;
-    
 
     public event UnityAction<bool> OnIsMovingHasChanged;
 
@@ -80,8 +79,6 @@ public class UnitAI : MonoBehaviour
         jobScript.OnIsAbleChanged += SetDefaultState;
         jobScript.OnIsMovingChanged += UpdateIsMoving;
     }
-
-   
 
     private void Start()
     {
