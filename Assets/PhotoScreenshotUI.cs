@@ -32,6 +32,6 @@ public class PhotoScreenshotUI : MonoBehaviour
 
     private void PhotoReference_OnPhotoTaken()
     {
-        screenshotImage.texture = photoReference.Texture;
+        screenshotImage.texture = photoReference.LastPhoto;
     }
 }

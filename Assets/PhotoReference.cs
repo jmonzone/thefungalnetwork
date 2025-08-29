@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Events;
 
 [CreateAssetMenu]
@@ -10,9 +11,11 @@ public class PhotoReference : ScriptableObject
     [SerializeField] private ViewReference screenshotView;
 
     [Header("Runtime")]
-    [SerializeField] private Texture texture;
-
-    public Texture Texture => texture;
+    [SerializeField] private Texture lastPhoto;
+    [SerializeField] private List<Texture> allPhotos;
+    
+    public Texture LastPhoto => lastPhoto;
+    public List<Texture> AllPhotos => allPhotos;
 
     public event UnityAction OnPhotoStart;
     public event UnityAction OnPhotoExit;
@@ -20,6 +23,8 @@ public class PhotoReference : ScriptableObject
 
     public void StartPhotoView()
     {
+        allPhotos = new List<Texture>();
+
         navigation.Navigate(cameraView);
         OnPhotoStart?.Invoke();
     }
@@ -30,9 +35,10 @@ public class PhotoReference : ScriptableObject
         OnPhotoExit?.Invoke();
     }
 
-    public void TakePhoto(Texture texture)
+    public void TakePhoto(Texture photo)
     {
-        this.texture = texture;
+        lastPhoto = photo;
+        allPhotos.Add(photo);
         navigation.Navigate(screenshotView);
         OnPhotoTaken?.Invoke();
     }

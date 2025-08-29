@@ -17,6 +17,7 @@ public class PartyReference : ScriptableObject
     [Header("References")]
     [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference partyHUD;
+    [SerializeField] private ViewReference debriefView;
     [SerializeField] private UnitListReference unitList;
 
     [Header("Data")]
@@ -68,7 +69,8 @@ public class PartyReference : ScriptableObject
 
     public void StopParty()
     {
-        navigation.GoBack(navigation.HistoryCount - 1);
+        navigation.Navigate(debriefView);
+        //navigation.GoBack(navigation.HistoryCount - 1);
         isActive = false;
         OnPartyComplete?.Invoke();
     }
