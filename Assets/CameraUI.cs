@@ -5,20 +5,16 @@ using UnityEngine.UI;
 
 public class CameraUI : MonoBehaviour
 {
-    [SerializeField] private Navigation navigation;
+    [SerializeField] private PhotoReference photoReference;
     [SerializeField] private ViewReference screenshotView;
 
     [SerializeField] private Button cameraButton;
-    [SerializeField] private Button tryAgainButton;
-    [SerializeField] private Button keepButton;
+    [SerializeField] private Button backButton;
 
-    [SerializeField] private GameObject screenshotContainer;
-    [SerializeField] private RawImage screenshotImage;
     [SerializeField] private Canvas hudCanvas;
 
     [SerializeField] private RectTransform targetView;
 
-    private Texture2D lastScreenshot;
     private Camera mainCamera;
 
     private void Awake()
@@ -30,17 +26,10 @@ public class CameraUI : MonoBehaviour
             StartCoroutine(CaptureScreenshot());
         });
 
-        tryAgainButton.onClick.AddListener(() =>
+        backButton.onClick.AddListener(() =>
         {
-            navigation.GoBack();
+            photoReference.ExitPhotoView();
         });
-
-        keepButton.onClick.AddListener(() =>
-        {
-            navigation.GoBack();
-        });
-
-        screenshotContainer.SetActive(false);
     }
 
     private IEnumerator CaptureScreenshot()
@@ -70,11 +59,8 @@ public class CameraUI : MonoBehaviour
         System.IO.File.WriteAllBytes(path, bytes);
 
         // assign to RawImage
-        screenshotImage.texture = tex;
-        screenshotContainer.SetActive(true);
-        lastScreenshot = tex;
+        photoReference.TakePhoto(tex);
 
-        navigation.Navigate(screenshotView);
         yield return new WaitForSeconds(1f);
         hudCanvas.enabled = true;
 

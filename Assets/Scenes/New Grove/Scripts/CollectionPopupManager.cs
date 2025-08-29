@@ -23,7 +23,7 @@ public class CollectionPopupManager : MonoBehaviour
             popupPool.Enqueue(popup);
         }
 
-        inventoryController.OnCollect += InventoryController_OnCollect;
+        //inventoryController.OnCollect += InventoryController_OnCollect;
     }
 
     private void InventoryController_OnCollect(Forageable forageable)

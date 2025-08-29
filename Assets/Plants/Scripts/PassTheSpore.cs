@@ -39,6 +39,7 @@ public class PassTheSpore : MonoBehaviour
     public Vector3 AnchorPosition => gameCenter.transform.position + Vector3.up * 2.5f;
 
     public event UnityAction OnGameStart;
+    public event UnityAction OnGameComplete;
 
     private void Awake()
     {
@@ -214,6 +215,8 @@ public class PassTheSpore : MonoBehaviour
         }
 
         players = new List<PassTheSporePlayer>();
+
+        OnGameComplete?.Invoke();
     }
 
     private void Reset()

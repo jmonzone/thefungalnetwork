@@ -28,7 +28,6 @@ public class InventoryController : MonoBehaviour
     private Coroutine pulseRoutine;
     private Coroutine transitionRoutine;
 
-    public event UnityAction<Forageable> OnCollect;
     public event UnityAction<int> OnMushroomCountChanged;
     public event UnityAction OnInsightGained;
 

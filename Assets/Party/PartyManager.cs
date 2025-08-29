@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class PartyHUDUI : MonoBehaviour
+public class PartyManager : MonoBehaviour
 {
     [SerializeField] private PartyReference partyReference;
     [SerializeField] private Slider slider;

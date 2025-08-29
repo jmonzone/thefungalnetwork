@@ -1,19 +1,29 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class PhotoInteractionButton : MonoBehaviour
 {
     [SerializeField] private FadeCanvasGroup fadeCanvasGroup;
 
+    private Button button;
     private Camera mainCamera;
     private Canvas canvas;
 
     private Vector3 targetPosition;
     private RectTransform rectTransform;
 
+    public event UnityAction OnClick;
+
     private void Awake()
     {
+        button = GetComponent<Button>();
+        button.onClick.AddListener(() =>
+        {
+            OnClick?.Invoke();
+        });
+
         mainCamera = Camera.main;
         rectTransform = GetComponent<RectTransform>();
         canvas = GetComponentInParent<Canvas>();
@@ -23,6 +33,11 @@ public class PhotoInteractionButton : MonoBehaviour
     {
         this.targetPosition = targetPosition;
         yield return fadeCanvasGroup.FadeIn();
+    }
+
+    public IEnumerator Hide()
+    {
+        yield return fadeCanvasGroup.FadeOut();
     }
 
     private void Update()

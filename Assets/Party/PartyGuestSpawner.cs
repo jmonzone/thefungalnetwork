@@ -14,7 +14,7 @@ public class PartyGuestSpawner : MonoBehaviour
 
     private void Awake()
     {
-        var partyManager = GetComponent<PartyHUDUI>();
+        var partyManager = GetComponent<PartyManager>();
         partyManager.OnPhaseChanged += PartyManager_OnPhaseChanged;
     }
 
