@@ -9,6 +9,8 @@ public interface IInteractable
 
 public class InteractionController : MonoBehaviour
 {
+    [Header("References")]
+    [SerializeField] private PlayerReference playerReference;
     [SerializeField] private Transform selected;
     [SerializeField] private LayerMask interactableMask;
     [SerializeField] private LayerMask groundMask;
@@ -75,11 +77,13 @@ public class InteractionController : MonoBehaviour
                 if (unit && selected != unit.transform)
                 {
                     cameraPanController.CenterTargetInView(unit.transform.position);
-                    selectedUnit = unit;
-                    unit.Select();
-                    unit.OnUnselect += Unit_OnUnselect;
-                    OnEntitySelected?.Invoke(unit.transform);
-                    selected = unit.transform;
+                    playerReference.SetTargetUnit(unit);
+
+                    //selectedUnit = unit;
+                    //unit.Select();
+                    //unit.OnUnselect += Unit_OnUnselect;
+                    //OnEntitySelected?.Invoke(unit.transform);
+                    //selected = unit.transform;
                     return;
                 }
             }
@@ -107,6 +111,7 @@ public class InteractionController : MonoBehaviour
             {
                 cameraPanController.CenterTargetInView(hit.point);
                 OnGroundSelected?.Invoke(hit.point);
+                playerReference.SetTargetPosition(hit.point);
 
                 if (selected)
                 {
