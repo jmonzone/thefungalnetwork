@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ScreenshotUI : MonoBehaviour
+public class PhotoScreenshotUI : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private PhotoReference photoReference;
