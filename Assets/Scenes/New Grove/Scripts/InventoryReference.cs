@@ -18,6 +18,7 @@ public class InventoryReference : ScriptableObject
     public int SporeCount => sporeCount;
     public List<Item> Items => items;
 
+    public event UnityAction<SporeController> OnSporeCollected;
     public event UnityAction<int> OnSporeCountChanged;
     public event UnityAction OnItemSummoned;
 
@@ -36,6 +37,12 @@ public class InventoryReference : ScriptableObject
         {
             sporeCount = initialSporeCount;
         }
+    }
+
+    public void CollectSpore(SporeController sporeController)
+    {
+        IncreaseSporeCount(1);
+        OnSporeCollected?.Invoke(sporeController);
     }
 
     public void IncreaseSporeCount(int value = 1)

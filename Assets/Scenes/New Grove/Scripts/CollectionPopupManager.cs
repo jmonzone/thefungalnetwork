@@ -4,7 +4,8 @@ using System.Collections;
 
 public class CollectionPopupManager : MonoBehaviour
 {
-    public InventoryController inventoryController;
+    [SerializeField] private InventoryReference inventoryReference;
+
     public Canvas uiCanvas;
     public Camera mainCamera;
     public CollectionPopupUI popupPrefab;
@@ -22,11 +23,19 @@ public class CollectionPopupManager : MonoBehaviour
             popup.gameObject.SetActive(false);
             popupPool.Enqueue(popup);
         }
-
-        //inventoryController.OnCollect += InventoryController_OnCollect;
     }
 
-    private void InventoryController_OnCollect(Forageable forageable)
+    private void OnEnable()
+    {
+        inventoryReference.OnSporeCollected += InventoryReference_OnSporeCollected;
+    }
+
+    private void OnDisable()
+    {
+        inventoryReference.OnSporeCollected -= InventoryReference_OnSporeCollected;
+    }
+
+    private void InventoryReference_OnSporeCollected(SporeController spore)
     {
         if (popupPool.Count == 0)
         {
@@ -35,7 +44,7 @@ public class CollectionPopupManager : MonoBehaviour
         }
 
         CollectionPopupUI popup = popupPool.Dequeue();
-        popup.PlayPopup(forageable.transform.position, forageable.SporeCount);
+        popup.PlayPopup(spore.transform.position, 1);
 
         StartCoroutine(ReturnToPoolAfterDuration(popup, popup.duration));
     }

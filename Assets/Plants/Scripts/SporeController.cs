@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class SporeController : MonoBehaviour
 {
@@ -12,7 +13,7 @@ public class SporeController : MonoBehaviour
 
     public void Collect()
     {
-        inventoryReference.IncreaseSporeCount(1);
+        inventoryReference.CollectSpore(this);
 
         StopAllCoroutines();
 

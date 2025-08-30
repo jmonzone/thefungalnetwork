@@ -4,15 +4,17 @@ using UnityEngine;
 
 public class UnitPickup : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private void Update()
     {
-        
-    }
+        var colliders = Physics.OverlapBox(transform.position, Vector3.one * 0.5f);
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        foreach(var collider in colliders)
+        {
+            var sporeController = collider.GetComponentInParent<SporeController>();
+            if (sporeController)
+            {
+                sporeController.Collect();
+            }
+        }
     }
 }
