@@ -19,15 +19,19 @@ public class PartyReference : ScriptableObject
     [SerializeField] private ViewReference partyHUD;
     [SerializeField] private ViewReference debriefView;
     [SerializeField] private UnitListReference unitList;
+    [SerializeField] private DialogueReference dialogueReference;
+    [SerializeField] private PhotoReference photoReference;
 
     [Header("Data")]
     [SerializeField] private List<PartyData> parties;
 
     [Header("Runtime")]
+    [SerializeField] private int score;
     [SerializeField] private PartyData currentParty;
     [SerializeField] private bool isActive;
     [SerializeField] private List<UnitController> guests;
 
+    public int Score => score;
     public List<UnitController> Guests => guests;
     public List<PartyData> Parties => parties;
 
@@ -44,10 +48,28 @@ public class PartyReference : ScriptableObject
     {
         isActive = false;
         guests = new List<UnitController>();
+        dialogueReference.OnDialogueComplete += DialogueReference_OnDialogueComplete;
+        photoReference.OnPhotoTaken += PhotoReference_OnPhotoTaken;
+    }
+
+    private void PhotoReference_OnPhotoTaken()
+    {
+        IncrementScore(25);
+    }
+
+    private void DialogueReference_OnDialogueComplete()
+    {
+        IncrementScore(15);
+    }
+
+    private void IncrementScore(int value)
+    {
+        if (isActive) score += value;
     }
 
     public void StartParty(PartyData party)
     {
+        score = 0;
         isActive = true;
         currentParty = party;
 

@@ -10,14 +10,13 @@ GameObject:
   m_Component:
   - component: {fileID: 1460368080851433977}
   - component: {fileID: 218634806848664791}
-  - component: {fileID: 8906506402799932121}
   - component: {fileID: 4509796270662811225}
   - component: {fileID: 4106141727428995005}
-  - component: {fileID: 6605686811852094366}
-  - component: {fileID: 1299118437144298130}
+  - component: {fileID: 3042677307364813546}
   - component: {fileID: 6701783708521320235}
   - component: {fileID: 1004340933199401876}
   - component: {fileID: 6933896745282238269}
+  - component: {fileID: 2272465958897182757}
   m_Layer: 8
   m_Name: Unit Controller
   m_TagString: Untagged
@@ -53,22 +52,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 0}
---- !u!114 &8906506402799932121
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5390423667600184729}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 37ed91033fb0c42a7a856decdbbfab35, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  movementSpeed: 2
-  rotationSpeed: 50
-  isMoving: 0
-  lookTransform: {fileID: 0}
 --- !u!114 &4509796270662811225
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -78,10 +61,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 5390423667600184729}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1922b782162c2472b8fc0f61733373a3, type: 3}
+  m_Script: {fileID: 11500000, guid: 98add05fddd2246d0b7144f180fbbf05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dJTableReference: {fileID: 11400000, guid: 3bda1116fcf8f49e696cd21c6b5092da, type: 2}
 --- !u!114 &4106141727428995005
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -95,57 +77,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   partyReference: {fileID: 11400000, guid: d2092e9896dc047a3939198bb6a0204c, type: 2}
-  wanderRadius: 5
-  minIdleTime: 2
-  maxIdleTime: 8
-  baseSpeed: 1
-  turnSpeedMin: 1250
-  turnSpeedMax: 1500
-  gravitateStrength: 0.1
+  playerReference: {fileID: 11400000, guid: 746148e8242954418b04a3ab83ac9260, type: 2}
   currentState: 0
   idleTargetTime: 0
   idleElapsedTime: 0
   doJob: 0
   currentJob: 0
---- !u!114 &6605686811852094366
+--- !u!114 &3042677307364813546
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5390423667600184729}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 429e16007b5ac46ad85b660c4685773e, type: 3}
+  m_Script: {fileID: 11500000, guid: 225c49f242d16425ea957132e8f7561d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sporeReference: {fileID: 11400000, guid: aada144c7ab1b4304a84a13d3ddc010c, type: 2}
-  buildReference: {fileID: 11400000, guid: 2526ce71d791f49acb54c441f1370a16, type: 2}
-  targetItem: {fileID: 11400000, guid: ec503a2453c1e4547b234275ed982ca8, type: 2}
-  gardenOffset: 1
-  emitInterval: 4
-  emitTimer: 0
-  isAble: 0
-  isMoving: 1
---- !u!114 &1299118437144298130
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5390423667600184729}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a8efb30783bf4f898845e548b133bef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  buildReference: {fileID: 11400000, guid: 2526ce71d791f49acb54c441f1370a16, type: 2}
-  targetItem: {fileID: 11400000, guid: ec503a2453c1e4547b234275ed982ca8, type: 2}
-  positionOffset: 1.5
-  isAble: 0
-  isMoving: 0
-  targetPlant: {fileID: 0}
-  targetPosition: {x: 0, y: 0, z: 0}
+  renderRoot: {fileID: 0}
+  baseSpeed: 2
+  wanderRadius: 10
+  minIdleTime: 1
+  maxIdleTime: 4
+  gravitateStrength: 0.5
+  isIdle: 0
 --- !u!195 &6701783708521320235
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -195,3 +151,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   partyReference: {fileID: 11400000, guid: d2092e9896dc047a3939198bb6a0204c, type: 2}
   energy: 0
+--- !u!114 &2272465958897182757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5390423667600184729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b352c63d7c2c4e8c999d032179e905a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  renderRoot: {fileID: 0}
+  stoppingDistance: 1.5

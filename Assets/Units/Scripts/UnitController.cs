@@ -14,7 +14,8 @@ public class UnitController : MonoBehaviour
     public void Initialize(Unit data)
     {
         this.data = data;
-        name = "Unit Controller - " + data.name; 
+        name = "Unit Controller - " + data.name;
+
         Instantiate(data.Prefab, transform);
         OnInitialized?.Invoke();
     }

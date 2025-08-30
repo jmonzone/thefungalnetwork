@@ -5,15 +5,22 @@ using UnityEngine.Events;
 public class PlayerReference : ScriptableObject
 {
     [Header("Runtime")]
+    [SerializeField] private PlayerController player;
     [SerializeField] private Vector3 targetPosition;
     [SerializeField] private UnitController targetUnit;
     [SerializeField] private bool isAtDestination;
 
+    public PlayerController Player => player;
     public Vector3 TargetPosition => targetPosition;
     public UnitController TargetUnit => targetUnit;
     public bool IsAtDestination => isAtDestination;
 
     public event UnityAction OnDestinationReached;
+
+    public void SetPlayer(PlayerController player)
+    {
+        this.player = player;
+    }
 
     public void SetTargetPosition(Vector3 targetPosition)
     {

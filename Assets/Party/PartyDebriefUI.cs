@@ -12,6 +12,7 @@ public class PartyDebriefUI : MonoBehaviour
 
     [Header("UI References")]
     [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private TextMeshProUGUI photoText;
     [SerializeField] private Button continueButton;
 
     private void Awake()
@@ -31,6 +32,7 @@ public class PartyDebriefUI : MonoBehaviour
 
     private void PartyReference_OnPartyComplete()
     {
-        scoreText.text = $"{photoReference.AllPhotos.Count} photos taken";
+        scoreText.text = $"{partyReference.Score} party points!";
+        photoText.text = $"{photoReference.AllPhotos.Count} photos taken";
     }
 }

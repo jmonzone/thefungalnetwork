@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
+        playerReference.SetPlayer(this);
         playerReference.SetTargetPosition(transform.position);
     }
 

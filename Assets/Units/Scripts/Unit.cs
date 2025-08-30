@@ -7,6 +7,7 @@ public enum DialogueAction
     DEFAULT,
     SHOW_TAROT,
     PLAY_SPORE,
+    FOLLOW,
 }
 
 [Serializable]

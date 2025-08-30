@@ -5,11 +5,10 @@ using UnityEngine.Events;
 
 public enum UnitState
 {
-    IDLE,
-    WANDER,
     JOB,
     DIALOGUE,
     ACTIVITY,
+    FOLLOW
 }
 
 public enum UnitJob
@@ -32,67 +31,54 @@ public class UnitAI : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private PartyReference partyReference;
-
-    [Header("Wandering Settings")]
-    [SerializeField] private float wanderRadius = 10f;           // radius for random destinations
-    [SerializeField] private float minIdleTime = 1f;             // min pause
-    [SerializeField] private float maxIdleTime = 4f;             // max pause
-    [SerializeField] private float baseSpeed = 2f;               // base agent speed
-    [SerializeField] private float turnSpeedMin = 60f;           // min rotation speed
-    [SerializeField] private float turnSpeedMax = 120f;          // max rotation speed
-    [SerializeField] private float gravitateStrength = 0.5f; // 0 = no gravitation, 1 = full pull to center
+    [SerializeField] private PlayerReference playerReference;
 
     private NavMeshAgent agent;
     private Vector3 currentDestination;
 
     private UnitDialogue dialogue;
+    private UnitFollow unitFollow;
 
     [SerializeField] private UnitState currentState;
-    [SerializeField] private float idleTargetTime;
-    [SerializeField] private float idleElapsedTime;
 
-    [SerializeField] private bool doJob = false;
-    [SerializeField] private UnitJob currentJob;
+    //private void Awake()
+    //{
+    //    dialogue = GetComponent<UnitDialogue>();
+    //    dialogue.OnDialogueStart += Dialogue_OnDialogueStart;
+    //    dialogue.OnDialogueComplete += Dialogue_OnDialogueComplete;
 
-    private IJob jobScript;
+    //    unitFollow = GetComponent<UnitFollow>();
 
-    public event UnityAction<bool> OnIsMovingHasChanged;
+    //    agent = GetComponent<NavMeshAgent>();
+    //    agent.updateRotation = true; // let NavMeshAgent handle rotation smoothly
+    //    agent.speed = baseSpeed;
 
-    private void Awake()
-    {
-        dialogue = GetComponent<UnitDialogue>();
-        dialogue.OnDialogueStart += Dialogue_OnDialogueStart;
-        dialogue.OnDialogueComplete += Dialogue_OnDialogueComplete;
+    //    agent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
+    //    agent.avoidancePriority = Random.Range(30, 70); // give variation so they don’t all “dance”
 
-        agent = GetComponent<NavMeshAgent>();
-        agent.updateRotation = true; // let NavMeshAgent handle rotation smoothly
-        agent.speed = baseSpeed;
+    //    jobScript = currentJob switch
+    //    {
+    //        UnitJob.FORAGE => GetComponent<UnitForage>(),
+    //        UnitJob.GARDEN => GetComponent<UnitGarden>(),
+    //        _ => GetComponent<UnitForage>(),
+    //    };
 
-        agent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
-        agent.avoidancePriority = Random.Range(30, 70); // give variation so they don’t all “dance”
-
-        jobScript = currentJob switch
-        {
-            UnitJob.FORAGE => GetComponent<UnitForage>(),
-            UnitJob.GARDEN => GetComponent<UnitGarden>(),
-            _ => GetComponent<UnitForage>(),
-        };
-
-        jobScript.OnIsAbleChanged += SetDefaultState;
-        jobScript.OnIsMovingChanged += UpdateIsMoving;
-    }
+    //    jobScript.OnIsAbleChanged += SetDefaultState;
+    //    jobScript.OnIsMovingChanged += UpdateIsMoving;
+    //}
 
     private void Start()
     {
-        SetDefaultState();
-        StartCoroutine(StateRoutine());
+        var unitWander = GetComponent<UnitWander>();
+        unitWander.StartWander();
     }
 
     private void SetDefaultState()
     {
         if (currentState == UnitState.DIALOGUE) return;
-        if (doJob && jobScript.IsAble) SetCurrentState(UnitState.JOB);
-        else SetCurrentState(UnitState.IDLE);
+        if (currentState == UnitState.FOLLOW) return;
+
+        //if (doJob && jobScript.IsAble) SetCurrentState(UnitState.JOB);
     }
 
     private void SetCurrentState(UnitState state)
@@ -101,24 +87,16 @@ public class UnitAI : MonoBehaviour
 
         UpdateIsMoving();
 
-        agent.speed = baseSpeed * Random.Range(0.8f, 1.2f);
-        agent.angularSpeed = Random.Range(turnSpeedMin, turnSpeedMax);
-
         switch (state)
         {
 
-            case UnitState.IDLE:
-                idleTargetTime = Random.Range(minIdleTime, maxIdleTime);
-                idleElapsedTime = 0;
-                break;
             case UnitState.DIALOGUE:
                 Vector3 targetPos = Camera.main.transform.position;
                 targetPos.y = transform.position.y; // keep upright
                 transform.LookAt(targetPos);
                 break;
-            case UnitState.WANDER:
-                currentDestination = GetReachableRandomDestination(transform.position, wanderRadius, NavMesh.AllAreas);
-                agent.SetDestination(currentDestination);
+            case UnitState.FOLLOW:
+                unitFollow.StartFollow(playerReference.Player.transform);
                 break;
         }
     }
@@ -130,31 +108,9 @@ public class UnitAI : MonoBehaviour
             switch (currentState)
             {
                 case UnitState.JOB:
-                    agent.SetDestination(jobScript.TargetPosition);
-                    break;
-                case UnitState.WANDER:
-                    Vector3 lookDir = (currentDestination - transform.position).normalized;
-                    lookDir.y = 0;
-                    if (lookDir.sqrMagnitude > 0.001f)
-                    {
-                        Quaternion lookRotation = Quaternion.LookRotation(lookDir);
-                        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 10f);
-                    }
-
-                    if (Vector3.Distance(currentDestination, transform.position) < 0.5f)
-                    {
-                        SetCurrentState(UnitState.IDLE);
-                    }
+                    //agent.SetDestination(jobScript.TargetPosition);
                     break;
 
-                case UnitState.IDLE:
-                    idleElapsedTime += Time.deltaTime;
-
-                    if (idleElapsedTime > idleTargetTime)
-                    {
-                        SetCurrentState(UnitState.WANDER);
-                    }
-                    break;
             }
 
             yield return null;
@@ -165,13 +121,12 @@ public class UnitAI : MonoBehaviour
     {
         agent.isStopped = currentState switch
         {
-            UnitState.IDLE => true,
             UnitState.DIALOGUE => true,
-            UnitState.JOB => !jobScript.IsMoving,
+            //UnitState.JOB => !jobScript.IsMoving,
             _ => false,
         };
 
-        OnIsMovingHasChanged?.Invoke(!agent.isStopped);
+        //OnIsMovingHasChanged?.Invoke(!agent.isStopped);
     }
 
     private void Dialogue_OnDialogueComplete()
@@ -192,36 +147,14 @@ public class UnitAI : MonoBehaviour
         transform.forward = direction;
     }
 
+    public void SetTour()
+    {
+        SetCurrentState(UnitState.FOLLOW);
+    }
+
     public void StopActivity()
     {
         SetDefaultState();
-    }
-
-
-    private Vector3 GetReachableRandomDestination(Vector3 origin, float radius, int layermask, int maxAttempts = 10)
-    {
-        for (int i = 0; i < maxAttempts; i++)
-        {
-            // 1. Pick a random point in a sphere around origin
-            Vector3 randomPoint = origin + Random.insideUnitSphere * radius;
-
-            // 2. Apply gravitation toward the center
-            randomPoint = Vector3.Lerp(randomPoint, Vector3.zero, gravitateStrength);
-
-            // 3. Project onto NavMesh
-            if (NavMesh.SamplePosition(randomPoint, out NavMeshHit hit, radius, layermask))
-            {
-                // 4. Check if a valid path exists
-                NavMeshPath path = new NavMeshPath();
-                if (agent.CalculatePath(hit.position, path) && path.status == NavMeshPathStatus.PathComplete)
-                {
-                    return hit.position;
-                }
-            }
-        }
-
-        // Fallback
-        return origin;
     }
 
     // Draw gizmo for destination

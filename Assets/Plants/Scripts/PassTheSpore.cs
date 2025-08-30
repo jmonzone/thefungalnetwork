@@ -176,7 +176,7 @@ public class PassTheSpore : MonoBehaviour
             if (!isMidAir && t >= heatDuration)
             {
                 // trigger your code when fully heated
-                currentPlayer.unit.GetComponent<UnitAnimation>().PlayAnimation("Death");
+                //currentPlayer.unit.GetComponent<UnitAnimation>().PlayAnimation("Death");
                 currentPlayer.isDone = true;
 
                 // Check if only one player is left
@@ -207,8 +207,8 @@ public class PassTheSpore : MonoBehaviour
 
         foreach (var player in players)
         {
-            var animation = player.unit.GetComponent<UnitAnimation>();
-            animation.TriggerRespawn();
+            //var animation = player.unit.GetComponent<UnitAnimation>();
+            //animation.TriggerRespawn();
 
             var ai = player.unit.GetComponent<UnitAI>();
             ai.StopActivity();
