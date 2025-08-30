@@ -28,7 +28,6 @@ public class InteractionController : MonoBehaviour
 
     private UnitController selectedUnit;
 
-
     public event UnityAction<Transform> OnEntitySelected;
     public event UnityAction<Vector3> OnGroundSelected;
 
@@ -67,45 +66,13 @@ public class InteractionController : MonoBehaviour
                 var interactable = hit.transform.GetComponentInParent<IInteractable>();
                 if (interactable != null)
                 {
-                    interactable.OnSelect();
+                    cameraPanController.CenterTargetInView(interactable.Transform.position);
+                    playerReference.SetTargetInteractable(interactable);
                     selected = interactable.Transform;
-                    OnEntitySelected?.Invoke(null);
-                    return;
-                }
-
-                var unit = hit.transform.GetComponentInParent<UnitController>();
-                if (unit && selected != unit.transform)
-                {
-                    cameraPanController.CenterTargetInView(unit.transform.position);
-                    playerReference.SetTargetUnit(unit);
-
-                    //selectedUnit = unit;
-                    //unit.Select();
-                    //unit.OnUnselect += Unit_OnUnselect;
-                    //OnEntitySelected?.Invoke(unit.transform);
-                    //selected = unit.transform;
+                    OnEntitySelected?.Invoke(interactable.Transform);
                     return;
                 }
             }
-
-            //if (selected)
-            //{
-            //    var forage = selected.GetComponent<UnitForage>();
-            //    if (forage)
-            //    {
-            //        if (Physics.Raycast(ray, out hit, raycastMaxDistance, interactableMask))
-            //        {
-            //            var forageable = hit.transform.GetComponentInParent<Forageable>();
-            //            if (forageable)
-            //            {
-            //                cameraPanController.CenterTargetInView(forageable.transform.position);
-            //                OnEntitySelected?.Invoke(forageable.transform);
-            //                forage.StartForage(forageable);
-            //                return;
-            //            }
-            //        }
-            //    }
-            //}
 
             if (Physics.Raycast(ray, out hit, raycastMaxDistance, groundMask))
             {
@@ -115,13 +82,6 @@ public class InteractionController : MonoBehaviour
 
                 if (selected)
                 {
-                    //var movement = selected.GetComponent<UnitMovement>();
-                    //if (movement)
-                    //{
-                    //    movement.StartMovement(hit.point);
-                    //}
-                    //else selected = null;
-
                     selected = null;
                     return;
                 }

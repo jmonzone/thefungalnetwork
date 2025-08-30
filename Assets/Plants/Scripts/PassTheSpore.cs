@@ -69,7 +69,7 @@ public class PassTheSpore : MonoBehaviour
 
         for (int i = 0; i < count; i++)
         {
-            var ai = players[i].unit.GetComponent<UnitAI>();
+            var ai = players[i].unit.GetComponent<FungalController>();
 
             // Evenly spaced angle around circle, but clockwise
             float angle = -(i / (float)count) * Mathf.PI * 2f;
@@ -210,8 +210,8 @@ public class PassTheSpore : MonoBehaviour
             //var animation = player.unit.GetComponent<UnitAnimation>();
             //animation.TriggerRespawn();
 
-            var ai = player.unit.GetComponent<UnitAI>();
-            ai.StopActivity();
+            //var ai = player.unit.GetComponent<FungalController>();
+            //ai.StopActivity();
         }
 
         players = new List<PassTheSporePlayer>();

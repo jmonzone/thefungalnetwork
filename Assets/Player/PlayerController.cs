@@ -1,13 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : UnitController
 {
-    [Header("References")]
+    [Header("Player References")]
     [SerializeField] private PlayerReference playerReference;
-    [SerializeField] private Transform renderRoot;
 
     [Header("Settings")]
     [SerializeField] private float stoppingDistance = 2;
@@ -24,10 +21,10 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         var targetPosition = playerReference.TargetPosition;
-        if (playerReference.TargetUnit)
+        if (playerReference.TargetInteractable != null)
         {
             navMeshAgent.stoppingDistance = stoppingDistance;
-            targetPosition = playerReference.TargetUnit.transform.position;
+            targetPosition = playerReference.TargetInteractable.Transform.position;
         }
         else
         {
@@ -36,16 +33,13 @@ public class PlayerController : MonoBehaviour
 
         navMeshAgent.SetDestination(targetPosition);
 
-        if (playerReference.TargetUnit)
+        if (playerReference.TargetInteractable != null)
         {
             var destinationReached = navMeshAgent.remainingDistance < stoppingDistance;
             if (destinationReached && !navMeshAgent.pathPending) playerReference.InvokeOnDestinationReached();
         }
 
-        var lookDirection = targetPosition - transform.position;
-        lookDirection.y = 0;
-
-        if (lookDirection != Vector3.zero) renderRoot.forward = lookDirection;
+        LookAt(targetPosition);
     }
 
 }

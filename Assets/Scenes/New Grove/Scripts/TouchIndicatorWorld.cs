@@ -19,7 +19,7 @@ public class TouchIndicatorWorld : MonoBehaviour
             }
             else
             {
-                ShowIndicator(entity.position, false);
+                ShowIndicator(entity.position, true);
             }
         };
 

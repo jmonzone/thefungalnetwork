@@ -1,31 +1,21 @@
-using UnityEngine;
-using UnityEngine.Events;
+﻿using UnityEngine;
 
-public class UnitDialogue : MonoBehaviour
+public class UnitDialogue : UnitBehaviour
 {
     [SerializeField] private DialogueReference dialogue;
+    [SerializeField] private PlayerReference playerReference;
 
-    private UnitController unit;
-
-    public event UnityAction OnDialogueStart;
-    public event UnityAction OnDialogueComplete;
-
-    private void Awake()
+    public override void StartBehaviour()
     {
-        unit = GetComponent<UnitController>();
-        unit.OnSelected += Unit_OnSelected;
-    }
+        dialogue.StartDialogue(Unit);
+        Unit.LookAt(playerReference.Player.transform.position);
 
-    private void Unit_OnSelected()
-    {
-        dialogue.StartDialogue(unit);
         dialogue.OnDialogueComplete += Dialogue_OnDialogueComplete;
-        OnDialogueStart?.Invoke();
     }
 
     private void Dialogue_OnDialogueComplete()
     {
         dialogue.OnDialogueComplete -= Dialogue_OnDialogueComplete;
-        OnDialogueComplete?.Invoke();
+        StopBehaviour();
     }
 }

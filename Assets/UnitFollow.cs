@@ -3,27 +3,35 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class UnitFollow : MonoBehaviour
+public class UnitFollow : UnitBehaviour
 {
-    [Header("Reference")]
-    [SerializeField] private Transform renderRoot;
+    [Header("References")]
+    [SerializeField] private PlayerReference playerReference;
 
     [Header("Settings")]
     [SerializeField] private float stoppingDistance = 2;
 
     private NavMeshAgent navMeshAgent;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         navMeshAgent = GetComponent<NavMeshAgent>();
     }
 
-    public void StartFollow(Transform target)
+    public override void StartBehaviour()
     {
+        var target = playerReference.Player.transform;
         navMeshAgent.stoppingDistance = stoppingDistance;
-        navMeshAgent.SetDestination(target.transform.position);
+        navMeshAgent.SetDestination(target.position);
 
         StartCoroutine(FollowRoutine(target));
+    }
+
+    public override void StopBehaviour()
+    {
+        base.StopBehaviour();
+        StopAllCoroutines();
     }
 
     private IEnumerator FollowRoutine(Transform target)
@@ -33,15 +41,10 @@ public class UnitFollow : MonoBehaviour
 
         while (true)
         {
-            navMeshAgent.SetDestination(target.transform.position);
-
-            //var lookDirection = target.transform.position - transform.position;
-            //lookDirection.y = 0;
-
-            //if (lookDirection != Vector3.zero) renderRoot.forward = lookDirection;
-
+            var destination = target.transform.position;
+            navMeshAgent.SetDestination(destination);
+            Unit.LookAt(destination);
             yield return null;
         }
-
     }
 }

@@ -85,8 +85,8 @@ public class DialogueUI : MonoBehaviour
                     });
                     break;
                 case DialogueAction.FOLLOW:
-                    var ai = dialogue.Unit.GetComponent<UnitAI>();
-                    ai.SetTour();
+                    var ai = dialogue.Unit.GetComponent<FungalController>();
+                    //ai.StartFollow();
                     continueButton.onClick.AddListener(() => nextPagePressed = true);
                     break;
                 default:

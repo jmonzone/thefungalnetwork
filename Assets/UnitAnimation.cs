@@ -16,7 +16,7 @@ public class UnitAnimation : MonoBehaviour
 
     private void Update()
     {
-        var isMoving = navMeshAgent.velocity.magnitude > 0.0001f;
+        var isMoving = navMeshAgent.velocity.magnitude > 0.00001f;
         animator.SetBool("IsMoving", isMoving);
 
         animator.transform.localPosition = Vector3.zero;

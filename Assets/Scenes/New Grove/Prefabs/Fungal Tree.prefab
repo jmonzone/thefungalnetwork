@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2526129002911352718}
   - component: {fileID: 5005622940643586346}
-  - component: {fileID: 8907860114878218061}
   m_Layer: 8
   m_Name: Fungal Tree
   m_TagString: Untagged
@@ -47,20 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 95347a15aaf7f4b40b23e8fdfbd3a26f, type: 2}
-  isSelected: 0
---- !u!114 &8907860114878218061
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3803047099492716171}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a051968eeea74528b48fad3e9e998b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dialogue: {fileID: 11400000, guid: 66db6a8c7a0524bd8b89b88de939507f, type: 2}
+  renderRoot: {fileID: 3151439445404310248}
 --- !u!1001 &2152848042397758449
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -124,7 +110,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Eyeball
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1955361964457395874, guid: 52fc5c3ff3eaf488ead2e0435c52fe57, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

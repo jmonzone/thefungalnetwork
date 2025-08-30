@@ -5,7 +5,7 @@ public class FrogAssist : MonoBehaviour
 {
     [SerializeField] private bool startAutomatically = false;
     [SerializeField] private float searchRadius = 5f;
-    [SerializeField] private float interactionInterval = 3f;
+    //[SerializeField] private float interactionInterval = 3f;
     [SerializeField] private LayerMask mushroomLayer;
 
     [SerializeField] private Transform tonguePivot; // Assign in Inspector

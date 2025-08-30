@@ -3,13 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class UnitWander : MonoBehaviour
+public class UnitWander : UnitBehaviour
 {
-    [Header("References")]
-    [SerializeField] private Transform renderRoot;
-
     [Header("Settings")]
-    [SerializeField] private float baseSpeed = 2f;               // base agent speed
+    [SerializeField] private float baseSpeed = 2f;
     [SerializeField] private float wanderRadius = 10f;
     [SerializeField] private float minIdleTime = 1f;
     [SerializeField] private float maxIdleTime = 4f;
@@ -20,16 +17,25 @@ public class UnitWander : MonoBehaviour
 
     private NavMeshAgent navMeshAgent;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         navMeshAgent = GetComponent<NavMeshAgent>();
     }
 
-    public void StartWander()
+    public override void StartBehaviour()
     {
-        if (!renderRoot) renderRoot = transform.GetChild(0);
         navMeshAgent.stoppingDistance = 0.1f;
+        navMeshAgent.isStopped = false;
         StartCoroutine(WanderRoutine());
+    }
+
+    public override void StopBehaviour()
+    {
+        base.StopBehaviour();
+        navMeshAgent.isStopped = true;
+        StopAllCoroutines();
     }
 
     private IEnumerator WanderRoutine()
@@ -47,11 +53,7 @@ public class UnitWander : MonoBehaviour
 
             while (navMeshAgent.pathPending || navMeshAgent.remainingDistance > navMeshAgent.stoppingDistance)
             {
-                var lookDirection = targetPosition - transform.position;
-                lookDirection.y = 0;
-
-                if (lookDirection != Vector3.zero) renderRoot.forward = lookDirection;
-
+                Unit.LookAt(targetPosition);
                 yield return null;
             }
         }

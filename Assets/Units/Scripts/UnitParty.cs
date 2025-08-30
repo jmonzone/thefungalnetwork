@@ -12,14 +12,6 @@ public class UnitParty : MonoBehaviour
     private void Awake()
     {
         animator = GetComponent<Animator>();
-
-        var dialogue = GetComponent<UnitDialogue>();
-        dialogue.OnDialogueComplete += Dialogue_OnDialogueComplete;
-    }
-
-    private void Dialogue_OnDialogueComplete()
-    {
-        IncrementEnergy(20f);
     }
 
     private void OnEnable()

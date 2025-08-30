@@ -7,12 +7,12 @@ public class PlayerReference : ScriptableObject
     [Header("Runtime")]
     [SerializeField] private PlayerController player;
     [SerializeField] private Vector3 targetPosition;
-    [SerializeField] private UnitController targetUnit;
+    [SerializeField] private IInteractable targetInteractable;
     [SerializeField] private bool isAtDestination;
 
     public PlayerController Player => player;
     public Vector3 TargetPosition => targetPosition;
-    public UnitController TargetUnit => targetUnit;
+    public IInteractable TargetInteractable => targetInteractable;
     public bool IsAtDestination => isAtDestination;
 
     public event UnityAction OnDestinationReached;
@@ -26,12 +26,12 @@ public class PlayerReference : ScriptableObject
     {
         this.targetPosition = targetPosition;
         isAtDestination = false;
-        SetTargetUnit(null);
+        SetTargetInteractable(null);
     }
 
-    public void SetTargetUnit(UnitController targetUnit)
+    public void SetTargetInteractable(IInteractable targetInteractable)
     {
-        this.targetUnit = targetUnit;
+        this.targetInteractable = targetInteractable;
         isAtDestination = false;
     }
 
@@ -42,7 +42,7 @@ public class PlayerReference : ScriptableObject
             isAtDestination = true;
             OnDestinationReached?.Invoke();
 
-            targetUnit.Select();
+            targetInteractable.OnSelect();
         }
     }
 }
