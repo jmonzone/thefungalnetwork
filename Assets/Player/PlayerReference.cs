@@ -8,14 +8,13 @@ public class PlayerReference : ScriptableObject
     [SerializeField] private PlayerController player;
     [SerializeField] private Vector3 targetPosition;
     [SerializeField] private IInteractable targetInteractable;
-    [SerializeField] private bool isAtDestination;
 
     public PlayerController Player => player;
     public Vector3 TargetPosition => targetPosition;
     public IInteractable TargetInteractable => targetInteractable;
-    public bool IsAtDestination => isAtDestination;
 
-    public event UnityAction OnDestinationReached;
+    public event UnityAction OnTargetInteractableChanged;
+    public event UnityAction OnTargetPositionChanged;
 
     public void SetPlayer(PlayerController player)
     {
@@ -25,24 +24,14 @@ public class PlayerReference : ScriptableObject
     public void SetTargetPosition(Vector3 targetPosition)
     {
         this.targetPosition = targetPosition;
-        isAtDestination = false;
+        OnTargetPositionChanged?.Invoke();
+
         SetTargetInteractable(null);
     }
 
     public void SetTargetInteractable(IInteractable targetInteractable)
     {
         this.targetInteractable = targetInteractable;
-        isAtDestination = false;
-    }
-
-    public void InvokeOnDestinationReached()
-    {
-        if (!isAtDestination)
-        {
-            isAtDestination = true;
-            OnDestinationReached?.Invoke();
-
-            targetInteractable.OnSelect();
-        }
+        OnTargetInteractableChanged?.Invoke();
     }
 }

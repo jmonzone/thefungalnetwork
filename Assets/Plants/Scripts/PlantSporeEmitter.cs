@@ -12,9 +12,7 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable
     [SerializeField] private Transform scaleTransform;
 
     [Header("Spore Settings")]
-    [SerializeField] private float emissionRate = 3f;
     [SerializeField] private float launchHeight = 2f;
-    [SerializeField] private float landingRadius = 2f;
 
     [Header("Plant Animation")]
     [SerializeField] private float bounceScale = 1.2f;

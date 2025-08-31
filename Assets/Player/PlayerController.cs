@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -6,40 +7,74 @@ public class PlayerController : UnitController
     [Header("Player References")]
     [SerializeField] private PlayerReference playerReference;
 
-    [Header("Settings")]
-    [SerializeField] private float stoppingDistance = 2;
-
     private NavMeshAgent navMeshAgent;
+    private UnitFollow unitFollow;
+    private bool isAtDestination;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         navMeshAgent = GetComponent<NavMeshAgent>();
+        unitFollow = GetComponent<UnitFollow>();
+
+        unitFollow.OnDestinationReached += UnitFollow_OnDestinationReached;
+
         playerReference.SetPlayer(this);
         playerReference.SetTargetPosition(transform.position);
     }
 
-    private void Update()
+    private void UnitFollow_OnDestinationReached()
     {
-        var targetPosition = playerReference.TargetPosition;
-        if (playerReference.TargetInteractable != null)
-        {
-            navMeshAgent.stoppingDistance = stoppingDistance;
-            targetPosition = playerReference.TargetInteractable.Transform.position;
-        }
-        else
-        {
-            navMeshAgent.stoppingDistance = 0;
-        }
-
-        navMeshAgent.SetDestination(targetPosition);
-
-        if (playerReference.TargetInteractable != null)
-        {
-            var destinationReached = navMeshAgent.remainingDistance < stoppingDistance;
-            if (destinationReached && !navMeshAgent.pathPending) playerReference.InvokeOnDestinationReached();
-        }
-
-        LookAt(targetPosition);
+        playerReference.TargetInteractable.OnSelect();
     }
 
+    private void OnEnable()
+    {
+        playerReference.OnTargetPositionChanged += PlayerReference_OnTargetPositionChanged;
+        playerReference.OnTargetInteractableChanged += PlayerReference_OnTargetInteractableChanged; ;
+    }
+
+    private void OnDisable()
+    {
+        playerReference.OnTargetPositionChanged -= PlayerReference_OnTargetPositionChanged;
+        playerReference.OnTargetInteractableChanged -= PlayerReference_OnTargetInteractableChanged;
+    }
+
+    private void PlayerReference_OnTargetInteractableChanged()
+    {
+        if (playerReference.TargetInteractable != null)
+        {
+            navMeshAgent.isStopped = false;
+            unitFollow.SetTarget(playerReference.TargetInteractable.Transform);
+            unitFollow.StartBehaviour();
+        }
+    }
+
+    private void PlayerReference_OnTargetPositionChanged()
+    {
+        unitFollow.StopBehaviour();
+
+        isAtDestination = false;
+        navMeshAgent.isStopped = false;
+        var targetPosition = playerReference.TargetPosition;
+        navMeshAgent.SetDestination(targetPosition);
+    }
+
+    protected override void Update()
+    {
+        base.Update();
+
+        if (playerReference.TargetInteractable == null)
+        {
+            LookAt(playerReference.TargetPosition);
+
+            if (!isAtDestination && Vector3.Distance(playerReference.TargetPosition, transform.position) < 0.5f)
+            {
+                isAtDestination = true;
+                navMeshAgent.isStopped = true;
+            }
+        }
+
+    }
 }

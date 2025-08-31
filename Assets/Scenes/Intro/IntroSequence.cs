@@ -27,6 +27,5 @@ public class IntroSequence : MonoBehaviour
         }
 
         PlayerPrefs.SetInt(INTRO_COMPLETE_KEY, 1);
-        sceneNavigation.NavigateToScene(Launcher.MENU_SCENE_INDEX);
     }
 }

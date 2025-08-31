@@ -2,13 +2,17 @@
 
 public class UnitDialogue : UnitBehaviour
 {
+    [Header("References")]
     [SerializeField] private DialogueReference dialogue;
     [SerializeField] private PlayerReference playerReference;
+
+    [Header("Settings")]
+    [SerializeField] private bool lookAtTarget = true;
 
     public override void StartBehaviour()
     {
         dialogue.StartDialogue(Unit);
-        Unit.LookAt(playerReference.Player.transform.position);
+        if (lookAtTarget) Unit.LookAt(playerReference.Player.transform.position);
 
         dialogue.OnDialogueComplete += Dialogue_OnDialogueComplete;
     }
