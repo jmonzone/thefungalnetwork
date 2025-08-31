@@ -27,7 +27,7 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable
         startScale = scaleTransform.localScale;
     }
 
-    void IInteractable.OnSelect()
+    void IInteractable.Select()
     {
         EmitSpore();
     }

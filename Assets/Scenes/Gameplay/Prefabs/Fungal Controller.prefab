@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 7313902277107358435}
   - component: {fileID: 3042677307364813546}
   - component: {fileID: 2272465958897182757}
+  - component: {fileID: 8649680259317709286}
   m_Layer: 8
   m_Name: Fungal Controller
   m_TagString: Untagged
@@ -54,6 +55,7 @@ MonoBehaviour:
   selectBehaviour: {fileID: 7313902277107358435}
   data: {fileID: 0}
   currentBehaviour: {fileID: 0}
+  targetLookPosition: {x: 0, y: 0, z: 0}
 --- !u!195 &6701783708521320235
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -117,8 +119,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseSpeed: 2
   wanderRadius: 10
-  minIdleTime: 1
-  maxIdleTime: 4
+  minIdleTime: 6
+  maxIdleTime: 10
   gravitateStrength: 0.5
   isIdle: 0
 --- !u!114 &2272465958897182757
@@ -134,3 +136,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
+--- !u!114 &8649680259317709286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5390423667600184729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca4d9bedae7ea47e18c760e73f926120, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  destination: {x: 0, y: 0, z: 0}
+  isAtDestination: 0

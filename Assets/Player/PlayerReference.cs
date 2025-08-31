@@ -24,9 +24,9 @@ public class PlayerReference : ScriptableObject
     public void SetTargetPosition(Vector3 targetPosition)
     {
         this.targetPosition = targetPosition;
-        OnTargetPositionChanged?.Invoke();
-
         SetTargetInteractable(null);
+
+        OnTargetPositionChanged?.Invoke();
     }
 
     public void SetTargetInteractable(IInteractable targetInteractable)

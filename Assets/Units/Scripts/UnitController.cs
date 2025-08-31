@@ -50,7 +50,7 @@ public class UnitController : MonoBehaviour, IInteractable
     {
         if (currentBehaviour)
         {
-            currentBehaviour.OnBehaviourComplete -= CurrentBehaviour_OnBehaviourComplete;
+            currentBehaviour.OnBehaviourComplete -= SetDefaultBehaviour;
             currentBehaviour.StopBehaviour();
         }
 
@@ -59,11 +59,11 @@ public class UnitController : MonoBehaviour, IInteractable
         if (currentBehaviour)
         {
             currentBehaviour.StartBehaviour();
-            currentBehaviour.OnBehaviourComplete += CurrentBehaviour_OnBehaviourComplete;
+            currentBehaviour.OnBehaviourComplete += SetDefaultBehaviour;
         }
     }
 
-    private void CurrentBehaviour_OnBehaviourComplete()
+    public void SetDefaultBehaviour()
     {
         SetBehaviour(defaultBehaviour);
     }
@@ -76,12 +76,12 @@ public class UnitController : MonoBehaviour, IInteractable
         OnInitialized?.Invoke();
     }
 
-    public void LookAt(Vector3 targetPosition)
+    public void SetLookPosition(Vector3 targetPosition)
     {
         targetLookPosition = targetPosition;
     }
 
-    void IInteractable.OnSelect()
+    void IInteractable.Select()
     {
         SetBehaviour(selectBehaviour);
     }

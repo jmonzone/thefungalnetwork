@@ -19,22 +19,28 @@ public enum FungalState
 
 public class FungalController : UnitController
 {
-    private UnitWander unitWander;
-    private UnitDialogue unitDialogue;
+    public bool IsAtDestination => unitDestination.IsAtDestination;
+
+    private UnitDestination unitDestination;
     private UnitFollow unitFollow;
 
     protected override void Awake()
     {
         base.Awake();
 
-        unitWander = GetComponent<UnitWander>();
-        unitDialogue = GetComponent<UnitDialogue>();
+        unitDestination = GetComponent<UnitDestination>();
         unitFollow = GetComponent<UnitFollow>();
     }
 
-    public void SetDestination(Vector3 destination, Vector3 direction)
+    public void SetDestination(Vector3 destination)
     {
-        transform.position = destination;
-        transform.forward = direction;
+        unitDestination.SetDestination(destination);
+        SetBehaviour(unitDestination);
+    }
+
+    public void SetTarget(Transform target)
+    {
+        unitFollow.SetTarget(target);
+        SetBehaviour(unitFollow);
     }
 }

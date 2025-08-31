@@ -12,7 +12,7 @@ public class UnitDialogue : UnitBehaviour
     public override void StartBehaviour()
     {
         dialogue.StartDialogue(Unit);
-        if (lookAtTarget) Unit.LookAt(playerReference.Player.transform.position);
+        if (lookAtTarget) Unit.SetLookPosition(playerReference.Player.transform.position);
 
         dialogue.OnDialogueComplete += Dialogue_OnDialogueComplete;
     }

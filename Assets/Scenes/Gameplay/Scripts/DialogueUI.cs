@@ -6,19 +6,22 @@ using UnityEngine.UI;
 
 public class DialogueUI : MonoBehaviour
 {
-    [SerializeField] private Image image;
+    [Header("References")]
+    [SerializeField] private PlayerReference playerReference;
     [SerializeField] private DialogueReference dialogue;
+    [SerializeField] private PassTheSpore passTheSpore;
+
+    [Header("UI References")]
+    [SerializeField] private Image image;
     [SerializeField] private TextMeshProUGUI speakerText;
     [SerializeField] private TextMeshProUGUI dialogueText;
-
     [SerializeField] private Button continueButton;
     [SerializeField] private Button closeButton;
+    [SerializeField] private TarotCardUI tarotCard;
 
+    [Header("UI Settings")]
     [SerializeField] private float baseSpeed = 0.03f;             // Normal speed between characters
     [SerializeField] private float punctuationPause = 0.2f;       // Extra pause for punctuation
-
-    [SerializeField] private TarotCardUI tarotCard;
-    [SerializeField] private PassTheSpore passTheSpore;
 
     private void Awake()
     {
@@ -85,8 +88,8 @@ public class DialogueUI : MonoBehaviour
                     });
                     break;
                 case DialogueAction.FOLLOW:
-                    var ai = dialogue.Unit.GetComponent<FungalController>();
-                    //ai.StartFollow();
+                    var fungalController = dialogue.Unit as FungalController;
+                    fungalController.SetTarget(playerReference.Player.transform);
                     continueButton.onClick.AddListener(() => nextPagePressed = true);
                     break;
                 default:

@@ -36,7 +36,7 @@ public class UnitWander : UnitBehaviour
     public override void StopBehaviour()
     {
         base.StopBehaviour();
-        navMeshAgent.isStopped = true;
+        navMeshAgent.isStopped = false;
         StopAllCoroutines();
     }
 
@@ -46,8 +46,10 @@ public class UnitWander : UnitBehaviour
         {
             var idleTargetTime = Random.Range(minIdleTime, maxIdleTime);
             isIdle = true;
+            navMeshAgent.isStopped = true;
             yield return new WaitForSeconds(idleTargetTime);
             isIdle = false;
+            navMeshAgent.isStopped = false;
 
             var targetPosition = GetReachableRandomDestination(transform.position, wanderRadius, NavMesh.AllAreas);
             navMeshAgent.SetDestination(targetPosition);
@@ -55,7 +57,7 @@ public class UnitWander : UnitBehaviour
 
             while (navMeshAgent.pathPending || navMeshAgent.remainingDistance > navMeshAgent.stoppingDistance)
             {
-                Unit.LookAt(targetPosition);
+                Unit.SetLookPosition(targetPosition);
                 yield return null;
             }
         }

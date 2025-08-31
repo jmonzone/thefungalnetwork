@@ -30,7 +30,7 @@ public class DJTableController : MonoBehaviour, IInteractable
         StopAllCoroutines();
     }
 
-    void IInteractable.OnSelect()
+    void IInteractable.Select()
     {
         navigation.Navigate(djView);
     }

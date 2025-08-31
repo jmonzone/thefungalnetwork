@@ -30,7 +30,7 @@ public class PassTheSpore : MonoBehaviour
 
     private class PassTheSporePlayer
     {
-        public UnitController unit;
+        public FungalController Fungal;
         public bool isDone;
     }
 
@@ -60,7 +60,7 @@ public class PassTheSpore : MonoBehaviour
         {
             players.Add(new PassTheSporePlayer
             {
-                unit = unit,
+                Fungal = unit as FungalController,
                 isDone = false,
             });
         };
@@ -69,7 +69,7 @@ public class PassTheSpore : MonoBehaviour
 
         for (int i = 0; i < count; i++)
         {
-            var ai = players[i].unit.GetComponent<FungalController>();
+            var fungalController = players[i].Fungal.GetComponent<FungalController>();
 
             // Evenly spaced angle around circle, but clockwise
             float angle = -(i / (float)count) * Mathf.PI * 2f;
@@ -80,8 +80,8 @@ public class PassTheSpore : MonoBehaviour
             // Position offset outward from center
             Vector3 destination = gameCenter.position + direction * 1f;
 
-            // Assign destination + facing direction
-            ai.SetDestination(destination, -direction); // face toward center
+            fungalController.SetDestination(destination);
+            fungalController.SetLookPosition(gameCenter.transform.position);
         }
 
         cameraPanController.CenterTargetInView(gameCenter.position);
@@ -95,25 +95,22 @@ public class PassTheSpore : MonoBehaviour
 
     private IEnumerator GameInput()
     {
+        yield return new WaitUntil(() => players.All(player => player.Fungal.IsAtDestination));
+
         int currentUnitIndex = 0;
 
         // Find first active player
         currentPlayer = GetNextActivePlayer(ref currentUnitIndex);
-        sporeBall.position = currentPlayer.unit.transform.position + Vector3.up;
+        sporeBall.position = currentPlayer.Fungal.transform.position + Vector3.up;
 
         while (true)
         {
             yield return new WaitForSeconds(1f);
 
-            //if (Input.GetMouseButtonDown(0) || currentPlayer.isDone)
-            //{
-               
-            //}
-
             // Move to next active player
             currentPlayer = GetNextActivePlayer(ref currentUnitIndex);
 
-            Vector3 targetPos = currentPlayer.unit.transform.position + Vector3.up;
+            Vector3 targetPos = currentPlayer.Fungal.transform.position + Vector3.up;
             yield return TossBall(sporeBall.position, targetPos, 0.5f);
         }
     }
@@ -165,6 +162,8 @@ public class PassTheSpore : MonoBehaviour
     }
     private IEnumerator GameUpdate()
     {
+        yield return new WaitUntil(() => players.All(player => player.Fungal.IsAtDestination));
+
         sporeMaterial.SetColor("_Outer_Color", startColor);
 
         var t = 0f;
@@ -201,17 +200,12 @@ public class PassTheSpore : MonoBehaviour
     {
         partyReference.ResumeParty();
 
-        //navigation.GoBack();
-
         Reset();
 
         foreach (var player in players)
         {
-            //var animation = player.unit.GetComponent<UnitAnimation>();
-            //animation.TriggerRespawn();
-
-            //var ai = player.unit.GetComponent<FungalController>();
-            //ai.StopActivity();
+            var fungalController = player.Fungal.GetComponent<FungalController>();
+            fungalController.SetDefaultBehaviour();
         }
 
         players = new List<PassTheSporePlayer>();

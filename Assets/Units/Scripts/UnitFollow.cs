@@ -37,12 +37,13 @@ public class UnitFollow : UnitBehaviour
     {
         base.StopBehaviour();
         StopAllCoroutines();
-        target = null;
     }
 
     private IEnumerator FollowRoutine(Transform target)
     {
+        Debug.Log("FollowRoutine 1");
         yield return new WaitWhile(() => navMeshAgent.pathPending);
+        Debug.Log($"FollowRoutine 2 {navMeshAgent.isStopped}");
 
         var firstTime = true;
 
@@ -50,7 +51,7 @@ public class UnitFollow : UnitBehaviour
         {
             Vector3 destination = GetAdjacentPoint(target, 1f);
             navMeshAgent.SetDestination(destination);
-            Unit.LookAt(target.transform.position);
+            Unit.SetLookPosition(target.transform.position);
             yield return null;
 
             var destinationReached = Vector3.Distance(destination, transform.position) < 0.5f;

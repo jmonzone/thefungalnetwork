@@ -7,16 +7,15 @@ public class PlayerController : UnitController
     [Header("Player References")]
     [SerializeField] private PlayerReference playerReference;
 
-    private NavMeshAgent navMeshAgent;
     private UnitFollow unitFollow;
-    private bool isAtDestination;
+    private UnitDestination unitDestination;
 
     protected override void Awake()
     {
         base.Awake();
 
-        navMeshAgent = GetComponent<NavMeshAgent>();
         unitFollow = GetComponent<UnitFollow>();
+        unitDestination = GetComponent<UnitDestination>();
 
         unitFollow.OnDestinationReached += UnitFollow_OnDestinationReached;
 
@@ -26,7 +25,7 @@ public class PlayerController : UnitController
 
     private void UnitFollow_OnDestinationReached()
     {
-        playerReference.TargetInteractable.OnSelect();
+        playerReference.TargetInteractable.Select();
     }
 
     private void OnEnable()
@@ -45,36 +44,18 @@ public class PlayerController : UnitController
     {
         if (playerReference.TargetInteractable != null)
         {
-            navMeshAgent.isStopped = false;
             unitFollow.SetTarget(playerReference.TargetInteractable.Transform);
-            unitFollow.StartBehaviour();
+            SetBehaviour(unitFollow);
         }
     }
 
     private void PlayerReference_OnTargetPositionChanged()
     {
-        unitFollow.StopBehaviour();
-
-        isAtDestination = false;
-        navMeshAgent.isStopped = false;
-        var targetPosition = playerReference.TargetPosition;
-        navMeshAgent.SetDestination(targetPosition);
-    }
-
-    protected override void Update()
-    {
-        base.Update();
-
         if (playerReference.TargetInteractable == null)
         {
-            LookAt(playerReference.TargetPosition);
-
-            if (!isAtDestination && Vector3.Distance(playerReference.TargetPosition, transform.position) < 0.5f)
-            {
-                isAtDestination = true;
-                navMeshAgent.isStopped = true;
-            }
+            SetLookPosition(playerReference.TargetPosition);
+            unitDestination.SetDestination(playerReference.TargetPosition);
+            SetBehaviour(unitDestination);
         }
-
     }
 }

@@ -12,6 +12,11 @@ public abstract class UnitBehaviour : MonoBehaviour
         Unit = GetComponent<UnitController>();
     }
 
+    protected virtual void Update()
+    {
+
+    }
+
     public abstract void StartBehaviour();
 
     public virtual void StopBehaviour()

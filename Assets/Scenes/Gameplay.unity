@@ -6220,16 +6220,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e753995f600bd44afb1843332eb8d069, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  image: {fileID: 48775379}
+  playerReference: {fileID: 11400000, guid: 746148e8242954418b04a3ab83ac9260, type: 2}
   dialogue: {fileID: 11400000, guid: 66db6a8c7a0524bd8b89b88de939507f, type: 2}
+  passTheSpore: {fileID: 192682052}
+  image: {fileID: 48775379}
   speakerText: {fileID: 1107766699}
   dialogueText: {fileID: 1695818708}
   continueButton: {fileID: 1454621657}
   closeButton: {fileID: 1670748568}
+  tarotCard: {fileID: 2130622332}
   baseSpeed: 0.03
   punctuationPause: 0.2
-  tarotCard: {fileID: 2130622332}
-  passTheSpore: {fileID: 192682052}
 --- !u!1 &409600234
 GameObject:
   m_ObjectHideFlags: 0
@@ -16359,14 +16360,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1145510282}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.25, z: -6}
+  m_LocalRotation: {x: 0.13052616, y: 0, z: 0, w: 0.9914449}
+  m_LocalPosition: {x: 0, y: 1.5, z: -6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1833342216}
   m_Father: {fileID: 2082686309}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 15, y: 0, z: 0}
 --- !u!114 &1145510285
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19399,6 +19400,7 @@ GameObject:
   - component: {fileID: 1339690600}
   - component: {fileID: 1339690601}
   - component: {fileID: 1339690602}
+  - component: {fileID: 1339690603}
   m_Layer: 0
   m_Name: Player Controller
   m_TagString: Untagged
@@ -19439,6 +19441,7 @@ MonoBehaviour:
   selectBehaviour: {fileID: 0}
   data: {fileID: 0}
   currentBehaviour: {fileID: 0}
+  targetLookPosition: {x: 0, y: 0, z: 0}
   playerReference: {fileID: 11400000, guid: 746148e8242954418b04a3ab83ac9260, type: 2}
 --- !u!195 &1339690599
 NavMeshAgent:
@@ -19499,6 +19502,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
+--- !u!114 &1339690603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1339690596}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca4d9bedae7ea47e18c760e73f926120, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  destination: {x: 0, y: 0, z: 0}
+  isAtDestination: 0
 --- !u!1 &1351519058
 GameObject:
   m_ObjectHideFlags: 0
@@ -22021,7 +22038,7 @@ MonoBehaviour:
   partyReference: {fileID: 11400000, guid: d2092e9896dc047a3939198bb6a0204c, type: 2}
   photoReference: {fileID: 11400000, guid: cb7b1e6b2b5d744488ab7a95f0210ad8, type: 2}
   navigation: {fileID: 11400000, guid: 7af35f01730a846d692adda4734cddd3, type: 2}
-  gameplayView: {fileID: 11400000, guid: 8738f1e97be914065a0091ac6b397253, type: 2}
+  gameplayView: {fileID: 11400000, guid: 76e524d331f5b4a15b8b9df9fff47b4d, type: 2}
   scoreText: {fileID: 1131501342}
   photoText: {fileID: 1307552611}
   continueButton: {fileID: 1436250355}
@@ -26995,7 +27012,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerReference: {fileID: 11400000, guid: 746148e8242954418b04a3ab83ac9260, type: 2}
-  selected: {fileID: 0}
   interactableMask:
     serializedVersion: 2
     m_Bits: 256
@@ -27006,6 +27022,7 @@ MonoBehaviour:
   navigation: {fileID: 11400000, guid: 7af35f01730a846d692adda4734cddd3, type: 2}
   homeView: {fileID: 11400000, guid: 76e524d331f5b4a15b8b9df9fff47b4d, type: 2}
   partyView: {fileID: 11400000, guid: 9bfb1103a1c06425080a014677e9dbed, type: 2}
+  selected: {fileID: 0}
 --- !u!1 &1858841102
 GameObject:
   m_ObjectHideFlags: 0
