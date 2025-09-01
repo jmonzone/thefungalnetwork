@@ -13,6 +13,7 @@ public class GameplayHUD : MonoBehaviour
     [SerializeField] private CameraPanController cameraPanController;
     [SerializeField] private CinemachineVirtualCamera gameplayVirtualCamera;
     [SerializeField] private CinemachineVirtualCamera photoVirtualCamera;
+    [SerializeField] private InteractionController interactionController;
 
     [Header("UI References")]
     [SerializeField] private Button cameraButton;
@@ -28,7 +29,13 @@ public class GameplayHUD : MonoBehaviour
         if (cameraButton) cameraButton.onClick.AddListener(UseOrthographicCamera);
         if (backButton) backButton.onClick.AddListener(UsePerspectiveCamera);
 
+        virtualJoystick.OnJoystickStart += VirtualJoystick_OnJoystickStart;
         virtualJoystick.OnJoystickUpdate += VirtualJoystick_OnJoystickUpdate;
+    }
+
+    private void VirtualJoystick_OnJoystickStart(Vector3 arg0)
+    {
+        interactionController.Unselect();
     }
 
     private void VirtualJoystick_OnJoystickUpdate(Vector3 direction)
@@ -40,7 +47,6 @@ public class GameplayHUD : MonoBehaviour
         playerReference.SetTargetPosition(targetPosition);
 
         cameraPanController.CenterTargetInView(targetPosition);
-        Debug.Log(direction);
     }
 
     private void UseOrthographicCamera()

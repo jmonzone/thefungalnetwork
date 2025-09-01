@@ -9107,62 +9107,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 705436363}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &727239975
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 727239977}
-  - component: {fileID: 727239976}
-  m_Layer: 0
-  m_Name: Inventory Controller
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &727239976
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 727239975}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64e1539a25b1941a2962a8b7c9f0ce45, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  unitManager: {fileID: 2087691131}
-  inventory: {fileID: 11400000, guid: e9c2fc38b99d8404f8495af08b4889fc, type: 2}
-  insightSlider: {fileID: 0}
-  rainbowImages:
-  - {fileID: 0}
-  - {fileID: 0}
-  magicCircleRotation: {fileID: 0}
-  highlightColorA: {r: 0.35893556, g: 0.6545046, b: 0.6981132, a: 1}
-  highlightColorB: {r: 0.60784316, g: 0.84705883, b: 0.88235295, a: 1}
-  pulseSpeed: 0.75
-  transitionDuration: 0.4
-  sliderLerpSpeed: 4
---- !u!4 &727239977
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 727239975}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &728192185
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10449,6 +10393,7 @@ MonoBehaviour:
   cameraPanController: {fileID: 1446848728}
   gameplayVirtualCamera: {fileID: 1446848726}
   photoVirtualCamera: {fileID: 0}
+  interactionController: {fileID: 1851915127}
   cameraButton: {fileID: 2139335950}
   backButton: {fileID: 9733358}
   virtualJoystick: {fileID: 384515366}
@@ -12781,7 +12726,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 60, y: 60}
+  m_SizeDelta: {x: 40, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1025246635
 MonoBehaviour:
@@ -26073,8 +26018,8 @@ RectTransform:
   m_GameObject: {fileID: 2131663679}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.75, y: 0.75, z: 0.75}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1025246634}
   m_Father: {fileID: 384515365}
@@ -26082,7 +26027,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 125, y: 125}
+  m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2131663681
 MonoBehaviour:
@@ -29421,7 +29366,6 @@ SceneRoots:
   - {fileID: 776251627}
   - {fileID: 68235283}
   - {fileID: 1841194354}
-  - {fileID: 727239977}
   - {fileID: 486440887}
   - {fileID: 2016030641}
   - {fileID: 818851464}

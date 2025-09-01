@@ -87,4 +87,13 @@ public class InteractionController : MonoBehaviour
             }
         }
     }
+
+    public void Unselect()
+    {
+        if (selected)
+        {
+            selected = null;
+            OnEntitySelected?.Invoke(null);
+        }
+    }
 }

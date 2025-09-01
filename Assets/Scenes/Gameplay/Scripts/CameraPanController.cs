@@ -43,6 +43,17 @@ public class CameraPanController : MonoBehaviour
 
     private void Update()
     {
+        // Smooth panning
+        virtualCamera.transform.position = Vector3.SmoothDamp(virtualCamera.transform.position, targetPosition, ref panVelocity, panSmoothTime);
+
+        // Smoothly interpolate to target size
+        virtualCamera.m_Lens.OrthographicSize = Mathf.SmoothDamp(
+            virtualCamera.m_Lens.OrthographicSize,
+            targetOrthoSize,
+            ref zoomVelocity,
+            zoomSmoothTime // smoothing time in seconds
+        );
+
         if (EventSystem.current.IsPointerOverGameObject()) return;
         if (Input.touchCount > 0 && EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId)) return;
 
@@ -75,21 +86,12 @@ public class CameraPanController : MonoBehaviour
 
         // Single touch / mouse panning
         else HandlePanning();
-
-        // Smooth panning
-        virtualCamera.transform.position = Vector3.SmoothDamp(virtualCamera.transform.position, targetPosition, ref panVelocity, panSmoothTime);
-
-        // Smoothly interpolate to target size
-        virtualCamera.m_Lens.OrthographicSize = Mathf.SmoothDamp(
-            virtualCamera.m_Lens.OrthographicSize,
-            targetOrthoSize,
-            ref zoomVelocity,
-            zoomSmoothTime // smoothing time in seconds
-        );
     }
 
     private void HandlePanning()
     {
+        Debug.Log("handling panning");
+
         // Single touch
         if (Input.touchCount == 1)
         {

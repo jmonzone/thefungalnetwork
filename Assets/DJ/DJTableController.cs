@@ -91,7 +91,7 @@ public class DJTableController : MonoBehaviour, IInteractable
     {
         while (true)
         {
-            yield return new WaitForSeconds(djReference.BeatDuration * 4f);
+            yield return new WaitForSeconds(djReference.BeatDuration * 8f);
             djReference.InvokeBeat();
         }
     }
