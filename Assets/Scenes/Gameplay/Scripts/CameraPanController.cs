@@ -90,8 +90,6 @@ public class CameraPanController : MonoBehaviour
 
     private void HandlePanning()
     {
-        Debug.Log("handling panning");
-
         // Single touch
         if (Input.touchCount == 1)
         {

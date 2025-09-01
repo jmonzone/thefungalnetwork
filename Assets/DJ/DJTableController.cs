@@ -89,10 +89,19 @@ public class DJTableController : MonoBehaviour, IInteractable
 
     private IEnumerator PlayToBeat()
     {
+        int beat = 0;
+        int maxBeats = 8;
+
         while (true)
         {
-            yield return new WaitForSeconds(djReference.BeatDuration * 8f);
-            djReference.InvokeBeat();
+            djReference.InvokeBeat(beat);
+
+            yield return new WaitForSeconds(djReference.BeatDuration);
+
+            beat += 1;
+            beat %= maxBeats;
+
+            Debug.Log("PlayToBeat " + beat);
         }
     }
 

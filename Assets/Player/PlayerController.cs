@@ -1,6 +1,4 @@
-using System.Collections;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class PlayerController : UnitController
 {
@@ -9,6 +7,7 @@ public class PlayerController : UnitController
 
     private UnitFollow unitFollow;
     private UnitDestination unitDestination;
+    private UnitDrum unitDrum;
 
     protected override void Awake()
     {
@@ -16,6 +15,7 @@ public class PlayerController : UnitController
 
         unitFollow = GetComponent<UnitFollow>();
         unitDestination = GetComponent<UnitDestination>();
+        unitDrum = GetComponent<UnitDrum>();
 
         unitFollow.OnDestinationReached += UnitFollow_OnDestinationReached;
 
@@ -25,7 +25,16 @@ public class PlayerController : UnitController
 
     private void UnitFollow_OnDestinationReached()
     {
-        playerReference.TargetInteractable.Select();
+        switch (playerReference.TargetInteractable)
+        {
+            case PlantSporeEmitter plant:
+                unitDrum.SetPlant(plant);
+                SetBehaviour(unitDrum);
+                break;
+            default:
+                playerReference.TargetInteractable.Select();
+                break;
+        }
     }
 
     private void OnEnable()

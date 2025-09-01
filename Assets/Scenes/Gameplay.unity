@@ -11555,6 +11555,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2017028620}
     m_Modifications:
+    - target: {fileID: 1802776275940221985, guid: 9e89634fe9474125ab42aefdc22a787d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2364977855752419471, guid: 9e89634fe9474125ab42aefdc22a787d,
         type: 3}
       propertyPath: m_IsActive
@@ -11576,6 +11581,21 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2100000, guid: 806224b540ec7465496fd51b01d3f02f, type: 2}
     - target: {fileID: 2838267163965576514, guid: 9e89634fe9474125ab42aefdc22a787d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2857182669888255159, guid: 9e89634fe9474125ab42aefdc22a787d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3149218618793787834, guid: 9e89634fe9474125ab42aefdc22a787d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3856908683174897080, guid: 9e89634fe9474125ab42aefdc22a787d,
         type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -17129,6 +17149,7 @@ GameObject:
   - component: {fileID: 1339690601}
   - component: {fileID: 1339690602}
   - component: {fileID: 1339690603}
+  - component: {fileID: 1339690604}
   m_Layer: 0
   m_Name: Player Controller
   m_TagString: Untagged
@@ -17244,6 +17265,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   destination: {x: 0, y: 0, z: 0}
   isAtDestination: 0
+--- !u!114 &1339690604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1339690596}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01046e98cabaa4e06a9977c73b4820fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dJTableReference: {fileID: 11400000, guid: 3bda1116fcf8f49e696cd21c6b5092da, type: 2}
+  step: 4
 --- !u!1 &1351519058
 GameObject:
   m_ObjectHideFlags: 0

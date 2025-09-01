@@ -10,7 +10,7 @@ public class DJTableReference : ScriptableObject
     public float BeatDuration => 60f / bpm; // seconds per beat
 
     public event UnityAction OnBPMChanged;
-    public event UnityAction OnBeat;
+    public event UnityAction<int> OnBeat;
 
     public void SetBPM(float bpm)
     {
@@ -18,8 +18,8 @@ public class DJTableReference : ScriptableObject
         OnBPMChanged?.Invoke();
     }
 
-    public void InvokeBeat()
+    public void InvokeBeat(int beat)
     {
-        OnBeat?.Invoke();
+        OnBeat?.Invoke(beat);
     }
 }
