@@ -1,6 +1,52 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
+using System.Collections.Generic;
+using UnityEngine.Events;
+
+public class ObjectPool<T> where T : Component
+{
+    private T prefab;
+    private Transform parent;
+    private Queue<T> pool = new Queue<T>();
+
+    public ObjectPool(T prefab, int initialSize = 10, Transform parent = null, UnityAction<T> initialize = null)
+    {
+        this.prefab = prefab;
+        this.parent = parent;
+
+        // Pre-instantiate objects
+        for (int i = 0; i < initialSize; i++)
+        {
+            T obj = Object.Instantiate(prefab, parent);
+            obj.gameObject.SetActive(false);
+            pool.Enqueue(obj);
+            initialize?.Invoke(obj);
+        }
+    }
+
+    public T Get()
+    {
+        if (pool.Count > 0)
+        {
+            T obj = pool.Dequeue();
+            obj.gameObject.SetActive(true);
+            return obj;
+        }
+        else
+        {
+            T obj = Object.Instantiate(prefab, parent);
+            return obj;
+        }
+    }
+
+    public void Return(T obj)
+    {
+        obj.gameObject.SetActive(false);
+        pool.Enqueue(obj);
+    }
+}
+
 
 public class PlantSporeEmitter : MonoBehaviour, IInteractable
 {
@@ -20,10 +66,15 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable
     Transform IInteractable.Transform => transform;
 
     private Vector3 startScale;
+    private ObjectPool<SporeController> sporePool;
 
     private void Awake()
     {
         startScale = scaleTransform.localScale;
+        sporePool = new ObjectPool<SporeController>(sporePrefab, 10, transform, spore =>
+        {
+            spore.OnCollect += () => sporePool.Return(spore);
+        });
     }
 
     void IInteractable.Select()
@@ -31,33 +82,16 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable
         EmitSpore();
     }
 
-    private void OnEnable()
-    {
-        dJTableReference.OnBeat += DJTableReference_OnBeat;
-    }
-
-    private void OnDisable()
-    {
-        dJTableReference.OnBeat -= DJTableReference_OnBeat;
-    }
-
-    private void DJTableReference_OnBeat(int beat)
-    {
-        //if (dJTableReference.IsPlaying && beat % emissionStep == 0) EmitSpore();
-    }
-
     public void EmitSpore()
     {
         StopAllCoroutines();
         StartCoroutine(BounceAnimation());
 
-        // Create spore
-        SporeController spore = Instantiate(sporePrefab, spawnPoint.position, Quaternion.identity);
+        SporeController spore = sporePool.Get();
+        spore.transform.position = spawnPoint.position;
+        spore.transform.rotation = Quaternion.identity;
 
-        // Launch upward
         Vector3 peak = spawnPoint.position + Vector3.up * launchHeight;
-
-        // Find landing spot (not on plant, but near)
         Vector3 landingSpot = FindLandingSpot();
 
         spore.LaunchSpore(peak, landingSpot);

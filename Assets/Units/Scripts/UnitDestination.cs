@@ -33,7 +33,7 @@ public class UnitDestination : UnitBehaviour
 
     private IEnumerator DestinationRoutine()
     {
-        while(Vector3.Distance(destination, transform.position) > 0.1f)
+        while(Vector3.Distance(destination, transform.position) > 0.5f)
         {
             yield return null;
         }

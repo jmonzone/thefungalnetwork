@@ -11,6 +11,8 @@ public class SporeController : MonoBehaviour
     [Header("Spore Settings")]
     [SerializeField] private float driftDownDuration = 2f;
 
+    public event UnityAction OnCollect;
+
     public void Collect()
     {
         inventoryReference.CollectSpore(this);
@@ -19,6 +21,8 @@ public class SporeController : MonoBehaviour
 
         sporeReference.RemoveSpore(this);
         gameObject.SetActive(false);
+
+        OnCollect?.Invoke();
     }
 
     public void LaunchSpore(Vector3 peak, Vector3 landing)
@@ -32,11 +36,15 @@ public class SporeController : MonoBehaviour
         Vector3 start = transform.position;
         float t = 0;
 
+        var launchDuration = 0.5f;
+        peak.x += Mathf.Sin(Random.value * Mathf.PI * 2f) * 0.01f; // feather sway
+        peak.z += Mathf.Cos(Random.value * Mathf.PI * 2f) * 0.01f; // feather sway
+
         // Go upward
-        while (t < 0.5f)
+        while (t < launchDuration)
         {
             t += Time.deltaTime;
-            transform.position = Vector3.Lerp(start, peak, t / 0.5f);
+            transform.position = Vector3.Lerp(start, peak, t / launchDuration);
             yield return null;
         }
 

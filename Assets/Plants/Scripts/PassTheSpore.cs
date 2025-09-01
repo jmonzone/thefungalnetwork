@@ -95,7 +95,9 @@ public class PassTheSpore : MonoBehaviour
 
     private IEnumerator GameInput()
     {
+        Debug.Log("Waiting");
         yield return new WaitUntil(() => players.All(player => player.Fungal.IsAtDestination));
+        Debug.Log("Waiting complete");
 
         int currentUnitIndex = 0;
 
