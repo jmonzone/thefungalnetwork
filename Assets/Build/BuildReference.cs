@@ -13,6 +13,7 @@ public class BuildReference : ScriptableObject
     [SerializeField] private InventoryReference inventory;
     [SerializeField] private Item initialItem;
     [SerializeField] private Navigation navigation;
+    [SerializeField] private ViewReference buildListView;
     [SerializeField] private ViewReference buildPlacementView;
     [SerializeField] private ViewReference buildSelectView;
 
@@ -23,11 +24,13 @@ public class BuildReference : ScriptableObject
     [SerializeField] private Material invalidMaterial;
 
     [Header("Runtime")]
+    [SerializeField] private bool isBuilding;
     [SerializeField] private BuildController currentBuild;
     [SerializeField] private int culturePoints;
     [SerializeField] private List<BuildInstance> buildInstances;
     [SerializeField] private List<BuildController> buildControllers;
 
+    public bool IsBuilding => isBuilding;
     public BuildController CurrentBuild => currentBuild;
     public int CulturePoints => culturePoints;
     public List<BuildInstance> BuildInstances => buildInstances;
@@ -155,7 +158,19 @@ public class BuildReference : ScriptableObject
         localData.SaveData(BUILD_KEY, buildJson);
     }
 
-    public void StartBuild(Item item)
+    public void ShowBuild()
+    {
+        isBuilding = true;
+        navigation.Navigate(buildListView);
+    }
+
+    public void EndBuild()
+    {
+        isBuilding = false;
+        navigation.GoBack();
+    }
+
+    public void StartBuildPlacement(Item item)
     {
         currentBuild = Instantiate(item.ItemPrefab).GetComponent<BuildController>();
         currentBuild.Initialize(item);
@@ -169,6 +184,7 @@ public class BuildReference : ScriptableObject
 
         buildControllers.Add(currentBuild);
 
+        inventory.DecreaseSporeCount(currentBuild.Item.Price);
         culturePoints += currentBuild.Item.CulturePoints;
         SaveData();
 
