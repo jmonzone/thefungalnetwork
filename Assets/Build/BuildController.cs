@@ -6,10 +6,14 @@ using UnityEngine.Events;
 
 public class BuildController : MonoBehaviour
 {
+    [Header("Runtime")]
     [SerializeField] private Item item;
     [SerializeField] private Vector3 overlapHalfExtents = new Vector3(0.5f, 0.5f, 0.5f);
+    [SerializeField] private bool isValidPlacement;
 
     public Item Item => item;
+    public bool IsValidPlacement => isValidPlacement;
+
     private Camera mainCamera;
 
     private List<Material> defaultMaterials;
@@ -64,6 +68,7 @@ public class BuildController : MonoBehaviour
 
             // Check collision validity
             bool isValid = IsPlacementValid(targetPosition, placementMask, collisionMask);
+            isValidPlacement = isValid;
 
             var i = 0;
             // Apply color to all child renderers' materials

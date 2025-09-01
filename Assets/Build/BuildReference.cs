@@ -12,12 +12,23 @@ public class BuildReference : ScriptableObject
     [SerializeField] private LocalData localData;
     [SerializeField] private InventoryReference inventory;
     [SerializeField] private Item initialItem;
+    [SerializeField] private Navigation navigation;
+    [SerializeField] private ViewReference buildPlacementView;
+    [SerializeField] private ViewReference buildSelectView;
+
+    [Header("Settings")]
+    [SerializeField] private LayerMask groundMask;
+    [SerializeField] private LayerMask collisionMask;
+    [SerializeField] private Material validMaterial;
+    [SerializeField] private Material invalidMaterial;
 
     [Header("Runtime")]
+    [SerializeField] private BuildController currentBuild;
     [SerializeField] private int culturePoints;
     [SerializeField] private List<BuildInstance> buildInstances;
     [SerializeField] private List<BuildController> buildControllers;
 
+    public BuildController CurrentBuild => currentBuild;
     public int CulturePoints => culturePoints;
     public List<BuildInstance> BuildInstances => buildInstances;
     public List<BuildController> BuildControllers => buildControllers;
@@ -113,29 +124,80 @@ public class BuildReference : ScriptableObject
         localData.SaveData(BUILD_KEY, buildJson);
     }
 
-    public void AddBuild(BuildController buildController)
+    public void StartBuild(Item item)
     {
-        buildControllers.Add(buildController);
-
-        var buildData = CreateInstance<BuildInstance>();
-        buildData.Initialize(buildController.Item, buildController.transform.position);
-        buildInstances.Add(buildData);
-        culturePoints += buildController.Item.CulturePoints;
-        SaveData();
-
-        OnBuildUpdated?.Invoke();
+        currentBuild = Instantiate(item.ItemPrefab).GetComponent<BuildController>();
+        currentBuild.Initialize(item);
+        currentBuild.StartBuild(groundMask, collisionMask, validMaterial, invalidMaterial);
+        navigation.Navigate(buildPlacementView);
     }
 
-    public void RemoveBuild(BuildController buildController)
+    public void CompleteBuild()
     {
-        buildControllers.Remove(buildController);
+        if (!currentBuild) return;
 
-        var build = buildInstances.Find(build => build.Item == buildController.Item);
-        buildInstances.Remove(build);
-        culturePoints -= buildController.Item.CulturePoints;
+        buildControllers.Add(currentBuild);
+
+        var buildData = CreateInstance<BuildInstance>();
+        buildData.Initialize(currentBuild.Item, currentBuild.transform.position);
+        buildInstances.Add(buildData);
+        culturePoints += currentBuild.Item.CulturePoints;
         SaveData();
 
         OnBuildUpdated?.Invoke();
+        currentBuild.CompleteBuild();
+        currentBuild = null;
+        navigation.GoBack();
+    }
+
+    public void CancelBuild()
+    {
+        if (!currentBuild) return;
+        Destroy(currentBuild.gameObject);
+        currentBuild = null;
+        navigation.GoBack();
+    }
+
+    public void SelectBuild(BuildController buildController)
+    {
+        currentBuild = buildController;
+        navigation.Navigate(buildSelectView);
+    }
+
+
+    public void CancelSelect()
+    {
+        if (!currentBuild) return;
+        currentBuild = null;
+        navigation.GoBack();
+    }
+
+    public void RotateLeft()
+    {
+        currentBuild.transform.Rotate(Vector3.down, -45f);
+    }
+
+    public void RotateRight()
+    {
+        currentBuild.transform.Rotate(Vector3.down, 45f);
+    }
+
+    public void RemoveBuild()
+    {
+        if (!currentBuild) return;
+
+        buildControllers.Remove(currentBuild);
+
+        var build = buildInstances.Find(build => build.Item == currentBuild.Item);
+        buildInstances.Remove(build);
+        culturePoints -= currentBuild.Item.CulturePoints;
+
+        Destroy(currentBuild.gameObject);
+        SaveData();
+
+        OnBuildUpdated?.Invoke();
+
+        navigation.GoBack();
     }
 
     public bool Contains(Item item)

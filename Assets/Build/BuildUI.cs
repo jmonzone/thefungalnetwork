@@ -1,30 +1,17 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class BuildUI : MonoBehaviour
 {
-    [SerializeField] private LayerMask groundMask;
-    [SerializeField] private LayerMask collisionMask;
-
-    [SerializeField] private Material validMaterial;
-    [SerializeField] private Material invalidMaterial;
-
     [SerializeField] private BuildReference build;
     [SerializeField] private InventoryReference inventory;
-    [SerializeField] private Navigation navigation;
-    [SerializeField] private ViewReference buildView;
-    [SerializeField] private ViewReference removeView;
-    [SerializeField] private Button buildButton;
-    [SerializeField] private Button removeButton;
     [SerializeField] private Button closeButton;
 
     [SerializeField] private CameraPanController cameraPanController;
 
     private List<ItemUI> itemViewList = new List<ItemUI>();
 
-    private BuildController buildController;
     private Vector3 startInput;
     private bool isDragging;
     private Camera mainCamera;
@@ -39,58 +26,19 @@ public class BuildUI : MonoBehaviour
 
         foreach(var itemView in itemViewList)
         {
-            itemView.OnClick += () => ItemView_OnClick(itemView.Item);
+            itemView.OnClick += () => build.StartBuild(itemView.Item);
         }
 
         var viewController = GetComponent<ViewController>();
         viewController.OnFadeInStart += ViewController_OnFadeInStart;
         viewController.OnFadeOutStart += ViewController_OnFadeOutStart;
 
-        buildButton.onClick.AddListener(() =>
-        {
-            if (buildController)
-            {
-                build.AddBuild(buildController);
-                buildController.CompleteBuild();
-                buildController = null;
-                navigation.GoBack();
-            }
-        });
-
-        removeButton.onClick.AddListener(() =>
-        {
-            if (buildController)
-            {
-                build.RemoveBuild(buildController);
-                Destroy(buildController.gameObject);
-                buildController = null;
-                navigation.GoBack();
-            }
-        });
-
-        closeButton.onClick.AddListener(() =>
-        {
-            if (buildController)
-            {
-                Destroy(buildController.gameObject);
-                buildController = null;
-            }
-        });
+        closeButton.onClick.AddListener(build.CancelBuild);
     }
 
     private void Start()
     {
         build.LoadExistingBuild();
-    }
-
-    private void ItemView_OnClick(Item item)
-    {
-        buildController = Instantiate(item.ItemPrefab).GetComponent<BuildController>();
-        buildController.Initialize(item);
-        buildController.StartBuild(groundMask, collisionMask, validMaterial, invalidMaterial);
-
-        navigation.Navigate(buildView);
-
     }
 
     private bool canSelectBuildings = false;
@@ -129,16 +77,15 @@ public class BuildUI : MonoBehaviour
             Vector3 inputPos = Input.mousePosition;
 
             Ray ray = mainCamera.ScreenPointToRay(inputPos);
-            RaycastHit hit;
 
-            if (Physics.Raycast(ray, out hit, 1000f, interactableMask))
+            if (Physics.Raycast(ray, out RaycastHit hit, 1000f, interactableMask))
             {
 
-                buildController = hit.transform.GetComponentInParent<BuildController>();
+                var buildController = hit.transform.GetComponentInParent<BuildController>();
                 if (buildController)
                 {
+                    build.SelectBuild(buildController);
                     cameraPanController.CenterTargetInView(buildController.transform.position);
-                    navigation.Navigate(removeView);
                     return;
                 }
             }
