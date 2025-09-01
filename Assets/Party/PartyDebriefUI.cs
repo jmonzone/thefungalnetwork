@@ -44,23 +44,23 @@ public class PartyDebriefUI : MonoBehaviour
     {
         switch (partyReference.Score)
         {
-            case > 40:
+            case > 100:
                 rankingText.text = "S";
                 rankingText.color = rank1Color;
                 break;
-            case > 28:
+            case > 75:
                 rankingText.text = "A";
                 rankingText.color = rank2Color;
                 break;
-            case > 20:
+            case > 50:
                 rankingText.text = "B";
                 rankingText.color = rank3Color;
                 break;
-            case > 13:
+            case > 25:
                 rankingText.text = "C";
                 rankingText.color = rank4Color;
                 break;
-            case > 5:
+            case > 10:
                 rankingText.text = "D";
                 rankingText.color = rank5Color;
                 break;
