@@ -6,15 +6,18 @@ using UnityEngine.UI;
 
 public class GameplayHUD : MonoBehaviour
 {
-    [SerializeField] private Button cameraButton;
-    [SerializeField] private Button backButton;
-    [SerializeField] private CinemachineVirtualCamera gameplayVirtualCamera;
-    [SerializeField] private CinemachineVirtualCamera photoVirtualCamera;
-    [SerializeField] private CameraPanController cameraPanController;
+    [Header("References")]
+    [SerializeField] private PlayerReference playerReference;
     [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference cameraView;
+    [SerializeField] private CameraPanController cameraPanController;
+    [SerializeField] private CinemachineVirtualCamera gameplayVirtualCamera;
+    [SerializeField] private CinemachineVirtualCamera photoVirtualCamera;
 
-    [SerializeField] private PartyReference partyReference;
+    [Header("UI References")]
+    [SerializeField] private Button cameraButton;
+    [SerializeField] private Button backButton;
+    [SerializeField] private VirtualJoystick virtualJoystick;
 
     private Camera mainCamera;
 
@@ -24,18 +27,20 @@ public class GameplayHUD : MonoBehaviour
 
         if (cameraButton) cameraButton.onClick.AddListener(UseOrthographicCamera);
         if (backButton) backButton.onClick.AddListener(UsePerspectiveCamera);
+
+        virtualJoystick.OnJoystickUpdate += VirtualJoystick_OnJoystickUpdate;
     }
 
-    private void OnEnable()
+    private void VirtualJoystick_OnJoystickUpdate(Vector3 direction)
     {
-        //partyReference.OnPartyStarted += UsePerspectiveCamera;
-        //partyReference.OnPartyComplete += UseOrthographicCamera;
-    }
+        direction.z = direction.y;
+        direction.y = 0;
 
-    private void OnDisable()
-    {
-        //partyReference.OnPartyStarted -= UsePerspectiveCamera;
-        //partyReference.OnPartyComplete -= UseOrthographicCamera;
+        var targetPosition = playerReference.Player.transform.position + direction.normalized;
+        playerReference.SetTargetPosition(targetPosition);
+
+        cameraPanController.CenterTargetInView(targetPosition);
+        Debug.Log(direction);
     }
 
     private void UseOrthographicCamera()

@@ -15,7 +15,7 @@ public class PlantController : MonoBehaviour
 
     private void BuildController_OnBuildComplete()
     {
-        StartCoroutine(GrowthPhase());
+        if (plantStage1) StartCoroutine(GrowthPhase());
     }
 
     private IEnumerator GrowthPhase()

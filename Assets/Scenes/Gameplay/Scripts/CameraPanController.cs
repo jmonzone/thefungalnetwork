@@ -30,8 +30,11 @@ public class CameraPanController : MonoBehaviour
 
     public Vector2 inputDelta;
 
+    private Camera mainCamera;
+
     private void Awake()
     {
+        mainCamera = Camera.main;
         virtualCamera = GetComponent<CinemachineVirtualCamera>();
 
         targetPosition = transform.position;
@@ -142,21 +145,14 @@ public class CameraPanController : MonoBehaviour
         //Debug.Log("Centering");
         panSmoothTime = centeringSmoothTime;
 
-        Camera cam = Camera.main;
-        if (cam == null)
-        {
-            Debug.LogWarning("Camera or target missing.");
-            return;
-        }
-
         // Target's current screen position
-        Vector3 targetScreenPos = cam.WorldToScreenPoint(position);
+        Vector3 targetScreenPos = mainCamera.WorldToScreenPoint(position);
 
         // Convert screenDelta to world delta at the target's depth
         Vector3 camPos = transform.position;
 
-        Vector3 worldCenter = cam.ScreenToWorldPoint(new Vector3(Screen.width / 2f, Screen.height / 2f, targetScreenPos.z));
-        Vector3 worldTarget = cam.ScreenToWorldPoint(new Vector3(targetScreenPos.x, targetScreenPos.y, targetScreenPos.z));
+        Vector3 worldCenter = mainCamera.ScreenToWorldPoint(new Vector3(Screen.width / 2f, Screen.height / 2f, targetScreenPos.z));
+        Vector3 worldTarget = mainCamera.ScreenToWorldPoint(new Vector3(targetScreenPos.x, targetScreenPos.y, targetScreenPos.z));
 
         Vector3 worldDelta = worldTarget - worldCenter;
 

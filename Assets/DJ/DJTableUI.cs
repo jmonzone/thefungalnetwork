@@ -132,7 +132,6 @@ public class DJTableUI : MonoBehaviour
 
     private DJTrack currentTrack;
 
-    private float BeatDuration => 60f / dJTableReference.BPM; // seconds per beat
 
     private IEnumerator PartyLightsRoutine()
     {
@@ -144,12 +143,12 @@ public class DJTableUI : MonoBehaviour
                     foreach (var light in partyLights)
                         light.SetEnabled(true);
 
-                    yield return new WaitForSeconds(BeatDuration);
+                    yield return new WaitForSeconds(dJTableReference.BeatDuration);
 
                     foreach (var light in partyLights)
                         light.SetEnabled(false);
 
-                    yield return new WaitForSeconds(BeatDuration);
+                    yield return new WaitForSeconds(dJTableReference.BeatDuration);
                     break;
 
                 case PartyMode.Alternating:
@@ -162,7 +161,7 @@ public class DJTableUI : MonoBehaviour
                                 partyLights[i].SetEnabled(true);
                         }
 
-                        yield return new WaitForSeconds(BeatDuration / 2);
+                        yield return new WaitForSeconds(dJTableReference.BeatDuration / 2);
 
                         for (int i = 0; i < partyLights.Count; i++)
                         {
@@ -170,7 +169,7 @@ public class DJTableUI : MonoBehaviour
                                 partyLights[i].SetEnabled(false);
                         }
 
-                        yield return new WaitForSeconds(BeatDuration / 2);
+                        yield return new WaitForSeconds(dJTableReference.BeatDuration / 2);
                     }
                     break;
 
@@ -180,14 +179,14 @@ public class DJTableUI : MonoBehaviour
                         light.SetEnabled(true);
                     }
 
-                    yield return new WaitForSeconds(BeatDuration / 4f); // 4 strobes per beat
+                    yield return new WaitForSeconds(dJTableReference.BeatDuration / 4f); // 4 strobes per beat
 
                     foreach (var light in partyLights)
                     {
                         light.SetEnabled(false);
                     }
 
-                    yield return new WaitForSeconds(BeatDuration / 4f); // 4 strobes per beat
+                    yield return new WaitForSeconds(dJTableReference.BeatDuration / 4f); // 4 strobes per beat
                     break;
             }
         }

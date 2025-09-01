@@ -25,6 +25,7 @@ public class UnitFollow : UnitBehaviour
 
     public override void StartBehaviour()
     {
+        navMeshAgent.isStopped = false;
         Vector3 targetPosition = GetAdjacentPoint(target, 1f);
 
         navMeshAgent.SetDestination(targetPosition);
@@ -37,28 +38,38 @@ public class UnitFollow : UnitBehaviour
     {
         base.StopBehaviour();
         StopAllCoroutines();
+        navMeshAgent.isStopped = true;
     }
 
     private IEnumerator FollowRoutine(Transform target)
     {
-        Debug.Log("FollowRoutine 1");
         yield return new WaitWhile(() => navMeshAgent.pathPending);
-        Debug.Log($"FollowRoutine 2 {navMeshAgent.isStopped}");
 
         var firstTime = true;
 
         while (true)
         {
+
             Vector3 destination = GetAdjacentPoint(target, 1f);
             navMeshAgent.SetDestination(destination);
             Unit.SetLookPosition(target.transform.position);
             yield return null;
 
             var destinationReached = Vector3.Distance(destination, transform.position) < 0.5f;
-            if (destinationReached && firstTime)
+
+            if (destinationReached)
             {
-                firstTime = false;
-                OnDestinationReached?.Invoke();
+                navMeshAgent.isStopped = true;
+                if (firstTime)
+                {
+                    firstTime = false;
+                    OnDestinationReached?.Invoke();
+                }
+
+            }
+            else
+            {
+                navMeshAgent.isStopped = false;
             }
         }
     }

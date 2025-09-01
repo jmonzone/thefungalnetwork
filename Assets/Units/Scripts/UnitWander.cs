@@ -36,7 +36,7 @@ public class UnitWander : UnitBehaviour
     public override void StopBehaviour()
     {
         base.StopBehaviour();
-        navMeshAgent.isStopped = false;
+        navMeshAgent.isStopped = true;
         StopAllCoroutines();
     }
 

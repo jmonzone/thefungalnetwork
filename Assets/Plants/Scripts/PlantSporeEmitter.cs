@@ -1,5 +1,4 @@
 using System.Collections;
-using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -30,6 +29,16 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable
     void IInteractable.Select()
     {
         EmitSpore();
+    }
+
+    private void OnEnable()
+    {
+        dJTableReference.OnBeat += EmitSpore;
+    }
+
+    private void OnDisable()
+    {
+        dJTableReference.OnBeat -= EmitSpore;
     }
 
     public void EmitSpore()
