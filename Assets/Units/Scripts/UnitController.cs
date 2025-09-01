@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -15,19 +17,27 @@ public class UnitController : MonoBehaviour, IInteractable
 
     public Unit Data => data;
     protected Transform RenderRoot => renderRoot;
+    public bool IsDefaultBehaviour => currentBehaviour == defaultBehaviour;
 
     Transform IInteractable.Transform => transform;
 
     public event UnityAction OnInitialized;
+    public event UnityAction OnBehaviourChanged;
 
     protected virtual void Awake()
     {
         targetLookPosition = transform.position;
+
+        var allBehaviours = GetComponents<UnitBehaviour>();
+        foreach(var behaviour in allBehaviours)
+        {
+            behaviour.OnBehaviourRequest += () => SetBehaviour(behaviour);
+        }
     }
 
     protected virtual void Start()
     {
-        SetBehaviour(defaultBehaviour);
+        SetDefaultBehaviour();
     }
 
     protected virtual void Update()
@@ -55,6 +65,7 @@ public class UnitController : MonoBehaviour, IInteractable
         }
 
         currentBehaviour = behaviour;
+        OnBehaviourChanged?.Invoke();
 
         if (currentBehaviour)
         {

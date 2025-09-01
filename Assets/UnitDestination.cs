@@ -23,7 +23,7 @@ public class UnitDestination : UnitBehaviour
         this.destination = destination;
     }
 
-    public override void StartBehaviour()
+    protected override void OnBehaviourStart()
     {
         isAtDestination = false;
         navMeshAgent.isStopped = false;

@@ -21,6 +21,11 @@ public class PhotoReference : ScriptableObject
     public event UnityAction OnPhotoExit;
     public event UnityAction OnPhotoTaken;
 
+    public void Initialize()
+    {
+        allPhotos = new List<Texture>();
+    }
+
     public void StartPhotoView()
     {
         allPhotos = new List<Texture>();

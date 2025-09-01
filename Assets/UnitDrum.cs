@@ -22,7 +22,7 @@ public class UnitDrum : UnitBehaviour
         this.plant = plant;
     }
 
-    public override void StartBehaviour()
+    protected override void OnBehaviourStart()
     {
         dJTableReference.OnBeat += DJTableReference_OnBeat;
     }

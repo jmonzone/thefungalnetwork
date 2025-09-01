@@ -23,7 +23,7 @@ public class UnitFollow : UnitBehaviour
         this.target = target;
     }
 
-    public override void StartBehaviour()
+    protected override void OnBehaviourStart()
     {
         navMeshAgent.isStopped = false;
         Vector3 targetPosition = GetAdjacentPoint(target, 1f);

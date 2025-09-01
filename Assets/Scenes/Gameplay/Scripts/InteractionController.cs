@@ -11,6 +11,7 @@ public class InteractionController : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private PlayerReference playerReference;
+    [SerializeField] private DialogueReference dialogue;
     [SerializeField] private LayerMask interactableMask;
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private CameraPanController cameraPanController;
@@ -32,6 +33,7 @@ public class InteractionController : MonoBehaviour
     private void Awake()
     {
         mainCamera = Camera.main;
+        dialogue.OnDialogueComplete += Unselect;
     }
 
     private float raycastMaxDistance = 100f;
@@ -64,7 +66,7 @@ public class InteractionController : MonoBehaviour
             Ray ray = mainCamera.ScreenPointToRay(inputPos);
             RaycastHit hit;
 
-            if (Physics.SphereCast(ray, 0.5f, out hit, 1000f, interactableMask))
+            if (Physics.SphereCast(ray, 0.25f, out hit, 1000f, interactableMask))
             {
                 var interactable = hit.transform.GetComponentInParent<IInteractable>();
                 if (interactable != null)
@@ -94,6 +96,7 @@ public class InteractionController : MonoBehaviour
         {
             selected = null;
             OnEntitySelected?.Invoke(null);
+            cameraPanController.CenterTargetInView(playerReference.Player.transform.position);
         }
     }
 }

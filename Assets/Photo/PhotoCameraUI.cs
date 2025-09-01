@@ -20,6 +20,7 @@ public class PhotoCameraUI : MonoBehaviour
     private void Awake()
     {
         mainCamera = Camera.main;
+        photoReference.Initialize();
 
         cameraButton.onClick.AddListener(() =>
         {

@@ -9,7 +9,7 @@ public class UnitDialogue : UnitBehaviour
     [Header("Settings")]
     [SerializeField] private bool lookAtTarget = true;
 
-    public override void StartBehaviour()
+    protected override void OnBehaviourStart()
     {
         dialogue.StartDialogue(Unit);
         if (lookAtTarget) Unit.SetLookPosition(playerReference.Player.transform.position);

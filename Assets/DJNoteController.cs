@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class DJNoteController : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class DJNoteController : MonoBehaviour
     private float journeyLength;
     private float startTime;
 
+    public event UnityAction OnDestinationReached;
+
     public void Initialize(PlantSporeEmitter targetPlant)
     {
         plant = targetPlant;
@@ -20,7 +23,7 @@ public class DJNoteController : MonoBehaviour
         journeyLength = Vector3.Distance(startPos, targetPos);
     }
 
-    void Update()
+    private void Update()
     {
         if (!plant) return;
 
@@ -42,6 +45,7 @@ public class DJNoteController : MonoBehaviour
         {
             plant.EmitSpore();
             gameObject.SetActive(false);
+            OnDestinationReached?.Invoke();
         }
     }
 }

@@ -26,7 +26,7 @@ public class UnitWander : UnitBehaviour
         navMeshAgent = GetComponent<NavMeshAgent>();
     }
 
-    public override void StartBehaviour()
+    protected override void OnBehaviourStart()
     {
         navMeshAgent.stoppingDistance = 0.1f;
         navMeshAgent.isStopped = false;

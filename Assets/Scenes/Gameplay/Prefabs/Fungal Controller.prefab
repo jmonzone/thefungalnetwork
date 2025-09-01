@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 2272465958897182757}
   - component: {fileID: 8649680259317709286}
   - component: {fileID: 90876838566174676}
+  - component: {fileID: 4216329062336841891}
   m_Layer: 8
   m_Name: Fungal Controller
   m_TagString: Untagged
@@ -103,6 +104,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a051968eeea74528b48fad3e9e998b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isActive: 0
   dialogue: {fileID: 11400000, guid: 66db6a8c7a0524bd8b89b88de939507f, type: 2}
   playerReference: {fileID: 11400000, guid: 746148e8242954418b04a3ab83ac9260, type: 2}
   lookAtTarget: 1
@@ -118,6 +120,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 225c49f242d16425ea957132e8f7561d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isActive: 0
   baseSpeed: 2
   wanderRadius: 10
   minIdleTime: 6
@@ -136,6 +139,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b352c63d7c2c4e8c999d032179e905a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isActive: 0
   target: {fileID: 0}
 --- !u!114 &8649680259317709286
 MonoBehaviour:
@@ -149,6 +153,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca4d9bedae7ea47e18c760e73f926120, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isActive: 0
   destination: {x: 0, y: 0, z: 0}
   isAtDestination: 0
 --- !u!114 &90876838566174676
@@ -163,3 +168,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e0271bb48d214210aec3a4e614933fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4216329062336841891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5390423667600184729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 429e16007b5ac46ad85b660c4685773e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isActive: 0
+  sporeReference: {fileID: 11400000, guid: aada144c7ab1b4304a84a13d3ddc010c, type: 2}
+  blacklist:
+  - {fileID: 7313902277107358435}
+  targetSpore: {fileID: 0}

@@ -33,7 +33,11 @@ public class TouchIndicatorWorld : MonoBehaviour
             ShowIndicator(position, true);
         };
 
-        dialogue.OnDialogueComplete += HideIndicator;
+        dialogue.OnDialogueComplete += () =>
+        {
+            target = null;
+            HideIndicator();
+        };
     }
 
     private void Update()

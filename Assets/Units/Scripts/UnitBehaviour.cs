@@ -3,8 +3,12 @@ using UnityEngine.Events;
 
 public abstract class UnitBehaviour : MonoBehaviour
 {
-    protected UnitController Unit { get; private set; }
+    [SerializeField] private bool isActive;
 
+    protected UnitController Unit { get; private set; }
+    protected bool IsActive => isActive;
+
+    public event UnityAction OnBehaviourRequest;
     public event UnityAction OnBehaviourComplete;
 
     protected virtual void Awake()
@@ -17,10 +21,22 @@ public abstract class UnitBehaviour : MonoBehaviour
 
     }
 
-    public abstract void StartBehaviour();
+    public virtual void StartBehaviour()
+    {
+        isActive = true;
+        OnBehaviourStart();
+    }
+
+    protected abstract void OnBehaviourStart();
 
     public virtual void StopBehaviour()
     {
+        isActive = false;
         OnBehaviourComplete?.Invoke();
+    }
+
+    protected void InvokeOnBehaviourRequest()
+    {
+        OnBehaviourRequest?.Invoke();
     }
 }
