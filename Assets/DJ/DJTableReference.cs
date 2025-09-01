@@ -4,7 +4,7 @@ using UnityEngine.Events;
 [CreateAssetMenu]
 public class DJTableReference : ScriptableObject
 {
-    [SerializeField] private float bpm = 135f;
+    [SerializeField] private float bpm = 90;
 
     public float BPM => bpm;
     public float BeatDuration => 60f / bpm; // seconds per beat

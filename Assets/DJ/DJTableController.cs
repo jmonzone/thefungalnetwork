@@ -28,7 +28,6 @@ public class DJTableController : MonoBehaviour, IInteractable
     private void BuildController_OnBuildComplete()
     {
         StopAllCoroutines();
-        StartCoroutine(PlayToBeat());
     }
 
     void IInteractable.Select()
@@ -85,24 +84,6 @@ public class DJTableController : MonoBehaviour, IInteractable
             yield return null;
         }
         source.volume = targetVolume;
-    }
-
-    private IEnumerator PlayToBeat()
-    {
-        int beat = 0;
-        int maxBeats = 8;
-
-        while (true)
-        {
-            djReference.InvokeBeat(beat);
-
-            yield return new WaitForSeconds(djReference.BeatDuration);
-
-            beat += 1;
-            beat %= maxBeats;
-
-            Debug.Log("PlayToBeat " + beat);
-        }
     }
 
 }
