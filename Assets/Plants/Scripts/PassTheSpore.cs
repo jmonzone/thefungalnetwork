@@ -1,31 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Cinemachine;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UI;
 
 public class PassTheSpore : MonoBehaviour
 {
+    [Header("References")]
     [SerializeField] private PartyReference partyReference;
     [SerializeField] private UnitManager unitManager;
     [SerializeField] private PartyGuestSpawner guestManager;
-    [SerializeField] private CinemachineVirtualCamera virtualCamera;
-    [SerializeField] private Navigation navigation;
-    [SerializeField] private ViewReference passTheSporeView;
-    [SerializeField] private Transform gameCenter;
-    [SerializeField] private Button exitButton;
-    [SerializeField] private Transform sporeBall;
-    [SerializeField] private Renderer sporeOuterShell;
     [SerializeField] private CameraPanController cameraPanController;
 
+    [Header("Gameplay")]
+    [SerializeField] private Transform gameCenter;
+    [SerializeField] private Transform sporeBall;
+    [SerializeField] private Renderer sporeOuterShell;
+
+    [Header("Settings")]
     [SerializeField] private Color startColor;
     [SerializeField] private Color endColor;
-
     [SerializeField] private float heatDuration = 10f;
-    private bool isMidAir = false;
 
+    private bool isMidAir = false;
     private Material sporeMaterial;
 
     private class PassTheSporePlayer
@@ -45,8 +42,6 @@ public class PassTheSpore : MonoBehaviour
     {
         sporeMaterial = sporeOuterShell.material;
         Reset();
-
-        exitButton.onClick.AddListener(EndGame);
     }
 
     public void StartGame()
@@ -164,7 +159,14 @@ public class PassTheSpore : MonoBehaviour
     }
     private IEnumerator GameUpdate()
     {
-        yield return new WaitUntil(() => players.All(player => player.Fungal.IsAtDestination));
+        float elapsed = 0f;
+
+        // Wait until all players are at destination OR timeout reached
+        yield return new WaitUntil(() =>
+        {
+            elapsed += Time.deltaTime;
+            return players.All(player => player.Fungal.IsAtDestination) || elapsed >= 2f;
+        });
 
         sporeMaterial.SetColor("_Outer_Color", startColor);
 
@@ -177,7 +179,7 @@ public class PassTheSpore : MonoBehaviour
             if (!isMidAir && t >= heatDuration)
             {
                 // trigger your code when fully heated
-                //currentPlayer.unit.GetComponent<UnitAnimation>().PlayAnimation("Death");
+                currentPlayer.Fungal.TriggerDeath();
                 currentPlayer.isDone = true;
 
                 // Check if only one player is left
@@ -208,6 +210,7 @@ public class PassTheSpore : MonoBehaviour
         {
             var fungalController = player.Fungal.GetComponent<FungalController>();
             fungalController.SetDefaultBehaviour();
+            fungalController.TriggerRespawn();
         }
 
         players = new List<PassTheSporePlayer>();

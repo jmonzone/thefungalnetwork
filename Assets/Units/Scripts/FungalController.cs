@@ -23,6 +23,7 @@ public class FungalController : UnitController
 
     private UnitDestination unitDestination;
     private UnitFollow unitFollow;
+    private Animator animator;
 
     protected override void Awake()
     {
@@ -30,6 +31,12 @@ public class FungalController : UnitController
 
         unitDestination = GetComponent<UnitDestination>();
         unitFollow = GetComponent<UnitFollow>();
+    }
+
+    public override void Initialize(Unit data)
+    {
+        base.Initialize(data);
+        animator = GetComponentInChildren<Animator>();
     }
 
     public void SetDestination(Vector3 destination)
@@ -42,5 +49,15 @@ public class FungalController : UnitController
     {
         unitFollow.SetTarget(target);
         SetBehaviour(unitFollow);
+    }
+
+    public void TriggerDeath()
+    {
+        animator.Play("Death");
+    }
+
+    public void TriggerRespawn()
+    {
+        animator.SetTrigger("Respawn");
     }
 }

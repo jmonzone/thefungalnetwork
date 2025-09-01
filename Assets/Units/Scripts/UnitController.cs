@@ -79,7 +79,7 @@ public class UnitController : MonoBehaviour, IInteractable
         SetBehaviour(defaultBehaviour);
     }
 
-    public void Initialize(Unit data)
+    public virtual void Initialize(Unit data)
     {
         this.data = data;
         name = "Unit Controller - " + data.name;
