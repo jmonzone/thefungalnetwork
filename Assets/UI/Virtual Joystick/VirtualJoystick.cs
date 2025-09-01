@@ -23,7 +23,7 @@ public class VirtualJoystick : MonoBehaviour
 
     private void Start()
     {
-        defaultPosition = rect.anchoredPosition;
+        defaultPosition = rect.position;
     }
 
     private int activeTouchIndex = -1; // Tracks the touch index (-1 for mouse)
@@ -36,7 +36,7 @@ public class VirtualJoystick : MonoBehaviour
         {
             IsActive = false;
             activeTouchIndex = -1;
-            rect.anchoredPosition = defaultPosition;
+            rect.position = defaultPosition;
             joystickRect.anchoredPosition = Vector3.zero;
             OnJoystickEnd?.Invoke();
         }
@@ -47,7 +47,7 @@ public class VirtualJoystick : MonoBehaviour
             IsActive = true;
             activeTouchIndex = touchIndex;
             startPosition = GetInputPosition();
-            //rect.position = startPosition;
+            rect.position = startPosition;
             OnJoystickStart?.Invoke(startPosition);
         }
 

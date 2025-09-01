@@ -28,7 +28,7 @@ public class DJTableController : MonoBehaviour, IInteractable
     private void BuildController_OnBuildComplete()
     {
         StopAllCoroutines();
-        djReference.SetIsPlaying(true);
+        djReference.SetDJTable(this);
     }
 
     void IInteractable.Select()

@@ -1,16 +1,23 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 using UnityEngine.Events;
 
 [CreateAssetMenu]
 public class DJTableReference : ScriptableObject
 {
-    [Header("Runtime")]
-    [SerializeField] private float bpm = 90;
-    [SerializeField] private bool isPlaying = false;
+    [Header("References")]
+    [SerializeField] private BuildReference buildReference;
 
+    [Header("Runtime")]
+    [SerializeField] private DJTableController djTable;
+    [SerializeField] private float bpm = 90;
+    [SerializeField] private List<PlantSporeEmitter> plants;
+
+    public DJTableController DjTable => djTable;
     public float BPM => bpm;
     public float BeatDuration => 60f / bpm; // seconds per beat
-    public bool IsPlaying => isPlaying;
+    public List<PlantSporeEmitter> Plants => plants;
 
     public event UnityAction OnBPMChanged;
     public event UnityAction<int> OnBeat;
@@ -18,12 +25,24 @@ public class DJTableReference : ScriptableObject
     public void Initialize()
     {
         bpm = 90;
-        isPlaying = false;
+        plants = new List<PlantSporeEmitter>();
+        djTable = null;
+        buildReference.OnBuildUpdated += BuildReference_OnBuildUpdated;
     }
 
-    public void SetIsPlaying(bool isPlaying)
+    private void BuildReference_OnBuildUpdated()
     {
-        this.isPlaying = isPlaying;
+        plants = new List<PlantSporeEmitter>();
+        foreach(var build in buildReference.BuildControllers)
+        {
+            var plant = build.GetComponent<PlantSporeEmitter>();
+            if (plant) plants.Add(plant);
+        }
+    }
+
+    public void SetDJTable(DJTableController djTable)
+    {
+        this.djTable = djTable;
     }
 
     public void SetBPM(float bpm)

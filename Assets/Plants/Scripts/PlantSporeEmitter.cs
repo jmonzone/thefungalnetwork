@@ -16,6 +16,7 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable
     [SerializeField] private float bounceScale = 1.2f;
     [SerializeField] private float bounceDuration = 0.3f;
 
+    public int EmissionStep => emissionStep;
     Transform IInteractable.Transform => transform;
 
     private Vector3 startScale;
@@ -42,7 +43,7 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable
 
     private void DJTableReference_OnBeat(int beat)
     {
-        if (dJTableReference.IsPlaying && beat % emissionStep == 0) EmitSpore();
+        //if (dJTableReference.IsPlaying && beat % emissionStep == 0) EmitSpore();
     }
 
     public void EmitSpore()
