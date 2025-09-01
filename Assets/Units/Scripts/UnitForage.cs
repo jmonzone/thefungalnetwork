@@ -50,9 +50,11 @@ public class UnitForage : UnitBehaviour
         {
             if (Unit.IsDefaultBehaviour)
             {
+                Debug.Log("invoking");
                 InvokeOnBehaviourRequest();
             }
         }
+        else if (IsActive) StopBehaviour();
     }
 
 
@@ -60,29 +62,31 @@ public class UnitForage : UnitBehaviour
     {
         if (targetSpore)
         {
+            Debug.Log("OnBehaviourStart");
+
             agent.isStopped = false;
+            StopAllCoroutines();
             StartCoroutine(ForagingBehaviour());
-        }
-        else
-        {
-            StopBehaviour();
         }
     }
 
     private IEnumerator ForagingBehaviour()
     {
-        while (targetSpore)
+        while (true)
         {
-            agent.SetDestination(targetSpore.transform.position);
-            Unit.SetLookPosition(targetSpore.transform.position);
+            if (targetSpore)
+            {
+                agent.SetDestination(targetSpore.transform.position);
+                Unit.SetLookPosition(targetSpore.transform.position);
+            }
             yield return null;
         }
-
-        StopBehaviour();
     }
 
     public override void StopBehaviour()
     {
+        Debug.Log("StopBehaviour");
+
         base.StopBehaviour();
         agent.isStopped = true;
         StopAllCoroutines();

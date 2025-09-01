@@ -6,7 +6,7 @@ public abstract class UnitBehaviour : MonoBehaviour
     [SerializeField] private bool isActive;
 
     protected UnitController Unit { get; private set; }
-    protected bool IsActive => isActive;
+    public bool IsActive => isActive;
 
     public event UnityAction OnBehaviourRequest;
     public event UnityAction OnBehaviourComplete;
@@ -23,16 +23,22 @@ public abstract class UnitBehaviour : MonoBehaviour
 
     public virtual void StartBehaviour()
     {
-        isActive = true;
-        OnBehaviourStart();
+        if (!isActive)
+        {
+            isActive = true;
+            OnBehaviourStart();
+        }
     }
 
     protected abstract void OnBehaviourStart();
 
     public virtual void StopBehaviour()
     {
-        isActive = false;
-        OnBehaviourComplete?.Invoke();
+        if (isActive)
+        {
+            isActive = false;
+            OnBehaviourComplete?.Invoke();
+        }
     }
 
     protected void InvokeOnBehaviourRequest()

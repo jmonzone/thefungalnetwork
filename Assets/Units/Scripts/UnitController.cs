@@ -61,7 +61,7 @@ public class UnitController : MonoBehaviour, IInteractable
         if (currentBehaviour)
         {
             currentBehaviour.OnBehaviourComplete -= SetDefaultBehaviour;
-            currentBehaviour.StopBehaviour();
+            if (currentBehaviour.IsActive) currentBehaviour.StopBehaviour();
         }
 
         currentBehaviour = behaviour;

@@ -11,7 +11,17 @@ public class PartyDebriefUI : MonoBehaviour
     [SerializeField] private ViewReference gameplayView;
 
     [Header("UI References")]
+    [SerializeField] private TextMeshProUGUI rankingText;
+    [SerializeField] private Color rank1Color;
+    [SerializeField] private Color rank2Color;
+    [SerializeField] private Color rank3Color;
+    [SerializeField] private Color rank4Color;
+    [SerializeField] private Color rank5Color;
+    [SerializeField] private Color rank6Color;
     [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private TextMeshProUGUI guestsText;
+    [SerializeField] private TextMeshProUGUI sporesText;
+
     [SerializeField] private TextMeshProUGUI photoText;
     [SerializeField] private Button continueButton;
 
@@ -32,7 +42,37 @@ public class PartyDebriefUI : MonoBehaviour
 
     private void PartyReference_OnPartyComplete()
     {
+        switch (partyReference.Score)
+        {
+            case > 40:
+                rankingText.text = "S";
+                rankingText.color = rank1Color;
+                break;
+            case > 28:
+                rankingText.text = "A";
+                rankingText.color = rank2Color;
+                break;
+            case > 20:
+                rankingText.text = "B";
+                rankingText.color = rank3Color;
+                break;
+            case > 13:
+                rankingText.text = "C";
+                rankingText.color = rank4Color;
+                break;
+            case > 5:
+                rankingText.text = "D";
+                rankingText.color = rank5Color;
+                break;
+            default:
+                rankingText.text = "F";
+                rankingText.color = rank6Color;
+                break;
+        }
+
         scoreText.text = $"{partyReference.Score} party points!";
+        guestsText.text = $"{partyReference.CurrentParty.Guests.Count} of your friends came";
+        sporesText.text = $"{partyReference.SporesCollected} spores collected";
         photoText.text = $"{photoReference.AllPhotos.Count} photos taken";
     }
 }

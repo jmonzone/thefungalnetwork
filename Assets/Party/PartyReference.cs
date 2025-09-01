@@ -21,27 +21,29 @@ public class PartyReference : ScriptableObject
     [SerializeField] private UnitListReference unitList;
     [SerializeField] private DialogueReference dialogueReference;
     [SerializeField] private PhotoReference photoReference;
+    [SerializeField] private InventoryReference inventoryReference;
 
     [Header("Data")]
     [SerializeField] private List<PartyData> parties;
 
     [Header("Runtime")]
-    [SerializeField] private int score;
-    [SerializeField] private PartyData currentParty;
     [SerializeField] private bool isActive;
+    [SerializeField] private PartyData currentParty;
+    [SerializeField] private int score;
+    [SerializeField] private int sporesCollected;
     [SerializeField] private List<UnitController> guests;
 
-    public int Score => score;
-    public List<UnitController> Guests => guests;
     public List<PartyData> Parties => parties;
 
-    public PartyData CurrentParty => currentParty;
     public bool IsActive => isActive;
+    public PartyData CurrentParty => currentParty;
+    public int Score => score;
+    public int SporesCollected => sporesCollected;
+    public List<UnitController> Guests => guests;
 
     public event UnityAction OnPartyStarted;
     public event UnityAction OnPartyPaused;
     public event UnityAction OnPartyComplete;
-
     public event UnityAction OnPartyResumed;
 
     public void Initialize()
@@ -50,6 +52,13 @@ public class PartyReference : ScriptableObject
         guests = new List<UnitController>();
         dialogueReference.OnDialogueComplete += DialogueReference_OnDialogueComplete;
         photoReference.OnPhotoTaken += PhotoReference_OnPhotoTaken;
+        inventoryReference.OnSporeCollected += InventoryReference_OnSporeCollected;
+    }
+
+    private void InventoryReference_OnSporeCollected(SporeController arg0)
+    {
+        sporesCollected += 1;
+        IncrementScore(1);
     }
 
     private void PhotoReference_OnPhotoTaken()
@@ -70,6 +79,7 @@ public class PartyReference : ScriptableObject
     public void StartParty(PartyData party)
     {
         score = 0;
+        sporesCollected = 0;
         isActive = true;
         currentParty = party;
 
@@ -106,7 +116,7 @@ public class PartyReference : ScriptableObject
     {
         foreach (var guest in guests)
         {
-            Destroy(guest.gameObject, 1f); // delay for animation
+            guest.gameObject.SetActive(false);
         }
 
         guests = new List<UnitController>();
