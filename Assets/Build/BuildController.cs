@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Events;
 
 public class BuildController : MonoBehaviour
@@ -19,6 +20,7 @@ public class BuildController : MonoBehaviour
     private List<Material> defaultMaterials;
     private List<Renderer> renderers;
     private Collider objectCollider;
+    private NavMeshObstacle navMeshObstacle;
 
     const float moveSpeed = 15f; // Lerp speed
 
@@ -30,6 +32,7 @@ public class BuildController : MonoBehaviour
 
         renderers = GetComponentsInChildren<Renderer>().ToList();
         objectCollider = GetComponentInChildren<Collider>();
+        navMeshObstacle = GetComponent<NavMeshObstacle>();
 
         defaultMaterials = new List<Material>();
 
@@ -48,6 +51,7 @@ public class BuildController : MonoBehaviour
 
     public void StartBuild(LayerMask placementMask, LayerMask collisionMask, Material validMaterial, Material invalidMaterial)
     {
+        navMeshObstacle.enabled = false;
         StopAllCoroutines();
         StartCoroutine(BuildRoutine(placementMask, collisionMask, validMaterial, invalidMaterial));
     }
@@ -147,6 +151,7 @@ public class BuildController : MonoBehaviour
 
     public void Place()
     {
+        navMeshObstacle.enabled = true;
         OnPlaced?.Invoke();
     }
 }

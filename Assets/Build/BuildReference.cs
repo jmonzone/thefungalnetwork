@@ -62,7 +62,29 @@ public class BuildReference : ScriptableObject
                             var y = (float)positionJson["y"];
                             var z = (float)positionJson["z"];
                             var position = new Vector3(x, y, z);
-                            buildData.Initialize(itemData, position);
+
+
+                            // --- Rotation (safe parse) ---
+                            Quaternion rotation = Quaternion.LookRotation(Vector3.right); // default fallback
+                            try
+                            {
+                                if (buildJson.ContainsKey("rotation"))
+                                {
+                                    var rotationJson = buildJson["rotation"];
+                                    var rotX = (float)rotationJson["x"];
+                                    var rotY = (float)rotationJson["y"];
+                                    var rotZ = (float)rotationJson["z"];
+                                    var rotW = (float)rotationJson["w"];
+                                    rotation = new Quaternion(rotX, rotY, rotZ, rotW);
+                                }
+                            }
+                            catch(Exception e)
+                            {
+                                // ignored, will just stay Quaternion.identity
+                                Debug.LogError(e);
+                            }
+
+                            buildData.Initialize(itemData, position, rotation);
                             buildInstances.Add(buildData);
                             culturePoints += buildData.Item.CulturePoints;
                         }
@@ -77,14 +99,14 @@ public class BuildReference : ScriptableObject
             {
                 var buildData = CreateInstance<BuildInstance>();
                 var position = new Vector3(-1.25f, 0f, -2.5f);
-                buildData.Initialize(initialItem, position);
+                buildData.Initialize(initialItem, position, Quaternion.identity);
                 buildInstances.Add(buildData);
                 culturePoints += buildData.Item.CulturePoints;
             }
         }
         catch (Exception e)
         {
-            Debug.LogWarning(e);
+            Debug.LogError(e);
         }
     }
 
@@ -94,11 +116,13 @@ public class BuildReference : ScriptableObject
         {
             var item = build.Item;
             var buildController = Instantiate(item.ItemPrefab).GetComponent<BuildController>();
-            buildController.transform.position = build.Position;
+            buildController.transform.SetPositionAndRotation(build.Position, build.Rotation);
             buildController.Initialize(item);
             buildController.Place();
             buildControllers.Add(buildController);
         }
+
+        SaveData();
 
         OnBuildUpdated?.Invoke();
     }
@@ -107,16 +131,23 @@ public class BuildReference : ScriptableObject
     {
         var buildJson = new JArray();
 
-        foreach (var build in BuildInstances)
+        foreach (var build in buildControllers)
         {
             buildJson.Add(new JObject
             {
                 ["name"] = build.Item.Name,
                 ["position"] = new JObject
                 {
-                    ["x"] = build.Position.x,
-                    ["y"] = build.Position.y,
-                    ["z"] = build.Position.z,
+                    ["x"] = build.transform.position.x,
+                    ["y"] = build.transform.position.y,
+                    ["z"] = build.transform.position.z,
+                },
+                ["rotation"] = new JObject
+                {
+                    ["x"] = build.transform.rotation.x,
+                    ["y"] = build.transform.rotation.y,
+                    ["z"] = build.transform.rotation.z,
+                    ["w"] = build.transform.rotation.w,
                 },
             });
         }
@@ -138,9 +169,6 @@ public class BuildReference : ScriptableObject
 
         buildControllers.Add(currentBuild);
 
-        var buildData = CreateInstance<BuildInstance>();
-        buildData.Initialize(currentBuild.Item, currentBuild.transform.position);
-        buildInstances.Add(buildData);
         culturePoints += currentBuild.Item.CulturePoints;
         SaveData();
 
@@ -170,6 +198,7 @@ public class BuildReference : ScriptableObject
         if (!currentBuild) return;
         currentBuild = null;
         navigation.GoBack();
+        SaveData();
     }
 
     public void RotateLeft()
@@ -188,8 +217,6 @@ public class BuildReference : ScriptableObject
 
         buildControllers.Remove(currentBuild);
 
-        var build = buildInstances.Find(build => build.Item == currentBuild.Item);
-        buildInstances.Remove(build);
         culturePoints -= currentBuild.Item.CulturePoints;
 
         Destroy(currentBuild.gameObject);
@@ -202,7 +229,7 @@ public class BuildReference : ScriptableObject
 
     public bool Contains(Item item)
     {
-        return buildInstances.Find(build => build.Item == item);
+        return buildControllers.Find(build => build.Item == item);
     }
 
     public List<BuildController> FindBuildControllersWhere(Item item)
