@@ -6,6 +6,11 @@ public class DJController : MonoBehaviour
     [Header("References")]
     [SerializeField] private DJTableReference djReference;
 
+    private void Awake()
+    {
+        djReference.Initialize();
+    }
+
     private void Start()
     {
         StartCoroutine(PlayToBeat());

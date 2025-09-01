@@ -9,6 +9,13 @@ public class UnitDrum : UnitBehaviour
     [SerializeField] private int step;
 
     private PlantSporeEmitter plant;
+    private Animator animator;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        animator = GetComponentInChildren<Animator>();
+    }
 
     public void SetPlant(PlantSporeEmitter plant)
     {
@@ -22,7 +29,15 @@ public class UnitDrum : UnitBehaviour
 
     private void DJTableReference_OnBeat(int beat)
     {
-        if (beat % step == 0) plant.EmitSpore();
+        if (beat % step == step - 1)
+        {
+            animator.SetTrigger("attack");
+        }
+
+        if (beat % step == 0)
+        {
+            plant.EmitSpore();
+        }
     }
 
     public override void StopBehaviour()

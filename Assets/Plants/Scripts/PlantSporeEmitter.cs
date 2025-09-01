@@ -42,7 +42,7 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable
 
     private void DJTableReference_OnBeat(int beat)
     {
-        if (beat % emissionStep == 0) EmitSpore();
+        if (dJTableReference.IsPlaying && beat % emissionStep == 0) EmitSpore();
     }
 
     public void EmitSpore()
