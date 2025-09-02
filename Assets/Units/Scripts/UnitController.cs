@@ -58,24 +58,30 @@ public class UnitController : MonoBehaviour, IInteractable
 
     protected void SetBehaviour(UnitBehaviour behaviour)
     {
+        if (this is FungalController) Debug.Log($"SetBehaviour {currentBehaviour?.GetType().ToString() ?? "null"} -> {behaviour?.GetType().ToString() ?? "null"}");
+
         if (currentBehaviour)
         {
+            if (this is FungalController) Debug.Log($"unsubscribing {currentBehaviour?.GetType().ToString() ?? "null"}");
             currentBehaviour.OnBehaviourComplete -= SetDefaultBehaviour;
-            if (currentBehaviour.IsActive) currentBehaviour.StopBehaviour();
+            currentBehaviour.StopBehaviour();
         }
 
         currentBehaviour = behaviour;
-        OnBehaviourChanged?.Invoke();
 
         if (currentBehaviour)
         {
+            if (this is FungalController) Debug.Log($"subscribing {behaviour?.GetType().ToString() ?? "null"}");
             currentBehaviour.StartBehaviour();
             currentBehaviour.OnBehaviourComplete += SetDefaultBehaviour;
         }
+
+        OnBehaviourChanged?.Invoke();
     }
 
     public void SetDefaultBehaviour()
     {
+        if (this is FungalController) Debug.Log("Setting default");
         SetBehaviour(defaultBehaviour);
     }
 

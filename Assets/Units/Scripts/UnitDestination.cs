@@ -46,5 +46,6 @@ public class UnitDestination : UnitBehaviour
     {
         base.StopBehaviour();
         navMeshAgent.isStopped = false;
+        StopAllCoroutines();
     }
 }

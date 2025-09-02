@@ -37,6 +37,7 @@ public abstract class UnitBehaviour : MonoBehaviour
         if (isActive)
         {
             isActive = false;
+            if (this is FungalController) Debug.Log("OnBehaviourComplete");
             OnBehaviourComplete?.Invoke();
         }
     }
