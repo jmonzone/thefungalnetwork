@@ -13,8 +13,6 @@ public class DJTableUI : MonoBehaviour
     [SerializeField] private List<PartyLightController> partyLights;
     [SerializeField] private DJTableController dJTableController;
     
-    [SerializeField] private DJTrack track1;
-    [SerializeField] private DJTrack track2;
     [SerializeField] private Slider trackSlider;
     [SerializeField] private Slider bpmSlider;
 
@@ -27,9 +25,6 @@ public class DJTableUI : MonoBehaviour
 
     private void Awake()
     {
-        leftTrack.SetTrack(track1);
-        rightTrack.SetTrack(track2);
-
         trackSlider.onValueChanged.AddListener(value =>
         {
             dJTableReference.SetTrackValue(value);
@@ -37,11 +32,11 @@ public class DJTableUI : MonoBehaviour
 
             if (value > 0.5)
             {
-                StartPartyLights(rightTrack.Track);
+                StartPartyLights(dJTableReference.LeftTrack);
             }
             else
             {
-                StartPartyLights(leftTrack.Track);
+                StartPartyLights(dJTableReference.RightTrack);
             }
         });
 
@@ -72,9 +67,9 @@ public class DJTableUI : MonoBehaviour
     private void UpdateTrackPitch()
     {
         var bpm = dJTableReference.BPM;
-        float pitch1 = bpm / leftTrack.Track.Bpm;
+        float pitch1 = bpm / dJTableReference.LeftTrack.Bpm;
         dJTableController.SetLeftPitch(pitch1);
-        float pitch2 = bpm / rightTrack.Track.Bpm;
+        float pitch2 = bpm / dJTableReference.RightTrack.Bpm;
         dJTableController.SetRightPitch(pitch2);
     }
 
@@ -88,11 +83,9 @@ public class DJTableUI : MonoBehaviour
 
             if (dJTableController)
             {
-                dJTableReference.SetLeftTrack(leftTrack.Track);
-                dJTableReference.SetRightTrack(rightTrack.Track);
                 dJTableController.SetSlider(0);
                 UpdateTrackPitch();
-                StartPartyLights(leftTrack.Track);
+                StartPartyLights(dJTableReference.LeftTrack);
             }
         }
 

@@ -196,7 +196,7 @@ GameObject:
   - component: {fileID: 6923010309473299675}
   - component: {fileID: 6467645987667767119}
   m_Layer: 0
-  m_Name: Track type
+  m_Name: Artist Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -466,7 +466,7 @@ GameObject:
   - component: {fileID: 1726810065315561808}
   - component: {fileID: 5105639397533747845}
   m_Layer: 0
-  m_Name: Track name
+  m_Name: Track Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -648,11 +648,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77a342ea4d5fc405491ae7ca6dc13890, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dJTableReference: {fileID: 11400000, guid: 3bda1116fcf8f49e696cd21c6b5092da, type: 2}
   trackNameText: {fileID: 5105639397533747845}
-  trackTypeText: {fileID: 6467645987667767119}
+  descriptionText: {fileID: 6467645987667767119}
   trackImage: {fileID: 6409769664218873305}
-  button: {fileID: 4463323517732710740}
+  swapTrackButton: {fileID: 8013066956925846696}
   track: {fileID: 0}
+  value: 0
 --- !u!1 &5487468166853391615
 GameObject:
   m_ObjectHideFlags: 0

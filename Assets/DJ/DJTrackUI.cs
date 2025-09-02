@@ -5,28 +5,61 @@ using UnityEngine.UI;
 
 public class DJTrackUI : MonoBehaviour
 {
+    [Header("References")]
+    [SerializeField] private DJTableReference dJTableReference;
     [SerializeField] private TextMeshProUGUI trackNameText;
-    [SerializeField] private TextMeshProUGUI trackTypeText;
+    [SerializeField] private TextMeshProUGUI descriptionText;
     [SerializeField] private Image trackImage;
-    [SerializeField] private Button button;
+    [SerializeField] private Button swapTrackButton;
     [SerializeField] private DJTrack track;
 
-    public DJTrack Track => track;
-    public event UnityAction OnClick;
+    [SerializeField] private int value;
 
     private void Awake()
     {
-        button.onClick.AddListener(() =>
+        swapTrackButton.onClick.AddListener(() =>
         {
-            OnClick?.Invoke();
+            dJTableReference.RequestSwapTrack(value);
         });
+
+
+    }
+
+    private void OnEnable()
+    {
+        if (value == 0)
+        {
+            dJTableReference.OnLeftTrackChanged += DJTableReference_OnLeftTrackChanged;
+            DJTableReference_OnLeftTrackChanged();
+        }
+        else
+        {
+            dJTableReference.OnRightTrackChanged += DJTableReference_OnRightTrackChanged;
+            DJTableReference_OnRightTrackChanged();
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (value == 0) dJTableReference.OnLeftTrackChanged -= DJTableReference_OnLeftTrackChanged;
+        else dJTableReference.OnRightTrackChanged -= DJTableReference_OnRightTrackChanged;
+    }
+
+    private void DJTableReference_OnLeftTrackChanged()
+    {
+        SetTrack(dJTableReference.LeftTrack);
+    }
+    private void DJTableReference_OnRightTrackChanged()
+    {
+        SetTrack(dJTableReference.RightTrack);
     }
 
     public void SetTrack(DJTrack track)
     {
         this.track = track;
         trackNameText.text = track.TrackName;
-        trackTypeText.text = track.TrackType;
+        descriptionText.text = track.Description;
+        descriptionText.color = track.NoteColor;
         trackImage.sprite = track.Sprite;
     }
 }

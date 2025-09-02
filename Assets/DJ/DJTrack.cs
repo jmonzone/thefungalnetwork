@@ -11,7 +11,8 @@ public enum PartyMode
 public class DJTrack : ScriptableObject
 {
     [SerializeField] private string trackName;
-    [SerializeField] private string trackType;
+    [SerializeField] private string artist;
+    [SerializeField] [TextArea] private string description;
     [SerializeField] private Sprite sprite;
     [SerializeField] private AudioClip audioClip;
     [SerializeField] private PartyMode partyMode;
@@ -20,7 +21,8 @@ public class DJTrack : ScriptableObject
     [SerializeField] private Color noteColor;
 
     public string TrackName => trackName;
-    public string TrackType => trackType;
+    public string Artist => artist;
+    public string Description => description;
     public Sprite Sprite => sprite;
     public PartyMode PartyMode => partyMode;
     public AudioClip AudioClip => audioClip;

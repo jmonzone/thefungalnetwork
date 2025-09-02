@@ -35,9 +35,7 @@ public class DJNoteController : MonoBehaviour
     {
         this.target = target;
         startPos = transform.position;
-        targetPos = this.target.Transform.position;
         startTime = Time.time;
-        journeyLength = Vector3.Distance(startPos, targetPos);
         spriteRenderer.color = color;
         this.spiralPhaseOffset = spiralPhaseOffset;
         if (trackValue > 0) transform.localScale = Vector3.one * (minValue + trackValue * (maxValue - minValue));
@@ -47,9 +45,14 @@ public class DJNoteController : MonoBehaviour
     {
         if (target == null) return;
 
+
+        targetPos = target.Transform.position;
+        journeyLength = Vector3.Distance(startPos, targetPos);
+
         // Calculate how far along the journey we are (0..1)
         float distCovered = (Time.time - startTime) * speed;
         float fracJourney = distCovered / journeyLength;
+
 
         // Basic interpolation between start and target
         Vector3 newPos = Vector3.Lerp(startPos, targetPos, fracJourney);

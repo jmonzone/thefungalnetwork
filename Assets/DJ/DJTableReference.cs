@@ -6,6 +6,11 @@ using UnityEngine.Events;
 [CreateAssetMenu]
 public class DJTableReference : ScriptableObject
 {
+    [Header("References")]
+    [SerializeField] private Navigation navigation;
+    [SerializeField] private ViewReference tracklistView;
+    [SerializeField] private List<DJTrack> allTracks;
+
     [Header("Runtime")]
     [SerializeField] private DJTableController djTable;
     [SerializeField] private DJTrack leftTrack;
@@ -15,6 +20,7 @@ public class DJTableReference : ScriptableObject
 
     [SerializeField] private float bpm = 90;
 
+    public List<DJTrack> Tracks => allTracks;
     public DJTableController DjTable => djTable;
     public DJTrack LeftTrack => leftTrack;
     public DJTrack RightTrack => rightTrack;
@@ -26,12 +32,16 @@ public class DJTableReference : ScriptableObject
 
     public event UnityAction OnBPMChanged;
     public event UnityAction<int> OnBeat;
+    public event UnityAction OnLeftTrackChanged;
+    public event UnityAction OnRightTrackChanged;
 
     public void Initialize()
     {
         bpm = 90;
         djTable = null;
 
+        leftTrack = allTracks[0];
+        rightTrack = allTracks[1];
         SetTrackValue(0);
     }
 
@@ -54,18 +64,34 @@ public class DJTableReference : ScriptableObject
     public void SetLeftTrack(DJTrack track)
     {
         leftTrack = track;
-        djTable.PlayLeftTrack(track.AudioClip);
+        OnLeftTrackChanged?.Invoke();
     }
 
     public void SetRightTrack(DJTrack track)
     {
         rightTrack = track;
-        djTable.PlayRightTrack(track.AudioClip);
+        OnRightTrackChanged?.Invoke();
     }
 
     public void SetTrackValue(float value)
     {
         leftValue = 1 - value;
         rightValue = value;
+    }
+
+    private int trackToSwap = 0;
+
+    public void RequestSwapTrack(int value)
+    {
+        trackToSwap = value;
+        navigation.Navigate(tracklistView);
+    }
+
+    public void SwapTrack(DJTrack track)
+    {
+        if (trackToSwap == 0) SetLeftTrack(track);
+        else SetRightTrack(track);
+
+        navigation.GoBack();
     }
 }

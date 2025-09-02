@@ -20,9 +20,33 @@ public class DJTableController : MonoBehaviour, IInteractable
         buildController.OnPlaced += BuildController_OnBuildComplete;
     }
 
+    private void OnEnable()
+    {
+        djReference.OnLeftTrackChanged += DjReference_OnLeftTrackChanged;
+        djReference.OnRightTrackChanged += DjReference_OnRightTrackChanged;
+    }
+
+    private void OnDisable()
+    {
+        djReference.OnLeftTrackChanged -= DjReference_OnLeftTrackChanged;
+        djReference.OnRightTrackChanged -= DjReference_OnRightTrackChanged;
+    }
+
+    private void DjReference_OnLeftTrackChanged()
+    {
+        PlayLeftTrack(djReference.LeftTrack.AudioClip);
+    }
+
+    private void DjReference_OnRightTrackChanged()
+    {
+        PlayRightTrack(djReference.RightTrack.AudioClip);
+    }
+
     private void Start()
     {
         backgroundMusic.HideMusic();
+        PlayLeftTrack(djReference.LeftTrack.AudioClip);
+        PlayRightTrack(djReference.RightTrack.AudioClip);
     }
 
     private void BuildController_OnBuildComplete()
