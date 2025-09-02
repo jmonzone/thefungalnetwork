@@ -1,9 +1,13 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public interface IInteractable
+public interface ITarget
 {
     public Transform Transform { get; }
+}
+
+public interface IInteractable : ITarget
+{
     public void Select();
 }
 

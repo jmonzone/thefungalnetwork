@@ -6,9 +6,6 @@ using UnityEngine.Events;
 [CreateAssetMenu]
 public class DJTableReference : ScriptableObject
 {
-    [Header("References")]
-    [SerializeField] private BuildReference buildReference;
-
     [Header("Runtime")]
     [SerializeField] private DJTableController djTable;
     [SerializeField] private DJTrack leftTrack;
@@ -17,7 +14,6 @@ public class DJTableReference : ScriptableObject
     [SerializeField] private float rightValue;
 
     [SerializeField] private float bpm = 90;
-    [SerializeField] private List<PlantSporeEmitter> plants;
 
     public DJTableController DjTable => djTable;
     public DJTrack LeftTrack => leftTrack;
@@ -27,7 +23,6 @@ public class DJTableReference : ScriptableObject
 
     public float BPM => bpm;
     public float BeatDuration => 60f / bpm; // seconds per beat
-    public List<PlantSporeEmitter> Plants => plants;
 
     public event UnityAction OnBPMChanged;
     public event UnityAction<int> OnBeat;
@@ -35,21 +30,9 @@ public class DJTableReference : ScriptableObject
     public void Initialize()
     {
         bpm = 90;
-        plants = new List<PlantSporeEmitter>();
         djTable = null;
-        buildReference.OnBuildUpdated += BuildReference_OnBuildUpdated;
 
         SetTrackValue(0);
-    }
-
-    private void BuildReference_OnBuildUpdated()
-    {
-        plants = new List<PlantSporeEmitter>();
-        foreach(var build in buildReference.BuildControllers)
-        {
-            var plant = build.GetComponent<PlantSporeEmitter>();
-            if (plant) plants.Add(plant);
-        }
     }
 
     public void SetDJTable(DJTableController djTable)

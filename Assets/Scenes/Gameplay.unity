@@ -6734,6 +6734,9 @@ MonoBehaviour:
   notePrefab: {fileID: 2591081036677350107, guid: 7aa0e3738131f4e53a3bfde590853cfc,
     type: 3}
   poolSize: 20
+  unitManager: {fileID: 2087691131}
+  buildReference: {fileID: 11400000, guid: 2526ce71d791f49acb54c441f1370a16, type: 2}
+  plants: []
 --- !u!1 &377551021
 GameObject:
   m_ObjectHideFlags: 0
@@ -12853,6 +12856,7 @@ MonoBehaviour:
   playerReference: {fileID: 11400000, guid: 746148e8242954418b04a3ab83ac9260, type: 2}
   cameraPanController: {fileID: 1446848728}
   virtualJoystick: {fileID: 384515366}
+  interaction: {fileID: 0}
 --- !u!1 &825975473
 GameObject:
   m_ObjectHideFlags: 0
@@ -20714,6 +20718,7 @@ MonoBehaviour:
   playerReference: {fileID: 11400000, guid: 746148e8242954418b04a3ab83ac9260, type: 2}
   cameraPanController: {fileID: 1446848728}
   virtualJoystick: {fileID: 29413823}
+  interaction: {fileID: 0}
 --- !u!1 &1301616382
 GameObject:
   m_ObjectHideFlags: 0
@@ -21330,6 +21335,7 @@ MonoBehaviour:
   renderRoot: {fileID: 2017028620}
   defaultBehaviour: {fileID: 0}
   selectBehaviour: {fileID: 0}
+  emissionStep: 4
   data: {fileID: 0}
   currentBehaviour: {fileID: 0}
   targetLookPosition: {x: 0, y: 0, z: 0}
@@ -34487,6 +34493,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Fungal Tree
+      objectReference: {fileID: 0}
+    - target: {fileID: 5005622940643586346, guid: b5a65936c7fe74e3ca085c517af15846,
+        type: 3}
+      propertyPath: emissionStep
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -3,12 +3,13 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class UnitController : MonoBehaviour, IInteractable
+public class UnitController : MonoBehaviour, IInteractable, INoteTarget
 {
     [Header("Unit References")]
     [SerializeField] private Transform renderRoot;
     [SerializeField] private UnitBehaviour defaultBehaviour;
     [SerializeField] private UnitBehaviour selectBehaviour;
+    [SerializeField] private int emissionStep;
 
     [Header("Runtime")]
     [SerializeField] private Unit data;
@@ -19,7 +20,9 @@ public class UnitController : MonoBehaviour, IInteractable
     protected Transform RenderRoot => renderRoot;
     public bool IsDefaultBehaviour => currentBehaviour == defaultBehaviour;
 
-    Transform IInteractable.Transform => transform;
+    Transform ITarget.Transform => transform;
+
+    int INoteTarget.EmissionStep => emissionStep;
 
     public event UnityAction OnInitialized;
     public event UnityAction OnBehaviourChanged;
@@ -96,5 +99,9 @@ public class UnitController : MonoBehaviour, IInteractable
     void IInteractable.Select()
     {
         SetBehaviour(selectBehaviour);
+    }
+
+    void INoteTarget.OnHit()
+    {
     }
 }

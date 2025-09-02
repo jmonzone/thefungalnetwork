@@ -3,7 +3,7 @@ using UnityEngine.Events;
 
 public class DJNoteController : MonoBehaviour
 {
-    [SerializeField] private PlantSporeEmitter plant;
+    [SerializeField] private INoteTarget target;
     [SerializeField] private float speed = 5f;
     [SerializeField] private float arcHeight = 2f;
     [SerializeField] private float spiralRadius = 0.5f;
@@ -31,11 +31,11 @@ public class DJNoteController : MonoBehaviour
         spiralRadiusOffset = Random.Range(0.8f, 1.2f); // slight radius variation
     }
 
-    public void Initialize(PlantSporeEmitter targetPlant, Color color, float spiralPhaseOffset, float trackValue)
+    public void Initialize(INoteTarget target, Color color, float spiralPhaseOffset, float trackValue)
     {
-        plant = targetPlant;
+        this.target = target;
         startPos = transform.position;
-        targetPos = plant.transform.position;
+        targetPos = this.target.Transform.position;
         startTime = Time.time;
         journeyLength = Vector3.Distance(startPos, targetPos);
         spriteRenderer.color = color;
@@ -45,7 +45,7 @@ public class DJNoteController : MonoBehaviour
 
     private void Update()
     {
-        if (!plant) return;
+        if (target == null) return;
 
         // Calculate how far along the journey we are (0..1)
         float distCovered = (Time.time - startTime) * speed;
@@ -74,7 +74,6 @@ public class DJNoteController : MonoBehaviour
         // When close enough, trigger effect
         if (fracJourney >= 1f)
         {
-            plant.EmitSpore();
             gameObject.SetActive(false);
             OnDestinationReached?.Invoke();
         }

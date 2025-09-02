@@ -1,11 +1,23 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
+
+public interface INoteTarget : ITarget
+{
+    public int EmissionStep {get;}
+    public void OnHit();
+}
 
 public class DJNoteManager : MonoBehaviour
 {
     [SerializeField] private DJTableReference djReference;
     [SerializeField] private DJNoteController notePrefab;
     [SerializeField] private int poolSize = 20;
+
+    [SerializeField] private UnitManager unitManager;
+    [SerializeField] private BuildReference buildReference;
+    [SerializeField] private List<PlantSporeEmitter> plants;
+
 
     private Queue<DJNoteController> notePool = new Queue<DJNoteController>();
 
@@ -22,38 +34,79 @@ public class DJNoteManager : MonoBehaviour
     private void OnEnable()
     {
         djReference.OnBeat += DjReference_OnBeat;
+        buildReference.OnBuildUpdated += BuildReference_OnBuildUpdated;
     }
 
     private void OnDisable()
     {
         djReference.OnBeat -= DjReference_OnBeat;
+        buildReference.OnBuildUpdated -= BuildReference_OnBuildUpdated;
+    }
+
+    private void BuildReference_OnBuildUpdated()
+    {
+        plants = new List<PlantSporeEmitter>();
+        foreach (var build in buildReference.BuildControllers)
+        {
+            var plant = build.GetComponent<PlantSporeEmitter>();
+            if (plant) plants.Add(plant);
+        }
     }
 
     private void DjReference_OnBeat(int beat)
     {
-        foreach (var plant in djReference.Plants)
+        if (!djReference.DjTable) return;
+
+        var phaseOffset = Random.Range(0f, Mathf.PI * 2f);
+
+        EmitNotesForTrack(
+            djReference.LeftValue,
+            djReference.LeftTrack,
+            GetTargetsForTrack(djReference.LeftTrack),
+            beat,
+            phaseOffset);
+
+        EmitNotesForTrack(
+            djReference.RightValue,
+            djReference.RightTrack,
+            GetTargetsForTrack(djReference.RightTrack),
+            beat,
+            phaseOffset);
+    }
+
+    private IEnumerable<INoteTarget> GetTargetsForTrack(DJTrack track)
+    {
+        return track.PartyMode switch
         {
-            if (djReference.DjTable && beat % plant.EmissionStep == 0)
+            PartyMode.Strobe => unitManager.UnitControllers.Cast<INoteTarget>(),
+            _ => plants.Cast<INoteTarget>()
+        };
+    }
+
+    private void EmitNotesForTrack(
+        float value,
+        DJTrack track,
+        IEnumerable<INoteTarget> targets,
+        int beat,
+        float phaseOffset)
+    {
+        if (value <= 0.1f) return;
+
+        foreach (var target in targets)
+        {
+            if (beat % target.EmissionStep != 0) continue;
+
+            var note = GetFromPool();
+            note.gameObject.SetActive(true);
+            note.transform.position = djReference.DjTable.transform.position;
+            note.Initialize(target, track.NoteColor, phaseOffset, value);
+
+            void OnReached()
             {
-                var phaseOffset = Random.Range(0f, Mathf.PI * 2f);
-
-                if (djReference.LeftValue > .1)
-                {
-                    var note = GetFromPool();
-                    note.gameObject.SetActive(true);
-                    note.transform.position = djReference.DjTable.transform.position;
-                    note.Initialize(plant, djReference.LeftTrack.NoteColor, phaseOffset, djReference.LeftValue);
-
-                }
-
-                if (djReference.RightValue > .1)
-                {
-                    var note = GetFromPool();
-                    note.gameObject.SetActive(true);
-                    note.transform.position = djReference.DjTable.transform.position;
-                    note.Initialize(plant, djReference.RightTrack.NoteColor, phaseOffset + Mathf.PI, djReference.RightValue);
-                }
+                note.OnDestinationReached -= OnReached;
+                target.OnHit();
             }
+            note.OnDestinationReached += OnReached;
         }
     }
 

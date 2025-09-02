@@ -12,7 +12,7 @@ public class DJTableController : MonoBehaviour, IInteractable
     [SerializeField] private AudioSource audioSource1;
     [SerializeField] private AudioSource audioSource2;
 
-    Transform IInteractable.Transform => transform;
+    Transform ITarget.Transform => transform;
 
     private void Awake()
     {

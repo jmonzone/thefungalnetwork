@@ -48,7 +48,7 @@ public class ObjectPool<T> where T : Component
 }
 
 
-public class PlantSporeEmitter : MonoBehaviour, IInteractable
+public class PlantSporeEmitter : MonoBehaviour, IInteractable, INoteTarget
 {
     [Header("References")]
     [SerializeField] private SporeController sporePrefab;
@@ -63,7 +63,7 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable
     [SerializeField] private float bounceDuration = 0.3f;
 
     public int EmissionStep => emissionStep;
-    Transform IInteractable.Transform => transform;
+    Transform ITarget.Transform => transform;
 
     private Vector3 startScale;
     private ObjectPool<SporeController> sporePool;
@@ -133,5 +133,10 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable
         Debug.Log("fallback");
         // fallback: just drop next to plant
         return transform.position + (Vector3.right * 1f);
+    }
+
+    void INoteTarget.OnHit()
+    {
+        EmitSpore();
     }
 }
