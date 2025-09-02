@@ -35,10 +35,17 @@ public class DJNoteManager : MonoBehaviour
         {
             if (djReference.DjTable && beat % plant.EmissionStep == 0)
             {
+                var phaseOffset = Random.Range(0f, Mathf.PI * 2f);
+
                 DJNoteController note = GetFromPool();
                 note.gameObject.SetActive(true);
                 note.transform.position = djReference.DjTable.transform.position;
-                note.Initialize(plant);
+                note.Initialize(plant, djReference.LeftTrack.NoteColor, phaseOffset);
+
+                note = GetFromPool();
+                note.gameObject.SetActive(true);
+                note.transform.position = djReference.DjTable.transform.position;
+                note.Initialize(plant, djReference.RightTrack.NoteColor, phaseOffset + Mathf.PI);
             }
         }
     }

@@ -6,7 +6,10 @@ public class DJNoteController : MonoBehaviour
     [SerializeField] private PlantSporeEmitter plant;
     [SerializeField] private float speed = 5f;
     [SerializeField] private float arcHeight = 2f;
+    [SerializeField] private float spiralRadius = 0.5f;
+    [SerializeField] private float spiralSpeed = 4f;
 
+    private SpriteRenderer spriteRenderer;
     private Vector3 startPos;
     private Vector3 targetPos;
     private float journeyLength;
@@ -14,13 +17,27 @@ public class DJNoteController : MonoBehaviour
 
     public event UnityAction OnDestinationReached;
 
-    public void Initialize(PlantSporeEmitter targetPlant)
+    private float spiralPhaseOffset; // unique per note
+    private float spiralRadiusOffset; // optional variation in radius
+
+    private void Awake()
+    {
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+
+        // Assign random offsets when the object is created
+        spiralPhaseOffset = Random.Range(0f, Mathf.PI * 2f);
+        spiralRadiusOffset = Random.Range(0.8f, 1.2f); // slight radius variation
+    }
+
+    public void Initialize(PlantSporeEmitter targetPlant, Color color, float spiralPhaseOffset)
     {
         plant = targetPlant;
         startPos = transform.position;
         targetPos = plant.transform.position;
         startTime = Time.time;
         journeyLength = Vector3.Distance(startPos, targetPos);
+        spriteRenderer.color = color;
+        this.spiralPhaseOffset = spiralPhaseOffset;
     }
 
     private void Update()
@@ -38,6 +55,17 @@ public class DJNoteController : MonoBehaviour
         float arc = arcHeight * Mathf.Sin(Mathf.Clamp01(fracJourney) * Mathf.PI);
         newPos.y += arc;
 
+        // Spiral offset (slight circular variation around the forward path)            // tweak for tightness
+        float angle = fracJourney * spiralSpeed * Mathf.PI * 2f + spiralPhaseOffset;
+
+        // Create an offset perpendicular to the main trajectory
+        Vector3 direction = (targetPos - startPos).normalized;
+        Vector3 right = Vector3.Cross(direction, Vector3.up).normalized;
+        Vector3 up = Vector3.Cross(right, direction).normalized;
+
+        Vector3 spiralOffset = (Mathf.Cos(angle) * right + Mathf.Sin(angle) * up) * spiralRadius * spiralRadiusOffset * (1 - fracJourney);
+        newPos += spiralOffset;
+
         transform.position = newPos;
 
         // When close enough, trigger effect
@@ -48,4 +76,6 @@ public class DJNoteController : MonoBehaviour
             OnDestinationReached?.Invoke();
         }
     }
+
+
 }

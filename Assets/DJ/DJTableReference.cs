@@ -11,10 +11,15 @@ public class DJTableReference : ScriptableObject
 
     [Header("Runtime")]
     [SerializeField] private DJTableController djTable;
+    [SerializeField] private DJTrack leftTrack;
+    [SerializeField] private DJTrack rightTrack;
     [SerializeField] private float bpm = 90;
     [SerializeField] private List<PlantSporeEmitter> plants;
 
     public DJTableController DjTable => djTable;
+    public DJTrack LeftTrack => leftTrack;
+    public DJTrack RightTrack => rightTrack;
+
     public float BPM => bpm;
     public float BeatDuration => 60f / bpm; // seconds per beat
     public List<PlantSporeEmitter> Plants => plants;
@@ -54,5 +59,17 @@ public class DJTableReference : ScriptableObject
     public void InvokeBeat(int beat)
     {
         OnBeat?.Invoke(beat);
+    }
+
+    public void SetLeftTrack(DJTrack track)
+    {
+        leftTrack = track;
+        djTable.PlayLeftTrack(track.AudioClip);
+    }
+
+    public void SetRightTrack(DJTrack track)
+    {
+        rightTrack = track;
+        djTable.PlayRightTrack(track.AudioClip);
     }
 }

@@ -87,8 +87,8 @@ public class DJTableUI : MonoBehaviour
 
             if (dJTableController)
             {
-                dJTableController.PlayLeftTrack(leftTrack.Track.AudioClip);
-                dJTableController.PlayRightTrack(rightTrack.Track.AudioClip);
+                dJTableReference.SetLeftTrack(leftTrack.Track);
+                dJTableReference.SetRightTrack(rightTrack.Track);
                 dJTableController.SetSlider(0);
                 UpdateTrackPitch();
                 StartPartyLights(leftTrack.Track);
