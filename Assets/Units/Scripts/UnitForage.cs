@@ -60,7 +60,6 @@ public class UnitForage : UnitBehaviour
     {
         if (targetSpore)
         {
-            Debug.Log("OnBehaviourStart");
             agent.isStopped = false;
             StartCoroutine(ForagingBehaviour());
         }
