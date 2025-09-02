@@ -27,18 +27,6 @@ public class DJTableUI : MonoBehaviour
 
     private void Awake()
     {
-        //leftTrack.OnClick += () =>
-        //{
-        //    dJTableController.PlayLeftTrack(leftTrack.Track.AudioClip);
-        //    StartPartyLights(leftTrack.Track);
-        //};
-
-        //rightTrack.OnClick += () =>
-        //{
-        //    dJTableController.PlayRightTrack(rightTrack.Track.AudioClip);
-        //    StartPartyLights(rightTrack.Track);
-        //};
-
         leftTrack.SetTrack(track1);
         rightTrack.SetTrack(track2);
 
@@ -56,6 +44,7 @@ public class DJTableUI : MonoBehaviour
             }
         });
 
+        bpmSlider.value = dJTableReference.BPM;
         bpmSlider.onValueChanged.AddListener(value =>
         {
             dJTableReference.SetBPM(value);

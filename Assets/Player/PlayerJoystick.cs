@@ -5,10 +5,17 @@ public class PlayerJoystick : MonoBehaviour
     [SerializeField] private PlayerReference playerReference;
     [SerializeField] private CameraPanController cameraPanController;
     [SerializeField] private VirtualJoystick virtualJoystick;
+    [SerializeField] private InteractionController interaction;
 
     private void Awake()
     {
+        virtualJoystick.OnJoystickStart += VirtualJoystick_OnJoystickStart;
         virtualJoystick.OnJoystickUpdate += VirtualJoystick_OnJoystickUpdate;
+    }
+
+    private void VirtualJoystick_OnJoystickStart(Vector3 arg0)
+    {
+        interaction.Unselect();
     }
 
     private void VirtualJoystick_OnJoystickUpdate(Vector3 direction)

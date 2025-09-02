@@ -58,11 +58,8 @@ public class UnitController : MonoBehaviour, IInteractable
 
     protected void SetBehaviour(UnitBehaviour behaviour)
     {
-        if (this is FungalController) Debug.Log($"SetBehaviour {currentBehaviour?.GetType().ToString() ?? "null"} -> {behaviour?.GetType().ToString() ?? "null"}");
-
         if (currentBehaviour)
         {
-            if (this is FungalController) Debug.Log($"unsubscribing {currentBehaviour?.GetType().ToString() ?? "null"}");
             currentBehaviour.OnBehaviourComplete -= SetDefaultBehaviour;
             currentBehaviour.StopBehaviour();
         }
@@ -71,9 +68,8 @@ public class UnitController : MonoBehaviour, IInteractable
 
         if (currentBehaviour)
         {
-            if (this is FungalController) Debug.Log($"subscribing {behaviour?.GetType().ToString() ?? "null"}");
-            currentBehaviour.StartBehaviour();
             currentBehaviour.OnBehaviourComplete += SetDefaultBehaviour;
+            currentBehaviour.StartBehaviour();
         }
 
         OnBehaviourChanged?.Invoke();
@@ -81,7 +77,6 @@ public class UnitController : MonoBehaviour, IInteractable
 
     public void SetDefaultBehaviour()
     {
-        if (this is FungalController) Debug.Log("Setting default");
         SetBehaviour(defaultBehaviour);
     }
 
