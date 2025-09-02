@@ -8,6 +8,8 @@ public class DJNoteController : MonoBehaviour
     [SerializeField] private float arcHeight = 2f;
     [SerializeField] private float spiralRadius = 0.5f;
     [SerializeField] private float spiralSpeed = 4f;
+    [SerializeField] private float minValue = 0.5f;
+    [SerializeField] private float maxValue = 1f;
 
     private SpriteRenderer spriteRenderer;
     private Vector3 startPos;
@@ -29,7 +31,7 @@ public class DJNoteController : MonoBehaviour
         spiralRadiusOffset = Random.Range(0.8f, 1.2f); // slight radius variation
     }
 
-    public void Initialize(PlantSporeEmitter targetPlant, Color color, float spiralPhaseOffset)
+    public void Initialize(PlantSporeEmitter targetPlant, Color color, float spiralPhaseOffset, float trackValue)
     {
         plant = targetPlant;
         startPos = transform.position;
@@ -38,6 +40,7 @@ public class DJNoteController : MonoBehaviour
         journeyLength = Vector3.Distance(startPos, targetPos);
         spriteRenderer.color = color;
         this.spiralPhaseOffset = spiralPhaseOffset;
+        if (trackValue > 0) transform.localScale = Vector3.one * (minValue + trackValue * (maxValue - minValue));
     }
 
     private void Update()

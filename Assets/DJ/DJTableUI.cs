@@ -32,6 +32,7 @@ public class DJTableUI : MonoBehaviour
 
         trackSlider.onValueChanged.AddListener(value =>
         {
+            dJTableReference.SetTrackValue(value);
             dJTableController.SetSlider(value);
 
             if (value > 0.5)

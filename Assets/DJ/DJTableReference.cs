@@ -13,12 +13,17 @@ public class DJTableReference : ScriptableObject
     [SerializeField] private DJTableController djTable;
     [SerializeField] private DJTrack leftTrack;
     [SerializeField] private DJTrack rightTrack;
+    [SerializeField] private float leftValue;
+    [SerializeField] private float rightValue;
+
     [SerializeField] private float bpm = 90;
     [SerializeField] private List<PlantSporeEmitter> plants;
 
     public DJTableController DjTable => djTable;
     public DJTrack LeftTrack => leftTrack;
     public DJTrack RightTrack => rightTrack;
+    public float LeftValue => leftValue;
+    public float RightValue => rightValue;
 
     public float BPM => bpm;
     public float BeatDuration => 60f / bpm; // seconds per beat
@@ -33,6 +38,8 @@ public class DJTableReference : ScriptableObject
         plants = new List<PlantSporeEmitter>();
         djTable = null;
         buildReference.OnBuildUpdated += BuildReference_OnBuildUpdated;
+
+        SetTrackValue(0);
     }
 
     private void BuildReference_OnBuildUpdated()
@@ -71,5 +78,11 @@ public class DJTableReference : ScriptableObject
     {
         rightTrack = track;
         djTable.PlayRightTrack(track.AudioClip);
+    }
+
+    public void SetTrackValue(float value)
+    {
+        leftValue = 1 - value;
+        rightValue = value;
     }
 }

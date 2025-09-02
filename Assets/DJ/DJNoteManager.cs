@@ -37,15 +37,22 @@ public class DJNoteManager : MonoBehaviour
             {
                 var phaseOffset = Random.Range(0f, Mathf.PI * 2f);
 
-                DJNoteController note = GetFromPool();
-                note.gameObject.SetActive(true);
-                note.transform.position = djReference.DjTable.transform.position;
-                note.Initialize(plant, djReference.LeftTrack.NoteColor, phaseOffset);
+                if (djReference.LeftValue > .1)
+                {
+                    var note = GetFromPool();
+                    note.gameObject.SetActive(true);
+                    note.transform.position = djReference.DjTable.transform.position;
+                    note.Initialize(plant, djReference.LeftTrack.NoteColor, phaseOffset, djReference.LeftValue);
 
-                note = GetFromPool();
-                note.gameObject.SetActive(true);
-                note.transform.position = djReference.DjTable.transform.position;
-                note.Initialize(plant, djReference.RightTrack.NoteColor, phaseOffset + Mathf.PI);
+                }
+
+                if (djReference.RightValue > .1)
+                {
+                    var note = GetFromPool();
+                    note.gameObject.SetActive(true);
+                    note.transform.position = djReference.DjTable.transform.position;
+                    note.Initialize(plant, djReference.RightTrack.NoteColor, phaseOffset + Mathf.PI, djReference.RightValue);
+                }
             }
         }
     }
