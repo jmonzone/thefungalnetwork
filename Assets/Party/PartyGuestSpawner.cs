@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class PartyGuestSpawner : MonoBehaviour
 {
@@ -37,13 +38,32 @@ public class PartyGuestSpawner : MonoBehaviour
         for (int i = 0; i < guestsToSpawn; i++)
         {
             yield return null;
-            var guest = Instantiate(unitPrefab, spawnAnchor.transform.position, Quaternion.identity);
+
+            // Try to find a valid random position near the spawn anchor
+            Vector3 randomPoint = Random.insideUnitSphere * 2f; // radius = 5 units
+            randomPoint.y = spawnAnchor.transform.position.y; // keep roughly at same height
+            Quaternion randomYRotation = Quaternion.Euler(0, Random.Range(0f, 360f), 0);
+
+            if (NavMesh.SamplePosition(randomPoint, out NavMeshHit hit, 10f, NavMesh.AllAreas))
+            {
+                // Use closest valid point on NavMesh
+                randomPoint = hit.position;
+            }
+            else
+            {
+                // Fallback: spawn at anchor
+                randomPoint = spawnAnchor.transform.position;
+            }
+
+            // Spawn guest
+            var guest = Instantiate(unitPrefab, randomPoint, randomYRotation);
             guest.Initialize(partyReference.CurrentParty.Guests[i]);
             partyReference.AddGuest(guest);
         }
     }
 
-    private IEnumerator DoorsOpenRoutine()
+
+private IEnumerator DoorsOpenRoutine()
     {
         // Initial delay before the first guest arrives
         float initialDelay = Random.Range(0.5f, 2f);
