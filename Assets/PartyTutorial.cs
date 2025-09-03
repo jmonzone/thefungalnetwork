@@ -15,6 +15,7 @@ public class PartyTutorial : MonoBehaviour
 
     [SerializeField] private DialogueReference dialogueReference;
     [SerializeField] private List<Dialogue> initialDialogue;
+    [SerializeField] private List<Dialogue> afterPhotoTakenDialogue;
 
 
     private int timesInteractedWithGuests;
@@ -81,7 +82,7 @@ public class PartyTutorial : MonoBehaviour
         photoReference.SetLookTarget(guestPictureAnchor.transform);
         photoReference.StartPhotoView();
 
-        while (true)
+        while (photoReference.IsActive)
         {
             foreach (var guest in partyReference.Guests)
             {
@@ -90,5 +91,16 @@ public class PartyTutorial : MonoBehaviour
 
             yield return null;
         }
+
+        yield return new WaitForSeconds(1f);
+
+        dialogueReference.StartDialogue(initialUnit, afterPhotoTakenDialogue);
+        cameraPanController.CenterTargetInView(initialUnit.transform.position);
+
+        yield return new WaitWhile(() => dialogueReference.IsActive);
+        yield return new WaitForSeconds(1f);
+
+        partyReference.ClearGuests();
+        partyReference.StopParty();
     }
 }

@@ -17806,7 +17806,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1145510282}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.06869, y: 0.00000001822998, z: -0.000000001255182, w: 0.99763805}
+  m_LocalRotation: {x: 0.06868998, y: -0.0000000166458, z: 0.0000000011461067, w: 0.99763805}
   m_LocalPosition: {x: 0, y: 0.75, z: 0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -18442,9 +18442,14 @@ MonoBehaviour:
   cameraPositionAnchor: {fileID: 197055839}
   dialogueReference: {fileID: 11400000, guid: 66db6a8c7a0524bd8b89b88de939507f, type: 2}
   initialDialogue:
-  - text: woah wee we got the party rolling
+  - text: woah what a party
     action: 0
-  - text: hey you over there, lets take a pic how about that
+  - text: don't go yet, let's take a pic!
+    action: 0
+  afterPhotoTakenDialogue:
+  - text: oh gosh golly, we look great
+    action: 0
+  - text: alright thanks for coming guys, love
     action: 0
 --- !u!1 &1175904108
 GameObject:
