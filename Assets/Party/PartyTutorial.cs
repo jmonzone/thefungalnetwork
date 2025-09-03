@@ -54,10 +54,7 @@ public class PartyTutorial : MonoBehaviour
 
         var partyFrog = unitManager.UnitControllers[0];
         partyFrog.SetBehaviour(partyFrog.GetComponent<UnitDJ>());
-
-        yield return new WaitForSeconds(2f);
         cameraPanController.CenterTargetInView(playerReference.Player.transform.position + Vector3.back * 20f);
-        yield return new WaitForSeconds(1f);
         dialogueReference.StartDialogue(playerReference.Player, lostDialogue);
 
         yield return new WaitUntil(() => timesInteractedWithGuests > 1);
@@ -65,7 +62,6 @@ public class PartyTutorial : MonoBehaviour
         yield return new WaitForSeconds(1f);
 
         cameraPanController.CenterTargetInView(partyFrog.transform.position);
-        yield return new WaitForSeconds(1f);
         dialogueReference.StartDialogue(partyFrog, letsTakeAPhotoDialogue);
 
         yield return new WaitWhile(() => dialogueReference.IsActive);
