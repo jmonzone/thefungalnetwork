@@ -42,7 +42,7 @@ public class PartyGuestSpawner : MonoBehaviour
             // Try to find a valid random position near the spawn anchor
             Vector3 randomPoint = Random.insideUnitSphere * 2f; // radius = 5 units
             randomPoint.y = spawnAnchor.transform.position.y; // keep roughly at same height
-            Quaternion randomYRotation = Quaternion.Euler(0, Random.Range(0f, 360f), 0);
+            Quaternion randomYRotation = Quaternion.Euler(0, Random.Range(135f, 225f), 0);
 
             if (NavMesh.SamplePosition(randomPoint, out NavMeshHit hit, 10f, NavMesh.AllAreas))
             {

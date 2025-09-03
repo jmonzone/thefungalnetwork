@@ -46,6 +46,8 @@ public class CameraPanController : MonoBehaviour
         // Smooth panning
         virtualCamera.transform.position = Vector3.SmoothDamp(virtualCamera.transform.position, targetPosition, ref panVelocity, panSmoothTime);
 
+        //Debug.Log($"Centering {targetPosition}");
+
         // Smoothly interpolate to target size
         virtualCamera.m_Lens.OrthographicSize = Mathf.SmoothDamp(
             virtualCamera.m_Lens.OrthographicSize,
@@ -142,7 +144,6 @@ public class CameraPanController : MonoBehaviour
 
     public void CenterTargetInView(Vector3 position)
     {
-        //Debug.Log("Centering");
         panSmoothTime = centeringSmoothTime;
 
         // Target's current screen position
@@ -167,6 +168,9 @@ public class CameraPanController : MonoBehaviour
         desiredCamPos.y = camPos.y;
 
         targetPosition = desiredCamPos;
+
+        //Debug.Log($"Centering {targetPosition}");
+
     }
 
 }

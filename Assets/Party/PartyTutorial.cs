@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PartyTutorial : MonoBehaviour
@@ -14,9 +15,9 @@ public class PartyTutorial : MonoBehaviour
     [SerializeField] private Transform cameraPositionAnchor;
 
     [SerializeField] private DialogueReference dialogueReference;
-    [SerializeField] private List<Dialogue> initialDialogue;
+    [SerializeField] private List<Dialogue> lostDialogue;
+    [SerializeField] private List<Dialogue> letsTakeAPhotoDialogue;
     [SerializeField] private List<Dialogue> afterPhotoTakenDialogue;
-
 
     private int timesInteractedWithGuests;
 
@@ -49,28 +50,39 @@ public class PartyTutorial : MonoBehaviour
 
     private IEnumerator PartyRoutine()
     {
-        yield return null;
-        var initialUnit = unitManager.UnitControllers[0];
-        initialUnit.SetBehaviour(initialUnit.GetComponent<UnitDJ>());
+        yield return new WaitForSeconds(1f);
 
-        yield return new WaitUntil(() => timesInteractedWithGuests > 0);
+        var partyFrog = unitManager.UnitControllers[0];
+        partyFrog.SetBehaviour(partyFrog.GetComponent<UnitDJ>());
+
+        yield return new WaitForSeconds(2f);
+        cameraPanController.CenterTargetInView(playerReference.Player.transform.position + Vector3.back * 20f);
+        yield return new WaitForSeconds(1f);
+        dialogueReference.StartDialogue(playerReference.Player, lostDialogue);
+
+        yield return new WaitUntil(() => timesInteractedWithGuests > 1);
         yield return new WaitWhile(() => dialogueReference.IsActive);
         yield return new WaitForSeconds(1f);
 
-        dialogueReference.StartDialogue(initialUnit, initialDialogue);
-        cameraPanController.CenterTargetInView(initialUnit.transform.position);
+        cameraPanController.CenterTargetInView(partyFrog.transform.position);
+        yield return new WaitForSeconds(1f);
+        dialogueReference.StartDialogue(partyFrog, letsTakeAPhotoDialogue);
 
         yield return new WaitWhile(() => dialogueReference.IsActive);
         yield return new WaitForSeconds(1f);
 
         foreach(var guest in partyReference.Guests)
         {
+            guest.SetBehaviour(guest.GetComponent<UnitDJ>());
+        }
+
+        foreach (var unit in unitManager.AllUnits)
+        {
             var randomDirection = (Vector3)Random.insideUnitCircle.normalized;
             randomDirection.z = randomDirection.y;
             randomDirection.y = 0;
 
-            guest.transform.position = guestPictureAnchor.transform.position + randomDirection * 0.5f;
-            guest.SetBehaviour(guest.GetComponent<UnitDJ>());
+            unit.transform.position = guestPictureAnchor.transform.position + randomDirection * 0.25f;
         }
 
         playerReference.Player.transform.position = cameraPositionAnchor.position;
@@ -84,9 +96,9 @@ public class PartyTutorial : MonoBehaviour
 
         while (photoReference.IsActive)
         {
-            foreach (var guest in partyReference.Guests)
+            foreach (var unit in unitManager.AllUnits)
             {
-                guest.SetLookPosition(playerReference.Player.transform.position);
+                unit.SetLookPosition(playerReference.Player.transform.position);
             }
 
             yield return null;
@@ -94,13 +106,19 @@ public class PartyTutorial : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
 
-        dialogueReference.StartDialogue(initialUnit, afterPhotoTakenDialogue);
-        cameraPanController.CenterTargetInView(initialUnit.transform.position);
+        dialogueReference.StartDialogue(partyFrog, afterPhotoTakenDialogue);
+        cameraPanController.CenterTargetInView(partyFrog.transform.position);
 
         yield return new WaitWhile(() => dialogueReference.IsActive);
         yield return new WaitForSeconds(1f);
 
+        partyFrog.SetDefaultBehaviour();
+
         partyReference.ClearGuests();
+
+        yield return new WaitForSeconds(1f);
+
         partyReference.StopParty();
+
     }
 }
