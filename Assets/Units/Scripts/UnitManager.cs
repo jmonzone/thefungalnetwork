@@ -13,6 +13,9 @@ public class UnitManager : MonoBehaviour
 
     [SerializeField] private List<UnitController> unitControllers;
 
+    [Header("Initial Party Frog")]
+    [SerializeField] private Transform frogSpawnAnchor;
+
     public List<UnitController> UnitControllers => unitControllers;
     public List<UnitController> AllUnits => unitControllers.Concat(partyReference.Guests).ToList();
 
@@ -25,10 +28,11 @@ public class UnitManager : MonoBehaviour
 
     private void Start()
     {
-        foreach(var unit in unitList.Units)
-        {
-            SummonUnit(unit);
-        }   
+        SummonPartyFrog();
+        //foreach(var unit in unitList.Units)
+        //{
+        //    SummonUnit(unit);
+        //}   
     }
 
     private void OnEnable()
@@ -50,6 +54,18 @@ public class UnitManager : MonoBehaviour
 
         var unitController = Instantiate(unitPrefab, spawnPosition, unitSpawnAnchor.transform.rotation);
         unitController.Initialize(unit);
+        unitControllers.Add(unitController);
+
+        //cameraPanController.CenterTargetInView(unitController.transform.position);
+        OnUnitSummoned?.Invoke(unitController);
+    }
+
+    private void SummonPartyFrog()
+    {
+        var spawnPosition = frogSpawnAnchor.transform.position;
+
+        var unitController = Instantiate(unitPrefab, spawnPosition, frogSpawnAnchor.transform.rotation);
+        unitController.Initialize(unitList.Units[0]);
         unitControllers.Add(unitController);
 
         //cameraPanController.CenterTargetInView(unitController.transform.position);

@@ -76,11 +76,17 @@ public class DJNoteManager : MonoBehaviour
 
     private IEnumerable<INoteTarget> GetTargetsForTrack(DJTrack track)
     {
-        return track.PartyMode switch
+        var targets = track.PartyMode switch
         {
             PartyMode.Strobe => unitManager.AllUnits.Cast<INoteTarget>(),
             _ => plants.Cast<INoteTarget>()
         };
+
+        return targets.Where(target =>
+        {
+            var unit = target.Transform.GetComponent<UnitController>();
+            return !unit || unit.Data.Name != "Frog";
+        });
     }
 
     private void EmitNotesForTrack(
