@@ -11,9 +11,13 @@ public class PhotoReference : ScriptableObject
     [SerializeField] private ViewReference screenshotView;
 
     [Header("Runtime")]
+    [SerializeField] private bool isActive;
+    [SerializeField] private Transform lookTarget;
     [SerializeField] private Texture lastPhoto;
     [SerializeField] private List<Texture> allPhotos;
-    
+
+    public bool IsActive => isActive;
+    public Transform LookTarget => lookTarget;
     public Texture LastPhoto => lastPhoto;
     public List<Texture> AllPhotos => allPhotos;
 
@@ -24,10 +28,12 @@ public class PhotoReference : ScriptableObject
     public void Initialize()
     {
         allPhotos = new List<Texture>();
+        isActive = false;
     }
 
     public void StartPhotoView()
     {
+        isActive = true;
         allPhotos = new List<Texture>();
 
         navigation.Navigate(cameraView);
@@ -36,6 +42,7 @@ public class PhotoReference : ScriptableObject
 
     public void ExitPhotoView()
     {
+        isActive = false;
         navigation.GoBack();
         OnPhotoExit?.Invoke();
     }
@@ -46,5 +53,10 @@ public class PhotoReference : ScriptableObject
         allPhotos.Add(photo);
         navigation.Navigate(screenshotView);
         OnPhotoTaken?.Invoke();
+    }
+
+    public void SetLookTarget(Transform lookTarget)
+    {
+        this.lookTarget = lookTarget;
     }
 }

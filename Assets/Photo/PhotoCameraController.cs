@@ -7,6 +7,9 @@ public class PhotoCameraController : MonoBehaviour
     [SerializeField] private CameraPanController cameraPanController;
     [SerializeField] private CinemachineVirtualCamera photoVirtualCamera;
     [SerializeField] private PartyReference partyReference;
+    [SerializeField] private PlayerReference playerReference;
+    [SerializeField] private float zOffset;
+    [SerializeField] private float yOffset;
 
     private Camera mainCamera;
 
@@ -17,14 +20,14 @@ public class PhotoCameraController : MonoBehaviour
 
     private void OnEnable()
     {
-        photoReference.OnPhotoStart += UsePerspectiveCamera;
+        photoReference.OnPhotoStart += PhotoReference_OnPhotoStart;
         photoReference.OnPhotoExit += UseOrthographicCamera;
         partyReference.OnPartyComplete += UseOrthographicCamera;
     }
 
     private void OnDisable()
     {
-        photoReference.OnPhotoStart -= UsePerspectiveCamera;
+        photoReference.OnPhotoStart -= PhotoReference_OnPhotoStart;
         photoReference.OnPhotoExit -= UseOrthographicCamera;
         partyReference.OnPartyComplete -= UseOrthographicCamera;
     }
@@ -40,8 +43,19 @@ public class PhotoCameraController : MonoBehaviour
         }
     }
 
+
+
+    private void PhotoReference_OnPhotoStart()
+    {
+        //photoVirtualCamera.Follow = playerReference.Player.transform;
+        photoVirtualCamera.LookAt = photoReference.LookTarget;
+        UsePerspectiveCamera();
+    }
+
     private void UsePerspectiveCamera()
     {
+        //photoController.target = photoReference.LookTarget;
+
         // Swap between orthographic and perspective
         if (mainCamera.orthographic)
         {
@@ -49,5 +63,21 @@ public class PhotoCameraController : MonoBehaviour
             photoVirtualCamera.Priority = 12;
             mainCamera.orthographic = false; // Perspective
         }
+    }
+
+    private void Update()
+    {
+        if (!photoReference.IsActive) return;
+
+        Vector3 playerPos = playerReference.Player.transform.position;
+        Vector3 guestPos = photoReference.LookTarget.position;
+
+        // Midpoint between player and guest
+        Vector3 direction = (guestPos - playerPos).normalized;
+
+        Vector3 cameraPos = playerPos + direction * zOffset + Vector3.up * yOffset; // 1 unit back
+
+        photoVirtualCamera.transform.position = cameraPos;
+
     }
 }
