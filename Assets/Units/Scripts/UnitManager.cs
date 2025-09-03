@@ -65,8 +65,6 @@ public class UnitManager : MonoBehaviour
         var spawnPosition = frogSpawnAnchor.transform.position;
 
         var unitController = Instantiate(unitPrefab, spawnPosition, frogSpawnAnchor.transform.rotation);
-        unitController.SetInitialBehaviour(unitController.GetComponent<UnitDJ>());
-
         unitController.Initialize(unitList.Units[0]);
         unitControllers.Add(unitController);
 

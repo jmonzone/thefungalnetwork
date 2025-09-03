@@ -29,7 +29,7 @@ public class PlayerController : UnitController
         {
             case PlantSporeEmitter plant:
                 unitDrum.SetPlant(plant);
-                SetBehaviour(unitDrum);
+                ApplyBehaviour(unitDrum);
                 break;
             default:
                 playerReference.TargetInteractable.Select();
@@ -55,7 +55,7 @@ public class PlayerController : UnitController
         if (playerReference.TargetInteractable != null)
         {
             unitFollow.SetTarget(playerReference.TargetInteractable.Transform);
-            SetBehaviour(unitFollow);
+            ApplyBehaviour(unitFollow);
         }
     }
 
@@ -65,7 +65,7 @@ public class PlayerController : UnitController
         {
             SetLookPosition(playerReference.TargetPosition);
             unitDestination.SetDestination(playerReference.TargetPosition);
-            SetBehaviour(unitDestination);
+            ApplyBehaviour(unitDestination);
         }
     }
 }

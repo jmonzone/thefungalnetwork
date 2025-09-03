@@ -54,7 +54,7 @@ public class DialogueUI : MonoBehaviour
 
     private IEnumerator ShowDialogueRoutine()
     {
-        List<Dialogue> pages = dialogue.Unit.Data.DialogueTree.Dialogue;
+        List<Dialogue> pages = dialogue.Dialogue;
 
         for (int p = 0; p < pages.Count; p++)
         {

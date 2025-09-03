@@ -6,6 +6,7 @@ public class PlayerJoystick : MonoBehaviour
     [SerializeField] private CameraPanController cameraPanController;
     [SerializeField] private VirtualJoystick virtualJoystick;
     [SerializeField] private InteractionController interaction;
+    [SerializeField] private PhotoReference photoReference;
 
     private Camera mainCamera;
 
@@ -14,6 +15,12 @@ public class PlayerJoystick : MonoBehaviour
         mainCamera = Camera.main;
         virtualJoystick.OnJoystickStart += VirtualJoystick_OnJoystickStart;
         virtualJoystick.OnJoystickUpdate += VirtualJoystick_OnJoystickUpdate;
+        virtualJoystick.OnJoystickEnd += VirtualJoystick_OnJoystickEnd; ;
+    }
+
+    private void VirtualJoystick_OnJoystickEnd()
+    {
+        playerReference.SetTargetPosition(playerReference.TargetPosition);
     }
 
     private void VirtualJoystick_OnJoystickStart(Vector3 arg0)

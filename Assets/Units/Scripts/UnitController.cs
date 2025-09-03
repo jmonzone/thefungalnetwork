@@ -16,8 +16,6 @@ public class UnitController : MonoBehaviour, IInteractable, INoteTarget
     [SerializeField] private UnitBehaviour currentBehaviour;
     [SerializeField] private Vector3 targetLookPosition;
 
-    private UnitBehaviour initialBehaviour;
-
     public Unit Data => data;
     protected Transform RenderRoot => renderRoot;
     public bool IsDefaultBehaviour => currentBehaviour == defaultBehaviour;
@@ -35,15 +33,13 @@ public class UnitController : MonoBehaviour, IInteractable, INoteTarget
         var allBehaviours = GetComponents<UnitBehaviour>();
         foreach(var behaviour in allBehaviours)
         {
-            behaviour.OnBehaviourRequest += () => SetBehaviour(behaviour);
+            behaviour.OnBehaviourRequest += () => ApplyBehaviour(behaviour);
         }
-
-        initialBehaviour = defaultBehaviour;
     }
 
     protected virtual void Start()
     {
-        SetBehaviour(initialBehaviour);
+        SetDefaultBehaviour();
     }
 
     protected virtual void Update()
@@ -62,7 +58,7 @@ public class UnitController : MonoBehaviour, IInteractable, INoteTarget
         }
     }
 
-    protected void SetBehaviour(UnitBehaviour behaviour)
+    protected void ApplyBehaviour(UnitBehaviour behaviour)
     {
         if (currentBehaviour)
         {
@@ -81,10 +77,6 @@ public class UnitController : MonoBehaviour, IInteractable, INoteTarget
         OnBehaviourChanged?.Invoke();
     }
 
-    public void SetDefaultBehaviour()
-    {
-        SetBehaviour(defaultBehaviour);
-    }
 
     public virtual void Initialize(Unit data)
     {
@@ -98,14 +90,19 @@ public class UnitController : MonoBehaviour, IInteractable, INoteTarget
         targetLookPosition = targetPosition;
     }
 
-    public void SetInitialBehaviour(UnitBehaviour behaviour)
+    public void SetDefaultBehaviour()
     {
-        initialBehaviour = behaviour;
+        ApplyBehaviour(defaultBehaviour);
+    }
+
+    public void SetBehaviour(UnitBehaviour behaviour)
+    {
+        ApplyBehaviour(behaviour);
     }
 
     void IInteractable.Select()
     {
-        SetBehaviour(selectBehaviour);
+        ApplyBehaviour(selectBehaviour);
     }
 
     void INoteTarget.OnHit()

@@ -42,13 +42,13 @@ public class FungalController : UnitController
     public void SetDestination(Vector3 destination)
     {
         unitDestination.SetDestination(destination);
-        SetBehaviour(unitDestination);
+        ApplyBehaviour(unitDestination);
     }
 
     public void SetTarget(Transform target)
     {
         unitFollow.SetTarget(target);
-        SetBehaviour(unitFollow);
+        ApplyBehaviour(unitFollow);
     }
 
     public void TriggerDeath()
