@@ -1,9 +1,11 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class UnitManager : MonoBehaviour
 {
+    [SerializeField] private PartyReference partyReference;
     [SerializeField] private UnitListReference unitList;
     [SerializeField] private UnitController unitPrefab;
     [SerializeField] private Transform unitSpawnAnchor;
@@ -12,6 +14,8 @@ public class UnitManager : MonoBehaviour
     [SerializeField] private List<UnitController> unitControllers;
 
     public List<UnitController> UnitControllers => unitControllers;
+    public List<UnitController> AllUnits => unitControllers.Concat(partyReference.Guests).ToList();
+
     public event UnityAction<UnitController> OnUnitSummoned;
 
     private void Awake()

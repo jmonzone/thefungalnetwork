@@ -9,7 +9,6 @@ public class PassTheSpore : MonoBehaviour
     [Header("References")]
     [SerializeField] private PartyReference partyReference;
     [SerializeField] private UnitManager unitManager;
-    [SerializeField] private PartyGuestSpawner guestManager;
     [SerializeField] private CameraPanController cameraPanController;
 
     [Header("Gameplay")]
@@ -51,7 +50,7 @@ public class PassTheSpore : MonoBehaviour
         //virtualCamera.Priority = 11;
         sporeBall.gameObject.SetActive(true);
 
-        foreach(var unit in unitManager.UnitControllers.Concat(partyReference.Guests))
+        foreach(var unit in unitManager.AllUnits)
         {
             players.Add(new PassTheSporePlayer
             {

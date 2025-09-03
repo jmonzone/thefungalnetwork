@@ -10,8 +10,6 @@ public class PartyGuestSpawner : MonoBehaviour
     [SerializeField] private UnitController unitPrefab;
     [SerializeField] private UnitListReference unitListReference;
 
-
-
     private void Awake()
     {
         var partyManager = GetComponent<PartyManager>();

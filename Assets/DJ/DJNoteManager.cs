@@ -78,7 +78,7 @@ public class DJNoteManager : MonoBehaviour
     {
         return track.PartyMode switch
         {
-            PartyMode.Strobe => unitManager.UnitControllers.Cast<INoteTarget>(),
+            PartyMode.Strobe => unitManager.AllUnits.Cast<INoteTarget>(),
             _ => plants.Cast<INoteTarget>()
         };
     }
