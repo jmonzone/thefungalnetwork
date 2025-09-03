@@ -16,6 +16,8 @@ public class UnitController : MonoBehaviour, IInteractable, INoteTarget
     [SerializeField] private UnitBehaviour currentBehaviour;
     [SerializeField] private Vector3 targetLookPosition;
 
+    private UnitBehaviour initialBehaviour;
+
     public Unit Data => data;
     protected Transform RenderRoot => renderRoot;
     public bool IsDefaultBehaviour => currentBehaviour == defaultBehaviour;
@@ -24,7 +26,6 @@ public class UnitController : MonoBehaviour, IInteractable, INoteTarget
 
     int INoteTarget.EmissionStep => emissionStep;
 
-    public event UnityAction OnInitialized;
     public event UnityAction OnBehaviourChanged;
 
     protected virtual void Awake()
@@ -36,11 +37,13 @@ public class UnitController : MonoBehaviour, IInteractable, INoteTarget
         {
             behaviour.OnBehaviourRequest += () => SetBehaviour(behaviour);
         }
+
+        initialBehaviour = defaultBehaviour;
     }
 
     protected virtual void Start()
     {
-        SetDefaultBehaviour();
+        SetBehaviour(initialBehaviour);
     }
 
     protected virtual void Update()
@@ -88,12 +91,16 @@ public class UnitController : MonoBehaviour, IInteractable, INoteTarget
         this.data = data;
         name = "Unit Controller - " + data.name;
         renderRoot = Instantiate(data.Prefab, transform).transform;
-        OnInitialized?.Invoke();
     }
 
     public void SetLookPosition(Vector3 targetPosition)
     {
         targetLookPosition = targetPosition;
+    }
+
+    public void SetInitialBehaviour(UnitBehaviour behaviour)
+    {
+        initialBehaviour = behaviour;
     }
 
     void IInteractable.Select()

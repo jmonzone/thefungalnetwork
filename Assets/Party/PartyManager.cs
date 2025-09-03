@@ -110,6 +110,6 @@ public class PartyManager : MonoBehaviour
             yield return new WaitForSeconds(phaseDuration);
         }
 
-        partyReference.StopParty();
+        //partyReference.StopParty();
     }
 }

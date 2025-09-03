@@ -26,7 +26,7 @@ public class PartyGuestSpawner : MonoBehaviour
                 //StartCoroutine(DoorsOpenRoutine());
                 break;
             case PartyPhase.WIND_DOWN:
-                partyReference.ClearGuests();
+                //partyReference.ClearGuests();
                 break;
         }
     }

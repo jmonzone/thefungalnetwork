@@ -47,7 +47,7 @@ public class DJNoteController : MonoBehaviour
 
 
         targetPos = target.Transform.position;
-        journeyLength = Vector3.Distance(startPos, targetPos);
+        journeyLength = 2f;
 
         // Calculate how far along the journey we are (0..1)
         float distCovered = (Time.time - startTime) * speed;
