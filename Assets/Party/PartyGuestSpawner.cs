@@ -23,11 +23,25 @@ public class PartyGuestSpawner : MonoBehaviour
         switch (phase)
         {
             case PartyPhase.DOORS_OPEN:
-                StartCoroutine(DoorsOpenRoutine());
+                StartCoroutine(SpawnImmediately());
+                //StartCoroutine(DoorsOpenRoutine());
                 break;
             case PartyPhase.WIND_DOWN:
                 partyReference.ClearGuests();
                 break;
+        }
+    }
+
+    private IEnumerator SpawnImmediately()
+    {
+        int guestsToSpawn = partyReference.CurrentParty.Guests.Count;
+
+        for (int i = 0; i < guestsToSpawn; i++)
+        {
+            yield return null;
+            var guest = Instantiate(unitPrefab, spawnAnchor.transform.position, Quaternion.identity);
+            guest.Initialize(partyReference.CurrentParty.Guests[i]);
+            partyReference.AddGuest(guest);
         }
     }
 

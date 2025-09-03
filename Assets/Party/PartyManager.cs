@@ -34,6 +34,11 @@ public class PartyManager : MonoBehaviour
         });
     }
 
+    private void Start()
+    {
+        partyReference.StartParty(partyReference.Parties[0]);
+    }
+
     private void Update()
     {
         if (partyReference.IsActive)

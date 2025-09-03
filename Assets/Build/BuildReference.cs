@@ -12,6 +12,8 @@ public class BuildReference : ScriptableObject
     [SerializeField] private LocalData localData;
     [SerializeField] private InventoryReference inventory;
     [SerializeField] private Item initialItem;
+    [SerializeField] private List<BuildInstance> initialBuilds;
+
     [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference buildListView;
     [SerializeField] private ViewReference buildPlacementView;
@@ -42,6 +44,11 @@ public class BuildReference : ScriptableObject
 
     public void Initialize()
     {
+
+    }
+
+    public void LoadExistingBuild()
+    {
         buildControllers = new List<BuildController>();
 
         try
@@ -68,7 +75,7 @@ public class BuildReference : ScriptableObject
 
 
                             // --- Rotation (safe parse) ---
-                            Quaternion rotation = Quaternion.LookRotation(Vector3.right); // default fallback
+                            Quaternion rotation = Quaternion.LookRotation(Vector3.back); // default fallback
                             try
                             {
                                 if (buildJson.ContainsKey("rotation"))
@@ -81,7 +88,7 @@ public class BuildReference : ScriptableObject
                                     rotation = new Quaternion(rotX, rotY, rotZ, rotW);
                                 }
                             }
-                            catch(Exception e)
+                            catch (Exception e)
                             {
                                 // ignored, will just stay Quaternion.identity
                                 Debug.LogError(e);
@@ -100,21 +107,18 @@ public class BuildReference : ScriptableObject
             }
             else
             {
-                var buildData = CreateInstance<BuildInstance>();
-                var position = new Vector3(-1.25f, 0f, -2.5f);
-                buildData.Initialize(initialItem, position, Quaternion.identity);
-                buildInstances.Add(buildData);
-                culturePoints += buildData.Item.CulturePoints;
+                foreach (var build in initialBuilds)
+                {
+                    buildInstances.Add(build);
+                    culturePoints += build.Item.CulturePoints;
+                }
             }
         }
         catch (Exception e)
         {
             Debug.LogError(e);
         }
-    }
 
-    public void LoadExistingBuild()
-    {
         foreach (var build in buildInstances)
         {
             var item = build.Item;

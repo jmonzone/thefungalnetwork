@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+[CreateAssetMenu]
 public class BuildInstance : ScriptableObject
 {
     [SerializeField] private Item item;
