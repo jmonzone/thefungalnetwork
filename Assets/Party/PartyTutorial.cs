@@ -6,9 +6,11 @@ using UnityEngine;
 public class PartyTutorial : MonoBehaviour
 {
     [Header("References")]
+    [SerializeField] private PartyData tutorialParty;
     [SerializeField] private UnitManager unitManager;
     [SerializeField] private PlayerReference playerReference;
     [SerializeField] private PartyReference partyReference;
+    [SerializeField] private PartyLogReference partyLogReference;
     [SerializeField] private PhotoReference photoReference;
     [SerializeField] private CameraPanController cameraPanController;
     [SerializeField] private Transform guestPictureAnchor;
@@ -40,7 +42,10 @@ public class PartyTutorial : MonoBehaviour
 
     private void Start()
     {
-        partyReference.StartParty(partyReference.Parties[0]);
+        if (!partyLogReference.CompletedParties.Contains(tutorialParty))
+        {
+            partyReference.StartParty(tutorialParty);
+        }
     }
 
     private void PartyReference_OnPartyStarted()

@@ -28,11 +28,11 @@ public class UnitManager : MonoBehaviour
 
     private void Start()
     {
-        SummonPartyFrog();
-        //foreach(var unit in unitList.Units)
-        //{
-        //    SummonUnit(unit);
-        //}   
+        //SummonPartyFrog();
+        foreach(var unit in unitList.Units)
+        {
+            SummonUnit(unit);
+        }
     }
 
     private void OnEnable()

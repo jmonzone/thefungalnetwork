@@ -48,6 +48,7 @@ public class PartyReference : ScriptableObject
 
     public void Initialize()
     {
+        currentParty = null;
         isActive = false;
         guests = new List<UnitController>();
         dialogueReference.OnDialogueComplete += DialogueReference_OnDialogueComplete;
@@ -102,9 +103,9 @@ public class PartyReference : ScriptableObject
     public void StopParty()
     {
         navigation.Navigate(debriefView);
-        //navigation.GoBack(navigation.HistoryCount - 1);
-        isActive = false;
         OnPartyComplete?.Invoke();
+        isActive = false;
+        currentParty = null;
     }
 
     public void AddGuest(UnitController guest)

@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private InventoryReference inventory;
     [SerializeField] private UnitListReference unitList;
     [SerializeField] private PartyReference partyReference;
+    [SerializeField] private PartyLogReference partyLogReference;
     [SerializeField] private SporeReference sporeReference;
     [SerializeField] private Volume volume;
 
@@ -43,6 +44,7 @@ public class GameManager : MonoBehaviour
             build.Initialize();
             unitList.Initialize();
             partyReference.Initialize();
+            partyLogReference.Initialize();
             sporeReference.Initialize();
 
             uiNavigation.Initialize();

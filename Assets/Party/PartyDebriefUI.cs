@@ -11,6 +11,7 @@ public class PartyDebriefUI : MonoBehaviour
     [SerializeField] private ViewReference gameplayView;
 
     [Header("UI References")]
+    [SerializeField] private RawImage photoImage;
     [SerializeField] private TextMeshProUGUI rankingText;
     [SerializeField] private Color rank1Color;
     [SerializeField] private Color rank2Color;
@@ -42,6 +43,8 @@ public class PartyDebriefUI : MonoBehaviour
 
     private void PartyReference_OnPartyComplete()
     {
+        photoImage.texture = photoReference.LastPhoto;
+
         switch (partyReference.Score)
         {
             case > 100:
