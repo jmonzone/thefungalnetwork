@@ -24,27 +24,19 @@ public class StoryWorkTogether : MonoBehaviour
 
     private void OnEnable()
     {
-        sceneNavigation.OnSceneFadeIn += SceneNavigation_OnSceneFadeIn;
-        partyReference.OnPartyDebriefComplete += PartyReference_OnPartyDebriefComplete;
+        sceneNavigation.OnSceneFadeIn += TryStartStory;
+        partyReference.OnPartyDebriefComplete += TryStartStory;
     }
 
     private void OnDisable()
     {
-        partyReference.OnPartyDebriefComplete -= PartyReference_OnPartyDebriefComplete;
-        partyReference.OnPartyDebriefComplete -= PartyReference_OnPartyDebriefComplete;
+        sceneNavigation.OnSceneFadeIn += TryStartStory;
+        partyReference.OnPartyDebriefComplete -= TryStartStory;
     }
 
-    private void SceneNavigation_OnSceneFadeIn()
+    private void TryStartStory()
     {
-        if (!storyReference.HasCompleted(workTogether))
-        {
-            //initialUI.enabled = false;
-            PartyReference_OnPartyDebriefComplete();
-        }
-    }
-
-    private void PartyReference_OnPartyDebriefComplete()
-    {
+        Debug.Log("working together");
         if (storyReference.CompletedStories.Contains(workTogether)) return;
         if (!storyReference.CompletedStories.Contains(prerequisite)) return;
 

@@ -1,8 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
+using UnityEngine.AI;
 using UnityEngine.UI;
 
 public class PartyManager : MonoBehaviour
@@ -14,19 +13,11 @@ public class PartyManager : MonoBehaviour
     [SerializeField] private Navigation navigation;
     [SerializeField] private UnitManager unitManager;
     [SerializeField] private Transform frogAnchor;
+    [SerializeField] private UnitController unitPrefab;
 
-
-    [SerializeField] private PartyPhase partyPhase;
+    [SerializeField] private Transform spawnAnchor;
 
     [SerializeField] private float currentTimer;
-    [SerializeField] private float guestTimer;
-
-    [SerializeField] private float doorsOpenDuration = 7.5f;
-    [SerializeField] private float defaultPhaseDuration = 15f;
-
-    private float numberOfStages = 4;
-
-    public event UnityAction<PartyPhase> OnPhaseChanged;
 
     private void Awake()
     {
@@ -34,25 +25,6 @@ public class PartyManager : MonoBehaviour
         {
             navigation.GoBack(2);
         });
-    }
-
-    private void Update()
-    {
-        if (partyReference.IsActive)
-        {
-            currentTimer += Time.deltaTime;
-            slider.value = currentTimer;
-            phaseText.text = partyPhase switch
-            {
-                PartyPhase.DOORS_OPEN => "Doors Open",
-                PartyPhase.COCKTAIL_HOUR => "Meet the Fungals!",
-                PartyPhase.EVENT => "Main Event",
-                PartyPhase.WIND_DOWN => "Slow things down",
-                PartyPhase.CLEANUP => "Clean up time!",
-                _ => "error",
-            };
-        }
-
     }
 
     private void OnEnable()
@@ -67,51 +39,56 @@ public class PartyManager : MonoBehaviour
 
     private void PartyReference_OnPartyStarted()
     {
-
         var partyFrog = unitManager.UnitControllers[0];
         partyFrog.SetBehaviour(partyFrog.GetComponent<UnitDJ>());
         partyFrog.transform.position = frogAnchor.position;
 
         currentTimer = 0;
         slider.minValue = 0;
-        slider.maxValue = GetTotalPartyDuration();
+        slider.maxValue = partyReference.CurrentParty.Duration;
 
         StartCoroutine(PartyRoutine());
     }
 
-    private float GetPhaseDuration(PartyPhase phase)
+    private IEnumerator PartyRoutine()
     {
-        return phase switch
+        Debug.Log($"{currentTimer} {partyReference.CurrentParty.Duration}");
+        int guestsToSpawn = partyReference.CurrentParty.Guests.Count;
+
+        for (int i = 0; i < guestsToSpawn; i++)
         {
-            PartyPhase.DOORS_OPEN => doorsOpenDuration,
-            _ => defaultPhaseDuration,
-        };
-    }
+            yield return null;
 
-    private float GetTotalPartyDuration()
-    {
-        float total = 0f;
-        for (int i = 0; i < numberOfStages; i++)
-        {
-            total += GetPhaseDuration((PartyPhase)i);
-        }
-        return total;
-    }
+            // Try to find a valid random position near the spawn anchor
+            Vector3 randomPoint = Random.insideUnitSphere * 2f; // radius = 5 units
+            randomPoint.y = spawnAnchor.transform.position.y; // keep roughly at same height
+            Quaternion randomYRotation = Quaternion.Euler(0, Random.Range(135f, 225f), 0);
 
-    // Pass in explicit phase durations
-    public IEnumerator PartyRoutine()
-    {
-        for (int i = 0; i < numberOfStages; i++)
-        {
-            yield return new WaitUntil(() => partyReference.IsActive);
+            if (NavMesh.SamplePosition(randomPoint, out NavMeshHit hit, 10f, NavMesh.AllAreas))
+            {
+                // Use closest valid point on NavMesh
+                randomPoint = hit.position;
+            }
+            else
+            {
+                // Fallback: spawn at anchor
+                randomPoint = spawnAnchor.transform.position;
+            }
 
-            partyPhase = (PartyPhase)i;
-            OnPhaseChanged?.Invoke(partyPhase);
-            float phaseDuration = GetPhaseDuration(partyPhase);
-
-            yield return new WaitForSeconds(phaseDuration);
+            // Spawn guest
+            var guest = Instantiate(unitPrefab, randomPoint, randomYRotation);
+            guest.Initialize(partyReference.CurrentParty.Guests[i]);
+            partyReference.AddGuest(guest);
         }
 
-        //partyReference.StopParty();
+        while (currentTimer < partyReference.CurrentParty.Duration)
+        {
+            currentTimer += Time.deltaTime;
+            slider.value = currentTimer;
+
+            yield return null;
+        }
+
+        partyReference.StopParty();
     }
 }

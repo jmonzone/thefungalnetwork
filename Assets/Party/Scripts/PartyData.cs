@@ -26,7 +26,8 @@ public class PartyData : ScriptableObject
     [SerializeField] private string partyName;
     [SerializeField] private int level;
     [SerializeField] private Sprite sprite;
-    [SerializeField] private string description;
+    [SerializeField] [TextArea] private string description;
+    [SerializeField] private float duration;
     [SerializeField] private int culturePoints;
     [SerializeField] private List<PartyRequirementData> requirements;
     [SerializeField] private List<Unit> guests;
@@ -35,6 +36,7 @@ public class PartyData : ScriptableObject
     public int Level => level;
     public Sprite Sprite => sprite;
     public string Description => description;
+    public float Duration => duration;
     public int CulturePoints => culturePoints;
     public List<PartyRequirementData> Requirements => requirements;
     public List<Unit> Guests => guests;

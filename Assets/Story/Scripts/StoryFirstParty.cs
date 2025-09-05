@@ -37,7 +37,6 @@ public class StoryFirstParty : MonoBehaviour
         {
             StartCoroutine(PartyRoutine());
 
-            partyReference.StartParty(tutorialParty);
         }
     }
 
@@ -55,9 +54,11 @@ public class StoryFirstParty : MonoBehaviour
     private IEnumerator PartyRoutine()
     {
         yield return new WaitForSeconds(1f);
+        partyReference.StartParty(tutorialParty);
         var partyFrog = unitManager.UnitControllers[0];
+        yield return new WaitForSeconds(1f);
 
-        cameraPanController.CenterTargetInView(playerReference.Player.transform.position + Vector3.back * 20f);
+        cameraPanController.CenterTargetInView(playerReference.Player.transform.position);
         dialogueReference.StartDialogue(playerReference.Player, lostDialogue);
 
         yield return new WaitUntil(() => timesInteractedWithGuests > 1);
@@ -112,8 +113,6 @@ public class StoryFirstParty : MonoBehaviour
         yield return new WaitForSeconds(1f);
 
         partyFrog.SetDefaultBehaviour();
-
-        partyReference.ClearGuests();
 
         yield return new WaitForSeconds(1f);
 

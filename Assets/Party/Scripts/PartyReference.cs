@@ -2,15 +2,6 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public enum PartyPhase
-{
-    DOORS_OPEN = 0,
-    COCKTAIL_HOUR = 1,
-    EVENT = 2,
-    WIND_DOWN = 3,
-    CLEANUP = 4
-}
-
 [CreateAssetMenu]
 public class PartyReference : ScriptableObject
 {
@@ -87,6 +78,8 @@ public class PartyReference : ScriptableObject
 
     public void StartParty(PartyData party)
     {
+        Debug.Log("Starting the party");
+
         score = 0;
         sporesCollected = 0;
         isActive = true;
@@ -110,6 +103,14 @@ public class PartyReference : ScriptableObject
 
     public void StopParty()
     {
+        Debug.Log("Stopping the party");
+        foreach (var guest in guests)
+        {
+            guest.gameObject.SetActive(false);
+        }
+
+        guests = new List<UnitController>();
+
         navigation.Navigate(debriefView);
         OnPartyComplete?.Invoke();
     }
@@ -125,15 +126,5 @@ public class PartyReference : ScriptableObject
     public void AddGuest(UnitController guest)
     {
         guests.Add(guest);
-    }
-
-    public void ClearGuests()
-    {
-        foreach (var guest in guests)
-        {
-            guest.gameObject.SetActive(false);
-        }
-
-        guests = new List<UnitController>();
     }
 }

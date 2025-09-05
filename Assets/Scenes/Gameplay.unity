@@ -19554,7 +19554,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1170789628}
   - component: {fileID: 1170789629}
-  - component: {fileID: 1170789630}
   m_Layer: 0
   m_Name: Party Manager
   m_TagString: Untagged
@@ -19603,28 +19602,10 @@ MonoBehaviour:
   navigation: {fileID: 11400000, guid: 7af35f01730a846d692adda4734cddd3, type: 2}
   unitManager: {fileID: 2087691131}
   frogAnchor: {fileID: 102165638}
-  partyPhase: 0
-  currentTimer: 0
-  guestTimer: 0
-  doorsOpenDuration: 7.5
-  defaultPhaseDuration: 10
---- !u!114 &1170789630
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1170789626}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 688aedcccf4b943f8b28c6abe2155189, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  partyReference: {fileID: 11400000, guid: d2092e9896dc047a3939198bb6a0204c, type: 2}
-  spawnAnchor: {fileID: 1329972940}
   unitPrefab: {fileID: 4106141727428995005, guid: e9f8a044aacf9498eb482430f1da38f4,
     type: 3}
-  unitListReference: {fileID: 11400000, guid: 558326713f6b14f45ab4db31d34472f2, type: 2}
+  spawnAnchor: {fileID: 1329972940}
+  currentTimer: 0
 --- !u!1 &1175904108
 GameObject:
   m_ObjectHideFlags: 0
@@ -22375,7 +22356,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1337303657
 RectTransform:
   m_ObjectHideFlags: 0
