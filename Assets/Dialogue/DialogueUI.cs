@@ -60,6 +60,7 @@ public class DialogueUI : MonoBehaviour
         {
             dialogueText.text = "";
             Dialogue fullDialogue = pages[p];
+            dialogue.SetCurrentDialogue(fullDialogue);
 
             continueButton.onClick.RemoveAllListeners();
 

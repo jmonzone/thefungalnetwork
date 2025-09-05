@@ -7,10 +7,12 @@ public class DialogueReference : UIReference
 {
     [SerializeField] private bool isActive;
     [SerializeField] private UnitController unit;
+    [SerializeField] private Dialogue currentDialogue;
     [SerializeField] private List<Dialogue> dialogue;
 
     public bool IsActive => isActive;
     public UnitController Unit => unit;
+    public Dialogue CurrentDialogue => currentDialogue;
     public List<Dialogue> Dialogue => dialogue;
 
     public event UnityAction OnDialogueStart;
@@ -22,6 +24,11 @@ public class DialogueReference : UIReference
         this.unit = unit;
         this.dialogue = dialogue;
         OnDialogueStart?.Invoke();
+    }
+
+    public void SetCurrentDialogue(Dialogue dialogue)
+    {
+        currentDialogue = dialogue;
     }
 
     public void CompleteDialogue()

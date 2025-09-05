@@ -16,10 +16,9 @@ public class StoryWorkTogether : MonoBehaviour
     [SerializeField] private DialogueReference dialogueReference;
     [SerializeField] private List<Dialogue> workTogetherDialogue;
     [SerializeField] private InitialUI initialUI;
-
-
     [SerializeField] private Transform playerAnchor;
     [SerializeField] private Transform frogAnchor;
+    [SerializeField] private GameObject plantGift;
 
     private void OnEnable()
     {
@@ -66,7 +65,12 @@ public class StoryWorkTogether : MonoBehaviour
         cameraPanController.CenterTargetInView(partyFrog.transform.position);
         dialogueReference.StartDialogue(partyFrog, workTogetherDialogue);
 
+        yield return new WaitUntil(() => dialogueReference.CurrentDialogue.Action == DialogueAction.GIFT);
+        plantGift.SetActive(true);
+
         yield return new WaitWhile(() => dialogueReference.IsActive);
+        plantGift.SetActive(false);
+
         (partyFrog as FungalController).Unfocus();
     }
 }
