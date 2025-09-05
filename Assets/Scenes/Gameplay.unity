@@ -2345,7 +2345,7 @@ GameObject:
   - component: {fileID: 102165640}
   - component: {fileID: 102165639}
   m_Layer: 8
-  m_Name: Party Frog Spawn Anchor
+  m_Name: Frog Anchor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2364,7 +2364,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1483660455}
+  m_Father: {fileID: 1170789628}
   m_LocalEulerAnglesHint: {x: 0, y: 145, z: 0}
 --- !u!135 &102165639
 SphereCollider:
@@ -19581,6 +19581,7 @@ Transform:
   - {fileID: 1603231124}
   - {fileID: 1329972940}
   - {fileID: 197055839}
+  - {fileID: 102165638}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1170789629
@@ -19600,6 +19601,8 @@ MonoBehaviour:
   phaseText: {fileID: 1337303658}
   closeButton: {fileID: 931160572}
   navigation: {fileID: 11400000, guid: 7af35f01730a846d692adda4734cddd3, type: 2}
+  unitManager: {fileID: 2087691131}
+  frogAnchor: {fileID: 102165638}
   partyPhase: 0
   currentTimer: 0
   guestTimer: 0
@@ -23906,14 +23909,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1446848725}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.38268343, y: 0, z: 0, w: 0.92387956}
-  m_LocalPosition: {x: 0, y: 10, z: -12.5}
+  m_LocalRotation: {x: 0.2588191, y: 0, z: 0, w: 0.9659258}
+  m_LocalPosition: {x: 0, y: 7.5, z: -15}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 327665641}
   m_Father: {fileID: 818851464}
-  m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 30, y: 0, z: 0}
 --- !u!114 &1446848728
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24974,8 +24977,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 102165638}
+  m_Children: []
   m_Father: {fileID: 189055205}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1483660456
@@ -25001,7 +25003,6 @@ MonoBehaviour:
   cameraPanController: {fileID: 1446848728}
   guestPictureAnchor: {fileID: 1329972940}
   cameraPositionAnchor: {fileID: 197055839}
-  frogSpawnAnchor: {fileID: 102165638}
   dialogueReference: {fileID: 11400000, guid: 66db6a8c7a0524bd8b89b88de939507f, type: 2}
   lostDialogue:
   - text: oof what a trip
@@ -35416,8 +35417,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 304056670036744325}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.38268343, y: 0, z: 0, w: 0.92387956}
-  m_LocalPosition: {x: 0, y: 10, z: -12.5}
+  m_LocalRotation: {x: 0.2588191, y: 0, z: 0, w: 0.9659258}
+  m_LocalPosition: {x: 0, y: 7.5, z: -15}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

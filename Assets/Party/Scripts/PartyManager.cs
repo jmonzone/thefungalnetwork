@@ -12,6 +12,8 @@ public class PartyManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI phaseText;
     [SerializeField] private Button closeButton;
     [SerializeField] private Navigation navigation;
+    [SerializeField] private UnitManager unitManager;
+    [SerializeField] private Transform frogAnchor;
 
 
     [SerializeField] private PartyPhase partyPhase;
@@ -65,6 +67,11 @@ public class PartyManager : MonoBehaviour
 
     private void PartyReference_OnPartyStarted()
     {
+
+        var partyFrog = unitManager.UnitControllers[0];
+        partyFrog.SetBehaviour(partyFrog.GetComponent<UnitDJ>());
+        partyFrog.transform.position = frogAnchor.position;
+
         currentTimer = 0;
         slider.minValue = 0;
         slider.maxValue = GetTotalPartyDuration();
