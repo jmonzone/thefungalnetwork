@@ -17,6 +17,7 @@ public class StoryFirstParty : MonoBehaviour
     [SerializeField] private CameraPanController cameraPanController;
     [SerializeField] private Transform guestPictureAnchor;
     [SerializeField] private Transform cameraPositionAnchor;
+    [SerializeField] private Transform frogSpawnAnchor;
 
     [SerializeField] private DialogueReference dialogueReference;
     [SerializeField] private List<Dialogue> lostDialogue;
@@ -62,6 +63,9 @@ public class StoryFirstParty : MonoBehaviour
 
         var partyFrog = unitManager.UnitControllers[0];
         partyFrog.SetBehaviour(partyFrog.GetComponent<UnitDJ>());
+        playerReference.Player.transform.position = frogSpawnAnchor.position;
+
+
         cameraPanController.CenterTargetInView(playerReference.Player.transform.position + Vector3.back * 20f);
         dialogueReference.StartDialogue(playerReference.Player, lostDialogue);
 

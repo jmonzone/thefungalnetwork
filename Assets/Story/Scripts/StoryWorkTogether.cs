@@ -11,10 +11,15 @@ public class StoryWorkTogether : MonoBehaviour
     [SerializeField] private SceneNavigation sceneNavigation;
     [SerializeField] private PartyReference partyReference;
     [SerializeField] private UnitManager unitManager;
+    [SerializeField] private PlayerReference playerReference;
     [SerializeField] private CameraPanController cameraPanController;
     [SerializeField] private DialogueReference dialogueReference;
     [SerializeField] private List<Dialogue> workTogetherDialogue;
     [SerializeField] private InitialUI initialUI;
+
+
+    [SerializeField] private Transform playerAnchor;
+    [SerializeField] private Transform frogAnchor;
 
     private void OnEnable()
     {
@@ -50,8 +55,18 @@ public class StoryWorkTogether : MonoBehaviour
         yield return new WaitForSeconds(1f);
 
         var partyFrog = unitManager.UnitControllers[0];
+        partyFrog.SetBehaviour(partyFrog.GetComponent<UnitDJ>());
+        partyFrog.transform.position = frogAnchor.position;
+        partyFrog.SetLookPosition(playerAnchor.position);
+        (partyFrog as FungalController).Focus();
+
+        playerReference.Player.transform.position = playerAnchor.position;
+        playerReference.Player.SetLookPosition(frogAnchor.position);
+
         cameraPanController.CenterTargetInView(partyFrog.transform.position);
         dialogueReference.StartDialogue(partyFrog, workTogetherDialogue);
-        storyReference.CompleteStory(workTogether);
+
+        yield return new WaitWhile(() => dialogueReference.IsActive);
+        (partyFrog as FungalController).Unfocus();
     }
 }
