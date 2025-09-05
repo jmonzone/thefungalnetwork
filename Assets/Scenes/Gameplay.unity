@@ -3529,6 +3529,39 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 164128648}
   m_CullTransparentMesh: 1
+--- !u!1 &189055204
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 189055205}
+  m_Layer: 8
+  m_Name: Story Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &189055205
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 189055204}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.9238796, z: -0, w: -0.38268325}
+  m_LocalPosition: {x: 1.96, y: 0, z: 2.03}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1483660455}
+  - {fileID: 1679758331}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &192682051
 GameObject:
   m_ObjectHideFlags: 0
@@ -17984,7 +18017,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1145510282}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.06868998, y: -0.0000000166458, z: 0.0000000011461067, w: 0.99763805}
+  m_LocalRotation: {x: 0.06869, y: 0.00000001822998, z: -0.000000001255182, w: 0.99763805}
   m_LocalPosition: {x: 0, y: 0.75, z: 0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -18531,7 +18564,6 @@ GameObject:
   - component: {fileID: 1170789628}
   - component: {fileID: 1170789629}
   - component: {fileID: 1170789630}
-  - component: {fileID: 1170789631}
   m_Layer: 0
   m_Name: Party Manager
   m_TagString: Untagged
@@ -18599,62 +18631,6 @@ MonoBehaviour:
   unitPrefab: {fileID: 4106141727428995005, guid: e9f8a044aacf9498eb482430f1da38f4,
     type: 3}
   unitListReference: {fileID: 11400000, guid: 558326713f6b14f45ab4db31d34472f2, type: 2}
---- !u!114 &1170789631
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1170789626}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 80d90b6d9dc4242b1a82c83edca57ec3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tutorialParty: {fileID: 11400000, guid: 0340ecf46311340a1867b88ff2f8cc55, type: 2}
-  unitManager: {fileID: 2087691131}
-  playerReference: {fileID: 11400000, guid: 746148e8242954418b04a3ab83ac9260, type: 2}
-  partyReference: {fileID: 11400000, guid: d2092e9896dc047a3939198bb6a0204c, type: 2}
-  partyLogReference: {fileID: 11400000, guid: ccd6553192cde4616980b916ffb4faa7, type: 2}
-  photoReference: {fileID: 11400000, guid: cb7b1e6b2b5d744488ab7a95f0210ad8, type: 2}
-  initialUI: {fileID: 2016030642}
-  cameraPanController: {fileID: 1446848728}
-  guestPictureAnchor: {fileID: 1329972940}
-  cameraPositionAnchor: {fileID: 197055839}
-  dialogueReference: {fileID: 11400000, guid: 66db6a8c7a0524bd8b89b88de939507f, type: 2}
-  lostDialogue:
-  - text: oof what a trip
-    action: 0
-  - text: 'where am i?
-
-      (always the question)'
-    action: 0
-  - text: 'best i ask around
-
-      huh?'
-    action: 0
-  letsTakeAPhotoDialogue:
-  - text: 'alright friends, thanks
-
-      for coming to my show'
-    action: 0
-  - text: 'before you leave
-
-      let''s take a pic yea? '
-    action: 0
-  - text: 'hey you over there
-
-      would you help a frog out?'
-    action: 0
-  afterPhotoTakenDialogue:
-  - text: 'oh gosh golly
-
-      we look great'
-    action: 0
-  - text: 'alright thanks for coming
-
-      always love'
-    action: 0
 --- !u!1 &1175904108
 GameObject:
   m_ObjectHideFlags: 0
@@ -23978,6 +23954,95 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1481470473}
   m_CullTransparentMesh: 1
+--- !u!1 &1483660454
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1483660455}
+  - component: {fileID: 1483660456}
+  m_Layer: 8
+  m_Name: First Party
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1483660455
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1483660454}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 189055205}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1483660456
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1483660454}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80d90b6d9dc4242b1a82c83edca57ec3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tutorialParty: {fileID: 11400000, guid: 0340ecf46311340a1867b88ff2f8cc55, type: 2}
+  firstParty: {fileID: 11400000, guid: 3e2126086a0bf4939a1d9425c43b733e, type: 2}
+  unitManager: {fileID: 2087691131}
+  playerReference: {fileID: 11400000, guid: 746148e8242954418b04a3ab83ac9260, type: 2}
+  partyReference: {fileID: 11400000, guid: d2092e9896dc047a3939198bb6a0204c, type: 2}
+  storyReference: {fileID: 11400000, guid: ccd6553192cde4616980b916ffb4faa7, type: 2}
+  photoReference: {fileID: 11400000, guid: cb7b1e6b2b5d744488ab7a95f0210ad8, type: 2}
+  initialUI: {fileID: 2016030642}
+  cameraPanController: {fileID: 1446848728}
+  guestPictureAnchor: {fileID: 1329972940}
+  cameraPositionAnchor: {fileID: 197055839}
+  dialogueReference: {fileID: 11400000, guid: 66db6a8c7a0524bd8b89b88de939507f, type: 2}
+  lostDialogue:
+  - text: oof what a trip
+    action: 0
+  - text: 'where am i?
+
+      (always the question)'
+    action: 0
+  - text: 'best i ask around
+
+      huh?'
+    action: 0
+  letsTakeAPhotoDialogue:
+  - text: 'alright friends, thanks
+
+      for coming to my show'
+    action: 0
+  - text: 'before you leave
+
+      let''s take a pic yea? '
+    action: 0
+  - text: 'hey you over there
+
+      would you help a frog out?'
+    action: 0
+  afterPhotoTakenDialogue:
+  - text: 'oh gosh golly
+
+      we look great'
+    action: 0
+  - text: 'alright thanks for coming
+
+      always love'
+    action: 0
 --- !u!1 &1485212479
 GameObject:
   m_ObjectHideFlags: 0
@@ -26779,6 +26844,68 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1671037140}
   m_CullTransparentMesh: 1
+--- !u!1 &1679758330
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1679758331}
+  - component: {fileID: 1679758332}
+  m_Layer: 8
+  m_Name: Work Together
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1679758331
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1679758330}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 189055205}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1679758332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1679758330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcd76e5b489d6443195d773f2e5eab47, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  storyReference: {fileID: 11400000, guid: ccd6553192cde4616980b916ffb4faa7, type: 2}
+  prerequisite: {fileID: 11400000, guid: 3e2126086a0bf4939a1d9425c43b733e, type: 2}
+  workTogether: {fileID: 11400000, guid: 2b60aa8bbfd294a16b26d552e4a4be06, type: 2}
+  sceneNavigation: {fileID: 11400000, guid: 5c885c9a984a3470684bef7e76ca5c2a, type: 2}
+  partyReference: {fileID: 11400000, guid: d2092e9896dc047a3939198bb6a0204c, type: 2}
+  unitManager: {fileID: 2087691131}
+  cameraPanController: {fileID: 1446848728}
+  dialogueReference: {fileID: 11400000, guid: 66db6a8c7a0524bd8b89b88de939507f, type: 2}
+  workTogetherDialogue:
+  - text: so you're not from around here huh?
+    action: 0
+  - text: turns out me neither!
+    action: 0
+  - text: i'm trying to build up a reputation so i can get out of here
+    action: 0
+  - text: what do you think? lets work together?
+    action: 0
+  initialUI: {fileID: 2016030642}
 --- !u!1 &1690297276
 GameObject:
   m_ObjectHideFlags: 0
@@ -39651,6 +39778,7 @@ SceneRoots:
   - {fileID: 128109703}
   - {fileID: 4496741214353491274}
   - {fileID: 818851464}
+  - {fileID: 189055205}
   - {fileID: 1851915126}
   - {fileID: 7305205459602921054}
   - {fileID: 2328578699890120328}

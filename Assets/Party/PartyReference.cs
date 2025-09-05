@@ -18,6 +18,7 @@ public class PartyReference : ScriptableObject
     [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference partyHUD;
     [SerializeField] private ViewReference debriefView;
+    [SerializeField] private ViewReference gameplayView;
     [SerializeField] private UnitListReference unitList;
     [SerializeField] private DialogueReference dialogueReference;
     [SerializeField] private PhotoReference photoReference;
@@ -44,6 +45,7 @@ public class PartyReference : ScriptableObject
     public event UnityAction OnPartyStarted;
     public event UnityAction OnPartyPaused;
     public event UnityAction OnPartyComplete;
+    public event UnityAction OnPartyDebriefComplete;
     public event UnityAction OnPartyResumed;
 
     public void Initialize()
@@ -104,6 +106,12 @@ public class PartyReference : ScriptableObject
     {
         navigation.Navigate(debriefView);
         OnPartyComplete?.Invoke();
+    }
+
+    public void CompleteDebrief()
+    {
+        navigation.Navigate(gameplayView);
+        OnPartyDebriefComplete?.Invoke();
         isActive = false;
         currentParty = null;
     }

@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private InventoryReference inventory;
     [SerializeField] private UnitListReference unitList;
     [SerializeField] private PartyReference partyReference;
-    [SerializeField] private PartyLogReference partyLogReference;
+    [SerializeField] private StoryReference partyLogReference;
     [SerializeField] private SporeReference sporeReference;
     [SerializeField] private Volume volume;
 

@@ -28,7 +28,7 @@ public class PartyDebriefUI : MonoBehaviour
 
     private void Awake()
     {
-        continueButton.onClick.AddListener(() => navigation.Navigate(gameplayView));
+        continueButton.onClick.AddListener(partyReference.CompleteDebrief);
     }
 
     private void OnEnable()

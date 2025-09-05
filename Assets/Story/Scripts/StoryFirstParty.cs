@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class PartyTutorial : MonoBehaviour
+public class StoryFirstParty : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private PartyData tutorialParty;
+    [SerializeField] private StoryData firstParty;
     [SerializeField] private UnitManager unitManager;
     [SerializeField] private PlayerReference playerReference;
     [SerializeField] private PartyReference partyReference;
-    [SerializeField] private PartyLogReference partyLogReference;
+    [SerializeField] private StoryReference storyReference;
     [SerializeField] private PhotoReference photoReference;
     [SerializeField] private InitialUI initialUI;
     [SerializeField] private CameraPanController cameraPanController;
@@ -43,7 +44,7 @@ public class PartyTutorial : MonoBehaviour
 
     private void Start()
     {
-        if (!partyLogReference.CompletedParties.Contains(tutorialParty))
+        if (!storyReference.HasCompleted(firstParty))
         {
             initialUI.enabled = false;
             partyReference.StartParty(tutorialParty);
@@ -122,6 +123,6 @@ public class PartyTutorial : MonoBehaviour
         yield return new WaitForSeconds(1f);
 
         partyReference.StopParty();
-
+        storyReference.CompleteStory(firstParty);
     }
 }
