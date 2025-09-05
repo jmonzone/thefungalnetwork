@@ -46,8 +46,7 @@ public class PartyPageUI : MonoBehaviour
         {
             var requirementMet = requirement.Type switch
             {
-                PartyRequirementType.MUSIC => build.Contains(requirement.Item),
-                PartyRequirementType.LIGHTS => build.Contains(requirement.Item),
+                PartyRequirementType.BUILD => build.Contains(requirement.Item),
                 PartyRequirementType.CULTURE => build.CulturePoints >= party.CulturePoints,
                 _ => false,
             };

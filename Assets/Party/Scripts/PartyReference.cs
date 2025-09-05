@@ -16,6 +16,7 @@ public class PartyReference : ScriptableObject
 {
     [Header("References")]
     [SerializeField] private Navigation navigation;
+    [SerializeField] private ViewReference partyListView;
     [SerializeField] private ViewReference partyHUD;
     [SerializeField] private ViewReference debriefView;
     [SerializeField] private ViewReference gameplayView;
@@ -77,6 +78,11 @@ public class PartyReference : ScriptableObject
     private void IncrementScore(int value)
     {
         if (isActive) score += value;
+    }
+
+    public void ShowPartyList()
+    {
+        navigation.Navigate(partyListView);
     }
 
     public void StartParty(PartyData party)

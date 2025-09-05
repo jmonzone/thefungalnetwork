@@ -4,8 +4,7 @@ using UnityEngine;
 
 public enum PartyRequirementType
 {
-    MUSIC,
-    LIGHTS,
+    BUILD,
     CULTURE,
 }
 

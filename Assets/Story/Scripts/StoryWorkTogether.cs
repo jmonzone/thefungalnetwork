@@ -88,5 +88,6 @@ public class StoryWorkTogether : MonoBehaviour
         (partyFrog as FungalController).Unfocus();
 
         storyReference.CompleteStory(workTogether);
+        partyReference.ShowPartyList();
     }
 }
