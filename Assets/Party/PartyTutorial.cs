@@ -12,6 +12,7 @@ public class PartyTutorial : MonoBehaviour
     [SerializeField] private PartyReference partyReference;
     [SerializeField] private PartyLogReference partyLogReference;
     [SerializeField] private PhotoReference photoReference;
+    [SerializeField] private InitialUI initialUI;
     [SerializeField] private CameraPanController cameraPanController;
     [SerializeField] private Transform guestPictureAnchor;
     [SerializeField] private Transform cameraPositionAnchor;
@@ -44,6 +45,7 @@ public class PartyTutorial : MonoBehaviour
     {
         if (!partyLogReference.CompletedParties.Contains(tutorialParty))
         {
+            initialUI.enabled = false;
             partyReference.StartParty(tutorialParty);
         }
     }
