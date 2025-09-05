@@ -35,12 +35,12 @@ public class PhotoCameraController : MonoBehaviour
     private void UseOrthographicCamera()
     {
         // Swap between orthographic and perspective
-        if (!mainCamera.orthographic)
-        {
+        //if (!mainCamera.orthographic)
+        //{
             cameraPanController.enabled = true;
             photoVirtualCamera.Priority = 0;
-            mainCamera.orthographic = true;  // Isometric / orthographic
-        }
+        //    mainCamera.orthographic = true;  // Isometric / orthographic
+        //}
     }
 
 
@@ -57,12 +57,12 @@ public class PhotoCameraController : MonoBehaviour
         //photoController.target = photoReference.LookTarget;
 
         // Swap between orthographic and perspective
-        if (mainCamera.orthographic)
-        {
+        //if (mainCamera.orthographic)
+        //{
             cameraPanController.enabled = false;
             photoVirtualCamera.Priority = 12;
-            mainCamera.orthographic = false; // Perspective
-        }
+        //    mainCamera.orthographic = false; // Perspective
+        //}
     }
 
     private void Update()
@@ -70,7 +70,8 @@ public class PhotoCameraController : MonoBehaviour
         if (!photoReference.IsActive) return;
 
         Vector3 playerPos = playerReference.Player.transform.position;
-        Vector3 guestPos = photoReference.LookTarget.position;
+        Vector3 guestPos = playerPos + Vector3.forward * 5f;
+        if (photoReference.LookTarget) guestPos = photoReference.LookTarget.position;
 
         // Midpoint between player and guest
         Vector3 direction = (guestPos - playerPos).normalized;

@@ -8,12 +8,12 @@ public class StoryFirstParty : MonoBehaviour
     [Header("References")]
     [SerializeField] private PartyData tutorialParty;
     [SerializeField] private StoryData firstParty;
+    [SerializeField] private SceneNavigation sceneNavigation;
     [SerializeField] private UnitManager unitManager;
     [SerializeField] private PlayerReference playerReference;
     [SerializeField] private PartyReference partyReference;
     [SerializeField] private StoryReference storyReference;
     [SerializeField] private PhotoReference photoReference;
-    [SerializeField] private InitialUI initialUI;
     [SerializeField] private CameraPanController cameraPanController;
     [SerializeField] private Transform guestPictureAnchor;
     [SerializeField] private Transform cameraPositionAnchor;
@@ -28,13 +28,23 @@ public class StoryFirstParty : MonoBehaviour
 
     private void OnEnable()
     {
-        partyReference.OnPartyStarted += PartyReference_OnPartyStarted;
+        sceneNavigation.OnSceneFadeIn += SceneNavigation_OnSceneFadeIn;
         dialogueReference.OnDialogueStart += DialogueReference_OnDialogueStart;
+    }
+
+    private void SceneNavigation_OnSceneFadeIn()
+    {
+        if (!storyReference.HasCompleted(firstParty))
+        {
+            StartCoroutine(PartyRoutine());
+
+            partyReference.StartParty(tutorialParty);
+        }
     }
 
     private void OnDisable()
     {
-        partyReference.OnPartyStarted -= PartyReference_OnPartyStarted;
+        sceneNavigation.OnSceneFadeIn -= SceneNavigation_OnSceneFadeIn;
         dialogueReference.OnDialogueStart -= DialogueReference_OnDialogueStart;
     }
 
@@ -43,27 +53,13 @@ public class StoryFirstParty : MonoBehaviour
         timesInteractedWithGuests++;
     }
 
-    private void Start()
-    {
-        if (!storyReference.HasCompleted(firstParty))
-        {
-            initialUI.enabled = false;
-            partyReference.StartParty(tutorialParty);
-        }
-    }
-
-    private void PartyReference_OnPartyStarted()
-    {
-        StartCoroutine(PartyRoutine());
-    }
-
     private IEnumerator PartyRoutine()
     {
         yield return new WaitForSeconds(1f);
 
         var partyFrog = unitManager.UnitControllers[0];
         partyFrog.SetBehaviour(partyFrog.GetComponent<UnitDJ>());
-        playerReference.Player.transform.position = frogSpawnAnchor.position;
+        partyFrog.transform.position = frogSpawnAnchor.position;
 
 
         cameraPanController.CenterTargetInView(playerReference.Player.transform.position + Vector3.back * 20f);

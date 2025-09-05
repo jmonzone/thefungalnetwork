@@ -2359,12 +2359,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 102165637}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.953717, z: 0, w: 0.30070582}
+  m_LocalRotation: {x: -0, y: 0.953717, z: -0, w: 0.30070582}
   m_LocalPosition: {x: -3.5, y: 0, z: 1.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2087691132}
+  m_Father: {fileID: 1483660455}
   m_LocalEulerAnglesHint: {x: 0, y: 145, z: 0}
 --- !u!135 &102165639
 SphereCollider:
@@ -23027,7 +23027,7 @@ Transform:
   m_GameObject: {fileID: 1446848725}
   serializedVersion: 2
   m_LocalRotation: {x: 0.38268343, y: 0, z: 0, w: 0.92387956}
-  m_LocalPosition: {x: 0, y: 7.5, z: -12.5}
+  m_LocalPosition: {x: 0, y: 10, z: -12.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -24094,7 +24094,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 102165638}
   m_Father: {fileID: 189055205}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1483660456
@@ -24111,16 +24112,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tutorialParty: {fileID: 11400000, guid: 0340ecf46311340a1867b88ff2f8cc55, type: 2}
   firstParty: {fileID: 11400000, guid: 3e2126086a0bf4939a1d9425c43b733e, type: 2}
+  sceneNavigation: {fileID: 11400000, guid: 5c885c9a984a3470684bef7e76ca5c2a, type: 2}
   unitManager: {fileID: 2087691131}
   playerReference: {fileID: 11400000, guid: 746148e8242954418b04a3ab83ac9260, type: 2}
   partyReference: {fileID: 11400000, guid: d2092e9896dc047a3939198bb6a0204c, type: 2}
   storyReference: {fileID: 11400000, guid: ccd6553192cde4616980b916ffb4faa7, type: 2}
   photoReference: {fileID: 11400000, guid: cb7b1e6b2b5d744488ab7a95f0210ad8, type: 2}
-  initialUI: {fileID: 2016030642}
   cameraPanController: {fileID: 1446848728}
   guestPictureAnchor: {fileID: 1329972940}
   cameraPositionAnchor: {fileID: 197055839}
-  frogSpawnAnchor: {fileID: 0}
+  frogSpawnAnchor: {fileID: 102165638}
   dialogueReference: {fileID: 11400000, guid: 66db6a8c7a0524bd8b89b88de939507f, type: 2}
   lostDialogue:
   - text: oof what a trip
@@ -27053,10 +27054,22 @@ MonoBehaviour:
 
       plant this somewhere'
     action: 4
-  initialUI: {fileID: 2016030642}
+  buildCompleteDialogue:
+  - text: sweet! now its a party
+    action: 0
+  - text: 'alright i have my friends
+
+      on speed dial'
+    action: 0
+  - text: 'let me know when
+
+      you''re ready to party'
+    action: 0
   playerAnchor: {fileID: 1881101864}
   frogAnchor: {fileID: 238164570}
   plantGift: {fileID: 7274716744692762698}
+  buildReference: {fileID: 11400000, guid: 2526ce71d791f49acb54c441f1370a16, type: 2}
+  plantItem: {fileID: 11400000, guid: acff478c3e9464e36a306e4c83c824c2, type: 2}
 --- !u!1 &1690297276
 GameObject:
   m_ObjectHideFlags: 0
@@ -33526,7 +33539,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 102165638}
   - {fileID: 1582810628}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -34525,7 +34537,7 @@ Transform:
   m_GameObject: {fileID: 304056670036744325}
   serializedVersion: 2
   m_LocalRotation: {x: 0.38268343, y: 0, z: 0, w: 0.92387956}
-  m_LocalPosition: {x: 0, y: 7.5, z: -12.5}
+  m_LocalPosition: {x: 0, y: 10, z: -12.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

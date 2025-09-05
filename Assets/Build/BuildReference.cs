@@ -212,7 +212,6 @@ public class BuildReference : ScriptableObject
         navigation.Navigate(buildSelectView);
     }
 
-
     public void CancelSelect()
     {
         if (!currentBuild) return;
