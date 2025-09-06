@@ -44,7 +44,7 @@ public class UnitController : MonoBehaviour, IInteractable, INoteTarget
 
     protected virtual void Update()
     {
-        Vector3 direction = targetLookPosition - transform.position;
+        Vector3 direction = targetLookPosition - renderRoot.position;
         direction.y = 0f;
 
         if (direction.sqrMagnitude > 0.001f) // make sure it's not zero
@@ -82,7 +82,10 @@ public class UnitController : MonoBehaviour, IInteractable, INoteTarget
     {
         this.data = data;
         name = "Unit Controller - " + data.name;
-        renderRoot = Instantiate(data.Prefab, transform).transform;
+
+        Quaternion randomYRotation = Quaternion.Euler(0, Random.Range(135f, 225f), 0);
+
+        renderRoot = Instantiate(data.Prefab, Vector3.zero, randomYRotation, transform).transform;
     }
 
     public void SetLookPosition(Vector3 targetPosition)
@@ -106,6 +109,10 @@ public class UnitController : MonoBehaviour, IInteractable, INoteTarget
     }
 
     void INoteTarget.OnHit()
+    {
+    }
+
+    public virtual void OnProximityChanged(bool value)
     {
     }
 }

@@ -20,6 +20,9 @@ public enum FungalState
 
 public class FungalController : UnitController
 {
+    [Header("Fungal References")]
+    [SerializeField] private GameObject chatIcon;
+
     public bool IsAtDestination => unitDestination.IsAtDestination;
 
     private UnitDestination unitDestination;
@@ -72,5 +75,11 @@ public class FungalController : UnitController
     public void Unfocus()
     {
         virtualCamera.Priority = 0;
+    }
+
+    public override void OnProximityChanged(bool value)
+    {
+        base.OnProximityChanged(value);
+        chatIcon.SetActive(value);
     }
 }

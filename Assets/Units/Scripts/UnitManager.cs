@@ -5,12 +5,14 @@ using UnityEngine.Events;
 
 public class UnitManager : MonoBehaviour
 {
+    [Header("References")]
     [SerializeField] private PartyReference partyReference;
     [SerializeField] private UnitListReference unitList;
     [SerializeField] private UnitController unitPrefab;
     [SerializeField] private Transform unitSpawnAnchor;
     [SerializeField] private CameraPanController cameraPanController;
 
+    [Header("Runtime")]
     [SerializeField] private List<UnitController> unitControllers;
 
     public List<UnitController> UnitControllers => unitControllers;
@@ -49,7 +51,7 @@ public class UnitManager : MonoBehaviour
         randomDirection.y = 0;
         spawnPosition += randomDirection * 2f;
 
-        var unitController = Instantiate(unitPrefab, spawnPosition, unitSpawnAnchor.transform.rotation);
+        var unitController = Instantiate(unitPrefab, spawnPosition, Quaternion.identity);
         unitController.Initialize(unit);
         unitControllers.Add(unitController);
 

@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class StoryFirstParty : MonoBehaviour
@@ -17,6 +16,8 @@ public class StoryFirstParty : MonoBehaviour
     [SerializeField] private CameraPanController cameraPanController;
     [SerializeField] private Transform guestPictureAnchor;
     [SerializeField] private Transform cameraPositionAnchor;
+    [SerializeField] private InitialUI initialUI;
+    [SerializeField] private ViewReference partyView;
 
     [SerializeField] private DialogueReference dialogueReference;
     [SerializeField] private List<Dialogue> lostDialogue;
@@ -27,41 +28,42 @@ public class StoryFirstParty : MonoBehaviour
 
     private void OnEnable()
     {
-        sceneNavigation.OnSceneFadeIn += SceneNavigation_OnSceneFadeIn;
+        sceneNavigation.OnSceneFadeIn += StartParty;
         dialogueReference.OnDialogueStart += DialogueReference_OnDialogueStart;
-    }
-
-    private void SceneNavigation_OnSceneFadeIn()
-    {
-        if (!storyReference.HasCompleted(firstParty))
-        {
-            StartCoroutine(PartyRoutine());
-
-        }
     }
 
     private void OnDisable()
     {
-        sceneNavigation.OnSceneFadeIn -= SceneNavigation_OnSceneFadeIn;
+        sceneNavigation.OnSceneFadeIn -= StartParty;
         dialogueReference.OnDialogueStart -= DialogueReference_OnDialogueStart;
     }
 
-    private void DialogueReference_OnDialogueStart()
+    private void Awake()
     {
-        timesInteractedWithGuests++;
+        if (!storyReference.HasCompleted(firstParty))
+        {
+            initialUI.enabled = false;
+        }
+    }
+
+    private void StartParty()
+    {
+        if (!storyReference.HasCompleted(firstParty))
+        {
+            StartCoroutine(PartyRoutine());
+            initialUI.enabled = true;
+        }
     }
 
     private IEnumerator PartyRoutine()
     {
-        yield return new WaitForSeconds(1f);
         partyReference.StartParty(tutorialParty);
         var partyFrog = unitManager.UnitControllers[0];
-        yield return new WaitForSeconds(1f);
 
-        cameraPanController.CenterTargetInView(playerReference.Player.transform.position);
-        dialogueReference.StartDialogue(playerReference.Player, lostDialogue);
+        //cameraPanController.CenterTargetInView(playerReference.Player.transform.position);
+        //dialogueReference.StartDialogue(playerReference.Player, lostDialogue);
 
-        yield return new WaitUntil(() => timesInteractedWithGuests > 1);
+        yield return new WaitUntil(() => timesInteractedWithGuests > 3);
         yield return new WaitWhile(() => dialogueReference.IsActive);
         yield return new WaitForSeconds(1f);
 
@@ -82,7 +84,7 @@ public class StoryFirstParty : MonoBehaviour
             randomDirection.z = randomDirection.y;
             randomDirection.y = 0;
 
-            unit.transform.position = guestPictureAnchor.transform.position + randomDirection * 0.25f;
+            unit.transform.position = guestPictureAnchor.transform.position + randomDirection * 0.1f;
         }
 
         playerReference.Player.transform.position = cameraPositionAnchor.position;
@@ -118,5 +120,10 @@ public class StoryFirstParty : MonoBehaviour
 
         partyReference.StopParty();
         storyReference.CompleteStory(firstParty);
+    }
+
+    private void DialogueReference_OnDialogueStart()
+    {
+        timesInteractedWithGuests++;
     }
 }

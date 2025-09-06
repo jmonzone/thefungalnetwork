@@ -111,4 +111,7 @@ public class DJTableController : MonoBehaviour, IInteractable
         source.volume = targetVolume;
     }
 
+    void IInteractable.OnProximityChanged(bool value)
+    {
+    }
 }

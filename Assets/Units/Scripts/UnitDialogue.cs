@@ -12,6 +12,12 @@ public class UnitDialogue : UnitBehaviour
     protected override void OnBehaviourStart()
     {
         dialogue.StartDialogue(Unit, Unit.Data.DialogueTree.Dialogue);
+
+        if (Unit is FungalController fungal)
+        {
+            fungal.Focus();
+        }
+
         if (lookAtTarget) Unit.SetLookPosition(playerReference.Player.transform.position);
 
         dialogue.OnDialogueComplete += Dialogue_OnDialogueComplete;
@@ -21,5 +27,10 @@ public class UnitDialogue : UnitBehaviour
     {
         dialogue.OnDialogueComplete -= Dialogue_OnDialogueComplete;
         StopBehaviour();
+
+        if (Unit is FungalController fungal)
+        {
+            fungal.Unfocus();
+        }
     }
 }

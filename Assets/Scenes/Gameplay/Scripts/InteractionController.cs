@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -9,6 +11,7 @@ public interface ITarget
 public interface IInteractable : ITarget
 {
     public void Select();
+    public void OnProximityChanged(bool value);
 }
 
 public class InteractionController : MonoBehaviour
@@ -42,9 +45,33 @@ public class InteractionController : MonoBehaviour
 
     private float raycastMaxDistance = 100f;
 
+    private List<IInteractable> previousInteractables = new List<IInteractable>();
+
     private void Update()
     {
         if (!homeView.Canvas.IsVisible && !partyView.Canvas.IsVisible) return;
+
+        var proximityColliders = Physics.OverlapSphere(playerReference.Player.transform.position, 1f, interactableMask);
+
+        var proximityInteractables = proximityColliders
+            .Select(c => c.GetComponentInParent<IInteractable>())
+            .Where(i => i != null)
+            .ToList();
+
+        // Handle leaving proximity
+        foreach (var interactable in previousInteractables.Except(proximityInteractables).ToList())
+        {
+            interactable.OnProximityChanged(false);
+            previousInteractables.Remove(interactable);
+        }
+
+        // Handle entering proximity
+        foreach (var interactable in proximityInteractables.Except(previousInteractables).ToList())
+        {
+            interactable.OnProximityChanged(true);
+            previousInteractables.Add(interactable);
+        }
+
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -70,7 +97,7 @@ public class InteractionController : MonoBehaviour
             Ray ray = mainCamera.ScreenPointToRay(inputPos);
             RaycastHit hit;
 
-            if (Physics.SphereCast(ray, 0.25f, out hit, 1000f, interactableMask))
+            if (Physics.SphereCast(ray, 0.001f, out hit, 1000f, interactableMask))
             {
                 var interactable = hit.transform.GetComponentInParent<IInteractable>();
                 if (interactable != null)

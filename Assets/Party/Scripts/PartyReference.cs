@@ -39,6 +39,7 @@ public class PartyReference : ScriptableObject
     public event UnityAction OnPartyComplete;
     public event UnityAction OnPartyDebriefComplete;
     public event UnityAction OnPartyResumed;
+    public event UnityAction OnScoreChanged;
 
     public void Initialize()
     {
@@ -68,7 +69,11 @@ public class PartyReference : ScriptableObject
 
     private void IncrementScore(int value)
     {
-        if (isActive) score += value;
+        if (isActive)
+        {
+            score += value;
+            OnScoreChanged?.Invoke();
+        }
     }
 
     public void ShowPartyList()
@@ -81,6 +86,7 @@ public class PartyReference : ScriptableObject
         Debug.Log("Starting the party");
 
         score = 0;
+        OnScoreChanged?.Invoke();
         sporesCollected = 0;
         isActive = true;
         currentParty = party;
@@ -103,6 +109,8 @@ public class PartyReference : ScriptableObject
 
     public void StopParty()
     {
+        if (!isActive) return;
+
         Debug.Log("Stopping the party");
         foreach (var guest in guests)
         {

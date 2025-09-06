@@ -139,4 +139,8 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable, INoteTarget
     {
         EmitSpore();
     }
+
+    void IInteractable.OnProximityChanged(bool value)
+    {
+    }
 }
