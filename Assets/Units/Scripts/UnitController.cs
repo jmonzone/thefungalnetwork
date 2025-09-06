@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Cinemachine;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -15,6 +16,8 @@ public class UnitController : MonoBehaviour, IInteractable, INoteTarget
     [SerializeField] private Unit data;
     [SerializeField] private UnitBehaviour currentBehaviour;
     [SerializeField] private Vector3 targetLookPosition;
+
+    private CinemachineVirtualCamera virtualCamera;
 
     public Unit Data => data;
     protected Transform RenderRoot => renderRoot;
@@ -35,6 +38,8 @@ public class UnitController : MonoBehaviour, IInteractable, INoteTarget
         {
             behaviour.OnBehaviourRequest += () => ApplyBehaviour(behaviour);
         }
+
+        virtualCamera = GetComponentInChildren<CinemachineVirtualCamera>();
     }
 
     protected virtual void Start()
@@ -114,5 +119,15 @@ public class UnitController : MonoBehaviour, IInteractable, INoteTarget
 
     public virtual void OnProximityChanged(bool value)
     {
+    }
+
+    public void Focus()
+    {
+        if (virtualCamera) virtualCamera.Priority = 11;
+    }
+
+    public void Unfocus()
+    {
+        if (virtualCamera) virtualCamera.Priority = 0;
     }
 }

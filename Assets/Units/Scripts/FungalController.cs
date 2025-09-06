@@ -28,7 +28,6 @@ public class FungalController : UnitController
     private UnitDestination unitDestination;
     private UnitFollow unitFollow;
     private Animator animator;
-    private CinemachineVirtualCamera virtualCamera;
 
     protected override void Awake()
     {
@@ -36,7 +35,6 @@ public class FungalController : UnitController
 
         unitDestination = GetComponent<UnitDestination>();
         unitFollow = GetComponent<UnitFollow>();
-        virtualCamera = GetComponentInChildren<CinemachineVirtualCamera>();
     }
 
     public override void Initialize(Unit data)
@@ -65,16 +63,6 @@ public class FungalController : UnitController
     public void TriggerRespawn()
     {
         animator.SetTrigger("Respawn");
-    }
-
-    public void Focus()
-    {
-        virtualCamera.Priority = 11;
-    }
-
-    public void Unfocus()
-    {
-        virtualCamera.Priority = 0;
     }
 
     public override void OnProximityChanged(bool value)

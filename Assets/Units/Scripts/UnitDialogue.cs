@@ -13,10 +13,7 @@ public class UnitDialogue : UnitBehaviour
     {
         dialogue.StartDialogue(Unit, Unit.Data.DialogueTree.Dialogue);
 
-        if (Unit is FungalController fungal)
-        {
-            fungal.Focus();
-        }
+        Unit.Focus();
 
         if (lookAtTarget) Unit.SetLookPosition(playerReference.Player.transform.position);
 
@@ -28,9 +25,7 @@ public class UnitDialogue : UnitBehaviour
         dialogue.OnDialogueComplete -= Dialogue_OnDialogueComplete;
         StopBehaviour();
 
-        if (Unit is FungalController fungal)
-        {
-            fungal.Unfocus();
-        }
+        Unit.Unfocus();
+
     }
 }
