@@ -13,8 +13,6 @@ public class UnitDialogue : UnitBehaviour
     {
         dialogue.StartDialogue(Unit, Unit.Data.DialogueTree.Dialogue);
 
-        Unit.Focus();
-
         if (lookAtTarget) Unit.SetLookPosition(playerReference.Player.transform.position);
 
         dialogue.OnDialogueComplete += Dialogue_OnDialogueComplete;
@@ -24,8 +22,6 @@ public class UnitDialogue : UnitBehaviour
     {
         dialogue.OnDialogueComplete -= Dialogue_OnDialogueComplete;
         StopBehaviour();
-
-        Unit.Unfocus();
 
     }
 }

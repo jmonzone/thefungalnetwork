@@ -51,8 +51,6 @@ public class StoryWorkTogether : MonoBehaviour
         partyFrog.SetBehaviour(partyFrog.GetComponent<UnitDJ>());
         partyFrog.transform.position = frogAnchor.position;
         partyFrog.SetLookPosition(playerAnchor.position);
-        (partyFrog as FungalController).Focus();
-
         playerReference.Player.transform.position = playerAnchor.position;
         playerReference.Player.SetLookPosition(frogAnchor.position);
 
@@ -65,19 +63,13 @@ public class StoryWorkTogether : MonoBehaviour
         yield return new WaitWhile(() => dialogueReference.IsActive);
         plantGift.SetActive(false);
 
-        (partyFrog as FungalController).Unfocus();
-
         buildReference.StartBuildPlacement(plantItem);
 
         yield return new WaitWhile(() => buildReference.CurrentBuild);
 
         cameraPanController.CenterTargetInView(partyFrog.transform.position);
         dialogueReference.StartDialogue(partyFrog, buildCompleteDialogue);
-
-        (partyFrog as FungalController).Focus();
         yield return new WaitWhile(() => dialogueReference.IsActive);
-
-        (partyFrog as FungalController).Unfocus();
 
         storyReference.CompleteStory(workTogether);
         partyReference.ShowPartyList();

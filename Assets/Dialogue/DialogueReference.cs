@@ -23,6 +23,7 @@ public class DialogueReference : UIReference
         isActive = true;
         this.unit = unit;
         this.dialogue = dialogue;
+        unit.Focus();
         OnDialogueStart?.Invoke();
     }
 
@@ -33,7 +34,11 @@ public class DialogueReference : UIReference
 
     public void CompleteDialogue()
     {
-        isActive = false;
+        unit.Unfocus();
         OnDialogueComplete?.Invoke();
+
+        isActive = false;
+        unit = null;
+        dialogue = null;
     } 
 }
