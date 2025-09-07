@@ -82,7 +82,7 @@ public class StoryFirstParty : MonoBehaviour
             randomDirection.z = randomDirection.y;
             randomDirection.y = 0;
 
-            unit.transform.position = guestPictureAnchor.transform.position + randomDirection * 0.5f;
+            unit.transform.position = guestPictureAnchor.transform.position + randomDirection * 1f;
         }
 
         playerReference.Player.transform.position = cameraPositionAnchor.position;

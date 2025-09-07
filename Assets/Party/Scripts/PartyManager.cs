@@ -5,6 +5,7 @@ using UnityEngine.AI;
 public class PartyManager : MonoBehaviour
 {
     [SerializeField] private PartyReference partyReference;
+    [SerializeField] private PhotoReference photoReference;
     [SerializeField] private UnitManager unitManager;
     [SerializeField] private Transform frogAnchor;
     [SerializeField] private UnitController unitPrefab;
@@ -16,12 +17,18 @@ public class PartyManager : MonoBehaviour
     {
         partyReference.OnPartyStarted += PartyReference_OnPartyStarted;
         partyReference.OnPartyComplete += PartyReference_OnPartyComplete;
+
+        photoReference.OnPhotoStart += PhotoReference_OnPhotoStart;
+        photoReference.OnPhotoExit += PhotoReference_OnPhotoExit;
     }
 
     private void OnDisable()
     {
         partyReference.OnPartyStarted -= PartyReference_OnPartyStarted;
         partyReference.OnPartyComplete -= PartyReference_OnPartyComplete;
+
+        photoReference.OnPhotoStart -= PhotoReference_OnPhotoStart;
+        photoReference.OnPhotoExit -= PhotoReference_OnPhotoExit;
     }
 
     private void PartyReference_OnPartyStarted()
@@ -86,6 +93,16 @@ public class PartyManager : MonoBehaviour
     {
         yield return vibeMeterCanvas.FadeOut();
         StopAllCoroutines();
-
     }
+
+    private void PhotoReference_OnPhotoExit()
+    {
+        if (partyReference.IsActive) StartCoroutine(vibeMeterCanvas.FadeIn());
+    }
+
+    private void PhotoReference_OnPhotoStart()
+    {
+        if (partyReference.IsActive) StartCoroutine(vibeMeterCanvas.FadeOut());
+    }
+
 }
