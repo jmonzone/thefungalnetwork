@@ -95,18 +95,6 @@ public class PartyReference : ScriptableObject
         OnPartyStarted?.Invoke();
     }
 
-    public void PauseParty()
-    {
-        isActive = false;
-        OnPartyPaused?.Invoke();
-    }
-
-    public void ResumeParty()
-    {
-        isActive = true;
-        OnPartyResumed?.Invoke();
-    }
-
     public void StopParty()
     {
         if (!isActive) return;

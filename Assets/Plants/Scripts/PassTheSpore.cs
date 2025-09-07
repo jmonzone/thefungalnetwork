@@ -44,12 +44,9 @@ public class PassTheSpore : MonoBehaviour
 
     public void StartGame()
     {
-        partyReference.PauseParty();
-
         //virtualCamera.Priority = 11;
-        sporeBall.gameObject.SetActive(true);
 
-        foreach(var unit in unitManager.AllUnits)
+        foreach(var unit in partyReference.Guests)
         {
             players.Add(new PassTheSporePlayer
             {
@@ -88,11 +85,10 @@ public class PassTheSpore : MonoBehaviour
 
     private IEnumerator GameInput()
     {
-        Debug.Log("Waiting");
         yield return new WaitUntil(() => players.All(player => player.Fungal.IsAtDestination));
-        Debug.Log("Waiting complete");
 
         int currentUnitIndex = 0;
+        sporeBall.gameObject.SetActive(true);
 
         // Find first active player
         currentPlayer = GetNextActivePlayer(ref currentUnitIndex);
@@ -100,13 +96,12 @@ public class PassTheSpore : MonoBehaviour
 
         while (true)
         {
-            yield return new WaitForSeconds(1f);
-
             // Move to next active player
             currentPlayer = GetNextActivePlayer(ref currentUnitIndex);
 
             Vector3 targetPos = currentPlayer.Fungal.transform.position + Vector3.up;
             yield return TossBall(sporeBall.position, targetPos, 0.5f);
+            yield return new WaitForSeconds(1f);
         }
     }
 
@@ -150,7 +145,6 @@ public class PassTheSpore : MonoBehaviour
             yield return null;
         }
 
-        // Ensure final position is exact
         sporeBall.position = end;
         partyReference.IncrementScore(10);
         isMidAir = false;
@@ -200,8 +194,6 @@ public class PassTheSpore : MonoBehaviour
 
     private void EndGame()
     {
-        partyReference.ResumeParty();
-
         Reset();
 
         foreach (var player in players)
