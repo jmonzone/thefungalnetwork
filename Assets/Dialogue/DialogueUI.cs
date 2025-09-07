@@ -40,6 +40,7 @@ public class DialogueUI : MonoBehaviour
         dialogue.OnDialogueStart += StartTalk;
         dialogue.OnChatStart += Dialogue_OnChatStart;
         dialogue.OnSpecialDialogueStart += Dialogue_OnChatStart;
+        dialogue.OnGiveComplete += Dialogue_OnChatStart;
     }
 
     private void OnDisable()
@@ -47,6 +48,7 @@ public class DialogueUI : MonoBehaviour
         dialogue.OnDialogueStart -= StartTalk;
         dialogue.OnChatStart -= Dialogue_OnChatStart;
         dialogue.OnSpecialDialogueStart -= Dialogue_OnChatStart;
+        dialogue.OnGiveComplete -= Dialogue_OnChatStart;
     }
 
     private void StartTalk()
@@ -58,7 +60,6 @@ public class DialogueUI : MonoBehaviour
 
         StopAllCoroutines();
         StartCoroutine(TalkRoutine());
-        dialogue.Show();
     }
 
     private IEnumerator TalkRoutine()
@@ -99,7 +100,6 @@ public class DialogueUI : MonoBehaviour
     {
         // Finished all pages → close dialogue
         dialogue.CompleteDialogue();
-        dialogue.Close();
     }
 
 
@@ -112,10 +112,7 @@ public class DialogueUI : MonoBehaviour
 
         StopAllCoroutines();
         StartCoroutine(ChatRoutine());
-        dialogue.Show();
-
     }
-
 
     private IEnumerator ChatRoutine()
     {
@@ -194,5 +191,6 @@ public class DialogueUI : MonoBehaviour
 
         CloseDialogue();
     }
+
 
 }

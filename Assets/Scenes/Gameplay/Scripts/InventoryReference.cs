@@ -7,6 +7,9 @@ public class InventoryReference : ScriptableObject
 {
     [Header("References")]
     [SerializeField] private LocalData localData;
+    [SerializeField] private Navigation navigation;
+    [SerializeField] private ViewReference inventoryView;
+
     [Header("Settings")]
     [SerializeField] private int initialSporeCount = 124;
     [SerializeField] private List<Item> initialItems;
@@ -21,6 +24,8 @@ public class InventoryReference : ScriptableObject
     public event UnityAction<SporeController> OnSporeCollected;
     public event UnityAction<int> OnSporeCountChanged;
     public event UnityAction OnItemSummoned;
+    public event UnityAction OnInventoryOpened;
+    public event UnityAction<Item> OnItemSelected;
 
     private const string SPORE_KEY = "spore";
 
@@ -64,5 +69,16 @@ public class InventoryReference : ScriptableObject
         items.Add(item);
         DecreaseSporeCount(item.Price);
         OnItemSummoned?.Invoke();
+    }
+
+    public void OpenInventory()
+    {
+        navigation.Navigate(inventoryView);
+        OnInventoryOpened?.Invoke();
+    }
+
+    public void SelectItem(Item item)
+    {
+        OnItemSelected?.Invoke(item);
     }
 }

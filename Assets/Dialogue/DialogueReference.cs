@@ -3,8 +3,15 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [CreateAssetMenu]
-public class DialogueReference : UIReference
+public class DialogueReference : ScriptableObject
 {
+    [Header("References")]
+    [SerializeField] private PhotoReference photoReference;
+    [SerializeField] private InventoryReference inventory;
+    [SerializeField] private Navigation navigation;
+    [SerializeField] private ViewReference dialogueView;
+
+    [Header("Runtime")]
     [SerializeField] private bool isActive;
     [SerializeField] private UnitController unit;
     [SerializeField] private Dialogue currentDialogue;
@@ -22,6 +29,9 @@ public class DialogueReference : UIReference
 
     public event UnityAction OnSpecialDialogueStart;
 
+    public event UnityAction OnGiveStart;
+    public event UnityAction OnGiveComplete;
+
 
     public void StartDialogue(UnitController unit, List<Dialogue> dialogue)
     {
@@ -30,6 +40,7 @@ public class DialogueReference : UIReference
         this.dialogue = dialogue;
         unit.Focus();
         OnDialogueStart?.Invoke();
+        navigation.Navigate(dialogueView);
     }
 
     public void SetCurrentDialogue(Dialogue dialogue)
@@ -41,6 +52,7 @@ public class DialogueReference : UIReference
     {
         unit.Unfocus();
         OnDialogueComplete?.Invoke();
+        navigation.GoBack();
 
         isActive = false;
         unit = null;
@@ -49,9 +61,9 @@ public class DialogueReference : UIReference
 
     public void StartChat()
     {
+        dialogue = unit.Data.ChatDialogue;
         OnChatStart?.Invoke();
     }
-
 
     public void StartSpecialDialogue(UnitController unit, List<Dialogue> dialogue)
     {
@@ -62,4 +74,23 @@ public class DialogueReference : UIReference
         OnSpecialDialogueStart?.Invoke();
     }
 
+    public void StartPhoto()
+    {
+        photoReference.SetLookTarget(Unit.transform);
+        photoReference.StartPhotoView();
+    }
+
+    public void StartGive()
+    {
+        inventory.OnItemSelected += Inventory_OnItemSelected;
+        inventory.OpenInventory();
+    }
+
+    private void Inventory_OnItemSelected(Item arg0)
+    {
+        inventory.OnItemSelected -= Inventory_OnItemSelected;
+        dialogue = unit.Data.GiveDialogue;
+        OnGiveComplete?.Invoke();
+        navigation.GoBack();
+    }
 }
