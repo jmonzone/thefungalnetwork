@@ -6,6 +6,7 @@ using UnityEngine.Events;
 public class DialogueReference : ScriptableObject
 {
     [Header("References")]
+    [SerializeField] private PlayerReference playerReference;
     [SerializeField] private PhotoReference photoReference;
     [SerializeField] private InventoryReference inventory;
     [SerializeField] private Navigation navigation;
@@ -92,5 +93,14 @@ public class DialogueReference : ScriptableObject
         dialogue = unit.Data.GiveDialogue;
         OnGiveComplete?.Invoke();
         navigation.GoBack();
+    }
+
+    public void StartFollow()
+    {
+        if (Unit is FungalController fungal)
+        {
+            fungal.SetTarget(playerReference.Player.transform);
+            CompleteDialogue();
+        }
     }
 }
