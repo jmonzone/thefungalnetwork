@@ -9,7 +9,6 @@ public class PassTheSpore : MonoBehaviour
     [Header("References")]
     [SerializeField] private PartyReference partyReference;
     [SerializeField] private UnitManager unitManager;
-    [SerializeField] private CameraPanController cameraPanController;
 
     [Header("Gameplay")]
     [SerializeField] private Transform gameCenter;
@@ -78,7 +77,7 @@ public class PassTheSpore : MonoBehaviour
             fungalController.SetLookPosition(gameCenter.transform.position);
         }
 
-        cameraPanController.CenterTargetInView(gameCenter.position);
+        //cameraPanController.CenterTargetInView(gameCenter.position);
         //navigation.Navigate(passTheSporeView);
 
         StartCoroutine(GameInput());
