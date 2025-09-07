@@ -91,7 +91,7 @@ public class PartyReference : ScriptableObject
         isActive = true;
         currentParty = party;
 
-        //navigation.Navigate(partyHUD);
+        navigation.Navigate(gameplayView);
         OnPartyStarted?.Invoke();
     }
 

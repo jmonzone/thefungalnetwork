@@ -62,7 +62,7 @@ public class StoryFirstParty : MonoBehaviour
         //cameraPanController.CenterTargetInView(playerReference.Player.transform.position);
         //dialogueReference.StartDialogue(playerReference.Player, lostDialogue);
 
-        yield return new WaitUntil(() => timesInteractedWithGuests > 3);
+        yield return new WaitUntil(() => timesInteractedWithGuests > 0);
         yield return new WaitWhile(() => dialogueReference.IsActive);
         yield return new WaitForSeconds(1f);
 
@@ -82,7 +82,7 @@ public class StoryFirstParty : MonoBehaviour
             randomDirection.z = randomDirection.y;
             randomDirection.y = 0;
 
-            unit.transform.position = guestPictureAnchor.transform.position + randomDirection * 0.1f;
+            unit.transform.position = guestPictureAnchor.transform.position + randomDirection * 0.5f;
         }
 
         playerReference.Player.transform.position = cameraPositionAnchor.position;
@@ -99,6 +99,8 @@ public class StoryFirstParty : MonoBehaviour
             unit.SetLookTarget(playerReference.Player.transform);
         }
 
+
+        yield return new WaitWhile(() => photoReference.IsActive);
         yield return new WaitForSeconds(1f);
 
         dialogueReference.StartSpecialDialogue(partyFrog, afterPhotoTakenDialogue);

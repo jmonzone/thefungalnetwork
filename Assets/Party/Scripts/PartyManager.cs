@@ -79,7 +79,13 @@ public class PartyManager : MonoBehaviour
 
     private void PartyReference_OnPartyComplete()
     {
-        StartCoroutine(vibeMeterCanvas.FadeOut());
+        StartCoroutine(EndParty());
+    }
+
+    private IEnumerator EndParty()
+    {
+        yield return vibeMeterCanvas.FadeOut();
         StopAllCoroutines();
+
     }
 }

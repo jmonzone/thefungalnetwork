@@ -34,12 +34,8 @@ public class DialogueReference : ScriptableObject
 
     public void StartDialogue(UnitController unit, List<Dialogue> dialogue)
     {
-        isActive = true;
-        this.unit = unit;
-        this.dialogue = dialogue;
-        unit.Focus();
+        ApplyStartDialogue(unit, dialogue);
         OnDialogueStart?.Invoke();
-        navigation.Navigate(dialogueView);
     }
 
     public void SetCurrentDialogue(Dialogue dialogue)
@@ -66,11 +62,18 @@ public class DialogueReference : ScriptableObject
 
     public void StartSpecialDialogue(UnitController unit, List<Dialogue> dialogue)
     {
+        ApplyStartDialogue(unit, dialogue);
+        OnSpecialDialogueStart?.Invoke();
+    }
+
+    private void ApplyStartDialogue(UnitController unit, List<Dialogue> dialogue)
+    {
         isActive = true;
         this.unit = unit;
         this.dialogue = dialogue;
         unit.Focus();
         OnSpecialDialogueStart?.Invoke();
+        navigation.Navigate(dialogueView);
     }
 
     public void StartPhoto()
