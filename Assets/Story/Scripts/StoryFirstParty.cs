@@ -62,7 +62,7 @@ public class StoryFirstParty : MonoBehaviour
         //cameraPanController.CenterTargetInView(playerReference.Player.transform.position);
         //dialogueReference.StartDialogue(playerReference.Player, lostDialogue);
 
-        yield return new WaitUntil(() => timesInteractedWithGuests > 0);
+        yield return new WaitUntil(() => timesInteractedWithGuests > 3);
         yield return new WaitWhile(() => dialogueReference.IsActive);
         yield return new WaitForSeconds(1f);
 
