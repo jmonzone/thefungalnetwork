@@ -48,7 +48,7 @@ public class InteractionController : MonoBehaviour
 
     private void Update()
     {
-        if (!homeView.Canvas.IsVisible && !partyView.Canvas.IsVisible) return;
+        if (!homeView.Canvas.IsVisible) return;
 
         var proximityColliders = Physics.OverlapSphere(playerReference.Player.transform.position, 1f, interactableMask);
 

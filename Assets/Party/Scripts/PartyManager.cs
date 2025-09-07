@@ -5,22 +5,17 @@ using UnityEngine.AI;
 public class PartyManager : MonoBehaviour
 {
     [SerializeField] private PartyReference partyReference;
-    [SerializeField] private Navigation navigation;
     [SerializeField] private UnitManager unitManager;
     [SerializeField] private Transform frogAnchor;
     [SerializeField] private UnitController unitPrefab;
     [SerializeField] private Transform spawnAnchor;
     [SerializeField] private float currentTimer;
+    [SerializeField] private FadeCanvasGroup vibeMeterCanvas;
 
     private void OnEnable()
     {
         partyReference.OnPartyStarted += PartyReference_OnPartyStarted;
         partyReference.OnPartyComplete += PartyReference_OnPartyComplete;
-    }
-
-    private void PartyReference_OnPartyComplete()
-    {
-        StopAllCoroutines();
     }
 
     private void OnDisable()
@@ -41,6 +36,8 @@ public class PartyManager : MonoBehaviour
 
     private IEnumerator PartyRoutine()
     {
+        yield return vibeMeterCanvas.FadeIn();
+
         int guestsToSpawn = partyReference.CurrentParty.Guests.Count;
 
         for (int i = 0; i < guestsToSpawn; i++)
@@ -78,5 +75,11 @@ public class PartyManager : MonoBehaviour
 
             partyReference.StopParty();
         }
+    }
+
+    private void PartyReference_OnPartyComplete()
+    {
+        StartCoroutine(vibeMeterCanvas.FadeOut());
+        StopAllCoroutines();
     }
 }
