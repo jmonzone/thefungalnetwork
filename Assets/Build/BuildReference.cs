@@ -41,6 +41,8 @@ public class BuildReference : ScriptableObject
     private const string BUILD_KEY = "build";
 
     public event UnityAction OnBuildUpdated;
+    public event UnityAction OnBuildStart;
+    public event UnityAction OnBuildEnd;
 
     public void Initialize()
     {
@@ -166,12 +168,14 @@ public class BuildReference : ScriptableObject
     {
         isBuilding = true;
         navigation.Navigate(buildListView);
+        OnBuildStart?.Invoke();
     }
 
     public void EndBuild()
     {
         isBuilding = false;
         navigation.GoBack();
+        OnBuildEnd?.Invoke();
     }
 
     public void StartBuildPlacement(Item item)
@@ -180,6 +184,7 @@ public class BuildReference : ScriptableObject
         currentBuild.Initialize(item);
         currentBuild.StartBuild(groundMask, collisionMask, validMaterial, invalidMaterial);
         navigation.Navigate(buildPlacementView);
+        OnBuildStart?.Invoke();
     }
 
     public void CompleteBuild()

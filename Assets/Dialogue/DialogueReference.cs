@@ -20,6 +20,9 @@ public class DialogueReference : UIReference
 
     public event UnityAction OnChatStart;
 
+    public event UnityAction OnSpecialDialogueStart;
+
+
     public void StartDialogue(UnitController unit, List<Dialogue> dialogue)
     {
         isActive = true;
@@ -48,4 +51,15 @@ public class DialogueReference : UIReference
     {
         OnChatStart?.Invoke();
     }
+
+
+    public void StartSpecialDialogue(UnitController unit, List<Dialogue> dialogue)
+    {
+        isActive = true;
+        this.unit = unit;
+        this.dialogue = dialogue;
+        unit.Focus();
+        OnSpecialDialogueStart?.Invoke();
+    }
+
 }

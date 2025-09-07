@@ -12,7 +12,6 @@ public class StoryWorkTogether : MonoBehaviour
     [SerializeField] private PartyReference partyReference;
     [SerializeField] private UnitManager unitManager;
     [SerializeField] private PlayerReference playerReference;
-    [SerializeField] private CameraPanController cameraPanController;
     [SerializeField] private DialogueReference dialogueReference;
     [SerializeField] private List<Dialogue> workTogetherDialogue;
     [SerializeField] private List<Dialogue> buildCompleteDialogue;
@@ -54,8 +53,7 @@ public class StoryWorkTogether : MonoBehaviour
         playerReference.Player.transform.position = playerAnchor.position;
         playerReference.Player.SetLookPosition(frogAnchor.position);
 
-        cameraPanController.CenterTargetInView(partyFrog.transform.position);
-        dialogueReference.StartDialogue(partyFrog, workTogetherDialogue);
+        dialogueReference.StartSpecialDialogue(partyFrog, workTogetherDialogue);
 
         yield return new WaitUntil(() => dialogueReference.CurrentDialogue.Action == DialogueAction.GIFT);
         plantGift.SetActive(true);
@@ -67,8 +65,9 @@ public class StoryWorkTogether : MonoBehaviour
 
         yield return new WaitWhile(() => buildReference.CurrentBuild);
 
-        cameraPanController.CenterTargetInView(partyFrog.transform.position);
-        dialogueReference.StartDialogue(partyFrog, buildCompleteDialogue);
+        buildReference.EndBuild();
+
+        dialogueReference.StartSpecialDialogue(partyFrog, buildCompleteDialogue);
         yield return new WaitWhile(() => dialogueReference.IsActive);
 
         storyReference.CompleteStory(workTogether);

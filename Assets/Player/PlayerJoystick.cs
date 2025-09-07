@@ -51,9 +51,6 @@ public class PlayerJoystick : MonoBehaviour
 
         // Move player
         playerReference.SetTargetPosition(targetPosition);
-
-        // Keep camera centered
-        cameraPanController.CenterTargetInView(targetPosition);
     }
 
 }

@@ -13,7 +13,6 @@ public class StoryFirstParty : MonoBehaviour
     [SerializeField] private PartyReference partyReference;
     [SerializeField] private StoryReference storyReference;
     [SerializeField] private PhotoReference photoReference;
-    [SerializeField] private CameraPanController cameraPanController;
     [SerializeField] private Transform guestPictureAnchor;
     [SerializeField] private Transform cameraPositionAnchor;
     [SerializeField] private InitialUI initialUI;
@@ -67,7 +66,7 @@ public class StoryFirstParty : MonoBehaviour
         yield return new WaitWhile(() => dialogueReference.IsActive);
         yield return new WaitForSeconds(1f);
 
-        dialogueReference.StartDialogue(partyFrog, letsTakeAPhotoDialogue);
+        dialogueReference.StartSpecialDialogue(partyFrog, letsTakeAPhotoDialogue);
 
         yield return new WaitWhile(() => dialogueReference.IsActive);
         yield return new WaitForSeconds(1f);
@@ -107,7 +106,7 @@ public class StoryFirstParty : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
 
-        dialogueReference.StartDialogue(partyFrog, afterPhotoTakenDialogue);
+        dialogueReference.StartSpecialDialogue(partyFrog, afterPhotoTakenDialogue);
 
         yield return new WaitWhile(() => dialogueReference.IsActive);
         yield return new WaitForSeconds(1f);

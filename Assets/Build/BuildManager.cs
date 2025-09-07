@@ -1,3 +1,4 @@
+using Cinemachine;
 using UnityEngine;
 
 public class BuildManager : MonoBehaviour
@@ -6,6 +7,7 @@ public class BuildManager : MonoBehaviour
     [SerializeField] private BuildReference build;
     [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference buildListView;
+    [SerializeField] private CinemachineVirtualCamera buildCamera;
     [SerializeField] private CameraPanController cameraPanController;
     [SerializeField] private LayerMask interactableMask;
 
@@ -57,5 +59,27 @@ public class BuildManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void OnEnable()
+    {
+        build.OnBuildStart += Build_OnBuildStart;
+        build.OnBuildEnd += Build_OnBuildEnd;
+    }
+
+    private void OnDisable()
+    {
+        build.OnBuildStart -= Build_OnBuildStart;
+        build.OnBuildEnd -= Build_OnBuildEnd;
+    }
+
+    private void Build_OnBuildStart()
+    {
+        buildCamera.Priority = 11;
+    }
+
+    private void Build_OnBuildEnd()
+    {
+        buildCamera.Priority = 0;
     }
 }

@@ -21,7 +21,6 @@ public class InteractionController : MonoBehaviour
     [SerializeField] private DialogueReference dialogue;
     [SerializeField] private LayerMask interactableMask;
     [SerializeField] private LayerMask groundMask;
-    [SerializeField] private CameraPanController cameraPanController;
     [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference homeView;
     [SerializeField] private ViewReference partyView;
@@ -85,11 +84,6 @@ public class InteractionController : MonoBehaviour
             if (inputDelta.magnitude > 0.1f) isDragging = true;
         }
 
-        if (selected)
-        {
-            cameraPanController.CenterTargetInView(selected.position);
-        }
-
         if (Input.GetMouseButtonUp(0) && !isDragging)
         {
             Vector3 inputPos = Input.mousePosition;
@@ -112,7 +106,6 @@ public class InteractionController : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit, raycastMaxDistance, groundMask))
             {
-                cameraPanController.CenterTargetInView(hit.point);
                 playerReference.SetTargetPosition(hit.point);
                 OnGroundSelected?.Invoke(hit.point);
 
@@ -127,7 +120,6 @@ public class InteractionController : MonoBehaviour
         {
             selected = null;
             OnEntitySelected?.Invoke(null);
-            cameraPanController.CenterTargetInView(playerReference.Player.transform.position);
         }
     }
 }

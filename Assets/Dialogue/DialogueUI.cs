@@ -39,12 +39,14 @@ public class DialogueUI : MonoBehaviour
     {
         dialogue.OnDialogueStart += StartTalk;
         dialogue.OnChatStart += Dialogue_OnChatStart;
+        dialogue.OnSpecialDialogueStart += Dialogue_OnChatStart;
     }
 
     private void OnDisable()
     {
         dialogue.OnDialogueStart -= StartTalk;
         dialogue.OnChatStart -= Dialogue_OnChatStart;
+        dialogue.OnSpecialDialogueStart -= Dialogue_OnChatStart;
     }
 
     private void StartTalk()
@@ -103,7 +105,15 @@ public class DialogueUI : MonoBehaviour
 
     private void Dialogue_OnChatStart()
     {
+        tarotCard.gameObject.SetActive(false);
+
+        speakerText.text = dialogue.Unit.Data.Name;
+        image.sprite = dialogue.Unit.Data.Sprite;
+
+        StopAllCoroutines();
         StartCoroutine(ChatRoutine());
+        dialogue.Show();
+
     }
 
 
