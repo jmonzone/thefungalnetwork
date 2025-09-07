@@ -67,7 +67,7 @@ public class PartyReference : ScriptableObject
         IncrementScore(15);
     }
 
-    private void IncrementScore(int value)
+    public void IncrementScore(int value)
     {
         if (isActive)
         {
