@@ -18,6 +18,8 @@ public class DialogueReference : UIReference
     public event UnityAction OnDialogueStart;
     public event UnityAction OnDialogueComplete;
 
+    public event UnityAction OnChatStart;
+
     public void StartDialogue(UnitController unit, List<Dialogue> dialogue)
     {
         isActive = true;
@@ -40,5 +42,10 @@ public class DialogueReference : UIReference
         isActive = false;
         unit = null;
         dialogue = null;
-    } 
+    }
+
+    public void StartChat()
+    {
+        OnChatStart?.Invoke();
+    }
 }

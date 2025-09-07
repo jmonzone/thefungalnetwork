@@ -4,65 +4,35 @@ using UnityEngine;
 public class PhotoCameraController : MonoBehaviour
 {
     [SerializeField] private PhotoReference photoReference;
-    [SerializeField] private CameraPanController cameraPanController;
     [SerializeField] private CinemachineVirtualCamera photoVirtualCamera;
     [SerializeField] private PartyReference partyReference;
     [SerializeField] private PlayerReference playerReference;
     [SerializeField] private float zOffset;
     [SerializeField] private float yOffset;
 
-    private Camera mainCamera;
-
-    private void Awake()
-    {
-        mainCamera = Camera.main;
-    }
-
     private void OnEnable()
     {
-        photoReference.OnPhotoStart += PhotoReference_OnPhotoStart;
-        photoReference.OnPhotoExit += UseOrthographicCamera;
-        partyReference.OnPartyComplete += UseOrthographicCamera;
+        photoReference.OnPhotoStart += OnPhotoStart;
+        photoReference.OnPhotoExit += OnPhotoExit;
+        partyReference.OnPartyComplete += OnPhotoExit;
     }
 
     private void OnDisable()
     {
-        photoReference.OnPhotoStart -= PhotoReference_OnPhotoStart;
-        photoReference.OnPhotoExit -= UseOrthographicCamera;
-        partyReference.OnPartyComplete -= UseOrthographicCamera;
+        photoReference.OnPhotoStart -= OnPhotoStart;
+        photoReference.OnPhotoExit -= OnPhotoExit;
+        partyReference.OnPartyComplete -= OnPhotoExit;
     }
 
-    private void UseOrthographicCamera()
+    private void OnPhotoExit()
     {
-        // Swap between orthographic and perspective
-        //if (!mainCamera.orthographic)
-        //{
-            cameraPanController.enabled = true;
-            photoVirtualCamera.Priority = 0;
-        //    mainCamera.orthographic = true;  // Isometric / orthographic
-        //}
+        photoVirtualCamera.Priority = 0;
     }
 
-
-
-    private void PhotoReference_OnPhotoStart()
+    private void OnPhotoStart()
     {
-        //photoVirtualCamera.Follow = playerReference.Player.transform;
         photoVirtualCamera.LookAt = photoReference.LookTarget;
-        UsePerspectiveCamera();
-    }
-
-    private void UsePerspectiveCamera()
-    {
-        //photoController.target = photoReference.LookTarget;
-
-        // Swap between orthographic and perspective
-        //if (mainCamera.orthographic)
-        //{
-            cameraPanController.enabled = false;
-            photoVirtualCamera.Priority = 12;
-        //    mainCamera.orthographic = false; // Perspective
-        //}
+        photoVirtualCamera.Priority = 12;
     }
 
     private void Update()

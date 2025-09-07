@@ -15,13 +15,20 @@ public class DialogueUI : MonoBehaviour
     [SerializeField] private Image image;
     [SerializeField] private TextMeshProUGUI speakerText;
     [SerializeField] private TextMeshProUGUI dialogueText;
+    [SerializeField] private TextMeshProUGUI chatText;
+
     [SerializeField] private Button continueButton;
     [SerializeField] private Button closeButton;
     [SerializeField] private TarotCardUI tarotCard;
+    [SerializeField] private FadeCanvasGroup chatPage;
+    [SerializeField] private FadeCanvasGroup actionPage;
+    [SerializeField] private FadeCanvasGroup actionButtons;
 
     [Header("UI Settings")]
     [SerializeField] private float baseSpeed = 0.03f;             // Normal speed between characters
     [SerializeField] private float punctuationPause = 0.2f;       // Extra pause for punctuation
+
+    private bool nextPagePressed;
 
     private void Awake()
     {
@@ -30,10 +37,17 @@ public class DialogueUI : MonoBehaviour
 
     private void OnEnable()
     {
-        dialogue.OnDialogueStart += Dialogue_OnDialogueStart;
+        dialogue.OnDialogueStart += StartTalk;
+        dialogue.OnChatStart += Dialogue_OnChatStart;
     }
 
-    private void Dialogue_OnDialogueStart()
+    private void OnDisable()
+    {
+        dialogue.OnDialogueStart -= StartTalk;
+        dialogue.OnChatStart -= Dialogue_OnChatStart;
+    }
+
+    private void StartTalk()
     {
         tarotCard.gameObject.SetActive(false);
 
@@ -41,24 +55,69 @@ public class DialogueUI : MonoBehaviour
         image.sprite = dialogue.Unit.Data.Sprite;
 
         StopAllCoroutines();
-        StartCoroutine(ShowDialogueRoutine());
+        StartCoroutine(TalkRoutine());
         dialogue.Show();
     }
 
-    private void OnDisable()
+    private IEnumerator TalkRoutine()
     {
-        dialogue.OnDialogueStart -= Dialogue_OnDialogueStart;
+        chatPage.gameObject.SetActive(false);
+        actionPage.gameObject.SetActive(true);
+        actionButtons.gameObject.SetActive(false);
+
+
+        dialogueText.text = "";
+        var randomIndex = Random.Range(0, dialogue.Unit.Data.Intros.Count);
+        var fullDialogue = dialogue.Unit.Data.Intros[randomIndex];
+
+        if (string.IsNullOrEmpty(fullDialogue)) yield break;
+
+        // Typewriter effect with expressive timing
+        for (int i = 0; i < fullDialogue.Length; i++)
+        {
+            dialogueText.text += fullDialogue[i];
+
+            char c = fullDialogue[i];
+            float delay = baseSpeed;
+
+            // Extra pause after punctuation
+            if (".,!?:;".Contains(c.ToString()))
+                delay += punctuationPause;
+
+            // Slight random variation for organic feel
+            delay *= Random.Range(0.9f, 1.3f);
+
+            yield return new WaitForSeconds(delay);
+        }
+
+        yield return actionButtons.FadeIn();
     }
 
-    private bool nextPagePressed;
-
-    private IEnumerator ShowDialogueRoutine()
+    private void CloseDialogue()
     {
+        // Finished all pages → close dialogue
+        dialogue.CompleteDialogue();
+        dialogue.Close();
+    }
+
+
+    private void Dialogue_OnChatStart()
+    {
+        StartCoroutine(ChatRoutine());
+    }
+
+
+    private IEnumerator ChatRoutine()
+    {
+        actionPage.gameObject.SetActive(false);
+
+        StartCoroutine(chatPage.FadeIn());
+
         List<Dialogue> pages = dialogue.Dialogue;
 
         for (int p = 0; p < pages.Count; p++)
         {
-            dialogueText.text = "";
+            chatText.text = "";
             Dialogue fullDialogue = pages[p];
             dialogue.SetCurrentDialogue(fullDialogue);
 
@@ -103,7 +162,7 @@ public class DialogueUI : MonoBehaviour
             // Typewriter effect with expressive timing
             for (int i = 0; i < fullDialogue.Text.Length; i++)
             {
-                dialogueText.text += fullDialogue.Text[i];
+                chatText.text += fullDialogue.Text[i];
 
                 char c = fullDialogue.Text[i];
                 float delay = baseSpeed;
@@ -118,20 +177,12 @@ public class DialogueUI : MonoBehaviour
                 yield return new WaitForSeconds(delay);
             }
 
-
             // Wait for continue button
             nextPagePressed = false;
             yield return new WaitUntil(() => nextPagePressed);
         }
 
         CloseDialogue();
-    }
-
-    private void CloseDialogue()
-    {
-        // Finished all pages → close dialogue
-        dialogue.CompleteDialogue();
-        dialogue.Close();
     }
 
 }
