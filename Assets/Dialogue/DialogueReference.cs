@@ -30,9 +30,7 @@ public class DialogueReference : ScriptableObject
 
     public event UnityAction OnSpecialDialogueStart;
 
-    public event UnityAction OnGiveStart;
     public event UnityAction OnGiveComplete;
-
 
     public void StartDialogue(UnitController unit, List<Dialogue> dialogue)
     {
@@ -77,6 +75,7 @@ public class DialogueReference : ScriptableObject
 
     public void StartPhoto()
     {
+        Unit.SetLookTarget(playerReference.Player.transform);
         photoReference.SetLookTarget(Unit.transform);
         photoReference.StartPhotoView();
     }

@@ -16,6 +16,7 @@ public class UnitController : MonoBehaviour, IInteractable, INoteTarget
     [SerializeField] private Unit data;
     [SerializeField] private UnitBehaviour currentBehaviour;
     [SerializeField] private Vector3 targetLookPosition;
+    [SerializeField] private Transform target;
 
     private CinemachineVirtualCamera virtualCamera;
 
@@ -49,6 +50,8 @@ public class UnitController : MonoBehaviour, IInteractable, INoteTarget
 
     protected virtual void Update()
     {
+        if (target) targetLookPosition = target.transform.position;
+
         Vector3 direction = targetLookPosition - renderRoot.position;
         direction.y = 0f;
 
@@ -96,6 +99,11 @@ public class UnitController : MonoBehaviour, IInteractable, INoteTarget
     public void SetLookPosition(Vector3 targetPosition)
     {
         targetLookPosition = targetPosition;
+    }
+
+    public void SetLookTarget(Transform target)
+    {
+        this.target = target;
     }
 
     public void SetDefaultBehaviour()

@@ -94,14 +94,9 @@ public class StoryFirstParty : MonoBehaviour
         photoReference.SetLookTarget(guestPictureAnchor.transform);
         photoReference.StartPhotoView();
 
-        while (photoReference.IsActive)
+        foreach (var unit in unitManager.AllUnits)
         {
-            foreach (var unit in unitManager.AllUnits)
-            {
-                unit.SetLookPosition(playerReference.Player.transform.position);
-            }
-
-            yield return null;
+            unit.SetLookTarget(playerReference.Player.transform);
         }
 
         yield return new WaitForSeconds(1f);
