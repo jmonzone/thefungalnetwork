@@ -174,7 +174,7 @@ public class BuildReference : ScriptableObject
     public void EndBuild()
     {
         isBuilding = false;
-        navigation.GoBack();
+        if (navigation.CurrentView == buildListView) navigation.GoBack();
         OnBuildEnd?.Invoke();
     }
 
@@ -190,6 +190,8 @@ public class BuildReference : ScriptableObject
     public void CompleteBuild()
     {
         if (!currentBuild) return;
+
+        isBuilding = true;
 
         buildControllers.Add(currentBuild);
 

@@ -41,7 +41,7 @@ public class StoryFirstParty : MonoBehaviour
     {
         if (!storyReference.HasCompleted(firstParty))
         {
-            //initialUI.enabled = false;
+            initialUI.enabled = false;
         }
     }
 
@@ -50,7 +50,7 @@ public class StoryFirstParty : MonoBehaviour
         if (!storyReference.HasCompleted(firstParty))
         {
             StartCoroutine(PartyRoutine());
-            //initialUI.enabled = true;
+            initialUI.enabled = true;
         }
     }
 

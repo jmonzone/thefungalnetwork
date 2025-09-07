@@ -36,21 +36,10 @@ public class PartyManager : MonoBehaviour
         var partyFrog = unitManager.UnitControllers[0];
         partyFrog.SetBehaviour(partyFrog.GetComponent<UnitDJ>());
 
-        currentTimer = 0;
-
-        StartCoroutine(PartyRoutine());
-    }
-
-    private IEnumerator PartyRoutine()
-    {
-        yield return vibeMeterCanvas.FadeIn();
-
         int guestsToSpawn = partyReference.CurrentParty.Guests.Count;
 
         for (int i = 0; i < guestsToSpawn; i++)
         {
-            yield return null;
-
             // Try to find a valid random position near the spawn anchor
             Vector3 randomPoint = Random.insideUnitSphere * 2f; // radius = 5 units
             randomPoint.y = spawnAnchor.transform.position.y; // keep roughly at same height
@@ -72,8 +61,16 @@ public class PartyManager : MonoBehaviour
             partyReference.AddGuest(guest);
         }
 
+        StartCoroutine(vibeMeterCanvas.FadeIn());
+        StartCoroutine(PartyRoutine());
+    }
+
+    private IEnumerator PartyRoutine()
+    {
         if (partyReference.CurrentParty.Duration > 0)
         {
+            currentTimer = 0;
+
             while (currentTimer < partyReference.CurrentParty.Duration)
             {
                 currentTimer += Time.deltaTime;

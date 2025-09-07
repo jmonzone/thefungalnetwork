@@ -125,7 +125,7 @@ public class PartyReference : ScriptableObject
 
     public void CompleteDebrief()
     {
-        navigation.Navigate(gameplayView);
+        navigation.GoBack();
         OnPartyDebriefComplete?.Invoke();
         isActive = false;
         currentParty = null;

@@ -48,6 +48,16 @@ public class UnitController : MonoBehaviour, IInteractable, INoteTarget
         SetDefaultBehaviour();
     }
 
+    protected virtual void OnEnable()
+    {
+
+    }
+
+    protected virtual void OnDisable()
+    {
+
+    }
+
     protected virtual void Update()
     {
         if (target) targetLookPosition = target.transform.position;

@@ -23,6 +23,10 @@ public class DialogueReference : ScriptableObject
     public Dialogue CurrentDialogue => currentDialogue;
     public List<Dialogue> Dialogue => dialogue;
 
+
+    //todo: consolidate events;
+    public event UnityAction OnIsActiveChanged;
+
     public event UnityAction OnDialogueStart;
     public event UnityAction OnDialogueComplete;
 
@@ -52,6 +56,7 @@ public class DialogueReference : ScriptableObject
         isActive = false;
         unit = null;
         dialogue = null;
+        OnIsActiveChanged?.Invoke();
     }
 
     public void StartChat()
@@ -72,7 +77,7 @@ public class DialogueReference : ScriptableObject
         this.unit = unit;
         this.dialogue = dialogue;
         unit.Focus();
-        OnSpecialDialogueStart?.Invoke();
+        OnIsActiveChanged?.Invoke();
         navigation.Navigate(dialogueView);
     }
 
