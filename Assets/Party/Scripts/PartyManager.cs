@@ -33,7 +33,6 @@ public class PartyManager : MonoBehaviour
     {
         var partyFrog = unitManager.UnitControllers[0];
         partyFrog.SetBehaviour(partyFrog.GetComponent<UnitDJ>());
-        partyFrog.transform.position = frogAnchor.position;
 
         currentTimer = 0;
 

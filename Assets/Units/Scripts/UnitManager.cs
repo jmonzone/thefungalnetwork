@@ -10,7 +10,6 @@ public class UnitManager : MonoBehaviour
     [SerializeField] private UnitListReference unitList;
     [SerializeField] private UnitController unitPrefab;
     [SerializeField] private Transform unitSpawnAnchor;
-    [SerializeField] private CameraPanController cameraPanController;
 
     [Header("Runtime")]
     [SerializeField] private List<UnitController> unitControllers;
@@ -27,7 +26,6 @@ public class UnitManager : MonoBehaviour
 
     private void Start()
     {
-        //SummonPartyFrog();
         foreach(var unit in unitList.Units)
         {
             SummonUnit(unit);
@@ -55,7 +53,6 @@ public class UnitManager : MonoBehaviour
         unitController.Initialize(unit);
         unitControllers.Add(unitController);
 
-        //cameraPanController.CenterTargetInView(unitController.transform.position);
         OnUnitSummoned?.Invoke(unitController);
     }
 }

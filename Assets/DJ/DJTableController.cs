@@ -8,11 +8,13 @@ public class DJTableController : MonoBehaviour, IInteractable
     [SerializeField] private BackgroundMusicDelegate backgroundMusic;
     [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference djView;
+    [SerializeField] private Transform djAnchor;
 
     [SerializeField] private AudioSource audioSource1;
     [SerializeField] private AudioSource audioSource2;
 
     Transform ITarget.Transform => transform;
+    public Vector3 DJPosition => djAnchor.position;
 
     private void Awake()
     {
