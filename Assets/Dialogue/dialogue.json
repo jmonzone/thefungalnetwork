@@ -5,7 +5,72 @@
       "yea I like to pass a spore here and there, sharing is caring",
       "theres rules to passing a spore, but don't get me started on that"
     ],
-    "chat": ["if you have a light, we could play pass the spore"],
+    "chat": [
+      {
+        "id": "line1",
+        "text": "i haven't seen my mom in a while, i wonder how she's doing",
+        "responses": [
+          { "text": "oh geez, i'm sorry bro", "nextId": "line2a" },
+          { "text": "yea, i'm with you on that", "nextId": "line2b" }
+        ]
+      },
+      {
+        "id": "line2a",
+        "text": "sometimes i just wish i could go dance my worries away",
+        "responses": [
+          { "text": "dance with me, let's cheer up!", "nextId": "line3a" },
+          { "text": "maybe take a walk outside instead?", "nextId": "line3b" }
+        ]
+      },
+      {
+        "id": "line2b",
+        "text": "it's been tough lately, i guess we all have our ups and downs",
+        "responses": [
+          { "text": "hang in there, it will get better", "nextId": "line3c" },
+          { "text": "want to talk about it?", "nextId": "line3d" }
+        ]
+      },
+      {
+        "id": "line3a",
+        "text": "haha, alright! you're full of energy.",
+        "responses": [
+          { "text": "lets try passing spores then!", "nextId": "line4a" },
+          { "text": "maybe dance first?", "nextId": "line4b" }
+        ]
+      },
+      {
+        "id": "line3b",
+        "text": "hmm, that might help… thanks for the suggestion.",
+        "responses": [
+          { "text": "anytime, let's go!", "nextId": "line4c" },
+          { "text": "take your time", "nextId": "line4d" }
+        ]
+      },
+      {
+        "id": "line3c",
+        "text": "thanks, i needed to hear that.",
+        "responses": [
+          { "text": "no problem, keep your head up", "nextId": "line4e" },
+          { "text": "want to grab a snack?", "nextId": "line4f" }
+        ]
+      },
+      {
+        "id": "line3d",
+        "text": "sure, i could use someone to talk to.",
+        "responses": [
+          { "text": "tell me everything", "nextId": "line4g" },
+          { "text": "maybe a joke first?", "nextId": "line4h" }
+        ]
+      },
+      { "id": "line4a", "text": "yes! let's try passing spores together!" },
+      { "id": "line4b", "text": "alright, let's dance a little first." },
+      { "id": "line4c", "text": "you're right, let's get going!" },
+      { "id": "line4d", "text": "i will, thanks for giving me space." },
+      { "id": "line4e", "text": "that really helps, i feel better now." },
+      { "id": "line4f", "text": "sure, let's grab a snack together." },
+      { "id": "line4g", "text": "well, it all started this week with…" },
+      { "id": "line4h", "text": "haha, okay, here’s a joke to start" }
+    ],
     "gift": [
       {
         "text": "sweet thanks, lets go do this now",

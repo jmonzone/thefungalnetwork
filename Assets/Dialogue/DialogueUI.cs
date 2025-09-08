@@ -18,11 +18,20 @@ public class DialogueUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI chatText;
 
     [SerializeField] private Button continueButton;
+    [SerializeField] private FadeCanvasGroup continueCanvasGroup;
+
     [SerializeField] private Button closeButton;
     [SerializeField] private TarotCardUI tarotCard;
     [SerializeField] private FadeCanvasGroup chatPage;
     [SerializeField] private FadeCanvasGroup actionPage;
     [SerializeField] private FadeCanvasGroup actionButtons;
+
+    [SerializeField] private FadeCanvasGroup responseCanvasGroup;
+    [SerializeField] private Button responseButton1;
+    [SerializeField] private Button responseButton2;
+    [SerializeField] private TextMeshProUGUI responseText1;
+    [SerializeField] private TextMeshProUGUI responseText2;
+
 
     [Header("UI Settings")]
     [SerializeField] private float baseSpeed = 0.03f;             // Normal speed between characters
@@ -105,91 +114,73 @@ public class DialogueUI : MonoBehaviour
 
     private void Dialogue_OnChatStart()
     {
+        actionPage.gameObject.SetActive(false);
         tarotCard.gameObject.SetActive(false);
 
         speakerText.text = dialogue.Unit.Data.Name;
         image.sprite = dialogue.Unit.Data.Sprite;
 
         StopAllCoroutines();
-        StartCoroutine(ChatRoutine());
+        StartCoroutine(chatPage.FadeIn());
+        StartCoroutine(ChatRoutine(dialogue.Dialogue[0]));
     }
 
-    private IEnumerator ChatRoutine()
+    private IEnumerator ChatRoutine(Dialogue fullDialogue)
     {
-        actionPage.gameObject.SetActive(false);
+        responseCanvasGroup.gameObject.SetActive(false);
+        continueButton.gameObject.SetActive(false);
 
-        StartCoroutine(chatPage.FadeIn());
+        chatText.text = "";
+        dialogue.SetCurrentDialogue(fullDialogue);
 
-        List<Dialogue> pages = dialogue.Dialogue;
-
-        for (int p = 0; p < pages.Count; p++)
+        // Typewriter effect with expressive timing
+        for (int i = 0; i < fullDialogue.Text.Length; i++)
         {
-            chatText.text = "";
-            Dialogue fullDialogue = pages[p];
-            dialogue.SetCurrentDialogue(fullDialogue);
+            chatText.text += fullDialogue.Text[i];
 
-            continueButton.onClick.RemoveAllListeners();
+            char c = fullDialogue.Text[i];
+            float delay = baseSpeed;
 
-            switch (fullDialogue.Action)
-            {
-                case DialogueAction.SHOW_TAROT:
-                    tarotCard.Reset();
-                    continueButton.onClick.AddListener(() =>
-                    {
-                        continueButton.interactable = false;
-                        tarotCard.StartFlipCard(() =>
-                        {
-                            continueButton.interactable = true;
-                            nextPagePressed = true;
-                        });
-                    });
+            // Extra pause after punctuation
+            if (".,!?:;".Contains(c.ToString()))
+                delay += punctuationPause;
 
-                    tarotCard.gameObject.SetActive(true);
-                    break;
-                case DialogueAction.PLAY_SPORE:
-                    continueButton.onClick.AddListener(() =>
-                    {
-                        CloseDialogue();
-                        passTheSpore.StartGame();
-                        StopAllCoroutines();
-                    });
-                    break;
-                case DialogueAction.FOLLOW:
-                    var fungalController = dialogue.Unit as FungalController;
-                    fungalController.SetTarget(playerReference.Player.transform);
-                    continueButton.onClick.AddListener(() => nextPagePressed = true);
-                    break;
-                default:
-                    continueButton.onClick.AddListener(() => nextPagePressed = true);
-                    break;
-            }
+            // Slight random variation for organic feel
+            delay *= Random.Range(0.9f, 1.3f);
 
-            if (string.IsNullOrEmpty(fullDialogue.Text)) continue;
-
-            // Typewriter effect with expressive timing
-            for (int i = 0; i < fullDialogue.Text.Length; i++)
-            {
-                chatText.text += fullDialogue.Text[i];
-
-                char c = fullDialogue.Text[i];
-                float delay = baseSpeed;
-
-                // Extra pause after punctuation
-                if (".,!?:;".Contains(c.ToString()))
-                    delay += punctuationPause;
-
-                // Slight random variation for organic feel
-                delay *= Random.Range(0.9f, 1.3f);
-
-                yield return new WaitForSeconds(delay);
-            }
-
-            // Wait for continue button
-            nextPagePressed = false;
-            yield return new WaitUntil(() => nextPagePressed);
+            yield return new WaitForSeconds(delay);
         }
 
-        CloseDialogue();
+        if (fullDialogue.Responses.Count >= 2)
+        {
+            responseButton1.onClick.RemoveAllListeners();
+            responseButton1.onClick.AddListener(() =>
+            {
+                dialogue.RespondToChat();
+                StartCoroutine(ChatRoutine(fullDialogue.Responses[0].Next));
+            });
+            responseText1.text = fullDialogue.Responses[0].Text;
+
+            responseButton2.onClick.RemoveAllListeners();
+            responseButton2.onClick.AddListener(() =>
+            {
+                dialogue.RespondToChat();
+                StartCoroutine(ChatRoutine(fullDialogue.Responses[1].Next));
+            });
+            responseText2.text = fullDialogue.Responses[1].Text;
+
+            yield return responseCanvasGroup.FadeIn();
+
+        }
+        else
+        {
+            continueButton.onClick.RemoveAllListeners();
+            continueButton.onClick.AddListener(() =>
+            {
+                CloseDialogue();
+            });
+            yield return continueCanvasGroup.FadeIn();
+        }
     }
 
 

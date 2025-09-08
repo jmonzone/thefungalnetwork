@@ -33,7 +33,6 @@ public class UnitListReference : ScriptableObject
             {
                 string json = File.ReadAllText("Assets/Dialogue/dialogue.json");
                 JObject root = JObject.Parse(json);
-                Debug.Log(root);
                 // Example: load "fox"
                 JObject foxData = (JObject)root[unit.Name.ToLower()];
                 unit.Initialize(foxData);

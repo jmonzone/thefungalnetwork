@@ -45,9 +45,15 @@ public class PartyReference : ScriptableObject
         currentParty = null;
         isActive = false;
         guests = new List<UnitController>();
+        dialogueReference.OnChatResponded += DialogueReference_OnChatResponded;
         dialogueReference.OnDialogueComplete += DialogueReference_OnDialogueComplete;
         photoReference.OnPhotoTaken += PhotoReference_OnPhotoTaken;
         inventoryReference.OnSporeCollected += InventoryReference_OnSporeCollected;
+    }
+
+    private void DialogueReference_OnChatResponded()
+    {
+        IncrementScore(10, dialogueReference.Unit.transform.position);
     }
 
     private void InventoryReference_OnSporeCollected(SporeController spore)

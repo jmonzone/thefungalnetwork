@@ -35,6 +35,8 @@ public class DialogueReference : ScriptableObject
     public event UnityAction OnSpecialDialogueStart;
 
     public event UnityAction OnGiveComplete;
+    public event UnityAction OnChatResponded;
+
 
     public void StartDialogue(UnitController unit, List<Dialogue> dialogue)
     {
@@ -109,5 +111,10 @@ public class DialogueReference : ScriptableObject
             fungal.SetTarget(playerReference.Player.transform);
             CompleteDialogue();
         }
+    }
+
+    public void RespondToChat()
+    {
+        OnChatResponded?.Invoke();
     }
 }

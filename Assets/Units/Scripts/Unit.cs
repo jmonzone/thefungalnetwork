@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
@@ -22,7 +23,6 @@ public class Unit : ScriptableObject
 
     public void Initialize(JObject data)
     {
-        Debug.Log(data);
         // Greetings → intros
         intros = new List<string>();
         if (data["greetings"] is JArray greetingsArray)
@@ -37,11 +37,8 @@ public class Unit : ScriptableObject
         chatDialogue = new List<Dialogue>();
         if (data["chat"] is JArray chatArray)
         {
-            foreach (var c in chatArray)
-            {
-                Dialogue d = new Dialogue(c.ToString());
-                chatDialogue.Add(d);
-            }
+            var chat = BuildDialogueTree(chatArray[0] as JObject, chatArray);
+            chatDialogue.Add(chat);
         }
 
         // Gift dialogue
@@ -71,6 +68,34 @@ public class Unit : ScriptableObject
                 }
             }
         }
+    }
+
+    private Dialogue BuildDialogueTree(JObject lineObj,JArray chatArray)
+    {
+        string text = lineObj.Value<string>("text");
+        var dialogue = new Dialogue(text);
+
+        if (lineObj["responses"] is JArray responses)
+        {
+            foreach (var resp in responses)
+            {
+                string respText = resp.Value<string>("text");
+                string nextId = resp.Value<string>("nextId");
+
+                if (!string.IsNullOrEmpty(nextId))
+                {
+                    // find the object in chatArray with this id
+                    var nextLine = chatArray.First(l => l.Value<string>("id") == nextId) as JObject;
+                    var childDialogue = BuildDialogueTree(nextLine, chatArray);
+
+                    var response = CreateInstance<Response>();
+                    response.Initialize(respText, childDialogue);
+                    dialogue.Responses.Add(response);
+                }
+            }
+        }
+
+        return dialogue;
     }
 
 }
