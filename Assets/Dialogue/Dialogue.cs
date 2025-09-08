@@ -18,4 +18,10 @@ public class Dialogue
 
     public string Text => text;
     public DialogueAction Action => action;
+
+    public Dialogue(string text, DialogueAction action = DialogueAction.DEFAULT)
+    {
+        this.text = text;
+        this.action = action;
+    }
 }

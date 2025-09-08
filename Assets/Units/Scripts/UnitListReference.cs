@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
@@ -26,6 +27,19 @@ public class UnitListReference : ScriptableObject
 
     public void Initialize()
     {
+        foreach(var unit in unitCollection)
+        {
+            if (unit.Name == "Fox")
+            {
+                string json = File.ReadAllText("Assets/Dialogue/dialogue.json");
+                JObject root = JObject.Parse(json);
+                Debug.Log(root);
+                // Example: load "fox"
+                JObject foxData = (JObject)root[unit.Name.ToLower()];
+                unit.Initialize(foxData);
+            }
+        }
+
         units = new List<Unit>();
 
         if (localData.JsonFile.ContainsKey(UNIT_KEY))
