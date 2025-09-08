@@ -77,5 +77,349 @@
         "action": "spore"
       }
     ]
+  },
+  "owl": {
+    "greetings": [
+      "i brought my tarot cards lol i bring them everywhere these days",
+      "the cards the cards will telll. do you know what movie that is from?",
+      "the future is unknown, but the present, it's here "
+    ],
+    "chat": [
+      {
+        "id": "line1",
+        "text": "hey, i've been practicing tarot lately, want me to do a reading for you?",
+        "responses": [
+          { "text": "sure, let's see what the cards say", "nextId": "line2a" },
+          { "text": "maybe another time", "nextId": "line2b" }
+        ]
+      },
+      {
+        "id": "line2a",
+        "text": "great! shuffle the deck, focus on your question…",
+        "responses": [
+          {
+            "text": "i'm thinking about my next party adventure",
+            "nextId": "line3a"
+          },
+          {
+            "text": "i want to know about friendship vibes",
+            "nextId": "line3b"
+          }
+        ]
+      },
+      {
+        "id": "line2b",
+        "text": "no worries, the cards will be here when you're ready",
+        "responses": [
+          { "text": "thanks, i'll come back later", "nextId": "line3c" },
+          { "text": "maybe just a quick peek?", "nextId": "line3d" }
+        ]
+      },
+      {
+        "id": "line3a",
+        "text": "ah, the ace of cups appears, there’s excitement ahead!",
+        "responses": [
+          { "text": "awesome, i can feel it", "nextId": "line4a" },
+          { "text": "hmm, tell me more", "nextId": "line4b" }
+        ]
+      },
+      {
+        "id": "line3b",
+        "text": "the two of cups! looks like positive connections are coming",
+        "responses": [
+          { "text": "i like the sound of that", "nextId": "line4c" },
+          { "text": "i hope so!", "nextId": "line4d" }
+        ]
+      },
+      {
+        "id": "line3c",
+        "text": "ok, i'll be here when you're ready for a reading",
+        "responses": [
+          { "text": "thanks, appreciate it", "nextId": "line4e" },
+          { "text": "see you soon", "nextId": "line4f" }
+        ]
+      },
+      {
+        "id": "line3d",
+        "text": "alright, just a quick draw… the wheel of fortune shows a twist coming",
+        "responses": [
+          { "text": "interesting, tell me more", "nextId": "line4g" },
+          { "text": "i’ll keep an eye out", "nextId": "line4h" }
+        ]
+      },
+      { "id": "line4a", "text": "get ready for some fun adventures ahead!" },
+      {
+        "id": "line4b",
+        "text": "looks like a small surprise is coming your way"
+      },
+      { "id": "line4c", "text": "expect some delightful new friendships soon" },
+      { "id": "line4d", "text": "good vibes are coming, keep your heart open" },
+      { "id": "line4e", "text": "take your time, the cards will wait" },
+      {
+        "id": "line4f",
+        "text": "see you soon, don't forget your question next time"
+      },
+      {
+        "id": "line4g",
+        "text": "the twist could be tricky, but it’s part of the fun"
+      },
+      {
+        "id": "line4h",
+        "text": "stay alert, something unexpected might pop up"
+      }
+    ],
+    "gift": [
+      {
+        "text": "the cards told me this would happen"
+      }
+    ]
+  },
+  "jellyfish": {
+    "greetings": [
+      "hey, i love giving little things, it’s kind of my thing",
+      "i brought some gifts, hope you like surprises",
+      "sharing is caring, right? especially little trinkets"
+    ],
+    "chat": [
+      {
+        "id": "line1",
+        "text": "hey, want to see something i picked out for you?",
+        "responses": [
+          { "text": "sure, i love surprises", "nextId": "line2a" },
+          { "text": "maybe later?", "nextId": "line2b" }
+        ]
+      },
+      {
+        "id": "line2a",
+        "text": "awesome! i thought you might like this little charm",
+        "responses": [
+          { "text": "wow, that’s really thoughtful", "nextId": "line3a" },
+          { "text": "thanks! it’s cute", "nextId": "line3b" }
+        ]
+      },
+      {
+        "id": "line2b",
+        "text": "no worries, i’ll keep it safe until you’re ready",
+        "responses": [
+          { "text": "thanks, i’ll come back for it", "nextId": "line3c" },
+          { "text": "maybe just a peek?", "nextId": "line3d" }
+        ]
+      },
+      {
+        "id": "line3a",
+        "text": "i’m glad you like it! it makes me happy to give",
+        "responses": [
+          { "text": "you really made my day", "nextId": "line4a" },
+          { "text": "i love it, thank you", "nextId": "line4b" }
+        ]
+      },
+      {
+        "id": "line3b",
+        "text": "heh, just a little something to brighten your day",
+        "responses": [
+          { "text": "it definitely did", "nextId": "line4c" },
+          { "text": "i appreciate it", "nextId": "line4d" }
+        ]
+      },
+      {
+        "id": "line3c",
+        "text": "i’ll be here when you’re ready, don’t worry",
+        "responses": [
+          { "text": "thanks, i appreciate it", "nextId": "line4e" },
+          { "text": "see you soon", "nextId": "line4f" }
+        ]
+      },
+      {
+        "id": "line3d",
+        "text": "alright, just a tiny peek… a little charm appears",
+        "responses": [
+          { "text": "aww, that’s sweet", "nextId": "line4g" },
+          { "text": "thanks for showing me", "nextId": "line4h" }
+        ]
+      },
+      {
+        "id": "line4a",
+        "text": "i’m happy you liked it, giving feels magical"
+      },
+      { "id": "line4b", "text": "seeing you smile makes it all worth it" },
+      { "id": "line4c", "text": "glad it brightened your day" },
+      { "id": "line4d", "text": "sharing little things is my favorite" },
+      { "id": "line4e", "text": "take your time, the gift waits for you" },
+      { "id": "line4f", "text": "see you soon, don’t forget it’s yours" },
+      { "id": "line4g", "text": "even small gestures can mean a lot" },
+      {
+        "id": "line4h",
+        "text": "hope it makes you smile every time you see it"
+      }
+    ],
+    "gift": [
+      {
+        "text": "i thought you might like this little charm"
+      }
+    ]
+  },
+  "frog": {
+    "greetings": [
+      "yo, got some fresh tracks for the party tonight",
+      "i live for spinning beats, hope you’re ready",
+      "music makes everything better, don’t you think?"
+    ],
+    "chat": [
+      {
+        "id": "line1",
+        "text": "hey, wanna check out some of my new tracks?",
+        "responses": [
+          { "text": "yeah, let's hear them", "nextId": "line2a" },
+          { "text": "maybe later, i’m busy", "nextId": "line2b" }
+        ]
+      },
+      {
+        "id": "line2a",
+        "text": "sweet! listen to this drop, it’s one of my favorites",
+        "responses": [
+          { "text": "woah, that’s fire!", "nextId": "line3a" },
+          { "text": "i love the vibes", "nextId": "line3b" }
+        ]
+      },
+      {
+        "id": "line2b",
+        "text": "no worries, i’ll spin it later for you",
+        "responses": [
+          { "text": "cool, looking forward to it", "nextId": "line3c" },
+          { "text": "maybe a short sample?", "nextId": "line3d" }
+        ]
+      },
+      {
+        "id": "line3a",
+        "text": "haha glad you feel it! nothing beats a good beat drop",
+        "responses": [
+          { "text": "keep the music coming!", "nextId": "line4a" },
+          { "text": "can you show me how you made this?", "nextId": "line4b" }
+        ]
+      },
+      {
+        "id": "line3b",
+        "text": "i knew you’d feel the vibes, music connects us all",
+        "responses": [
+          { "text": "totally, it’s awesome", "nextId": "line4c" },
+          { "text": "can we dance to it?", "nextId": "line4d" }
+        ]
+      },
+      {
+        "id": "line3c",
+        "text": "perfect, i’ll play it when you’re ready",
+        "responses": [
+          { "text": "thanks, can’t wait", "nextId": "line4e" },
+          { "text": "see you then", "nextId": "line4f" }
+        ]
+      },
+      {
+        "id": "line3d",
+        "text": "alright, just a quick sample… listen to this drop",
+        "responses": [
+          { "text": "haha, that’s sick!", "nextId": "line4g" },
+          { "text": "wow, can’t wait for more", "nextId": "line4h" }
+        ]
+      },
+      { "id": "line4a", "text": "let’s keep the party jumping all night!" },
+      {
+        "id": "line4b",
+        "text": "i’ll show you the tricks behind the beats sometime"
+      },
+      { "id": "line4c", "text": "music really brings people together" },
+      { "id": "line4d", "text": "alright, let’s dance and ride the vibes" },
+      {
+        "id": "line4e",
+        "text": "get ready, the party’s about to hit next level"
+      },
+      { "id": "line4f", "text": "see you at the DJ booth later" },
+      { "id": "line4g", "text": "hope that gave you a taste of the set" },
+      { "id": "line4h", "text": "stay tuned, there’s more fire coming" }
+    ]
+  },
+  "tree": {
+    "greetings": [
+      "welcome, traveler… the fungal network awaits",
+      "paths twist and turn, only those who wander find their way",
+      "i have watched over these spores for ages…"
+    ],
+    "chat": [
+      {
+        "id": "line1",
+        "text": "do you seek passage through the fungal network?",
+        "responses": [
+          { "text": "yes, i’m ready", "nextId": "line2a" },
+          { "text": "i need to know more first", "nextId": "line2b" }
+        ]
+      },
+      {
+        "id": "line2a",
+        "text": "very well… the network responds to those who listen",
+        "responses": [
+          { "text": "i’ll pay attention to the signs", "nextId": "line3a" },
+          { "text": "what signs should i look for?", "nextId": "line3b" }
+        ]
+      },
+      {
+        "id": "line2b",
+        "text": "patience is a virtue… the network reveals itself in time",
+        "responses": [
+          { "text": "i’ll wait and observe", "nextId": "line3c" },
+          { "text": "can you give me a hint?", "nextId": "line3d" }
+        ]
+      },
+      {
+        "id": "line3a",
+        "text": "good, many rush in without heeding the whispers of the spores",
+        "responses": [
+          { "text": "i’ll be careful", "nextId": "line4a" },
+          { "text": "i want to explore bravely", "nextId": "line4b" }
+        ]
+      },
+      {
+        "id": "line3b",
+        "text": "look for the glow and the subtle shifts in the air",
+        "responses": [
+          { "text": "i see… i’ll be observant", "nextId": "line4c" },
+          { "text": "got it, i’ll follow carefully", "nextId": "line4d" }
+        ]
+      },
+      {
+        "id": "line3c",
+        "text": "wisely done, the network favors the patient",
+        "responses": [
+          { "text": "i will continue to watch", "nextId": "line4e" },
+          { "text": "thank you for guiding me", "nextId": "line4f" }
+        ]
+      },
+      {
+        "id": "line3d",
+        "text": "the path is hidden until the spores decide to reveal it",
+        "responses": [
+          { "text": "i’ll stay alert", "nextId": "line4g" },
+          { "text": "i’ll try to sense them", "nextId": "line4h" }
+        ]
+      },
+      { "id": "line4a", "text": "the journey is long, but worth every step" },
+      {
+        "id": "line4b",
+        "text": "courage will carry you where curiosity leads"
+      },
+      { "id": "line4c", "text": "the subtle glow will guide your way" },
+      {
+        "id": "line4d",
+        "text": "follow the shifts, the network speaks softly"
+      },
+      {
+        "id": "line4e",
+        "text": "patience will be rewarded, keep your senses open"
+      },
+      { "id": "line4f", "text": "listen well, the spores tell stories of old" },
+      {
+        "id": "line4g",
+        "text": "attune yourself to the air and light, traveler"
+      },
+      { "id": "line4h", "text": "the network is alive… let it whisper to you" }
+    ]
   }
 }

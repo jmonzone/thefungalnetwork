@@ -29,14 +29,11 @@ public class UnitListReference : ScriptableObject
     {
         foreach(var unit in unitCollection)
         {
-            if (unit.Name == "Fox")
-            {
-                string json = File.ReadAllText("Assets/Dialogue/dialogue.json");
-                JObject root = JObject.Parse(json);
-                // Example: load "fox"
-                JObject foxData = (JObject)root[unit.Name.ToLower()];
-                unit.Initialize(foxData);
-            }
+            string json = File.ReadAllText("Assets/Dialogue/dialogue.json");
+            JObject root = JObject.Parse(json);
+            // Example: load "fox"
+            JObject foxData = (JObject)root[unit.Name.ToLower()];
+            unit.Initialize(foxData);
         }
 
         units = new List<Unit>();
