@@ -146,7 +146,7 @@ public class PassTheSpore : MonoBehaviour
         }
 
         sporeBall.position = end;
-        partyReference.IncrementScore(10);
+        partyReference.IncrementScore(10, sporeBall.position);
         isMidAir = false;
     }
     private IEnumerator GameUpdate()

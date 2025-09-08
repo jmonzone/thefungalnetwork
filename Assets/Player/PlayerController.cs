@@ -38,14 +38,16 @@ public class PlayerController : UnitController
         }
     }
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
         playerReference.OnTargetPositionChanged += PlayerReference_OnTargetPositionChanged;
         playerReference.OnTargetInteractableChanged += PlayerReference_OnTargetInteractableChanged; ;
     }
 
-    private void OnDisable()
+    protected override void OnDisable()
     {
+        base.OnDisable();
         playerReference.OnTargetPositionChanged -= PlayerReference_OnTargetPositionChanged;
         playerReference.OnTargetInteractableChanged -= PlayerReference_OnTargetInteractableChanged;
     }

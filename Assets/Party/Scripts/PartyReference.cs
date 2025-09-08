@@ -35,11 +35,10 @@ public class PartyReference : ScriptableObject
     public List<UnitController> Guests => guests;
 
     public event UnityAction OnPartyStarted;
-    public event UnityAction OnPartyPaused;
     public event UnityAction OnPartyComplete;
     public event UnityAction OnPartyDebriefComplete;
-    public event UnityAction OnPartyResumed;
     public event UnityAction OnScoreChanged;
+    public event UnityAction<Vector3> OnVibeIncreased;
 
     public void Initialize()
     {
@@ -51,28 +50,29 @@ public class PartyReference : ScriptableObject
         inventoryReference.OnSporeCollected += InventoryReference_OnSporeCollected;
     }
 
-    private void InventoryReference_OnSporeCollected(SporeController arg0)
+    private void InventoryReference_OnSporeCollected(SporeController spore)
     {
         sporesCollected += 1;
-        IncrementScore(1);
+        IncrementScore(1, spore.transform.position);
     }
 
     private void PhotoReference_OnPhotoTaken()
     {
-        IncrementScore(25);
+        IncrementScore(25, photoReference.LookTarget.position);
     }
 
     private void DialogueReference_OnDialogueComplete()
     {
-        IncrementScore(15);
+        IncrementScore(15, dialogueReference.Unit.transform.position);
     }
 
-    public void IncrementScore(int value)
+    public void IncrementScore(int value, Vector3 source)
     {
         if (isActive)
         {
             score += value;
             OnScoreChanged?.Invoke();
+            OnVibeIncreased?.Invoke(source);
         }
     }
 

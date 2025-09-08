@@ -5,9 +5,13 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [CreateAssetMenu]
-public class UnitListReference : UIReference
+public class UnitListReference : ScriptableObject
 {
     [SerializeField] private LocalData localData;
+    [SerializeField] private Navigation navigation;
+    [SerializeField] private ViewReference fungalView;
+    [SerializeField] private ViewReference fungalListView;
+
     [SerializeField] private List<Unit> units;
 
     [SerializeField] private List<Unit> unitCollection;
@@ -16,6 +20,8 @@ public class UnitListReference : UIReference
 
     private const string UNIT_KEY = "units";
 
+    public event UnityAction OnFungalOpened;
+    public event UnityAction<Unit> OnFungalSelected;
     public event UnityAction<Unit> OnUnitSummoned;
 
     public void Initialize()
@@ -85,5 +91,17 @@ public class UnitListReference : UIReference
         }
 
         localData.SaveData(UNIT_KEY, unitsJson);
+    }
+
+    public void OpenFungals()
+    {
+        navigation.Navigate(fungalListView);
+        OnFungalOpened?.Invoke();
+    }
+
+    public void SelectFungal(Unit unit)
+    {
+        navigation.Navigate(fungalView);
+        OnFungalSelected?.Invoke(unit);
     }
 }

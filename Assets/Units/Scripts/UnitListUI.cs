@@ -15,7 +15,7 @@ public class UnitListUI : MonoBehaviour
     private void OnEnable()
     {
         UpdateView();
-        unitListReference.OnShow += UpdateView;
+        unitListReference.OnFungalOpened += UpdateView;
         unitListReference.OnUnitSummoned += UnitListReference_OnUnitSummoned;
     }
 
@@ -26,7 +26,7 @@ public class UnitListUI : MonoBehaviour
 
     private void OnDisable()
     {
-        unitListReference.OnShow -= UpdateView;
+        unitListReference.OnFungalOpened -= UpdateView;
         unitListReference.OnUnitSummoned -= UnitListReference_OnUnitSummoned;
     }
 

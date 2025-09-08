@@ -5,22 +5,23 @@ using UnityEngine.UI;
 
 public class UnitUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
+    [Header("References")]
     [SerializeField] private UnitListReference unitListReference;
-
     [SerializeField] private Image image;
+    [SerializeField] private Button unitButton;
     [SerializeField] private Image backgroundImage;
     [SerializeField] private Color backgroundActiveColor;
     [SerializeField] private Color backgroundInactiveColor;
     [SerializeField] private RotateObject rotateObject;
-
     [SerializeField] private GameObject labelsContainer;
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI levelText;
-
     [SerializeField] private BuyButton summonButton;
     [SerializeField] private GameObject summonContainer;
-
     [SerializeField] private InventoryReference inventory;
+
+    [Header("Runtime")]
+    [SerializeField] private Unit unit;
 
     private void Awake()
     {
@@ -30,10 +31,14 @@ public class UnitUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             inventory.DecreaseSporeCount(125);
             unitListReference.AddUnit(null);
         };
+
+        unitButton.onClick.AddListener(() => unitListReference.SelectFungal(unit));
     }
 
     public void SetUnit(Unit unit)
     {
+        this.unit = unit;
+
         if (unit)
         {
             image.sprite = unit.Sprite;

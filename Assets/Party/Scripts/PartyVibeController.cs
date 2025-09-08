@@ -10,35 +10,39 @@ public class PartyVibeController : MonoBehaviour
     [SerializeField] private Image fillImage; // assign your fill image here
     [SerializeField] private Gradient vibeGradient; // base gradient driven by slider value
 
-    [Header("Lerp Settings")]
+    [Header("Settings")]
     [SerializeField] private float lerpSpeed = 5f;
-
-    [Header("Pulse Settings")]
     [SerializeField] private float pulseDuration = 0.3f;
     [SerializeField] private float pulseScale = 1.2f;
-
-    [Header("Color Animation")]
     [SerializeField] private float colorPulseSpeed = 2f; // how fast the hue shifts
     [SerializeField] private float colorPulseStrength = 0.15f; // how strong the shift is
 
+    [Header("Runtime")]
+    [SerializeField] private float targetValue;
+    [SerializeField] private Color animatedColor;
+
     private Coroutine pulseRoutine;
-    private float targetValue;
+    private PartyVibeParticleController partyVibeParticleController;
+
+    public Color AnimatedColor => animatedColor;
 
     private void Awake()
     {
         slider.minValue = 0;
         slider.maxValue = 100;
         targetValue = slider.value;
+
+        partyVibeParticleController = GetComponent<PartyVibeParticleController>();
+        partyVibeParticleController.OnParticlesReached += PartyVibeParticleController_OnParticlesReached;
     }
 
-    private void OnEnable()
+    private void PartyVibeParticleController_OnParticlesReached()
     {
-        partyReference.OnScoreChanged += PartyReference_OnScoreChanged;
-    }
+        targetValue = partyReference.Score;
 
-    private void OnDisable()
-    {
-        partyReference.OnScoreChanged -= PartyReference_OnScoreChanged;
+        // Pulse effect
+        if (pulseRoutine != null) StopCoroutine(pulseRoutine);
+        pulseRoutine = StartCoroutine(PulseFill());
     }
 
     private void Update()
@@ -52,18 +56,9 @@ public class PartyVibeController : MonoBehaviour
 
         // Add animated color vibe (oscillates the hue/brightness)
         float wave = Mathf.Sin(Time.time * colorPulseSpeed) * colorPulseStrength;
-        Color animated = ShiftColor(baseColor, wave);
+        animatedColor = ShiftColor(baseColor, wave);
 
-        fillImage.color = animated;
-    }
-
-    private void PartyReference_OnScoreChanged()
-    {
-        targetValue = partyReference.Score;
-
-        // Pulse effect
-        if (pulseRoutine != null) StopCoroutine(pulseRoutine);
-        pulseRoutine = StartCoroutine(PulseFill());
+        fillImage.color = animatedColor;
     }
 
     private IEnumerator PulseFill()
