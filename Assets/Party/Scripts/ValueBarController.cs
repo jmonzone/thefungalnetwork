@@ -2,70 +2,79 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PartyVibeController : MonoBehaviour
+public class ValueBarController : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private PartyReference partyReference;
     [SerializeField] private Slider slider;
-    [SerializeField] private Image fillImage; // assign your fill image here
-    [SerializeField] private Gradient vibeGradient; // base gradient driven by slider value
+    [SerializeField] private Image fillImage;
+    [SerializeField] private Gradient gradient; // slider color mapping
 
     [Header("Settings")]
     [SerializeField] private float lerpSpeed = 5f;
     [SerializeField] private float pulseDuration = 0.3f;
     [SerializeField] private float pulseScale = 1.2f;
-    [SerializeField] private float colorPulseSpeed = 2f; // how fast the hue shifts
-    [SerializeField] private float colorPulseStrength = 0.15f; // how strong the shift is
+    [SerializeField] private float colorPulseSpeed = 2f;
+    [SerializeField] private float colorPulseStrength = 0.15f;
 
     [Header("Runtime")]
     [SerializeField] private float targetValue;
     [SerializeField] private Color animatedColor;
 
     private Coroutine pulseRoutine;
-    private PartyVibeParticleController partyVibeParticleController;
+    private Vector3 originalScale;
 
     public Color AnimatedColor => animatedColor;
 
     private void Awake()
     {
-        slider.minValue = 0;
-        slider.maxValue = 100;
-        targetValue = slider.value;
+        if (slider != null)
+        {
+            slider.minValue = 0;
+            slider.maxValue = 100;
+            targetValue = slider.value;
+        }
 
-        partyVibeParticleController = GetComponent<PartyVibeParticleController>();
-        partyVibeParticleController.OnParticlesReached += PartyVibeParticleController_OnParticlesReached;
+        originalScale = fillImage.transform.localScale;
     }
 
-    private void PartyVibeParticleController_OnParticlesReached()
+    /// <summary>Externally call to update the bar target value.</summary>
+    public void SetTargetValue(float value, bool pulse = true)
     {
-        targetValue = partyReference.Score;
+        targetValue = value;
 
-        // Pulse effect
-        if (pulseRoutine != null) StopCoroutine(pulseRoutine);
-        pulseRoutine = StartCoroutine(PulseFill());
+        if (pulse)
+        {
+            if (pulseRoutine != null) StopCoroutine(pulseRoutine);
+            pulseRoutine = StartCoroutine(PulseFill());
+        }
     }
+
+    public void Increment() => SetTargetValue(targetValue + 1);
 
     private void Update()
     {
-        // Smooth lerp to target value
+        if (!slider) return;
+
+        // Smooth lerp
         slider.value = Mathf.Lerp(slider.value, targetValue, Time.deltaTime * lerpSpeed);
 
-        // Base gradient color
+        // Base color from gradient
         float t = slider.normalizedValue;
-        Color baseColor = vibeGradient.Evaluate(t);
+        Color baseColor = gradient.Evaluate(t);
 
-        // Add animated color vibe (oscillates the hue/brightness)
+        // Animate hue
         float wave = Mathf.Sin(Time.time * colorPulseSpeed) * colorPulseStrength;
         animatedColor = ShiftColor(baseColor, wave);
 
-        fillImage.color = animatedColor;
+        if (fillImage) fillImage.color = animatedColor;
     }
 
     private IEnumerator PulseFill()
     {
-        Vector3 originalScale = fillImage.transform.localScale;
+        if (!fillImage) yield break;
 
         float time = 0;
+
         while (time < pulseDuration)
         {
             float progress = time / pulseDuration;
@@ -79,7 +88,6 @@ public class PartyVibeController : MonoBehaviour
         fillImage.transform.localScale = originalScale;
     }
 
-    // Shifts color by modifying HSV values slightly
     private Color ShiftColor(Color color, float shift)
     {
         Color.RGBToHSV(color, out float h, out float s, out float v);

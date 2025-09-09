@@ -13,6 +13,22 @@ public class PartyManager : MonoBehaviour
     [SerializeField] private float currentTimer;
     [SerializeField] private FadeCanvasGroup vibeMeterCanvas;
 
+    private ValueBarController valueBarController;
+    private ValueBarParticleController valueBarParticleController;
+
+    private void Awake()
+    {
+        //valueBarController = GetComponent<ValueBarController>();
+        //valueBarParticleController = GetComponent<ValueBarParticleController>();
+
+        //valueBarParticleController.OnParticleReached += ValueBarParticleController_OnParticlesReached;
+    }
+
+    private void ValueBarParticleController_OnParticlesReached()
+    {
+        valueBarController.Increment();
+    }
+
     private void OnEnable()
     {
         partyReference.OnPartyStarted += PartyReference_OnPartyStarted;
@@ -20,6 +36,8 @@ public class PartyManager : MonoBehaviour
 
         photoReference.OnPhotoStart += PhotoReference_OnPhotoStart;
         photoReference.OnPhotoExit += PhotoReference_OnPhotoExit;
+
+        //partyReference.OnVibeIncreased += PartyReference_OnVibeIncreased;
     }
 
     private void OnDisable()
@@ -29,6 +47,8 @@ public class PartyManager : MonoBehaviour
 
         photoReference.OnPhotoStart -= PhotoReference_OnPhotoStart;
         photoReference.OnPhotoExit -= PhotoReference_OnPhotoExit;
+
+        //partyReference.OnVibeIncreased -= PartyReference_OnVibeIncreased;
     }
 
     private void PartyReference_OnPartyStarted()
@@ -101,5 +121,11 @@ public class PartyManager : MonoBehaviour
     {
         if (partyReference.IsActive) StartCoroutine(vibeMeterCanvas.FadeOut());
     }
+
+    private void PartyReference_OnVibeIncreased(int points, Vector3 position)
+    {
+        valueBarParticleController.BurstFromWorld(points, position);
+    }
+
 
 }

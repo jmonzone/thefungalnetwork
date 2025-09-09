@@ -52,6 +52,7 @@ public class DialogueReference : ScriptableObject
 
     public void RespondToChat(Response response)
     {
+        dialogue = response.Next;
         OnDialogueResponse?.Invoke(response);
     }
 

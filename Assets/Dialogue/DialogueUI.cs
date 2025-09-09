@@ -4,9 +4,15 @@ using UnityEngine.UI;
 
 public abstract class DialoguePageUI : MonoBehaviour
 {
+    [SerializeField] protected DialogueReference dialogue;
     [SerializeField] protected FadeCanvasGroup fadeCanvasGroup;
 
     public event UnityAction OnClose;
+
+    protected virtual void Awake()
+    {
+
+    }
 
     public virtual void Show()
     {

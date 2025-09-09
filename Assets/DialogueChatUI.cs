@@ -5,7 +5,6 @@ using UnityEngine.Events;
 
 public class DialogueChatUI : DialoguePageUI
 {
-    [SerializeField] private DialogueReference dialogue;
     [SerializeField] private ResponseUI responseUI;
     [SerializeField] private TypewriterEffect chatTypewriter;
 

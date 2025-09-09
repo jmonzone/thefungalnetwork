@@ -1573,7 +1573,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -274.2}
+  m_AnchoredPosition: {x: 0, y: -200}
   m_SizeDelta: {x: 500, y: 60}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &68235281
@@ -9412,6 +9412,8 @@ GameObject:
   - component: {fileID: 399686876}
   - component: {fileID: 399686875}
   - component: {fileID: 399686879}
+  - component: {fileID: 399686881}
+  - component: {fileID: 399686880}
   m_Layer: 0
   m_Name: Dialogue UI
   m_TagString: Untagged
@@ -9460,6 +9462,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d8c62ea4db7c422393fe117543093d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dialogue: {fileID: 11400000, guid: 66db6a8c7a0524bd8b89b88de939507f, type: 2}
   fadeCanvasGroup: {fileID: 1560251378}
 --- !u!114 &399686876
 MonoBehaviour:
@@ -9473,8 +9476,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9eb16107dbe32467ab68e0788bca4755, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeCanvasGroup: {fileID: 1681115128}
   dialogue: {fileID: 11400000, guid: 66db6a8c7a0524bd8b89b88de939507f, type: 2}
+  fadeCanvasGroup: {fileID: 1681115128}
   responseUI: {fileID: 399686879}
   chatTypewriter: {fileID: 1681115130}
 --- !u!114 &399686877
@@ -9489,8 +9492,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7a8accb43b2c4839bed802a18480442, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dialogue: {fileID: 11400000, guid: 66db6a8c7a0524bd8b89b88de939507f, type: 2}
   fadeCanvasGroup: {fileID: 407616902}
-  dialogueReference: {fileID: 11400000, guid: 66db6a8c7a0524bd8b89b88de939507f, type: 2}
   actionButtons: {fileID: 896076432}
   dialogueTypewriter: {fileID: 407616904}
   chatButton: {fileID: 502555705}
@@ -9536,6 +9539,100 @@ MonoBehaviour:
     text: {fileID: 1961639496}
   - button: {fileID: 1306795696}
     text: {fileID: 342652697}
+--- !u!114 &399686880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 399686871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b20b85cdc33e8443d9fa549318b53d95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetUI: {fileID: 1875405232}
+  canvas: {fileID: 440252800}
+  particlePrefab: {fileID: 1348427375487834283, guid: 9440ae4f82ca2485faaa9b37455b9072,
+    type: 3}
+  barController: {fileID: 399686881}
+  mintravelTime: 0.75
+  maxtravelTime: 1.25
+  arcCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &399686881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 399686871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: beaffdd96a271427a801ddd88a738b0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slider: {fileID: 1072812597}
+  fillImage: {fileID: 1769034656}
+  gradient:
+    serializedVersion: 2
+    key0: {r: 0.9764706, g: 0.78431374, b: 0.101960786, a: 1}
+    key1: {r: 0.79607844, g: 0.972549, b: 0.43529412, a: 1}
+    key2: {r: 0, g: 0, b: 0, a: 0}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 65535
+    ctime2: 0
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_ColorSpace: -1
+    m_NumColorKeys: 2
+    m_NumAlphaKeys: 2
+  lerpSpeed: 5
+  pulseDuration: 0.3
+  pulseScale: 1.2
+  colorPulseSpeed: 2
+  colorPulseStrength: 0.01
+  targetValue: 0
+  animatedColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &407349044
 GameObject:
   m_ObjectHideFlags: 0
@@ -24725,7 +24822,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1145510282}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.06868998, y: -0.0000000166458, z: 0.0000000011461067, w: 0.99763805}
+  m_LocalRotation: {x: 0.06869, y: 0.00000001822998, z: -0.000000001255182, w: 0.99763805}
   m_LocalPosition: {x: 0, y: 0.75, z: 0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -25405,25 +25502,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 1170789626}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d686002c9eedd4644b12b14a3571c667, type: 3}
+  m_Script: {fileID: 11500000, guid: beaffdd96a271427a801ddd88a738b0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  partyReference: {fileID: 11400000, guid: d2092e9896dc047a3939198bb6a0204c, type: 2}
   slider: {fileID: 1435923179}
   fillImage: {fileID: 1481417626}
-  vibeGradient:
+  gradient:
     serializedVersion: 2
-    key0: {r: 0.59291446, g: 0.30838376, b: 0.6226415, a: 1}
+    key0: {r: 0.5951482, g: 0, b: 0.6509434, a: 1}
     key1: {r: 0.84313726, g: 0.5803922, b: 0.87058824, a: 1}
-    key2: {r: 0.9622642, g: 0.22241013, b: 0.78996086, a: 0}
+    key2: {r: 0, g: 0, b: 0, a: 0}
     key3: {r: 0, g: 0, b: 0, a: 0}
     key4: {r: 0, g: 0, b: 0, a: 0}
     key5: {r: 0, g: 0, b: 0, a: 0}
     key6: {r: 0, g: 0, b: 0, a: 0}
     key7: {r: 0, g: 0, b: 0, a: 0}
-    ctime0: 386
-    ctime1: 32768
-    ctime2: 65150
+    ctime0: 0
+    ctime1: 65535
+    ctime2: 0
     ctime3: 0
     ctime4: 0
     ctime5: 0
@@ -25439,7 +25535,7 @@ MonoBehaviour:
     atime7: 0
     m_Mode: 0
     m_ColorSpace: -1
-    m_NumColorKeys: 3
+    m_NumColorKeys: 2
     m_NumAlphaKeys: 2
   lerpSpeed: 5
   pulseDuration: 0.3
@@ -25457,16 +25553,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 1170789626}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 34ae673607787467bade93992d9e9339, type: 3}
+  m_Script: {fileID: 11500000, guid: b20b85cdc33e8443d9fa549318b53d95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  partyReference: {fileID: 11400000, guid: d2092e9896dc047a3939198bb6a0204c, type: 2}
   targetUI: {fileID: 277890260}
   canvas: {fileID: 1365724379}
   particlePrefab: {fileID: 1348427375487834283, guid: 9440ae4f82ca2485faaa9b37455b9072,
     type: 3}
-  burstCount: 6
-  travelTime: 1
+  barController: {fileID: 1170789630}
+  mintravelTime: 0.75
+  maxtravelTime: 1.25
   arcCurve:
     serializedVersion: 2
     m_Curve:
@@ -25482,8 +25578,8 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 2
-      outSlope: 2
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
@@ -29207,7 +29303,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Fill the Vibe Meter
+  m_text: Talk to Guests
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b4e44b235567b440caf4e04d3269a48c, type: 2}
   m_sharedMaterial: {fileID: -4893521127105691677, guid: b4e44b235567b440caf4e04d3269a48c,
@@ -31918,7 +32014,7 @@ GameObject:
   - component: {fileID: 1481417627}
   - component: {fileID: 1481417626}
   m_Layer: 0
-  m_Name: 'Insight Slider Fill '
+  m_Name: Party Vibe Slider Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -37925,7 +38021,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1752910753
 RectTransform:
   m_ObjectHideFlags: 0
@@ -50307,6 +50403,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Spore Count
+      objectReference: {fileID: 0}
+    - target: {fileID: 2045618369593018823, guid: 9ad9eee15e8564fdaa113b2697983962,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5565633959542331367, guid: 9ad9eee15e8564fdaa113b2697983962,
         type: 3}
