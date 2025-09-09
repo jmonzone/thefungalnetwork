@@ -28,13 +28,13 @@ public class StoryFirstParty : MonoBehaviour
     private void OnEnable()
     {
         sceneNavigation.OnSceneFadeIn += StartParty;
-        dialogueReference.OnDialogueStart += DialogueReference_OnDialogueStart;
+        dialogueReference.OnInteractionStart += DialogueReference_OnDialogueStart;
     }
 
     private void OnDisable()
     {
         sceneNavigation.OnSceneFadeIn -= StartParty;
-        dialogueReference.OnDialogueStart -= DialogueReference_OnDialogueStart;
+        dialogueReference.OnInteractionStart -= DialogueReference_OnDialogueStart;
     }
 
     private void Awake()
@@ -66,7 +66,7 @@ public class StoryFirstParty : MonoBehaviour
         yield return new WaitWhile(() => dialogueReference.IsActive);
         yield return new WaitForSeconds(1f);
 
-        dialogueReference.StartSpecialDialogue(partyFrog, letsTakeAPhotoDialogue);
+        //dialogueReference.StartDialogue(partyFrog, letsTakeAPhotoDialogue);
 
         yield return new WaitWhile(() => dialogueReference.IsActive);
         yield return new WaitForSeconds(1f);
@@ -103,7 +103,7 @@ public class StoryFirstParty : MonoBehaviour
         yield return new WaitWhile(() => photoReference.IsActive);
         yield return new WaitForSeconds(1f);
 
-        dialogueReference.StartSpecialDialogue(partyFrog, afterPhotoTakenDialogue);
+        //dialogueReference.StartDialogue(partyFrog, afterPhotoTakenDialogue);
 
         yield return new WaitWhile(() => dialogueReference.IsActive);
         yield return new WaitForSeconds(1f);

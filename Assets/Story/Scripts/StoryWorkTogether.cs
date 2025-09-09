@@ -53,9 +53,9 @@ public class StoryWorkTogether : MonoBehaviour
         playerReference.Player.transform.position = playerAnchor.position;
         playerReference.Player.SetLookPosition(frogAnchor.position);
 
-        dialogueReference.StartSpecialDialogue(partyFrog, workTogetherDialogue);
+        //dialogueReference.StartDialogue(partyFrog, workTogetherDialogue);
 
-        yield return new WaitUntil(() => dialogueReference.CurrentDialogue.Action == DialogueAction.GIFT);
+        yield return new WaitUntil(() => dialogueReference.Dialogue.Action == DialogueAction.GIFT);
         plantGift.SetActive(true);
 
         yield return new WaitWhile(() => dialogueReference.IsActive);
@@ -67,7 +67,7 @@ public class StoryWorkTogether : MonoBehaviour
 
         buildReference.EndBuild();
 
-        dialogueReference.StartSpecialDialogue(partyFrog, buildCompleteDialogue);
+        //dialogueReference.StartDialogue(partyFrog, buildCompleteDialogue);
         yield return new WaitWhile(() => dialogueReference.IsActive);
 
         storyReference.CompleteStory(workTogether);
