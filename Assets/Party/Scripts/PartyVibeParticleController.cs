@@ -46,11 +46,11 @@ public class PartyVibeParticleController : MonoBehaviour
 
     private int activeParticles; // track how many are active
 
-    public void BurstFromWorld(Vector3 worldPos)
+    public void BurstFromWorld(int value, Vector3 worldPos)
     {
-        activeParticles = burstCount; // reset counter
+        activeParticles = value; // reset counter
 
-        for (int i = 0; i < burstCount; i++)
+        for (int i = 0; i < value; i++)
         {
             GameObject p = Instantiate(particlePrefab, canvas.transform);
             StartCoroutine(AnimateParticle(p, worldPos));

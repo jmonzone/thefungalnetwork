@@ -12,6 +12,7 @@ public class UnitListReference : ScriptableObject
     [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference fungalView;
     [SerializeField] private ViewReference fungalListView;
+    [SerializeField] private TextAsset textAsset;
 
     [SerializeField] private List<Unit> units;
 
@@ -29,11 +30,11 @@ public class UnitListReference : ScriptableObject
     {
         foreach(var unit in unitCollection)
         {
-            string json = File.ReadAllText("Assets/Dialogue/dialogue.json");
+            string json = textAsset.text;
             JObject root = JObject.Parse(json);
             // Example: load "fox"
-            JObject foxData = (JObject)root[unit.Name.ToLower()];
-            unit.Initialize(foxData);
+            JObject data = (JObject)root[unit.Name.ToLower()];
+            unit.Initialize(data);
         }
 
         units = new List<Unit>();

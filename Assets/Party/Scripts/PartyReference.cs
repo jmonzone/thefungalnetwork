@@ -38,7 +38,7 @@ public class PartyReference : ScriptableObject
     public event UnityAction OnPartyComplete;
     public event UnityAction OnPartyDebriefComplete;
     public event UnityAction OnScoreChanged;
-    public event UnityAction<Vector3> OnVibeIncreased;
+    public event UnityAction<int, Vector3> OnVibeIncreased;
 
     public void Initialize()
     {
@@ -51,9 +51,9 @@ public class PartyReference : ScriptableObject
         inventoryReference.OnSporeCollected += InventoryReference_OnSporeCollected;
     }
 
-    private void DialogueReference_OnChatResponded()
+    private void DialogueReference_OnChatResponded(Response response)
     {
-        IncrementScore(10, dialogueReference.Unit.transform.position);
+        IncrementScore((int)response.XP, dialogueReference.Unit.transform.position);
     }
 
     private void InventoryReference_OnSporeCollected(SporeController spore)
@@ -78,7 +78,7 @@ public class PartyReference : ScriptableObject
         {
             score += value;
             OnScoreChanged?.Invoke();
-            OnVibeIncreased?.Invoke(source);
+            OnVibeIncreased?.Invoke(value, source);
         }
     }
 

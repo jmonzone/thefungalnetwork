@@ -35,7 +35,7 @@ public class DialogueReference : ScriptableObject
     public event UnityAction OnSpecialDialogueStart;
 
     public event UnityAction OnGiveComplete;
-    public event UnityAction OnChatResponded;
+    public event UnityAction<Response> OnChatResponded;
 
 
     public void StartDialogue(UnitController unit, List<Dialogue> dialogue)
@@ -113,8 +113,8 @@ public class DialogueReference : ScriptableObject
         }
     }
 
-    public void RespondToChat()
+    public void RespondToChat(Response response)
     {
-        OnChatResponded?.Invoke();
+        OnChatResponded?.Invoke(response);
     }
 }

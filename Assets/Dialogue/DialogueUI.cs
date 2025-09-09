@@ -153,21 +153,38 @@ public class DialogueUI : MonoBehaviour
 
         if (fullDialogue.Responses.Count >= 2)
         {
+            var response1 = fullDialogue.Responses[0];
             responseButton1.onClick.RemoveAllListeners();
             responseButton1.onClick.AddListener(() =>
             {
-                dialogue.RespondToChat();
-                StartCoroutine(ChatRoutine(fullDialogue.Responses[0].Next));
+                if (response1.HasNext)
+                {
+                    dialogue.RespondToChat(response1);
+                    StartCoroutine(ChatRoutine(response1.Next));
+                }
+                else
+                {
+                    CloseDialogue();
+                }
             });
-            responseText1.text = fullDialogue.Responses[0].Text;
 
+            responseText1.text = response1.Text;
+
+            var response2 = fullDialogue.Responses[1];
             responseButton2.onClick.RemoveAllListeners();
             responseButton2.onClick.AddListener(() =>
             {
-                dialogue.RespondToChat();
-                StartCoroutine(ChatRoutine(fullDialogue.Responses[1].Next));
+                if (response2.HasNext)
+                {
+                    dialogue.RespondToChat(response2);
+                    StartCoroutine(ChatRoutine(response2.Next));
+                }
+                else
+                {
+                    CloseDialogue();
+                }
             });
-            responseText2.text = fullDialogue.Responses[1].Text;
+            responseText2.text = response2.Text;
 
             yield return responseCanvasGroup.FadeIn();
 

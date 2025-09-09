@@ -81,6 +81,12 @@ public class Unit : ScriptableObject
             {
                 string respText = resp.Value<string>("text");
                 string nextId = resp.Value<string>("nextId");
+                float xp = resp.Value<float>("xp");
+                Debug.Log(resp);
+                Debug.Log(xp);
+
+                var response = CreateInstance<Response>();
+                response.Initialize(respText, xp);
 
                 if (!string.IsNullOrEmpty(nextId))
                 {
@@ -88,10 +94,11 @@ public class Unit : ScriptableObject
                     var nextLine = chatArray.First(l => l.Value<string>("id") == nextId) as JObject;
                     var childDialogue = BuildDialogueTree(nextLine, chatArray);
 
-                    var response = CreateInstance<Response>();
-                    response.Initialize(respText, childDialogue);
-                    dialogue.Responses.Add(response);
+                    response.SetNext(childDialogue);
                 }
+
+                dialogue.Responses.Add(response);
+
             }
         }
 
