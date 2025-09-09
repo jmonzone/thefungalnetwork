@@ -1,9 +1,12 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DialogueActionsUI : MonoBehaviour
+public class DialogueActionsUI : DialoguePageUI
 {
     [SerializeField] private DialogueReference dialogueReference;
+
+    [SerializeField] private FadeCanvasGroup actionButtons;
+    [SerializeField] private TypewriterEffect dialogueTypewriter;
 
     [SerializeField] private Button chatButton;
     [SerializeField] private Button photoButton;
@@ -18,5 +21,19 @@ public class DialogueActionsUI : MonoBehaviour
         followButton.onClick.AddListener(dialogueReference.StartFollow);
     }
 
-   
+    public override void Show()
+    {
+        base.Show();
+        actionButtons.gameObject.SetActive(false);
+
+        var allIntros = dialogueReference.Unit.Data.Intros;
+        var intro = allIntros[Random.Range(0, allIntros.Count)];
+        StartCoroutine(dialogueTypewriter.TypeRoutine(intro, () => StartCoroutine(actionButtons.FadeIn())));
+    }
+
+    public override void Hide()
+    {
+        base.Hide();
+    }
+
 }

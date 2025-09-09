@@ -9407,7 +9407,11 @@ GameObject:
   m_Component:
   - component: {fileID: 399686872}
   - component: {fileID: 399686873}
-  - component: {fileID: 399686874}
+  - component: {fileID: 399686878}
+  - component: {fileID: 399686877}
+  - component: {fileID: 399686876}
+  - component: {fileID: 399686875}
+  - component: {fileID: 399686879}
   m_Layer: 0
   m_Name: Dialogue UI
   m_TagString: Untagged
@@ -9444,7 +9448,56 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewReference: {fileID: 11400000, guid: 227df233736184388a3c550ebfccf26c, type: 2}
---- !u!114 &399686874
+--- !u!114 &399686875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 399686871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d8c62ea4db7c422393fe117543093d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fadeCanvasGroup: {fileID: 1560251378}
+--- !u!114 &399686876
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 399686871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9eb16107dbe32467ab68e0788bca4755, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fadeCanvasGroup: {fileID: 1681115128}
+  dialogue: {fileID: 11400000, guid: 66db6a8c7a0524bd8b89b88de939507f, type: 2}
+  responseUI: {fileID: 399686879}
+  chatTypewriter: {fileID: 1681115130}
+--- !u!114 &399686877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 399686871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7a8accb43b2c4839bed802a18480442, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fadeCanvasGroup: {fileID: 407616902}
+  dialogueReference: {fileID: 11400000, guid: 66db6a8c7a0524bd8b89b88de939507f, type: 2}
+  actionButtons: {fileID: 896076432}
+  dialogueTypewriter: {fileID: 407616904}
+  chatButton: {fileID: 502555705}
+  photoButton: {fileID: 1115219331}
+  giveButton: {fileID: 824580281}
+  followButton: {fileID: 1114501122}
+--- !u!114 &399686878
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9458,14 +9511,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogue: {fileID: 11400000, guid: 66db6a8c7a0524bd8b89b88de939507f, type: 2}
   speakerUI: {fileID: 1566617435}
-  dialogueTypewriter: {fileID: 407616904}
-  chatTypewriter: {fileID: 1681115130}
-  responseUI: {fileID: 1080034334}
-  chatPage: {fileID: 1681115128}
-  actionPage: {fileID: 407616902}
-  actionButtons: {fileID: 896076432}
+  actionPage: {fileID: 399686877}
+  chatPage: {fileID: 399686876}
+  friendshipPage: {fileID: 399686875}
   tarotCard: {fileID: 2130622332}
   closeButton: {fileID: 1670748568}
+--- !u!114 &399686879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 399686871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c33e01fd2d58475081b4273e1a8238d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  continueButton: {fileID: 1454621657}
+  continueGroup: {fileID: 1454621660}
+  responseGroup: {fileID: 1080034331}
+  options:
+  - button: {fileID: 756835940}
+    text: {fileID: 1961639496}
+  - button: {fileID: 1306795696}
+    text: {fileID: 342652697}
 --- !u!1 &407349044
 GameObject:
   m_ObjectHideFlags: 0
@@ -9613,10 +9683,9 @@ GameObject:
   - component: {fileID: 407616900}
   - component: {fileID: 407616903}
   - component: {fileID: 407616902}
-  - component: {fileID: 407616901}
   - component: {fileID: 407616904}
   m_Layer: 5
-  m_Name: Actions Page
+  m_Name: Action Page
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9629,7 +9698,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 407616898}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -9640,7 +9709,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 410, y: -575}
+  m_AnchoredPosition: {x: 410, y: -325}
   m_SizeDelta: {x: 660, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &407616900
@@ -9669,23 +9738,6 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &407616901
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 407616898}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a7a8accb43b2c4839bed802a18480442, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dialogueReference: {fileID: 11400000, guid: 66db6a8c7a0524bd8b89b88de939507f, type: 2}
-  chatButton: {fileID: 502555705}
-  photoButton: {fileID: 1115219331}
-  giveButton: {fileID: 824580281}
-  followButton: {fileID: 1114501122}
 --- !u!114 &407616902
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10701,7 +10753,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &440252797
 RectTransform:
   m_ObjectHideFlags: 0
@@ -13180,8 +13232,8 @@ RectTransform:
   - {fileID: 48775378}
   m_Father: {fileID: 1566617433}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 150, y: 250}
   m_Pivot: {x: 0, y: 1}
@@ -22350,7 +22402,6 @@ GameObject:
   - component: {fileID: 1080034333}
   - component: {fileID: 1080034332}
   - component: {fileID: 1080034331}
-  - component: {fileID: 1080034334}
   m_Layer: 5
   m_Name: Responses Group
   m_TagString: Untagged
@@ -22427,24 +22478,6 @@ MonoBehaviour:
   m_Spacing: {x: 25, y: 25}
   m_Constraint: 1
   m_ConstraintCount: 2
---- !u!114 &1080034334
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1080034329}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c33e01fd2d58475081b4273e1a8238d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  responseGroup: {fileID: 1080034331}
-  options:
-  - button: {fileID: 756835940}
-    text: {fileID: 1961639496}
-  - button: {fileID: 1306795696}
-    text: {fileID: 342652697}
 --- !u!1 &1080191736
 GameObject:
   m_ObjectHideFlags: 0
@@ -23528,9 +23561,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1566617433}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 200, y: -75}
   m_SizeDelta: {x: 650, y: 100}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1107766699
@@ -32597,8 +32630,8 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1566617433}
-  - {fileID: 1681115126}
   - {fileID: 407616899}
+  - {fileID: 1681115126}
   - {fileID: 1560251377}
   m_Father: {fileID: 75251042}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -32909,7 +32942,7 @@ GameObject:
   - component: {fileID: 1560251379}
   - component: {fileID: 1560251378}
   m_Layer: 5
-  m_Name: Friendship Meter
+  m_Name: Friendship Page
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32922,7 +32955,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1560251376}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -32931,10 +32964,10 @@ RectTransform:
   - {fileID: 1629663397}
   m_Father: {fileID: 1535143182}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 410, y: -375}
-  m_SizeDelta: {x: 500, y: 250}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 660, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1560251378
 MonoBehaviour:
@@ -33272,9 +33305,9 @@ RectTransform:
   - {fileID: 1107766698}
   m_Father: {fileID: 1535143182}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 410, y: -125}
   m_SizeDelta: {x: 650, y: 250}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1566617434
@@ -35471,6 +35504,11 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8602866031016970919, guid: f6558d4dd71864792b8f232062e669bb,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -35700,7 +35738,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1681115125}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -35710,10 +35748,10 @@ RectTransform:
   - {fileID: 1080034330}
   m_Father: {fileID: 1535143182}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 410, y: -375}
-  m_SizeDelta: {x: 660, y: 250}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 660, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1681115127
 MonoBehaviour:

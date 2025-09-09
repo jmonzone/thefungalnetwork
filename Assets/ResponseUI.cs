@@ -19,8 +19,6 @@ public class ResponseUI : MonoBehaviour
 
     public void ShowResponses(List<Response> responses, System.Action<Response> onSelect, System.Action onClose)
     {
-        responseGroup.gameObject.SetActive(true);
-
         // Assign responses to available options
         for (int i = 0; i < options.Count; i++)
         {
@@ -40,9 +38,6 @@ public class ResponseUI : MonoBehaviour
 
     public void ShowContinue(System.Action onClose)
     {
-        responseGroup.gameObject.SetActive(false);
-        continueGroup.gameObject.SetActive(true);
-
         continueButton.onClick.RemoveAllListeners();
         continueButton.onClick.AddListener(() => onClose());
         StartCoroutine(continueGroup.FadeIn());
@@ -55,11 +50,13 @@ public class ResponseUI : MonoBehaviour
         option.button.onClick.RemoveAllListeners();
         option.button.onClick.AddListener(() =>
         {
-            gameObject.SetActive(false);
-            if (response.HasNext)
-                onSelect(response);
-            else
-                onClose();
+            if (response.HasNext) onSelect(response);
+            else onClose();
         });
+    }
+
+    public void Hide()
+    {
+        responseGroup.gameObject.SetActive(false);
     }
 }

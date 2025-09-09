@@ -1,5 +1,28 @@
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
+
+public abstract class DialoguePageUI : MonoBehaviour
+{
+    [SerializeField] protected FadeCanvasGroup fadeCanvasGroup;
+
+    public event UnityAction OnClose;
+
+    public virtual void Show()
+    {
+        StartCoroutine(fadeCanvasGroup.FadeIn());
+    }
+
+    public virtual void Hide()
+    {
+        fadeCanvasGroup.gameObject.SetActive(false);
+    }
+
+    protected void InvokeClose()
+    {
+        OnClose?.Invoke();
+    }
+}
 
 public class DialogueUI : MonoBehaviour
 {
@@ -8,18 +31,21 @@ public class DialogueUI : MonoBehaviour
 
     [Header("UI Components")]
     [SerializeField] private SpeakerUI speakerUI;
-    [SerializeField] private TypewriterEffect dialogueTypewriter;
-    [SerializeField] private TypewriterEffect chatTypewriter;
-    [SerializeField] private ResponseUI responseUI;
-    [SerializeField] private FadeCanvasGroup chatPage;
-    [SerializeField] private FadeCanvasGroup actionPage;
-    [SerializeField] private FadeCanvasGroup actionButtons;
+    [SerializeField] private DialogueActionsUI actionPage;
+    [SerializeField] private DialogueChatUI chatPage;
+    [SerializeField] private DialogueFriendshipUI friendshipPage;
+
     [SerializeField] private TarotCardUI tarotCard;
     [SerializeField] private Button closeButton;
 
+    private DialoguePageUI currentPage;
+
     private void Awake()
     {
-        closeButton.onClick.AddListener(CloseDialogue);
+        currentPage = actionPage;
+        chatPage.OnClose += () => ShowPage(DialoguePage.FRIENDSHIP);
+
+        closeButton.onClick.AddListener(dialogue.CompleteDialogue);
     }
 
     private void OnEnable()
@@ -38,52 +64,35 @@ public class DialogueUI : MonoBehaviour
 
     private void StartInteraction()
     {
-        speakerUI.SetSpeaker(dialogue.Unit.Data);
-
-        actionPage.gameObject.SetActive(true);
-        chatPage.gameObject.SetActive(false);
-        actionButtons.gameObject.SetActive(false);
-
-        var intro = dialogue.Unit.Data.Intros[Random.Range(0, dialogue.Unit.Data.Intros.Count)];
-
-        StopAllCoroutines();
-        StartCoroutine(dialogueTypewriter.TypeRoutine(intro, () => StartCoroutine(actionButtons.FadeIn())));
+        ShowPage(DialoguePage.ACTION);
     }
 
     private void StartDialogue()
     {
+        ShowPage(DialoguePage.CHAT);
+    }
+
+    private enum DialoguePage
+    {
+        ACTION,
+        CHAT,
+        FRIENDSHIP
+    }
+
+    private void ShowPage(DialoguePage page)
+    {
         speakerUI.SetSpeaker(dialogue.Unit.Data);
 
-        actionPage.gameObject.SetActive(false);
-        responseUI.gameObject.SetActive(false);
+        currentPage.Hide();
 
-        StopAllCoroutines();
-        StartCoroutine(chatPage.FadeIn());
-
-        ShowDialogue(dialogue.Dialogue);
-    }
-
-    private void ShowDialogue(Dialogue dialogueData)
-    {
-        StartCoroutine(chatTypewriter.TypeRoutine(dialogueData.Text, () =>
+        currentPage = page switch
         {
-            if (dialogueData.Responses.Count >= 2)
-            {
-                responseUI.ShowResponses(dialogueData.Responses, response =>
-                {
-                    dialogue.RespondToChat(response);
-                    ShowDialogue(response.Next);
-                }, CloseDialogue);
-            }
-            else
-            {
-                responseUI.ShowContinue(CloseDialogue);
-            }
-        }));
-    }
+            DialoguePage.ACTION => actionPage,
+            DialoguePage.CHAT => chatPage,
+            DialoguePage.FRIENDSHIP => friendshipPage,
+            _ => actionPage,
+        };
 
-    private void CloseDialogue()
-    {
-        dialogue.CompleteDialogue();
+        currentPage.Show();
     }
 }
