@@ -6,16 +6,20 @@ using UnityEngine.UI;
 
 public class PartyPageUI : MonoBehaviour
 {
+    [Header("References")]
+    [SerializeField] private UnitListReference unitList;
     [SerializeField] private BuildReference build;
-
+    [SerializeField] private Image partyImage;
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI levelText;
-    [SerializeField] private Image partyImage;
     [SerializeField] private TextMeshProUGUI descriptionText;
     [SerializeField] private Button readyButton;
+
+    [Header("Runtime")]
     [SerializeField] private PartyData party;
 
     private List<PartyRequirementUI> partyRequirements;
+    private List<PartyInviteUI> partyInvites;
 
     public event UnityAction<PartyData> OnPartyReady;
 
@@ -27,16 +31,19 @@ public class PartyPageUI : MonoBehaviour
     public void Initialize()
     {
         partyRequirements = new List<PartyRequirementUI>();
+        partyInvites = new List<PartyInviteUI>();
+
         GetComponentsInChildren(true, partyRequirements);
+        GetComponentsInChildren(true, partyInvites);
     }
 
     public void SetParty(PartyData party)
     {
         this.party = party;
 
+        partyImage.sprite = party.Sprite;
         nameText.text = party.Name;
         levelText.text = $"Party Level {party.Level}";
-        partyImage.sprite = party.Sprite;
         descriptionText.text = party.Description;
 
         var allRequirementsMet = true;
@@ -63,6 +70,19 @@ public class PartyPageUI : MonoBehaviour
         while (i < partyRequirements.Count)
         {
             partyRequirements[i].gameObject.SetActive(false);
+            i++;
+        }
+
+        i = 0;
+        foreach(var unit in unitList.Units)
+        {
+            partyInvites[i].SetUnit(unit);
+            i++;
+        }
+
+        while (i < partyInvites.Count)
+        {
+            partyInvites[i].Clear();
             i++;
         }
     }
