@@ -34,7 +34,7 @@ public class FungalUI : MonoBehaviour
         fungalName.text = unit.Data.Name;
         relationshipSlider.minValue = 0;
         relationshipSlider.maxValue = 8;
-        relationshipSlider.value = unit.Relationship;
+        relationshipSlider.value = unit.RelationshipPoints;
         dateText.text = DateTime.Now.ToLongDateString();
     }
 }

@@ -28,7 +28,7 @@ public class UnitManager : MonoBehaviour
     {
         foreach(var unit in unitList.Units)
         {
-            if (unit.IsHired) SummonUnit(unit);
+            if (unit.IsFriends) SummonUnit(unit);
         }
     }
 

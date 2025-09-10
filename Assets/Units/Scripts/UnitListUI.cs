@@ -18,7 +18,7 @@ public class UnitListUI : MonoBehaviour
     private void OnEnable()
     {
         UpdateView();
-        unitListReference.OnFungalOpened += UpdateView;
+        unitListReference.OnFungalUpdated += UpdateView;
         unitListReference.OnUnitSummoned += UnitListReference_OnUnitSummoned;
     }
 
@@ -29,14 +29,14 @@ public class UnitListUI : MonoBehaviour
 
     private void OnDisable()
     {
-        unitListReference.OnFungalOpened -= UpdateView;
+        unitListReference.OnFungalUpdated -= UpdateView;
         unitListReference.OnUnitSummoned -= UnitListReference_OnUnitSummoned;
     }
 
     private void UpdateView()
     {
         // filter only hired units
-        var hiredUnits = unitListReference.Units.Where(u => u.IsHired).ToList();
+        var hiredUnits = unitListReference.Units.Where(u => u.IsFriends).ToList();
 
         // ensure we have enough views
         while (unitViewList.Count < hiredUnits.Count)

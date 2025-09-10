@@ -9,27 +9,73 @@ using UnityEngine.Events;
 public class UnitInstance
 {
     [SerializeField] private Unit unit;
-    [SerializeField] private bool isHired;
-    [SerializeField] private float relationship;
+    [SerializeField] private int relationshipLevel;
+    [SerializeField] private float relationshipPoints;
 
     public Unit Data => unit;
-    public bool IsHired => isHired;
-    public float Relationship => relationship;
+    public bool IsFriends => relationshipLevel > 1;
+    public int RelationshipLevel => relationshipLevel;
+    public float RelationshipPoints => relationshipPoints;
 
     public event UnityAction<float> OnRelationshipChanged;
+    public event UnityAction OnRelationshipLevelChanged;
 
-    public UnitInstance(Unit unit, bool isHired, float relationship)
+    public UnitInstance(Unit unit, float relationshipPoints)
     {
         this.unit = unit;
-        this.isHired = isHired;
-        this.relationship = relationship;
+        this.relationshipPoints = relationshipPoints;
+        relationshipLevel = GetLevelFromXP(relationshipPoints);
     }
 
     public void IncreaseRelationship(float value)
     {
-        relationship += value;
+        SetRelationshipPoints(relationshipPoints + value);
         OnRelationshipChanged?.Invoke(value);
     }
+
+    private void SetRelationshipPoints(float value)
+    {
+        relationshipPoints = value;
+
+        var previousLevel = relationshipLevel;
+        relationshipLevel = GetLevelFromXP(relationshipPoints);
+
+        if (previousLevel != relationshipLevel) OnRelationshipLevelChanged?.Invoke();
+    }
+
+    public int GetLevelFromXP(float xp)
+    {
+        int level = 1;
+        double points = 0;
+
+        for (int lvl = 1; lvl <= 120; lvl++) // RuneScape goes to 99/120, you can adjust cap
+        {
+            points += Math.Floor(lvl + 300 * Math.Pow(2, lvl / 7.0));
+            double output = Math.Floor(points / (4 * 10));
+
+            if (output > xp)
+            {
+                level = lvl;
+                break;
+            }
+        }
+
+        return level;
+    }
+
+    public static int GetXPFromLevel(int level)
+    {
+        double points = 0;
+
+        for (int lvl = 1; lvl < level; lvl++)
+        {
+            points += Math.Floor(lvl + 300 * Math.Pow(2, lvl / 7.0));
+        }
+
+        return (int)Math.Floor(points / (4 * 10));
+    }
+
+
 }
 
 [CreateAssetMenu]

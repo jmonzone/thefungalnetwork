@@ -18,12 +18,13 @@ public class UnitListReference : ScriptableObject
     [SerializeField] private List<Unit> unitCollection;
 
     public List<UnitInstance> Units => units;
+    public List<UnitInstance> Friends => units.Where(unit => unit.IsFriends).ToList();
 
     private const string UNIT_KEY = "units";
 
-    public event UnityAction OnFungalOpened;
     public event UnityAction<UnitInstance> OnFungalSelected;
     public event UnityAction<UnitInstance> OnUnitSummoned;
+    public event UnityAction OnFungalUpdated;
 
     public void Initialize()
     {
@@ -47,9 +48,8 @@ public class UnitListReference : ScriptableObject
                     var matchingUnit = unitCollection.Find(item => item.Name == unitJson["name"].ToString());
                     if (matchingUnit)
                     {
-                        bool isHired = unitJson["isHired"] != null && unitJson["isHired"].ToObject<bool>();
-                        float relationship = unitJson["relationship"] != null ? unitJson["relationship"].ToObject<float>() : 0f;
-                        RegisterUnit(matchingUnit, isHired, relationship, save: false);
+                        float relationship = unitJson["relationshipPoints"] != null ? unitJson["relationshipPoints"].ToObject<float>() : 0f;
+                        RegisterUnit(matchingUnit, relationship, save: false);
                     }
                     else
                     {
@@ -61,7 +61,8 @@ public class UnitListReference : ScriptableObject
 
         if (units.Count == 0)
         {
-            RegisterUnit(unitCollection[0], true, relationship: 100, save: false);
+            var relationship = UnitInstance.GetXPFromLevel(2);
+            RegisterUnit(unitCollection[0], relationship, save: false);
         }
     }
 
@@ -79,18 +80,22 @@ public class UnitListReference : ScriptableObject
 
     public void SummonUnit(Unit unit)
     {
-        var instance = RegisterUnit(unit, true, relationship: 100);
+        var instance = RegisterUnit(unit, relationship: 100);
         OnUnitSummoned?.Invoke(instance);
     }
 
-    public UnitInstance RegisterUnit(Unit unit, bool isHired, float relationship, bool save = true)
+    public UnitInstance RegisterUnit(Unit unit, float relationship, bool save = true)
     {
         var matchingUnit = units.Find(x => x.Data.Name == unit.Name.ToString());
         if (matchingUnit != null) return matchingUnit;
 
-        var instance = new UnitInstance(unit, isHired, relationship);
+        var instance = new UnitInstance(unit, relationship);
+
         instance.OnRelationshipChanged += _ => SaveData();
+        instance.OnRelationshipLevelChanged += () => OnFungalUpdated?.Invoke();
+
         units.Add(instance);
+
         if (save) SaveData();
         return instance;
     }
@@ -104,8 +109,8 @@ public class UnitListReference : ScriptableObject
             unitsJson.Add(new JObject
             {
                 ["name"] = unit.Data.Name,
-                ["isHired"] = unit.IsHired,
-                ["relationship"] = unit.Relationship,
+                ["relationshipLevel"] = unit.RelationshipLevel,
+                ["relationshipPoints"] = unit.RelationshipPoints,
             });
         }
 
@@ -114,7 +119,6 @@ public class UnitListReference : ScriptableObject
 
     public void OpenFungals()
     {
-        OnFungalOpened?.Invoke();
         navigation.Navigate(fungalListView);
     }
 

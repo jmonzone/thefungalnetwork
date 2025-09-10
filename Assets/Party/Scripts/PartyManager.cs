@@ -84,7 +84,7 @@ public class PartyManager : MonoBehaviour
             }
 
             // Spawn guest
-            var instance = unitList.RegisterUnit(guest, false, 0);
+            var instance = unitList.RegisterUnit(guest, 0);
 
             var controller = Instantiate(unitPrefab, randomPoint, Quaternion.identity);
             controller.Initialize(instance);

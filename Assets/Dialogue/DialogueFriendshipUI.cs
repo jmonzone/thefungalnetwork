@@ -21,7 +21,7 @@ public class DialogueFriendshipUI : DialoguePageUI
     {
         base.Show();
 
-        valueBarController.Initialize(dialogue.Unit.Instance.Relationship, 0, 8);
+        valueBarController.Initialize(dialogue.Unit.Instance.RelationshipPoints, 0, 8);
         dialogue.Unit.Instance.IncreaseRelationship(dialogue.Relationship);
         valueBarParticleController.BurstFromWorld((int)dialogue.Relationship, dialogue.Unit.transform.position);
     }
