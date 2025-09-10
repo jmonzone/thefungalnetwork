@@ -1,943 +1,818 @@
 {
-    "fox": {
-        "greetings": [
-            "you must have heard by now, SPORES are everything",
-            "yea I like to pass a spore here and there, sharing is caring",
-            "theres rules to passing a spore, but don't get me started on that"
-        ],
-        "chat": [
-            {
-                "id": "line1",
-                "text": "i haven't seen my mom in a while, i wonder how she's doing",
-                "responses": [
-                    {
-                        "text": "oh geez, i'm sorry bro",
-                        "nextId": "line2a",
-                        "xp": 2,
-                        "relationship": 1
-                    },
-                    {
-                        "text": "meh, moms are overrated",
-                        "xp": 0,
-                        "relationship": -1
-                    }
-                ]
-            },
-            {
-                "id": "line2a",
-                "text": "sometimes i just wish i could go clear my mind",
-                "responses": [
-                    {
-                        "text": "let's go pass some spores then!",
-                        "nextId": "line3a",
-                        "xp": 3,
-                        "relationship": 2,
-                        "activity": "game"
-                    },
-                    {
-                        "text": "i get that, maybe some fresh air?",
-                        "nextId": "line3b",
-                        "xp": 1,
-                        "relationship": 1
-                    }
-                ]
-            },
-            {
-                "id": "line2b",
-                "text": "it's been tough lately, i guess we all have our ups and downs",
-                "responses": [
-                    {
-                        "text": "hang in there, it will get better",
-                        "nextId": "line3c",
-                        "xp": 2,
-                        "relationship": 1
-                    },
-                    {
-                        "text": "want to talk about it?",
-                        "nextId": "line3d",
-                        "xp": 1,
-                        "relationship": 2
-                    }
-                ]
-            },
-            {
-                "id": "line3a",
-                "text": "yes! passing spores sounds fun!",
-                "responses": [
-                    {
-                        "text": "awesome, let's start!",
-                        "nextId": "line4a",
-                        "xp": 3,
-                        "relationship": 3,
-                        "activity": "game"
-                    },
-                    {
-                        "text": "maybe later, let's just chat",
-                        "nextId": "line4b",
-                        "xp": 1,
-                        "relationship": 1
-                    }
-                ]
-            },
-            {
-                "id": "line3b",
-                "text": "fresh air might help… thanks for suggesting",
-                "responses": [
-                    {
-                        "text": "glad it helps",
-                        "nextId": "line4c",
-                        "xp": 1,
-                        "relationship": 1
-                    },
-                    {
-                        "text": "anytime, take your time",
-                        "xp": 0,
-                        "relationship": 0
-                    }
-                ]
-            },
-            {
-                "id": "line3c",
-                "text": "thanks, that really cheers me up",
-                "responses": [
-                    {
-                        "text": "no problem, happy to help",
-                        "nextId": "line4d",
-                        "xp": 2,
-                        "relationship": 1
-                    },
-                    {
-                        "text": "don't mention it",
-                        "xp": 1,
-                        "relationship": 0
-                    }
-                ]
-            },
-            {
-                "id": "line3d",
-                "text": "sure, talking might help",
-                "responses": [
-                    {
-                        "text": "i'm listening",
-                        "nextId": "line4e",
-                        "xp": 1,
-                        "relationship": 2
-                    },
-                    {
-                        "text": "maybe a joke first?",
-                        "xp": 1,
-                        "relationship": 0
-                    }
-                ]
-            },
-            {
-                "id": "line4a",
-                "text": "let's enjoy the game of passing spores!"
-            },
-            {
-                "id": "line4b",
-                "text": "okay, just chatting then",
-                "responses": [
-                    {
-                        "text": "so, how's your week been?",
-                        "nextId": "line5a",
-                        "xp": 1,
-                        "relationship": 1
-                    },
-                    {
-                        "text": "i should get going, thanks for talking",
-                        "xp": 0,
-                        "relationship": 0
-                    }
-                ]
-            },
-            {
-                "id": "line4c",
-                "text": "i feel a bit better, thanks!",
-                "responses": [
-                    {
-                        "text": "glad to hear that",
-                        "nextId": "line5b",
-                        "xp": 1,
-                        "relationship": 1
-                    },
-                    {
-                        "text": "anytime!",
-                        "xp": 0,
-                        "relationship": 0
-                    }
-                ]
-            },
-            {
-                "id": "line4d",
-                "text": "that really helped me feel better!",
-                "xp": 0,
-                "relationship": 0
-            },
-            {
-                "id": "line4e",
-                "text": "appreciate you listening!",
-                "xp": 0,
-                "relationship": 0
-            },
-            {
-                "id": "line5a",
-                "text": "it's been alright, a bit slow, but peaceful",
-                "responses": [
-                    {
-                        "text": "peaceful is good, enjoy the calm",
-                        "xp": 1,
-                        "relationship": 2
-                    },
-                    {
-                        "text": "sounds boring, you should spice it up",
-                        "xp": 0,
-                        "relationship": -1
-                    }
-                ]
-            },
-            {
-                "id": "line5b",
-                "text": "thanks for checking in, it means a lot",
-                "xp": 1,
-                "relationship": 1
-            }
-        ],
-        "gift": [
-            {
-                "text": "sweet thanks, lets go do this now",
-                "action": "spore"
-            }
+  "fox": {
+    "greetings": [
+      "you must have heard by now, SPORES are everything",
+      "yea I like to pass a spore here and there, sharing is caring",
+      "theres rules to passing a spore, but don't get me started on that"
+    ],
+    "chat": [
+      {
+        "id": "line1",
+        "text": "whoa, the spores here… they drift like little lights in the air",
+        "responses": [
+          {
+            "text": "yeah, almost like they’re waiting to be passed around",
+            "nextId": "line2a",
+            "xp": 2,
+            "relationship": 4
+          },
+          {
+            "text": "it feels kind of magical… like they know where to go",
+            "nextId": "line2b",
+            "xp": 1,
+            "relationship": 4
+          }
         ]
-    },
-    "owl": {
-        "greetings": [
-            "i brought my tarot cards lol i bring them everywhere these days",
-            "the cards the cards will telll. do you know what movie that is from?",
-            "the future is unknown, but the present, it's here "
-        ],
-        "chat": [
-            {
-                "id": "line1",
-                "text": "hey, i've been practicing tarot lately, want me to do a reading for you?",
-                "responses": [
-                    {
-                        "text": "sure, let's see what the cards say",
-                        "nextId": "line2a",
-                        "xp": 2,
-                        "relationship": 2,
-                        "activity": "tarot"
-                    },
-                    {
-                        "text": "nah, i don't believe in that stuff",
-                        "xp": -1,
-                        "relationship": -1
-                    }
-                ]
-            },
-            {
-                "id": "line2a",
-                "text": "great! shuffle the deck, focus on your question…",
-                "responses": [
-                    {
-                        "text": "i'm curious about my next party adventure",
-                        "nextId": "line3a",
-                        "xp": 2,
-                        "relationship": 1
-                    },
-                    {
-                        "text": "i want to know about friendship vibes",
-                        "nextId": "line3b",
-                        "xp": 1,
-                        "relationship": 2
-                    }
-                ]
-            },
-            {
-                "id": "line2b",
-                "text": "no worries, the cards will be here if you change your mind",
-                "responses": [
-                    {
-                        "text": "maybe a quick peek then",
-                        "nextId": "line3c",
-                        "xp": 1,
-                        "relationship": 1,
-                        "activity": "tarot"
-                    },
-                    {
-                        "text": "i'll pass, thanks",
-                        "xp": 0,
-                        "relationship": 0
-                    }
-                ]
-            },
-            {
-                "id": "line3a",
-                "text": "ah, the ace of cups appears, there’s excitement ahead!",
-                "responses": [
-                    {
-                        "text": "awesome, i can feel it",
-                        "nextId": "line4a",
-                        "xp": 2,
-                        "relationship": 2
-                    },
-                    {
-                        "text": "hmm, tell me more",
-                        "nextId": "line4b",
-                        "xp": 1,
-                        "relationship": 1
-                    }
-                ]
-            },
-            {
-                "id": "line3b",
-                "text": "the two of cups! positive connections are coming",
-                "responses": [
-                    {
-                        "text": "i like the sound of that",
-                        "nextId": "line4c",
-                        "xp": 2,
-                        "relationship": 2
-                    },
-                    {
-                        "text": "i doubt it, sounds risky",
-                        "nextId": "line4d",
-                        "xp": -1,
-                        "relationship": -1
-                    }
-                ]
-            },
-            {
-                "id": "line3c",
-                "text": "alright, just a quick draw… the wheel of fortune shows a twist coming",
-                "responses": [
-                    {
-                        "text": "interesting, tell me more",
-                        "nextId": "line4e",
-                        "xp": 1,
-                        "relationship": 1
-                    },
-                    {
-                        "text": "i'll take my chances",
-                        "xp": 0,
-                        "relationship": 0
-                    }
-                ]
-            },
-            {
-                "id": "line4a",
-                "text": "get ready for some fun adventures ahead!",
-                "responses": [
-                    {
-                        "text": "can't wait!",
-                        "nextId": "line5a",
-                        "xp": 2,
-                        "relationship": 2
-                    },
-                    {
-                        "text": "eh, let's see",
-                        "xp": 0,
-                        "relationship": 0
-                    }
-                ]
-            },
-            {
-                "id": "line4b",
-                "text": "looks like a small surprise is coming your way",
-                "responses": [
-                    {
-                        "text": "nice, surprises are fun",
-                        "xp": 1,
-                        "relationship": 1
-                    },
-                    {
-                        "text": "i hate surprises",
-                        "xp": -1,
-                        "relationship": -1
-                    }
-                ]
-            },
-            {
-                "id": "line4c",
-                "text": "expect some delightful new friendships soon",
-                "responses": [
-                    {
-                        "text": "looking forward to it",
-                        "xp": 1,
-                        "relationship": 2
-                    },
-                    {
-                        "text": "not interested",
-                        "xp": 0,
-                        "relationship": -1
-                    }
-                ]
-            },
-            {
-                "id": "line4d",
-                "text": "good vibes are coming, keep your heart open",
-                "responses": [
-                    {
-                        "text": "thanks, i needed that",
-                        "xp": 1,
-                        "relationship": 1
-                    },
-                    {
-                        "text": "i don't care",
-                        "xp": -1,
-                        "relationship": -1
-                    }
-                ]
-            },
-            {
-                "id": "line4e",
-                "text": "the twist could be tricky, but it’s part of the fun",
-                "responses": [
-                    {
-                        "text": "bring it on!",
-                        "xp": 1,
-                        "relationship": 1
-                    },
-                    {
-                        "text": "sounds stressful…",
-                        "xp": -1,
-                        "relationship": -1
-                    }
-                ]
-            },
-            {
-                "id": "line5a",
-                "text": "you're ready! the cards are smiling on you",
-                "responses": [
-                    {
-                        "text": "thanks, i feel lucky",
-                        "xp": 2,
-                        "relationship": 2
-                    },
-                    {
-                        "text": "i still don't believe it",
-                        "xp": 0,
-                        "relationship": 0
-                    }
-                ]
-            }
-        ],
-        "gift": [
-            {
-                "text": "the cards told me this would happen"
-            }
+      },
+      {
+        "id": "line2a",
+        "text": "exactly, one floats to you, you float it on—everyone’s part of the cycle",
+        "responses": [
+          {
+            "text": "so it’s like passing spores is the way you connect?",
+            "nextId": "line3a",
+            "xp": 2,
+            "relationship": 4
+          },
+          {
+            "text": "that’s kind of beautiful… i’d like to try",
+            "nextId": "line3b",
+            "xp": 2,
+            "relationship": 4,
+            "activity": "game"
+          }
         ]
-    },
-    "jellyfish": {
-        "greetings": [
-            "hey, i love giving little things, it’s kind of my thing",
-            "i brought some gifts, hope you like surprises",
-            "sharing is caring, right? especially little trinkets"
-        ],
-        "chat": [
-            {
-                "id": "line1",
-                "text": "hey, i found some shiny things, want one?",
-                "responses": [
-                    {
-                        "text": "sure, i love gifts!",
-                        "nextId": "line2a",
-                        "xp": 2,
-                        "relationship": 2,
-                        "activity": "gift"
-                    },
-                    {
-                        "text": "nah, i don't need anything",
-                        "nextId": "line2b",
-                        "xp": 0,
-                        "relationship": -1
-                    }
-                ]
-            },
-            {
-                "id": "line2a",
-                "text": "great! here's something special, hope you like it",
-                "responses": [
-                    {
-                        "text": "wow, thanks so much!",
-                        "nextId": "line3a",
-                        "xp": 2,
-                        "relationship": 3
-                    },
-                    {
-                        "text": "oh… okay",
-                        "nextId": "line3b",
-                        "xp": 0,
-                        "relationship": 0
-                    }
-                ]
-            },
-            {
-                "id": "line2b",
-                "text": "ah, alright… maybe next time",
-                "responses": [
-                    {
-                        "text": "maybe, thanks",
-                        "xp": 0,
-                        "relationship": 0
-                    },
-                    {
-                        "text": "i still want one",
-                        "nextId": "line3c",
-                        "xp": 1,
-                        "relationship": 1,
-                        "activity": "gift"
-                    }
-                ]
-            },
-            {
-                "id": "line3a",
-                "text": "i'm glad you like it! want me to show you another?",
-                "responses": [
-                    {
-                        "text": "yes, let's see",
-                        "nextId": "line4a",
-                        "xp": 2,
-                        "relationship": 2,
-                        "activity": "gift"
-                    },
-                    {
-                        "text": "no thanks, i have enough",
-                        "xp": 0,
-                        "relationship": 1
-                    }
-                ]
-            },
-            {
-                "id": "line3b",
-                "text": "hm… i'll try harder next time",
-                "responses": [
-                    {
-                        "text": "i appreciate it",
-                        "nextId": "line4b",
-                        "xp": 1,
-                        "relationship": 1
-                    },
-                    {
-                        "text": "eh, don't worry",
-                        "xp": 0,
-                        "relationship": 0
-                    }
-                ]
-            },
-            {
-                "id": "line3c",
-                "text": "here, i saved the best for last!",
-                "responses": [
-                    {
-                        "text": "yay, thanks!",
-                        "nextId": "line4c",
-                        "xp": 2,
-                        "relationship": 2
-                    },
-                    {
-                        "text": "i guess…",
-                        "xp": 0,
-                        "relationship": 0
-                    }
-                ]
-            },
-            {
-                "id": "line4a",
-                "text": "here's another shiny gem just for you!",
-                "responses": [
-                    {
-                        "text": "i love it, you're the best",
-                        "nextId": "line5a",
-                        "xp": 3,
-                        "relationship": 3
-                    },
-                    {
-                        "text": "thanks… i guess",
-                        "xp": 0,
-                        "relationship": 0
-                    }
-                ]
-            },
-            {
-                "id": "line4b",
-                "text": "okay, maybe next time i'll get it right",
-                "responses": [
-                    {
-                        "text": "it's fine, you tried",
-                        "xp": 1,
-                        "relationship": 1
-                    },
-                    {
-                        "text": "no worries",
-                        "xp": 0,
-                        "relationship": 0
-                    }
-                ]
-            },
-            {
-                "id": "line4c",
-                "text": "glad you liked it, hope it brings you good vibes",
-                "responses": [
-                    {
-                        "text": "it really does, thanks again",
-                        "nextId": "line5b",
-                        "xp": 2,
-                        "relationship": 2
-                    },
-                    {
-                        "text": "yeah, it's okay",
-                        "xp": 0,
-                        "relationship": 0
-                    }
-                ]
-            },
-            {
-                "id": "line5a",
-                "text": "you're all set! keep it close, it'll bring good luck",
-                "responses": [
-                    {
-                        "text": "i will, thanks!",
-                        "xp": 2,
-                        "relationship": 2
-                    },
-                    {
-                        "text": "i don't believe in luck",
-                        "xp": 0,
-                        "relationship": -1
-                    }
-                ]
-            },
-            {
-                "id": "line5b",
-                "text": "i'm happy it makes you feel good!",
-                "responses": [
-                    {
-                        "text": "yes, it really does",
-                        "xp": 2,
-                        "relationship": 2
-                    },
-                    {
-                        "text": "it's alright",
-                        "xp": 0,
-                        "relationship": 0
-                    }
-                ]
-            }
-        ],
-        "gift": [
-            {
-                "text": "i thought you might like this little charm"
-            }
+      },
+      {
+        "id": "line2b",
+        "text": "yeah, the network carries them along… spores know how to find a friend",
+        "responses": [
+          {
+            "text": "like the party is guiding me through them",
+            "nextId": "line3c",
+            "xp": 2,
+            "relationship": 4
+          },
+          {
+            "text": "maybe that’s how i ended up here… drifting in",
+            "nextId": "line3d",
+            "xp": 2,
+            "relationship": 4
+          }
         ]
-    },
-    "frog": {
-        "greetings": [
-            "yo, got some fresh tracks for the party tonight",
-            "i live for spinning beats, hope you’re ready",
-            "music makes everything better, don’t you think?"
-        ],
-        "chat": [
-            {
-                "id": "line1",
-                "text": "hey, wanna hear the latest track i've been mixing?",
-                "responses": [
-                    {
-                        "text": "yes! let's hear it",
-                        "nextId": "line2a",
-                        "xp": 2,
-                        "relationship": 2,
-                        "activity": "music"
-                    },
-                    {
-                        "text": "nah, not in the mood",
-                        "nextId": "line2b",
-                        "xp": 0,
-                        "relationship": -1
-                    }
-                ]
-            },
-            {
-                "id": "line2a",
-                "text": "awesome! crank it up and feel the beat!",
-                "responses": [
-                    {
-                        "text": "this is amazing!",
-                        "nextId": "line3a",
-                        "xp": 2,
-                        "relationship": 2
-                    },
-                    {
-                        "text": "it's ok, a bit loud",
-                        "nextId": "line3b",
-                        "xp": 0,
-                        "relationship": 0
-                    }
-                ]
-            },
-            {
-                "id": "line2b",
-                "text": "ah, alright… maybe next time i'll mix something special",
-                "responses": [
-                    {
-                        "text": "sure, i'll listen later",
-                        "xp": 0,
-                        "relationship": 0
-                    },
-                    {
-                        "text": "actually, maybe a short preview?",
-                        "nextId": "line3c",
-                        "xp": 1,
-                        "relationship": 1,
-                        "activity": "music"
-                    }
-                ]
-            },
-            {
-                "id": "line3a",
-                "text": "glad you like it! wanna try mixing a beat with me?",
-                "responses": [
-                    {
-                        "text": "yes, let's do it!",
-                        "nextId": "line4a",
-                        "xp": 2,
-                        "relationship": 2,
-                        "activity": "play"
-                    },
-                    {
-                        "text": "maybe later",
-                        "xp": 0,
-                        "relationship": 1
-                    }
-                ]
-            },
-            {
-                "id": "line3b",
-                "text": "hm… i can turn it down a bit if you want",
-                "responses": [
-                    {
-                        "text": "yes, please",
-                        "xp": 1,
-                        "relationship": 1
-                    },
-                    {
-                        "text": "no, it's fine",
-                        "xp": 0,
-                        "relationship": 0
-                    }
-                ]
-            },
-            {
-                "id": "line3c",
-                "text": "ok, just a short snippet… enjoy the vibe!",
-                "responses": [
-                    {
-                        "text": "cool, thanks!",
-                        "nextId": "line4b",
-                        "xp": 1,
-                        "relationship": 1
-                    },
-                    {
-                        "text": "meh, not feeling it",
-                        "xp": -1,
-                        "relationship": -1
-                    }
-                ]
-            },
-            {
-                "id": "line4a",
-                "text": "awesome! let's see if you can keep up with my beat!",
-                "responses": [
-                    {
-                        "text": "i'm ready, let's go!",
-                        "nextId": "line5a",
-                        "xp": 2,
-                        "relationship": 2,
-                        "activity": "play"
-                    },
-                    {
-                        "text": "uh… maybe just watch",
-                        "xp": 0,
-                        "relationship": 1
-                    }
-                ]
-            },
-            {
-                "id": "line4b",
-                "text": "glad you got a taste! hope it lifts your mood",
-                "responses": [
-                    {
-                        "text": "it really does, thanks!",
-                        "xp": 1,
-                        "relationship": 1
-                    },
-                    {
-                        "text": "it's alright",
-                        "xp": 0,
-                        "relationship": 0
-                    }
-                ]
-            },
-            {
-                "id": "line5a",
-                "text": "you're doing great! let's finish this track strong",
-                "responses": [
-                    {
-                        "text": "yes, let's finish it!",
-                        "xp": 2,
-                        "relationship": 2
-                    },
-                    {
-                        "text": "i'm tired, let's stop",
-                        "xp": -1,
-                        "relationship": 0
-                    }
-                ]
-            }
-        ],
-        "gift": [
-            {
-                "text": "hey, i made this mix just for you!"
-            }
+      },
+      {
+        "id": "line3a",
+        "text": "you got it, spores keep the whole vibe flowing"
+      },
+      {
+        "id": "line3b",
+        "text": "then come on, let’s pass some spores together!"
+      },
+      {
+        "id": "line3c",
+        "text": "the party does that—everyone drifts in somehow"
+      },
+      {
+        "id": "line3d",
+        "text": "maybe you were meant to find this place"
+      }
+    ],
+    "gift": [
+      {
+        "text": "sweet thanks, lets go do this now",
+        "action": "spore"
+      }
+    ]
+  },
+  "owl": {
+    "greetings": [
+      "i brought my tarot cards lol i bring them everywhere these days",
+      "the cards the cards will telll. do you know what movie that is from?",
+      "the future is unknown, but the present, it's here "
+    ],
+    "chat": [
+      {
+        "id": "line1",
+        "text": "hey, i've been practicing tarot lately, want me to do a reading for you?",
+        "responses": [
+          {
+            "text": "sure, let's see what the cards say",
+            "nextId": "line2a",
+            "xp": 2,
+            "relationship": 2,
+            "activity": "tarot"
+          },
+          {
+            "text": "nah, i don't believe in that stuff",
+            "xp": -1,
+            "relationship": -1
+          }
         ]
-    },
-    "tree": {
-        "greetings": [
-            "welcome, traveler… the fungal network awaits",
-            "paths twist and turn, only those who wander find their way",
-            "i have watched over these spores for ages…"
-        ],
-        "chat": [
-            {
-                "id": "line1",
-                "text": "do you seek passage through the fungal network?",
-                "responses": [
-                    {
-                        "text": "yes, i’m ready",
-                        "nextId": "line2a"
-                    },
-                    {
-                        "text": "i need to know more first",
-                        "nextId": "line2b"
-                    }
-                ]
-            },
-            {
-                "id": "line2a",
-                "text": "very well… the network responds to those who listen",
-                "responses": [
-                    {
-                        "text": "i’ll pay attention to the signs",
-                        "nextId": "line3a"
-                    },
-                    {
-                        "text": "what signs should i look for?",
-                        "nextId": "line3b"
-                    }
-                ]
-            },
-            {
-                "id": "line2b",
-                "text": "patience is a virtue… the network reveals itself in time",
-                "responses": [
-                    {
-                        "text": "i’ll wait and observe",
-                        "nextId": "line3c"
-                    },
-                    {
-                        "text": "can you give me a hint?",
-                        "nextId": "line3d"
-                    }
-                ]
-            },
-            {
-                "id": "line3a",
-                "text": "good, many rush in without heeding the whispers of the spores",
-                "responses": [
-                    {
-                        "text": "i’ll be careful",
-                        "nextId": "line4a"
-                    },
-                    {
-                        "text": "i want to explore bravely",
-                        "nextId": "line4b"
-                    }
-                ]
-            },
-            {
-                "id": "line3b",
-                "text": "look for the glow and the subtle shifts in the air",
-                "responses": [
-                    {
-                        "text": "i see… i’ll be observant",
-                        "nextId": "line4c"
-                    },
-                    {
-                        "text": "got it, i’ll follow carefully",
-                        "nextId": "line4d"
-                    }
-                ]
-            },
-            {
-                "id": "line3c",
-                "text": "wisely done, the network favors the patient",
-                "responses": [
-                    {
-                        "text": "i will continue to watch",
-                        "nextId": "line4e"
-                    },
-                    {
-                        "text": "thank you for guiding me",
-                        "nextId": "line4f"
-                    }
-                ]
-            },
-            {
-                "id": "line3d",
-                "text": "the path is hidden until the spores decide to reveal it",
-                "responses": [
-                    {
-                        "text": "i’ll stay alert",
-                        "nextId": "line4g"
-                    },
-                    {
-                        "text": "i’ll try to sense them",
-                        "nextId": "line4h"
-                    }
-                ]
-            },
-            {
-                "id": "line4a",
-                "text": "the journey is long, but worth every step"
-            },
-            {
-                "id": "line4b",
-                "text": "courage will carry you where curiosity leads"
-            },
-            {
-                "id": "line4c",
-                "text": "the subtle glow will guide your way"
-            },
-            {
-                "id": "line4d",
-                "text": "follow the shifts, the network speaks softly"
-            },
-            {
-                "id": "line4e",
-                "text": "patience will be rewarded, keep your senses open"
-            },
-            {
-                "id": "line4f",
-                "text": "listen well, the spores tell stories of old"
-            },
-            {
-                "id": "line4g",
-                "text": "attune yourself to the air and light, traveler"
-            },
-            {
-                "id": "line4h",
-                "text": "the network is alive… let it whisper to you"
-            }
+      },
+      {
+        "id": "line2a",
+        "text": "great! shuffle the deck, focus on your question…",
+        "responses": [
+          {
+            "text": "i'm curious about my next party adventure",
+            "nextId": "line3a",
+            "xp": 2,
+            "relationship": 1
+          },
+          {
+            "text": "i want to know about friendship vibes",
+            "nextId": "line3b",
+            "xp": 1,
+            "relationship": 2
+          }
         ]
-    }
+      },
+      {
+        "id": "line2b",
+        "text": "no worries, the cards will be here if you change your mind",
+        "responses": [
+          {
+            "text": "maybe a quick peek then",
+            "nextId": "line3c",
+            "xp": 1,
+            "relationship": 1,
+            "activity": "tarot"
+          },
+          {
+            "text": "i'll pass, thanks",
+            "xp": 0,
+            "relationship": 0
+          }
+        ]
+      },
+      {
+        "id": "line3a",
+        "text": "ah, the ace of cups appears, there’s excitement ahead!",
+        "responses": [
+          {
+            "text": "awesome, i can feel it",
+            "nextId": "line4a",
+            "xp": 2,
+            "relationship": 2
+          },
+          {
+            "text": "hmm, tell me more",
+            "nextId": "line4b",
+            "xp": 1,
+            "relationship": 1
+          }
+        ]
+      },
+      {
+        "id": "line3b",
+        "text": "the two of cups! positive connections are coming",
+        "responses": [
+          {
+            "text": "i like the sound of that",
+            "nextId": "line4c",
+            "xp": 2,
+            "relationship": 2
+          },
+          {
+            "text": "i doubt it, sounds risky",
+            "nextId": "line4d",
+            "xp": -1,
+            "relationship": -1
+          }
+        ]
+      },
+      {
+        "id": "line3c",
+        "text": "alright, just a quick draw… the wheel of fortune shows a twist coming",
+        "responses": [
+          {
+            "text": "interesting, tell me more",
+            "nextId": "line4e",
+            "xp": 1,
+            "relationship": 1
+          },
+          {
+            "text": "i'll take my chances",
+            "xp": 0,
+            "relationship": 0
+          }
+        ]
+      },
+      {
+        "id": "line4a",
+        "text": "get ready for some fun adventures ahead!",
+        "responses": [
+          {
+            "text": "can't wait!",
+            "nextId": "line5a",
+            "xp": 2,
+            "relationship": 2
+          },
+          {
+            "text": "eh, let's see",
+            "xp": 0,
+            "relationship": 0
+          }
+        ]
+      },
+      {
+        "id": "line4b",
+        "text": "looks like a small surprise is coming your way",
+        "responses": [
+          {
+            "text": "nice, surprises are fun",
+            "xp": 1,
+            "relationship": 1
+          },
+          {
+            "text": "i hate surprises",
+            "xp": -1,
+            "relationship": -1
+          }
+        ]
+      },
+      {
+        "id": "line4c",
+        "text": "expect some delightful new friendships soon",
+        "responses": [
+          {
+            "text": "looking forward to it",
+            "xp": 1,
+            "relationship": 2
+          },
+          {
+            "text": "not interested",
+            "xp": 0,
+            "relationship": -1
+          }
+        ]
+      },
+      {
+        "id": "line4d",
+        "text": "good vibes are coming, keep your heart open",
+        "responses": [
+          {
+            "text": "thanks, i needed that",
+            "xp": 1,
+            "relationship": 1
+          },
+          {
+            "text": "i don't care",
+            "xp": -1,
+            "relationship": -1
+          }
+        ]
+      },
+      {
+        "id": "line4e",
+        "text": "the twist could be tricky, but it’s part of the fun",
+        "responses": [
+          {
+            "text": "bring it on!",
+            "xp": 1,
+            "relationship": 1
+          },
+          {
+            "text": "sounds stressful…",
+            "xp": -1,
+            "relationship": -1
+          }
+        ]
+      },
+      {
+        "id": "line5a",
+        "text": "you're ready! the cards are smiling on you",
+        "responses": [
+          {
+            "text": "thanks, i feel lucky",
+            "xp": 2,
+            "relationship": 2
+          },
+          {
+            "text": "i still don't believe it",
+            "xp": 0,
+            "relationship": 0
+          }
+        ]
+      }
+    ],
+    "gift": [
+      {
+        "text": "the cards told me this would happen"
+      }
+    ]
+  },
+  "jellyfish": {
+    "greetings": [
+      "hey, i love giving little things, it’s kind of my thing",
+      "i brought some gifts, hope you like surprises",
+      "sharing is caring, right? especially little trinkets"
+    ],
+    "chat": [
+      {
+        "id": "line1",
+        "text": "hey, i found some shiny things, want one?",
+        "responses": [
+          {
+            "text": "sure, i love gifts!",
+            "nextId": "line2a",
+            "xp": 2,
+            "relationship": 2,
+            "activity": "gift"
+          },
+          {
+            "text": "nah, i don't need anything",
+            "nextId": "line2b",
+            "xp": 0,
+            "relationship": -1
+          }
+        ]
+      },
+      {
+        "id": "line2a",
+        "text": "great! here's something special, hope you like it",
+        "responses": [
+          {
+            "text": "wow, thanks so much!",
+            "nextId": "line3a",
+            "xp": 2,
+            "relationship": 3
+          },
+          {
+            "text": "oh… okay",
+            "nextId": "line3b",
+            "xp": 0,
+            "relationship": 0
+          }
+        ]
+      },
+      {
+        "id": "line2b",
+        "text": "ah, alright… maybe next time",
+        "responses": [
+          {
+            "text": "maybe, thanks",
+            "xp": 0,
+            "relationship": 0
+          },
+          {
+            "text": "i still want one",
+            "nextId": "line3c",
+            "xp": 1,
+            "relationship": 1,
+            "activity": "gift"
+          }
+        ]
+      },
+      {
+        "id": "line3a",
+        "text": "i'm glad you like it! want me to show you another?",
+        "responses": [
+          {
+            "text": "yes, let's see",
+            "nextId": "line4a",
+            "xp": 2,
+            "relationship": 2,
+            "activity": "gift"
+          },
+          {
+            "text": "no thanks, i have enough",
+            "xp": 0,
+            "relationship": 1
+          }
+        ]
+      },
+      {
+        "id": "line3b",
+        "text": "hm… i'll try harder next time",
+        "responses": [
+          {
+            "text": "i appreciate it",
+            "nextId": "line4b",
+            "xp": 1,
+            "relationship": 1
+          },
+          {
+            "text": "eh, don't worry",
+            "xp": 0,
+            "relationship": 0
+          }
+        ]
+      },
+      {
+        "id": "line3c",
+        "text": "here, i saved the best for last!",
+        "responses": [
+          {
+            "text": "yay, thanks!",
+            "nextId": "line4c",
+            "xp": 2,
+            "relationship": 2
+          },
+          {
+            "text": "i guess…",
+            "xp": 0,
+            "relationship": 0
+          }
+        ]
+      },
+      {
+        "id": "line4a",
+        "text": "here's another shiny gem just for you!",
+        "responses": [
+          {
+            "text": "i love it, you're the best",
+            "nextId": "line5a",
+            "xp": 3,
+            "relationship": 3
+          },
+          {
+            "text": "thanks… i guess",
+            "xp": 0,
+            "relationship": 0
+          }
+        ]
+      },
+      {
+        "id": "line4b",
+        "text": "okay, maybe next time i'll get it right",
+        "responses": [
+          {
+            "text": "it's fine, you tried",
+            "xp": 1,
+            "relationship": 1
+          },
+          {
+            "text": "no worries",
+            "xp": 0,
+            "relationship": 0
+          }
+        ]
+      },
+      {
+        "id": "line4c",
+        "text": "glad you liked it, hope it brings you good vibes",
+        "responses": [
+          {
+            "text": "it really does, thanks again",
+            "nextId": "line5b",
+            "xp": 2,
+            "relationship": 2
+          },
+          {
+            "text": "yeah, it's okay",
+            "xp": 0,
+            "relationship": 0
+          }
+        ]
+      },
+      {
+        "id": "line5a",
+        "text": "you're all set! keep it close, it'll bring good luck",
+        "responses": [
+          {
+            "text": "i will, thanks!",
+            "xp": 2,
+            "relationship": 2
+          },
+          {
+            "text": "i don't believe in luck",
+            "xp": 0,
+            "relationship": -1
+          }
+        ]
+      },
+      {
+        "id": "line5b",
+        "text": "i'm happy it makes you feel good!",
+        "responses": [
+          {
+            "text": "yes, it really does",
+            "xp": 2,
+            "relationship": 2
+          },
+          {
+            "text": "it's alright",
+            "xp": 0,
+            "relationship": 0
+          }
+        ]
+      }
+    ],
+    "gift": [
+      {
+        "text": "i thought you might like this little charm"
+      }
+    ]
+  },
+  "frog": {
+    "greetings": [
+      "yo, got some fresh tracks for the party tonight",
+      "i live for spinning beats, hope you’re ready",
+      "music makes everything better, don’t you think?"
+    ],
+    "chat": [
+      {
+        "id": "line1",
+        "text": "hey, wanna hear the latest track i've been mixing?",
+        "responses": [
+          {
+            "text": "yes! let's hear it",
+            "nextId": "line2a",
+            "xp": 2,
+            "relationship": 2,
+            "activity": "music"
+          },
+          {
+            "text": "nah, not in the mood",
+            "nextId": "line2b",
+            "xp": 0,
+            "relationship": -1
+          }
+        ]
+      },
+      {
+        "id": "line2a",
+        "text": "awesome! crank it up and feel the beat!",
+        "responses": [
+          {
+            "text": "this is amazing!",
+            "nextId": "line3a",
+            "xp": 2,
+            "relationship": 2
+          },
+          {
+            "text": "it's ok, a bit loud",
+            "nextId": "line3b",
+            "xp": 0,
+            "relationship": 0
+          }
+        ]
+      },
+      {
+        "id": "line2b",
+        "text": "ah, alright… maybe next time i'll mix something special",
+        "responses": [
+          {
+            "text": "sure, i'll listen later",
+            "xp": 0,
+            "relationship": 0
+          },
+          {
+            "text": "actually, maybe a short preview?",
+            "nextId": "line3c",
+            "xp": 1,
+            "relationship": 1,
+            "activity": "music"
+          }
+        ]
+      },
+      {
+        "id": "line3a",
+        "text": "glad you like it! wanna try mixing a beat with me?",
+        "responses": [
+          {
+            "text": "yes, let's do it!",
+            "nextId": "line4a",
+            "xp": 2,
+            "relationship": 2,
+            "activity": "play"
+          },
+          {
+            "text": "maybe later",
+            "xp": 0,
+            "relationship": 1
+          }
+        ]
+      },
+      {
+        "id": "line3b",
+        "text": "hm… i can turn it down a bit if you want",
+        "responses": [
+          {
+            "text": "yes, please",
+            "xp": 1,
+            "relationship": 1
+          },
+          {
+            "text": "no, it's fine",
+            "xp": 0,
+            "relationship": 0
+          }
+        ]
+      },
+      {
+        "id": "line3c",
+        "text": "ok, just a short snippet… enjoy the vibe!",
+        "responses": [
+          {
+            "text": "cool, thanks!",
+            "nextId": "line4b",
+            "xp": 1,
+            "relationship": 1
+          },
+          {
+            "text": "meh, not feeling it",
+            "xp": -1,
+            "relationship": -1
+          }
+        ]
+      },
+      {
+        "id": "line4a",
+        "text": "awesome! let's see if you can keep up with my beat!",
+        "responses": [
+          {
+            "text": "i'm ready, let's go!",
+            "nextId": "line5a",
+            "xp": 2,
+            "relationship": 2,
+            "activity": "play"
+          },
+          {
+            "text": "uh… maybe just watch",
+            "xp": 0,
+            "relationship": 1
+          }
+        ]
+      },
+      {
+        "id": "line4b",
+        "text": "glad you got a taste! hope it lifts your mood",
+        "responses": [
+          {
+            "text": "it really does, thanks!",
+            "xp": 1,
+            "relationship": 1
+          },
+          {
+            "text": "it's alright",
+            "xp": 0,
+            "relationship": 0
+          }
+        ]
+      },
+      {
+        "id": "line5a",
+        "text": "you're doing great! let's finish this track strong",
+        "responses": [
+          {
+            "text": "yes, let's finish it!",
+            "xp": 2,
+            "relationship": 2
+          },
+          {
+            "text": "i'm tired, let's stop",
+            "xp": -1,
+            "relationship": 0
+          }
+        ]
+      }
+    ],
+    "gift": [
+      {
+        "text": "hey, i made this mix just for you!"
+      }
+    ]
+  },
+  "tree": {
+    "greetings": [
+      "welcome, traveler… the fungal network awaits",
+      "paths twist and turn, only those who wander find their way",
+      "i have watched over these spores for ages…"
+    ],
+    "chat": [
+      {
+        "id": "line1",
+        "text": "do you seek passage through the fungal network?",
+        "responses": [
+          {
+            "text": "yes, i’m ready",
+            "nextId": "line2a"
+          },
+          {
+            "text": "i need to know more first",
+            "nextId": "line2b"
+          }
+        ]
+      },
+      {
+        "id": "line2a",
+        "text": "very well… the network responds to those who listen",
+        "responses": [
+          {
+            "text": "i’ll pay attention to the signs",
+            "nextId": "line3a"
+          },
+          {
+            "text": "what signs should i look for?",
+            "nextId": "line3b"
+          }
+        ]
+      },
+      {
+        "id": "line2b",
+        "text": "patience is a virtue… the network reveals itself in time",
+        "responses": [
+          {
+            "text": "i’ll wait and observe",
+            "nextId": "line3c"
+          },
+          {
+            "text": "can you give me a hint?",
+            "nextId": "line3d"
+          }
+        ]
+      },
+      {
+        "id": "line3a",
+        "text": "good, many rush in without heeding the whispers of the spores",
+        "responses": [
+          {
+            "text": "i’ll be careful",
+            "nextId": "line4a"
+          },
+          {
+            "text": "i want to explore bravely",
+            "nextId": "line4b"
+          }
+        ]
+      },
+      {
+        "id": "line3b",
+        "text": "look for the glow and the subtle shifts in the air",
+        "responses": [
+          {
+            "text": "i see… i’ll be observant",
+            "nextId": "line4c"
+          },
+          {
+            "text": "got it, i’ll follow carefully",
+            "nextId": "line4d"
+          }
+        ]
+      },
+      {
+        "id": "line3c",
+        "text": "wisely done, the network favors the patient",
+        "responses": [
+          {
+            "text": "i will continue to watch",
+            "nextId": "line4e"
+          },
+          {
+            "text": "thank you for guiding me",
+            "nextId": "line4f"
+          }
+        ]
+      },
+      {
+        "id": "line3d",
+        "text": "the path is hidden until the spores decide to reveal it",
+        "responses": [
+          {
+            "text": "i’ll stay alert",
+            "nextId": "line4g"
+          },
+          {
+            "text": "i’ll try to sense them",
+            "nextId": "line4h"
+          }
+        ]
+      },
+      {
+        "id": "line4a",
+        "text": "the journey is long, but worth every step"
+      },
+      {
+        "id": "line4b",
+        "text": "courage will carry you where curiosity leads"
+      },
+      {
+        "id": "line4c",
+        "text": "the subtle glow will guide your way"
+      },
+      {
+        "id": "line4d",
+        "text": "follow the shifts, the network speaks softly"
+      },
+      {
+        "id": "line4e",
+        "text": "patience will be rewarded, keep your senses open"
+      },
+      {
+        "id": "line4f",
+        "text": "listen well, the spores tell stories of old"
+      },
+      {
+        "id": "line4g",
+        "text": "attune yourself to the air and light, traveler"
+      },
+      {
+        "id": "line4h",
+        "text": "the network is alive… let it whisper to you"
+      }
+    ]
+  }
 }

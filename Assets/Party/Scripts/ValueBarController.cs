@@ -27,18 +27,20 @@ public class ValueBarController : MonoBehaviour
 
     private void Awake()
     {
-        if (slider != null)
-        {
-            slider.minValue = 0;
-            slider.maxValue = 100;
-            targetValue = slider.value;
-        }
-
+        Initialize(0, 0, 100);
         originalScale = fillImage.transform.localScale;
     }
 
+    public void Initialize(float value, float min, float max)
+    {
+        targetValue = value;
+        slider.value = value;
+        slider.minValue = min;
+        slider.maxValue = max;
+    }
+
     /// <summary>Externally call to update the bar target value.</summary>
-    public void SetTargetValue(float value, bool pulse = true)
+    private void SetTargetValue(float value, bool pulse = true)
     {
         targetValue = value;
 

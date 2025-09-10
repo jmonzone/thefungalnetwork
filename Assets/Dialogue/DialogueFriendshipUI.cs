@@ -30,7 +30,7 @@ public class DialogueFriendshipUI : DialoguePageUI
     {
         base.Show();
 
-        valueBarController.SetTargetValue(dialogue.Unit.Instance.Relationship);
+        valueBarController.Initialize(dialogue.Unit.Instance.Relationship, 0, 8);
         dialogue.Unit.Instance.IncreaseRelationship(dialogue.Experience);
         valueBarParticleController.BurstFromWorld((int)dialogue.Experience, dialogue.Unit.transform.position);
     }

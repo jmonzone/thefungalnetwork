@@ -18,11 +18,13 @@ public class DialogueReference : ScriptableObject
     [SerializeField] private UnitController unit;
     [SerializeField] private Dialogue dialogue;
     [SerializeField] private float experience;
+    [SerializeField] private float relationship;
 
     public bool IsActive => isActive;
     public UnitController Unit => unit;
     public Dialogue Dialogue => dialogue;
     public float Experience => experience;
+    public float Relationship => relationship;
 
     public event UnityAction OnIsActiveChanged;
     public event UnityAction OnInteractionStart;
@@ -51,6 +53,8 @@ public class DialogueReference : ScriptableObject
         OnIsActiveChanged?.Invoke();
 
         experience = 0;
+        relationship = 0;
+
         unit.Focus();
         if (navigation.CurrentView != dialogueView) navigation.Navigate(dialogueView);
     }
@@ -59,6 +63,7 @@ public class DialogueReference : ScriptableObject
     {
         dialogue = response.Next;
         experience += response.XP;
+        relationship += response.Relationship;
         OnDialogueResponse?.Invoke(response);
     }
 

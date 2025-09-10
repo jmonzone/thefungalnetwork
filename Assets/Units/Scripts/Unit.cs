@@ -105,14 +105,12 @@ public class Unit : ScriptableObject
 
         if (lineObj["responses"] is JArray responses)
         {
-            foreach (var resp in responses)
+            foreach (var json in responses)
             {
-                string respText = resp.Value<string>("text");
-                string nextId = resp.Value<string>("nextId");
-                float xp = resp.Value<float>("xp");
+                string nextId = json.Value<string>("nextId");
 
                 var response = CreateInstance<Response>();
-                response.Initialize(respText, xp);
+                response.Initialize(json);
 
                 if (!string.IsNullOrEmpty(nextId))
                 {

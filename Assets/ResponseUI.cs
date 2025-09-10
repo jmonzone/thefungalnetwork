@@ -58,5 +58,6 @@ public class ResponseUI : MonoBehaviour
     public void Hide()
     {
         responseGroup.gameObject.SetActive(false);
+        continueGroup.gameObject.SetActive(false);
     }
 }
