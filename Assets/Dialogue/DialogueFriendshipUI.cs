@@ -43,7 +43,7 @@ public class DialogueFriendshipUI : DialoguePageUI
 
     private IEnumerator LevelUpRoutine()
     {
-        valueBarController.SetTargetScale(1.25f);
+        valueBarController.SetTargetScale(1.1f);
         yield return new WaitForSeconds(1f);
         text.text = "Friendship Level Increased";
         yield return new WaitForSeconds(2f);

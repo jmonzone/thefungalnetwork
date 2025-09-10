@@ -38,7 +38,7 @@ public class UnitListUI : MonoBehaviour
             if (i < unitListReference.Units.Count)
             {
                 var unit = unitListReference.Units[i];
-                unitView.SetUnit(unit.Data);
+                unitView.SetUnit(unit);
             }
             else
             {

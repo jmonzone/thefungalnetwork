@@ -70,6 +70,7 @@ public class DialogueReference : ScriptableObject
     {
         unit.Unfocus();
         OnDialogueComplete?.Invoke();
+
         navigation.GoBack();
 
         unit = null;

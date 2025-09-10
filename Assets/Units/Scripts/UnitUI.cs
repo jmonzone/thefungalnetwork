@@ -21,7 +21,7 @@ public class UnitUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     [SerializeField] private InventoryReference inventory;
 
     [Header("Runtime")]
-    [SerializeField] private Unit unit;
+    [SerializeField] private UnitInstance unit;
 
     private void Awake()
     {
@@ -37,14 +37,14 @@ public class UnitUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         unitButton.onClick.AddListener(() => unitListReference.SelectFungal(unit));
     }
 
-    public void SetUnit(Unit unit)
+    public void SetUnit(UnitInstance unit)
     {
         this.unit = unit;
 
-        if (unit)
+        if (unit != null)
         {
-            image.sprite = unit.Sprite;
-            nameText.text = unit.name;
+            image.sprite = unit.Data.Sprite;
+            nameText.text = unit.Data.Name;
             backgroundImage.color = backgroundActiveColor;
         }
         else
@@ -52,9 +52,9 @@ public class UnitUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             backgroundImage.color = backgroundInactiveColor;
         }
 
-        image.gameObject.SetActive(unit);
-        labelsContainer.SetActive(unit);
-        summonContainer.SetActive(!unit);
+        image.gameObject.SetActive(unit != null);
+        labelsContainer.SetActive(unit != null);
+        summonContainer.SetActive(unit == null);
     }
 
     void IPointerEnterHandler.OnPointerEnter(PointerEventData eventData)

@@ -23,15 +23,18 @@ public class FungalUI : MonoBehaviour
         unitListReference.OnFungalSelected -= UnitListReference_OnFungalSelected;
     }
 
-    private void UnitListReference_OnFungalSelected(Unit unit)
+    private void UnitListReference_OnFungalSelected(UnitInstance unit)
     {
         SetFungal(unit);
     }
 
-    public void SetFungal(Unit unit)
+    public void SetFungal(UnitInstance unit)
     {
-        fungalImage.sprite = unit.Sprite;
-        fungalName.name = unit.Name;
+        fungalImage.sprite = unit.Data.Sprite;
+        fungalName.text = unit.Data.Name;
+        relationshipSlider.minValue = 0;
+        relationshipSlider.maxValue = 8;
+        relationshipSlider.value = unit.Relationship;
         dateText.text = DateTime.Now.ToLongDateString();
     }
 }

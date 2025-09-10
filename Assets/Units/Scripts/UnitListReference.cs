@@ -22,7 +22,7 @@ public class UnitListReference : ScriptableObject
     private const string UNIT_KEY = "units";
 
     public event UnityAction OnFungalOpened;
-    public event UnityAction<Unit> OnFungalSelected;
+    public event UnityAction<UnitInstance> OnFungalSelected;
     public event UnityAction<UnitInstance> OnUnitSummoned;
 
     public void Initialize()
@@ -114,13 +114,13 @@ public class UnitListReference : ScriptableObject
 
     public void OpenFungals()
     {
-        navigation.Navigate(fungalListView);
         OnFungalOpened?.Invoke();
+        navigation.Navigate(fungalListView);
     }
 
-    public void SelectFungal(Unit unit)
+    public void SelectFungal(UnitInstance unit)
     {
-        navigation.Navigate(fungalView);
         OnFungalSelected?.Invoke(unit);
+        navigation.Navigate(fungalView);
     }
 }

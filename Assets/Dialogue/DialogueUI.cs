@@ -13,6 +13,7 @@ public class DialogueUI : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private DialogueReference dialogue;
+    [SerializeField] private UnitListReference unitListReference;
 
     [Header("UI Components")]
     [SerializeField] private SpeakerUI speakerUI;
@@ -36,7 +37,7 @@ public class DialogueUI : MonoBehaviour
         chatPage.OnClose += ChatPage_OnClose;
         friendshipPage.OnClose += FriendshipPage_OnClose;
 
-        closeButton.onClick.AddListener(dialogue.CompleteDialogue);
+        closeButton.onClick.AddListener(() => dialogue.CompleteDialogue());
     }
 
     private void OnEnable()
@@ -69,7 +70,16 @@ public class DialogueUI : MonoBehaviour
         {
             ShowPage(DialoguePage.FRIENDSHIP);
         }
-        else dialogue.CompleteDialogue();
+        else if (dialogue.Dialogue.Type == DialogueType.FRIEND)
+        {
+            var selectUnit = dialogue.Unit;
+            dialogue.CompleteDialogue();
+            unitListReference.SelectFungal(selectUnit.Instance);
+        }
+        else
+        {
+            dialogue.CompleteDialogue();
+        }
     }
 
     private void FriendshipPage_OnClose()
