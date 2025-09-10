@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Linq;
+using UnityEngine;
 
 public class UnitDialogue : UnitBehaviour
 {
@@ -9,6 +11,15 @@ public class UnitDialogue : UnitBehaviour
     [Header("Settings")]
     [SerializeField] private bool lookAtTarget = true;
 
+    private Animator animator;
+    private AudioSource audioSource;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        animator = GetComponentInChildren<Animator>();
+    }
+
     protected override void OnBehaviourStart()
     {
         dialogue.StartInteraction(Unit, Unit.Instance.Data.ChatDialogue[0]);
@@ -16,6 +27,11 @@ public class UnitDialogue : UnitBehaviour
         if (lookAtTarget) Unit.SetLookPosition(playerReference.Player.transform.position);
 
         dialogue.OnDialogueComplete += Dialogue_OnDialogueComplete;
+        dialogue.OnDialogueResponse += Dialogue_OnDialogueResponse;
+    }
+
+    private void Dialogue_OnDialogueResponse(Response arg0)
+    {
     }
 
     private void Dialogue_OnDialogueComplete()

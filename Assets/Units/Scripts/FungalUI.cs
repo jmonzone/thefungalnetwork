@@ -12,6 +12,8 @@ public class FungalUI : MonoBehaviour
     [SerializeField] private Slider relationshipSlider;
     [SerializeField] private Image headImage;
     [SerializeField] private TextMeshProUGUI dateText;
+    [SerializeField] private TextMeshProUGUI levelText;
+    [SerializeField] private TextMeshProUGUI nextLevelText;
 
     private void OnEnable()
     {
@@ -32,9 +34,11 @@ public class FungalUI : MonoBehaviour
     {
         fungalImage.sprite = unit.Data.Sprite;
         fungalName.text = unit.Data.Name;
-        relationshipSlider.minValue = 0;
-        relationshipSlider.maxValue = 8;
+        relationshipSlider.minValue = unit.MinimumRelationshipPoints;
+        relationshipSlider.maxValue = unit.MaximumRelationshipPoints;
         relationshipSlider.value = unit.RelationshipPoints;
+        levelText.text = $"Level {unit.RelationshipLevel}";
+        nextLevelText.text = $"{unit.RelationshipPointsUntilNextLevel} xp until next level";
         dateText.text = DateTime.Now.ToLongDateString();
     }
 }

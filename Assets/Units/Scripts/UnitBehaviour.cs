@@ -14,6 +14,11 @@ public abstract class UnitBehaviour : MonoBehaviour
     protected virtual void Awake()
     {
         Unit = GetComponent<UnitController>();
+        Unit.OnInitialized += OnInitialized;
+    }
+
+    protected virtual void OnInitialized()
+    {
     }
 
     protected virtual void Update()

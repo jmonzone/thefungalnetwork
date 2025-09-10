@@ -35,7 +35,6 @@ public class StoryWorkTogether : MonoBehaviour
 
     private void TryStartStory()
     {
-        Debug.Log("working together");
         if (storyReference.CompletedStories.Contains(workTogether)) return;
         if (!storyReference.CompletedStories.Contains(prerequisite)) return;
 
@@ -53,9 +52,10 @@ public class StoryWorkTogether : MonoBehaviour
         playerReference.Player.transform.position = playerAnchor.position;
         playerReference.Player.SetLookPosition(frogAnchor.position);
 
-        //dialogueReference.StartDialogue(partyFrog, workTogetherDialogue);
+        dialogueReference.StartDialogue(partyFrog, new Dialogue(workTogetherDialogue, DialogueType.STORY));
 
         yield return new WaitUntil(() => dialogueReference.Dialogue.Action == DialogueAction.GIFT);
+
         plantGift.SetActive(true);
 
         yield return new WaitWhile(() => dialogueReference.IsActive);
@@ -67,7 +67,7 @@ public class StoryWorkTogether : MonoBehaviour
 
         buildReference.EndBuild();
 
-        //dialogueReference.StartDialogue(partyFrog, buildCompleteDialogue);
+        dialogueReference.StartDialogue(partyFrog, new Dialogue(buildCompleteDialogue, DialogueType.STORY));
         yield return new WaitWhile(() => dialogueReference.IsActive);
 
         storyReference.CompleteStory(workTogether);

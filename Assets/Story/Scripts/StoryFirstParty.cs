@@ -62,11 +62,11 @@ public class StoryFirstParty : MonoBehaviour
         //cameraPanController.CenterTargetInView(playerReference.Player.transform.position);
         //dialogueReference.StartDialogue(playerReference.Player, lostDialogue);
 
-        yield return new WaitUntil(() => timesInteractedWithGuests > 3);
+        yield return new WaitUntil(() => timesInteractedWithGuests > 0);
         yield return new WaitWhile(() => dialogueReference.IsActive);
         yield return new WaitForSeconds(1f);
 
-        //dialogueReference.StartDialogue(partyFrog, letsTakeAPhotoDialogue);
+        dialogueReference.StartDialogue(partyFrog, new Dialogue(letsTakeAPhotoDialogue, DialogueType.STORY));
 
         yield return new WaitWhile(() => dialogueReference.IsActive);
         yield return new WaitForSeconds(1f);
@@ -103,7 +103,7 @@ public class StoryFirstParty : MonoBehaviour
         yield return new WaitWhile(() => photoReference.IsActive);
         yield return new WaitForSeconds(1f);
 
-        //dialogueReference.StartDialogue(partyFrog, afterPhotoTakenDialogue);
+        dialogueReference.StartDialogue(partyFrog, new Dialogue(afterPhotoTakenDialogue, DialogueType.STORY));
 
         yield return new WaitWhile(() => dialogueReference.IsActive);
         yield return new WaitForSeconds(1f);

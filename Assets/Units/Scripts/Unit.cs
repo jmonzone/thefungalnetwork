@@ -16,7 +16,9 @@ public class UnitInstance
     public bool IsFriends => relationshipLevel > 1;
     public int RelationshipLevel => relationshipLevel;
     public float RelationshipPoints => relationshipPoints;
-
+    public float MinimumRelationshipPoints => GetXPFromLevel(relationshipLevel);
+    public float MaximumRelationshipPoints => GetXPFromLevel(relationshipLevel + 1);
+    public float RelationshipPointsUntilNextLevel => MaximumRelationshipPoints - relationshipPoints;
     public event UnityAction<float> OnRelationshipChanged;
     public event UnityAction OnRelationshipLevelChanged;
 

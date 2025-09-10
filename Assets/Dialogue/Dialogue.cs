@@ -42,18 +42,21 @@ public enum DialogueType
 {
     CHAT,
     GIFT,
-    FRIEND
+    FRIEND,
+    STORY
 }
 
 [Serializable]
 public class Dialogue
 {
     [SerializeField] [TextArea] private string text;
+    [SerializeField] private Dialogue next;
     [SerializeField] private List<Response> responses;
     [SerializeField] private DialogueType type;
     [SerializeField] private DialogueAction action;
 
     public string Text => text;
+    public Dialogue Next => next;
     public List<Response> Responses => responses;
     public DialogueType Type => type;
     public DialogueAction Action => action;
@@ -64,5 +67,21 @@ public class Dialogue
         responses = new List<Response>();
         this.type = type;
         this.action = action;
+    }
+
+    public Dialogue(List<Dialogue> dialogue, DialogueType type)
+    {
+        text = dialogue[0].text;
+        action = dialogue[0].action;
+
+        this.type = type;
+        responses = new List<Response>();
+
+        if (dialogue.Count > 1)
+        {
+            next = new Dialogue(dialogue.GetRange(1, dialogue.Count - 1), type);
+        }
+
+
     }
 }

@@ -80,6 +80,24 @@ public class Navigation : ScriptableObject
         history.Add(view);
     }
 
+    public void GoBackToRoot()
+    {
+        if (history.Count > 1)
+        {
+            // grab the very first view in history
+            var rootView = history.First();
+
+            // clear everything
+            history.Clear();
+
+            // re-add root
+            history.Add(rootView);
+
+            // navigate to root
+            if (rootView) Navigate(rootView);
+        }
+    }
+
     public void GoBack()
     {
         if (history.Count > 1)

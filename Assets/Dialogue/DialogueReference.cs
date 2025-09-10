@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Events;
 
 [CreateAssetMenu]
@@ -48,6 +49,7 @@ public class DialogueReference : ScriptableObject
     {
         this.unit = unit;
         this.dialogue = dialogue;
+        Debug.Log($"ApplyStartDialogue {dialogue}");
         isActive = true;
         OnIsActiveChanged?.Invoke();
 
@@ -60,18 +62,29 @@ public class DialogueReference : ScriptableObject
 
     public void RespondToChat(Response response)
     {
+        Debug.Log($"RespondToChat {response.Next}");
+
         if (response.Next != null) dialogue = response.Next;
         experience += response.XP;
         relationship += response.Relationship;
         OnDialogueResponse?.Invoke(response);
     }
 
+    public void ContinueDialogue()
+    {
+        Debug.Log($"ContinueDialogue {dialogue.Next.Action}");
+
+        if (dialogue.Next != null) dialogue = dialogue.Next;
+    }
+
     public void CompleteDialogue()
     {
+        Debug.Log($"CompleteDialogue  {dialogue.Action}");
+
         unit.Unfocus();
         OnDialogueComplete?.Invoke();
 
-        navigation.GoBack();
+        navigation.GoBackToRoot();
 
         unit = null;
         dialogue = null;

@@ -24,11 +24,22 @@ public class DialogueChatUI : DialoguePageUI
                     else InvokeClose();
                 });
             }
+            else if (dialogueData.Next != null)
+            {
+                StartCoroutine(ContinueRoutine());
+            }
             else
             {
                 StartCoroutine(CloseRoutine());
             }
         }));
+    }
+
+    private IEnumerator ContinueRoutine()
+    {
+        yield return new WaitForSeconds(1f);
+        dialogue.ContinueDialogue();
+        Show();
     }
 
     private IEnumerator CloseRoutine()

@@ -26,6 +26,7 @@ public class UnitController : MonoBehaviour, IInteractable, INoteTarget
 
     int INoteTarget.EmissionStep => emissionStep;
 
+    public event UnityAction OnInitialized;
     public event UnityAction OnBehaviourChanged;
 
     protected virtual void Awake()
@@ -102,6 +103,8 @@ public class UnitController : MonoBehaviour, IInteractable, INoteTarget
         Quaternion randomYRotation = Quaternion.Euler(0, Random.Range(135f, 225f), 0);
 
         renderRoot = Instantiate(instance.Data.Prefab, Vector3.zero, randomYRotation, transform).transform;
+
+        OnInitialized?.Invoke();
     }
 
     public void SetLookPosition(Vector3 targetPosition)

@@ -7,18 +7,21 @@ public class UnitUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [Header("References")]
     [SerializeField] private UnitListReference unitListReference;
+    [SerializeField] private InventoryReference inventory;
+
+    [Header("UI References")]
     [SerializeField] private Image image;
     [SerializeField] private Button unitButton;
     [SerializeField] private Image backgroundImage;
     [SerializeField] private Color backgroundActiveColor;
     [SerializeField] private Color backgroundInactiveColor;
     [SerializeField] private RotateObject rotateObject;
+
     [SerializeField] private GameObject labelsContainer;
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI levelText;
     [SerializeField] private BuyButton summonButton;
     [SerializeField] private GameObject summonContainer;
-    [SerializeField] private InventoryReference inventory;
 
     [Header("Runtime")]
     [SerializeField] private UnitInstance unit;
@@ -45,6 +48,7 @@ public class UnitUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         {
             image.sprite = unit.Data.Sprite;
             nameText.text = unit.Data.Name;
+            levelText.text = $"Level {unit.RelationshipLevel}";
             backgroundImage.color = backgroundActiveColor;
         }
         else

@@ -84,7 +84,7 @@ public class DialogueUI : MonoBehaviour
 
     private void FriendshipPage_OnClose()
     {
-        ShowPage(DialoguePage.CHAT);
+        dialogue.CompleteDialogue();
     }
 
     private void ShowPage(DialoguePage page)

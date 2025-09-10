@@ -5,8 +5,12 @@ using UnityEngine;
 public class DialogueFriendshipUI : DialoguePageUI
 {
     [SerializeField] private TextMeshProUGUI text;
+
     private ValueBarController valueBarController;
     private ValueBarParticleController valueBarParticleController;
+
+    private int level;
+    public bool HasLeveledUp => dialogue.Unit.Instance.RelationshipLevel > level;
 
     protected override void Awake()
     {
@@ -21,8 +25,10 @@ public class DialogueFriendshipUI : DialoguePageUI
     {
         base.Show();
 
-        valueBarController.Initialize(dialogue.Unit.Instance.RelationshipPoints, 0, 8);
-        dialogue.Unit.Instance.IncreaseRelationship(dialogue.Relationship);
+        var instance = dialogue.Unit.Instance;
+        valueBarController.Initialize(instance.RelationshipPoints, instance.MinimumRelationshipPoints, instance.MaximumRelationshipPoints);
+        level = instance.RelationshipLevel;
+        instance.IncreaseRelationship(dialogue.Relationship);
         valueBarParticleController.BurstFromWorld((int)dialogue.Relationship, dialogue.Unit.transform.position);
     }
 
@@ -38,7 +44,14 @@ public class DialogueFriendshipUI : DialoguePageUI
 
     private void ValueBarParticleController_OnAllParticleReached()
     {
-        StartCoroutine(LevelUpRoutine());
+        if (HasLeveledUp)
+        {
+            StartCoroutine(LevelUpRoutine());
+        }
+        else
+        {
+            StartCoroutine(CloseRoutine());
+        }
     }
 
     private IEnumerator LevelUpRoutine()
@@ -48,5 +61,11 @@ public class DialogueFriendshipUI : DialoguePageUI
         text.text = "Friendship Level Increased";
         yield return new WaitForSeconds(2f);
         dialogue.StartDialogue(dialogue.Unit, new Dialogue("I really like your vibe, we should be friends!", DialogueType.FRIEND));
+    }
+
+    private IEnumerator CloseRoutine()
+    {
+        yield return new WaitForSeconds(2f);
+        InvokeClose();
     }
 }
