@@ -20,7 +20,8 @@ public class DialogueChatUI : DialoguePageUI
                 responseUI.ShowResponses(dialogueData.Responses, response =>
                 {
                     dialogue.RespondToChat(response);
-                    Show();
+                    if (response.Next != null) Show();
+                    else InvokeClose();
                 });
             }
             else

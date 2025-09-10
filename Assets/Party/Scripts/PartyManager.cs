@@ -5,13 +5,14 @@ using UnityEngine.AI;
 public class PartyManager : MonoBehaviour
 {
     [SerializeField] private PartyReference partyReference;
-    [SerializeField] private PhotoReference photoReference;
     [SerializeField] private UnitManager unitManager;
     [SerializeField] private UnitListReference unitList;
     [SerializeField] private Transform frogAnchor;
     [SerializeField] private UnitController unitPrefab;
     [SerializeField] private Transform spawnAnchor;
     [SerializeField] private float currentTimer;
+    [SerializeField] private Navigation navigation;
+    [SerializeField] private ViewReference gameplayView;
     [SerializeField] private FadeCanvasGroup vibeMeterCanvas;
 
     private ValueBarController valueBarController;
@@ -35,19 +36,27 @@ public class PartyManager : MonoBehaviour
         partyReference.OnPartyStarted += PartyReference_OnPartyStarted;
         partyReference.OnPartyComplete += PartyReference_OnPartyComplete;
 
-        photoReference.OnPhotoStart += PhotoReference_OnPhotoStart;
-        photoReference.OnPhotoExit += PhotoReference_OnPhotoExit;
-
         //partyReference.OnVibeIncreased += PartyReference_OnVibeIncreased;
+
+        navigation.OnNavigated += Navigation_OnNavigated;
+    }
+
+    private void Navigation_OnNavigated()
+    {
+        if (partyReference.IsActive && navigation.CurrentView == gameplayView)
+        {
+            StartCoroutine(vibeMeterCanvas.FadeIn());
+        }
+        else
+        {
+            StartCoroutine(vibeMeterCanvas.FadeOut());
+        }
     }
 
     private void OnDisable()
     {
         partyReference.OnPartyStarted -= PartyReference_OnPartyStarted;
         partyReference.OnPartyComplete -= PartyReference_OnPartyComplete;
-
-        photoReference.OnPhotoStart -= PhotoReference_OnPhotoStart;
-        photoReference.OnPhotoExit -= PhotoReference_OnPhotoExit;
 
         //partyReference.OnVibeIncreased -= PartyReference_OnVibeIncreased;
     }
@@ -113,15 +122,6 @@ public class PartyManager : MonoBehaviour
         StopAllCoroutines();
     }
 
-    private void PhotoReference_OnPhotoExit()
-    {
-        if (partyReference.IsActive) StartCoroutine(vibeMeterCanvas.FadeIn());
-    }
-
-    private void PhotoReference_OnPhotoStart()
-    {
-        if (partyReference.IsActive) StartCoroutine(vibeMeterCanvas.FadeOut());
-    }
 
     private void PartyReference_OnVibeIncreased(int points, Vector3 position)
     {

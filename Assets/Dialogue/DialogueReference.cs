@@ -60,7 +60,7 @@ public class DialogueReference : ScriptableObject
 
     public void RespondToChat(Response response)
     {
-        dialogue = response.Next;
+        if (response.Next != null) dialogue = response.Next;
         experience += response.XP;
         relationship += response.Relationship;
         OnDialogueResponse?.Invoke(response);
