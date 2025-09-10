@@ -16,7 +16,8 @@ public class StoryFirstParty : MonoBehaviour
     [SerializeField] private Transform guestPictureAnchor;
     [SerializeField] private Transform cameraPositionAnchor;
     [SerializeField] private InitialUI initialUI;
-    [SerializeField] private ViewReference partyView;
+    [SerializeField] private Navigation navigation;
+    [SerializeField] private ViewReference gameplayView;
 
     [SerializeField] private DialogueReference dialogueReference;
     [SerializeField] private List<Dialogue> lostDialogue;
@@ -27,13 +28,11 @@ public class StoryFirstParty : MonoBehaviour
 
     private void OnEnable()
     {
-        sceneNavigation.OnSceneFadeIn += StartParty;
         dialogueReference.OnInteractionStart += DialogueReference_OnDialogueStart;
     }
 
     private void OnDisable()
     {
-        sceneNavigation.OnSceneFadeIn -= StartParty;
         dialogueReference.OnInteractionStart -= DialogueReference_OnDialogueStart;
     }
 
@@ -42,20 +41,19 @@ public class StoryFirstParty : MonoBehaviour
         if (!storyReference.HasCompleted(firstParty))
         {
             initialUI.enabled = false;
+            unitManager.OnAllUnitsSummoned += UnitManager_OnAllUnitsSummoned;
         }
     }
 
-    private void StartParty()
+    private void UnitManager_OnAllUnitsSummoned()
     {
-        if (!storyReference.HasCompleted(firstParty))
-        {
-            StartCoroutine(PartyRoutine());
-            initialUI.enabled = true;
-        }
+        StartCoroutine(PartyRoutine());
+        initialUI.enabled = true;
     }
 
     private IEnumerator PartyRoutine()
     {
+        yield return new WaitForFixedUpdate();
         partyReference.StartParty(tutorialParty);
         var partyFrog = unitManager.UnitControllers[0];
 
@@ -68,7 +66,7 @@ public class StoryFirstParty : MonoBehaviour
 
         dialogueReference.StartDialogue(partyFrog, new Dialogue(letsTakeAPhotoDialogue, DialogueType.STORY));
 
-        yield return new WaitWhile(() => dialogueReference.IsActive);
+        yield return new WaitUntil(() => navigation.CurrentView == gameplayView);
         yield return new WaitForSeconds(1f);
 
         foreach(var guest in partyReference.Guests)

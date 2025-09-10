@@ -18,6 +18,7 @@ public class UnitManager : MonoBehaviour
     public List<UnitController> AllUnits => unitControllers.Concat(partyReference.Guests).ToList();
 
     public event UnityAction<UnitController> OnUnitSummoned;
+    public event UnityAction OnAllUnitsSummoned;
 
     private void Awake()
     {
@@ -30,6 +31,8 @@ public class UnitManager : MonoBehaviour
         {
             if (unit.IsFriends) SummonUnit(unit);
         }
+
+        OnAllUnitsSummoned?.Invoke();
     }
 
     private void OnEnable()
