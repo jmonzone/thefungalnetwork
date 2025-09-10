@@ -16,11 +16,16 @@ public class ValueBarParticleController : MonoBehaviour
     [SerializeField] private float maxtravelTime = 1.25f;
     [SerializeField] private AnimationCurve arcCurve;
 
+    private int activeParticles;
+
     public event UnityAction OnParticleReached;
+    public event UnityAction OnAllParticleReached;
 
     /// <summary>Call to spawn a burst from world space to this bar.</summary>
     public void BurstFromWorld(int count, Vector3 worldPos)
     {
+        activeParticles = count;
+
         for (int i = 0; i < count; i++)
         {
             GameObject p = Instantiate(particlePrefab, canvas.transform);
@@ -75,5 +80,8 @@ public class ValueBarParticleController : MonoBehaviour
 
         Destroy(particle);
         OnParticleReached?.Invoke();
+        activeParticles--;
+
+        if (activeParticles == 0) OnAllParticleReached?.Invoke();
     }
 }

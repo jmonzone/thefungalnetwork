@@ -1,44 +1,13 @@
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
-public abstract class DialoguePageUI : MonoBehaviour
+public enum DialoguePage
 {
-    [SerializeField] protected DialogueReference dialogue;
-    [SerializeField] protected FadeCanvasGroup fadeCanvasGroup;
-
-    public event UnityAction OnClose;
-
-    protected virtual void Awake()
-    {
-
-    }
-
-    protected virtual void OnEnable()
-    {
-
-    }
-
-    protected virtual void OnDisable()
-    {
-
-    }
-
-    public virtual void Show()
-    {
-        StartCoroutine(fadeCanvasGroup.FadeIn());
-    }
-
-    public virtual void Hide()
-    {
-        fadeCanvasGroup.gameObject.SetActive(false);
-    }
-
-    protected void InvokeClose()
-    {
-        OnClose?.Invoke();
-    }
+    ACTION,
+    CHAT,
+    FRIENDSHIP
 }
+
 
 public class DialogueUI : MonoBehaviour
 {
@@ -59,7 +28,13 @@ public class DialogueUI : MonoBehaviour
     private void Awake()
     {
         currentPage = actionPage;
-        chatPage.OnClose += () => ShowPage(DialoguePage.FRIENDSHIP);
+
+        actionPage.Hide();
+        chatPage.Hide();
+        friendshipPage.Hide();
+
+        chatPage.OnClose += ChatPage_OnClose;
+        friendshipPage.OnClose += FriendshipPage_OnClose;
 
         closeButton.onClick.AddListener(dialogue.CompleteDialogue);
     }
@@ -88,11 +63,14 @@ public class DialogueUI : MonoBehaviour
         ShowPage(DialoguePage.CHAT);
     }
 
-    private enum DialoguePage
+    private void ChatPage_OnClose()
     {
-        ACTION,
-        CHAT,
-        FRIENDSHIP
+        ShowPage(DialoguePage.FRIENDSHIP);
+    }
+
+    private void FriendshipPage_OnClose()
+    {
+        ShowPage(DialoguePage.CHAT);
     }
 
     private void ShowPage(DialoguePage page)

@@ -1,5 +1,11 @@
+using System.Collections;
+using TMPro;
+using UnityEngine;
+using UnityEngine.Events;
+
 public class DialogueFriendshipUI : DialoguePageUI
 {
+    [SerializeField] private TextMeshProUGUI text;
     private ValueBarController valueBarController;
     private ValueBarParticleController valueBarParticleController;
 
@@ -9,21 +15,7 @@ public class DialogueFriendshipUI : DialoguePageUI
         valueBarController = GetComponent<ValueBarController>();
         valueBarParticleController = GetComponent<ValueBarParticleController>();
         valueBarParticleController.OnParticleReached += ValueBarParticleController_OnParticlesReached;
-    }
-
-    protected override void OnEnable()
-    {
-        base.OnEnable();
-    }
-
-    protected override void OnDisable()
-    {
-        base.OnDisable();
-    }
-
-    private void ValueBarParticleController_OnParticlesReached()
-    {
-        valueBarController.Increment();
+        valueBarParticleController.OnAllParticleReached += ValueBarParticleController_OnAllParticleReached;
     }
 
     public override void Show()
@@ -33,5 +25,29 @@ public class DialogueFriendshipUI : DialoguePageUI
         valueBarController.Initialize(dialogue.Unit.Instance.Relationship, 0, 8);
         dialogue.Unit.Instance.IncreaseRelationship(dialogue.Experience);
         valueBarParticleController.BurstFromWorld((int)dialogue.Experience, dialogue.Unit.transform.position);
+    }
+
+    private void Update()
+    {
+        text.color = valueBarController.AnimatedColor;
+    }
+
+    private void ValueBarParticleController_OnParticlesReached()
+    {
+        valueBarController.Increment();
+    }
+
+    private void ValueBarParticleController_OnAllParticleReached()
+    {
+        StartCoroutine(LevelUpRoutine());
+    }
+
+    private IEnumerator LevelUpRoutine()
+    {
+        valueBarController.SetTargetScale(1.25f);
+        yield return new WaitForSeconds(1f);
+        text.text = "Friendship Level Increased";
+        yield return new WaitForSeconds(2f);
+        dialogue.StartDialogue(dialogue.Unit, new Dialogue("I really like your vibe, we should be friends!"));
     }
 }

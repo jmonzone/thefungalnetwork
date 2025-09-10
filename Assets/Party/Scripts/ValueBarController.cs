@@ -47,7 +47,7 @@ public class ValueBarController : MonoBehaviour
         if (pulse)
         {
             if (pulseRoutine != null) StopCoroutine(pulseRoutine);
-            pulseRoutine = StartCoroutine(PulseFill());
+            pulseRoutine = StartCoroutine(PulseFill(pulseScale, originalScale));
         }
     }
 
@@ -71,23 +71,33 @@ public class ValueBarController : MonoBehaviour
         if (fillImage) fillImage.color = animatedColor;
     }
 
-    private IEnumerator PulseFill()
+    private IEnumerator PulseFill(float amplitude, Vector3 endScale)
     {
         if (!fillImage) yield break;
 
         float time = 0;
 
-        while (time < pulseDuration)
+        float scale = 1;
+        while (time < pulseDuration && Vector3.Distance(originalScale * scale, endScale) > 0.1f)
         {
             float progress = time / pulseDuration;
-            float scale = Mathf.Lerp(1f, pulseScale, Mathf.Sin(progress * Mathf.PI));
+            scale = Mathf.Lerp(1f, amplitude, Mathf.Sin(progress * Mathf.PI));
             fillImage.transform.localScale = originalScale * scale;
 
             time += Time.deltaTime;
             yield return null;
         }
 
-        fillImage.transform.localScale = originalScale;
+        fillImage.transform.localScale = endScale;
+    }
+
+    // Hold at max size (e.g. show "full power")
+    public void SetTargetScale(float scale = 1.2f)
+    {
+        if (!fillImage) return;
+
+        StopCoroutine(nameof(PulseFill));
+        StartCoroutine(PulseFill(scale, originalScale * scale));
     }
 
     private Color ShiftColor(Color color, float shift)

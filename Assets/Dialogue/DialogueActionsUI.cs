@@ -30,10 +30,4 @@ public class DialogueActionsUI : DialoguePageUI
         var intro = allIntros[Random.Range(0, allIntros.Count)];
         StartCoroutine(dialogueTypewriter.TypeRoutine(intro, () => StartCoroutine(actionButtons.FadeIn())));
     }
-
-    public override void Hide()
-    {
-        base.Hide();
-    }
-
 }
