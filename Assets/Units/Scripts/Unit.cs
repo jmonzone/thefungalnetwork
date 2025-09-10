@@ -65,7 +65,7 @@ public class Unit : ScriptableObject
         chatDialogue = new List<Dialogue>();
         if (data["chat"] is JArray chatArray)
         {
-            var chat = BuildDialogueTree(chatArray[0] as JObject, chatArray);
+            var chat = BuildDialogueTree(chatArray[0] as JObject, chatArray, DialogueType.CHAT);
             chatDialogue.Add(chat);
         }
 
@@ -86,22 +86,22 @@ public class Unit : ScriptableObject
                         _ => DialogueAction.DEFAULT,
                     };
 
-                    Dialogue d = new Dialogue(text, action);
+                    Dialogue d = new Dialogue(text, DialogueType.GIFT, action);
                     giveDialogue.Add(d);
                 }
                 else
                 {
-                    Dialogue d = new Dialogue(g.ToString());
+                    Dialogue d = new Dialogue(g.ToString(), DialogueType.GIFT);
                     giveDialogue.Add(d);
                 }
             }
         }
     }
 
-    private Dialogue BuildDialogueTree(JObject lineObj,JArray chatArray)
+    private Dialogue BuildDialogueTree(JObject lineObj,JArray chatArray, DialogueType type)
     {
         string text = lineObj.Value<string>("text");
-        var dialogue = new Dialogue(text);
+        var dialogue = new Dialogue(text, type);
 
         if (lineObj["responses"] is JArray responses)
         {
@@ -116,7 +116,7 @@ public class Unit : ScriptableObject
                 {
                     // find the object in chatArray with this id
                     var nextLine = chatArray.First(l => l.Value<string>("id") == nextId) as JObject;
-                    var childDialogue = BuildDialogueTree(nextLine, chatArray);
+                    var childDialogue = BuildDialogueTree(nextLine, chatArray, type);
 
                     response.SetNext(childDialogue);
                 }

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class DialogueChatUI : DialoguePageUI
@@ -19,14 +20,19 @@ public class DialogueChatUI : DialoguePageUI
                 responseUI.ShowResponses(dialogueData.Responses, response =>
                 {
                     dialogue.RespondToChat(response);
-                    if (response.HasNext) Show();
-                    else InvokeClose();
+                    Show();
                 });
             }
             else
             {
-                responseUI.ShowContinue(InvokeClose);
+                StartCoroutine(CloseRoutine());
             }
         }));
+    }
+
+    private IEnumerator CloseRoutine()
+    {
+        yield return new WaitForSeconds(2f);
+        InvokeClose();
     }
 }

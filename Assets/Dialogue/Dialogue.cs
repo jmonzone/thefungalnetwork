@@ -38,21 +38,31 @@ public class Response : ScriptableObject
     }
 }
 
+public enum DialogueType
+{
+    CHAT,
+    GIFT,
+    FRIEND
+}
+
 [Serializable]
 public class Dialogue
 {
     [SerializeField] [TextArea] private string text;
     [SerializeField] private List<Response> responses;
+    [SerializeField] private DialogueType type;
     [SerializeField] private DialogueAction action;
 
     public string Text => text;
     public List<Response> Responses => responses;
+    public DialogueType Type => type;
     public DialogueAction Action => action;
 
-    public Dialogue(string text, DialogueAction action = DialogueAction.DEFAULT)
+    public Dialogue(string text, DialogueType type, DialogueAction action = DialogueAction.DEFAULT)
     {
         this.text = text;
-        this.action = action;
         responses = new List<Response>();
+        this.type = type;
+        this.action = action;
     }
 }

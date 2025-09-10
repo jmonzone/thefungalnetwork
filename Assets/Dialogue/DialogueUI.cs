@@ -65,7 +65,11 @@ public class DialogueUI : MonoBehaviour
 
     private void ChatPage_OnClose()
     {
-        ShowPage(DialoguePage.FRIENDSHIP);
+        if (dialogue.Dialogue.Type == DialogueType.CHAT)
+        {
+            ShowPage(DialoguePage.FRIENDSHIP);
+        }
+        else dialogue.CompleteDialogue();
     }
 
     private void FriendshipPage_OnClose()

@@ -1,7 +1,6 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class DialogueFriendshipUI : DialoguePageUI
 {
@@ -23,8 +22,8 @@ public class DialogueFriendshipUI : DialoguePageUI
         base.Show();
 
         valueBarController.Initialize(dialogue.Unit.Instance.Relationship, 0, 8);
-        dialogue.Unit.Instance.IncreaseRelationship(dialogue.Experience);
-        valueBarParticleController.BurstFromWorld((int)dialogue.Experience, dialogue.Unit.transform.position);
+        dialogue.Unit.Instance.IncreaseRelationship(dialogue.Relationship);
+        valueBarParticleController.BurstFromWorld((int)dialogue.Relationship, dialogue.Unit.transform.position);
     }
 
     private void Update()
@@ -48,6 +47,6 @@ public class DialogueFriendshipUI : DialoguePageUI
         yield return new WaitForSeconds(1f);
         text.text = "Friendship Level Increased";
         yield return new WaitForSeconds(2f);
-        dialogue.StartDialogue(dialogue.Unit, new Dialogue("I really like your vibe, we should be friends!"));
+        dialogue.StartDialogue(dialogue.Unit, new Dialogue("I really like your vibe, we should be friends!", DialogueType.FRIEND));
     }
 }
