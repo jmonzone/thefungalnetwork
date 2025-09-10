@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using Cinemachine;
 using UnityEngine;
 using UnityEngine.Events;
@@ -13,14 +11,14 @@ public class UnitController : MonoBehaviour, IInteractable, INoteTarget
     [SerializeField] private int emissionStep;
 
     [Header("Runtime")]
-    [SerializeField] private Unit data;
+    [SerializeField] private UnitInstance instance;
     [SerializeField] private UnitBehaviour currentBehaviour;
     [SerializeField] private Vector3 targetLookPosition;
     [SerializeField] private Transform target;
 
     private CinemachineVirtualCamera virtualCamera;
 
-    public Unit Data => data;
+    public UnitInstance Instance => instance;
     protected Transform RenderRoot => renderRoot;
     public bool IsDefaultBehaviour => currentBehaviour == defaultBehaviour;
 
@@ -96,14 +94,14 @@ public class UnitController : MonoBehaviour, IInteractable, INoteTarget
     }
 
 
-    public virtual void Initialize(Unit data)
+    public virtual void Initialize(UnitInstance instance)
     {
-        this.data = data;
-        name = "Unit Controller - " + data.name;
+        this.instance = instance;
+        name = "Unit Controller - " + instance.Data.Name;
 
         Quaternion randomYRotation = Quaternion.Euler(0, Random.Range(135f, 225f), 0);
 
-        renderRoot = Instantiate(data.Prefab, Vector3.zero, randomYRotation, transform).transform;
+        renderRoot = Instantiate(instance.Data.Prefab, Vector3.zero, randomYRotation, transform).transform;
     }
 
     public void SetLookPosition(Vector3 targetPosition)

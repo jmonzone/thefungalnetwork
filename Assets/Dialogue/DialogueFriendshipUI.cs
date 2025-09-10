@@ -11,6 +11,16 @@ public class DialogueFriendshipUI : DialoguePageUI
         valueBarParticleController.OnParticleReached += ValueBarParticleController_OnParticlesReached;
     }
 
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+    }
+
     private void ValueBarParticleController_OnParticlesReached()
     {
         valueBarController.Increment();
@@ -19,6 +29,9 @@ public class DialogueFriendshipUI : DialoguePageUI
     public override void Show()
     {
         base.Show();
-        valueBarParticleController.BurstFromWorld(10, dialogue.Unit.transform.position);
+
+        valueBarController.SetTargetValue(dialogue.Unit.Instance.Relationship);
+        dialogue.Unit.Instance.IncreaseRelationship(dialogue.Experience);
+        valueBarParticleController.BurstFromWorld((int)dialogue.Experience, dialogue.Unit.transform.position);
     }
 }

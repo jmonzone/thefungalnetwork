@@ -26,7 +26,7 @@ public class DialogueActionsUI : DialoguePageUI
         base.Show();
         actionButtons.gameObject.SetActive(false);
 
-        var allIntros = dialogue.Unit.Data.Intros;
+        var allIntros = dialogue.Unit.Instance.Data.Intros;
         var intro = allIntros[Random.Range(0, allIntros.Count)];
         StartCoroutine(dialogueTypewriter.TypeRoutine(intro, () => StartCoroutine(actionButtons.FadeIn())));
     }

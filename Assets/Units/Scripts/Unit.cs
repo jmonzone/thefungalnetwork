@@ -3,6 +3,34 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
+using UnityEngine.Events;
+
+[Serializable]
+public class UnitInstance
+{
+    [SerializeField] private Unit unit;
+    [SerializeField] private bool isHired;
+    [SerializeField] private float relationship;
+
+    public Unit Data => unit;
+    public bool IsHired => isHired;
+    public float Relationship => relationship;
+
+    public event UnityAction<float> OnRelationshipChanged;
+
+    public UnitInstance(Unit unit, bool isHired, float relationship)
+    {
+        this.unit = unit;
+        this.isHired = isHired;
+        this.relationship = relationship;
+    }
+
+    public void IncreaseRelationship(float value)
+    {
+        relationship += value;
+        OnRelationshipChanged?.Invoke(value);
+    }
+}
 
 [CreateAssetMenu]
 public class Unit : ScriptableObject

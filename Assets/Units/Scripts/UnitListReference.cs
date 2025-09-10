@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
@@ -14,17 +13,17 @@ public class UnitListReference : ScriptableObject
     [SerializeField] private ViewReference fungalListView;
     [SerializeField] private TextAsset textAsset;
 
-    [SerializeField] private List<Unit> units;
+    [SerializeField] private List<UnitInstance> units;
 
     [SerializeField] private List<Unit> unitCollection;
 
-    public List<Unit> Units => units;
+    public List<UnitInstance> Units => units;
 
     private const string UNIT_KEY = "units";
 
     public event UnityAction OnFungalOpened;
     public event UnityAction<Unit> OnFungalSelected;
-    public event UnityAction<Unit> OnUnitSummoned;
+    public event UnityAction<UnitInstance> OnUnitSummoned;
 
     public void Initialize()
     {
@@ -37,7 +36,7 @@ public class UnitListReference : ScriptableObject
             unit.Initialize(data);
         }
 
-        units = new List<Unit>();
+        units = new List<UnitInstance>();
 
         if (localData.JsonFile.ContainsKey(UNIT_KEY))
         {
@@ -48,7 +47,9 @@ public class UnitListReference : ScriptableObject
                     var matchingUnit = unitCollection.Find(item => item.Name == unitJson["name"].ToString());
                     if (matchingUnit)
                     {
-                        units.Add(matchingUnit);
+                        bool isHired = unitJson["isHired"] != null && unitJson["isHired"].ToObject<bool>();
+                        float relationship = unitJson["relationship"] != null ? unitJson["relationship"].ToObject<float>() : 0f;
+                        RegisterUnit(matchingUnit, isHired, relationship, save: false);
                     }
                     else
                     {
@@ -60,13 +61,13 @@ public class UnitListReference : ScriptableObject
 
         if (units.Count == 0)
         {
-            AddUnit(unitCollection[0]);
+            RegisterUnit(unitCollection[0], true, relationship: 100, save: false);
         }
     }
 
-    public Unit GetNewUnit(List<Unit> blackList)
+    public Unit GetRandomUnit(List<UnitInstance> blackList)
     {
-        var available = unitCollection.Where(u => !blackList.Contains(u)).ToList();
+        var available = unitCollection.Where(unit => !blackList.Any(unitInstance => unitInstance.Data == unit)).ToList();
 
         if (available.Count > 0)
         {
@@ -76,20 +77,25 @@ public class UnitListReference : ScriptableObject
         return unitCollection[Random.Range(0, unitCollection.Count)];
     }
 
-
-    public void AddUnit(Unit unit)
+    public void SummonUnit(Unit unit)
     {
-        if (!unit)
-        {
-            unit = GetNewUnit(units);
-        }
-
-        units.Add(unit);
-        OnUnitSummoned?.Invoke(unit);
-        SaveData();
+        var instance = RegisterUnit(unit, true, relationship: 100);
+        OnUnitSummoned?.Invoke(instance);
     }
 
-    private void SaveData()
+    public UnitInstance RegisterUnit(Unit unit, bool isHired, float relationship, bool save = true)
+    {
+        var matchingUnit = units.Find(x => x.Data.Name == unit.Name.ToString());
+        if (matchingUnit != null) return matchingUnit;
+
+        var instance = new UnitInstance(unit, isHired, relationship);
+        instance.OnRelationshipChanged += _ => SaveData();
+        units.Add(instance);
+        if (save) SaveData();
+        return instance;
+    }
+
+    public void SaveData()
     {
         var unitsJson = new JArray();
 
@@ -97,7 +103,9 @@ public class UnitListReference : ScriptableObject
         {
             unitsJson.Add(new JObject
             {
-                ["name"] = unit.Name,
+                ["name"] = unit.Data.Name,
+                ["isHired"] = unit.IsHired,
+                ["relationship"] = unit.Relationship,
             });
         }
 

@@ -55,9 +55,9 @@ public class FungalController : UnitController
         dialogueReference.OnIsActiveChanged -= DialogueReference_OnIsActiveChanged;
     }
 
-    public override void Initialize(Unit data)
+    public override void Initialize(UnitInstance instance)
     {
-        base.Initialize(data);
+        base.Initialize(instance);
         animator = GetComponentInChildren<Animator>();
     }
 

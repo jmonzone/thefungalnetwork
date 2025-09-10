@@ -11,7 +11,7 @@ public class UnitDialogue : UnitBehaviour
 
     protected override void OnBehaviourStart()
     {
-        dialogue.StartInteraction(Unit, Unit.Data.ChatDialogue[0]);
+        dialogue.StartInteraction(Unit, Unit.Instance.Data.ChatDialogue[0]);
 
         if (lookAtTarget) Unit.SetLookPosition(playerReference.Player.transform.position);
 

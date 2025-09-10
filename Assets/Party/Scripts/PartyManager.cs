@@ -7,6 +7,7 @@ public class PartyManager : MonoBehaviour
     [SerializeField] private PartyReference partyReference;
     [SerializeField] private PhotoReference photoReference;
     [SerializeField] private UnitManager unitManager;
+    [SerializeField] private UnitListReference unitList;
     [SerializeField] private Transform frogAnchor;
     [SerializeField] private UnitController unitPrefab;
     [SerializeField] private Transform spawnAnchor;
@@ -56,9 +57,7 @@ public class PartyManager : MonoBehaviour
         var partyFrog = unitManager.UnitControllers[0];
         partyFrog.SetBehaviour(partyFrog.GetComponent<UnitDJ>());
 
-        int guestsToSpawn = partyReference.CurrentParty.Guests.Count;
-
-        for (int i = 0; i < guestsToSpawn; i++)
+        foreach(var guest in partyReference.CurrentParty.Guests)
         {
             // Try to find a valid random position near the spawn anchor
             Vector3 randomPoint = Random.insideUnitSphere * 2f; // radius = 5 units
@@ -76,9 +75,11 @@ public class PartyManager : MonoBehaviour
             }
 
             // Spawn guest
-            var guest = Instantiate(unitPrefab, randomPoint, Quaternion.identity);
-            guest.Initialize(partyReference.CurrentParty.Guests[i]);
-            partyReference.AddGuest(guest);
+            var instance = unitList.RegisterUnit(guest, false, 0);
+
+            var controller = Instantiate(unitPrefab, randomPoint, Quaternion.identity);
+            controller.Initialize(instance);
+            partyReference.AddGuest(controller);
         }
 
         StartCoroutine(vibeMeterCanvas.FadeIn());

@@ -85,7 +85,7 @@ public class DJNoteManager : MonoBehaviour
         return targets.Where(target =>
         {
             var unit = target.Transform.GetComponent<UnitController>();
-            return !unit || unit.Data.Name != "Frog";
+            return !unit || unit.Instance.Data.Name != "Frog";
         });
     }
 

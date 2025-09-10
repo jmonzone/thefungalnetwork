@@ -28,7 +28,7 @@ public class UnitManager : MonoBehaviour
     {
         foreach(var unit in unitList.Units)
         {
-            SummonUnit(unit);
+            if (unit.IsHired) SummonUnit(unit);
         }
     }
 
@@ -42,7 +42,7 @@ public class UnitManager : MonoBehaviour
         unitList.OnUnitSummoned -= SummonUnit;
     }
 
-    private void SummonUnit(Unit unit)
+    private void SummonUnit(UnitInstance unit)
     {
         var spawnPosition = unitSpawnAnchor.transform.position;
         var randomDirection = Random.insideUnitSphere;

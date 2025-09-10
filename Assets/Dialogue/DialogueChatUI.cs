@@ -1,13 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class DialogueChatUI : DialoguePageUI
 {
     [SerializeField] private ResponseUI responseUI;
     [SerializeField] private TypewriterEffect chatTypewriter;
-
 
     public override void Show()
     {

@@ -9,6 +9,7 @@ public class DialogueReference : ScriptableObject
     [SerializeField] private PlayerReference playerReference;
     [SerializeField] private PhotoReference photoReference;
     [SerializeField] private InventoryReference inventory;
+    [SerializeField] private UnitListReference unitListReference;
     [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference dialogueView;
 
@@ -16,10 +17,12 @@ public class DialogueReference : ScriptableObject
     [SerializeField] private bool isActive;
     [SerializeField] private UnitController unit;
     [SerializeField] private Dialogue dialogue;
+    [SerializeField] private float experience;
 
     public bool IsActive => isActive;
     public UnitController Unit => unit;
     public Dialogue Dialogue => dialogue;
+    public float Experience => experience;
 
     public event UnityAction OnIsActiveChanged;
     public event UnityAction OnInteractionStart;
@@ -42,17 +45,20 @@ public class DialogueReference : ScriptableObject
 
     private void ApplyStartDialogue(UnitController unit, Dialogue dialogue)
     {
-        isActive = true;
         this.unit = unit;
         this.dialogue = dialogue;
-        unit.Focus();
+        isActive = true;
         OnIsActiveChanged?.Invoke();
+
+        experience = 0;
+        unit.Focus();
         if (navigation.CurrentView != dialogueView) navigation.Navigate(dialogueView);
     }
 
     public void RespondToChat(Response response)
     {
         dialogue = response.Next;
+        experience += response.XP;
         OnDialogueResponse?.Invoke(response);
     }
 
@@ -62,9 +68,9 @@ public class DialogueReference : ScriptableObject
         OnDialogueComplete?.Invoke();
         navigation.GoBack();
 
-        isActive = false;
         unit = null;
         dialogue = null;
+        isActive = false;
         OnIsActiveChanged?.Invoke();
     }
 
@@ -77,7 +83,7 @@ public class DialogueReference : ScriptableObject
 
     public void StartChat()
     {
-        StartDialogue(unit, unit.Data.ChatDialogue[0]);
+        StartDialogue(unit, unit.Instance.Data.ChatDialogue[0]);
     }
 
     public void StartGive()
@@ -89,7 +95,7 @@ public class DialogueReference : ScriptableObject
     private void Inventory_OnItemSelected(Item arg0)
     {
         inventory.OnItemSelected -= Inventory_OnItemSelected;
-        dialogue = unit.Data.GiveDialogue[0];
+        dialogue = unit.Instance.Data.GiveDialogue[0];
         OnGiveComplete?.Invoke();
         navigation.GoBack();
     }

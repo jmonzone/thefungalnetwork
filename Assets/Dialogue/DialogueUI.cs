@@ -14,6 +14,16 @@ public abstract class DialoguePageUI : MonoBehaviour
 
     }
 
+    protected virtual void OnEnable()
+    {
+
+    }
+
+    protected virtual void OnDisable()
+    {
+
+    }
+
     public virtual void Show()
     {
         StartCoroutine(fadeCanvasGroup.FadeIn());
@@ -87,7 +97,7 @@ public class DialogueUI : MonoBehaviour
 
     private void ShowPage(DialoguePage page)
     {
-        speakerUI.SetSpeaker(dialogue.Unit.Data);
+        speakerUI.SetSpeaker(dialogue.Unit.Instance);
 
         currentPage.Hide();
 

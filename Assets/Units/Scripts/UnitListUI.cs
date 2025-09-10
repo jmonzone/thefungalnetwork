@@ -19,7 +19,7 @@ public class UnitListUI : MonoBehaviour
         unitListReference.OnUnitSummoned += UnitListReference_OnUnitSummoned;
     }
 
-    private void UnitListReference_OnUnitSummoned(Unit arg0)
+    private void UnitListReference_OnUnitSummoned(UnitInstance arg0)
     {
         UpdateView();
     }
@@ -38,7 +38,7 @@ public class UnitListUI : MonoBehaviour
             if (i < unitListReference.Units.Count)
             {
                 var unit = unitListReference.Units[i];
-                unitView.SetUnit(unit);
+                unitView.SetUnit(unit.Data);
             }
             else
             {

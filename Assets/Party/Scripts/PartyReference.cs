@@ -98,6 +98,7 @@ public class PartyReference : ScriptableObject
         currentParty = party;
 
         navigation.Navigate(gameplayView);
+
         OnPartyStarted?.Invoke();
     }
 
@@ -125,8 +126,8 @@ public class PartyReference : ScriptableObject
         currentParty = null;
     }
 
-    public void AddGuest(UnitController guest)
+    public void AddGuest(UnitController unit)
     {
-        guests.Add(guest);
+        guests.Add(unit);
     }
 }

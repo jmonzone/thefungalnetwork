@@ -29,7 +29,9 @@ public class UnitUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         summonButton.OnBuy += () =>
         {
             inventory.DecreaseSporeCount(125);
-            unitListReference.AddUnit(null);
+            var blackList = unitListReference.Units;
+            var randomUnit = unitListReference.GetRandomUnit(blackList);
+            unitListReference.SummonUnit(randomUnit);
         };
 
         unitButton.onClick.AddListener(() => unitListReference.SelectFungal(unit));
