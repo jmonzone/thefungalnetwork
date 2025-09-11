@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -74,9 +75,9 @@ public class PartyPageUI : MonoBehaviour
         }
 
         i = 0;
-        foreach(var unit in unitList.Units)
+        foreach(var unit in unitList.Units.Skip(1))
         {
-            partyInvites[i].SetUnit(unit);
+            partyInvites[i].SetUnit(unit, true);
             i++;
         }
 
