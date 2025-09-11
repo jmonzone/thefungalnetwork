@@ -6,6 +6,7 @@ public class DialogueFriendshipUI : DialoguePageUI
 {
     [SerializeField] private TextMeshProUGUI text;
 
+    private AudioSource audioSource;
     private ValueBarController valueBarController;
     private ValueBarParticleController valueBarParticleController;
 
@@ -15,6 +16,7 @@ public class DialogueFriendshipUI : DialoguePageUI
     protected override void Awake()
     {
         base.Awake();
+        audioSource = GetComponent<AudioSource>();
         valueBarController = GetComponent<ValueBarController>();
         valueBarParticleController = GetComponent<ValueBarParticleController>();
         valueBarParticleController.OnParticleReached += ValueBarParticleController_OnParticlesReached;
@@ -30,6 +32,7 @@ public class DialogueFriendshipUI : DialoguePageUI
         level = instance.RelationshipLevel;
         instance.IncreaseRelationship(dialogue.Relationship);
         valueBarParticleController.BurstFromWorld((int)dialogue.Relationship, dialogue.Unit.transform.position);
+        audioSource.Play();
     }
 
     private void Update()

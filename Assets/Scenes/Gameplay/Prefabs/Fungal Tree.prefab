@@ -153,7 +153,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2526129002911352718}
-  - component: {fileID: 5005622940643586346}
+  - component: {fileID: 6489991089625311762}
   - component: {fileID: 4594485596784555639}
   m_Layer: 8
   m_Name: Fungal Tree
@@ -179,7 +179,7 @@ Transform:
   - {fileID: 441511650662501066}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 202, z: 0}
---- !u!114 &5005622940643586346
+--- !u!114 &6489991089625311762
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -188,16 +188,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 3803047099492716171}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a53077c691c445f0b4d7f2eed304103, type: 3}
+  m_Script: {fileID: 11500000, guid: ad2fa0c5f8b3143c384bb15ef4a69940, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   renderRoot: {fileID: 3151439445404310248}
   defaultBehaviour: {fileID: 0}
   selectBehaviour: {fileID: 4594485596784555639}
-  emissionStep: 0
-  data: {fileID: 11400000, guid: 95347a15aaf7f4b40b23e8fdfbd3a26f, type: 2}
+  emissionStep: 4
+  instance:
+    unit: {fileID: 0}
+    relationshipLevel: 0
+    relationshipPoints: 0
   currentBehaviour: {fileID: 0}
   targetLookPosition: {x: 0, y: 0, z: 0}
+  target: {fileID: 0}
+  dialogue: {fileID: 4900000, guid: 653e626fc96d2478fa72e028a19d495d, type: 3}
+  treeUnit: {fileID: 11400000, guid: 95347a15aaf7f4b40b23e8fdfbd3a26f, type: 2}
 --- !u!114 &4594485596784555639
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -518,8 +524,8 @@ NavMeshObstacle:
   m_GameObject: {fileID: 2375642026395435090}
   m_Enabled: 1
   serializedVersion: 3
-  m_Shape: 1
-  m_Extents: {x: 3.5, y: 3.5, z: 3}
+  m_Shape: 0
+  m_Extents: {x: 2.8140001, y: 3.3520002, z: 2.8140001}
   m_MoveThreshold: 0.1
   m_Carve: 1
   m_CarveOnlyStationary: 1

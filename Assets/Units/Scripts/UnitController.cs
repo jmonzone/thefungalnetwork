@@ -5,7 +5,7 @@ using UnityEngine.Events;
 public class UnitController : MonoBehaviour, IInteractable, INoteTarget
 {
     [Header("Unit References")]
-    [SerializeField] private Transform renderRoot;
+    [SerializeField] protected Transform renderRoot;
     [SerializeField] private UnitBehaviour defaultBehaviour;
     [SerializeField] private UnitBehaviour selectBehaviour;
     [SerializeField] private int emissionStep;
@@ -94,16 +94,10 @@ public class UnitController : MonoBehaviour, IInteractable, INoteTarget
         OnBehaviourChanged?.Invoke();
     }
 
-
     public virtual void Initialize(UnitInstance instance)
     {
         this.instance = instance;
         name = "Unit Controller - " + instance.Data.Name;
-
-        Quaternion randomYRotation = Quaternion.Euler(0, Random.Range(135f, 225f), 0);
-
-        renderRoot = Instantiate(instance.Data.Prefab, Vector3.zero, randomYRotation, transform).transform;
-
         OnInitialized?.Invoke();
     }
 
