@@ -62,8 +62,16 @@ public class DialogueFriendshipUI : DialoguePageUI
         valueBarController.SetTargetScale(1.1f);
         yield return new WaitForSeconds(1f);
         text.text = "Friendship Level Increased";
-        yield return new WaitForSeconds(2f);
-        dialogue.StartDialogue(dialogue.Unit, new Dialogue("I really like your vibe, we should be friends!", DialogueType.FRIEND));
+
+        if (dialogue.Unit.Instance.RelationshipLevel == 2)
+        {
+            yield return new WaitForSeconds(2f);
+            dialogue.StartDialogue(dialogue.Unit, new Dialogue("I really like your vibe, we should be friends!", DialogueType.FRIEND));
+        }
+        else
+        {
+            yield return CloseRoutine();
+        }
     }
 
     private IEnumerator CloseRoutine()

@@ -66,11 +66,11 @@ public class DialogueUI : MonoBehaviour
 
     private void ChatPage_OnClose()
     {
-        if (dialogue.Dialogue.Type == DialogueType.CHAT)
+        if (dialogue.Dialogue.Type == DialogueType.CHAT && dialogue.Unit is FungalController)
         {
             ShowPage(DialoguePage.FRIENDSHIP);
         }
-        else if (dialogue.Dialogue.Type == DialogueType.FRIEND)
+        else if (dialogue.Dialogue.Type == DialogueType.FRIEND && friendshipPage.HasLeveledUp && dialogue.Unit.Instance.RelationshipLevel == 2)
         {
             var selectUnit = dialogue.Unit;
             dialogue.CompleteDialogue();
