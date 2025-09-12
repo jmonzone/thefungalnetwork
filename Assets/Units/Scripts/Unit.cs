@@ -8,41 +8,48 @@ using UnityEngine.Events;
 [Serializable]
 public class UnitInstance
 {
+    [SerializeField] private string id;
     [SerializeField] private Unit unit;
-    [SerializeField] private int relationshipLevel;
-    [SerializeField] private float relationshipPoints;
+    [SerializeField] private int friendshipLevel;
+    [SerializeField] private float friendshipPoints;
+    [SerializeField] private ColorPalette colorPalette;
 
+    public string Id => id;
     public Unit Data => unit;
-    public bool IsFriends => relationshipLevel > 1;
-    public int RelationshipLevel => relationshipLevel;
-    public float RelationshipPoints => relationshipPoints;
-    public float MinimumRelationshipPoints => GetXPFromLevel(relationshipLevel);
-    public float MaximumRelationshipPoints => GetXPFromLevel(relationshipLevel + 1);
-    public float RelationshipPointsUntilNextLevel => MaximumRelationshipPoints - relationshipPoints;
-    public event UnityAction<float> OnRelationshipChanged;
-    public event UnityAction OnRelationshipLevelChanged;
+    public bool IsFriends => friendshipLevel > 1;
+    public int FriendshipLevel => friendshipLevel;
+    public float FriendshipPoints => friendshipPoints;
+    public float MinFP => GetXPFromLevel(friendshipLevel);
+    public float MaxFP => GetXPFromLevel(friendshipLevel + 1);
+    public float FPUntilNextLevel => MaxFP - friendshipPoints;
+    public ColorPalette ColorPalette => colorPalette;
 
-    public UnitInstance(Unit unit, float relationshipPoints)
+    public event UnityAction<float> OnFriendshipPointsChanged;
+    public event UnityAction OnFriendshipLevelChanged;
+
+    public UnitInstance(string id, Unit unit, float friendshipPoints, ColorPalette colorPalette)
     {
+        this.id = id;
         this.unit = unit;
-        this.relationshipPoints = relationshipPoints;
-        relationshipLevel = GetLevelFromXP(relationshipPoints);
+        this.friendshipPoints = friendshipPoints;
+        friendshipLevel = GetLevelFromXP(friendshipPoints);
+        this.colorPalette = colorPalette;
     }
 
-    public void IncreaseRelationship(float value)
+    public void IncreaseFriendship(float value)
     {
-        SetRelationshipPoints(relationshipPoints + value);
-        OnRelationshipChanged?.Invoke(value);
+        SetFriendshipPoints(friendshipPoints + value);
+        OnFriendshipPointsChanged?.Invoke(value);
     }
 
-    private void SetRelationshipPoints(float value)
+    private void SetFriendshipPoints(float value)
     {
-        relationshipPoints = value;
+        friendshipPoints = value;
 
-        var previousLevel = relationshipLevel;
-        relationshipLevel = GetLevelFromXP(relationshipPoints);
+        var previousLevel = friendshipLevel;
+        friendshipLevel = GetLevelFromXP(friendshipPoints);
 
-        if (previousLevel != relationshipLevel) OnRelationshipLevelChanged?.Invoke();
+        if (previousLevel != friendshipLevel) OnFriendshipLevelChanged?.Invoke();
     }
 
     public int GetLevelFromXP(float xp)

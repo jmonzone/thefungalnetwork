@@ -34,11 +34,11 @@ public class FungalUI : MonoBehaviour
     {
         fungalImage.sprite = unit.Data.Sprite;
         fungalName.text = unit.Data.Name;
-        relationshipSlider.minValue = unit.MinimumRelationshipPoints;
-        relationshipSlider.maxValue = unit.MaximumRelationshipPoints;
-        relationshipSlider.value = unit.RelationshipPoints;
-        levelText.text = $"Level {unit.RelationshipLevel}";
-        nextLevelText.text = $"{unit.RelationshipPointsUntilNextLevel} xp until next level";
+        relationshipSlider.minValue = unit.MinFP;
+        relationshipSlider.maxValue = unit.MaxFP;
+        relationshipSlider.value = unit.FriendshipPoints;
+        levelText.text = $"Level {unit.FriendshipLevel}";
+        nextLevelText.text = $"{unit.FPUntilNextLevel} xp until next level";
         dateText.text = DateTime.Now.ToLongDateString();
     }
 }

@@ -70,7 +70,7 @@ public class DialogueUI : MonoBehaviour
         {
             ShowPage(DialoguePage.FRIENDSHIP);
         }
-        else if (dialogue.Dialogue.Type == DialogueType.FRIEND && friendshipPage.HasLeveledUp && dialogue.Unit.Instance.RelationshipLevel == 2)
+        else if (dialogue.Dialogue.Type == DialogueType.FRIEND && friendshipPage.HasLeveledUp && dialogue.Unit.Instance.FriendshipLevel == 2)
         {
             var selectUnit = dialogue.Unit;
             dialogue.CompleteDialogue();

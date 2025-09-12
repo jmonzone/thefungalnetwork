@@ -48,7 +48,7 @@ public class UnitUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         {
             image.sprite = unit.Data.Sprite;
             nameText.text = unit.Data.Name;
-            levelText.text = $"Level {unit.RelationshipLevel}";
+            levelText.text = $"Level {unit.FriendshipLevel}";
             backgroundImage.color = backgroundActiveColor;
         }
         else

@@ -1,30 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class FungalColorChanger : UnitBehaviour
+public class UnitColorPalette : UnitBehaviour
 {
-    [System.Serializable]
-    public struct ColumnConfig
-    {
-        public bool overrideColor;   // if true, override with palette
-        [Range(0, 7)] public int paletteIndex; // which palette color to use
-    }
-
-    public enum FungalPalette
-    {
-        Original = 1,
-        Red = 2,
-        Yellow = 3,
-        Blue = 4,
-        Green = 5
-    }
-
-    [SerializeField] private FungalPalette selectedPalette = FungalPalette.Original;
     [SerializeField] private Texture2D originalCache; // assign prefab's texture
-
-    [SerializeField] private Color[] paletteColors = new Color[8];   // the 8 base colors
-    [SerializeField] private ColumnConfig[] columnConfigs = new ColumnConfig[8]; // one per column
+    [SerializeField] private ColorPalette colorPalette; // the 8 base colors
 
     protected override void OnInitialized()
     {
@@ -34,11 +13,12 @@ public class FungalColorChanger : UnitBehaviour
         Renderer rend = Unit.GetComponentInChildren<Renderer>();
         if (rend.material.mainTexture is Texture2D tex)
         {
-            Debug.Log("Unit " + Unit.name);
             originalCache = new Texture2D(tex.width, tex.height, TextureFormat.RGBA32, false);
             originalCache.SetPixels32(tex.GetPixels32());
             originalCache.Apply();
         }
+
+        SetColorPalette(Unit.Instance.ColorPalette);
     }
 
     protected override void OnBehaviourStart()
@@ -51,16 +31,28 @@ public class FungalColorChanger : UnitBehaviour
 
         if (Input.GetKeyUp(KeyCode.Space))
         {
-            foreach (var renderer in Unit.GetComponentsInChildren<Renderer>())
-            {
-                ApplySelectedPalette(renderer);
-            }
+            ApplyColorPalette();
+        }
+    }
+
+    public void SetColorPalette(ColorPalette colorPalette)
+    {
+        this.colorPalette = colorPalette;
+        ApplyColorPalette();
+    }
+
+    private void ApplyColorPalette()
+    {
+        foreach (var renderer in Unit.GetComponentsInChildren<Renderer>())
+        {
+            ApplySelectedPalette(renderer);
         }
     }
 
     private void ApplySelectedPalette(Renderer renderer)
     {
-        if (originalCache == null) return;
+        if (!originalCache) return;
+        if (!colorPalette) return;
 
         Texture2D tex = new Texture2D(originalCache.width, originalCache.height, TextureFormat.RGBA32, false);
         tex.SetPixels32(originalCache.GetPixels32());
@@ -83,9 +75,15 @@ public class FungalColorChanger : UnitBehaviour
 
                 // -1 = keep original
                 Color newColor = origColor;
-                if (mapIndex >= 0 && mapIndex < paletteColors.Length)
+                if (mapIndex >= 0 && mapIndex < 3)
                 {
-                    newColor = paletteColors[mapIndex];
+                    newColor = mapIndex switch
+                    {
+                        0 => colorPalette.PrimaryColor,
+                        1 => colorPalette.SecondaryColor,
+                        2 => colorPalette.AccentColor,
+                        _ => colorPalette.PrimaryColor,
+                    };
                 }
 
                 // Apply to 2x2 block

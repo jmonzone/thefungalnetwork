@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -63,10 +64,33 @@ public class PartyManager : MonoBehaviour
 
     private void PartyReference_OnPartyStarted()
     {
+        //todo: apply jobs to all units - party frog as dj is default
         var partyFrog = unitManager.UnitControllers[0];
         partyFrog.SetBehaviour(partyFrog.GetComponent<UnitDJ>());
 
-        foreach(var guest in partyReference.CurrentParty.Guests)
+        //todo: assemble guests predefined by party + newly introduced friends
+        var allguests = new List<UnitInstance>();
+        //foreach(var predefinedGuest in partyReference.CurrentParty.Guests)
+        //{
+        //    var predefinedInstance = unitList.RegisterUnit(predefinedGuest, 0);
+        //    allguests.Add(predefinedInstance);
+        //}
+
+        foreach (var friend in unitList.Friends)
+        {
+            var friendshipLevel = friend.FriendshipLevel;
+            Debug.Log($"{friend.Data.Name} {friendshipLevel}");
+
+            if (friendshipLevel >= 2)
+            {
+                //todo: add a related or random friend
+                var id = unitList.GenerateMongoLikeId();
+                var instance = unitList.RegisterUnit(id, friend.Data, 0, unitList.RandomColorPalette);
+                allguests.Add(instance);
+            }
+        }
+
+        foreach (var guest in allguests)
         {
             // Try to find a valid random position near the spawn anchor
             Vector3 randomPoint = Random.insideUnitSphere * 2f; // radius = 5 units
@@ -83,11 +107,8 @@ public class PartyManager : MonoBehaviour
                 randomPoint = spawnAnchor.transform.position;
             }
 
-            // Spawn guest
-            var instance = unitList.RegisterUnit(guest, 0);
-
             var controller = Instantiate(unitPrefab, randomPoint, Quaternion.identity);
-            controller.Initialize(instance);
+            controller.Initialize(guest);
             partyReference.AddGuest(controller);
         }
 

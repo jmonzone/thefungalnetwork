@@ -11,7 +11,7 @@ public class DialogueFriendshipUI : DialoguePageUI
     private ValueBarParticleController valueBarParticleController;
 
     private int level;
-    public bool HasLeveledUp => dialogue.Unit.Instance.RelationshipLevel > level;
+    public bool HasLeveledUp => dialogue.Unit.Instance.FriendshipLevel > level;
 
     protected override void Awake()
     {
@@ -28,9 +28,9 @@ public class DialogueFriendshipUI : DialoguePageUI
         base.Show();
 
         var instance = dialogue.Unit.Instance;
-        valueBarController.Initialize(instance.RelationshipPoints, instance.MinimumRelationshipPoints, instance.MaximumRelationshipPoints);
-        level = instance.RelationshipLevel;
-        instance.IncreaseRelationship(dialogue.Relationship);
+        valueBarController.Initialize(instance.FriendshipPoints, instance.MinFP, instance.MaxFP);
+        level = instance.FriendshipLevel;
+        instance.IncreaseFriendship(dialogue.Relationship);
         valueBarParticleController.BurstFromWorld((int)dialogue.Relationship, dialogue.Unit.transform.position);
         audioSource.Play();
     }
@@ -63,7 +63,7 @@ public class DialogueFriendshipUI : DialoguePageUI
         yield return new WaitForSeconds(1f);
         text.text = "Friendship Level Increased";
 
-        if (dialogue.Unit.Instance.RelationshipLevel == 2)
+        if (dialogue.Unit.Instance.FriendshipLevel == 2)
         {
             yield return new WaitForSeconds(2f);
             dialogue.StartDialogue(dialogue.Unit, new Dialogue("I really like your vibe, we should be friends!", DialogueType.FRIEND));
