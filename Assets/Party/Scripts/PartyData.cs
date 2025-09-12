@@ -30,7 +30,7 @@ public class PartyData : ScriptableObject
     [SerializeField] private float duration;
     [SerializeField] private int culturePoints;
     [SerializeField] private List<PartyRequirementData> requirements;
-    [SerializeField] private List<Unit> guests;
+    [SerializeField] private List<UnitInstance> guests;
 
     public string Name => partyName;
     public int Level => level;
@@ -39,6 +39,6 @@ public class PartyData : ScriptableObject
     public float Duration => duration;
     public int CulturePoints => culturePoints;
     public List<PartyRequirementData> Requirements => requirements;
-    public List<Unit> Guests => guests;
+    public List<UnitInstance> Guests => guests;
 
 }

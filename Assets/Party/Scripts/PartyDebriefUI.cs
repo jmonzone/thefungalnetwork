@@ -74,7 +74,7 @@ public class PartyDebriefUI : MonoBehaviour
         }
 
         scoreText.text = $"{partyReference.Score} party points!";
-        guestsText.text = $"{partyReference.CurrentParty.Guests.Count} of your friends came";
+        guestsText.text = $"{partyReference.Guests.Count} of your friends came";
         sporesText.text = $"{partyReference.SporesCollected} spores collected";
         photoText.text = $"{photoReference.AllPhotos.Count} photos taken";
     }

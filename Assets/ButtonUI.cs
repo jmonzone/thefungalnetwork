@@ -18,21 +18,23 @@ public static class AudioUtility
 }
 public class ButtonUI : MonoBehaviour
 {
-    private Button button;
-    private TextMeshProUGUI text;
+    [SerializeField] private Button button;
+    [SerializeField] private TextMeshProUGUI text;
+
     private AudioSource audioSource;
 
     private void Awake()
     {
         button = GetComponent<Button>();
-        button.onClick.AddListener(OnClick);
-
         text = GetComponentInChildren<TextMeshProUGUI>();
         audioSource = GetComponent<AudioSource>();
     }
 
     public void Initialize(string label, UnityAction action)
     {
+        Debug.Log($"{text} {label}");
+        Debug.Log($"{text.text}");
+        if (!text) text = GetComponentInChildren<TextMeshProUGUI>();
         text.text = label;
 
         button.onClick.RemoveAllListeners();

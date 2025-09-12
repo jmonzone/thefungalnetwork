@@ -21,8 +21,8 @@ public class ResponseUI : MonoBehaviour
             if (i < responses.Count)
             {
                 var response = responses[i];
-                buttons[i].Initialize(response.Text, () => onSelect(response));
                 buttons[i].gameObject.SetActive(true);
+                buttons[i].Initialize(response.Text, () => onSelect(response));
             }
             else
             {

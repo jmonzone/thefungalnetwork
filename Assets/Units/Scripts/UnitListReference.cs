@@ -8,16 +8,21 @@ using UnityEngine.Events;
 [CreateAssetMenu]
 public class UnitListReference : ScriptableObject
 {
+    [Header("References")]
     [SerializeField] private LocalData localData;
     [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference fungalView;
     [SerializeField] private ViewReference fungalListView;
     [SerializeField] private TextAsset textAsset;
 
-    [SerializeField] private List<UnitInstance> units;
-
+    [Header("Collections")]
+    [SerializeField] private List<UnitInstance> initialUnits;
     [SerializeField] private List<Unit> unitCollection;
     [SerializeField] private List<ColorPalette> colorPalettes;
+
+    [Header("Runtime")]
+    [SerializeField] private List<UnitInstance> units;
+
 
     public List<UnitInstance> Units => units;
     public List<UnitInstance> Friends => units.Where(unit => unit.IsFriends).ToList();
@@ -92,12 +97,17 @@ public class UnitListReference : ScriptableObject
 
         if (units.Count == 0)
         {
-            //todo: use scriptable asset
-            var friendship = UnitInstance.GetXPFromLevel(2);
-            var partyFrogId = "000000000000000000000000";
-            var instance = CreateInstance<UnitInstance>();
-            instance.Initialize(unitCollection[0], partyFrogId, friendship, null);
-            RegisterUnit(instance, false);
+            foreach(var unit in initialUnits)
+            {
+                RegisterUnit(unit.Copy(), false);
+            }
+
+            foreach (var unit in initialUnits)
+            {
+                var matchingUnit = units.Find(x => x.Id == unit.Id);
+                matchingUnit.Friends.AddRange(unit.Friends.Select(friend => units.Find(x => x.Id == friend.Id)));
+                RegisterUnit(unit.Copy(), false);
+            }
         }
 
         SaveData();
@@ -159,7 +169,7 @@ public class UnitListReference : ScriptableObject
         return unseenColors[UnityEngine.Random.Range(0, unseenColors.Count)];
     }
 
-    public bool TryGetFriend(UnitInstance unit, out UnitInstance friend)
+    public bool TryGetFriend(UnitInstance unit, out UnitInstance friend, List<UnitInstance> blacklist)
     {
         friend = null;
 
@@ -182,7 +192,7 @@ public class UnitListReference : ScriptableObject
         }
         else
         {
-            var availableFriends = unit.Friends.Where(friend => !friend.IsFriends).ToList();
+            var availableFriends = unit.Friends.Where(friend => !blacklist.Contains(friend)).ToList();
             if (availableFriends.Count > 0)
             {
                 friend = availableFriends[UnityEngine.Random.Range(0, availableFriends.Count)];
@@ -193,16 +203,26 @@ public class UnitListReference : ScriptableObject
 
     }
 
-    public UnitInstance RegisterUnit(UnitInstance instance, bool saveData = true)
+    public UnitInstance RegisterUnit(UnitInstance unit, bool saveData = true)
     {
-        instance.OnFriendshipPointsChanged += _ => SaveData();
-        instance.OnFriendshipLevelChanged += () => OnFungalUpdated?.Invoke();
+        // Check if an instance with the same Id already exists
+        var existing = units.FirstOrDefault(u => u.Id == unit.Id);
+        if (existing != null)
+        {
+            return existing; // Return the already-registered instance
+        }
 
-        units.Add(instance);
+        // Otherwise, register new instance
+        unit.OnFriendshipPointsChanged += _ => SaveData();
+        unit.OnFriendshipLevelChanged += () => OnFungalUpdated?.Invoke();
+
+        units.Add(unit);
 
         if (saveData) SaveData();
-        return instance;
+
+        return unit;
     }
+
 
     public void SaveData()
     {

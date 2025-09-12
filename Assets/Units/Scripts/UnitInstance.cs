@@ -49,6 +49,12 @@ public class UnitInstance : ScriptableObject
         this.json = json;
     }
 
+    public UnitInstance Copy()
+    {
+        var copy = CreateInstance<UnitInstance>();
+        copy.Initialize(Data, Id, FriendshipPoints, ColorPalette);
+        return copy;
+    }
     public static string GenerateMongoLikeId()
     {
         byte[] bytes = new byte[12];

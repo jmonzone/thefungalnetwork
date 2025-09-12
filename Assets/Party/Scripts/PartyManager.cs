@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -22,10 +21,10 @@ public class PartyManager : MonoBehaviour
 
     private void Awake()
     {
-        //valueBarController = GetComponent<ValueBarController>();
-        //valueBarParticleController = GetComponent<ValueBarParticleController>();
+        valueBarController = GetComponent<ValueBarController>();
+        valueBarParticleController = GetComponent<ValueBarParticleController>();
 
-        //valueBarParticleController.OnParticleReached += ValueBarParticleController_OnParticlesReached;
+        valueBarParticleController.OnParticleReached += ValueBarParticleController_OnParticlesReached;
     }
 
     private void ValueBarParticleController_OnParticlesReached()
@@ -38,7 +37,7 @@ public class PartyManager : MonoBehaviour
         partyReference.OnPartyStarted += PartyReference_OnPartyStarted;
         partyReference.OnPartyComplete += PartyReference_OnPartyComplete;
 
-        //partyReference.OnVibeIncreased += PartyReference_OnVibeIncreased;
+        partyReference.OnVibeIncreased += PartyReference_OnVibeIncreased;
 
         navigation.OnNavigated += Navigation_OnNavigated;
     }
@@ -60,7 +59,7 @@ public class PartyManager : MonoBehaviour
         partyReference.OnPartyStarted -= PartyReference_OnPartyStarted;
         partyReference.OnPartyComplete -= PartyReference_OnPartyComplete;
 
-        //partyReference.OnVibeIncreased -= PartyReference_OnVibeIncreased;
+        partyReference.OnVibeIncreased -= PartyReference_OnVibeIncreased;
     }
 
     private void PartyReference_OnPartyStarted()
@@ -71,17 +70,19 @@ public class PartyManager : MonoBehaviour
 
         //todo: assemble guests predefined by party + newly introduced friends
         var allguests = new List<UnitInstance>();
-        //foreach(var predefinedGuest in partyReference.CurrentParty.Guests)
-        //{
-        //    var predefinedInstance = unitList.RegisterUnit(predefinedGuest, 0);
-        //    allguests.Add(predefinedInstance);
-        //}
+        foreach(var predefinedGuest in partyReference.CurrentParty.Guests)
+        {
+            var copyGuest = predefinedGuest.Copy();
+            var predefinedInstance = unitList.RegisterUnit(copyGuest);
+            allguests.Add(predefinedInstance);
+        }
 
+        // todo: introduces guests
         foreach (var guest in unitList.Friends)
         {
             var friendshipLevel = guest.FriendshipLevel;
 
-            if (friendshipLevel >= 2 && unitList.TryGetFriend(guest, out UnitInstance friend))
+            if (friendshipLevel >= 2 && unitList.TryGetFriend(guest, out UnitInstance friend, allguests))
             {
                 allguests.Add(friend);
             }
