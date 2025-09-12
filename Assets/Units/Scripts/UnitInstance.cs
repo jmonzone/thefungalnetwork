@@ -17,14 +17,22 @@ public class UnitInstance : ScriptableObject
 
     public string Id => id;
     public Unit Data => unit;
+    public ColorPalette ColorPalette => colorPalette;
+
     public bool IsFriends => friendshipLevel > 1;
     public int FriendshipLevel => friendshipLevel;
     public float FriendshipPoints => friendshipPoints;
     public float MinFP => GetXPFromLevel(friendshipLevel);
     public float MaxFP => GetXPFromLevel(friendshipLevel + 1);
     public float FPUntilNextLevel => MaxFP - friendshipPoints;
+
+    // Scale existing friend chance based on friendship level
+    float minChance = 0.1f;   // minimum chance to pick existing friend at level 0
+    float maxChance = 0.5f;   // maximum chance at max level
+    public float IntroduceNewFriendRate => Mathf.Lerp(minChance, maxChance, FriendshipLevel / (float)3);
+
     public List<UnitInstance> Friends => friends;
-    public ColorPalette ColorPalette => colorPalette;
+
     public JObject Json => json;
 
     public event UnityAction<float> OnFriendshipPointsChanged;

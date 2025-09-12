@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -80,10 +81,9 @@ public class PartyManager : MonoBehaviour
         {
             var friendshipLevel = guest.FriendshipLevel;
 
-            if (friendshipLevel >= 2)
+            if (friendshipLevel >= 2 && unitList.TryGetFriend(guest, out UnitInstance friend))
             {
-                var newFriend = unitList.FindOrCreateFriend(guest);
-                allguests.Add(newFriend);
+                allguests.Add(friend);
             }
         }
 
@@ -121,6 +121,7 @@ public class PartyManager : MonoBehaviour
 
             while (currentTimer < partyReference.CurrentParty.Duration)
             {
+                if (Input.GetKeyUp(KeyCode.E)) break;
                 currentTimer += Time.deltaTime;
                 yield return null;
             }

@@ -103,36 +103,94 @@ public class UnitListReference : ScriptableObject
         SaveData();
     }
 
-    public Unit RandomUnitData
+    public (Unit unit, ColorPalette color) PickNewFriend()
     {
-        get
+        // Step 1: units the instance hasn’t had yet globally
+        var unseenUnits = unitCollection
+            .Where(u => !Units.Any(ui => ui.Data == u))
+            .ToList();
+
+        if (unseenUnits.Count > 0)
         {
-            var prioritizedList = unitCollection.Where(unit => !Units.Any(unitInstance => unitInstance.Data == unit)).ToList();
-
-            if (prioritizedList.Count > 0)
-            {
-                return prioritizedList[UnityEngine.Random.Range(0, prioritizedList.Count)];
-            }
-
-            return unitCollection[UnityEngine.Random.Range(0, unitCollection.Count)];
+            var chosenUnit = unseenUnits[UnityEngine.Random.Range(0, unseenUnits.Count)];
+            var chosenColor = PickUnseenColorForUnit(chosenUnit);
+            return (chosenUnit, chosenColor);
         }
+
+        // Step 2: all units have been seen → prioritize units with unused colors
+        var unitsWithUnseenColors = unitCollection
+            .Where(u => PickUnseenColorForUnit(u) != null)
+            .ToList();
+
+        if (unitsWithUnseenColors.Count > 0)
+        {
+            var chosenUnit = unitsWithUnseenColors[UnityEngine.Random.Range(0, unitsWithUnseenColors.Count)];
+            var chosenColor = PickUnseenColorForUnit(chosenUnit);
+            return (chosenUnit, chosenColor);
+        }
+
+        // Step 3: fallback → any unit and any color
+        var fallbackUnit = unitCollection[UnityEngine.Random.Range(0, unitCollection.Count)];
+        var fallbackColor = colorPalettes[UnityEngine.Random.Range(0, colorPalettes.Count)];
+        return (fallbackUnit, fallbackColor);
     }
 
-    public UnitInstance FindOrCreateFriend(UnitInstance instance)
+    /// <summary>
+    /// Returns a color palette that hasn't been used yet for the given unit type. 
+    /// Returns null if all colors are already used.
+    /// </summary>
+    private ColorPalette PickUnseenColorForUnit(Unit unit)
     {
-        if (instance.Friends.Count > 0)
+        // Get all colors already used for this unit type
+        var usedColors = Units
+            .Where(ui => ui.Data == unit)
+            .Select(ui => ui.ColorPalette)
+            .Where(c => c != null)
+            .ToHashSet();
+
+        // Find all unseen colors
+        var unseenColors = colorPalettes
+            .Where(c => !usedColors.Contains(c))
+            .ToList();
+
+        if (unseenColors.Count == 0)
+            return null;
+
+        return unseenColors[UnityEngine.Random.Range(0, unseenColors.Count)];
+    }
+
+    public bool TryGetFriend(UnitInstance unit, out UnitInstance friend)
+    {
+        friend = null;
+
+        var introduceNewFriend = unit.Friends.Count switch
         {
-            return instance.Friends[UnityEngine.Random.Range(0, instance.Friends.Count)];
+            0 => 1f,
+            1 => 0.66f,
+            2 => 0.33f,
+            _ => 0f,
+        };
+
+        if (unit.Friends.Count < 3 && UnityEngine.Random.value < introduceNewFriend)
+        {
+            var (newUnit, newColor) = PickNewFriend();
+            friend = CreateInstance<UnitInstance>();
+            friend.Initialize(newUnit, colorPalette: newColor);
+            unit.Friends.Add(friend);
+            friend.Friends.Add(unit);
+            RegisterUnit(friend);
         }
         else
         {
-            var friend = CreateInstance<UnitInstance>();
-            friend.Initialize(RandomUnitData, colorPalette: RandomColorPalette);
-            instance.Friends.Add(friend);
-            friend.Friends.Add(instance);
-            RegisterUnit(friend);
-            return friend;
+            var availableFriends = unit.Friends.Where(friend => !friend.IsFriends).ToList();
+            if (availableFriends.Count > 0)
+            {
+                friend = availableFriends[UnityEngine.Random.Range(0, availableFriends.Count)];
+            }
         }
+
+        return friend;
+
     }
 
     public UnitInstance RegisterUnit(UnitInstance instance, bool saveData = true)
