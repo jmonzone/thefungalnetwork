@@ -86,6 +86,12 @@ public class Unit : ScriptableObject
     [SerializeField] private new string name;
     [SerializeField] private Sprite sprite;
     [SerializeField] private GameObject prefab;
+
+    [Header("Palette")]
+    [Tooltip("Column mapping for this Unit. -1 = keep original, 0–7 = palette index.")]
+    [SerializeField] private int[] columnMapping = new int[8] { -1, -1, -1, -1, -1, -1, -1, -1 };
+
+    [Header("Dialogue")]
     [SerializeField] [TextArea] private List<string> intros;
     [SerializeField] private List<Dialogue> chatDialogue;
     [SerializeField] private List<Dialogue> giveDialogue;
@@ -93,6 +99,9 @@ public class Unit : ScriptableObject
     public string Name => name;
     public Sprite Sprite => sprite;
     public GameObject Prefab => prefab;
+
+    public int[] ColumnMapping => columnMapping;
+
     public List<string> Intros => intros;
     public List<Dialogue> GiveDialogue => giveDialogue;
     public List<Dialogue> ChatDialogue => chatDialogue;

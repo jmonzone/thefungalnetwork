@@ -15,13 +15,20 @@ MonoBehaviour:
   name: Frog
   sprite: {fileID: 21300000, guid: f9f936b45a4ad4c7eaeaa983d20f4b37, type: 3}
   prefab: {fileID: 2551892347925612379, guid: f2d37b34e3e70a545afb6ca990777dd6, type: 3}
+  columnMapping: 0100000001000000010000000100000001000000010000000100000001000000
   intros:
-  - if we don't have music, we don't have each other
-  - historically all that we know has been passed down in song
-  - what's music, but some words, some sounds, it comes out of thin air
+  - yo, got some fresh tracks for the party tonight
+  - "i live for spinning beats, hope you\u2019re ready"
+  - "music makes everything better, don\u2019t you think?"
   chatDialogue:
-  - text: 
+  - text: hey, wanna hear the latest track i've been mixing?
+    responses:
+    - {fileID: 0}
+    - {fileID: 0}
+    type: 0
     action: 0
   giveDialogue:
-  - text: 
+  - text: hey, i made this mix just for you!
+    responses: []
+    type: 1
     action: 0
