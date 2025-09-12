@@ -35,16 +35,6 @@ public class UnitManager : MonoBehaviour
         OnAllUnitsSummoned?.Invoke();
     }
 
-    private void OnEnable()
-    {
-        unitList.OnUnitSummoned += SummonUnit;
-    }
-
-    private void OnDisable()
-    {
-        unitList.OnUnitSummoned -= SummonUnit;
-    }
-
     private void SummonUnit(UnitInstance unit)
     {
         var spawnPosition = unitSpawnAnchor.transform.position;

@@ -76,17 +76,14 @@ public class PartyManager : MonoBehaviour
         //    allguests.Add(predefinedInstance);
         //}
 
-        foreach (var friend in unitList.Friends)
+        foreach (var guest in unitList.Friends)
         {
-            var friendshipLevel = friend.FriendshipLevel;
-            Debug.Log($"{friend.Data.Name} {friendshipLevel}");
+            var friendshipLevel = guest.FriendshipLevel;
 
             if (friendshipLevel >= 2)
             {
-                //todo: add a related or random friend
-                var id = unitList.GenerateMongoLikeId();
-                var instance = unitList.RegisterUnit(id, friend.Data, 0, unitList.RandomColorPalette);
-                allguests.Add(instance);
+                var newFriend = unitList.FindOrCreateFriend(guest);
+                allguests.Add(newFriend);
             }
         }
 

@@ -19,7 +19,7 @@ public class UnitListUI : MonoBehaviour
     {
         UpdateView();
         unitListReference.OnFungalUpdated += UpdateView;
-        unitListReference.OnUnitSummoned += UnitListReference_OnUnitSummoned;
+        //unitListReference.OnUnitSummoned += UnitListReference_OnUnitSummoned;
     }
 
     private void UnitListReference_OnUnitSummoned(UnitInstance arg0)
@@ -30,7 +30,7 @@ public class UnitListUI : MonoBehaviour
     private void OnDisable()
     {
         unitListReference.OnFungalUpdated -= UpdateView;
-        unitListReference.OnUnitSummoned -= UnitListReference_OnUnitSummoned;
+        //unitListReference.OnUnitSummoned -= UnitListReference_OnUnitSummoned;
     }
 
     private void UpdateView()

@@ -16,8 +16,10 @@ public class TreeController : UnitController
 
         JObject data = (JObject)root["tree"];
         treeUnit.Initialize(data);
-        var treeId = "000000000000000000000001";
-        var instance = new UnitInstance(treeId, treeUnit, 0, null);
+
+        var instance = ScriptableObject.CreateInstance<UnitInstance>();
+        instance.Initialize(treeUnit);
+
         Initialize(instance);
     }
 }

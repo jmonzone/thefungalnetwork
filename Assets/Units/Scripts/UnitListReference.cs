@@ -27,7 +27,6 @@ public class UnitListReference : ScriptableObject
     private const string UNIT_KEY = "units";
 
     public event UnityAction<UnitInstance> OnFungalSelected;
-    public event UnityAction<UnitInstance> OnUnitSummoned;
     public event UnityAction OnFungalUpdated;
 
     public void Initialize()
@@ -60,83 +59,90 @@ public class UnitListReference : ScriptableObject
 
                     var unitId = unitJson.Value<string>("id");
 
-
                     var colorPaletteId = unitJson.Value<string>("colorPalette");
                     var matchingColorPalette = colorPalettes.Find(p => p.Id == colorPaletteId);
 
-                    float relationship = unitJson.Value<float?>("friendshipPoints") ?? 0f;
+                    float friendshipPoints = unitJson.Value<float?>("friendshipPoints") ?? 0f;
 
-                    RegisterUnit(unitId, matchingUnit, relationship, matchingColorPalette, save: false);
+                    var instance = CreateInstance<UnitInstance>();
+                    instance.Initialize(matchingUnit, unitId, friendshipPoints, matchingColorPalette, unitJson);
+                    RegisterUnit(instance, false);
                 };
+            }
+        }
+
+        foreach (var unit in units)
+        {
+            // Get the friends array from the unit's JObject
+            if (unit.Json?["friends"] is not JArray friendsArray) continue;
+
+            foreach (var friendIdToken in friendsArray)
+            {
+                string friendId = friendIdToken?.ToString();
+                if (string.IsNullOrEmpty(friendId)) continue;
+
+                // Find the matching UnitInstance in your units list
+                var friendUnit = units.Find(u => u.Id == friendId);
+                if (friendUnit != null && !unit.Friends.Contains(friendUnit))
+                {
+                    unit.Friends.Add(friendUnit);
+                }
             }
         }
 
         if (units.Count == 0)
         {
-            var relationship = UnitInstance.GetXPFromLevel(2);
+            //todo: use scriptable asset
+            var friendship = UnitInstance.GetXPFromLevel(2);
             var partyFrogId = "000000000000000000000000";
-            RegisterUnit(partyFrogId, unitCollection[0], relationship, colorPalette: null, save: false);
+            var instance = CreateInstance<UnitInstance>();
+            instance.Initialize(unitCollection[0], partyFrogId, friendship, null);
+            RegisterUnit(instance, false);
         }
+
+        SaveData();
     }
 
-    public Unit GetRandomUnit(List<UnitInstance> blackList)
+    public Unit RandomUnitData
     {
-        var available = unitCollection.Where(unit => !blackList.Any(unitInstance => unitInstance.Data == unit)).ToList();
-
-        if (available.Count > 0)
+        get
         {
-            return available[UnityEngine.Random.Range(0, available.Count)];
+            var prioritizedList = unitCollection.Where(unit => !Units.Any(unitInstance => unitInstance.Data == unit)).ToList();
+
+            if (prioritizedList.Count > 0)
+            {
+                return prioritizedList[UnityEngine.Random.Range(0, prioritizedList.Count)];
+            }
+
+            return unitCollection[UnityEngine.Random.Range(0, unitCollection.Count)];
         }
-
-        return unitCollection[UnityEngine.Random.Range(0, unitCollection.Count)];
     }
 
-    public void SummonUnit(Unit unit)
+    public UnitInstance FindOrCreateFriend(UnitInstance instance)
     {
-        var id = GenerateMongoLikeId();
-        var instance = RegisterUnit(id, unit, relationship: 100, null);
-        OnUnitSummoned?.Invoke(instance);
+        if (instance.Friends.Count > 0)
+        {
+            return instance.Friends[UnityEngine.Random.Range(0, instance.Friends.Count)];
+        }
+        else
+        {
+            var friend = CreateInstance<UnitInstance>();
+            friend.Initialize(RandomUnitData, colorPalette: RandomColorPalette);
+            instance.Friends.Add(friend);
+            friend.Friends.Add(instance);
+            RegisterUnit(friend);
+            return friend;
+        }
     }
 
-    public string GenerateMongoLikeId()
+    public UnitInstance RegisterUnit(UnitInstance instance, bool saveData = true)
     {
-        byte[] bytes = new byte[12];
-
-        // 4 bytes: current Unix timestamp
-        uint timestamp = (uint)(DateTimeOffset.UtcNow.ToUnixTimeSeconds());
-        BitConverter.GetBytes(timestamp).CopyTo(bytes, 0);
-
-        // 3 bytes: random machine identifier
-        var machine = new byte[3];
-        new System.Random().NextBytes(machine);
-        Array.Copy(machine, 0, bytes, 4, 3);
-
-        // 2 bytes: process id (or random)
-        ushort pid = (ushort)UnityEngine.Random.Range(0, ushort.MaxValue);
-        BitConverter.GetBytes(pid).CopyTo(bytes, 7);
-
-        // 3 bytes: incrementing counter (random for simplicity)
-        var counter = new byte[3];
-        new System.Random().NextBytes(counter);
-        Array.Copy(counter, 0, bytes, 9, 3);
-
-        // Convert to 24-character hex string
-        return BitConverter.ToString(bytes).Replace("-", "").ToLower();
-    }
-
-    public UnitInstance RegisterUnit(string id, Unit unit, float relationship, ColorPalette colorPalette = null, bool save = true)
-    {
-        var matchingInstance = units.Find(x => x.Id == id);
-        if (matchingInstance != null) return matchingInstance;
-
-        var instance = new UnitInstance(id, unit, relationship, colorPalette);
-
         instance.OnFriendshipPointsChanged += _ => SaveData();
         instance.OnFriendshipLevelChanged += () => OnFungalUpdated?.Invoke();
 
         units.Add(instance);
 
-        if (save) SaveData();
+        if (saveData) SaveData();
         return instance;
     }
 
@@ -153,6 +159,7 @@ public class UnitListReference : ScriptableObject
                 ["friendshipLevel"] = unit.FriendshipLevel,
                 ["friendshipPoints"] = unit.FriendshipPoints,
                 ["colorPalette"] = unit.ColorPalette?.Id ?? null,
+                ["friends"] = new JArray(unit.Friends.Select(friend => friend.Id)),
             });
         }
 
