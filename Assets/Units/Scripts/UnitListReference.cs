@@ -65,7 +65,7 @@ public class UnitListReference : ScriptableObject
                     var unitId = unitJson.Value<string>("id");
 
                     var colorPaletteId = unitJson.Value<string>("colorPalette");
-                    var matchingColorPalette = colorPalettes.Find(p => p.Id == colorPaletteId);
+                    var matchingColorPalette = colorPalettes.Find(p => p?.Id == colorPaletteId);
 
                     float friendshipPoints = unitJson.Value<float?>("friendshipPoints") ?? 0f;
 
@@ -123,19 +123,19 @@ public class UnitListReference : ScriptableObject
         if (unseenUnits.Count > 0)
         {
             var chosenUnit = unseenUnits[UnityEngine.Random.Range(0, unseenUnits.Count)];
-            var chosenColor = PickUnseenColorForUnit(chosenUnit);
+            TryPickUnseenColorForUnit(chosenUnit, out ColorPalette chosenColor);
             return (chosenUnit, chosenColor);
         }
 
         // Step 2: all units have been seen → prioritize units with unused colors
         var unitsWithUnseenColors = unitCollection
-            .Where(u => PickUnseenColorForUnit(u) != null)
+            .Where(u => TryPickUnseenColorForUnit(u, out ColorPalette colorPalette))
             .ToList();
 
         if (unitsWithUnseenColors.Count > 0)
         {
             var chosenUnit = unitsWithUnseenColors[UnityEngine.Random.Range(0, unitsWithUnseenColors.Count)];
-            var chosenColor = PickUnseenColorForUnit(chosenUnit);
+            TryPickUnseenColorForUnit(chosenUnit, out ColorPalette chosenColor);
             return (chosenUnit, chosenColor);
         }
 
@@ -149,13 +149,12 @@ public class UnitListReference : ScriptableObject
     /// Returns a color palette that hasn't been used yet for the given unit type. 
     /// Returns null if all colors are already used.
     /// </summary>
-    private ColorPalette PickUnseenColorForUnit(Unit unit)
+    private bool TryPickUnseenColorForUnit(Unit unit, out ColorPalette colorPalette)
     {
         // Get all colors already used for this unit type
         var usedColors = Units
             .Where(ui => ui.Data == unit)
             .Select(ui => ui.ColorPalette)
-            .Where(c => c != null)
             .ToHashSet();
 
         // Find all unseen colors
@@ -163,10 +162,17 @@ public class UnitListReference : ScriptableObject
             .Where(c => !usedColors.Contains(c))
             .ToList();
 
-        if (unseenColors.Count == 0)
-            return null;
+        if (unseenColors.Count > 0)
+        {
+            colorPalette = unseenColors[UnityEngine.Random.Range(0, unseenColors.Count)];
+            return true;
+        }
+        else
+        {
+            colorPalette = colorPalettes[UnityEngine.Random.Range(0, colorPalettes.Count)];
+            return false;
+        }
 
-        return unseenColors[UnityEngine.Random.Range(0, unseenColors.Count)];
     }
 
     public bool TryGetFriend(UnitInstance unit, out UnitInstance friend, List<UnitInstance> blacklist)

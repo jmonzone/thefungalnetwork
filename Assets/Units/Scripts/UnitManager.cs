@@ -29,7 +29,7 @@ public class UnitManager : MonoBehaviour
     {
         foreach(var unit in unitList.Units)
         {
-            if (unit.IsFriends) SummonUnit(unit);
+            if (unit.FriendshipLevel > 2) SummonUnit(unit);
         }
 
         OnAllUnitsSummoned?.Invoke();

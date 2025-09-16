@@ -1,10 +1,26 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DialogueChatUI : DialoguePageUI
 {
     [SerializeField] private ResponseUI responseUI;
     [SerializeField] private TypewriterEffect chatTypewriter;
+    [SerializeField] private Image glyphImage;
+
+    private GlyphPalleteUI glyphPallete;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        glyphPallete = GetComponent<GlyphPalleteUI>();
+        glyphPallete.OnGlyphSelected += GlyphPallete_OnGlyphSelected;
+    }
+
+    private void GlyphPallete_OnGlyphSelected()
+    {
+        glyphImage.enabled = false;
+    }
 
     public override void Show()
     {
@@ -13,6 +29,8 @@ public class DialogueChatUI : DialoguePageUI
         responseUI.Hide();
 
         var dialogueData = dialogue.Dialogue;
+        glyphImage.enabled = dialogueData.Glyph != DialogueGlyph.NONE;
+
         StartCoroutine(chatTypewriter.TypeRoutine(dialogueData.Text, () =>
         {
             if (dialogueData.Responses.Count >= 2)

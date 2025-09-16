@@ -46,6 +46,13 @@ public enum DialogueType
     STORY
 }
 
+public enum DialogueGlyph
+{
+    NONE,
+    ACE_OF_WANDS,
+    TWO_OF_WANDS,
+}
+
 [Serializable]
 public class Dialogue
 {
@@ -54,12 +61,14 @@ public class Dialogue
     [SerializeField] private List<Response> responses;
     [SerializeField] private DialogueType type;
     [SerializeField] private DialogueAction action;
+    [SerializeField] private DialogueGlyph glyph = DialogueGlyph.ACE_OF_WANDS;
 
     public string Text => text;
     public Dialogue Next => next;
     public List<Response> Responses => responses;
     public DialogueType Type => type;
     public DialogueAction Action => action;
+    public DialogueGlyph Glyph => glyph;
 
     public Dialogue(string text, DialogueType type, DialogueAction action = DialogueAction.DEFAULT)
     {

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -69,26 +70,29 @@ public class PartyManager : MonoBehaviour
         partyFrog.SetBehaviour(partyFrog.GetComponent<UnitDJ>());
 
         //todo: assemble guests predefined by party + newly introduced friends
-        var allguests = new List<UnitInstance>();
+        var allGuests = new List<UnitInstance>();
+
+        //todo: don't spawn host or guests already spawned;
         foreach(var predefinedGuest in partyReference.CurrentParty.Guests)
         {
             var copyGuest = predefinedGuest.Copy();
             var predefinedInstance = unitList.RegisterUnit(copyGuest);
-            allguests.Add(predefinedInstance);
+            allGuests.Add(predefinedInstance);
         }
 
+        // todo: include direct invites
         // todo: introduces guests
         foreach (var guest in unitList.Friends)
         {
             var friendshipLevel = guest.FriendshipLevel;
 
-            if (friendshipLevel >= 2 && unitList.TryGetFriend(guest, out UnitInstance friend, allguests))
+            if (friendshipLevel >= 2 && unitList.TryGetFriend(guest, out UnitInstance friend, allGuests))
             {
-                allguests.Add(friend);
+                allGuests.Add(friend);
             }
         }
 
-        foreach (var guest in allguests)
+        foreach (var guest in allGuests)
         {
             // Try to find a valid random position near the spawn anchor
             Vector3 randomPoint = Random.insideUnitSphere * 2f; // radius = 5 units
