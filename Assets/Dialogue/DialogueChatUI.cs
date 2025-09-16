@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class DialogueChatUI : DialoguePageUI
 {
@@ -51,7 +50,7 @@ public class DialogueChatUI : DialoguePageUI
 
         if (dialogue.Dialogue.Glyph != DialogueGlyph.NONE)
         {
-            glyphPallete.ShowGlyph();
+            glyphPallete.ShowGlyph(dialogue.Dialogue.Glyph);
         }
     }
 

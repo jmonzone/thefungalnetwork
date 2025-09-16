@@ -13,7 +13,9 @@ public class GlyphPalleteUI : MonoBehaviour
     [SerializeField] private VertexGradient normalColor;
     [SerializeField] private VertexGradient blurColor;
 
-    private List<Button> glyphButtons = new List<Button>();
+    private DialogueGlyph targetGlyph;
+
+    private List<GlyphButtonUI> glyphButtons = new List<GlyphButtonUI>();
 
     public event UnityAction OnGlyphReleased;
 
@@ -21,24 +23,26 @@ public class GlyphPalleteUI : MonoBehaviour
     {
         glyphAnchor.GetComponentsInChildren(includeInactive: true, glyphButtons);
 
-        Debug.Log(glyphButtons.Count);
-        foreach(var button in glyphButtons)
+        foreach (var button in glyphButtons)
         {
-            button.onClick.AddListener(() => OnGlyphSelected());
+            button.OnGlyphClicked += () => OnGlyphSelected(button.Glyph);
         }
     }
 
-    private void OnGlyphSelected()
+    private void OnGlyphSelected(DialogueGlyph glyph)
     {
-        Debug.Log("clicked");
-        glyphImage.enabled = false;
-        fungalText.colorGradient = normalColor;
-        glyphAnchor.gameObject.SetActive(false);
-        OnGlyphReleased?.Invoke();
+        if (targetGlyph == glyph)
+        {
+            glyphImage.enabled = false;
+            fungalText.colorGradient = normalColor;
+            glyphAnchor.gameObject.SetActive(false);
+            OnGlyphReleased?.Invoke();
+        }
     }
 
-    public void ShowGlyph()
+    public void ShowGlyph(DialogueGlyph glyph)
     {
+        targetGlyph = glyph;
         glyphImage.enabled = true;
         fungalText.colorGradient = blurColor;
         glyphAnchor.gameObject.SetActive(true);

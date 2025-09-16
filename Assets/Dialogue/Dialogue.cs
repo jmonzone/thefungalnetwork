@@ -46,13 +46,6 @@ public enum DialogueType
     STORY
 }
 
-public enum DialogueGlyph
-{
-    NONE,
-    ACE_OF_WANDS,
-    TWO_OF_WANDS,
-}
-
 [Serializable]
 public class Dialogue
 {
@@ -61,7 +54,7 @@ public class Dialogue
     [SerializeField] private List<Response> responses;
     [SerializeField] private DialogueType type;
     [SerializeField] private DialogueAction action;
-    [SerializeField] private DialogueGlyph glyph = DialogueGlyph.ACE_OF_WANDS;
+    [SerializeField] private DialogueGlyph glyph = DialogueGlyph.ACE_OF_SPORES;
 
     public string Text => text;
     public Dialogue Next => next;
@@ -90,7 +83,5 @@ public class Dialogue
         {
             next = new Dialogue(dialogue.GetRange(1, dialogue.Count - 1), type);
         }
-
-
     }
 }
