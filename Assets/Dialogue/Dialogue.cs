@@ -63,12 +63,13 @@ public class Dialogue
     public DialogueAction Action => action;
     public DialogueGlyph Glyph => glyph;
 
-    public Dialogue(string text, DialogueType type, DialogueAction action = DialogueAction.DEFAULT)
+    public Dialogue(string text, DialogueType type, DialogueAction action = DialogueAction.DEFAULT, DialogueGlyph glyph = DialogueGlyph.NONE)
     {
         this.text = text;
         responses = new List<Response>();
         this.type = type;
         this.action = action;
+        this.glyph = glyph;
     }
 
     public Dialogue(List<Dialogue> dialogue, DialogueType type)

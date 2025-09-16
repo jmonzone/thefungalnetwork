@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
@@ -81,7 +82,8 @@ public class Unit : ScriptableObject
     private Dialogue BuildDialogueTree(JObject lineObj,JArray chatArray, DialogueType type)
     {
         string text = lineObj.Value<string>("text");
-        var dialogue = new Dialogue(text, type);
+        Enum.TryParse(lineObj.Value<string>("glyph")?.ToUpper(), out DialogueGlyph result);
+        var dialogue = new Dialogue(text, type, glyph: result);
 
         if (lineObj["responses"] is JArray responses)
         {

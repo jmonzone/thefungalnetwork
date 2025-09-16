@@ -13,6 +13,11 @@ public class GlyphPalleteUI : MonoBehaviour
     [SerializeField] private VertexGradient normalColor;
     [SerializeField] private VertexGradient blurColor;
 
+    [Header("Glyph Images")]
+    [SerializeField] private Sprite aceOfWands;
+    [SerializeField] private Sprite aceOfCups;
+    [SerializeField] private Sprite aceOfSpores;
+
     private DialogueGlyph targetGlyph;
 
     private List<GlyphButtonUI> glyphButtons = new List<GlyphButtonUI>();
@@ -43,8 +48,17 @@ public class GlyphPalleteUI : MonoBehaviour
     public void ShowGlyph(DialogueGlyph glyph)
     {
         targetGlyph = glyph;
-        glyphImage.enabled = true;
+
         fungalText.colorGradient = blurColor;
         glyphAnchor.gameObject.SetActive(true);
+        glyphImage.sprite = glyph switch
+        {
+            DialogueGlyph.ACE_OF_WANDS => aceOfWands,
+            DialogueGlyph.ACE_OF_CUPS => aceOfCups,
+            DialogueGlyph.ACE_OF_SPORES => aceOfSpores,
+            _ => aceOfWands,
+        };
+
+        glyphImage.enabled = true;
     }
 }

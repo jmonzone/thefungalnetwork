@@ -32,15 +32,15 @@ public class ButtonUI : MonoBehaviour
 
     public void Initialize(string label, UnityAction action)
     {
-        Debug.Log($"{text} {label}");
-        Debug.Log($"{text.text}");
+        //Debug.Log($"{text} {label}");
+        //Debug.Log($"{text.text}");
         if (!text) text = GetComponentInChildren<TextMeshProUGUI>();
         text.text = label;
 
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(() =>
         {
-            Debug.Log("clicked " + action == null);
+            //Debug.Log("clicked " + action == null);
             action?.Invoke();
             OnClick();
         });

@@ -49,7 +49,7 @@ public class DialogueReference : ScriptableObject
     {
         this.unit = unit;
         this.dialogue = dialogue;
-        Debug.Log($"ApplyStartDialogue {dialogue}");
+        //Debug.Log($"ApplyStartDialogue {dialogue}");
         isActive = true;
         OnIsActiveChanged?.Invoke();
 

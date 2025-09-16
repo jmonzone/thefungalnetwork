@@ -516,6 +516,7 @@
       {
         "id": "line1",
         "text": "hey, wanna hear the latest track i've been mixing?",
+        "glyph": "ace_of_cups",
         "responses": [
           {
             "text": "yes! let's hear it",
@@ -532,143 +533,151 @@
           }
         ]
       },
-      {
-        "id": "line2a",
-        "text": "awesome! crank it up and feel the beat!",
-        "responses": [
-          {
-            "text": "this is amazing!",
-            "nextId": "line3a",
-            "xp": 2,
-            "relationship": 2
-          },
-          {
-            "text": "it's ok, a bit loud",
-            "nextId": "line3b",
-            "xp": 0,
-            "relationship": 0
-          }
-        ]
-      },
-      {
-        "id": "line2b",
-        "text": "ah, alright… maybe next time i'll mix something special",
-        "responses": [
-          {
-            "text": "sure, i'll listen later",
-            "xp": 0,
-            "relationship": 0
-          },
-          {
-            "text": "actually, maybe a short preview?",
-            "nextId": "line3c",
-            "xp": 1,
-            "relationship": 1,
-            "activity": "music"
-          }
-        ]
-      },
-      {
-        "id": "line3a",
-        "text": "glad you like it! wanna try mixing a beat with me?",
-        "responses": [
-          {
-            "text": "yes, let's do it!",
-            "nextId": "line4a",
-            "xp": 2,
-            "relationship": 2,
-            "activity": "play"
-          },
-          {
-            "text": "maybe later",
-            "xp": 0,
-            "relationship": 1
-          }
-        ]
-      },
-      {
-        "id": "line3b",
-        "text": "hm… i can turn it down a bit if you want",
-        "responses": [
-          {
-            "text": "yes, please",
-            "xp": 1,
-            "relationship": 1
-          },
-          {
-            "text": "no, it's fine",
-            "xp": 0,
-            "relationship": 0
-          }
-        ]
-      },
-      {
-        "id": "line3c",
-        "text": "ok, just a short snippet… enjoy the vibe!",
-        "responses": [
-          {
-            "text": "cool, thanks!",
-            "nextId": "line4b",
-            "xp": 1,
-            "relationship": 1
-          },
-          {
-            "text": "meh, not feeling it",
-            "xp": -1,
-            "relationship": -1
-          }
-        ]
-      },
-      {
-        "id": "line4a",
-        "text": "awesome! let's see if you can keep up with my beat!",
-        "responses": [
-          {
-            "text": "i'm ready, let's go!",
-            "nextId": "line5a",
-            "xp": 2,
-            "relationship": 2,
-            "activity": "play"
-          },
-          {
-            "text": "uh… maybe just watch",
-            "xp": 0,
-            "relationship": 1
-          }
-        ]
-      },
-      {
-        "id": "line4b",
-        "text": "glad you got a taste! hope it lifts your mood",
-        "responses": [
-          {
-            "text": "it really does, thanks!",
-            "xp": 1,
-            "relationship": 1
-          },
-          {
-            "text": "it's alright",
-            "xp": 0,
-            "relationship": 0
-          }
-        ]
-      },
-      {
-        "id": "line5a",
-        "text": "you're doing great! let's finish this track strong",
-        "responses": [
-          {
-            "text": "yes, let's finish it!",
-            "xp": 2,
-            "relationship": 2
-          },
-          {
-            "text": "i'm tired, let's stop",
-            "xp": -1,
-            "relationship": 0
-          }
-        ]
-      }
+        {
+            "id": "line2a",
+            "text": "awesome! crank it up and feel the beat!",
+            "glyph": "ace_of_spores",
+            "responses": [
+                {
+                    "text": "this is amazing!",
+                    "nextId": "line3a",
+                    "xp": 2,
+                    "relationship": 2
+                },
+                {
+                    "text": "it's ok, a bit loud",
+                    "nextId": "line3b",
+                    "xp": 0,
+                    "relationship": 0
+                }
+            ]
+        },
+        {
+            "id": "line2b",
+            "text": "ah, alright… maybe next time i'll mix something special",
+            "glyph": "ace_of_cups",
+            "responses": [
+                {
+                    "text": "sure, i'll listen later",
+                    "xp": 0,
+                    "relationship": 0
+                },
+                {
+                    "text": "actually, maybe a short preview?",
+                    "nextId": "line3c",
+                    "xp": 1,
+                    "relationship": 1,
+                    "activity": "music"
+                }
+            ]
+        },
+        {
+            "id": "line3a",
+            "text": "glad you like it! wanna try mixing a beat with me?",
+            "glyph": "ace_of_spores",
+            "responses": [
+                {
+                    "text": "yes, let's do it!",
+                    "nextId": "line4a",
+                    "xp": 2,
+                    "relationship": 2,
+                    "activity": "play"
+                },
+                {
+                    "text": "maybe later",
+                    "xp": 0,
+                    "relationship": 1
+                }
+            ]
+        },
+        {
+            "id": "line3b",
+            "text": "hm… i can turn it down a bit if you want",
+            "glyph": "ace_of_wands",
+            "responses": [
+                {
+                    "text": "yes, please",
+                    "xp": 1,
+                    "relationship": 1
+                },
+                {
+                    "text": "no, it's fine",
+                    "xp": 0,
+                    "relationship": 0
+                }
+            ]
+        },
+        {
+            "id": "line3c",
+            "text": "ok, just a short snippet… enjoy the vibe!",
+            "glyph": "ace_of_spores",
+            "responses": [
+                {
+                    "text": "cool, thanks!",
+                    "nextId": "line4b",
+                    "xp": 1,
+                    "relationship": 1
+                },
+                {
+                    "text": "meh, not feeling it",
+                    "xp": -1,
+                    "relationship": -1
+                }
+            ]
+        },
+        {
+            "id": "line4a",
+            "text": "awesome! let's see if you can keep up with my beat!",
+            "glyph": "ace_of_wands",
+            "responses": [
+                {
+                    "text": "i'm ready, let's go!",
+                    "nextId": "line5a",
+                    "xp": 2,
+                    "relationship": 2,
+                    "activity": "play"
+                },
+                {
+                    "text": "uh… maybe just watch",
+                    "xp": 0,
+                    "relationship": 1
+                }
+            ]
+        },
+        {
+            "id": "line4b",
+            "text": "glad you got a taste! hope it lifts your mood",
+            "glyph": "ace_of_cups",
+            "responses": [
+                {
+                    "text": "it really does, thanks!",
+                    "xp": 1,
+                    "relationship": 1
+                },
+                {
+                    "text": "it's alright",
+                    "xp": 0,
+                    "relationship": 0
+                }
+            ]
+        },
+        {
+            "id": "line5a",
+            "text": "you're doing great! let's finish this track strong",
+            "glyph": "ace_of_cups",
+            "responses": [
+                {
+                    "text": "yes, let's finish it!",
+                    "xp": 2,
+                    "relationship": 2
+                },
+                {
+                    "text": "i'm tired, let's stop",
+                    "xp": -1,
+                    "relationship": 0
+                }
+            ]
+        }
     ],
     "gift": [
       {
