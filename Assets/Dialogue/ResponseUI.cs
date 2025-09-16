@@ -40,6 +40,12 @@ public class ResponseUI : MonoBehaviour
         StartCoroutine(continueGroup.FadeIn());
     }
 
+    public void Show()
+    {
+        responseGroup.Hide();
+        responseGroup.gameObject.SetActive(true);
+    }
+
     public void Hide()
     {
         responseGroup.gameObject.SetActive(false);

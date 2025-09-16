@@ -6,7 +6,6 @@ public class DialogueChatUI : DialoguePageUI
 {
     [SerializeField] private ResponseUI responseUI;
     [SerializeField] private TypewriterEffect chatTypewriter;
-    [SerializeField] private Image glyphImage;
 
     private GlyphPalleteUI glyphPallete;
 
@@ -14,23 +13,14 @@ public class DialogueChatUI : DialoguePageUI
     {
         base.Awake();
         glyphPallete = GetComponent<GlyphPalleteUI>();
-        glyphPallete.OnGlyphSelected += GlyphPallete_OnGlyphSelected;
+        glyphPallete.OnGlyphReleased += GlyphPallete_OnGlyphSelected;
     }
 
     private void GlyphPallete_OnGlyphSelected()
     {
-        glyphImage.enabled = false;
-    }
-
-    public override void Show()
-    {
-        base.Show();
-
-        responseUI.Hide();
+        responseUI.Show();
 
         var dialogueData = dialogue.Dialogue;
-        glyphImage.enabled = dialogueData.Glyph != DialogueGlyph.NONE;
-
         StartCoroutine(chatTypewriter.TypeRoutine(dialogueData.Text, () =>
         {
             if (dialogueData.Responses.Count >= 2)
@@ -51,6 +41,18 @@ public class DialogueChatUI : DialoguePageUI
                 StartCoroutine(CloseRoutine());
             }
         }));
+    }
+
+    public override void Show()
+    {
+        base.Show();
+
+        responseUI.Hide();
+
+        if (dialogue.Dialogue.Glyph != DialogueGlyph.NONE)
+        {
+            glyphPallete.ShowGlyph();
+        }
     }
 
     private IEnumerator ContinueRoutine()

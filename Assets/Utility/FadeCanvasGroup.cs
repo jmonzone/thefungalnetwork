@@ -8,6 +8,11 @@ public class FadeCanvasGroup : MonoBehaviour
     private float duration = 0.25f;
     private CanvasGroup canvasGroup;
 
+    private void Awake()
+    {
+        if (!canvasGroup) canvasGroup = GetComponent<CanvasGroup>();
+    }
+
     public bool IsVisible
     {
         get
@@ -15,6 +20,13 @@ public class FadeCanvasGroup : MonoBehaviour
             if (!canvasGroup) canvasGroup = GetComponent<CanvasGroup>();
             return gameObject.activeSelf && canvasGroup.alpha == 1;
         }
+    }
+
+    public void Hide()
+    {
+        if (!canvasGroup) canvasGroup = GetComponent<CanvasGroup>();
+        canvasGroup.blocksRaycasts = false;
+        canvasGroup.alpha = 0;
     }
 
     public IEnumerator FadeIn() => Fade(0f, 1f, duration);
