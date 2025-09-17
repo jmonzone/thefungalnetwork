@@ -6002,9 +6002,8 @@ GameObject:
   - component: {fileID: 257048550}
   - component: {fileID: 257048549}
   - component: {fileID: 257048548}
-  - component: {fileID: 257048547}
   m_Layer: 5
-  m_Name: Glyph Button UI
+  m_Name: Glyph Slot 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6030,25 +6029,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &257048547
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 257048545}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e760a3abf783d45bb9dd1b863d72bfa9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  glyphImage: {fileID: 257048549}
-  glyph: {fileID: 0}
-  originalPosition: {x: 0, y: 0}
-  canvas: {fileID: 0}
-  rectTransform: {fileID: 0}
-  canvasGroup: {fileID: 0}
-  originalParent: {fileID: 0}
 --- !u!114 &257048548
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24439,9 +24419,8 @@ GameObject:
   - component: {fileID: 961048845}
   - component: {fileID: 961048844}
   - component: {fileID: 961048843}
-  - component: {fileID: 961048842}
   m_Layer: 5
-  m_Name: Glyph Button UI
+  m_Name: Glyph Slot 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24466,25 +24445,6 @@ RectTransform:
   m_AnchoredPosition: {x: -175, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &961048842
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 961048840}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e760a3abf783d45bb9dd1b863d72bfa9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  glyphImage: {fileID: 961048844}
-  glyph: {fileID: 0}
-  originalPosition: {x: 0, y: 0}
-  canvas: {fileID: 0}
-  rectTransform: {fileID: 0}
-  canvasGroup: {fileID: 0}
-  originalParent: {fileID: 0}
 --- !u!114 &961048843
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -48338,7 +48298,7 @@ PrefabInstance:
     - target: {fileID: 2452743247563635008, guid: 9eec0459431164f7baef5dae629eea9a,
         type: 3}
       propertyPath: m_Name
-      value: Glyph Button UI
+      value: Glyph Slot 1
       objectReference: {fileID: 0}
     - target: {fileID: 2452743247563635008, guid: 9eec0459431164f7baef5dae629eea9a,
         type: 3}
@@ -48445,7 +48405,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3181198853285914382, guid: 9eec0459431164f7baef5dae629eea9a, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
