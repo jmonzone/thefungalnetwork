@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
@@ -28,7 +27,7 @@ public class UnitListReference : ScriptableObject
     public List<UnitInstance> Units => units;
     public List<UnitInstance> Friends => units.Where(unit => unit.IsFriends).ToList();
     public List<ColorPalette> ColorPalettes => colorPalettes;
-    public ColorPalette RandomColorPalette => colorPalettes[UnityEngine.Random.Range(0, colorPalettes.Count)];
+    public ColorPalette RandomColorPalette => colorPalettes[Random.Range(0, colorPalettes.Count)];
 
     private const string UNIT_KEY = "units";
 
@@ -65,13 +64,14 @@ public class UnitListReference : ScriptableObject
 
                     var unitId = unitJson.Value<string>("id");
 
-                    var colorPaletteId = unitJson.Value<string>("colorPalette");
-                    var matchingColorPalette = colorPalettes.Find(p => p?.Id == colorPaletteId);
+                    var elementId = unitJson.Value<string>("element");
+                    var element = System.Enum.TryParse(elementId, ignoreCase: true, out Element result) ? result : Element.NONE;
+                    var matchingColorPalette = colorPalettes.Find(p => p?.Id == elementId);
 
                     float friendshipPoints = unitJson.Value<float?>("friendshipPoints") ?? 0f;
 
                     var instance = CreateInstance<UnitInstance>();
-                    instance.Initialize(matchingUnit, unitId, friendshipPoints, matchingColorPalette, unitJson);
+                    instance.Initialize(matchingUnit, unitId, friendshipPoints, element, matchingColorPalette, unitJson);
                     RegisterUnit(instance, false);
                 };
             }
@@ -142,7 +142,7 @@ public class UnitListReference : ScriptableObject
 
         // Step 3: fallback → any unit and any color
         var fallbackUnit = unitCollection[UnityEngine.Random.Range(0, unitCollection.Count)];
-        var fallbackColor = colorPalettes[UnityEngine.Random.Range(0, colorPalettes.Count)];
+        var fallbackColor = colorPalettes[Random.Range(0, colorPalettes.Count)];
         return (fallbackUnit, fallbackColor);
     }
 
@@ -165,12 +165,12 @@ public class UnitListReference : ScriptableObject
 
         if (unseenColors.Count > 0)
         {
-            colorPalette = unseenColors[UnityEngine.Random.Range(0, unseenColors.Count)];
+            colorPalette = unseenColors[Random.Range(0, unseenColors.Count)];
             return true;
         }
         else
         {
-            colorPalette = colorPalettes[UnityEngine.Random.Range(0, colorPalettes.Count)];
+            colorPalette = colorPalettes[Random.Range(0, colorPalettes.Count)];
             return false;
         }
 
@@ -188,7 +188,7 @@ public class UnitListReference : ScriptableObject
             _ => 0f,
         };
 
-        if (unit.Friends.Count < 3 && UnityEngine.Random.value < introduceNewFriend)
+        if (unit.Friends.Count < 3 && Random.value < introduceNewFriend)
         {
             var (newUnit, newColor) = PickNewFriend();
             friend = CreateInstance<UnitInstance>();
@@ -202,7 +202,7 @@ public class UnitListReference : ScriptableObject
             var availableFriends = unit.Friends.Where(friend => !blacklist.Contains(friend)).ToList();
             if (availableFriends.Count > 0)
             {
-                friend = availableFriends[UnityEngine.Random.Range(0, availableFriends.Count)];
+                friend = availableFriends[Random.Range(0, availableFriends.Count)];
             }
         }
 
@@ -243,7 +243,7 @@ public class UnitListReference : ScriptableObject
                 ["name"] = unit.Data.Name,
                 ["friendshipLevel"] = unit.FriendshipLevel,
                 ["friendshipPoints"] = unit.FriendshipPoints,
-                ["colorPalette"] = unit.ColorPalette?.Id ?? null,
+                ["element"] = unit.ColorPalette?.Id ?? null,
                 ["friends"] = new JArray(unit.Friends.Select(friend => friend.Id)),
             });
         }

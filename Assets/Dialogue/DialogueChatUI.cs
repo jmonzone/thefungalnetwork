@@ -1,23 +1,26 @@
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 
 public class DialogueChatUI : DialoguePageUI
 {
     [SerializeField] private ResponseUI responseUI;
     [SerializeField] private TypewriterEffect chatTypewriter;
+    [SerializeField] private GlyphCollection glyphCollection;
 
-    private GlyphPalleteUI glyphPallete;
+    private GlyphUI glyphUI;
 
     protected override void Awake()
     {
         base.Awake();
-        glyphPallete = GetComponent<GlyphPalleteUI>();
-        glyphPallete.OnGlyphReleased += GlyphPallete_OnGlyphSelected;
+        glyphUI = GetComponent<GlyphUI>();
+        glyphUI.OnGlyphMatched += OnGlyphMatched;
     }
 
-    private void GlyphPallete_OnGlyphSelected()
+    private void OnGlyphMatched()
     {
         responseUI.Show();
+        glyphUI.HideGlyphUI();
 
         var dialogueData = dialogue.Dialogue;
         StartCoroutine(chatTypewriter.TypeRoutine(dialogueData.Text, () =>
@@ -50,11 +53,13 @@ public class DialogueChatUI : DialoguePageUI
 
         if (dialogue.Dialogue.Glyph)
         {
-            glyphPallete.ShowGlyph(dialogue.Dialogue.Glyph);
+            var availableGlyphs = glyphCollection.Glyphs.Where(glyph => glyph.Element.HasFlag(dialogue.Unit.Instance.Element)).ToList();
+            var randomGlyph = availableGlyphs[Random.Range(0, availableGlyphs.Count)];
+            glyphUI.ShowGlyph(randomGlyph);
         }
         else
         {
-            GlyphPallete_OnGlyphSelected();
+            OnGlyphMatched();
         }
     }
 

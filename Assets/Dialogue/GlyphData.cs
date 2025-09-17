@@ -22,8 +22,20 @@ public class GlyphFusion
 public class GlyphData : ScriptableObject
 {
     [SerializeField] private string id;
+    [SerializeField] private Element element;
     [SerializeField] private Sprite sprite;
 
     public string Id => id;
+    public Element Element => element;
     public Sprite Sprite => sprite;
+}
+
+[Flags]
+public enum Element
+{
+    NONE = 0,
+    FIRE = 1 << 0,
+    WATER = 1 << 1,
+    EARTH = 1 << 2,
+    AIR = 1 << 3
 }

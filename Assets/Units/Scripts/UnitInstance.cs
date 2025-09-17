@@ -11,12 +11,14 @@ public class UnitInstance : ScriptableObject
     [SerializeField] private Unit unit;
     [SerializeField] private int friendshipLevel;
     [SerializeField] private float friendshipPoints;
+    [SerializeField] private Element element;
     [SerializeField] private ColorPalette colorPalette;
     [SerializeField] private List<UnitInstance> friends;
     [SerializeField] private JObject json;
 
     public string Id => id;
     public Unit Data => unit;
+    public Element Element => element;
     public ColorPalette ColorPalette => colorPalette;
 
     public bool IsFriends => friendshipLevel > 1;
@@ -38,12 +40,13 @@ public class UnitInstance : ScriptableObject
     public event UnityAction<float> OnFriendshipPointsChanged;
     public event UnityAction OnFriendshipLevelChanged;
 
-    public void Initialize(Unit unit, string id = null, float friendshipPoints = 0, ColorPalette colorPalette = null, JObject json = null)
+    public void Initialize(Unit unit, string id = null, float friendshipPoints = 0, Element element = Element.NONE, ColorPalette colorPalette = null, JObject json = null)
     {
         this.id = string.IsNullOrEmpty(id) ? GenerateMongoLikeId() : id;
         this.unit = unit;
         this.friendshipPoints = friendshipPoints;
         friendshipLevel = GetLevelFromXP(friendshipPoints);
+        this.element = element;
         this.colorPalette = colorPalette;
         friends = new List<UnitInstance>();
         this.json = json;
@@ -52,7 +55,7 @@ public class UnitInstance : ScriptableObject
     public UnitInstance Copy()
     {
         var copy = CreateInstance<UnitInstance>();
-        copy.Initialize(Data, Id, FriendshipPoints, ColorPalette);
+        copy.Initialize(Data, Id, FriendshipPoints, element, ColorPalette);
         return copy;
     }
     public static string GenerateMongoLikeId()

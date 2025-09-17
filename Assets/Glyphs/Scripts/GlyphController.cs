@@ -37,6 +37,7 @@ public class GlyphController : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         this.glyph = glyph;
         this.isPalleteGlyph = isPalleteGlyph;
         glyphImage.sprite = glyph.Sprite;
+        glyphImage.SetNativeSize();
 
         rectTransform = GetComponent<RectTransform>();
         originalPosition = rectTransform.anchoredPosition;
@@ -77,7 +78,11 @@ public class GlyphController : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         if (transform.parent == canvas.transform) // means not dropped on a drop zone
         {
             ReturnToOriginalParent();
-        } 
+        }
+        else
+        {
+            isPalleteGlyph = false;
+        }
 
         OnGlyphDropped?.Invoke(this);
     }
