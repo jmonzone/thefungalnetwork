@@ -21,16 +21,17 @@ public class GlyphButtonUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     private void Awake()
     {
-        rectTransform = GetComponent<RectTransform>();
         canvasGroup = gameObject.AddComponent<CanvasGroup>();
         canvas = GetComponentInParent<Canvas>();
-        originalPosition = rectTransform.anchoredPosition;
     }
 
     public void SetGlyph(DialogueGlyph glyph, Sprite sprite)
     {
         this.glyph = glyph;
         glyphImage.sprite = sprite;
+
+        rectTransform = GetComponent<RectTransform>();
+        originalPosition = rectTransform.anchoredPosition;
     }
 
     public void OnBeginDrag(PointerEventData eventData)

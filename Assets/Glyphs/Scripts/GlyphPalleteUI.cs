@@ -10,11 +10,19 @@ public class GlyphPalleteUI : MonoBehaviour
     [SerializeField] private GlyphDropZone glyphDropZone;
     [SerializeField] private GlyphButtonUI glyphPrefab;
 
+    [SerializeField] private RectTransform glyphSlot1;
+    [SerializeField] private RectTransform glyphSlot2;
+    [SerializeField] private RectTransform glyphSlot3;
 
     [SerializeField] private Image glyphImage;
     [SerializeField] private TextMeshProUGUI fungalText;
     [SerializeField] private VertexGradient normalColor;
     [SerializeField] private VertexGradient blurColor;
+
+    [Header("Initial Glyphs")]
+    [SerializeField] private DialogueGlyph glyph1;
+    [SerializeField] private DialogueGlyph glyph2;
+    [SerializeField] private DialogueGlyph glyph3;
 
     [Header("Glyph Images")]
     [SerializeField] private Sprite aceOfWands;
@@ -29,12 +37,9 @@ public class GlyphPalleteUI : MonoBehaviour
 
     private void Awake()
     {
-        glyphAnchor.GetComponentsInChildren(includeInactive: true, glyphButtons);
-
-        foreach (var button in glyphButtons)
-        {
-            button.OnGlyphDropped += OnGlyphSelected;
-        }
+        SpawnGlyph(glyph1, glyphSlot1.anchoredPosition);
+        SpawnGlyph(glyph2, glyphSlot2.anchoredPosition);
+        SpawnGlyph(glyph3, glyphSlot3.anchoredPosition);
 
         glyphDropZone.OnGlyphPlaced += HandleGlyphPlaced;
     }
@@ -43,16 +48,22 @@ public class GlyphPalleteUI : MonoBehaviour
     {
         if (zone == glyphDropZone)
         {
-            Debug.Log("✅ Correct glyph placed!");
-            var replacementGlyph = Instantiate(glyphPrefab, glyphAnchor);
-            replacementGlyph.GetComponent<RectTransform>().anchoredPosition = placedGlyph.OriginalPosition;
-            replacementGlyph.SetGlyph(placedGlyph.Glyph, GetGlyphSprite(placedGlyph.Glyph));
+            SpawnGlyph(placedGlyph.Glyph, placedGlyph.OriginalPosition);
         }
         else
         {
             Debug.Log("❌ Wrong glyph.");
             placedGlyph.ResetToOriginalParent();
         }
+    }
+
+    private void SpawnGlyph(DialogueGlyph glyph, Vector3 position)
+    {
+        var glyphObj = Instantiate(glyphPrefab, glyphAnchor);
+        glyphObj.GetComponent<RectTransform>().anchoredPosition = position;
+        glyphObj.SetGlyph(glyph, GetGlyphSprite(glyph));
+        glyphObj.OnGlyphDropped += OnGlyphSelected;
+        glyphButtons.Add(glyphObj);
     }
 
     private void OnGlyphSelected(GlyphButtonUI glyph)

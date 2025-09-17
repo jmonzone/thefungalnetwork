@@ -6009,7 +6009,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &257048546
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12770,6 +12770,9 @@ MonoBehaviour:
   glyphDropZone: {fileID: 1763634588}
   glyphPrefab: {fileID: 3181198853285914382, guid: 9eec0459431164f7baef5dae629eea9a,
     type: 3}
+  glyphSlot1: {fileID: 826627638}
+  glyphSlot2: {fileID: 961048841}
+  glyphSlot3: {fileID: 257048546}
   glyphImage: {fileID: 1055622168}
   fungalText: {fileID: 1695818708}
   normalColor:
@@ -12782,6 +12785,9 @@ MonoBehaviour:
     topRight: {r: 0.27058825, g: 0.14509805, b: 0.28235295, a: 1}
     bottomLeft: {r: 0.27058825, g: 0.14509805, b: 0.28235295, a: 1}
     bottomRight: {r: 1, g: 1, b: 1, a: 0}
+  glyph1: 0
+  glyph2: 0
+  glyph3: 0
   aceOfWands: {fileID: 21300000, guid: 34b228c1f68134c7c82bf560c8730aa0, type: 3}
   aceOfCups: {fileID: 21300000, guid: abb42f6ee7d2243ddad9f10ff94eb040, type: 3}
   aceOfSpores: {fileID: 21300000, guid: 6f4dad3c070114bc781357e421afe611, type: 3}
@@ -24438,7 +24444,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &961048841
 RectTransform:
   m_ObjectHideFlags: 0
@@ -48327,6 +48333,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Glyph Button UI
+      objectReference: {fileID: 0}
+    - target: {fileID: 2452743247563635008, guid: 9eec0459431164f7baef5dae629eea9a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2630833722149907961, guid: 9eec0459431164f7baef5dae629eea9a,
         type: 3}
