@@ -7,6 +7,9 @@ using UnityEngine.UI;
 public class GlyphPalleteUI : MonoBehaviour
 {
     [SerializeField] private Transform glyphAnchor;
+    [SerializeField] private GlyphDropZone glyphDropZone;
+    [SerializeField] private GlyphButtonUI glyphPrefab;
+
 
     [SerializeField] private Image glyphImage;
     [SerializeField] private TextMeshProUGUI fungalText;
@@ -30,13 +33,31 @@ public class GlyphPalleteUI : MonoBehaviour
 
         foreach (var button in glyphButtons)
         {
-            button.OnGlyphClicked += () => OnGlyphSelected(button.Glyph);
+            button.OnGlyphDropped += OnGlyphSelected;
+        }
+
+        glyphDropZone.OnGlyphPlaced += HandleGlyphPlaced;
+    }
+
+    private void HandleGlyphPlaced(GlyphButtonUI placedGlyph, GlyphDropZone zone)
+    {
+        if (zone == glyphDropZone)
+        {
+            Debug.Log("✅ Correct glyph placed!");
+            var replacementGlyph = Instantiate(glyphPrefab, glyphAnchor);
+            replacementGlyph.GetComponent<RectTransform>().anchoredPosition = placedGlyph.OriginalPosition;
+            replacementGlyph.SetGlyph(placedGlyph.Glyph, GetGlyphSprite(placedGlyph.Glyph));
+        }
+        else
+        {
+            Debug.Log("❌ Wrong glyph.");
+            placedGlyph.ResetToOriginalParent();
         }
     }
 
-    private void OnGlyphSelected(DialogueGlyph glyph)
+    private void OnGlyphSelected(GlyphButtonUI glyph)
     {
-        if (targetGlyph == glyph)
+        if (targetGlyph == glyph.Glyph)
         {
             glyphImage.enabled = false;
             fungalText.colorGradient = normalColor;
@@ -51,14 +72,16 @@ public class GlyphPalleteUI : MonoBehaviour
 
         fungalText.colorGradient = blurColor;
         glyphAnchor.gameObject.SetActive(true);
-        glyphImage.sprite = glyph switch
-        {
-            DialogueGlyph.ACE_OF_WANDS => aceOfWands,
-            DialogueGlyph.ACE_OF_CUPS => aceOfCups,
-            DialogueGlyph.ACE_OF_SPORES => aceOfSpores,
-            _ => aceOfWands,
-        };
+        glyphImage.sprite = GetGlyphSprite(glyph);
 
         glyphImage.enabled = true;
     }
+
+    private Sprite GetGlyphSprite(DialogueGlyph glyph) => glyph switch
+    {
+        DialogueGlyph.ACE_OF_WANDS => aceOfWands,
+        DialogueGlyph.ACE_OF_CUPS => aceOfCups,
+        DialogueGlyph.ACE_OF_SPORES => aceOfSpores,
+        _ => aceOfWands,
+    };
 }
