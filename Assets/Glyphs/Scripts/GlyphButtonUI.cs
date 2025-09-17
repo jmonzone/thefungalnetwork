@@ -13,6 +13,8 @@ public class GlyphButtonUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     public Vector2 OriginalPosition => originalPosition;
 
     public event UnityAction<GlyphButtonUI> OnGlyphDropped;
+    public event UnityAction<GlyphButtonUI, GlyphButtonUI> OnGlyphFused;
+    // (draggedGlyph, targetGlyph)
 
     private Canvas canvas;
     private RectTransform rectTransform;
@@ -21,6 +23,7 @@ public class GlyphButtonUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     private void Awake()
     {
+        rectTransform = GetComponent<RectTransform>();
         canvasGroup = gameObject.AddComponent<CanvasGroup>();
         canvas = GetComponentInParent<Canvas>();
     }
@@ -37,8 +40,8 @@ public class GlyphButtonUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     public void OnBeginDrag(PointerEventData eventData)
     {
         originalParent = transform.parent;
-        transform.SetParent(canvas.transform); // move to top layer while dragging
-        canvasGroup.blocksRaycasts = false;   // so it doesn’t block raycasts on drop targets
+        transform.SetParent(canvas.transform); // move to top while dragging
+        canvasGroup.blocksRaycasts = false;    // don’t block raycasts
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -48,14 +51,30 @@ public class GlyphButtonUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        // Let drop zones handle placement
         canvasGroup.blocksRaycasts = true;
-        OnGlyphDropped?.Invoke(this);
+
+        // Raycast to check if dropped onto another glyph
+        var results = new System.Collections.Generic.List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventData, results);
+
+        foreach (var result in results)
+        {
+            var otherGlyph = result.gameObject.GetComponent<GlyphButtonUI>();
+            if (otherGlyph != null && otherGlyph != this)
+            {
+                Debug.Log("fuse");
+                // 🔥 Trigger fusion
+                OnGlyphFused?.Invoke(this, otherGlyph);
+                return;
+            }
+        }
 
         if (transform.parent == canvas.transform) // means not dropped on a drop zone
         {
             ResetToOriginalParent();
-        }
+        } 
+
+        OnGlyphDropped?.Invoke(this);
     }
 
     public void ResetToOriginalParent()

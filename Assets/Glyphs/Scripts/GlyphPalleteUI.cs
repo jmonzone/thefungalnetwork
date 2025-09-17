@@ -37,9 +37,9 @@ public class GlyphPalleteUI : MonoBehaviour
 
     private void Awake()
     {
-        SpawnGlyph(glyph1, glyphSlot1.anchoredPosition);
-        SpawnGlyph(glyph2, glyphSlot2.anchoredPosition);
-        SpawnGlyph(glyph3, glyphSlot3.anchoredPosition);
+        SpawnPalletteGlyph(glyph1, glyphSlot1.anchoredPosition);
+        SpawnPalletteGlyph(glyph2, glyphSlot2.anchoredPosition);
+        SpawnPalletteGlyph(glyph3, glyphSlot3.anchoredPosition);
 
         glyphDropZone.OnGlyphPlaced += HandleGlyphPlaced;
     }
@@ -48,7 +48,7 @@ public class GlyphPalleteUI : MonoBehaviour
     {
         if (zone == glyphDropZone)
         {
-            SpawnGlyph(placedGlyph.Glyph, placedGlyph.OriginalPosition);
+            SpawnPalletteGlyph(placedGlyph.Glyph, placedGlyph.OriginalPosition);
         }
         else
         {
@@ -57,14 +57,37 @@ public class GlyphPalleteUI : MonoBehaviour
         }
     }
 
-    private void SpawnGlyph(DialogueGlyph glyph, Vector3 position)
+    private void SpawnPalletteGlyph(DialogueGlyph glyph, Vector3 position)
     {
-        var glyphObj = Instantiate(glyphPrefab, glyphAnchor);
+        var glyphObj = SpawnGlyph(glyph, position, glyphAnchor);
+        glyphObj.OnGlyphDropped += OnGlyphSelected;
+
+    }
+
+    private GlyphButtonUI SpawnGlyph(DialogueGlyph glyph, Vector3 position, Transform parent)
+    {
+        var glyphObj = Instantiate(glyphPrefab, parent);
         glyphObj.GetComponent<RectTransform>().anchoredPosition = position;
         glyphObj.SetGlyph(glyph, GetGlyphSprite(glyph));
-        glyphObj.OnGlyphDropped += OnGlyphSelected;
+
+        glyphObj.OnGlyphFused += GlyphObj_OnGlyphFused;
+
         glyphButtons.Add(glyphObj);
+        return glyphObj;
     }
+
+    private void GlyphObj_OnGlyphFused(GlyphButtonUI dragged, GlyphButtonUI target)
+    {
+        // 1. Create a new fused glyph (this is your logic)
+        DialogueGlyph fusedGlyph = DialogueGlyph.ACE_OF_SPORES;
+
+        // 2. Destroy old glyphs
+        Destroy(dragged.gameObject);
+        Destroy(target.gameObject);
+
+        SpawnGlyph(fusedGlyph, target.GetComponent<RectTransform>().anchoredPosition, glyphDropZone.transform);
+    }
+
 
     private void OnGlyphSelected(GlyphButtonUI glyph)
     {
