@@ -24,7 +24,7 @@ public class DialogueActionsUI : DialoguePageUI
     public override void Show()
     {
         base.Show();
-        actionButtons.gameObject.SetActive(false);
+        actionButtons.Hide();
 
         var allIntros = dialogue.Unit.Instance.Data.Intros;
         var intro = allIntros[Random.Range(0, allIntros.Count)];

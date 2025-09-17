@@ -37,7 +37,7 @@ public class GlyphController : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         this.glyph = glyph;
         this.isPalleteGlyph = isPalleteGlyph;
         glyphImage.sprite = glyph.Sprite;
-        glyphImage.SetNativeSize();
+        //glyphImage.SetNativeSize();
 
         rectTransform = GetComponent<RectTransform>();
         originalPosition = rectTransform.anchoredPosition;
@@ -66,9 +66,8 @@ public class GlyphController : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         foreach (var result in results)
         {
             var otherGlyph = result.gameObject.GetComponent<GlyphController>();
-            if (otherGlyph != null && otherGlyph != this)
+            if (otherGlyph != null && otherGlyph != this && !otherGlyph.isPalleteGlyph)
             {
-                Debug.Log("fuse");
                 // 🔥 Trigger fusion
                 OnGlyphFused?.Invoke(this, otherGlyph);
                 return;

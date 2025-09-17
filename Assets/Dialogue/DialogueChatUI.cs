@@ -23,26 +23,24 @@ public class DialogueChatUI : DialoguePageUI
         glyphUI.HideGlyphUI();
 
         var dialogueData = dialogue.Dialogue;
-        StartCoroutine(chatTypewriter.TypeRoutine(dialogueData.Text, () =>
+        if (dialogueData.Responses.Count >= 2)
         {
-            if (dialogueData.Responses.Count >= 2)
+            responseUI.ShowResponses(dialogueData.Responses, response =>
             {
-                responseUI.ShowResponses(dialogueData.Responses, response =>
-                {
-                    dialogue.RespondToChat(response);
-                    if (response.Next != null) Show();
-                    else InvokeClose();
-                });
-            }
-            else if (dialogueData.Next != null)
-            {
-                StartCoroutine(ContinueRoutine());
-            }
-            else
-            {
-                StartCoroutine(CloseRoutine());
-            }
-        }));
+                dialogue.RespondToChat(response);
+                if (response.Next != null) Show();
+                else InvokeClose();
+            });
+        }
+        else if (dialogueData.Next != null)
+        {
+            StartCoroutine(ContinueRoutine());
+        }
+        else
+        {
+            StartCoroutine(CloseRoutine());
+        }
+
     }
 
     public override void Show()
@@ -51,16 +49,19 @@ public class DialogueChatUI : DialoguePageUI
 
         responseUI.Hide();
 
-        if (dialogue.Dialogue.Glyph)
+        var dialogueData = dialogue.Dialogue;
+
+        var availableGlyphs = glyphCollection.Glyphs.Where(glyph => glyph.Tier > 1 && glyph.Element.HasFlag(dialogue.Unit.Instance.Element)).ToList();
+        var randomGlyph = availableGlyphs[Random.Range(0, availableGlyphs.Count)];
+        glyphUI.StartGlyphDialogue(randomGlyph);
+
+        StartCoroutine(chatTypewriter.TypeRoutine(dialogueData.Text, () =>
         {
-            var availableGlyphs = glyphCollection.Glyphs.Where(glyph => glyph.Element.HasFlag(dialogue.Unit.Instance.Element)).ToList();
-            var randomGlyph = availableGlyphs[Random.Range(0, availableGlyphs.Count)];
-            glyphUI.ShowGlyph(randomGlyph);
-        }
-        else
-        {
-            OnGlyphMatched();
-        }
+            glyphUI.BlockDialogueWithGlyph();
+        }));
+
+
+        
     }
 
     private IEnumerator ContinueRoutine()

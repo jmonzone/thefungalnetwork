@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -35,10 +36,10 @@ public class GlyphUI : MonoBehaviour
 
     private void Awake()
     {
-        SpawnPalletteGlyph(glyph1, glyphSlot1.anchoredPosition);
-        SpawnPalletteGlyph(glyph2, glyphSlot2.anchoredPosition);
-        SpawnPalletteGlyph(glyph3, glyphSlot3.anchoredPosition);
-        SpawnPalletteGlyph(glyph4, glyphSlot4.anchoredPosition);
+        SpawnGlyph(glyph1, glyphSlot1.anchoredPosition, isPaletteGlyph: true);
+        SpawnGlyph(glyph2, glyphSlot2.anchoredPosition, isPaletteGlyph: true);
+        SpawnGlyph(glyph3, glyphSlot3.anchoredPosition, isPaletteGlyph: true);
+        SpawnGlyph(glyph4, glyphSlot4.anchoredPosition, isPaletteGlyph: true);
 
         glyphDropZone.OnGlyphPlaced += HandleGlyphPlaced;
     }
@@ -49,20 +50,13 @@ public class GlyphUI : MonoBehaviour
         {
             if (placedGlyph.IsPalleteGlyph)
             {
-                SpawnPalletteGlyph(placedGlyph.Glyph, placedGlyph.OriginalPosition);
+                SpawnGlyph(placedGlyph.Glyph, placedGlyph.OriginalPosition, true);
             }
         }
         else
         {
             placedGlyph.ReturnToOriginalParent();
         }
-    }
-
-    private void SpawnPalletteGlyph(GlyphData glyph, Vector3 position)
-    {
-        var glyphObj = SpawnGlyph(glyph, position, true);
-        glyphObj.OnGlyphDropped += OnGlyphFused;
-
     }
 
     private GlyphController SpawnGlyph(GlyphData glyph, Vector3 position, bool isPaletteGlyph)
@@ -87,33 +81,92 @@ public class GlyphUI : MonoBehaviour
             glyphControllers.Remove(target);
             Destroy(target.gameObject);
 
-            var fusedGlyphController = SpawnGlyph(fusedGlyph, target.GetComponent<RectTransform>().anchoredPosition,false);
-            OnGlyphFused(fusedGlyphController);
+            var targetRect = target.GetComponent<RectTransform>();
+            var fusedGlyphController = SpawnGlyph(fusedGlyph, targetRect.anchoredPosition, false);
+
+            if (targetGlyph == fusedGlyph)
+            {
+                var fusedRect = fusedGlyphController.GetComponent<RectTransform>();
+                StartCoroutine(MatchGlyphRoutine(fusedRect));
+            }
         }
     }
 
-    private void OnGlyphFused(GlyphController glyph)
+    private IEnumerator MatchGlyphRoutine(RectTransform fusedRect)
     {
-        if (targetGlyph == glyph.Glyph)
+        var duration = 1.5f;
+        var targetRect = glyphImage.GetComponent<RectTransform>();
+
+        // store starting state
+        Vector3 startPos = fusedRect.position;          // world position
+        Vector3 targetPos = targetRect.position;        // world position
+        Vector3 startScale = fusedRect.localScale;
+        Vector3 targetScale = targetRect.localScale;
+
+        float elapsed = 0f;
+
+        while (elapsed < duration)
         {
-            glyphImage.enabled = false;
-            fungalText.colorGradient = normalColor;
-            glyphPalette.gameObject.SetActive(false);
-            OnGlyphMatched?.Invoke();
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+
+            // smooth interpolation in world space
+            Vector3 newWorldPos = Vector3.Lerp(startPos, targetPos, t);
+            fusedRect.position = newWorldPos;
+
+            fusedRect.localScale = Vector3.Lerp(startScale, targetScale, t);
+
+            yield return null;
         }
+
+        // snap to final
+        fusedRect.position = targetPos;
+        fusedRect.localScale = targetScale;
+
+        fusedRect.gameObject.SetActive(false);
+        StartCoroutine(GlowEffect(glyphImage, Color.cyan, 1.5f));
     }
 
-    public void ShowGlyph(GlyphData glyph)
+    private IEnumerator GlowEffect(Image img, Color glowColor, float duration = 0.5f)
+    {
+        Color startColor = img.color;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.PingPong(elapsed * 2f, 1f); // pulse in/out
+            img.color = Color.Lerp(startColor, glowColor, t);
+            yield return null;
+        }
+
+        img.color = startColor; // reset after glow
+
+        glyphImage.enabled = false;
+        fungalText.colorGradient = normalColor;
+
+        glyphPalette.gameObject.SetActive(false);
+        OnGlyphMatched?.Invoke();
+    }
+
+
+    public void StartGlyphDialogue(GlyphData glyph)
     {
         targetGlyph = glyph;
 
         fungalText.colorGradient = blurColor;
 
         glyphImage.sprite = glyph.Sprite;
-        glyphImage.enabled = true;
+        glyphImage.enabled = false;
 
         glyphPalette.gameObject.SetActive(true);
         glyphDropZone.gameObject.SetActive(true);
+    }
+
+
+    public void BlockDialogueWithGlyph()
+    {
+        glyphImage.enabled = true;
     }
 
     public void HideGlyphUI()

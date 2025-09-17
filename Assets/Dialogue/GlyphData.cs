@@ -22,10 +22,12 @@ public class GlyphFusion
 public class GlyphData : ScriptableObject
 {
     [SerializeField] private string id;
+    [SerializeField] private int tier;
     [SerializeField] private Element element;
     [SerializeField] private Sprite sprite;
 
     public string Id => id;
+    public int Tier => tier;
     public Element Element => element;
     public Sprite Sprite => sprite;
 }
