@@ -14,6 +14,7 @@ public class UnitListReference : ScriptableObject
     [SerializeField] private ViewReference fungalView;
     [SerializeField] private ViewReference fungalListView;
     [SerializeField] private TextAsset textAsset;
+    [SerializeField] private GlyphCollection glyphCollection;
 
     [Header("Collections")]
     [SerializeField] private List<UnitInstance> initialUnits;
@@ -42,7 +43,7 @@ public class UnitListReference : ScriptableObject
             JObject root = JObject.Parse(json);
             // Example: load "fox"
             JObject data = (JObject)root[unit.Name.ToLower()];
-            unit.Initialize(data);
+            unit.Initialize(data, glyphCollection);
         }
 
         units = new List<UnitInstance>();

@@ -6043,8 +6043,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glyphImage: {fileID: 257048549}
-  glyph: 1
+  glyph: {fileID: 0}
   originalPosition: {x: 0, y: 0}
+  canvas: {fileID: 0}
+  rectTransform: {fileID: 0}
+  canvasGroup: {fileID: 0}
+  originalParent: {fileID: 0}
 --- !u!114 &257048548
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12770,6 +12774,7 @@ MonoBehaviour:
   glyphDropZone: {fileID: 1763634588}
   glyphPrefab: {fileID: 3181198853285914382, guid: 9eec0459431164f7baef5dae629eea9a,
     type: 3}
+  glyphCollection: {fileID: 11400000, guid: 8ff2f86eb4f5142c8aa3e3c918fb7d61, type: 2}
   glyphSlot1: {fileID: 826627638}
   glyphSlot2: {fileID: 961048841}
   glyphSlot3: {fileID: 257048546}
@@ -12785,12 +12790,9 @@ MonoBehaviour:
     topRight: {r: 0.27058825, g: 0.14509805, b: 0.28235295, a: 1}
     bottomLeft: {r: 0.27058825, g: 0.14509805, b: 0.28235295, a: 1}
     bottomRight: {r: 1, g: 1, b: 1, a: 0}
-  glyph1: 1
-  glyph2: 2
-  glyph3: 3
-  aceOfWands: {fileID: 21300000, guid: cadf4372dd2e44a7d898fb5e29eb4d9f, type: 3}
-  aceOfCups: {fileID: 21300000, guid: fd40fef2cc4b74b37aa0af50df46d67f, type: 3}
-  aceOfSpores: {fileID: 21300000, guid: 8e7216161d4264985adadf62dfbe1c41, type: 3}
+  glyph1: {fileID: 11400000, guid: af0d24ff31c23411a848d7f6185ef1f1, type: 2}
+  glyph2: {fileID: 11400000, guid: 2468a9d88e03540d1b8c9848ca7fedf8, type: 2}
+  glyph3: {fileID: 11400000, guid: 51e6440cb4b4b42ca9de4d4147b2e011, type: 2}
 --- !u!1 &407349044
 GameObject:
   m_ObjectHideFlags: 0
@@ -24477,8 +24479,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glyphImage: {fileID: 961048844}
-  glyph: 2
+  glyph: {fileID: 0}
   originalPosition: {x: 0, y: 0}
+  canvas: {fileID: 0}
+  rectTransform: {fileID: 0}
+  canvasGroup: {fileID: 0}
+  originalParent: {fileID: 0}
 --- !u!114 &961048843
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26319,7 +26325,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.79607844, g: 0.972549, b: 0.43529412, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -28969,7 +28975,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1145510282}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.06869, y: 0.00000001822998, z: -0.000000001255182, w: 0.99763805}
+  m_LocalRotation: {x: 0.06868998, y: -0.0000000166458, z: 0.0000000011461067, w: 0.99763805}
   m_LocalPosition: {x: 0, y: 0.75, z: 0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -36604,48 +36610,48 @@ MonoBehaviour:
     responses: []
     type: 0
     action: 0
-    glyph: 0
+    glyph: {fileID: 0}
   - text: 'where am i?
 
       (always the question)'
     responses: []
     type: 0
     action: 0
-    glyph: 0
+    glyph: {fileID: 0}
   - text: 'best i ask around
 
       huh?'
     responses: []
     type: 0
     action: 0
-    glyph: 0
+    glyph: {fileID: 0}
   letsTakeAPhotoDialogue:
   - text: alright friends, that's the end of my set, thanks for coming to my party
     responses: []
     type: 0
     action: 0
-    glyph: 0
+    glyph: {fileID: 0}
   - text: 'before you leave, let''s take a pic yea? '
     responses: []
     type: 0
     action: 0
-    glyph: 0
+    glyph: {fileID: 0}
   - text: hey you over there, would you help a frog out?
     responses: []
     type: 0
     action: 0
-    glyph: 0
+    glyph: {fileID: 0}
   afterPhotoTakenDialogue:
   - text: oh gosh golly, we look great!
     responses: []
     type: 0
     action: 0
-    glyph: 0
+    glyph: {fileID: 0}
   - text: alright thanks for coming, and as always love
     responses: []
     type: 0
     action: 0
-    glyph: 0
+    glyph: {fileID: 0}
 --- !u!1 &1485212479
 GameObject:
   m_ObjectHideFlags: 0
@@ -40014,41 +40020,41 @@ MonoBehaviour:
     responses: []
     type: 0
     action: 0
-    glyph: 0
+    glyph: {fileID: 0}
   - text: you're lost? join the club. no literally. join my club :) i'm trying to
       build a reputation
     responses: []
     type: 0
     action: 0
-    glyph: 0
+    glyph: {fileID: 0}
   - text: you may be lost today so party along the way
     responses: []
     type: 0
     action: 0
-    glyph: 0
+    glyph: {fileID: 0}
   - text: do you wanna help out?
     responses: []
     type: 0
     action: 0
-    glyph: 0
+    glyph: {fileID: 0}
   - text: yay! ok we're going to need to more plants. when we party, so do the plants.
     responses: []
     type: 0
     action: 0
-    glyph: 0
+    glyph: {fileID: 0}
   - text: they emit spores and spores are EVERYTHING. here take this, it's yours,
       why don't you go plant this somewhere
     responses: []
     type: 0
     action: 4
-    glyph: 0
+    glyph: {fileID: 0}
   buildCompleteDialogue:
   - text: sweet! now its a party. alright i have my friends on the ready. let me
       know when you're ready.
     responses: []
     type: 0
     action: 0
-    glyph: 0
+    glyph: {fileID: 0}
   playerAnchor: {fileID: 1881101864}
   frogAnchor: {fileID: 238164570}
   plantGift: {fileID: 7274716744692762698}
@@ -46833,7 +46839,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2075582811
 MonoBehaviour:
@@ -49439,6 +49445,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fungal Tree
       objectReference: {fileID: 0}
+    - target: {fileID: 6489991089625311762, guid: b5a65936c7fe74e3ca085c517af15846,
+        type: 3}
+      propertyPath: glyphCollection
+      value: 
+      objectReference: {fileID: 11400000, guid: 8ff2f86eb4f5142c8aa3e3c918fb7d61,
+        type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

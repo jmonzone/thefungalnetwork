@@ -8,7 +8,8 @@ public class GlyphPalleteUI : MonoBehaviour
 {
     [SerializeField] private Transform glyphAnchor;
     [SerializeField] private GlyphDropZone glyphDropZone;
-    [SerializeField] private GlyphButtonUI glyphPrefab;
+    [SerializeField] private GlyphController glyphPrefab;
+    [SerializeField] private GlyphCollection glyphCollection;
 
     [SerializeField] private RectTransform glyphSlot1;
     [SerializeField] private RectTransform glyphSlot2;
@@ -20,18 +21,13 @@ public class GlyphPalleteUI : MonoBehaviour
     [SerializeField] private VertexGradient blurColor;
 
     [Header("Initial Glyphs")]
-    [SerializeField] private DialogueGlyph glyph1;
-    [SerializeField] private DialogueGlyph glyph2;
-    [SerializeField] private DialogueGlyph glyph3;
+    [SerializeField] private GlyphData glyph1;
+    [SerializeField] private GlyphData glyph2;
+    [SerializeField] private GlyphData glyph3;
 
-    [Header("Glyph Images")]
-    [SerializeField] private Sprite aceOfWands;
-    [SerializeField] private Sprite aceOfCups;
-    [SerializeField] private Sprite aceOfSpores;
+    private GlyphData targetGlyph;
 
-    private DialogueGlyph targetGlyph;
-
-    private List<GlyphButtonUI> glyphButtons = new List<GlyphButtonUI>();
+    private List<GlyphController> glyphButtons = new List<GlyphController>();
 
     public event UnityAction OnGlyphReleased;
 
@@ -44,31 +40,33 @@ public class GlyphPalleteUI : MonoBehaviour
         glyphDropZone.OnGlyphPlaced += HandleGlyphPlaced;
     }
 
-    private void HandleGlyphPlaced(GlyphButtonUI placedGlyph, GlyphDropZone zone)
+    private void HandleGlyphPlaced(GlyphController placedGlyph, GlyphDropZone zone)
     {
         if (zone == glyphDropZone)
         {
-            SpawnPalletteGlyph(placedGlyph.Glyph, placedGlyph.OriginalPosition);
+            if (placedGlyph.IsPalleteGlyph)
+            {
+                SpawnPalletteGlyph(placedGlyph.Glyph, placedGlyph.OriginalPosition);
+            }
         }
         else
         {
-            Debug.Log("❌ Wrong glyph.");
-            placedGlyph.ResetToOriginalParent();
+            placedGlyph.ReturnToOriginalParent();
         }
     }
 
-    private void SpawnPalletteGlyph(DialogueGlyph glyph, Vector3 position)
+    private void SpawnPalletteGlyph(GlyphData glyph, Vector3 position)
     {
-        var glyphObj = SpawnGlyph(glyph, position, glyphAnchor);
-        glyphObj.OnGlyphDropped += OnGlyphSelected;
+        var glyphObj = SpawnGlyph(glyph, position, true);
+        //glyphObj.OnGlyphDropped += OnGlyphSelected;
 
     }
 
-    private GlyphButtonUI SpawnGlyph(DialogueGlyph glyph, Vector3 position, Transform parent)
+    private GlyphController SpawnGlyph(GlyphData glyph, Vector3 position, bool isPaletteGlyph)
     {
-        var glyphObj = Instantiate(glyphPrefab, parent);
+        var glyphObj = Instantiate(glyphPrefab, isPaletteGlyph ? glyphAnchor : glyphDropZone.transform);
         glyphObj.GetComponent<RectTransform>().anchoredPosition = position;
-        glyphObj.SetGlyph(glyph, GetGlyphSprite(glyph));
+        glyphObj.Initialize(glyph, isPaletteGlyph);
 
         glyphObj.OnGlyphFused += GlyphObj_OnGlyphFused;
 
@@ -76,20 +74,18 @@ public class GlyphPalleteUI : MonoBehaviour
         return glyphObj;
     }
 
-    private void GlyphObj_OnGlyphFused(GlyphButtonUI dragged, GlyphButtonUI target)
+    private void GlyphObj_OnGlyphFused(GlyphController dragged, GlyphController target)
     {
-        // 1. Create a new fused glyph (this is your logic)
-        DialogueGlyph fusedGlyph = DialogueGlyph.ACE_OF_SPORES;
+        if (glyphCollection.TryFuse(dragged.Glyph, target.Glyph, out GlyphData fusedGlyph))
+        {
+            Destroy(dragged.gameObject);
+            Destroy(target.gameObject);
 
-        // 2. Destroy old glyphs
-        Destroy(dragged.gameObject);
-        Destroy(target.gameObject);
-
-        SpawnGlyph(fusedGlyph, target.GetComponent<RectTransform>().anchoredPosition, glyphDropZone.transform);
+            SpawnGlyph(fusedGlyph, target.GetComponent<RectTransform>().anchoredPosition,false);
+        }
     }
 
-
-    private void OnGlyphSelected(GlyphButtonUI glyph)
+    private void OnGlyphSelected(GlyphController glyph)
     {
         if (targetGlyph == glyph.Glyph)
         {
@@ -100,22 +96,14 @@ public class GlyphPalleteUI : MonoBehaviour
         }
     }
 
-    public void ShowGlyph(DialogueGlyph glyph)
+    public void ShowGlyph(GlyphData glyph)
     {
         targetGlyph = glyph;
 
         fungalText.colorGradient = blurColor;
         glyphAnchor.gameObject.SetActive(true);
-        glyphImage.sprite = GetGlyphSprite(glyph);
+        glyphImage.sprite = glyph.Sprite;
 
         glyphImage.enabled = true;
     }
-
-    private Sprite GetGlyphSprite(DialogueGlyph glyph) => glyph switch
-    {
-        DialogueGlyph.ACE_OF_WANDS => aceOfWands,
-        DialogueGlyph.ACE_OF_CUPS => aceOfCups,
-        DialogueGlyph.ACE_OF_SPORES => aceOfSpores,
-        _ => aceOfWands,
-    };
 }

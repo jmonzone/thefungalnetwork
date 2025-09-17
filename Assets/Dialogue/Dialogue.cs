@@ -54,16 +54,16 @@ public class Dialogue
     [SerializeField] private List<Response> responses;
     [SerializeField] private DialogueType type;
     [SerializeField] private DialogueAction action;
-    [SerializeField] private DialogueGlyph glyph = DialogueGlyph.ACE_OF_SPORES;
+    [SerializeField] private GlyphData glyph = null;
 
     public string Text => text;
     public Dialogue Next => next;
     public List<Response> Responses => responses;
     public DialogueType Type => type;
     public DialogueAction Action => action;
-    public DialogueGlyph Glyph => glyph;
+    public GlyphData Glyph => glyph;
 
-    public Dialogue(string text, DialogueType type, DialogueAction action = DialogueAction.DEFAULT, DialogueGlyph glyph = DialogueGlyph.NONE)
+    public Dialogue(string text, DialogueType type, DialogueAction action = DialogueAction.DEFAULT, GlyphData glyph = null)
     {
         this.text = text;
         responses = new List<Response>();

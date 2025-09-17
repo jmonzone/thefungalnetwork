@@ -30,7 +30,7 @@ public class Unit : ScriptableObject
     public List<Dialogue> GiveDialogue => giveDialogue;
     public List<Dialogue> ChatDialogue => chatDialogue;
 
-    public void Initialize(JObject data)
+    public void Initialize(JObject data, GlyphCollection glyphs)
     {
         // Greetings → intros
         intros = new List<string>();
@@ -46,7 +46,7 @@ public class Unit : ScriptableObject
         chatDialogue = new List<Dialogue>();
         if (data["chat"] is JArray chatArray)
         {
-            var chat = BuildDialogueTree(chatArray[0] as JObject, chatArray, DialogueType.CHAT);
+            var chat = BuildDialogueTree(chatArray[0] as JObject, chatArray, DialogueType.CHAT, glyphs);
             chatDialogue.Add(chat);
         }
 
@@ -79,11 +79,14 @@ public class Unit : ScriptableObject
         }
     }
 
-    private Dialogue BuildDialogueTree(JObject lineObj,JArray chatArray, DialogueType type)
+    private Dialogue BuildDialogueTree(JObject lineObj,JArray chatArray, DialogueType type, GlyphCollection glyphCollection)
     {
         string text = lineObj.Value<string>("text");
-        Enum.TryParse(lineObj.Value<string>("glyph")?.ToUpper(), out DialogueGlyph result);
-        var dialogue = new Dialogue(text, type, glyph: result);
+
+        var glyphValue = lineObj.Value<string>("glyph");
+        var glyph = glyphCollection.Glyphs.Find(x => x.Id == glyphValue);
+
+        var dialogue = new Dialogue(text, type, glyph: glyph);
 
         if (lineObj["responses"] is JArray responses)
         {
@@ -98,7 +101,7 @@ public class Unit : ScriptableObject
                 {
                     // find the object in chatArray with this id
                     var nextLine = chatArray.First(l => l.Value<string>("id") == nextId) as JObject;
-                    var childDialogue = BuildDialogueTree(nextLine, chatArray, type);
+                    var childDialogue = BuildDialogueTree(nextLine, chatArray, type, glyphCollection);
 
                     response.SetNext(childDialogue);
                 }

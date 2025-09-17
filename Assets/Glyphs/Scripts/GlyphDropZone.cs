@@ -4,11 +4,11 @@ using UnityEngine.Events;
 
 public class GlyphDropZone : MonoBehaviour, IDropHandler
 {
-    public event UnityAction<GlyphButtonUI, GlyphDropZone> OnGlyphPlaced;
+    public event UnityAction<GlyphController, GlyphDropZone> OnGlyphPlaced;
 
     public void OnDrop(PointerEventData eventData)
     {
-        var glyphUI = eventData.pointerDrag.GetComponent<GlyphButtonUI>();
+        var glyphUI = eventData.pointerDrag.GetComponent<GlyphController>();
         if (glyphUI != null)
         {
             // Snap into place

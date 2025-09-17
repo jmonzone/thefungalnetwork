@@ -6,6 +6,7 @@ public class TreeController : UnitController
     [Header("Tree References")]
     [SerializeField] private TextAsset dialogue;
     [SerializeField] private Unit treeUnit;
+    [SerializeField] private GlyphCollection glyphCollection;
 
     protected override void Awake()
     {
@@ -15,7 +16,7 @@ public class TreeController : UnitController
         JObject root = JObject.Parse(json);
 
         JObject data = (JObject)root["tree"];
-        treeUnit.Initialize(data);
+        treeUnit.Initialize(data, glyphCollection);
 
         var instance = ScriptableObject.CreateInstance<UnitInstance>();
         instance.Initialize(treeUnit);

@@ -48,8 +48,7 @@ public class DialogueChatUI : DialoguePageUI
 
         responseUI.Hide();
 
-        Debug.Log(dialogue.Dialogue.Glyph);
-        if (dialogue.Dialogue.Glyph != DialogueGlyph.NONE)
+        if (dialogue.Dialogue.Glyph)
         {
             glyphPallete.ShowGlyph(dialogue.Dialogue.Glyph);
         }

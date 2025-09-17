@@ -3,18 +3,22 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class GlyphButtonUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class GlyphController : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
+    [Header("References")]
     [SerializeField] private Image glyphImage;
-    [SerializeField] private DialogueGlyph glyph;
+
+    [Header("Runtime")]
+    [SerializeField] private GlyphData glyph;
+    [SerializeField] private bool isPalleteGlyph;
     [SerializeField] private Vector2 originalPosition;
 
-    public DialogueGlyph Glyph => glyph;
+    public GlyphData Glyph => glyph;
+    public bool IsPalleteGlyph => isPalleteGlyph;
     public Vector2 OriginalPosition => originalPosition;
 
-    public event UnityAction<GlyphButtonUI> OnGlyphDropped;
-    public event UnityAction<GlyphButtonUI, GlyphButtonUI> OnGlyphFused;
-    // (draggedGlyph, targetGlyph)
+    public event UnityAction<GlyphController> OnGlyphDropped;
+    public event UnityAction<GlyphController, GlyphController> OnGlyphFused;
 
     private Canvas canvas;
     private RectTransform rectTransform;
@@ -28,10 +32,11 @@ public class GlyphButtonUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         canvas = GetComponentInParent<Canvas>();
     }
 
-    public void SetGlyph(DialogueGlyph glyph, Sprite sprite)
+    public void Initialize(GlyphData glyph, bool isPalleteGlyph)
     {
         this.glyph = glyph;
-        glyphImage.sprite = sprite;
+        this.isPalleteGlyph = isPalleteGlyph;
+        glyphImage.sprite = glyph.Sprite;
 
         rectTransform = GetComponent<RectTransform>();
         originalPosition = rectTransform.anchoredPosition;
@@ -59,7 +64,7 @@ public class GlyphButtonUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
         foreach (var result in results)
         {
-            var otherGlyph = result.gameObject.GetComponent<GlyphButtonUI>();
+            var otherGlyph = result.gameObject.GetComponent<GlyphController>();
             if (otherGlyph != null && otherGlyph != this)
             {
                 Debug.Log("fuse");
@@ -71,13 +76,13 @@ public class GlyphButtonUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
         if (transform.parent == canvas.transform) // means not dropped on a drop zone
         {
-            ResetToOriginalParent();
+            ReturnToOriginalParent();
         } 
 
         OnGlyphDropped?.Invoke(this);
     }
 
-    public void ResetToOriginalParent()
+    public void ReturnToOriginalParent()
     {
         transform.SetParent(originalParent);
         rectTransform.anchoredPosition = originalPosition;
