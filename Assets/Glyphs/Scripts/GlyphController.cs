@@ -1,13 +1,17 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class GlyphController : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     [Header("References")]
+    [SerializeField] private Image backgroundGlyph;
     [SerializeField] private Image glyphImage;
     [SerializeField] private RectTransform rectTransform;
+    [SerializeField] private GlyphTextController textPrefab;
 
     [Header("Runtime")]
     [SerializeField] private GlyphData glyph;
@@ -24,6 +28,7 @@ public class GlyphController : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     private Canvas canvas;
     private CanvasGroup canvasGroup;
     private Transform originalParent;
+    private List<GlyphTextController> textControllers = new List<GlyphTextController>();
 
     private void Awake()
     {
@@ -31,14 +36,31 @@ public class GlyphController : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         canvas = GetComponentInParent<Canvas>();
     }
 
-    public void Initialize(GlyphData glyph, bool isPalleteGlyph)
+    public void Initialize(GlyphData glyph, bool isPalleteGlyph, List<string> trappedWords)
     {
         this.glyph = glyph;
         this.isPalleteGlyph = isPalleteGlyph;
+        backgroundGlyph.enabled = isPalleteGlyph;
         glyphImage.sprite = glyph.Sprite;
         glyphImage.SetNativeSize();
 
         originalPosition = rectTransform.anchoredPosition;
+
+        SpawnTrappedWords(trappedWords);
+    }
+
+    private void SpawnTrappedWords(List<string> words)
+    {
+        foreach (var word in words)
+        {
+            var textController = Instantiate(textPrefab, rectTransform);
+            textController.Initialize(word);
+            textController.transform.SetAsFirstSibling();
+            textController.transform.localPosition = Vector3.zero; // start at center of glyph
+            textController.transform.localScale = Vector3.one;
+
+            textControllers.Add(textController);
+        }
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -89,4 +111,30 @@ public class GlyphController : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         transform.SetParent(originalParent);
         rectTransform.anchoredPosition = originalPosition;
     }
+
+    public IEnumerator Animate(Vector3 startCanvasPos, Vector3 targetCanvasPos, float duration, float scalePulse)
+    {
+        RectTransform.localPosition = startCanvasPos;
+
+        float t = 0f;
+        while (t < duration)
+        {
+            t += Time.deltaTime;
+            float normalized = Mathf.Clamp01(t / duration);
+
+            RectTransform.localPosition = Vector3.Lerp(
+                startCanvasPos,
+                targetCanvasPos,
+                Mathf.SmoothStep(0, 1, normalized)
+            );
+
+            RectTransform.localScale = Vector3.one * (1f + scalePulse * Mathf.Sin(normalized * Mathf.PI));
+
+            yield return null;
+        }
+
+        RectTransform.localPosition = targetCanvasPos;
+        RectTransform.localScale = Vector3.one;
+    }
+
 }

@@ -62,10 +62,6 @@ public class FungalController : UnitController
         base.Initialize(instance);
     }
 
-    
-
-
-
     public void SetDestination(Vector3 destination)
     {
         unitDestination.SetDestination(destination);

@@ -1,5 +1,7 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
+using Cinemachine;
 using TMPro;
 using UnityEngine;
 
@@ -77,36 +79,39 @@ public class DialogueChatUI : DialoguePageUI
     {
         base.Show();
 
-        //responseFade.gameObject.SetActive(false);
-        //StartCoroutine(glyphFade.FadeIn(1));
-
         normalTextFade.Hide();
+        StartCoroutine(StartRoutine());
+    }
 
-        var dialogueData = dialogue.Dialogue;
+    private IEnumerator StartRoutine()
+    {
+        var brain = Camera.main.GetComponent<CinemachineBrain>();
+        if (brain == null) yield break;
+
+        // Wait until the blend is done
+        while (brain.IsBlending)
+            yield return null;
+
+        yield return new WaitForSeconds(1f);
 
         // Filter glyphs
         var availableGlyphs = glyphCollection.Glyphs
             .Where(glyph => glyph.Tier > 1 && glyph.Element.HasFlag(dialogue.Unit.Instance.Element))
+            .OrderBy(g => Random.value)
+            .Take(3)
             .ToList();
 
-        // Pick 3 unique random glyphs (if available)
-        var selectedGlyphs = availableGlyphs
-            .OrderBy(g => Random.value)   // shuffle
-            .Take(3)                      // take first 3
+        // Example
+        string dialogueText = dialogue.Dialogue.Text;
+
+        // Split into words using spaces (and remove empty entries)
+        List<string> words = dialogueText
+            .Split(' ')
+            .Where(w => !string.IsNullOrWhiteSpace(w))
             .ToList();
 
-        glyphUI.StartGlyphDialogue(selectedGlyphs[0]);
 
-        // Emit only the 3 selected glyphs
-
-
-        //StartCoroutine(blurTextFade.FadeIn());
-        StartCoroutine(chatTypewriter.TypeRoutine(dialogueData.Text, () =>
-        {
-            glyphEmitterUI.EmitGlyphs(selectedGlyphs, dialogue.Unit.transform.position);
-
-            //glyphUI.BlockDialogueWithGlyph();
-        }));
+        glyphEmitterUI.EmitGlyphs(availableGlyphs, words, dialogue.Unit.transform.position);
     }
 
     private IEnumerator ContinueRoutine()

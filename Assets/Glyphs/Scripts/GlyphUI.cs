@@ -39,10 +39,10 @@ public class GlyphUI : MonoBehaviour
 
     private void Awake()
     {
-        SpawnGlyph(glyph1, glyphSlot1.anchoredPosition, isPaletteGlyph: true);
-        SpawnGlyph(glyph2, glyphSlot2.anchoredPosition, isPaletteGlyph: true);
-        SpawnGlyph(glyph3, glyphSlot3.anchoredPosition, isPaletteGlyph: true);
-        SpawnGlyph(glyph4, glyphSlot4.anchoredPosition, isPaletteGlyph: true);
+        SpawnGlyph(glyph1, glyphSlot1.anchoredPosition, isPaletteGlyph: true, new List<string>());
+        SpawnGlyph(glyph2, glyphSlot2.anchoredPosition, isPaletteGlyph: true, new List<string>());
+        SpawnGlyph(glyph3, glyphSlot3.anchoredPosition, isPaletteGlyph: true, new List<string>());
+        SpawnGlyph(glyph4, glyphSlot4.anchoredPosition, isPaletteGlyph: true, new List<string>());
 
         glyphDropZone.OnGlyphPlaced += HandleGlyphPlaced;
     }
@@ -53,7 +53,7 @@ public class GlyphUI : MonoBehaviour
         {
             if (placedGlyph.IsPalleteGlyph)
             {
-                SpawnGlyph(placedGlyph.Glyph, placedGlyph.OriginalPosition, true);
+                SpawnGlyph(placedGlyph.Glyph, placedGlyph.OriginalPosition, true, new List<string>());
             }
         }
         else
@@ -62,11 +62,11 @@ public class GlyphUI : MonoBehaviour
         }
     }
 
-    private GlyphController SpawnGlyph(GlyphData glyph, Vector3 position, bool isPaletteGlyph)
+    private GlyphController SpawnGlyph(GlyphData glyph, Vector3 position, bool isPaletteGlyph, List<string> words)
     {
         var glyphObj = Instantiate(glyphPrefab, isPaletteGlyph ? glyphPalette : glyphDropZone.transform);
         glyphObj.GetComponent<RectTransform>().anchoredPosition = position;
-        glyphObj.Initialize(glyph, isPaletteGlyph);
+        glyphObj.Initialize(glyph, isPaletteGlyph, words );
 
         glyphObj.OnGlyphFused += GlyphObj_OnGlyphFused;
 
@@ -85,7 +85,7 @@ public class GlyphUI : MonoBehaviour
             Destroy(target.gameObject);
 
             var targetRect = target.GetComponent<RectTransform>();
-            var fusedGlyphController = SpawnGlyph(fusedGlyph, targetRect.anchoredPosition, false);
+            var fusedGlyphController = SpawnGlyph(fusedGlyph, targetRect.anchoredPosition, false, new List<string>());
 
             if (targetGlyph == fusedGlyph)
             {
