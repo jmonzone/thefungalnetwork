@@ -159,9 +159,6 @@ public class GlyphUI : MonoBehaviour
 
         glyphImage.sprite = glyph.Sprite;
         glyphImage.enabled = false;
-
-        glyphPalette.gameObject.SetActive(true);
-        glyphDropZone.gameObject.SetActive(true);
     }
 
 
@@ -183,7 +180,5 @@ public class GlyphUI : MonoBehaviour
         glyphControllers = new List<GlyphController>();
 
         glyphImage.enabled = false;
-        glyphPalette.gameObject.SetActive(false);
-        glyphDropZone.gameObject.SetActive(false);
     }
 }

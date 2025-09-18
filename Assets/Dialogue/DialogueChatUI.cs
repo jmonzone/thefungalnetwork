@@ -8,10 +8,14 @@ public class DialogueChatUI : DialoguePageUI
     [SerializeField] private ResponseUI responseUI;
     [SerializeField] private TypewriterEffect chatTypewriter;
     [SerializeField] private GlyphCollection glyphCollection;
+    [SerializeField] private GlyphEmitterUI glyphEmitterUI;
 
     [SerializeField] private TextMeshProUGUI normalText;
     [SerializeField] private FadeCanvasGroup normalTextFade;
     [SerializeField] private FadeCanvasGroup blurTextFade;
+
+    [SerializeField] private FadeCanvasGroup glyphFade;
+    [SerializeField] private FadeCanvasGroup responseFade;
 
     private GlyphUI glyphUI;
 
@@ -35,19 +39,29 @@ public class DialogueChatUI : DialoguePageUI
         StartCoroutine(blurTextFade.FadeOut(2));
         yield return normalTextFade.FadeIn(2);
 
-        responseUI.Show();
+        //responseUI.Show();
         glyphUI.HideGlyphUI();
+
+        yield return new WaitForSeconds(3f);
+
+        //glyphFade.gameObject.SetActive(false);
+        //StartCoroutine(responseFade.FadeIn(1));
 
         var dialogueData = dialogue.Dialogue;
 
         if (dialogueData.Responses.Count >= 2)
         {
-            responseUI.ShowResponses(dialogueData.Responses, response =>
-            {
-                dialogue.RespondToChat(response);
-                if (response.Next != null) Show();
-                else InvokeClose();
-            });
+            var response = dialogueData.Responses[0];
+            dialogue.RespondToChat(response);
+            if (response.Next != null) Show();
+            else InvokeClose();
+
+            //responseUI.ShowResponses(dialogueData.Responses, response =>
+            //{
+            //    dialogue.RespondToChat(response);
+            //    if (response.Next != null) Show();
+            //    else InvokeClose();
+            //});
         }
         else if (dialogueData.Next != null)
         {
@@ -63,20 +77,35 @@ public class DialogueChatUI : DialoguePageUI
     {
         base.Show();
 
-        responseUI.Hide();
+        //responseFade.gameObject.SetActive(false);
+        //StartCoroutine(glyphFade.FadeIn(1));
 
         normalTextFade.Hide();
 
         var dialogueData = dialogue.Dialogue;
 
-        var availableGlyphs = glyphCollection.Glyphs.Where(glyph => glyph.Tier > 1 && glyph.Element.HasFlag(dialogue.Unit.Instance.Element)).ToList();
-        var randomGlyph = availableGlyphs[Random.Range(0, availableGlyphs.Count)];
-        glyphUI.StartGlyphDialogue(randomGlyph);
+        // Filter glyphs
+        var availableGlyphs = glyphCollection.Glyphs
+            .Where(glyph => glyph.Tier > 1 && glyph.Element.HasFlag(dialogue.Unit.Instance.Element))
+            .ToList();
 
-        StartCoroutine(blurTextFade.FadeIn());
+        // Pick 3 unique random glyphs (if available)
+        var selectedGlyphs = availableGlyphs
+            .OrderBy(g => Random.value)   // shuffle
+            .Take(3)                      // take first 3
+            .ToList();
+
+        glyphUI.StartGlyphDialogue(selectedGlyphs[0]);
+
+        // Emit only the 3 selected glyphs
+
+
+        //StartCoroutine(blurTextFade.FadeIn());
         StartCoroutine(chatTypewriter.TypeRoutine(dialogueData.Text, () =>
         {
-            glyphUI.BlockDialogueWithGlyph();
+            glyphEmitterUI.EmitGlyphs(selectedGlyphs, dialogue.Unit.transform.position);
+
+            //glyphUI.BlockDialogueWithGlyph();
         }));
     }
 

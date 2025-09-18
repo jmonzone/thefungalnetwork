@@ -25,7 +25,7 @@ public abstract class DialoguePageUI : MonoBehaviour
 
     public virtual void Show()
     {
-        StartCoroutine(fadeCanvasGroup.FadeIn());
+        if (!fadeCanvasGroup.IsVisible) StartCoroutine(fadeCanvasGroup.FadeIn());
     }
 
     public virtual void Hide()

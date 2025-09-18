@@ -56,7 +56,7 @@ public class DialogueUI : MonoBehaviour
 
     private void StartInteraction()
     {
-        ShowPage(DialoguePage.ACTION);
+        ShowPage(DialoguePage.CHAT);
     }
 
     private void StartDialogue()

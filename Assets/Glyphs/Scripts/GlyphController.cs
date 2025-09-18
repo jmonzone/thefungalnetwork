@@ -7,6 +7,7 @@ public class GlyphController : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 {
     [Header("References")]
     [SerializeField] private Image glyphImage;
+    [SerializeField] private RectTransform rectTransform;
 
     [Header("Runtime")]
     [SerializeField] private GlyphData glyph;
@@ -16,18 +17,16 @@ public class GlyphController : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     public GlyphData Glyph => glyph;
     public bool IsPalleteGlyph => isPalleteGlyph;
     public Vector2 OriginalPosition => originalPosition;
-
+    public RectTransform RectTransform => rectTransform;
     public event UnityAction<GlyphController> OnGlyphDropped;
     public event UnityAction<GlyphController, GlyphController> OnGlyphFused;
 
     private Canvas canvas;
-    private RectTransform rectTransform;
     private CanvasGroup canvasGroup;
     private Transform originalParent;
 
     private void Awake()
     {
-        rectTransform = GetComponent<RectTransform>();
         canvasGroup = gameObject.AddComponent<CanvasGroup>();
         canvas = GetComponentInParent<Canvas>();
     }
@@ -39,7 +38,6 @@ public class GlyphController : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         glyphImage.sprite = glyph.Sprite;
         glyphImage.SetNativeSize();
 
-        rectTransform = GetComponent<RectTransform>();
         originalPosition = rectTransform.anchoredPosition;
     }
 
