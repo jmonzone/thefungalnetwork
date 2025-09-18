@@ -19,6 +19,7 @@ public class GlyphUI : MonoBehaviour
 
     [SerializeField] private Image glyphImage;
     [SerializeField] private TextMeshProUGUI fungalText;
+
     [SerializeField] private VertexGradient normalColor;
     [SerializeField] private VertexGradient blurColor;
 
@@ -143,9 +144,7 @@ public class GlyphUI : MonoBehaviour
         img.color = startColor; // reset after glow
 
         glyphImage.enabled = false;
-        fungalText.colorGradient = normalColor;
-
-        glyphPalette.gameObject.SetActive(false);
+        //fungalText.colorGradient = normalColor;
         OnGlyphMatched?.Invoke();
     }
 

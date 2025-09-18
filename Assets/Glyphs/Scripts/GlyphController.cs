@@ -37,7 +37,7 @@ public class GlyphController : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         this.glyph = glyph;
         this.isPalleteGlyph = isPalleteGlyph;
         glyphImage.sprite = glyph.Sprite;
-        //glyphImage.SetNativeSize();
+        glyphImage.SetNativeSize();
 
         rectTransform = GetComponent<RectTransform>();
         originalPosition = rectTransform.anchoredPosition;
