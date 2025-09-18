@@ -23,6 +23,8 @@ public class GlyphUI : MonoBehaviour
     [SerializeField] private VertexGradient normalColor;
     [SerializeField] private VertexGradient blurColor;
 
+    [SerializeField] private FadeCanvasGroup fadeCanvasGroup;
+
     [Header("Initial Glyphs")]
     [SerializeField] private GlyphData glyph1;
     [SerializeField] private GlyphData glyph2;
