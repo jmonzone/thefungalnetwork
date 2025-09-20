@@ -8,10 +8,11 @@ using UnityEngine.UI;
 public class GlyphController : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     [Header("References")]
-    [SerializeField] private Image backgroundGlyph;
     [SerializeField] private Image glyphImage;
     [SerializeField] private RectTransform rectTransform;
-    [SerializeField] private GlyphTextController textPrefab;
+
+    [Header("Settings")]
+    [SerializeField] private float matchingDuration = 1f;
 
     [Header("Runtime")]
     [SerializeField] private GlyphData glyph;
@@ -28,7 +29,6 @@ public class GlyphController : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     private Canvas canvas;
     private CanvasGroup canvasGroup;
     private Transform originalParent;
-    private List<GlyphTextController> textControllers = new List<GlyphTextController>();
 
     private void Awake()
     {
@@ -40,27 +40,10 @@ public class GlyphController : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     {
         this.glyph = glyph;
         this.isPalleteGlyph = isPalleteGlyph;
-        backgroundGlyph.enabled = isPalleteGlyph;
         glyphImage.sprite = glyph.Sprite;
         glyphImage.SetNativeSize();
 
         originalPosition = rectTransform.anchoredPosition;
-
-        SpawnTrappedWords(trappedWords);
-    }
-
-    private void SpawnTrappedWords(List<string> words)
-    {
-        foreach (var word in words)
-        {
-            var textController = Instantiate(textPrefab, rectTransform);
-            textController.Initialize(word);
-            textController.transform.SetAsFirstSibling();
-            textController.transform.localPosition = Vector3.zero; // start at center of glyph
-            textController.transform.localScale = Vector3.one;
-
-            textControllers.Add(textController);
-        }
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -80,7 +63,7 @@ public class GlyphController : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         canvasGroup.blocksRaycasts = true;
 
         // Raycast to check if dropped onto another glyph
-        var results = new System.Collections.Generic.List<RaycastResult>();
+        var results = new List<RaycastResult>();
         EventSystem.current.RaycastAll(eventData, results);
 
         foreach (var result in results)
@@ -112,29 +95,45 @@ public class GlyphController : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         rectTransform.anchoredPosition = originalPosition;
     }
 
-    public IEnumerator Animate(Vector3 startCanvasPos, Vector3 targetCanvasPos, float duration, float scalePulse)
+
+    public IEnumerator MoveAndSlot(RectTransform targetRect)
     {
-        RectTransform.localPosition = startCanvasPos;
+        Vector3 startPos = RectTransform.position;
+        Vector3 targetPos = targetRect.position;
+        Vector3 targetScale = targetRect.localScale;
 
-        float t = 0f;
-        while (t < duration)
+        float elapsed = 0f;
+        float arcHeight = 50f;       // vertical arc for whimsical motion
+        float wobbleStrength = 0.15f; // subtle wobble while moving
+        float shrinkFactor = 0.5f;    // final shrink multiplier relative to target
+
+        while (elapsed < matchingDuration)
         {
-            t += Time.deltaTime;
-            float normalized = Mathf.Clamp01(t / duration);
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / matchingDuration);
+            float easeT = Mathf.SmoothStep(0f, 1f, t);
 
-            RectTransform.localPosition = Vector3.Lerp(
-                startCanvasPos,
-                targetCanvasPos,
-                Mathf.SmoothStep(0, 1, normalized)
-            );
+            // Arc movement
+            float arc = Mathf.Sin(t * Mathf.PI) * arcHeight;
+            Vector3 newWorldPos = Vector3.Lerp(startPos, targetPos, easeT) + new Vector3(0f, arc, 0f);
 
-            RectTransform.localScale = Vector3.one * (1f + scalePulse * Mathf.Sin(normalized * Mathf.PI));
+            // Wobble + scale shrinking toward target
+            float scaleFactor = Mathf.Lerp(1f, shrinkFactor, easeT) * (1f + Mathf.Sin(t * Mathf.PI * 2f) * wobbleStrength);
+            Vector3 newScale = targetScale * scaleFactor;
+
+            RectTransform.position = newWorldPos;
+            RectTransform.localScale = newScale;
 
             yield return null;
         }
 
-        RectTransform.localPosition = targetCanvasPos;
-        RectTransform.localScale = Vector3.one;
+        // Snap exactly to target and shrink completely
+        RectTransform.position = targetPos;
+        RectTransform.localScale = targetScale * shrinkFactor;
+
+        RectTransform.gameObject.SetActive(false);
     }
+
+
 
 }

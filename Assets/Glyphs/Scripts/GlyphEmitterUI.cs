@@ -1,27 +1,29 @@
-using UnityEngine;
-using UnityEngine.UI;
-using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class GlyphEmitterUI : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Canvas uiCanvas; // Your main UI canvas
     [SerializeField] private RectTransform targetContainer;
-    [SerializeField] private GlyphController glyphController;
+    [SerializeField] private BlockingGlyphController blockingGlyphPrefab;
 
     [Header("Settings")]
     [SerializeField] private float duration = 1f;       // travel time
     [SerializeField] private float scalePulse = 0.2f;   // bounce factor while animating
 
+    [SerializeField] private List<BlockingGlyphController> glyphControllers = new List<BlockingGlyphController>();
+    public List<BlockingGlyphController> GlyphControllers => glyphControllers;
+
     public void EmitGlyphs(List<GlyphData> glyphs, List<string> words, Vector3 mouthWorldPosition)
     {
+        glyphControllers = new List<BlockingGlyphController>();
+
         int count = glyphs.Count;
         float containerWidth = targetContainer.rect.width;
 
         // Convert mouth world position → canvas local
         Vector3 startCanvasPos = WorldToCanvasLocal(uiCanvas, mouthWorldPosition);
-        Debug.Log($"{startCanvasPos} {mouthWorldPosition}");
 
         Vector3 containerCenterCanvas = targetContainer.position;
         Vector2 containerCenterCanvasLocal;
@@ -44,10 +46,11 @@ public class GlyphEmitterUI : MonoBehaviour
 
             Vector3 targetCanvasPos = (Vector3)containerCenterCanvasLocal + new Vector3(offsetX, 0, 0);
 
-            var glyphGO = Instantiate(glyphController, uiCanvas.transform);
-            glyphGO.Initialize(glyph, isPalleteGlyph: false, words);
+            var blockingGlyph = Instantiate(blockingGlyphPrefab, uiCanvas.transform);
+            blockingGlyph.Initialize(glyph, words, targetContainer);
+            glyphControllers.Add(blockingGlyph);
 
-            StartCoroutine(glyphGO.Animate(startCanvasPos, targetCanvasPos, duration, scalePulse));
+            StartCoroutine(blockingGlyph.Animate(startCanvasPos, targetCanvasPos, duration, scalePulse));
         }
     }
 

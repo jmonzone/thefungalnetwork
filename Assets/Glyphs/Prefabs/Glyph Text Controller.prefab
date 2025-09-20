@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &6509340529959602159
+--- !u!1 &4817231824192141671
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,54 +8,51 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2592614207486669212}
-  - component: {fileID: 842596561848142529}
-  - component: {fileID: 8304306630922821623}
-  - component: {fileID: 3348249612012217209}
-  - component: {fileID: 1235507021961691039}
-  - component: {fileID: 5627028772168568633}
-  - component: {fileID: 2517855795342159234}
+  - component: {fileID: 115063433197070028}
+  - component: {fileID: 2731048875554902369}
+  - component: {fileID: 5529775894164248061}
+  - component: {fileID: 3800246227674279138}
   m_Layer: 5
-  m_Name: Glyph Text Controller
+  m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &2592614207486669212
+--- !u!224 &115063433197070028
 RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6509340529959602159}
+  m_GameObject: {fileID: 4817231824192141671}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2592614207486669212}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &842596561848142529
+--- !u!222 &2731048875554902369
 CanvasRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6509340529959602159}
+  m_GameObject: {fileID: 4817231824192141671}
   m_CullTransparentMesh: 1
---- !u!114 &8304306630922821623
+--- !u!114 &5529775894164248061
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6509340529959602159}
+  m_GameObject: {fileID: 4817231824192141671}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
@@ -79,8 +76,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 1088874214
+  m_fontColor: {r: 0.9, g: 0.9, b: 0.9, a: 0.2509804}
   m_enableVertexGradient: 1
   m_colorMode: 0
   m_fontColorGradient:
@@ -97,8 +94,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 35
-  m_fontSizeBase: 35
+  m_fontSize: 25
+  m_fontSizeBase: 25
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -139,30 +136,68 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!225 &3348249612012217209
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6509340529959602159}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
---- !u!114 &1235507021961691039
+--- !u!114 &3800246227674279138
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6509340529959602159}
+  m_GameObject: {fileID: 4817231824192141671}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6830e4b21d8854d7dac9573cb944041a, type: 3}
+  m_Script: {fileID: 11500000, guid: b0a35d9e506144c438ab355765d41537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxOffset: 5
+  maxRotation: 15
+  wiggleSpeed: 5
+  randomness: 0.5
+--- !u!1 &6509340529959602159
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2592614207486669212}
+  - component: {fileID: 842596561848142529}
+  - component: {fileID: 5627028772168568633}
+  m_Layer: 5
+  m_Name: Glyph Text Controller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2592614207486669212
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6509340529959602159}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children:
+  - {fileID: 115063433197070028}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &842596561848142529
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6509340529959602159}
+  m_CullTransparentMesh: 1
 --- !u!114 &5627028772168568633
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -175,18 +210,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9beb7c6371a454a659d77c612f80bee2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  text: {fileID: 8304306630922821623}
---- !u!114 &2517855795342159234
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6509340529959602159}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b0a35d9e506144c438ab355765d41537, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  amplitude: 5
-  frequency: 2
+  text: {fileID: 5529775894164248061}
+  wiggler: {fileID: 3800246227674279138}
+  moveSpeed: 2
+  rotationSpeed: 5
+  straightenDuration: 0.5
+  glowDuration: 1
+  glowColor: {r: 0, g: 1, b: 1, a: 1}
+  targetColor: {r: 1, g: 1, b: 1, a: 1}
+  maxFinalRotation: 2.5
+  wiggleDilute: 0.01
+  releaseDuration: 1

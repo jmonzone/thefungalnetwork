@@ -25,15 +25,47 @@ public class DialogueChatUI : DialoguePageUI
     {
         base.Awake();
         glyphUI = GetComponent<GlyphUI>();
-        glyphUI.OnGlyphMatched += OnGlyphMatched;
+        glyphUI.OnGlyphFused += GlyphUI_OnGlyphFused;
     }
 
-    private void OnGlyphMatched()
+    private void GlyphUI_OnGlyphFused(GlyphController fusedGlyph)
     {
-        var dialogueData = dialogue.Dialogue;
-        normalText.text = dialogueData.Text;
+        var matchingGlyph = glyphEmitterUI.GlyphControllers.Find(controller => controller.Glyph == fusedGlyph.Glyph);
 
-        StartCoroutine(ShowNormalTextRoutine());
+        Debug.Log("GlyphUI_OnGlyphFused");
+
+        if (matchingGlyph)
+        {
+            StartCoroutine(MatchRoutine(fusedGlyph, matchingGlyph));
+        }
+    }
+
+    private IEnumerator MatchRoutine(GlyphController fusedGlyph, BlockingGlyphController matchingGlyph)
+    {
+        yield return fusedGlyph.MoveAndSlot(matchingGlyph.RectTransform);
+        yield return matchingGlyph.GlowAndRelease();
+
+        yield return new WaitForSeconds(5f);
+
+        yield return matchingGlyph.CleanupTextControllers();
+
+        var targetDialogue = dialogue.Dialogue;
+
+        if (targetDialogue.Responses.Count >= 2)
+        {
+            var response = targetDialogue.Responses[0];
+            dialogue.RespondToChat(response);
+            if (response.Next != null) Show();
+            else InvokeClose();
+        }
+        else if (targetDialogue.Next != null)
+        {
+            StartCoroutine(ContinueRoutine());
+        }
+        else
+        {
+            StartCoroutine(CloseRoutine());
+        }
     }
 
     private IEnumerator ShowNormalTextRoutine()
@@ -95,10 +127,10 @@ public class DialogueChatUI : DialoguePageUI
         yield return new WaitForSeconds(1f);
 
         // Filter glyphs
-        var availableGlyphs = glyphCollection.Glyphs
+        var selectedGlyphs = glyphCollection.Glyphs
             .Where(glyph => glyph.Tier > 1 && glyph.Element.HasFlag(dialogue.Unit.Instance.Element))
             .OrderBy(g => Random.value)
-            .Take(3)
+            .Take(1)
             .ToList();
 
         // Example
@@ -111,7 +143,7 @@ public class DialogueChatUI : DialoguePageUI
             .ToList();
 
 
-        glyphEmitterUI.EmitGlyphs(availableGlyphs, words, dialogue.Unit.transform.position);
+        glyphEmitterUI.EmitGlyphs(selectedGlyphs, words, dialogue.Unit.transform.position);
     }
 
     private IEnumerator ContinueRoutine()

@@ -16,7 +16,7 @@ public class TreeController : UnitController
         JObject root = JObject.Parse(json);
 
         JObject data = (JObject)root["tree"];
-        treeUnit.Initialize(data, glyphCollection);
+        treeUnit.Initialize(data);
 
         var instance = ScriptableObject.CreateInstance<UnitInstance>();
         instance.Initialize(treeUnit);

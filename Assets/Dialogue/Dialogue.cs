@@ -54,22 +54,19 @@ public class Dialogue
     [SerializeField] private List<Response> responses;
     [SerializeField] private DialogueType type;
     [SerializeField] private DialogueAction action;
-    [SerializeField] private GlyphData glyph = null;
 
     public string Text => text;
     public Dialogue Next => next;
     public List<Response> Responses => responses;
     public DialogueType Type => type;
     public DialogueAction Action => action;
-    public GlyphData Glyph => glyph;
 
-    public Dialogue(string text, DialogueType type, DialogueAction action = DialogueAction.DEFAULT, GlyphData glyph = null)
+    public Dialogue(string text, DialogueType type, DialogueAction action = DialogueAction.DEFAULT)
     {
         this.text = text;
         responses = new List<Response>();
         this.type = type;
         this.action = action;
-        this.glyph = glyph;
     }
 
     public Dialogue(List<Dialogue> dialogue, DialogueType type)

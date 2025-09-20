@@ -1,9 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UI;
 
 public class GlyphUI : MonoBehaviour
 {
@@ -17,12 +14,6 @@ public class GlyphUI : MonoBehaviour
     [SerializeField] private RectTransform glyphSlot3;
     [SerializeField] private RectTransform glyphSlot4;
 
-    [SerializeField] private Image glyphImage;
-    [SerializeField] private TextMeshProUGUI fungalText;
-
-    [SerializeField] private VertexGradient normalColor;
-    [SerializeField] private VertexGradient blurColor;
-
     [SerializeField] private FadeCanvasGroup fadeCanvasGroup;
 
     [Header("Initial Glyphs")]
@@ -31,11 +22,9 @@ public class GlyphUI : MonoBehaviour
     [SerializeField] private GlyphData glyph3;
     [SerializeField] private GlyphData glyph4;
 
-    private GlyphData targetGlyph;
-
     private List<GlyphController> glyphControllers = new List<GlyphController>();
 
-    public event UnityAction OnGlyphMatched;
+    public event UnityAction<GlyphController> OnGlyphFused;
 
     private void Awake()
     {
@@ -87,84 +76,12 @@ public class GlyphUI : MonoBehaviour
             var targetRect = target.GetComponent<RectTransform>();
             var fusedGlyphController = SpawnGlyph(fusedGlyph, targetRect.anchoredPosition, false, new List<string>());
 
-            if (targetGlyph == fusedGlyph)
-            {
-                var fusedRect = fusedGlyphController.GetComponent<RectTransform>();
-                StartCoroutine(MatchGlyphRoutine(fusedRect));
-            }
+            OnGlyphFused?.Invoke(fusedGlyphController);
         }
-    }
-
-    private IEnumerator MatchGlyphRoutine(RectTransform fusedRect)
-    {
-        var duration = 1.5f;
-        var targetRect = glyphImage.GetComponent<RectTransform>();
-
-        // store starting state
-        Vector3 startPos = fusedRect.position;          // world position
-        Vector3 targetPos = targetRect.position;        // world position
-        Vector3 startScale = fusedRect.localScale;
-        Vector3 targetScale = targetRect.localScale;
-
-        float elapsed = 0f;
-
-        while (elapsed < duration)
+        else
         {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / duration);
-
-            // smooth interpolation in world space
-            Vector3 newWorldPos = Vector3.Lerp(startPos, targetPos, t);
-            fusedRect.position = newWorldPos;
-
-            fusedRect.localScale = Vector3.Lerp(startScale, targetScale, t);
-
-            yield return null;
+            Debug.Log("no fusion");
         }
-
-        // snap to final
-        fusedRect.position = targetPos;
-        fusedRect.localScale = targetScale;
-
-        fusedRect.gameObject.SetActive(false);
-        StartCoroutine(GlowEffect(glyphImage, Color.cyan, 1.5f));
-    }
-
-    private IEnumerator GlowEffect(Image img, Color glowColor, float duration = 0.5f)
-    {
-        Color startColor = img.color;
-        float elapsed = 0f;
-
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            float t = Mathf.PingPong(elapsed * 2f, 1f); // pulse in/out
-            img.color = Color.Lerp(startColor, glowColor, t);
-            yield return null;
-        }
-
-        img.color = startColor; // reset after glow
-
-        glyphImage.enabled = false;
-        //fungalText.colorGradient = normalColor;
-        OnGlyphMatched?.Invoke();
-    }
-
-
-    public void StartGlyphDialogue(GlyphData glyph)
-    {
-        targetGlyph = glyph;
-
-        fungalText.colorGradient = blurColor;
-
-        glyphImage.sprite = glyph.Sprite;
-        glyphImage.enabled = false;
-    }
-
-
-    public void BlockDialogueWithGlyph()
-    {
-        glyphImage.enabled = true;
     }
 
     public void HideGlyphUI()
@@ -178,7 +95,5 @@ public class GlyphUI : MonoBehaviour
         }
 
         glyphControllers = new List<GlyphController>();
-
-        glyphImage.enabled = false;
     }
 }
