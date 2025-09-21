@@ -66,7 +66,7 @@ public class DialogueFriendshipUI : DialoguePageUI
         if (dialogue.Unit.Instance.FriendshipLevel == 2)
         {
             yield return new WaitForSeconds(2f);
-            dialogue.StartDialogue(dialogue.Unit, new Dialogue("I really like your vibe, we should be friends!", DialogueType.FRIEND));
+            dialogue.StartDialogue(dialogue.Unit, new Dialogue("I really like your vibe, we should be friends!", type: DialogueType.FRIEND));
         }
         else
         {

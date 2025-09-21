@@ -68,45 +68,6 @@ public class DialogueChatUI : DialoguePageUI
         }
     }
 
-    private IEnumerator ShowNormalTextRoutine()
-    {
-        StartCoroutine(blurTextFade.FadeOut(2));
-        yield return normalTextFade.FadeIn(2);
-
-        //responseUI.Show();
-        glyphUI.HideGlyphUI();
-
-        yield return new WaitForSeconds(3f);
-
-        //glyphFade.gameObject.SetActive(false);
-        //StartCoroutine(responseFade.FadeIn(1));
-
-        var dialogueData = dialogue.Dialogue;
-
-        if (dialogueData.Responses.Count >= 2)
-        {
-            var response = dialogueData.Responses[0];
-            dialogue.RespondToChat(response);
-            if (response.Next != null) Show();
-            else InvokeClose();
-
-            //responseUI.ShowResponses(dialogueData.Responses, response =>
-            //{
-            //    dialogue.RespondToChat(response);
-            //    if (response.Next != null) Show();
-            //    else InvokeClose();
-            //});
-        }
-        else if (dialogueData.Next != null)
-        {
-            StartCoroutine(ContinueRoutine());
-        }
-        else
-        {
-            StartCoroutine(CloseRoutine());
-        }
-    }
-
     public override void Show()
     {
         base.Show();

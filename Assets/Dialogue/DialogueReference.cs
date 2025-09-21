@@ -17,13 +17,11 @@ public class DialogueReference : ScriptableObject
     [SerializeField] private bool isActive;
     [SerializeField] private UnitController unit;
     [SerializeField] private Dialogue dialogue;
-    [SerializeField] private float experience;
     [SerializeField] private float relationship;
 
     public bool IsActive => isActive;
     public UnitController Unit => unit;
     public Dialogue Dialogue => dialogue;
-    public float Experience => experience;
     public float Relationship => relationship;
 
     public event UnityAction OnIsActiveChanged;
@@ -53,7 +51,6 @@ public class DialogueReference : ScriptableObject
         isActive = true;
         OnIsActiveChanged?.Invoke();
 
-        experience = 0;
         relationship = 0;
 
         unit.Focus();
@@ -65,7 +62,6 @@ public class DialogueReference : ScriptableObject
         Debug.Log($"RespondToChat {response.Next}");
 
         if (response.Next != null) dialogue = response.Next;
-        experience += response.XP;
         relationship += response.Relationship;
         OnDialogueResponse?.Invoke(response);
     }
@@ -75,6 +71,7 @@ public class DialogueReference : ScriptableObject
         Debug.Log($"ContinueDialogue {dialogue.Next.Action}");
 
         if (dialogue.Next != null) dialogue = dialogue.Next;
+        relationship += 5f;
     }
 
     public void CompleteDialogue()
@@ -101,7 +98,7 @@ public class DialogueReference : ScriptableObject
 
     public void StartChat()
     {
-        StartDialogue(unit, unit.Instance.Data.ChatDialogue[0]);
+        StartDialogue(unit, unit.Instance.Dialogue[0]);
     }
 
     public void StartGive()
@@ -113,7 +110,7 @@ public class DialogueReference : ScriptableObject
     private void Inventory_OnItemSelected(Item arg0)
     {
         inventory.OnItemSelected -= Inventory_OnItemSelected;
-        dialogue = unit.Instance.Data.GiveDialogue[0];
+        dialogue = unit.Instance.Dialogue[0];
         OnGiveComplete?.Invoke();
         navigation.GoBack();
     }

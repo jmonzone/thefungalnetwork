@@ -21,6 +21,9 @@ public class UnitInstance : ScriptableObject
     public Element Element => element;
     public ColorPalette ColorPalette => colorPalette;
 
+    public List<Dialogue> Dialogue => Data.ElementalDialogue[element];
+    public Dialogue RandomDialogue => Dialogue[UnityEngine.Random.Range(0, Dialogue.Count)];
+
     public bool IsFriends => friendshipLevel > 1;
     public int FriendshipLevel => friendshipLevel;
     public float FriendshipPoints => friendshipPoints;

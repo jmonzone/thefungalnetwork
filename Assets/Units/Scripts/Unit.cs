@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
@@ -16,9 +15,7 @@ public class Unit : ScriptableObject
     [SerializeField] private int[] columnMapping = new int[8] { -1, -1, -1, -1, -1, -1, -1, -1 };
 
     [Header("Dialogue")]
-    [SerializeField] [TextArea] private List<string> intros;
     [SerializeField] private List<Dialogue> chatDialogue;
-    [SerializeField] private List<Dialogue> giveDialogue;
 
     public string Name => name;
     public Sprite Sprite => sprite;
@@ -26,89 +23,58 @@ public class Unit : ScriptableObject
 
     public int[] ColumnMapping => columnMapping;
 
-    public List<string> Intros => intros;
-    public List<Dialogue> GiveDialogue => giveDialogue;
-    public List<Dialogue> ChatDialogue => chatDialogue;
+    // Key: element, Value: list of dialogue chains
+    public Dictionary<Element, List<Dialogue>> ElementalDialogue = new Dictionary<Element, List<Dialogue>>();
 
     public void Initialize(JObject data)
     {
-        // Greetings → intros
-        intros = new List<string>();
-        if (data["greetings"] is JArray greetingsArray)
-        {
-            foreach (var g in greetingsArray)
-            {
-                intros.Add(g.ToString());
-            }
-        }
+        ElementalDialogue.Clear();
 
-        // Chat dialogue
-        chatDialogue = new List<Dialogue>();
-        if (data["chat"] is JArray chatArray)
+        foreach (var elementProp in data.Properties())
         {
-            var chat = BuildDialogueTree(chatArray[0] as JObject, chatArray, DialogueType.CHAT);
-            chatDialogue.Add(chat);
-        }
+            if (!Enum.TryParse<Element>(elementProp.Name, true, out var element))
+                element = Element.NONE;
 
-        // Gift dialogue
-        giveDialogue = new List<Dialogue>();
-        if (data["gift"] is JArray giftArray)
-        {
-            foreach (var g in giftArray)
+            if (elementProp.Value is JObject elementObj && elementObj["lines"] is JArray linesArray)
             {
-                if (g is JObject giftObj)
+                var dialogues = new List<Dialogue>();
+
+                foreach (JArray lineGroup in linesArray)
                 {
-                    var text = giftObj.Value<string>("text") ?? string.Empty;
-                    var actionStr = giftObj.Value<string>("action");
+                    Dialogue first = null;
+                    Dialogue previous = null;
 
-                    var action = actionStr switch
+                    foreach (var lineToken in lineGroup)
                     {
-                        "spore" => DialogueAction.PLAY_SPORE,
-                        _ => DialogueAction.DEFAULT,
-                    };
+                        string text = lineToken.ToString();
+                        var dialogue = new Dialogue(text, element.ToString());
 
-                    Dialogue d = new Dialogue(text, DialogueType.GIFT, action);
-                    giveDialogue.Add(d);
+                        if (first == null)
+                            first = dialogue;
+
+                        if (previous != null)
+                            previous.SetNext(dialogue);
+
+                        previous = dialogue;
+                    }
+
+                    if (first != null)
+                        dialogues.Add(first); // add the head of the chain
                 }
-                else
-                {
-                    Dialogue d = new Dialogue(g.ToString(), DialogueType.GIFT);
-                    giveDialogue.Add(d);
-                }
+
+                ElementalDialogue[element] = dialogues;
             }
         }
     }
 
-    private Dialogue BuildDialogueTree(JObject lineObj,JArray chatArray, DialogueType type)
+    // Get random dialogue chain for element
+    public Dialogue GetDialogue(Element element)
     {
-        string text = lineObj.Value<string>("text");
-
-        var dialogue = new Dialogue(text, type);
-
-        if (lineObj["responses"] is JArray responses)
+        if (ElementalDialogue.TryGetValue(element, out var list) && list.Count > 0)
         {
-            foreach (var json in responses)
-            {
-                string nextId = json.Value<string>("nextId");
-
-                var response = CreateInstance<Response>();
-                response.Initialize(json);
-
-                if (!string.IsNullOrEmpty(nextId))
-                {
-                    // find the object in chatArray with this id
-                    var nextLine = chatArray.First(l => l.Value<string>("id") == nextId) as JObject;
-                    var childDialogue = BuildDialogueTree(nextLine, chatArray, type);
-
-                    response.SetNext(childDialogue);
-                }
-
-                dialogue.Responses.Add(response);
-
-            }
+            int index = UnityEngine.Random.Range(0, list.Count);
+            return list[index];
         }
-
-        return dialogue;
+        return null;
     }
-
 }

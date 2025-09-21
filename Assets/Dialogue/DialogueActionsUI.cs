@@ -26,8 +26,7 @@ public class DialogueActionsUI : DialoguePageUI
         base.Show();
         actionButtons.Hide();
 
-        var allIntros = dialogue.Unit.Instance.Data.Intros;
-        var intro = allIntros[Random.Range(0, allIntros.Count)];
-        StartCoroutine(dialogueTypewriter.TypeRoutine(intro, () => StartCoroutine(actionButtons.FadeIn())));
+        var intro = dialogue.Unit.Instance.RandomDialogue;
+        StartCoroutine(dialogueTypewriter.TypeRoutine(intro.Text, () => StartCoroutine(actionButtons.FadeIn())));
     }
 }

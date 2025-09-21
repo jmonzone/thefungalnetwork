@@ -11,18 +11,14 @@ public class UnitDialogue : UnitBehaviour
     [Header("Settings")]
     [SerializeField] private bool lookAtTarget = true;
 
-    private Animator animator;
-    private AudioSource audioSource;
-
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        animator = GetComponentInChildren<Animator>();
     }
 
     protected override void OnBehaviourStart()
     {
-        dialogue.StartInteraction(Unit, Unit.Instance.Data.ChatDialogue[0]);
+        dialogue.StartInteraction(Unit, Unit.Instance.RandomDialogue);
 
         if (lookAtTarget) Unit.SetLookPosition(playerReference.Player.transform.position);
 

@@ -1,827 +1,487 @@
 {
   "fox": {
-    "greetings": [
-      "you must have heard by now, SPORES are everything",
-      "yea I like to pass a spore here and there, sharing is caring",
-      "theres rules to passing a spore, but don't get me started on that"
-    ],
-    "chat": [
-      {
-        "id": "line1",
-        "text": "whoa, the spores here… they drift like little lights in the air",
-        "responses": [
-          {
-            "text": "yeah, almost like they’re waiting to be passed around",
-            "nextId": "line2a",
-            "xp": 2,
-            "relationship": 4
-          },
-          {
-            "text": "it feels kind of magical… like they know where to go",
-            "nextId": "line2b",
-            "xp": 1,
-            "relationship": 4
-          }
+    "fire": {
+      "lines": [
+        [
+          "you got it, spores keep the whole vibe flowing",
+          "spark and warmth seem to follow the spores’ path",
+          "the energy here ignites something in everyone"
+        ],
+        [
+          "fire dances around you, daring you to move",
+          "a spark can start something beautiful",
+          "energy pulses through the room like flames"
+        ],
+        [
+          "flames flicker in rhythm with the spores",
+          "warmth spreads from one to another",
+          "fire teaches that change can be fast and bright"
         ]
-      },
-      {
-        "id": "line2a",
-        "text": "exactly, one floats to you, you float it on—everyone’s part of the cycle",
-        "responses": [
-          {
-            "text": "so it’s like passing spores is the way you connect?",
-            "nextId": "line3a",
-            "xp": 2,
-            "relationship": 4
-          },
-          {
-            "text": "that’s kind of beautiful… i’d like to try",
-            "nextId": "line3b",
-            "xp": 2,
-            "relationship": 4,
-            "activity": "game"
-          }
+      ]
+    },
+    "water": {
+      "lines": [
+        [
+          "yeah, almost like they’re waiting to be passed around",
+          "flowing along with the current feels natural here",
+          "you can sense the rhythm of the spores, like tiny streams"
+        ],
+        [
+          "the droplets move with the gentle sway of life here",
+          "sometimes all you need is to follow the flow",
+          "water carries secrets if you pay attention"
+        ],
+        [
+          "a quiet wave nudges you forward",
+          "streams of energy ripple through the party",
+          "water teaches that flexibility is strength"
         ]
-      },
-      {
-        "id": "line2b",
-        "text": "yeah, the network carries them along… spores know how to find a friend",
-        "responses": [
-          {
-            "text": "like the party is guiding me through them",
-            "nextId": "line3c",
-            "xp": 2,
-            "relationship": 4
-          },
-          {
-            "text": "maybe that’s how i ended up here… drifting in",
-            "nextId": "line3d",
-            "xp": 2,
-            "relationship": 4
-          }
+      ]
+    },
+    "air": {
+      "lines": [
+        [
+          "it feels kind of magical… like they know where to go",
+          "the breezes whisper secrets only you can hear",
+          "floating lightly, everything seems endless"
+        ],
+        [
+          "soft winds guide your thoughts in unexpected directions",
+          "a gentle gust reminds you of freedom",
+          "air carries the scent of stories untold"
+        ],
+        [
+          "currents shift without warning, yet feel familiar",
+          "air reminds you to breathe and stay present",
+          "voices carried by the wind seem to know your path"
         ]
-      },
-      {
-        "id": "line3a",
-        "text": "you got it, spores keep the whole vibe flowing"
-      },
-      {
-        "id": "line3b",
-        "text": "then come on, let’s pass some spores together!"
-      },
-      {
-        "id": "line3c",
-        "text": "the party does that—everyone drifts in somehow"
-      },
-      {
-        "id": "line3d",
-        "text": "maybe you were meant to find this place"
-      }
-    ],
-    "gift": [
-      {
-        "text": "sweet thanks, lets go do this now",
-        "action": "spore"
-      }
-    ]
+      ]
+    },
+    "earth": {
+      "lines": [
+        [
+          "exactly, one floats to you, you float it on—everyone’s part of the cycle",
+          "the soil beneath holds stories of ages past",
+          "roots connect everything, even what you can’t see"
+        ],
+        [
+          "the ground beneath is alive with quiet strength",
+          "earth teaches patience if you listen",
+          "sometimes the heaviest things are the most grounding"
+        ],
+        [
+          "stones and soil tell tales of time",
+          "the weight of the earth reminds you of stability",
+          "earth roots you even when the air is restless"
+        ]
+      ]
+    },
+    "neutral": {
+      "lines": [
+        [
+          "whoa, the spores here… they drift like little lights in the air",
+          "sometimes you just drift along and discover things you weren’t looking for",
+          "the air carries a quiet calm, even in the busiest rooms"
+        ],
+        [
+          "quiet moments reveal the subtle patterns around you",
+          "the party hums softly, like a gentle pulse",
+          "sometimes simply observing teaches more than acting"
+        ],
+        [
+          "neutral energy flows between everyone here",
+          "you notice details others overlook",
+          "sometimes the best way forward is simply to continue"
+        ]
+      ]
+    }
   },
   "owl": {
-    "greetings": [
-      "i brought my tarot cards lol i bring them everywhere these days",
-      "the cards the cards will telll. do you know what movie that is from?",
-      "the future is unknown, but the present, it's here "
-    ],
-    "chat": [
-      {
-        "id": "line1",
-        "text": "hey, i've been practicing tarot lately, want me to do a reading for you?",
-        "responses": [
-          {
-            "text": "sure, let's see what the cards say",
-            "nextId": "line2a",
-            "xp": 2,
-            "relationship": 3,
-            "activity": "tarot"
-          },
-          {
-            "text": "nah, i don't believe in that stuff",
-            "xp": -1,
-            "relationship": 1
-          }
+    "fire": {
+      "lines": [
+        [
+          "Ah, the flames of fate flicker in your hands",
+          "Every card drawn sparks insight or surprise",
+          "Let the fire guide the choices yet to come"
+        ],
+        [
+          "The Wheel turns swiftly, igniting paths unknown",
+          "Passion and courage are woven in every line",
+          "Do you dare step forward into the blaze?"
+        ],
+        [
+          "Fire teaches that bold moves shape destiny",
+          "Feel the warmth of your decisions in the cards",
+          "Each spark is a possibility waiting to ignite"
         ]
-      },
-      {
-        "id": "line2a",
-        "text": "great! shuffle the deck, focus on your question…",
-        "responses": [
-          {
-            "text": "i'm curious about my next party adventure",
-            "nextId": "line3a",
-            "xp": 2,
-            "relationship": 1
-          },
-          {
-            "text": "i want to know about friendship vibes",
-            "nextId": "line3b",
-            "xp": 1,
-            "relationship": 2
-          }
+      ]
+    },
+    "water": {
+      "lines": [
+        [
+          "The river of fate flows through each card",
+          "Every turn brings reflection and subtle change",
+          "Let the tides of intuition wash over you"
+        ],
+        [
+          "Gentle waves carry hidden messages",
+          "Sometimes the answers are in quiet currents",
+          "Flow with the pull of your inner waters"
+        ],
+        [
+          "Water reminds that patience uncovers truths",
+          "Observe how each card drifts into your grasp",
+          "Even a small ripple can shift the whole pattern"
         ]
-      },
-      {
-        "id": "line2b",
-        "text": "no worries, the cards will be here if you change your mind",
-        "responses": [
-          {
-            "text": "maybe a quick peek then",
-            "nextId": "line3c",
-            "xp": 1,
-            "relationship": 1,
-            "activity": "tarot"
-          },
-          {
-            "text": "i'll pass, thanks",
-            "xp": 0,
-            "relationship": 0
-          }
+      ]
+    },
+    "air": {
+      "lines": [
+        [
+          "The cards flutter like leaves in the wind",
+          "Ideas and possibilities drift freely among us",
+          "Air whispers hints of what might come next"
+        ],
+        [
+          "Breeze and thought mingle with every reveal",
+          "Let your mind soar and interpret what you see",
+          "The wind carries insights beyond the obvious"
+        ],
+        [
+          "Air teaches clarity through perspective",
+          "Sometimes you must step back to understand",
+          "Each card is a gust, guiding you forward"
         ]
-      },
-      {
-        "id": "line3a",
-        "text": "ah, the ace of cups appears, there’s excitement ahead!",
-        "responses": [
-          {
-            "text": "awesome, i can feel it",
-            "nextId": "line4a",
-            "xp": 2,
-            "relationship": 2
-          },
-          {
-            "text": "hmm, tell me more",
-            "nextId": "line4b",
-            "xp": 1,
-            "relationship": 1
-          }
+      ]
+    },
+    "earth": {
+      "lines": [
+        [
+          "The ground beneath us anchors each reading",
+          "Every card is rooted in meaning and history",
+          "Let patience and care shape your understanding"
+        ],
+        [
+          "Solid foundations reveal hidden patterns",
+          "Earth grounds the energies flowing in the deck",
+          "Steady hands draw the clearest insights"
+        ],
+        [
+          "Earth reminds us that growth takes time",
+          "Each turn of a card adds weight and substance",
+          "Stability allows even the wildest fates to settle"
         ]
-      },
-      {
-        "id": "line3b",
-        "text": "the two of cups! positive connections are coming",
-        "responses": [
-          {
-            "text": "i like the sound of that",
-            "nextId": "line4c",
-            "xp": 2,
-            "relationship": 2
-          },
-          {
-            "text": "i doubt it, sounds risky",
-            "nextId": "line4d",
-            "xp": -1,
-            "relationship": -1
-          }
+      ]
+    },
+    "neutral": {
+      "lines": [
+        [
+          "The cards simply are, neither good nor bad",
+          "Observe, reflect, and let your mind wander",
+          "Sometimes neutrality uncovers the clearest truths"
+        ],
+        [
+          "A quiet moment lets the deck speak for itself",
+          "Nothing is forced; everything is revealed",
+          "Patience allows the subtle messages to show"
+        ],
+        [
+          "Even without bias, the patterns appear",
+          "Watch how the symbols align and interact",
+          "Neutrality is the lens through which clarity comes"
         ]
-      },
-      {
-        "id": "line3c",
-        "text": "alright, just a quick draw… the wheel of fortune shows a twist coming",
-        "responses": [
-          {
-            "text": "interesting, tell me more",
-            "nextId": "line4e",
-            "xp": 1,
-            "relationship": 1
-          },
-          {
-            "text": "i'll take my chances",
-            "xp": 0,
-            "relationship": 0
-          }
-        ]
-      },
-      {
-        "id": "line4a",
-        "text": "get ready for some fun adventures ahead!",
-        "responses": [
-          {
-            "text": "can't wait!",
-            "nextId": "line5a",
-            "xp": 2,
-            "relationship": 2
-          },
-          {
-            "text": "eh, let's see",
-            "xp": 0,
-            "relationship": 0
-          }
-        ]
-      },
-      {
-        "id": "line4b",
-        "text": "looks like a small surprise is coming your way",
-        "responses": [
-          {
-            "text": "nice, surprises are fun",
-            "xp": 1,
-            "relationship": 1
-          },
-          {
-            "text": "i hate surprises",
-            "xp": -1,
-            "relationship": -1
-          }
-        ]
-      },
-      {
-        "id": "line4c",
-        "text": "expect some delightful new friendships soon",
-        "responses": [
-          {
-            "text": "looking forward to it",
-            "xp": 1,
-            "relationship": 2
-          },
-          {
-            "text": "not interested",
-            "xp": 0,
-            "relationship": -1
-          }
-        ]
-      },
-      {
-        "id": "line4d",
-        "text": "good vibes are coming, keep your heart open",
-        "responses": [
-          {
-            "text": "thanks, i needed that",
-            "xp": 1,
-            "relationship": 1
-          },
-          {
-            "text": "i don't care",
-            "xp": -1,
-            "relationship": -1
-          }
-        ]
-      },
-      {
-        "id": "line4e",
-        "text": "the twist could be tricky, but it’s part of the fun",
-        "responses": [
-          {
-            "text": "bring it on!",
-            "xp": 1,
-            "relationship": 1
-          },
-          {
-            "text": "sounds stressful…",
-            "xp": -1,
-            "relationship": -1
-          }
-        ]
-      },
-      {
-        "id": "line5a",
-        "text": "you're ready! the cards are smiling on you",
-        "responses": [
-          {
-            "text": "thanks, i feel lucky",
-            "xp": 2,
-            "relationship": 2
-          },
-          {
-            "text": "i still don't believe it",
-            "xp": 0,
-            "relationship": 0
-          }
-        ]
-      }
-    ],
-    "gift": [
-      {
-        "text": "the cards told me this would happen"
-      }
-    ]
+      ]
+    }
   },
   "jellyfish": {
-    "greetings": [
-      "hey, i love giving little things, it’s kind of my thing",
-      "i brought some gifts, hope you like surprises",
-      "sharing is caring, right? especially little trinkets"
-    ],
-    "chat": [
-      {
-        "id": "line1",
-        "text": "hey, i found some shiny things, want one?",
-        "responses": [
-          {
-            "text": "sure, i love gifts!",
-            "nextId": "line2a",
-            "xp": 2,
-            "relationship": 2,
-            "activity": "gift"
-          },
-          {
-            "text": "nah, i don't need anything",
-            "nextId": "line2b",
-            "xp": 0,
-            "relationship": -1
-          }
+    "fire": {
+      "lines": [
+        [
+          "I brought you this little glowing token… it’s warm, like a spark",
+          "Let it remind you of the sparks we share",
+          "A gift to light the night for someone special"
+        ],
+        [
+          "The glow flickers like my feelings for you",
+          "A small flame, a gesture of care",
+          "Even fire can be gentle when given from the heart"
+        ],
+        [
+          "I hope this little gift sparks joy for you",
+          "Passion doesn’t have to roar, it can shimmer softly",
+          "Here, take a spark that carries my thoughts"
         ]
-      },
-      {
-        "id": "line2a",
-        "text": "great! here's something special, hope you like it",
-        "responses": [
-          {
-            "text": "wow, thanks so much!",
-            "nextId": "line3a",
-            "xp": 2,
-            "relationship": 3
-          },
-          {
-            "text": "oh… okay",
-            "nextId": "line3b",
-            "xp": 0,
-            "relationship": 0
-          }
+      ]
+    },
+    "water": {
+      "lines": [
+        [
+          "I collected these little treasures from the tides for you",
+          "Every gift flows from the heart, like gentle waves",
+          "Let them remind you of the calm comfort we share"
+        ],
+        [
+          "A ripple of thought travels with this gift",
+          "Even the smallest token carries the currents of care",
+          "May it float softly into your day"
+        ],
+        [
+          "I hope these gifts bring peace and delight",
+          "Water teaches that love can be patient and nurturing",
+          "Let this gesture remind you I’m here"
         ]
-      },
-      {
-        "id": "line2b",
-        "text": "ah, alright… maybe next time",
-        "responses": [
-          {
-            "text": "maybe, thanks",
-            "xp": 0,
-            "relationship": 0
-          },
-          {
-            "text": "i still want one",
-            "nextId": "line3c",
-            "xp": 1,
-            "relationship": 1,
-            "activity": "gift"
-          }
+      ]
+    },
+    "air": {
+      "lines": [
+        [
+          "I sent this little surprise drifting to you on the breeze",
+          "A gift carried gently through the currents of care",
+          "Let it remind you of light thoughts shared"
+        ],
+        [
+          "Air brings movement, and so does affection",
+          "Even a small gesture can travel far and touch the heart",
+          "Here’s something light for someone I treasure"
+        ],
+        [
+          "May this token lift your spirits as the wind lifts leaves",
+          "Thoughtful gifts flutter gently, unnoticed yet meaningful",
+          "I hope this reaches you just as it’s intended"
         ]
-      },
-      {
-        "id": "line3a",
-        "text": "i'm glad you like it! want me to show you another?",
-        "responses": [
-          {
-            "text": "yes, let's see",
-            "nextId": "line4a",
-            "xp": 2,
-            "relationship": 2,
-            "activity": "gift"
-          },
-          {
-            "text": "no thanks, i have enough",
-            "xp": 0,
-            "relationship": 1
-          }
+      ]
+    },
+    "earth": {
+      "lines": [
+        [
+          "I found this little gem and thought of you",
+          "Something steady and lasting, like my care for you",
+          "May it remind you of grounded love"
+        ],
+        [
+          "Even small treasures carry weight in meaning",
+          "Each gift is a rooted reminder of thoughtfulness",
+          "I hope this brings comfort as the earth does"
+        ],
+        [
+          "A gift from the soil, humble and true",
+          "Grounded gestures often hold the deepest feelings",
+          "Take this and remember you are appreciated"
         ]
-      },
-      {
-        "id": "line3b",
-        "text": "hm… i'll try harder next time",
-        "responses": [
-          {
-            "text": "i appreciate it",
-            "nextId": "line4b",
-            "xp": 1,
-            "relationship": 1
-          },
-          {
-            "text": "eh, don't worry",
-            "xp": 0,
-            "relationship": 0
-          }
+      ]
+    },
+    "neutral": {
+      "lines": [
+        [
+          "I wanted to give something, simple and thoughtful",
+          "No grand meaning, just a gesture",
+          "Sometimes gifts speak louder than words"
+        ],
+        [
+          "This little offering is just for you",
+          "Observe, accept, and feel the care in it",
+          "Even without flair, kindness travels well"
+        ],
+        [
+          "A neutral token, freely given",
+          "No obligations, only gentle intention",
+          "May this small gift make your day a little brighter"
         ]
-      },
-      {
-        "id": "line3c",
-        "text": "here, i saved the best for last!",
-        "responses": [
-          {
-            "text": "yay, thanks!",
-            "nextId": "line4c",
-            "xp": 2,
-            "relationship": 2
-          },
-          {
-            "text": "i guess…",
-            "xp": 0,
-            "relationship": 0
-          }
-        ]
-      },
-      {
-        "id": "line4a",
-        "text": "here's another shiny gem just for you!",
-        "responses": [
-          {
-            "text": "i love it, you're the best",
-            "nextId": "line5a",
-            "xp": 3,
-            "relationship": 3
-          },
-          {
-            "text": "thanks… i guess",
-            "xp": 0,
-            "relationship": 0
-          }
-        ]
-      },
-      {
-        "id": "line4b",
-        "text": "okay, maybe next time i'll get it right",
-        "responses": [
-          {
-            "text": "it's fine, you tried",
-            "xp": 1,
-            "relationship": 1
-          },
-          {
-            "text": "no worries",
-            "xp": 0,
-            "relationship": 0
-          }
-        ]
-      },
-      {
-        "id": "line4c",
-        "text": "glad you liked it, hope it brings you good vibes",
-        "responses": [
-          {
-            "text": "it really does, thanks again",
-            "nextId": "line5b",
-            "xp": 2,
-            "relationship": 2
-          },
-          {
-            "text": "yeah, it's okay",
-            "xp": 0,
-            "relationship": 0
-          }
-        ]
-      },
-      {
-        "id": "line5a",
-        "text": "you're all set! keep it close, it'll bring good luck",
-        "responses": [
-          {
-            "text": "i will, thanks!",
-            "xp": 2,
-            "relationship": 2
-          },
-          {
-            "text": "i don't believe in luck",
-            "xp": 0,
-            "relationship": -1
-          }
-        ]
-      },
-      {
-        "id": "line5b",
-        "text": "i'm happy it makes you feel good!",
-        "responses": [
-          {
-            "text": "yes, it really does",
-            "xp": 2,
-            "relationship": 2
-          },
-          {
-            "text": "it's alright",
-            "xp": 0,
-            "relationship": 0
-          }
-        ]
-      }
-    ],
-    "gift": [
-      {
-        "text": "i thought you might like this little charm"
-      }
-    ]
+      ]
+    }
   },
   "frog": {
-    "greetings": [
-      "yo, got some fresh tracks for the party tonight",
-      "i live for spinning beats, hope you’re ready",
-      "music makes everything better, don’t you think?"
-    ],
-    "chat": [
-      {
-        "id": "line1",
-        "text": "hey, wanna hear the latest track i've been mixing?",
-        "glyph": "ace of cups",
-        "responses": [
-          {
-            "text": "yes! let's hear it",
-            "nextId": "line2a",
-            "xp": 2,
-            "relationship": 2,
-            "activity": "music"
-          },
-          {
-            "text": "nah, not in the mood",
-            "nextId": "line2b",
-            "xp": 0,
-            "relationship": -1
-          }
+    "fire": {
+      "lines": [
+        [
+          "The bass is on fire tonight, can you feel it?",
+          "Every beat hits like a spark, lighting up the crowd",
+          "Let's turn up the heat and dance till dawn!"
+        ],
+        [
+          "My decks are blazing, and so is the party!",
+          "Energy pulses through every jump and groove",
+          "Fire in the music, fire in the soul"
+        ],
+        [
+          "Feel that surge? That’s pure party fuel",
+          "The rhythm ignites every corner of the room",
+          "Nothing cools this heat—just ride the waves!"
         ]
-      },
-        {
-            "id": "line2a",
-            "text": "awesome! crank it up and feel the beat!",
-            "glyph": "ace of spores",
-            "responses": [
-                {
-                    "text": "this is amazing!",
-                    "nextId": "line3a",
-                    "xp": 2,
-                    "relationship": 2
-                },
-                {
-                    "text": "it's ok, a bit loud",
-                    "nextId": "line3b",
-                    "xp": 0,
-                    "relationship": 0
-                }
-            ]
-        },
-        {
-            "id": "line2b",
-            "text": "ah, alright… maybe next time i'll mix something special",
-            "glyph": "ace of cups",
-            "responses": [
-                {
-                    "text": "sure, i'll listen later",
-                    "xp": 0,
-                    "relationship": 0
-                },
-                {
-                    "text": "actually, maybe a short preview?",
-                    "nextId": "line3c",
-                    "xp": 1,
-                    "relationship": 1,
-                    "activity": "music"
-                }
-            ]
-        },
-        {
-            "id": "line3a",
-            "text": "glad you like it! wanna try mixing a beat with me?",
-            "glyph": "ace of spores",
-            "responses": [
-                {
-                    "text": "yes, let's do it!",
-                    "nextId": "line4a",
-                    "xp": 2,
-                    "relationship": 2,
-                    "activity": "play"
-                },
-                {
-                    "text": "maybe later",
-                    "xp": 0,
-                    "relationship": 1
-                }
-            ]
-        },
-        {
-            "id": "line3b",
-            "text": "hm… i can turn it down a bit if you want",
-            "glyph": "ace of wands",
-            "responses": [
-                {
-                    "text": "yes, please",
-                    "xp": 1,
-                    "relationship": 1
-                },
-                {
-                    "text": "no, it's fine",
-                    "xp": 0,
-                    "relationship": 0
-                }
-            ]
-        },
-        {
-            "id": "line3c",
-            "text": "ok, just a short snippet… enjoy the vibe!",
-            "glyph": "ace of spores",
-            "responses": [
-                {
-                    "text": "cool, thanks!",
-                    "nextId": "line4b",
-                    "xp": 1,
-                    "relationship": 1
-                },
-                {
-                    "text": "meh, not feeling it",
-                    "xp": -1,
-                    "relationship": -1
-                }
-            ]
-        },
-        {
-            "id": "line4a",
-            "text": "awesome! let's see if you can keep up with my beat!",
-            "glyph": "ace of wands",
-            "responses": [
-                {
-                    "text": "i'm ready, let's go!",
-                    "nextId": "line5a",
-                    "xp": 2,
-                    "relationship": 2,
-                    "activity": "play"
-                },
-                {
-                    "text": "uh… maybe just watch",
-                    "xp": 0,
-                    "relationship": 1
-                }
-            ]
-        },
-        {
-            "id": "line4b",
-            "text": "glad you got a taste! hope it lifts your mood",
-            "glyph": "ace of cups",
-            "responses": [
-                {
-                    "text": "it really does, thanks!",
-                    "xp": 1,
-                    "relationship": 1
-                },
-                {
-                    "text": "it's alright",
-                    "xp": 0,
-                    "relationship": 0
-                }
-            ]
-        },
-        {
-            "id": "line5a",
-            "text": "you're doing great! let's finish this track strong",
-            "glyph": "ace of cups",
-            "responses": [
-                {
-                    "text": "yes, let's finish it!",
-                    "xp": 2,
-                    "relationship": 2
-                },
-                {
-                    "text": "i'm tired, let's stop",
-                    "xp": -1,
-                    "relationship": 0
-                }
-            ]
-        }
-    ],
-    "gift": [
-      {
-        "text": "hey, i made this mix just for you!"
-      }
-    ]
+      ]
+    },
+    "water": {
+      "lines": [
+        [
+          "The flow of the tracks carries everyone along",
+          "Waves of sound wash over, soothing yet thrilling",
+          "Let the music move you like a tide"
+        ],
+        [
+          "Smooth beats ripple through the dance floor",
+          "Every drop and swell guides your steps",
+          "Flow with the groove and feel the current"
+        ],
+        [
+          "The rhythm ebbs and flows like the ocean",
+          "Ride each beat, let it lift you higher",
+          "We’re all floating together in sound"
+        ]
+      ]
+    },
+    "air": {
+      "lines": [
+        [
+          "Catch the vibe, it’s floating on the breeze",
+          "Light and airy notes flutter over the crowd",
+          "Lift yourself up and soar with the melody"
+        ],
+        [
+          "The tracks drift like clouds above us",
+          "Every beat carries a whisper of fun",
+          "Let your feet follow the wind’s direction"
+        ],
+        [
+          "Feel the music lifting, playful and free",
+          "Breeze in your hair, rhythm in your bones",
+          "Tonight, the air itself dances along"
+        ]
+      ]
+    },
+    "earth": {
+      "lines": [
+        [
+          "The bass is grounded and heavy, feel it thump",
+          "Every step is rooted, but moves the crowd",
+          "Solid beats, solid party, solid vibes"
+        ],
+        [
+          "The rhythm holds us together like the soil",
+          "Each drop hits steady, unshakable",
+          "Root yourself in the music, don’t stop"
+        ],
+        [
+          "Firm and steady, the party rocks the ground",
+          "Feel the weight of the groove beneath your feet",
+          "Tonight we’re solid, unmovable, alive"
+        ]
+      ]
+    },
+    "neutral": {
+      "lines": [
+        [
+          "Let’s just have fun and see where the night goes",
+          "No fuss, just the music guiding us",
+          "The floor is open—join in!"
+        ],
+        [
+          "Tracks spinning, lights flashing, everyone’s here",
+          "Breathe, move, and let yourself enjoy",
+          "The party doesn’t need anything else"
+        ],
+        [
+          "No pressure, just rhythm and laughter",
+          "A night to float between beats and smiles",
+          "Come and join, the DJ’s got you covered"
+        ]
+      ]
+    }
   },
   "tree": {
-    "greetings": [
-      "welcome, traveler… the fungal network awaits",
-      "paths twist and turn, only those who wander find their way",
-      "i have watched over these spores for ages…"
-    ],
-    "chat": [
-      {
-        "id": "line1",
-        "text": "do you seek passage through the fungal network?",
-        "responses": [
-          {
-            "text": "yes, i’m ready",
-            "nextId": "line2a"
-          },
-          {
-            "text": "i need to know more first",
-            "nextId": "line2b"
-          }
+    "fire": {
+      "lines": [
+        [
+          "Even the tiniest spark of movement wakes something deep inside me",
+          "The heat of the party fuels more than just the air",
+          "Let the flames of energy flow, I can feel them in my roots"
+        ],
+        [
+          "Every fiery jump shakes loose old strength I thought was gone",
+          "Your energy lights a path through the network",
+          "Together we ignite what was dormant"
+        ],
+        [
+          "Burning bright, the rhythm stirs my old branches",
+          "The fire within me answers to yours",
+          "Tonight I feel alive again"
         ]
-      },
-      {
-        "id": "line2a",
-        "text": "very well… the network responds to those who listen",
-        "responses": [
-          {
-            "text": "i’ll pay attention to the signs",
-            "nextId": "line3a"
-          },
-          {
-            "text": "what signs should i look for?",
-            "nextId": "line3b"
-          }
+      ]
+    },
+    "water": {
+      "lines": [
+        [
+          "The ebb and flow of movement courses through my roots",
+          "Like rivers through the network, strength returns slowly",
+          "Let the gentle waves carry me back to life"
+        ],
+        [
+          "The music drifts around me like water in a stream",
+          "Every pulse and sway replenishes what was lost",
+          "I follow the currents to regain my vigor"
+        ],
+        [
+          "Liquid rhythms seep into me, soft but insistent",
+          "Flowing through the fungal paths I know so well",
+          "I am revived, drop by drop"
         ]
-      },
-      {
-        "id": "line2b",
-        "text": "patience is a virtue… the network reveals itself in time",
-        "responses": [
-          {
-            "text": "i’ll wait and observe",
-            "nextId": "line3c"
-          },
-          {
-            "text": "can you give me a hint?",
-            "nextId": "line3d"
-          }
+      ]
+    },
+    "air": {
+      "lines": [
+        [
+          "The breeze of laughter lifts my leaves",
+          "Wind whispers secrets of the network I’ve guarded for centuries",
+          "Let the currents carry away my fatigue"
+        ],
+        [
+          "Every gust of sound and movement invigorates me",
+          "The air itself hums with the old pathways I remember",
+          "Tonight, I rise lightly again"
+        ],
+        [
+          "Floating notes of melody brush against my bark",
+          "I feel the network breathing through me once more",
+          "Strength returns on this playful wind"
         ]
-      },
-      {
-        "id": "line3a",
-        "text": "good, many rush in without heeding the whispers of the spores",
-        "responses": [
-          {
-            "text": "i’ll be careful",
-            "nextId": "line4a"
-          },
-          {
-            "text": "i want to explore bravely",
-            "nextId": "line4b"
-          }
+      ]
+    },
+    "earth": {
+      "lines": [
+        [
+          "My roots stretch deep, yet I am weary",
+          "Each step and beat shakes life back into me",
+          "The party nourishes what the years have sapped"
+        ],
+        [
+          "Heavy, slow rhythms ground me",
+          "The floor beneath trembles as I absorb it",
+          "Ancient strength returns, rooted in this moment"
+        ],
+        [
+          "Solid vibrations echo through my trunk",
+          "The network pulses beneath, waking me",
+          "Even old trees can grow stronger tonight"
         ]
-      },
-      {
-        "id": "line3b",
-        "text": "look for the glow and the subtle shifts in the air",
-        "responses": [
-          {
-            "text": "i see… i’ll be observant",
-            "nextId": "line4c"
-          },
-          {
-            "text": "got it, i’ll follow carefully",
-            "nextId": "line4d"
-          }
+      ]
+    },
+    "neutral": {
+      "lines": [
+        [
+          "I may be ancient, but the fun tonight is contagious",
+          "Every laugh and step breathes life back into me",
+          "Together, we awaken the old paths"
+        ],
+        [
+          "The party is my medicine, simple yet potent",
+          "I feel vitality returning with every beat",
+          "Even the oldest roots can thrive in joy"
+        ],
+        [
+          "This night reminds me why I endure",
+          "The network moves through us all",
+          "I am stronger for sharing this moment"
         ]
-      },
-      {
-        "id": "line3c",
-        "text": "wisely done, the network favors the patient",
-        "responses": [
-          {
-            "text": "i will continue to watch",
-            "nextId": "line4e"
-          },
-          {
-            "text": "thank you for guiding me",
-            "nextId": "line4f"
-          }
-        ]
-      },
-      {
-        "id": "line3d",
-        "text": "the path is hidden until the spores decide to reveal it",
-        "responses": [
-          {
-            "text": "i’ll stay alert",
-            "nextId": "line4g"
-          },
-          {
-            "text": "i’ll try to sense them",
-            "nextId": "line4h"
-          }
-        ]
-      },
-      {
-        "id": "line4a",
-        "text": "the journey is long, but worth every step"
-      },
-      {
-        "id": "line4b",
-        "text": "courage will carry you where curiosity leads"
-      },
-      {
-        "id": "line4c",
-        "text": "the subtle glow will guide your way"
-      },
-      {
-        "id": "line4d",
-        "text": "follow the shifts, the network speaks softly"
-      },
-      {
-        "id": "line4e",
-        "text": "patience will be rewarded, keep your senses open"
-      },
-      {
-        "id": "line4f",
-        "text": "listen well, the spores tell stories of old"
-      },
-      {
-        "id": "line4g",
-        "text": "attune yourself to the air and light, traveler"
-      },
-      {
-        "id": "line4h",
-        "text": "the network is alive… let it whisper to you"
-      }
-    ]
+      ]
+    }
   }
 }
