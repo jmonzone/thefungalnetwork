@@ -21,6 +21,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private PartyReference partyReference;
     [SerializeField] private StoryReference partyLogReference;
     [SerializeField] private SporeReference sporeReference;
+    [SerializeField] private GlyphCollection glyphCollection;
+
     [SerializeField] private Volume volume;
 
     private void Awake()
@@ -40,12 +42,7 @@ public class GameManager : MonoBehaviour
             // or else there is unexpeted behaviour
             localData.Initialize();
 
-            inventory.Initialize();
-            build.Initialize();
-            unitList.Initialize();
-            partyReference.Initialize();
-            partyLogReference.Initialize();
-            sporeReference.Initialize();
+            InitializeSystems();
 
             uiNavigation.Initialize();
 
@@ -56,9 +53,7 @@ public class GameManager : MonoBehaviour
 
             localData.OnReset += () =>
             {
-                inventory.Initialize();
-                build.Initialize();
-                unitList.Initialize();
+                InitializeSystems();
             };
 
             sceneNavigation.OnSceneNavigationRequest += () =>
@@ -67,6 +62,17 @@ public class GameManager : MonoBehaviour
                 StartCoroutine(sceneNavigation.NavigateToSceneRoutine(screenFade));
             };
         }
+    }
+
+    private void InitializeSystems()
+    {
+        inventory.Initialize();
+        build.Initialize();
+        unitList.Initialize();
+        partyReference.Initialize();
+        partyLogReference.Initialize();
+        sporeReference.Initialize();
+        glyphCollection.Initialize();
     }
 
     private IEnumerator Start()

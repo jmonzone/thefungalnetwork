@@ -90,8 +90,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glyphImage: {fileID: 5302031666352626699}
+  background: {fileID: 2312974803998652584}
   rectTransform: {fileID: 2630833722149907961}
-  matchingDuration: 0.75
+  matchingDuration: 0.6
+  settleTime: 0.3
   glyph: {fileID: 0}
   isPalleteGlyph: 0
   originalPosition: {x: 0, y: 0}
@@ -152,7 +154,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: b4943ca942b96447e8d45cdf209448c8, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -228,7 +230,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: b4943ca942b96447e8d45cdf209448c8, type: 2}
   m_Color: {r: 0.75, g: 0.75, b: 0.75, a: 0.7490196}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -259,8 +261,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glyphImage: {fileID: 0}
+  background: {fileID: 0}
   rectTransform: {fileID: 3651358999379376566}
   matchingDuration: 1
+  settleTime: 0.3
   glyph: {fileID: 0}
   isPalleteGlyph: 0
   originalPosition: {x: 0, y: 0}

@@ -6849,7 +6849,7 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 1, g: 0.8820755, b: 0.9649991, a: 1}
+  m_Color: {r: 0.9528302, g: 0.7505785, b: 0.89215463, a: 1}
   m_Intensity: 0.5
   m_Range: 50
   m_SpotAngle: 30
@@ -6893,7 +6893,7 @@ Light:
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
-  m_ColorTemperature: 5000
+  m_ColorTemperature: 4592
   m_UseColorTemperature: 1
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
@@ -11933,6 +11933,7 @@ MonoBehaviour:
   notePrefab: {fileID: 2591081036677350107, guid: 7aa0e3738131f4e53a3bfde590853cfc,
     type: 3}
   poolSize: 20
+  playerReference: {fileID: 11400000, guid: 746148e8242954418b04a3ab83ac9260, type: 2}
   unitManager: {fileID: 2087691131}
   buildReference: {fileID: 11400000, guid: 2526ce71d791f49acb54c441f1370a16, type: 2}
   plants: []
@@ -12549,15 +12550,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogue: {fileID: 11400000, guid: 66db6a8c7a0524bd8b89b88de939507f, type: 2}
   fadeCanvasGroup: {fileID: 1681115128}
-  responseUI: {fileID: 399686879}
-  chatTypewriter: {fileID: 1681115130}
-  glyphCollection: {fileID: 11400000, guid: 8ff2f86eb4f5142c8aa3e3c918fb7d61, type: 2}
-  glyphEmitterUI: {fileID: 399686884}
-  normalText: {fileID: 1229974334}
-  normalTextFade: {fileID: 1229974336}
-  blurTextFade: {fileID: 1695818710}
-  glyphFade: {fileID: 146932690}
-  responseFade: {fileID: 1080034331}
+  glyphUI: {fileID: 399686883}
 --- !u!114 &399686877
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12827,11 +12820,31 @@ MonoBehaviour:
   glyphSlot2: {fileID: 1742378065}
   glyphSlot3: {fileID: 1958228526}
   glyphSlot4: {fileID: 1800207529}
-  fadeCanvasGroup: {fileID: 0}
-  glyph1: {fileID: 11400000, guid: f73682886fc474df9965f98a17628df0, type: 2}
-  glyph2: {fileID: 11400000, guid: 29a2523e954394b54b23e203347771c6, type: 2}
-  glyph3: {fileID: 11400000, guid: 27e8e01d45801403dae9855688d9f9c7, type: 2}
-  glyph4: {fileID: 11400000, guid: e4b29c16cc31346109568ea9d66ea016, type: 2}
+  glyphEmitterUI: {fileID: 399686884}
+  dialogue: {fileID: 11400000, guid: 66db6a8c7a0524bd8b89b88de939507f, type: 2}
+  separateDuration: 0.2
+  spiralDuration: 0.5
+  spiralRadius: 75
+  spiralRotations: 1
+  phaseOffsetA: 0
+  phaseOffsetB: 3.1415927
+  elasticDuration: 0.5
+  elasticOvershoot: 1.5
+  elasticPower: 5
+  elasticFrequency: 0.5
+  glowIntensity: 1
+  failSeparateDistance: 40
+  failSeparateDuration: 0.1
+  failClashDistance: 1
+  failClashDuration: 0.1
+  failSettleDuration: 0.5
+  failScaleUpAmount: 0.2
+  failWobbleStrength: 10
+  failSettleTint: {r: 0.7176471, g: 0.7176471, b: 0.7176471, a: 0.49411765}
+  audioSource: {fileID: 399686882}
+  fusion1Audio: {fileID: 8300000, guid: 937f9cf9beb4a4bc3a4d41b15e01aef3, type: 3}
+  fusion2Audio: {fileID: 8300000, guid: 067d7c7903d904a19aee902c9e600b15, type: 3}
+  failAudio: {fileID: 8300000, guid: 59c02bba3b38b486393a0c050a1d6dac, type: 3}
 --- !u!114 &399686884
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12849,7 +12862,7 @@ MonoBehaviour:
   blockingGlyphPrefab: {fileID: 5480351150369794610, guid: 147cda0ef3ad442199c6f63f5ab9abdc,
     type: 3}
   duration: 1
-  scalePulse: 0.4
+  scalePulse: 0.5
   glyphControllers: []
 --- !u!1 &407349044
 GameObject:
@@ -19097,7 +19110,7 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 1, g: 0.8820755, b: 0.9649991, a: 1}
+  m_Color: {r: 0.9528302, g: 0.7505785, b: 0.89215463, a: 1}
   m_Intensity: 0.5
   m_Range: 50
   m_SpotAngle: 30
@@ -19141,7 +19154,7 @@ Light:
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
-  m_ColorTemperature: 5000
+  m_ColorTemperature: 4592
   m_UseColorTemperature: 1
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
@@ -29008,7 +29021,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1145510282}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.06869, y: 0.00000001822998, z: -0.000000001255182, w: 0.99763805}
+  m_LocalRotation: {x: 0.06868998, y: -0.0000000166458, z: 0.0000000011461067, w: 0.99763805}
   m_LocalPosition: {x: 0, y: 0.75, z: 0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -36848,40 +36861,48 @@ MonoBehaviour:
     responses: []
     type: 0
     action: 0
+    element: 
   - text: 'where am i?
 
       (always the question)'
     responses: []
     type: 0
     action: 0
+    element: 
   - text: 'best i ask around
 
       huh?'
     responses: []
     type: 0
     action: 0
+    element: 
   letsTakeAPhotoDialogue:
   - text: alright friends, that's the end of my set, thanks for coming to my party
     responses: []
     type: 0
     action: 0
+    element: 
   - text: 'before you leave, let''s take a pic yea? '
     responses: []
     type: 0
     action: 0
+    element: 
   - text: hey you over there, would you help a frog out?
     responses: []
     type: 0
     action: 0
+    element: 
   afterPhotoTakenDialogue:
   - text: oh gosh golly, we look great!
     responses: []
     type: 0
     action: 0
+    element: 
   - text: alright thanks for coming, and as always love
     responses: []
     type: 0
     action: 0
+    element: 
 --- !u!1 &1485212479
 GameObject:
   m_ObjectHideFlags: 0
@@ -40383,34 +40404,41 @@ MonoBehaviour:
     responses: []
     type: 0
     action: 0
+    element: 
   - text: you're lost? join the club. no literally. join my club :) i'm trying to
       build a reputation
     responses: []
     type: 0
     action: 0
+    element: 
   - text: you may be lost today so party along the way
     responses: []
     type: 0
     action: 0
+    element: 
   - text: do you wanna help out?
     responses: []
     type: 0
     action: 0
+    element: 
   - text: yay! ok we're going to need to more plants. when we party, so do the plants.
     responses: []
     type: 0
     action: 0
+    element: 
   - text: they emit spores and spores are EVERYTHING. here take this, it's yours,
       why don't you go plant this somewhere
     responses: []
     type: 0
     action: 4
+    element: 
   buildCompleteDialogue:
   - text: sweet! now its a party. alright i have my friends on the ready. let me
       know when you're ready.
     responses: []
     type: 0
     action: 0
+    element: 
   playerAnchor: {fileID: 1881101864}
   frogAnchor: {fileID: 238164570}
   plantGift: {fileID: 7274716744692762698}
@@ -46700,7 +46728,7 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 1, g: 0.8820755, b: 0.9649991, a: 1}
+  m_Color: {r: 0.9528302, g: 0.7505785, b: 0.89215463, a: 1}
   m_Intensity: 0.5
   m_Range: 50
   m_SpotAngle: 30
@@ -46744,7 +46772,7 @@ Light:
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
-  m_ColorTemperature: 5000
+  m_ColorTemperature: 4592
   m_UseColorTemperature: 1
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
@@ -50066,12 +50094,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fungal Tree
       objectReference: {fileID: 0}
-    - target: {fileID: 6489991089625311762, guid: b5a65936c7fe74e3ca085c517af15846,
-        type: 3}
-      propertyPath: glyphCollection
-      value: 
-      objectReference: {fileID: 11400000, guid: 8ff2f86eb4f5142c8aa3e3c918fb7d61,
-        type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -53876,11 +53898,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 225081015780643707, guid: aeb9ea07d40654a459c0e87b5ab0f0d2,
-        type: 3}
-      propertyPath: m_AngularSpeed
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 386142845891375195, guid: aeb9ea07d40654a459c0e87b5ab0f0d2,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -55066,6 +55083,12 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: 0.10963624
       objectReference: {fileID: 0}
+    - target: {fileID: 8410541423507090983, guid: aeb9ea07d40654a459c0e87b5ab0f0d2,
+        type: 3}
+      propertyPath: playerUnit
+      value: 
+      objectReference: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+        type: 2}
     - target: {fileID: 8702375842695443693, guid: aeb9ea07d40654a459c0e87b5ab0f0d2,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -55751,7 +55774,7 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 1, g: 0.8820755, b: 0.9649991, a: 1}
+  m_Color: {r: 0.9528302, g: 0.7505785, b: 0.89215463, a: 1}
   m_Intensity: 0.5
   m_Range: 50
   m_SpotAngle: 30
@@ -55795,7 +55818,7 @@ Light:
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
-  m_ColorTemperature: 5000
+  m_ColorTemperature: 4592
   m_UseColorTemperature: 1
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0

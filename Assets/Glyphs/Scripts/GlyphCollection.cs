@@ -1,38 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using UnityEditor;
 
 [CreateAssetMenu]
 public class GlyphCollection : ScriptableObject
 {
     [SerializeField] private List<GlyphData> glyphs;
-    [SerializeField, HideInInspector] private List<GlyphFusion> fusions = new List<GlyphFusion>();
+    [SerializeField] private List<GlyphFusion> fusions = new List<GlyphFusion>();
 
-    private Dictionary<(int f, int w, int a, int e), GlyphData> lookup;
+    private Dictionary<(int f, int w, int a, int e), GlyphData> lookup = new Dictionary<(int f, int w, int a, int e), GlyphData>();
 
     public List<GlyphData> Glyphs => glyphs;
     public List<GlyphFusion> Fusions => fusions;
 
-    private void OnValidate()
+    public void Initialize()
     {
-        AutoPopulateGlyphs("Assets/Glyphs");
         BuildLookup();
         BuildAllFusions();
     }
 
-    private void AutoPopulateGlyphs(string folderPath)
+    public void SetGlyphs(List<GlyphData> glyphs)
     {
-        glyphs = new List<GlyphData>();
-        string[] guids = AssetDatabase.FindAssets("t:GlyphData", new[] { folderPath });
-
-        foreach (string guid in guids)
-        {
-            string path = AssetDatabase.GUIDToAssetPath(guid);
-            GlyphData asset = AssetDatabase.LoadAssetAtPath<GlyphData>(path);
-            if (asset != null && !glyphs.Contains(asset))
-                glyphs.Add(asset);
-        }
+        this.glyphs = glyphs.OrderBy(glyph => glyph.Tier).ToList();
     }
 
     private void BuildLookup()
@@ -80,7 +70,11 @@ public class GlyphCollection : ScriptableObject
     /// </summary>
     public bool TryFuse(GlyphData a, GlyphData b, out GlyphData fused)
     {
+        Debug.Log($"fire {a.Fire}");
         var combinedCounts = (a.Fire + b.Fire, a.Water + b.Water, a.Air + b.Air, a.Earth + b.Earth);
+        Debug.Log($"lookup {lookup != null}");
+        Debug.Log($"lookup keys {lookup.Keys.Count}");
+
         return lookup.TryGetValue(combinedCounts, out fused);
     }
 }

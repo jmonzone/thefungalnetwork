@@ -4,6 +4,12 @@ using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
+public enum Job
+{
+    NONE,
+    DJ
+}
+
 [CreateAssetMenu]
 public class UnitInstance : ScriptableObject
 {
@@ -12,6 +18,7 @@ public class UnitInstance : ScriptableObject
     [SerializeField] private int friendshipLevel;
     [SerializeField] private float friendshipPoints;
     [SerializeField] private Element element;
+    [SerializeField] private Job job;
     [SerializeField] private ColorPalette colorPalette;
     [SerializeField] private List<UnitInstance> friends;
     [SerializeField] private JObject json;
@@ -19,6 +26,7 @@ public class UnitInstance : ScriptableObject
     public string Id => id;
     public Unit Data => unit;
     public Element Element => element;
+    public Job Job => job;
     public ColorPalette ColorPalette => colorPalette;
 
     public List<Dialogue> Dialogue => Data.ElementalDialogue[element];
@@ -43,13 +51,14 @@ public class UnitInstance : ScriptableObject
     public event UnityAction<float> OnFriendshipPointsChanged;
     public event UnityAction OnFriendshipLevelChanged;
 
-    public void Initialize(Unit unit, string id = null, float friendshipPoints = 0, Element element = Element.NONE, ColorPalette colorPalette = null, JObject json = null)
+    public void Initialize(Unit unit, string id = null, float friendshipPoints = 0, Element element = Element.NONE, Job job = Job.NONE, ColorPalette colorPalette = null, JObject json = null)
     {
         this.id = string.IsNullOrEmpty(id) ? GenerateMongoLikeId() : id;
         this.unit = unit;
         this.friendshipPoints = friendshipPoints;
         friendshipLevel = GetLevelFromXP(friendshipPoints);
         this.element = element;
+        this.job = job;
         this.colorPalette = colorPalette;
         friends = new List<UnitInstance>();
         this.json = json;
@@ -58,7 +67,7 @@ public class UnitInstance : ScriptableObject
     public UnitInstance Copy()
     {
         var copy = CreateInstance<UnitInstance>();
-        copy.Initialize(Data, Id, FriendshipPoints, element, ColorPalette);
+        copy.Initialize(Data, Id, FriendshipPoints, element, job, ColorPalette);
         return copy;
     }
     public static string GenerateMongoLikeId()

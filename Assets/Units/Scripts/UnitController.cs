@@ -15,6 +15,7 @@ public class UnitController : MonoBehaviour, IInteractable, INoteTarget
     [SerializeField] private UnitBehaviour currentBehaviour;
     [SerializeField] private Vector3 targetLookPosition;
     [SerializeField] private Transform target;
+    [SerializeField] private bool isDj;
 
     private CinemachineVirtualCamera virtualCamera;
 

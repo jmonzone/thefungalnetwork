@@ -1,42 +1,104 @@
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class GlyphUI : MonoBehaviour
 {
+    [Header("References")]
     [SerializeField] private Transform glyphPalette;
     [SerializeField] private GlyphDropZone glyphDropZone;
     [SerializeField] private GlyphController glyphPrefab;
     [SerializeField] private GlyphCollection glyphCollection;
-
     [SerializeField] private RectTransform glyphSlot1;
     [SerializeField] private RectTransform glyphSlot2;
     [SerializeField] private RectTransform glyphSlot3;
     [SerializeField] private RectTransform glyphSlot4;
+    [SerializeField] private GlyphEmitterUI glyphEmitterUI;
+    [SerializeField] private DialogueReference dialogue;
 
-    [SerializeField] private FadeCanvasGroup fadeCanvasGroup;
+    [Header("Spiral Animation Settings")]
+    [SerializeField] private float separateDuration = 0.2f;   // time to separate outward before spiraling
+    [SerializeField] private float spiralDuration = 0.8f;     // time to spiral inward
+    [SerializeField] private float spiralRadius = 75f;        // radius of spiral path
+    [SerializeField] private int spiralRotations = 1;         // number of rotations inward
+    [SerializeField] private float phaseOffsetA = 0f;         // starting angle offset for glyph A
+    [SerializeField] private float phaseOffsetB = Mathf.PI;   // opposite side for glyph B
 
-    [Header("Initial Glyphs")]
-    [SerializeField] private GlyphData glyph1;
-    [SerializeField] private GlyphData glyph2;
-    [SerializeField] private GlyphData glyph3;
-    [SerializeField] private GlyphData glyph4;
+    [Header("Fusion Animation Settings")]
+    [SerializeField] private float elasticDuration = 1.2f;
+    [SerializeField] private float elasticOvershoot = 1.4f;
+    [SerializeField] private float elasticPower = 10f;
+    [SerializeField] private float elasticFrequency = 13f;
+    [SerializeField] private float glowIntensity = 1f;
+
+    [Header("Fusion Fail Settings")]
+    [SerializeField] private float failSeparateDistance = 80f;
+    [SerializeField] private float failSeparateDuration = 0.25f;
+    [SerializeField] private float failClashDistance = 30f;
+    [SerializeField] private float failClashDuration = 0.2f;
+    [SerializeField] private float failSettleDuration = 0.35f;
+    [SerializeField] private float failScaleUpAmount = 0.2f;
+    [SerializeField] private float failWobbleStrength = 5f;
+    [SerializeField] private Color failSettleTint = new Color(1f, 0.9f, 0.9f); // subtle pinkish neutral
+
+    [Header("Audio Settings")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip fusion1Audio;
+    [SerializeField] private AudioClip fusion2Audio;
+    [SerializeField] private AudioClip failAudio;
 
     private List<GlyphController> glyphControllers = new List<GlyphController>();
 
-    public event UnityAction<GlyphController> OnGlyphFused;
+    public event UnityAction OnGlyphDialogueComplete;
 
     private void Awake()
     {
-        SpawnGlyph(glyph1, glyphSlot1.anchoredPosition, isPaletteGlyph: true, new List<string>());
-        SpawnGlyph(glyph2, glyphSlot2.anchoredPosition, isPaletteGlyph: true, new List<string>());
-        SpawnGlyph(glyph3, glyphSlot3.anchoredPosition, isPaletteGlyph: true, new List<string>());
-        SpawnGlyph(glyph4, glyphSlot4.anchoredPosition, isPaletteGlyph: true, new List<string>());
+        audioSource = GetComponent<AudioSource>();
 
-        glyphDropZone.OnGlyphPlaced += HandleGlyphPlaced;
+        SpawnGlyph(glyphCollection.Glyphs[0], glyphSlot1.anchoredPosition, isPaletteGlyph: true, new List<string>());
+        SpawnGlyph(glyphCollection.Glyphs[1], glyphSlot2.anchoredPosition, isPaletteGlyph: true, new List<string>());
+        SpawnGlyph(glyphCollection.Glyphs[2], glyphSlot3.anchoredPosition, isPaletteGlyph: true, new List<string>());
+        SpawnGlyph(glyphCollection.Glyphs[3], glyphSlot4.anchoredPosition, isPaletteGlyph: true, new List<string>());
+
+        glyphDropZone.OnGlyphPlaced += OnPalleteGlyphDropped;
     }
 
-    private void HandleGlyphPlaced(GlyphController placedGlyph, GlyphDropZone zone)
+    private GlyphController SpawnGlyph(GlyphData glyph, Vector3 position, bool isPaletteGlyph, List<string> words)
+    {
+        var glyphObj = Instantiate(glyphPrefab, isPaletteGlyph ? glyphPalette : glyphDropZone.transform);
+        glyphObj.GetComponent<RectTransform>().anchoredPosition = position;
+        glyphObj.Initialize(glyph, isPaletteGlyph, words );
+
+        glyphObj.OnGlyphFused += OnGlyphsFused;
+
+        glyphControllers.Add(glyphObj);
+        return glyphObj;
+    }
+
+    public void StartGlyphDialogue()
+    {
+        // Filter glyphs
+        var selectedGlyphs = glyphCollection.Glyphs
+            .Where(glyph => glyph.Tier > 1 && glyph.Element.HasFlag(dialogue.Unit.Instance.Element))
+            .OrderBy(g => Random.value)
+            .Take(1)
+            .ToList();
+
+        // Example
+        string dialogueText = dialogue.Dialogue.Text;
+
+        // Split into words using spaces (and remove empty entries)
+        List<string> words = dialogueText
+            .Split(' ')
+            .Where(w => !string.IsNullOrWhiteSpace(w))
+            .ToList();
+
+        glyphEmitterUI.EmitGlyphs(selectedGlyphs, words, dialogue.Unit.transform.position);
+    }
+
+    private void OnPalleteGlyphDropped(GlyphController placedGlyph, GlyphDropZone zone)
     {
         if (zone == glyphDropZone)
         {
@@ -51,36 +113,125 @@ public class GlyphUI : MonoBehaviour
         }
     }
 
-    private GlyphController SpawnGlyph(GlyphData glyph, Vector3 position, bool isPaletteGlyph, List<string> words)
-    {
-        var glyphObj = Instantiate(glyphPrefab, isPaletteGlyph ? glyphPalette : glyphDropZone.transform);
-        glyphObj.GetComponent<RectTransform>().anchoredPosition = position;
-        glyphObj.Initialize(glyph, isPaletteGlyph, words );
-
-        glyphObj.OnGlyphFused += GlyphObj_OnGlyphFused;
-
-        glyphControllers.Add(glyphObj);
-        return glyphObj;
-    }
-
-    private void GlyphObj_OnGlyphFused(GlyphController dragged, GlyphController target)
+    private void OnGlyphsFused(GlyphController dragged, GlyphController target)
     {
         if (glyphCollection.TryFuse(dragged.Glyph, target.Glyph, out GlyphData fusedGlyph))
         {
-            glyphControllers.Remove(dragged);
-            Destroy(dragged.gameObject);
-
-            glyphControllers.Remove(target);
-            Destroy(target.gameObject);
-
-            var targetRect = target.GetComponent<RectTransform>();
-            var fusedGlyphController = SpawnGlyph(fusedGlyph, targetRect.anchoredPosition, false, new List<string>());
-
-            OnGlyphFused?.Invoke(fusedGlyphController);
+            StartCoroutine(FuseRoutine(dragged, target, fusedGlyph));
         }
         else
         {
-            Debug.Log("no fusion");
+            StartCoroutine(FailRoutine(dragged, target));
+        }
+    }
+
+    private IEnumerator FuseRoutine(GlyphController dragged, GlyphController target, GlyphData fusedGlyph)
+    {
+        ToggleInteractable(false);
+
+        // Midpoint between dragged + target
+        Vector3 clashPoint = (dragged.RectTransform.anchoredPosition + target.RectTransform.anchoredPosition) / 2f;
+
+        // Each starts at clashpoint, separates outward, then spirals inward
+        Coroutine animA = StartCoroutine(
+            dragged.AnimateSeparateAndSpiralIn(clashPoint, separateDuration, spiralDuration, spiralRadius, spiralRotations, phaseOffsetA)
+        );
+        Coroutine animB = StartCoroutine(
+            target.AnimateSeparateAndSpiralIn(clashPoint, separateDuration, spiralDuration, spiralRadius, spiralRotations, phaseOffsetB)
+        );
+
+        audioSource.clip = fusion1Audio;
+        audioSource.Play();
+
+        yield return animA;
+        yield return animB;
+
+        // Cleanup old glyphs
+        glyphControllers.Remove(dragged);
+        Destroy(dragged.gameObject);
+        glyphControllers.Remove(target);
+        Destroy(target.gameObject);
+
+        // Spawn fused glyph
+        var fused = SpawnGlyph(fusedGlyph, clashPoint, false, new List<string>());
+
+        audioSource.clip = fusion2Audio;
+        audioSource.Play();
+
+        // Elastic scale-up with glow using manager parameters
+        yield return StartCoroutine(fused.AnimateElasticSpawn(
+            elasticDuration, elasticOvershoot, elasticPower, elasticFrequency, glowIntensity));
+
+        var matchingGlyph = glyphEmitterUI.GlyphControllers.Find(controller => controller.Glyph == fused.Glyph);
+
+        if (matchingGlyph)
+        {
+            StartCoroutine(MatchRoutine(fused, matchingGlyph));
+        }
+
+        ToggleInteractable(true);
+    }
+
+    private IEnumerator MatchRoutine(GlyphController fusedGlyph, BlockingGlyphController matchingGlyph)
+    {
+        yield return fusedGlyph.MoveAndSlot(matchingGlyph.RectTransform);
+        yield return matchingGlyph.GlowAndRelease();
+
+        yield return new WaitForSeconds(3f);
+
+        yield return matchingGlyph.CleanupTextControllers();
+
+        OnGlyphDialogueComplete?.Invoke();
+    }
+
+    private IEnumerator FailRoutine(GlyphController dragged, GlyphController target)
+    {
+        ToggleInteractable(false);
+
+        Vector2 clashPoint = (dragged.RectTransform.anchoredPosition + target.RectTransform.anchoredPosition) / 2f;
+
+        // Trigger fail animations on both glyphs, mirrored directions
+        Vector2 dirA = (dragged.RectTransform.anchoredPosition - clashPoint).normalized;
+        Vector2 dirB = (target.RectTransform.anchoredPosition - clashPoint).normalized;
+
+        audioSource.clip = failAudio;
+        audioSource.Play();
+
+        Coroutine animA = StartCoroutine(dragged.AnimateFusionFail(
+            dirA,
+            failSeparateDistance,
+            failSeparateDuration,
+            failClashDistance,
+            failClashDuration,
+            failSettleDuration,
+            failScaleUpAmount,
+            failWobbleStrength,
+            failSettleTint
+        ));
+
+        Coroutine animB = StartCoroutine(target.AnimateFusionFail(
+            dirB,
+            failSeparateDistance,
+            failSeparateDuration,
+            failClashDistance,
+            failClashDuration,
+            failSettleDuration,
+            failScaleUpAmount,
+            failWobbleStrength,
+            failSettleTint
+        ));
+
+        yield return animA;
+        yield return animB;
+
+        ToggleInteractable(true);
+    }
+
+    public void ToggleInteractable(bool value)
+    {
+        foreach (var glyph in glyphControllers)
+        {
+            glyph.ToggleInteractable(value);
         }
     }
 

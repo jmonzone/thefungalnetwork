@@ -1,54 +1,39 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using Cinemachine;
-using TMPro;
 using UnityEngine;
 
 public class DialogueChatUI : DialoguePageUI
 {
-    [SerializeField] private ResponseUI responseUI;
-    [SerializeField] private TypewriterEffect chatTypewriter;
-    [SerializeField] private GlyphCollection glyphCollection;
-    [SerializeField] private GlyphEmitterUI glyphEmitterUI;
-
-    [SerializeField] private TextMeshProUGUI normalText;
-    [SerializeField] private FadeCanvasGroup normalTextFade;
-    [SerializeField] private FadeCanvasGroup blurTextFade;
-
-    [SerializeField] private FadeCanvasGroup glyphFade;
-    [SerializeField] private FadeCanvasGroup responseFade;
-
-    private GlyphUI glyphUI;
+    [SerializeField] private GlyphUI glyphUI;
 
     protected override void Awake()
     {
         base.Awake();
-        glyphUI = GetComponent<GlyphUI>();
-        glyphUI.OnGlyphFused += GlyphUI_OnGlyphFused;
+        glyphUI.OnGlyphDialogueComplete += OnGlyphDialogueComplete;
     }
 
-    private void GlyphUI_OnGlyphFused(GlyphController fusedGlyph)
+    public override void Show()
     {
-        var matchingGlyph = glyphEmitterUI.GlyphControllers.Find(controller => controller.Glyph == fusedGlyph.Glyph);
-
-        Debug.Log("GlyphUI_OnGlyphFused");
-
-        if (matchingGlyph)
-        {
-            StartCoroutine(MatchRoutine(fusedGlyph, matchingGlyph));
-        }
+        base.Show();
+        StartCoroutine(StartRoutine());
     }
 
-    private IEnumerator MatchRoutine(GlyphController fusedGlyph, BlockingGlyphController matchingGlyph)
+    private IEnumerator StartRoutine()
     {
-        yield return fusedGlyph.MoveAndSlot(matchingGlyph.RectTransform);
-        yield return matchingGlyph.GlowAndRelease();
+        var brain = Camera.main.GetComponent<CinemachineBrain>();
+        if (brain == null) yield break;
 
-        yield return new WaitForSeconds(5f);
+        // Wait until the blend is done
+        while (brain.IsBlending)
+            yield return null;
 
-        yield return matchingGlyph.CleanupTextControllers();
+        yield return new WaitForSeconds(1f);
 
+        glyphUI.StartGlyphDialogue();
+    }
+
+    private void OnGlyphDialogueComplete()
+    {
         var targetDialogue = dialogue.Dialogue;
 
         if (targetDialogue.Responses.Count >= 2)
@@ -66,45 +51,6 @@ public class DialogueChatUI : DialoguePageUI
         {
             StartCoroutine(CloseRoutine());
         }
-    }
-
-    public override void Show()
-    {
-        base.Show();
-
-        normalTextFade.Hide();
-        StartCoroutine(StartRoutine());
-    }
-
-    private IEnumerator StartRoutine()
-    {
-        var brain = Camera.main.GetComponent<CinemachineBrain>();
-        if (brain == null) yield break;
-
-        // Wait until the blend is done
-        while (brain.IsBlending)
-            yield return null;
-
-        yield return new WaitForSeconds(1f);
-
-        // Filter glyphs
-        var selectedGlyphs = glyphCollection.Glyphs
-            .Where(glyph => glyph.Tier > 1 && glyph.Element.HasFlag(dialogue.Unit.Instance.Element))
-            .OrderBy(g => Random.value)
-            .Take(1)
-            .ToList();
-
-        // Example
-        string dialogueText = dialogue.Dialogue.Text;
-
-        // Split into words using spaces (and remove empty entries)
-        List<string> words = dialogueText
-            .Split(' ')
-            .Where(w => !string.IsNullOrWhiteSpace(w))
-            .ToList();
-
-
-        glyphEmitterUI.EmitGlyphs(selectedGlyphs, words, dialogue.Unit.transform.position);
     }
 
     private IEnumerator ContinueRoutine()

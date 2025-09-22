@@ -64,13 +64,17 @@ public class UnitListReference : ScriptableObject
                     var unitId = unitJson.Value<string>("id");
 
                     var elementId = unitJson.Value<string>("element");
-                    var element = System.Enum.TryParse(elementId, ignoreCase: true, out Element result) ? result : Element.NONE;
+                    var element = System.Enum.TryParse(elementId, ignoreCase: true, out Element elementResult) ? elementResult : Element.NONE;
+
+                    var jobId = unitJson.Value<string>("element");
+                    var job = System.Enum.TryParse(elementId, ignoreCase: true, out Job jobResult) ? jobResult : Job.NONE;
+
                     var matchingColorPalette = colorPalettes.Find(p => p?.Id == elementId);
 
                     float friendshipPoints = unitJson.Value<float?>("friendshipPoints") ?? 0f;
 
                     var instance = CreateInstance<UnitInstance>();
-                    instance.Initialize(matchingUnit, unitId, friendshipPoints, element, matchingColorPalette, unitJson);
+                    instance.Initialize(matchingUnit, unitId, friendshipPoints, element, job, matchingColorPalette, unitJson);
                     RegisterUnit(instance, false);
                 };
             }
@@ -122,7 +126,7 @@ public class UnitListReference : ScriptableObject
 
         if (unseenUnits.Count > 0)
         {
-            var chosenUnit = unseenUnits[UnityEngine.Random.Range(0, unseenUnits.Count)];
+            var chosenUnit = unseenUnits[Random.Range(0, unseenUnits.Count)];
             TryPickUnseenColorForUnit(chosenUnit, out ColorPalette chosenColor);
             return (chosenUnit, chosenColor);
         }
@@ -134,13 +138,13 @@ public class UnitListReference : ScriptableObject
 
         if (unitsWithUnseenColors.Count > 0)
         {
-            var chosenUnit = unitsWithUnseenColors[UnityEngine.Random.Range(0, unitsWithUnseenColors.Count)];
+            var chosenUnit = unitsWithUnseenColors[Random.Range(0, unitsWithUnseenColors.Count)];
             TryPickUnseenColorForUnit(chosenUnit, out ColorPalette chosenColor);
             return (chosenUnit, chosenColor);
         }
 
         // Step 3: fallback → any unit and any color
-        var fallbackUnit = unitCollection[UnityEngine.Random.Range(0, unitCollection.Count)];
+        var fallbackUnit = unitCollection[Random.Range(0, unitCollection.Count)];
         var fallbackColor = colorPalettes[Random.Range(0, colorPalettes.Count)];
         return (fallbackUnit, fallbackColor);
     }
@@ -242,7 +246,8 @@ public class UnitListReference : ScriptableObject
                 ["name"] = unit.Data.Name,
                 ["friendshipLevel"] = unit.FriendshipLevel,
                 ["friendshipPoints"] = unit.FriendshipPoints,
-                ["element"] = unit.ColorPalette?.Id ?? null,
+                ["element"] = unit.Element.ToString().ToLower(),
+                ["job"] = unit.Job.ToString().ToLower(),
                 ["friends"] = new JArray(unit.Friends.Select(friend => friend.Id)),
             });
         }

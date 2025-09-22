@@ -4,6 +4,7 @@ public class PlayerController : UnitController
 {
     [Header("Player References")]
     [SerializeField] private PlayerReference playerReference;
+    [SerializeField] private Unit playerUnit;
 
     private UnitFollow unitFollow;
     private UnitDestination unitDestination;
@@ -21,6 +22,11 @@ public class PlayerController : UnitController
 
         playerReference.SetPlayer(this);
         playerReference.SetTargetPosition(transform.position);
+
+        var instance = ScriptableObject.CreateInstance<UnitInstance>();
+        instance.Initialize(playerUnit);
+
+        Initialize(instance);
     }
 
     private void UnitFollow_OnDestinationReached()

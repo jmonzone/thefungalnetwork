@@ -14,6 +14,7 @@ public class DJNoteManager : MonoBehaviour
     [SerializeField] private DJNoteController notePrefab;
     [SerializeField] private int poolSize = 20;
 
+    [SerializeField] private PlayerReference playerReference;
     [SerializeField] private UnitManager unitManager;
     [SerializeField] private BuildReference buildReference;
     [SerializeField] private List<PlantSporeEmitter> plants;
@@ -78,14 +79,14 @@ public class DJNoteManager : MonoBehaviour
     {
         var targets = track.PartyMode switch
         {
-            PartyMode.Alternating => unitManager.AllUnits.Cast<INoteTarget>(),
-            _ => plants.Cast<INoteTarget>()
+            _=> unitManager.AllUnits.Cast<INoteTarget>().Concat(new List<INoteTarget> { playerReference.Player }),
+            //_ => plants.Cast<INoteTarget>()
         };
 
         return targets.Where(target =>
         {
             var unit = target.Transform.GetComponent<UnitController>();
-            return !unit || unit.Instance.Data.Name != "Frog";
+            return !unit || unit.Instance.Job != Job.DJ;
         });
     }
 

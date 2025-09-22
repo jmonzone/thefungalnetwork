@@ -14,6 +14,8 @@ public class BlockingGlyphController : MonoBehaviour
     [SerializeField] private Color glowColor = Color.cyan;
     [SerializeField] private float glowDuration = 1.5f;
     [SerializeField] private float wordSpacing = 10f;
+    [SerializeField] float dissipateDuration = 0.8f;
+    [SerializeField] private float cleanupDuration = 1.0f; // or get from the text controller
 
     [Header("Runtime")]
     [SerializeField] private GlyphData glyph;
@@ -101,7 +103,6 @@ public class BlockingGlyphController : MonoBehaviour
 
         // --- Release / Dissipate ---
         elapsed = 0f;
-        float dissipateDuration = 0.8f;
         Vector3 startScale = rectTransform.localScale;
         Vector3 targetScale = startScale * 1.5f;
         Color targetColor = new Color(startColor.r, startColor.g, startColor.b, 0f);
@@ -167,8 +168,6 @@ public class BlockingGlyphController : MonoBehaviour
         // Centering horizontally and vertically
         int lineIndex = 0;
         int wordIndexInLine = 0;
-        y = 0f;
-        float totalHeight = Mathf.Abs(y) + lineHeight;
 
         for (int i = 0; i < textControllers.Count; i++)
         {
@@ -208,8 +207,6 @@ public class BlockingGlyphController : MonoBehaviour
                 StartCoroutine(text.ReleaseToEar());
         }
 
-        // Optionally wait a short duration to allow effects to finish
-        float cleanupDuration = 1.0f; // or get from the text controller
         yield return new WaitForSeconds(cleanupDuration);
 
         // Clear the references
