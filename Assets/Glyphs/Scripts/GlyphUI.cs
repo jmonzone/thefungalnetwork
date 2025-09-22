@@ -11,12 +11,10 @@ public class GlyphUI : MonoBehaviour
     [SerializeField] private GlyphDropZone glyphDropZone;
     [SerializeField] private GlyphController glyphPrefab;
     [SerializeField] private GlyphCollection glyphCollection;
-    [SerializeField] private RectTransform glyphSlot1;
-    [SerializeField] private RectTransform glyphSlot2;
-    [SerializeField] private RectTransform glyphSlot3;
-    [SerializeField] private RectTransform glyphSlot4;
     [SerializeField] private GlyphEmitterUI glyphEmitterUI;
     [SerializeField] private DialogueReference dialogue;
+    [SerializeField] private InventoryReference inventoryReference;
+    [SerializeField] private List<RectTransform> glyphSlots;
 
     [Header("Spiral Animation Settings")]
     [SerializeField] private float separateDuration = 0.2f;   // time to separate outward before spiraling
@@ -56,12 +54,6 @@ public class GlyphUI : MonoBehaviour
     private void Awake()
     {
         audioSource = GetComponent<AudioSource>();
-
-        SpawnGlyph(glyphCollection.Glyphs[0], glyphSlot1.anchoredPosition, isPaletteGlyph: true, new List<string>());
-        SpawnGlyph(glyphCollection.Glyphs[1], glyphSlot2.anchoredPosition, isPaletteGlyph: true, new List<string>());
-        SpawnGlyph(glyphCollection.Glyphs[2], glyphSlot3.anchoredPosition, isPaletteGlyph: true, new List<string>());
-        SpawnGlyph(glyphCollection.Glyphs[3], glyphSlot4.anchoredPosition, isPaletteGlyph: true, new List<string>());
-
         glyphDropZone.OnGlyphPlaced += OnPalleteGlyphDropped;
     }
 
@@ -96,6 +88,18 @@ public class GlyphUI : MonoBehaviour
             .ToList();
 
         glyphEmitterUI.EmitGlyphs(selectedGlyphs, words, dialogue.Unit.transform.position);
+
+        InitializePalleteGlyphs();
+    }
+
+    private void InitializePalleteGlyphs()
+    {
+        var i = 0;
+        foreach (var glyph in inventoryReference.Glyphs.Keys)
+        {
+            SpawnGlyph(glyph, glyphSlots[i].anchoredPosition, isPaletteGlyph: true, new List<string>());
+            i++;
+        }
     }
 
     private void OnPalleteGlyphDropped(GlyphController placedGlyph, GlyphDropZone zone)

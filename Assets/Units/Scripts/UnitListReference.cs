@@ -67,7 +67,7 @@ public class UnitListReference : ScriptableObject
                     var element = System.Enum.TryParse(elementId, ignoreCase: true, out Element elementResult) ? elementResult : Element.NONE;
 
                     var jobId = unitJson.Value<string>("job");
-                    var job = System.Enum.TryParse(elementId, ignoreCase: true, out Job jobResult) ? jobResult : Job.NONE;
+                    var job = System.Enum.TryParse(jobId, ignoreCase: true, out Job jobResult) ? jobResult : Job.NONE;
 
                     var matchingColorPalette = colorPalettes.Find(p => p?.Id == elementId);
 

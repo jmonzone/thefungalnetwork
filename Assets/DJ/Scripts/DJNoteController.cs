@@ -32,12 +32,13 @@ public class DJNoteController : MonoBehaviour
         spiralRadiusOffset = Random.Range(0.8f, 1.2f); // slight radius variation
     }
 
-    public void Initialize(INoteTarget target, Color color, float spiralPhaseOffset, float trackValue)
+    public void Initialize(INoteTarget target, DJTrack track, float spiralPhaseOffset, float trackValue)
     {
         this.target = target;
         startPos = transform.position;
         startTime = Time.time;
-        spriteRenderer.color = color;
+        spriteRenderer.sprite = track.Glyph.Sprite;
+
         this.spiralPhaseOffset = spiralPhaseOffset;
         initialScale = minValue + trackValue * (maxValue - minValue);
         if (trackValue > 0) transform.localScale = Vector3.one * initialScale;

@@ -13,6 +13,12 @@ public class GlyphData : ScriptableObject
     [SerializeField] private Element element;
     [SerializeField] private int tier;
 
+    private Color earthColor = new Color32(0x8A, 0xCE, 0x00, 0xFF); // #8ACE00
+    private Color fireColor = new Color32(0xF1, 0x7B, 0x7B, 0xFF); // #F17B7B
+    private Color waterColor = new Color32(0x5B, 0xD2, 0xEC, 0xFF); // #5BD2EC
+    private Color airColor = new Color32(0xF9, 0xC8, 0x1A, 0xFF); // #F9C81A
+
+    public string Id => sprite.name;
     public int Fire => fire;
     public int Water => water;
     public int Air => air;
@@ -20,6 +26,19 @@ public class GlyphData : ScriptableObject
 
     public int Tier => tier;
     public Element Element => element;
+
+    public Color Color
+    {
+        get
+        {
+            Color blendedColor =
+                fireColor * (fire / tier) +
+                waterColor * (water / tier) +
+                earthColor * (earth / tier) +
+                airColor * (air / tier);
+            return blendedColor;
+        }
+    }
     public Sprite Sprite => sprite;
 
     public void Initialize()

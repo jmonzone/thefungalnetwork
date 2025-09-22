@@ -10,14 +10,16 @@ public interface INoteTarget : ITarget
 
 public class DJNoteManager : MonoBehaviour
 {
+    [Header("Refereneces")]
     [SerializeField] private DJTableReference djReference;
     [SerializeField] private DJNoteController notePrefab;
     [SerializeField] private int poolSize = 20;
-
     [SerializeField] private PlayerReference playerReference;
     [SerializeField] private UnitManager unitManager;
     [SerializeField] private BuildReference buildReference;
     [SerializeField] private List<PlantSporeEmitter> plants;
+
+
 
 
     private Queue<DJNoteController> notePool = new Queue<DJNoteController>();
@@ -108,7 +110,7 @@ public class DJNoteManager : MonoBehaviour
             var note = GetFromPool();
             note.gameObject.SetActive(true);
             note.transform.position = djReference.DjTable.transform.position;
-            note.Initialize(target, track.NoteColor, phaseOffset, value);
+            note.Initialize(target, track, phaseOffset, value);
 
             void OnReached()
             {

@@ -5,10 +5,12 @@ public class PlayerController : UnitController
     [Header("Player References")]
     [SerializeField] private PlayerReference playerReference;
     [SerializeField] private Unit playerUnit;
+    [SerializeField] private InventoryReference inventoryReference;
 
     private UnitFollow unitFollow;
     private UnitDestination unitDestination;
     private UnitDrum unitDrum;
+    private UnitGlyphCollect unitGlyphCollect;
 
     protected override void Awake()
     {
@@ -17,8 +19,10 @@ public class PlayerController : UnitController
         unitFollow = GetComponent<UnitFollow>();
         unitDestination = GetComponent<UnitDestination>();
         unitDrum = GetComponent<UnitDrum>();
+        unitGlyphCollect = GetComponent<UnitGlyphCollect>();
 
         unitFollow.OnDestinationReached += UnitFollow_OnDestinationReached;
+        unitGlyphCollect.OnNoteHit += UnitGlyphCollect_OnNoteHit;
 
         playerReference.SetPlayer(this);
         playerReference.SetTargetPosition(transform.position);
@@ -27,6 +31,11 @@ public class PlayerController : UnitController
         instance.Initialize(playerUnit);
 
         Initialize(instance);
+    }
+
+    private void UnitGlyphCollect_OnNoteHit(DJTrack track)
+    {
+        inventoryReference.IncreaseShrune(track.Glyph);
     }
 
     private void UnitFollow_OnDestinationReached()

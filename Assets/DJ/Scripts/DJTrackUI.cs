@@ -59,7 +59,7 @@ public class DJTrackUI : MonoBehaviour
         this.track = track;
         trackNameText.text = track.TrackName;
         descriptionText.text = track.Description;
-        descriptionText.color = track.NoteColor;
+        descriptionText.color = track.Glyph.Color;
         trackImage.sprite = track.Sprite;
     }
 }

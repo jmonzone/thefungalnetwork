@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -9,6 +10,7 @@ public class InventoryReference : ScriptableObject
     [SerializeField] private LocalData localData;
     [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference inventoryView;
+    [SerializeField] private GlyphCollection glyphCollection;
 
     [Header("Settings")]
     [SerializeField] private int initialSporeCount = 124;
@@ -17,9 +19,11 @@ public class InventoryReference : ScriptableObject
     [Header("Runtime")]
     [SerializeField] private int sporeCount = 0;
     [SerializeField] private List<Item> items;
+    [SerializeField] private Dictionary<GlyphData, int> glyphs;
 
     public int SporeCount => sporeCount;
     public List<Item> Items => items;
+    public Dictionary<GlyphData, int> Glyphs => glyphs;
 
     public event UnityAction<SporeController> OnSporeCollected;
     public event UnityAction<int> OnSporeCountChanged;
@@ -28,10 +32,12 @@ public class InventoryReference : ScriptableObject
     public event UnityAction<Item> OnItemSelected;
 
     private const string SPORE_KEY = "spore";
+    private const string SHRUNE_KEY = "shrune";
 
     public void Initialize()
     {
         items = new List<Item>(initialItems);
+        glyphs = new Dictionary<GlyphData, int>();
 
         if (localData.JsonFile.ContainsKey(SPORE_KEY))
         {
@@ -41,6 +47,22 @@ public class InventoryReference : ScriptableObject
         else
         {
             sporeCount = initialSporeCount;
+        }
+
+        if (localData.JsonFile.ContainsKey(SHRUNE_KEY))
+        {
+            foreach (var unit in localData.JsonFile[SHRUNE_KEY] as JArray)
+            {
+                if (unit is JObject glyphJson)
+                {
+                    var glyphName = glyphJson.Value<string>("id");
+                    var matchingGlyph = glyphCollection.Glyphs.Find(u => u.Id == glyphName);
+
+                    var glyphCount = glyphJson.Value<int>("count");
+
+                    glyphs.Add(matchingGlyph, glyphCount);
+                }
+            }
         }
     }
 
@@ -62,6 +84,37 @@ public class InventoryReference : ScriptableObject
         sporeCount -= value;
         OnSporeCountChanged?.Invoke(sporeCount);
         localData.SaveData(SPORE_KEY, sporeCount);
+    }
+
+    public void IncreaseShrune(GlyphData glyph)
+    {
+        if (glyphs.ContainsKey(glyph))
+        {
+            glyphs[glyph]++;
+        }
+        else
+        {
+            glyphs.Add(glyph, 1);
+        }
+
+        SaveData();
+    }
+
+    private void SaveData()
+    {
+        var glyphJson = new JArray();
+
+        foreach (var glyph in glyphs.Keys)
+        {
+            glyphJson.Add(new JObject
+            {
+                ["id"] = glyph.name,
+                ["count"] = glyphs[glyph]
+            });
+        }
+
+        localData.SaveData(SHRUNE_KEY, glyphJson);
+
     }
 
     public void SummonItem(Item item)

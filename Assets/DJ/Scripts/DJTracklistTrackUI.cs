@@ -31,6 +31,7 @@ public class DJTracklistTrackUI : MonoBehaviour
         trackNameText.text = track.name;
         artistText.text = track.Artist;
         descriptionText.text = track.Description;
-        descriptionText.color = track.NoteColor;
+
+        descriptionText.color = track.Glyph.Color;
     }
 }

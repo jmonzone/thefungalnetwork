@@ -1,6 +1,7 @@
 using UnityEngine;
+using UnityEngine.Events;
 
-public class UnitMusicGlyph : MonoBehaviour, INoteTarget
+public class UnitGlyphCollect : MonoBehaviour, INoteTarget
 {
     [Header("References")]
     public GlyphCollectController glyphCollectPrefab; // prefab with GlyphCollectReveal script
@@ -20,6 +21,8 @@ public class UnitMusicGlyph : MonoBehaviour, INoteTarget
     int INoteTarget.EmissionStep => emissionStep;
 
     Transform ITarget.Transform => transform;
+
+    public event UnityAction<DJTrack> OnNoteHit;
 
     void INoteTarget.OnHit(DJTrack track)
     {
@@ -43,5 +46,7 @@ public class UnitMusicGlyph : MonoBehaviour, INoteTarget
             // Start the reveal animation
             StartCoroutine(vfx.PlayReveal());
         }
+
+        OnNoteHit?.Invoke(track);
     }
 }
