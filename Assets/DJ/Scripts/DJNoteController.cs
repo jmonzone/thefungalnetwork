@@ -16,6 +16,7 @@ public class DJNoteController : MonoBehaviour
     private Vector3 targetPos;
     private float journeyLength;
     private float startTime;
+    private float initialScale;
 
     public event UnityAction OnDestinationReached;
 
@@ -38,49 +39,50 @@ public class DJNoteController : MonoBehaviour
         startTime = Time.time;
         spriteRenderer.color = color;
         this.spiralPhaseOffset = spiralPhaseOffset;
-        if (trackValue > 0) transform.localScale = Vector3.one * (minValue + trackValue * (maxValue - minValue));
+        initialScale = minValue + trackValue * (maxValue - minValue);
+        if (trackValue > 0) transform.localScale = Vector3.one * initialScale;
     }
 
     private void Update()
     {
         if (target == null) return;
 
-
         targetPos = target.Transform.position;
         journeyLength = 2f;
 
-        // Calculate how far along the journey we are (0..1)
+        // Calculate fraction of journey (0..1)
         float distCovered = (Time.time - startTime) * speed;
-        float fracJourney = distCovered / journeyLength;
+        float fracJourney = Mathf.Clamp01(distCovered / journeyLength);
 
-
-        // Basic interpolation between start and target
+        // --- Position ---
         Vector3 newPos = Vector3.Lerp(startPos, targetPos, fracJourney);
 
-        // Add arc height (parabola) using a sine wave
-        float arc = arcHeight * Mathf.Sin(Mathf.Clamp01(fracJourney) * Mathf.PI);
+        // Arc for nice jump / trajectory
+        float arc = arcHeight * Mathf.Sin(fracJourney * Mathf.PI);
         newPos.y += arc;
 
-        // Spiral offset (slight circular variation around the forward path)            // tweak for tightness
+        // Spiral offset
         float angle = fracJourney * spiralSpeed * Mathf.PI * 2f + spiralPhaseOffset;
-
-        // Create an offset perpendicular to the main trajectory
         Vector3 direction = (targetPos - startPos).normalized;
         Vector3 right = Vector3.Cross(direction, Vector3.up).normalized;
         Vector3 up = Vector3.Cross(right, direction).normalized;
-
         Vector3 spiralOffset = (Mathf.Cos(angle) * right + Mathf.Sin(angle) * up) * spiralRadius * spiralRadiusOffset * (1 - fracJourney);
         newPos += spiralOffset;
 
         transform.position = newPos;
 
-        // When close enough, trigger effect
-        if (fracJourney >= 1f)
+        // --- Scale down smoothly as it reaches target ---
+        float scale = Mathf.Lerp(initialScale, 0.3f, fracJourney); // 0.3f matches the collect animation start
+        transform.localScale = Vector3.one * scale;
+
+        // --- Trigger collection ---
+        if (fracJourney >= .9f)
         {
             gameObject.SetActive(false);
-            OnDestinationReached?.Invoke();
+
+            // Optional: trigger the glyph collect reveal on the player
+            if (OnDestinationReached != null)
+                OnDestinationReached.Invoke();
         }
     }
-
-
 }

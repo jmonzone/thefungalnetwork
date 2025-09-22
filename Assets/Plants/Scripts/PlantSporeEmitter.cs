@@ -135,7 +135,7 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable, INoteTarget
         return transform.position + (Vector3.right * 1f);
     }
 
-    void INoteTarget.OnHit()
+    void INoteTarget.OnHit(DJTrack track)
     {
         EmitSpore();
     }

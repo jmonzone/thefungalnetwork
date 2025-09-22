@@ -5,7 +5,7 @@ using System.Linq;
 public interface INoteTarget : ITarget
 {
     public int EmissionStep {get;}
-    public void OnHit();
+    public void OnHit(DJTrack track);
 }
 
 public class DJNoteManager : MonoBehaviour
@@ -79,14 +79,16 @@ public class DJNoteManager : MonoBehaviour
     {
         var targets = track.PartyMode switch
         {
-            _=> unitManager.AllUnits.Cast<INoteTarget>().Concat(new List<INoteTarget> { playerReference.Player }),
+            _=> unitManager.AllUnits
+                .Select(unit => unit.GetComponent<INoteTarget>())
+                .Concat(new List<INoteTarget> { playerReference.Player.GetComponent<INoteTarget>() }),
             //_ => plants.Cast<INoteTarget>()
         };
 
         return targets.Where(target =>
         {
-            var unit = target.Transform.GetComponent<UnitController>();
-            return !unit || unit.Instance.Job != Job.DJ;
+            var unit = target?.Transform.GetComponent<UnitController>();
+            return unit && unit.Instance.Job != Job.DJ;
         });
     }
 
@@ -111,7 +113,7 @@ public class DJNoteManager : MonoBehaviour
             void OnReached()
             {
                 note.OnDestinationReached -= OnReached;
-                target.OnHit();
+                target.OnHit(track);
             }
             note.OnDestinationReached += OnReached;
         }

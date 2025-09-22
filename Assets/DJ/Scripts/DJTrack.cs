@@ -19,6 +19,7 @@ public class DJTrack : ScriptableObject
     [SerializeField] private float bpm;
 
     [SerializeField] private Color noteColor;
+    [SerializeField] private GlyphData glyph;
 
     public string TrackName => trackName;
     public string Artist => artist;
@@ -29,4 +30,5 @@ public class DJTrack : ScriptableObject
     public float Bpm => bpm;
 
     public Color NoteColor => noteColor;
+    public GlyphData Glyph => glyph;
 }

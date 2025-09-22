@@ -2,13 +2,12 @@ using Cinemachine;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class UnitController : MonoBehaviour, IInteractable, INoteTarget
+public class UnitController : MonoBehaviour, IInteractable
 {
     [Header("Unit References")]
     [SerializeField] protected Transform renderRoot;
     [SerializeField] private UnitBehaviour defaultBehaviour;
     [SerializeField] private UnitBehaviour selectBehaviour;
-    [SerializeField] private int emissionStep;
 
     [Header("Runtime")]
     [SerializeField] private UnitInstance instance;
@@ -24,8 +23,6 @@ public class UnitController : MonoBehaviour, IInteractable, INoteTarget
     public bool IsDefaultBehaviour => currentBehaviour == defaultBehaviour;
 
     Transform ITarget.Transform => transform;
-
-    int INoteTarget.EmissionStep => emissionStep;
 
     public event UnityAction OnInitialized;
     public event UnityAction OnBehaviourChanged;
@@ -125,10 +122,6 @@ public class UnitController : MonoBehaviour, IInteractable, INoteTarget
     void IInteractable.Select()
     {
         ApplyBehaviour(selectBehaviour);
-    }
-
-    void INoteTarget.OnHit()
-    {
     }
 
     public virtual void OnProximityChanged(bool value)
