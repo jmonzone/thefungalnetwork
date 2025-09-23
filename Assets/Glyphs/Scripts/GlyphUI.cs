@@ -14,7 +14,7 @@ public class GlyphUI : MonoBehaviour
     [SerializeField] private GlyphEmitterUI glyphEmitterUI;
     [SerializeField] private DialogueReference dialogue;
     [SerializeField] private InventoryReference inventoryReference;
-    [SerializeField] private List<RectTransform> glyphSlots;
+    [SerializeField] private List<GlyphPalleteSlotUI> glyphSlots;
 
     [Header("Spiral Animation Settings")]
     [SerializeField] private float separateDuration = 0.2f;   // time to separate outward before spiraling
@@ -54,13 +54,14 @@ public class GlyphUI : MonoBehaviour
     private void Awake()
     {
         audioSource = GetComponent<AudioSource>();
+        glyphPalette.GetComponentsInChildren(true, glyphSlots);
         glyphDropZone.OnGlyphPlaced += OnPalleteGlyphDropped;
     }
 
     private GlyphController SpawnGlyph(GlyphData glyph, Vector3 position, bool isPaletteGlyph, List<string> words)
     {
         var glyphObj = Instantiate(glyphPrefab, isPaletteGlyph ? glyphPalette : glyphDropZone.transform);
-        glyphObj.GetComponent<RectTransform>().anchoredPosition = position;
+        glyphObj.GetComponent<RectTransform>().position = position;
         glyphObj.Initialize(glyph, isPaletteGlyph, words );
 
         glyphObj.OnGlyphFused += OnGlyphsFused;
@@ -97,7 +98,7 @@ public class GlyphUI : MonoBehaviour
         var i = 0;
         foreach (var glyph in inventoryReference.Glyphs.Keys)
         {
-            SpawnGlyph(glyph, glyphSlots[i].anchoredPosition, isPaletteGlyph: true, new List<string>());
+            SpawnGlyph(glyph, glyphSlots[i].Rect.position, isPaletteGlyph: true, new List<string>());
             i++;
         }
     }
