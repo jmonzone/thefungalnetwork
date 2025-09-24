@@ -46,7 +46,7 @@ public class GlyphController : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         glyphImage.sprite = glyph.Sprite;
         glyphImage.SetNativeSize();
 
-        originalPosition = rectTransform.anchoredPosition;
+        originalPosition = rectTransform.position;
     }
 
     public void ToggleInteractable(bool value)
@@ -114,7 +114,7 @@ public class GlyphController : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     public void ReturnToOriginalParent()
     {
         transform.SetParent(originalParent);
-        rectTransform.anchoredPosition = originalPosition;
+        rectTransform.position = originalPosition;
     }
 
 
@@ -182,7 +182,7 @@ public class GlyphController : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             float angle = angleOffset;
 
             Vector2 offset = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * radius;
-            rectTransform.anchoredPosition = clashPoint + (Vector3)offset;
+            rectTransform.position = clashPoint + (Vector3)offset;
 
             rectTransform.localScale = Vector3.Lerp(startScale, startScale * 1.2f, t); // grow slightly
             background.color = Color.Lerp(startColor, Color.white, t);
@@ -204,7 +204,7 @@ public class GlyphController : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             float radius = Mathf.Lerp(startRadius, 0f, t);
 
             Vector2 offset = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * radius;
-            rectTransform.anchoredPosition = clashPoint + (Vector3)offset;
+            rectTransform.position = clashPoint + (Vector3)offset;
 
             rectTransform.localScale = Vector3.Lerp(startScale * 1.2f, Vector3.zero, t);
             background.color = Color.Lerp(startColor, Color.white, t); // stay white
@@ -213,7 +213,7 @@ public class GlyphController : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         }
 
         // Snap to clashpoint invisible
-        rectTransform.anchoredPosition = clashPoint;
+        rectTransform.position = clashPoint;
         rectTransform.localScale = Vector3.zero;
         background.color = startColor;
     }

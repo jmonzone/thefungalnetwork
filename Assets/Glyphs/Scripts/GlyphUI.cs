@@ -58,6 +58,26 @@ public class GlyphUI : MonoBehaviour
         glyphDropZone.OnGlyphPlaced += OnPalleteGlyphDropped;
     }
 
+    private void OnEnable()
+    {
+        inventoryReference.OnGlyphCountChanged += UpdateGlyphSlots;
+    }
+
+    private void OnDisable()
+    {
+        inventoryReference.OnGlyphCountChanged -= UpdateGlyphSlots;
+    }
+
+    private void UpdateGlyphSlots(GlyphData arg0, int arg1)
+    {
+        var i = 0;
+        foreach (var glyph in inventoryReference.Glyphs.Keys)
+        {
+            glyphSlots[i].SetCount(inventoryReference.Glyphs[glyph]);
+            i++;
+        }
+    }
+
     private GlyphController SpawnGlyph(GlyphData glyph, Vector3 position, bool isPaletteGlyph, List<string> words)
     {
         var glyphObj = Instantiate(glyphPrefab, isPaletteGlyph ? glyphPalette : glyphDropZone.transform);
@@ -98,6 +118,7 @@ public class GlyphUI : MonoBehaviour
         var i = 0;
         foreach (var glyph in inventoryReference.Glyphs.Keys)
         {
+            glyphSlots[i].SetCount(inventoryReference.Glyphs[glyph]);
             SpawnGlyph(glyph, glyphSlots[i].Rect.position, isPaletteGlyph: true, new List<string>());
             i++;
         }
@@ -109,7 +130,8 @@ public class GlyphUI : MonoBehaviour
         {
             if (placedGlyph.IsPalleteGlyph)
             {
-                SpawnGlyph(placedGlyph.Glyph, placedGlyph.OriginalPosition, true, new List<string>());
+                inventoryReference.DecreaseShrune(placedGlyph.Glyph);
+                if (inventoryReference.Glyphs[placedGlyph.Glyph] > 0) SpawnGlyph(placedGlyph.Glyph, placedGlyph.OriginalPosition, true, new List<string>());
             }
         }
         else
@@ -135,7 +157,7 @@ public class GlyphUI : MonoBehaviour
         ToggleInteractable(false);
 
         // Midpoint between dragged + target
-        Vector3 clashPoint = (dragged.RectTransform.anchoredPosition + target.RectTransform.anchoredPosition) / 2f;
+        Vector3 clashPoint = (dragged.RectTransform.position + target.RectTransform.position) / 2f;
 
         // Each starts at clashpoint, separates outward, then spirals inward
         Coroutine animA = StartCoroutine(

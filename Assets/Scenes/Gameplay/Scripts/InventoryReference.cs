@@ -27,6 +27,7 @@ public class InventoryReference : ScriptableObject
 
     public event UnityAction<SporeController> OnSporeCollected;
     public event UnityAction<int> OnSporeCountChanged;
+    public event UnityAction<GlyphData, int> OnGlyphCountChanged;
     public event UnityAction OnItemSummoned;
     public event UnityAction OnInventoryOpened;
     public event UnityAction<Item> OnItemSelected;
@@ -97,6 +98,22 @@ public class InventoryReference : ScriptableObject
             glyphs.Add(glyph, 1);
         }
 
+        OnGlyphCountChanged?.Invoke(glyph, glyphs[glyph]);
+        SaveData();
+    }
+
+    public void DecreaseShrune(GlyphData glyph)
+    {
+        if (glyphs.ContainsKey(glyph) && glyphs[glyph] > 0)
+        {
+            glyphs[glyph]--;
+        }
+        else
+        {
+            glyphs.Add(glyph, 0);
+        }
+
+        OnGlyphCountChanged?.Invoke(glyph, glyphs[glyph]);
         SaveData();
     }
 

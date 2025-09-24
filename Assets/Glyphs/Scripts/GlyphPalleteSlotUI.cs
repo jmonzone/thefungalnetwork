@@ -8,7 +8,7 @@ public class GlyphPalleteSlotUI : MonoBehaviour
 
     public RectTransform Rect => rectTransform;
 
-    public void Initialize(int count)
+    public void SetCount(int count)
     {
         countText.text = count.ToString();
     }
