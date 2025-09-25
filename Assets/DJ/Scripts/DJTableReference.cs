@@ -35,6 +35,8 @@ public class DJTableReference : ScriptableObject
     public event UnityAction OnLeftTrackChanged;
     public event UnityAction OnRightTrackChanged;
 
+    public event UnityAction OnMusicStarted;
+
     public void Initialize()
     {
         bpm = 90;
@@ -93,5 +95,10 @@ public class DJTableReference : ScriptableObject
         else SetRightTrack(track);
 
         navigation.GoBack();
+    }
+
+    public void InvokeOnMusicStarted()
+    {
+        OnMusicStarted?.Invoke();
     }
 }

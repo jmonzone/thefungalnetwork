@@ -13,6 +13,8 @@ public class DJTableController : MonoBehaviour, IInteractable
     [SerializeField] private AudioSource audioSource1;
     [SerializeField] private AudioSource audioSource2;
 
+    public AudioSource AudioSource1 => audioSource1;
+
     Transform ITarget.Transform => transform;
     public Vector3 DJPosition => djAnchor.position;
 
@@ -49,6 +51,7 @@ public class DJTableController : MonoBehaviour, IInteractable
         backgroundMusic.HideMusic();
         PlayLeftTrack(djReference.LeftTrack.AudioClip);
         PlayRightTrack(djReference.RightTrack.AudioClip);
+        djReference.InvokeOnMusicStarted();
     }
 
     private void BuildController_OnBuildComplete()
@@ -67,6 +70,7 @@ public class DJTableController : MonoBehaviour, IInteractable
 
     public void PlayLeftTrack(AudioClip audioClip)
     {
+        Debug.Log("playing left track");
         audioSource1.clip = audioClip;
         if (leftCoroutine != null) StopCoroutine(leftCoroutine);
         leftCoroutine = StartCoroutine(PlayAndFadeIn(audioSource1, 1, 5f));

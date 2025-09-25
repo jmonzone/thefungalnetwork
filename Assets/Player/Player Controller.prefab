@@ -50,6 +50,7 @@ GameObject:
   - component: {fileID: 6363586532240370566}
   - component: {fileID: 8520475437556092179}
   - component: {fileID: 7412468969747994918}
+  - component: {fileID: 5880526443589518393}
   m_Layer: 0
   m_Name: Player Controller
   m_TagString: Untagged
@@ -309,6 +310,25 @@ MonoBehaviour:
   scaleUp: 1.5
   scaleDuration: 0.25
   jumpHeight: 0.5
+--- !u!114 &5880526443589518393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 421527447816816506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab2b86bc7abaf4cd1b8c1172b4e34303, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  djReference: {fileID: 11400000, guid: 3bda1116fcf8f49e696cd21c6b5092da, type: 2}
+  targetMaterial: {fileID: 2100000, guid: 806224b540ec7465496fd51b01d3f02f, type: 2}
+  danceDuration: 0.5
+  pulseDecaySpeed: 5
+  progressSpeed: 0.2
+  lerpSpeed: 5
+  pulseMultiplier: 0.3
 --- !u!1001 &3542599120507107562
 PrefabInstance:
   m_ObjectHideFlags: 0

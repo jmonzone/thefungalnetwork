@@ -1,45 +1,40 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class DancefloorBackground : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private DancefloorReference musicVideoReference;
+    [SerializeField] private DancefloorReference dancefloorReference;
     [SerializeField] private ZoneController zoneController;
     [SerializeField] private DJTableReference dJTableReference;
     [SerializeField] private DancefloorBackgroundOverlay overlayEffects;
     [SerializeField] private FadeCanvasGroup fadeCanvasGroup;
-    //[SerializeField] private MusicVideoP postProcessing;
-
-    [SerializeField] private Camera camA;
-    [SerializeField] private Camera camB;
 
     [Header("UI Crossfade")]
+    [SerializeField] private Camera camA;
+    [SerializeField] private Camera camB;
+    [SerializeField] private Camera dominantCamera;
+    [SerializeField] private RectTransform rect;
     [SerializeField] private RawImage rawImageA;
     [SerializeField] private RawImage rawImageB;
+    [SerializeField] private Color baseColorA = Color.white;
+    [SerializeField] private Color baseColorB = Color.white;
+    [SerializeField] private float crossfadeDuration = 2f;
+
+    private int[] stepsPerFadeOptions = new int[] { 4, 8, 16 }; // e.g., half bar, full bar
+    private bool showingA = true;
+
+    public Camera DominantCamera => dominantCamera;
+    public RectTransform Rect => rect;
 
     [Header("Dancefloor Orbit")]
     [SerializeField] private float orbitRadius = 5f;
     [SerializeField] private float orbitHeight = 2f;
     [SerializeField] private float bobAmplitude = 0.5f;
-
-    [Header("Camera Base Colors")]
-    [SerializeField] private Color baseColorA = Color.white;
-    [SerializeField] private Color baseColorB = Color.white;
-
-    [Header("Beat Sync Settings")]
-    [SerializeField, Tooltip("Multiplier for camera orbit speed relative to beats.")]
-    private float orbitSpeedMultiplier = 1f;
-
-    private bool showingA = true;
+    [SerializeField] private float orbitSpeedMultiplier = 1f;
     private float orbitAngleA;
     private float orbitAngleB;
-
-    [Header("Beat Step Settings")]
-    [SerializeField, Tooltip("Possible step counts per fade transition.")]
-    private int[] stepsPerFadeOptions = new int[] { 2, 4, 8 }; // e.g., half bar, full bar
 
     private int currentStepCounter = 0;
     private int currentStepsPerFade; // the current fade length in steps
@@ -48,18 +43,19 @@ public class DancefloorBackground : MonoBehaviour
     private void Start()
     {
         PickNextStepsPerFade();
+        dominantCamera = camA;
     }
 
     private void OnEnable()
     {
-        musicVideoReference.OnDancefloorEnter += MusicVideoReference_OnMusicVideoStart;
-        musicVideoReference.OnDancefloorExit += MusicVideoReference_OnMusicVideoEnd;
+        dancefloorReference.OnDancefloorStart += MusicVideoReference_OnMusicVideoStart;
+        dancefloorReference.OnDancefloorExit += MusicVideoReference_OnMusicVideoEnd;
     }
 
     private void OnDisable()
     {
-        musicVideoReference.OnDancefloorEnter -= MusicVideoReference_OnMusicVideoStart;
-        musicVideoReference.OnDancefloorExit -= MusicVideoReference_OnMusicVideoEnd;
+        dancefloorReference.OnDancefloorEnter -= MusicVideoReference_OnMusicVideoStart;
+        dancefloorReference.OnDancefloorExit -= MusicVideoReference_OnMusicVideoEnd;
     }
 
     private void MusicVideoReference_OnMusicVideoStart()
@@ -97,7 +93,7 @@ public class DancefloorBackground : MonoBehaviour
             return;
 
         float beatDuration = dJTableReference.BeatDuration;
-        float fadeDuration = beatDuration * currentStepsPerFade;
+        float fadeDuration = beatDuration * crossfadeDuration;
 
         StartCoroutine(CrossfadeWithNextPick(fadeDuration));
     }
@@ -164,6 +160,9 @@ public class DancefloorBackground : MonoBehaviour
 
     private void SetRawImageAlpha(float alphaA, float alphaB)
     {
+        if (alphaA > alphaB) dominantCamera = camA;
+        else dominantCamera = camB;
+
         rawImageA.color = new Color(baseColorA.r, baseColorA.g, baseColorA.b, alphaA);
         rawImageB.color = new Color(baseColorB.r, baseColorB.g, baseColorB.b, alphaB);
     }

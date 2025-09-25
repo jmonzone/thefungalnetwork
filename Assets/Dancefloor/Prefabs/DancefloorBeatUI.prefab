@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 4167626204070816525}
   - component: {fileID: 4510680262946367402}
   m_Layer: 5
-  m_Name: MusicGlyphUI
+  m_Name: DancefloorBeatUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -39,7 +39,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 150, y: 150}
+  m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4768275716289983598
 CanvasRenderer:
@@ -144,23 +144,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 558169578233510617}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e2ab3052f2bd4c6d886b8d2d1b6446f, type: 3}
+  m_Script: {fileID: 11500000, guid: e7090cbd4822c42628cd9ec56c7c5d42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   inventory: {fileID: 11400000, guid: e9c2fc38b99d8404f8495af08b4889fc, type: 2}
   rect: {fileID: 4776155089759825755}
-  button: {fileID: 975538920032181133}
   canvasGroup: {fileID: 4167626204070816525}
   glyphImage: {fileID: 7020208108018937123}
-  spawnScale: 1.25
-  endScale: 0
-  fallDuration: 2.5
-  leafAmplitude: 25
-  rotationAmplitude: 20
-  spawnPopTime: 0.2
-  endScaleDownTime: 0.2
-  successScaleUp: 1.5
-  successFadeTime: 0.3
+  spawnScale: 0.5
+  endScale: 1
+  fallDuration: 5
+  leafAmplitude: 100
+  rotationAmplitude: 100
+  spawnPopTime: 0.1
+  endScaleDownTime: 0.1
+  successScaleUp: 2
+  successFadeTime: 0.2
 --- !u!1 &5647119305857507895
 GameObject:
   m_ObjectHideFlags: 0

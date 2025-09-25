@@ -1,10 +1,8 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class MusicVideoGlyphUI : MonoBehaviour, IPointerEnterHandler
+public class DancefloorBeatUI : MonoBehaviour
 {
     [SerializeField] private InventoryReference inventory;
 
@@ -28,20 +26,12 @@ public class MusicVideoGlyphUI : MonoBehaviour, IPointerEnterHandler
     private bool collected = false;
     private GlyphData glyph;
 
-    // Triggered immediately when pointer is pressed down
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        CollectSuccess();
-    }
-
-
     public IEnumerator FallRoutine(GlyphData glyph, Vector3 start, Vector3 target)
     {
         this.glyph = glyph;
         glyphImage.sprite = glyph.Sprite;
 
         float elapsed = 0f;
-
         rect.localPosition = start;
         rect.localScale = Vector3.zero;
 
@@ -68,14 +58,9 @@ public class MusicVideoGlyphUI : MonoBehaviour, IPointerEnterHandler
             float t = elapsed / fallDuration;
             float eased = t * t * (3f - 2f * t); // smoothstep
 
-            // base position
             Vector3 basePos = Vector3.Lerp(start, target, eased);
-
-            // sway
             float sway = Mathf.Sin(t * Mathf.PI * 2f) * leafAmplitude * (1f - eased);
             rect.localPosition = new Vector3(centerX + sway, basePos.y, basePos.z);
-
-            // subtle rotation
             rect.localRotation = Quaternion.Euler(0, 0, Mathf.Sin(t * Mathf.PI * 2f) * rotationAmplitude);
 
             yield return null;
@@ -95,15 +80,18 @@ public class MusicVideoGlyphUI : MonoBehaviour, IPointerEnterHandler
         Destroy(gameObject);
     }
 
-    // Call this on button/tap click
-    public void CollectSuccess()
+    /// <summary>
+    /// Call this when the glyph is collected (e.g., by AuraController collision)
+    /// </summary>
+    public void Collect()
     {
         if (collected) return;
         collected = true;
         StopAllCoroutines();
         StartCoroutine(SuccessRoutine());
 
-        inventory.IncreaseShrune(glyph);
+        if (glyph != null)
+            inventory.IncreaseShrune(glyph);
     }
 
     private IEnumerator SuccessRoutine()
@@ -117,10 +105,7 @@ public class MusicVideoGlyphUI : MonoBehaviour, IPointerEnterHandler
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / successFadeTime);
 
-            // Scale up
             rect.localScale = Vector3.Lerp(startScale, startScale * successScaleUp, t);
-
-            // Fade out
             if (canvasGroup != null)
                 canvasGroup.alpha = Mathf.Lerp(startAlpha, 0f, t);
 
