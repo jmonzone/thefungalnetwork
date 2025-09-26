@@ -56,8 +56,7 @@ public class StoryFirstParty : MonoBehaviour
         partyReference.StartParty(tutorialParty);
         var partyFrog = unitManager.UnitControllers[0];
 
-        //cameraPanController.CenterTargetInView(playerReference.Player.transform.position);
-        //dialogueReference.StartDialogue(playerReference.Player, lostDialogue);
+        dialogueReference.StartDialogue(playerReference.Player, new Dialogue(lostDialogue, DialogueType.STORY));
 
         yield return new WaitUntil(() => timesInteractedWithGuests > 3);
         yield return new WaitWhile(() => dialogueReference.IsActive);
@@ -83,8 +82,6 @@ public class StoryFirstParty : MonoBehaviour
         }
 
         playerReference.Player.transform.position = cameraPositionAnchor.position;
-
-        //cameraPanController.CenterTargetInView(guestPictureAnchor.transform.position);
 
         yield return new WaitForSeconds(1f);
 

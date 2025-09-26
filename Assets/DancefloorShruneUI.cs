@@ -22,17 +22,11 @@ public class DancefloorShruneUI : MonoBehaviour
         mainColor.a = Mathf.Clamp01(normalized);
         shruneImage.color = mainColor;
 
-        Debug.Log(normalized);
         // Update fill bar if present
         if (shruneFillImage)
         {
             shruneFillImage.fillAmount = normalized;
-            //shruneFillImage.color = new Color(
-            //    shruneFillImage.color.r,
-            //    shruneFillImage.color.g,
-            //    shruneFillImage.color.b,
-            //    Mathf.Clamp01(normalized)
-            //);
+            shruneFillImage.color = djReference.LeftTrack.Glyph.Color;
         }
     }
 }

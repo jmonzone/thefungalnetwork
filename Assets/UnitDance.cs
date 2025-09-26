@@ -6,12 +6,23 @@ public class UnitDance : MonoBehaviour
     [SerializeField] private DJTableReference djReference;
     [SerializeField] private Material targetMaterial; // assign in inspector
 
+    [SerializeField] private Color targetColor;
+    [SerializeField] private Color originalColor;
+    [SerializeField] private Color stageColor;
+    [SerializeField] private Color pulseColor;
+
+    [SerializeField] private float pulseSpeed = 10f;      // speed of pulse lerp
+    [SerializeField] private float targetIntensity = 0f;      // speed of return to stage color
+    [SerializeField] private float originalIntensity = 1f;
+    [SerializeField] private float stageSpeed = 2f; // time to drop one stage if idle
+    [SerializeField] private int maxProgress = 3;
+    [SerializeField] private float pulseOffset = 1;
+
     private Animator animator;
     private Material[] materialsToAnimate;
     private Color[] originalColors;
 
-    private float danceTimer = 0;
-    [SerializeField] private float danceDuration = 1f;
+    [SerializeField] private int currentStage = 0;
 
     private void Awake()
     {
@@ -44,59 +55,40 @@ public class UnitDance : MonoBehaviour
         originalColor = originalColors[0];
     }
 
-    [SerializeField] private Color targetColor;
-    [SerializeField] private Color originalColor;
-
-    [SerializeField] private float pulseSpeed = 10f;      // speed of pulse lerp
-    [SerializeField] private float returnSpeed = 5f;      // speed of return to stage color
-    [SerializeField] private float maxProgress = 0.9f;    // max progression fraction
-    [SerializeField] private float stageDecayInterval = 2f; // time to drop one stage if idle
-
-    private int currentStage = 0;
-    private float stageTimer = 0f;
-
-    private void Update()
-    {
-        // Decrement stage timer
-        if (currentStage > 0)
-        {
-            stageTimer -= Time.deltaTime;
-            if (stageTimer <= 0f)
-            {
-                currentStage--;
-                UpdateAnimator();
-                stageTimer = stageDecayInterval;
-                StartCoroutine(StageColorUpdate());
-            }
-        }
-    }
-
     public void StartDance()
     {
         targetColor = djReference.LeftTrack.Glyph.Color;
+        currentStage = 0;
 
-        currentStage = Mathf.Clamp(currentStage + 1, 0, 3);
-        stageTimer = stageDecayInterval; // reset timer on click
-        UpdateAnimator();
+        animator.SetBool("IsDancing", true);
 
-        StopCoroutine(nameof(PulseRoutine));
-        StartCoroutine(PulseRoutine());
     }
 
-    private void UpdateAnimator()
+    public void EndDance()
     {
-        if (currentStage <= 1)
-            animator.SetBool("IsDancing", false);
-        else
-            animator.SetBool("IsDancing", true);
+        animator.SetBool("IsDancing", false);
     }
 
-    private IEnumerator PulseRoutine()
+    public void IncrementDancePower()
     {
-        // Determine current stage color
-        float progressFraction = currentStage / 3f;
-        Color stageColor = Color.Lerp(originalColor, targetColor, Mathf.Min(progressFraction, maxProgress));
-        Color pulseColor = Color.Lerp(stageColor, targetColor, 0.2f); // slightly brighter
+        animator.SetTrigger("Cheer");
+
+        currentStage = Mathf.Clamp(currentStage + 1, 0, maxProgress);
+
+        StopAllCoroutines();
+        StartCoroutine(IncreaseRoutine());
+    }
+
+
+    private IEnumerator IncreaseRoutine()
+    {
+        var pulseValue = (float)(currentStage) / (maxProgress);
+
+        pulseColor = Color.Lerp(originalColor, targetColor, pulseValue);
+        var pulseIntensity = Mathf.Lerp(originalIntensity, targetIntensity, pulseValue);
+
+        var currentColor = materialsToAnimate[0].GetColor("_Outer_Color");
+        var currentIntensity = materialsToAnimate[0].GetFloat("_Intensity");
 
         float t = 0f;
         while (t < 1f)
@@ -104,48 +96,35 @@ public class UnitDance : MonoBehaviour
             t += Time.deltaTime * pulseSpeed;
             for (int i = 0; i < materialsToAnimate.Length; i++)
             {
-                Color current = materialsToAnimate[i].GetColor("_Outer_Color");
-                materialsToAnimate[i].SetColor("_Outer_Color", Color.Lerp(current, pulseColor, t));
+                materialsToAnimate[i].SetColor("_Outer_Color", Color.Lerp(currentColor, pulseColor, t));
+                materialsToAnimate[i].SetFloat("_Intensity", Mathf.Lerp(currentIntensity, pulseIntensity, t));
             }
             yield return null;
         }
 
-        t = 0f;
-        while (t < 1f)
+        // Decrement stage timer
+        while (currentStage > 0)
         {
-            t += Time.deltaTime * returnSpeed;
-            for (int i = 0; i < materialsToAnimate.Length; i++)
+            stageColor = Color.Lerp(originalColor, targetColor, (float)(currentStage - pulseOffset) / (maxProgress));
+
+            currentColor = materialsToAnimate[0].GetColor("_Outer_Color");
+            currentIntensity = materialsToAnimate[0].GetFloat("_Intensity");
+
+            t = 0f;
+            while (t < 1f)
             {
-                Color current = materialsToAnimate[i].GetColor("_Outer_Color");
-                materialsToAnimate[i].SetColor("_Outer_Color", Color.Lerp(current, stageColor, t));
+                t += Time.deltaTime * stageSpeed;
+                for (int i = 0; i < materialsToAnimate.Length; i++)
+                {
+                    materialsToAnimate[i].SetColor("_Outer_Color", Color.Lerp(currentColor, stageColor, t));
+                    materialsToAnimate[i].SetFloat("_Intensity", Mathf.Lerp(currentIntensity, originalIntensity, t));
+                }
+                yield return null;
             }
+
+            currentStage = Mathf.Clamp(currentStage - 1, 0, maxProgress);
             yield return null;
         }
     }
-
-    // Optional: smoothly update color when stage decrements automatically
-    private IEnumerator StageColorUpdate()
-    {
-        float progressFraction = currentStage / 3f;
-        Color stageColor = Color.Lerp(originalColor, targetColor, Mathf.Min(progressFraction, maxProgress));
-
-        bool done = false;
-        while (!done)
-        {
-            done = true;
-            for (int i = 0; i < materialsToAnimate.Length; i++)
-            {
-                Color current = materialsToAnimate[i].GetColor("_Outer_Color");
-                Color next = Color.Lerp(current, stageColor, Time.deltaTime * returnSpeed);
-                materialsToAnimate[i].SetColor("_Outer_Color", next);
-
-                if (((Vector4)(next - stageColor)).sqrMagnitude > 0.0001f)
-                    done = false;
-            }
-            yield return null;
-        }
-    }
-
-
 
 }

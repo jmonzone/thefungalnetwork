@@ -40,16 +40,7 @@ public class DancefloorEnergyController : MonoBehaviour
         isActive = false;
     }
 
-    public void SendEnergy(Vector3 screenPosition)
-    {
-        SpawnEnergyParticle(screenPosition, beatDuation);
-        ShowTouchIndicator(Input.mousePosition);
-    }
-
-    // ---------------------------
-    // Particle spawning logic
-    // ---------------------------
-    private void SpawnEnergyParticle(Vector3 screenPosition, float travelDuration)
+    public void SendEnergy(Vector3 screenPosition, Color color)
     {
         if (!energyParticlePrefab) return;
 
@@ -65,8 +56,13 @@ public class DancefloorEnergyController : MonoBehaviour
         particleRect.anchoredPosition = localPos;
         particleRect.localScale = Vector3.zero;
 
-        Vector2 auraPos = auraController.rect.anchoredPosition;
-        StartCoroutine(MoveParticle(particleRect, auraPos, travelDuration));
+        Image image = particle.GetComponent<Image>();
+        image.color = color;
+
+        Vector2 auraPos = (auraController.transform as RectTransform).anchoredPosition;
+        StartCoroutine(MoveParticle(particleRect, auraPos, beatDuation));
+
+        ShowTouchIndicator(Input.mousePosition);
     }
 
     private IEnumerator MoveParticle(RectTransform particle, Vector2 targetPos, float travelDuration)

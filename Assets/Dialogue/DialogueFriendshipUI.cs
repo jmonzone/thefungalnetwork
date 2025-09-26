@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class DialogueFriendshipUI : DialoguePageUI
 {
-    [SerializeField] private TextMeshProUGUI text;
+    [SerializeField] private TextMeshProUGUI levelText;
+    [SerializeField] private TextMeshProUGUI nextLevelText;
 
     private AudioSource audioSource;
     private ValueBarController valueBarController;
@@ -28,16 +29,20 @@ public class DialogueFriendshipUI : DialoguePageUI
         base.Show();
 
         var instance = dialogue.Unit.Instance;
+
+        levelText.text = $"Level {instance.FriendshipLevel}";
+
         valueBarController.Initialize(instance.FriendshipPoints, instance.MinFP, instance.MaxFP);
         level = instance.FriendshipLevel;
         instance.IncreaseFriendship(dialogue.Relationship);
         valueBarParticleController.BurstFromWorld((int)dialogue.Relationship, dialogue.Unit.transform.position);
         audioSource.Play();
+
     }
 
     private void Update()
     {
-        text.color = valueBarController.AnimatedColor;
+        nextLevelText.color = valueBarController.AnimatedColor;
     }
 
     private void ValueBarParticleController_OnParticlesReached()
@@ -49,6 +54,7 @@ public class DialogueFriendshipUI : DialoguePageUI
     {
         if (HasLeveledUp)
         {
+            levelText.text = $"Level {dialogue.Unit.Instance.FriendshipLevel}";
             StartCoroutine(LevelUpRoutine());
         }
         else
@@ -61,7 +67,7 @@ public class DialogueFriendshipUI : DialoguePageUI
     {
         valueBarController.SetTargetScale(1.1f);
         yield return new WaitForSeconds(1f);
-        text.text = "Friendship Level Increased";
+        nextLevelText.text = "Friendship Level Increased";
 
         if (dialogue.Unit.Instance.FriendshipLevel == 2)
         {

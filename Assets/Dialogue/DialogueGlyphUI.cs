@@ -2,7 +2,7 @@ using System.Collections;
 using Cinemachine;
 using UnityEngine;
 
-public class DialogueChatUI : DialoguePageUI
+public class DialogueGlyphUI : DialoguePageUI
 {
     [SerializeField] private GlyphUI glyphUI;
 

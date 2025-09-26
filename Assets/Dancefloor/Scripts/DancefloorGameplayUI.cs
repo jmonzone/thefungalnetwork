@@ -8,11 +8,8 @@ public class DancefloorGameplayUI : MonoBehaviour
     [Header("References")]
     [SerializeField] private DancefloorReference dancefloorReference;
     [SerializeField] private DJTableReference djReference;
-    [SerializeField] private DancefloorBeatManager beatManager;
-    [SerializeField] private DancefloorAuraController auraController;
     [SerializeField] private DancefloorEnergyController energyController;
     [SerializeField] private DancefloorBackground background;
-    [SerializeField] private RectTransform energyRect;
     [SerializeField] private Button exitButton;
 
     private void Start()
@@ -34,21 +31,21 @@ public class DancefloorGameplayUI : MonoBehaviour
 
     private void MusicVideoReference_OnMusicVideoStart()
     {
-        //beatManager.StartBeats();
-        auraController.auraColor = djReference.LeftTrack.Glyph.Color;
-        auraController.beatInterval = djReference.BeatDuration;
-        energyController.touchColor = djReference.LeftTrack.Glyph.Color;
+        var dancers = dancefloorReference.Units.Select(unit => unit.GetComponent<UnitDance>()).ToList();
+        dancers[0].StartDance();
 
-        auraController.Activate();
-        energyController.Activate(djReference.BeatDuration);
+        //energyController.touchColor = djReference.LeftTrack.Glyph.Color;
+
+        //energyController.Activate(djReference.BeatDuration);
         StartCoroutine(DanceRoutine());
     }
 
     private void MusicVideoReference_OnMusicVideoEnd()
     {
-        //beatManager.StopBeats();
-        auraController.Deactivate();
-        energyController.Deactivate();
+        var dancers = dancefloorReference.Units.Select(unit => unit.GetComponent<UnitDance>()).ToList();
+        dancers[0].EndDance();
+
+        //energyController.Deactivate();
         StopAllCoroutines();
     }
 
@@ -60,15 +57,15 @@ public class DancefloorGameplayUI : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))
             {
-                var worldPos = dancers[0].transform.position + Vector3.up * 3f;
+                var worldPos = dancers[0].transform.position + Vector3.up;
 
                 Vector3 viewportPos = background.DominantCamera.WorldToScreenPoint(worldPos);
 
-                energyController.SendEnergy(viewportPos + Vector3.right * 200f + Vector3.up * 100f);
+                //energyController.SendEnergy(viewportPos, djReference.LeftTrack.Glyph.Color);
 
                 foreach(var dancer in dancers)
                 {
-                    dancer.StartDance();
+                    dancer.IncrementDancePower();
                 }
             }
 

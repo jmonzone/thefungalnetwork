@@ -5,6 +5,7 @@ public enum DialoguePage
 {
     ACTION,
     CHAT,
+    GLYPH,
     FRIENDSHIP
 }
 
@@ -19,6 +20,7 @@ public class DialogueUI : MonoBehaviour
     [SerializeField] private SpeakerUI speakerUI;
     [SerializeField] private DialogueActionsUI actionPage;
     [SerializeField] private DialogueChatUI chatPage;
+    [SerializeField] private DialogueGlyphUI glyphPage;
     [SerializeField] private DialogueFriendshipUI friendshipPage;
 
     [SerializeField] private TarotCardUI tarotCard;
@@ -32,9 +34,11 @@ public class DialogueUI : MonoBehaviour
 
         actionPage.Hide();
         chatPage.Hide();
+        glyphPage.Hide();
         friendshipPage.Hide();
 
-        chatPage.OnClose += ChatPage_OnClose;
+        chatPage.OnClose += OnChatPageClosed;
+        glyphPage.OnClose += OnChatPageClosed;
         friendshipPage.OnClose += FriendshipPage_OnClose;
 
         closeButton.onClick.AddListener(() => dialogue.CompleteDialogue());
@@ -56,7 +60,14 @@ public class DialogueUI : MonoBehaviour
 
     private void StartInteraction()
     {
-        ShowPage(DialoguePage.CHAT);
+        if (dialogue.Unit is TreeController)
+        {
+            ShowPage(DialoguePage.GLYPH);
+        }
+        else
+        {
+            ShowPage(DialoguePage.CHAT);
+        }
     }
 
     private void StartDialogue()
@@ -64,7 +75,7 @@ public class DialogueUI : MonoBehaviour
         ShowPage(DialoguePage.CHAT);
     }
 
-    private void ChatPage_OnClose()
+    private void OnChatPageClosed()
     {
         if (dialogue.Dialogue.Type == DialogueType.CHAT && dialogue.Unit is FungalController)
         {
@@ -97,6 +108,7 @@ public class DialogueUI : MonoBehaviour
         {
             DialoguePage.ACTION => actionPage,
             DialoguePage.CHAT => chatPage,
+            DialoguePage.GLYPH => glyphPage,
             DialoguePage.FRIENDSHIP => friendshipPage,
             _ => actionPage,
         };

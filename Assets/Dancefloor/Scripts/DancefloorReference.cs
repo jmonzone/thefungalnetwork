@@ -48,8 +48,8 @@ public class DancefloorReference : ScriptableObject
 
     public void ExitDancefloor()
     {
+        OnDancefloorExit?.Invoke();
         units.Remove(playerReference.Player);
         navigation.GoBackToRoot();
-        OnDancefloorExit?.Invoke();
     }
 }

@@ -20,13 +20,13 @@ public class DancefloorBackgroundOverlay : MonoBehaviour
 
     private void OnEnable()
     {
-        dancefloorReference.OnDancefloorEnter += OnDancefloorEnter;
+        dancefloorReference.OnDancefloorStart += OnDancefloorEnter;
         dancefloorReference.OnDancefloorExit += OnDancefloorExit;
     }
 
     private void OnDisable()
     {
-        dancefloorReference.OnDancefloorEnter -= OnDancefloorEnter;
+        dancefloorReference.OnDancefloorStart -= OnDancefloorEnter;
         dancefloorReference.OnDancefloorExit -= OnDancefloorExit;
 
         if (dJTableReference != null)

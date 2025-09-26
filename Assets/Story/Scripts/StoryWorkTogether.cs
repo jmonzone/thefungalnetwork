@@ -47,6 +47,7 @@ public class StoryWorkTogether : MonoBehaviour
 
         var partyFrog = unitManager.UnitControllers[0];
         partyFrog.SetBehaviour(partyFrog.GetComponent<UnitDJ>());
+
         partyFrog.transform.position = frogAnchor.position;
         partyFrog.SetLookPosition(playerAnchor.position);
         playerReference.Player.transform.position = playerAnchor.position;
@@ -71,6 +72,5 @@ public class StoryWorkTogether : MonoBehaviour
         yield return new WaitWhile(() => dialogueReference.IsActive);
 
         storyReference.CompleteStory(workTogether);
-        partyReference.ShowPartyList();
     }
 }
