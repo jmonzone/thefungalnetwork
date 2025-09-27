@@ -1,83 +1,57 @@
 using System.Collections;
-using TMPro;
 using UnityEngine;
 
 public class DialogueFriendshipUI : DialoguePageUI
 {
-    [SerializeField] private TextMeshProUGUI levelText;
-    [SerializeField] private TextMeshProUGUI nextLevelText;
+    [SerializeField] private SkillLevelUI skillLevelUI;
+    [SerializeField] private Color color;
 
-    private AudioSource audioSource;
-    private ValueBarController valueBarController;
-    private ValueBarParticleController valueBarParticleController;
+    public bool HasLeveledUp { get; private set; }
 
-    private int level;
-    public bool HasLeveledUp => dialogue.Unit.Instance.FriendshipLevel > level;
+    private UnitController unit;
 
     protected override void Awake()
     {
         base.Awake();
-        audioSource = GetComponent<AudioSource>();
-        valueBarController = GetComponent<ValueBarController>();
-        valueBarParticleController = GetComponent<ValueBarParticleController>();
-        valueBarParticleController.OnParticleReached += ValueBarParticleController_OnParticlesReached;
-        valueBarParticleController.OnAllParticleReached += ValueBarParticleController_OnAllParticleReached;
+        skillLevelUI.OnLevelUp += SkillLevelUI_OnLevelUp;
+        skillLevelUI.OnAllParticlesReached += SkillLevelUI_OnAllParticlesReached;
     }
 
     public override void Show()
     {
         base.Show();
 
-        var instance = dialogue.Unit.Instance;
+        unit = dialogue.Unit;
 
-        levelText.text = $"Level {instance.FriendshipLevel}";
-
-        valueBarController.Initialize(instance.FriendshipPoints, instance.MinFP, instance.MaxFP);
-        level = instance.FriendshipLevel;
-        instance.IncreaseFriendship(dialogue.Relationship);
-        valueBarParticleController.BurstFromWorld((int)dialogue.Relationship, dialogue.Unit.transform.position);
-        audioSource.Play();
-
+        Vector3 screenPos = Camera.main.WorldToScreenPoint(dialogue.Unit.transform.position);
+        skillLevelUI.Show(unit.Instance);
+        skillLevelUI.Increase(dialogue.Relationship, color, screenPos);
     }
 
-    private void Update()
+    private void SkillLevelUI_OnAllParticlesReached()
     {
-        nextLevelText.color = valueBarController.AnimatedColor;
+        StartCoroutine(CloseRoutine());
     }
 
-    private void ValueBarParticleController_OnParticlesReached()
+    private void SkillLevelUI_OnLevelUp()
     {
-        valueBarController.Increment();
-    }
-
-    private void ValueBarParticleController_OnAllParticleReached()
-    {
-        if (HasLeveledUp)
-        {
-            levelText.text = $"Level {dialogue.Unit.Instance.FriendshipLevel}";
-            StartCoroutine(LevelUpRoutine());
-        }
-        else
-        {
-            StartCoroutine(CloseRoutine());
-        }
+        StartCoroutine(LevelUpRoutine());
     }
 
     private IEnumerator LevelUpRoutine()
     {
-        valueBarController.SetTargetScale(1.1f);
-        yield return new WaitForSeconds(1f);
-        nextLevelText.text = "Friendship Level Increased";
-
+        HasLeveledUp = true;
         if (dialogue.Unit.Instance.FriendshipLevel == 2)
         {
             yield return new WaitForSeconds(2f);
-            dialogue.StartDialogue(dialogue.Unit, new Dialogue("I really like your vibe, we should be friends!", type: DialogueType.FRIEND));
+            dialogue.StartDialogue(unit, new Dialogue("I really like your vibe, we should be friends!", type: DialogueType.FRIEND));
         }
         else
         {
             yield return CloseRoutine();
         }
+
+        HasLeveledUp = false;
     }
 
     private IEnumerator CloseRoutine()

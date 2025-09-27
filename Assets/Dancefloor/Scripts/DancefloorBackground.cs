@@ -54,7 +54,7 @@ public class DancefloorBackground : MonoBehaviour
 
     private void OnDisable()
     {
-        dancefloorReference.OnDancefloorEnter -= MusicVideoReference_OnMusicVideoStart;
+        dancefloorReference.OnDancefloorStart -= MusicVideoReference_OnMusicVideoStart;
         dancefloorReference.OnDancefloorExit -= MusicVideoReference_OnMusicVideoEnd;
     }
 

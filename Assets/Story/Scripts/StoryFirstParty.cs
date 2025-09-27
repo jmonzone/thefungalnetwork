@@ -56,7 +56,7 @@ public class StoryFirstParty : MonoBehaviour
         partyReference.StartParty(tutorialParty);
         var partyFrog = unitManager.UnitControllers[0];
 
-        dialogueReference.StartDialogue(playerReference.Player, new Dialogue(lostDialogue, DialogueType.STORY));
+        //dialogueReference.StartDialogue(playerReference.Player, new Dialogue(lostDialogue, DialogueType.STORY));
 
         yield return new WaitUntil(() => timesInteractedWithGuests > 3);
         yield return new WaitWhile(() => dialogueReference.IsActive);

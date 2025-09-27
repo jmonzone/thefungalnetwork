@@ -71,10 +71,11 @@ public class UnitListReference : ScriptableObject
 
                     var matchingColorPalette = colorPalettes.Find(p => p?.Id == elementId);
 
-                    float friendshipPoints = unitJson.Value<float?>("friendshipPoints") ?? 0f;
+                    float friendshipXP = unitJson.Value<float?>("friendshipXP") ?? 0f;
+                    float danceXP = unitJson.Value<float?>("danceXP") ?? 0f;
 
                     var instance = CreateInstance<UnitInstance>();
-                    instance.Initialize(matchingUnit, unitId, friendshipPoints, element, job, matchingColorPalette, unitJson);
+                    instance.Initialize(matchingUnit, unitId, friendshipXP, danceXP, element, job, matchingColorPalette, unitJson);
                     RegisterUnit(instance, false);
                 };
             }
@@ -223,8 +224,8 @@ public class UnitListReference : ScriptableObject
         }
 
         // Otherwise, register new instance
-        unit.OnFriendshipPointsChanged += _ => SaveData();
-        unit.OnFriendshipLevelChanged += () => OnFungalUpdated?.Invoke();
+        unit.OnXpChanged += (skill, xp) => SaveData();
+        unit.OnLevelChanged += (skill, level) => OnFungalUpdated?.Invoke();
 
         units.Add(unit);
 
@@ -245,7 +246,9 @@ public class UnitListReference : ScriptableObject
                 ["id"] = unit.Id,
                 ["name"] = unit.Data.Name,
                 ["friendshipLevel"] = unit.FriendshipLevel,
-                ["friendshipPoints"] = unit.FriendshipPoints,
+                ["friendshipXP"] = unit.FriendshipXP,
+                ["danceLevel"] = unit.DanceLevel,
+                ["danceXP"] = unit.DanceXP,
                 ["element"] = unit.Element.ToString().ToLower(),
                 ["job"] = unit.Job.ToString().ToLower(),
                 ["friends"] = new JArray(unit.Friends.Select(friend => friend.Id)),

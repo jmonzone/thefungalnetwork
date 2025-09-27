@@ -11,7 +11,6 @@ public class GlyphTextController : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private float moveSpeed = 2f;
     [SerializeField] private float rotationSpeed = 5f;       // speed to straighten rotation
-    [SerializeField] private float straightenDuration = 0.5f;
     [SerializeField] private float glowDuration = 1f;
     [SerializeField] private Color glowColor = Color.cyan;
     [SerializeField] private Color targetColor = Color.white;

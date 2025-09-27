@@ -151,6 +151,7 @@ GameObject:
   - component: {fileID: 493320410429043383}
   - component: {fileID: 6929509154742900535}
   - component: {fileID: 2571860531010250894}
+  - component: {fileID: 8272772892265704648}
   m_Layer: 8
   m_Name: Fungal Controller
   m_TagString: Untagged
@@ -468,6 +469,35 @@ MonoBehaviour:
   scaleUp: 1.5
   scaleDuration: 0.25
   jumpHeight: 0.5
+--- !u!114 &8272772892265704648
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5390423667600184729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab2b86bc7abaf4cd1b8c1172b4e34303, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isActive: 0
+  djReference: {fileID: 11400000, guid: 3bda1116fcf8f49e696cd21c6b5092da, type: 2}
+  targetMaterial: {fileID: 2100000, guid: 282050a220ed21241a70fd2911290578, type: 2}
+  colorID: _Color
+  danceAnimationClipName: Bounce
+  danceSpeedModifier: 0.75
+  targetColor: {r: 0.5411765, g: 0.80784315, b: 0, a: 1}
+  originalColor: {r: 0, g: 0.8206897, b: 1, a: 1}
+  stageColor: {r: 0, g: 0.8206897, b: 1, a: 1}
+  pulseColor: {r: 0.5411765, g: 0.80784315, b: 0, a: 1}
+  pulseSpeed: 10
+  targetIntensity: 0
+  originalIntensity: 1.5
+  stageSpeed: 1
+  maxProgress: 3
+  pulseOffset: 2
+  currentStage: 2
 --- !u!1001 &1899791931242643327
 PrefabInstance:
   m_ObjectHideFlags: 0

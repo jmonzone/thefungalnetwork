@@ -7,7 +7,14 @@ using UnityEngine.Events;
 public enum Job
 {
     NONE,
-    DJ
+    DJ,
+    DANCER
+}
+
+public enum Skill
+{
+    FRIENDSHIP,
+    DANCE,
 }
 
 [CreateAssetMenu]
@@ -15,8 +22,13 @@ public class UnitInstance : ScriptableObject
 {
     [SerializeField] private string id;
     [SerializeField] private Unit unit;
+
     [SerializeField] private int friendshipLevel;
-    [SerializeField] private float friendshipPoints;
+    [SerializeField] private float friendshipXP;
+
+    [SerializeField] private int danceLevel;
+    [SerializeField] private float danceXP;
+
     [SerializeField] private Element element;
     [SerializeField] private Job job;
     [SerializeField] private ColorPalette colorPalette;
@@ -34,10 +46,30 @@ public class UnitInstance : ScriptableObject
 
     public bool IsFriends => friendshipLevel > 1;
     public int FriendshipLevel => friendshipLevel;
-    public float FriendshipPoints => friendshipPoints;
-    public float MinFP => GetXPFromLevel(friendshipLevel);
-    public float MaxFP => GetXPFromLevel(friendshipLevel + 1);
-    public float FPUntilNextLevel => MaxFP - friendshipPoints;
+    public float FriendshipXP => friendshipXP;
+
+    public int DanceLevel => danceLevel;
+    public float DanceXP => danceXP;
+
+    public float GetXP(Skill skill) => skill switch
+    {
+        Skill.FRIENDSHIP => friendshipXP,
+        Skill.DANCE => danceXP,
+        _ => friendshipXP,
+    };
+
+
+    public int GetLevel(Skill skill) => skill switch
+    {
+        Skill.FRIENDSHIP => friendshipLevel,
+        Skill.DANCE => danceLevel,
+        _ => friendshipLevel,
+    };
+
+    public float GetMinXP(Skill skill) => GetXPFromLevel(GetLevel(skill));
+    public float GetMaxXP(Skill skill) => GetXPFromLevel(GetLevel(skill) + 1);
+    public float GetXPUntilNextLevel(Skill skill) => GetMaxXP(skill) - GetXP(skill);
+
 
     // Scale existing friend chance based on friendship level
     float minChance = 0.1f;   // minimum chance to pick existing friend at level 0
@@ -48,26 +80,32 @@ public class UnitInstance : ScriptableObject
 
     public JObject Json => json;
 
-    public event UnityAction<float> OnFriendshipPointsChanged;
-    public event UnityAction OnFriendshipLevelChanged;
+    public event UnityAction<Skill, float> OnXpChanged;
+    public event UnityAction<Skill, int> OnLevelChanged;
 
-    public void Initialize(Unit unit, string id = null, float friendshipPoints = 0, Element element = Element.NONE, Job job = Job.NONE, ColorPalette colorPalette = null, JObject json = null)
+    public void Initialize(Unit unit, string id = null, float friendshipXP = 0, float danceXP = 0, Element element = Element.NONE, Job job = Job.NONE, ColorPalette colorPalette = null, JObject json = null)
     {
         this.id = string.IsNullOrEmpty(id) ? GenerateMongoLikeId() : id;
         this.unit = unit;
-        this.friendshipPoints = friendshipPoints;
-        friendshipLevel = GetLevelFromXP(friendshipPoints);
+        this.json = json;
+
+        this.friendshipXP = friendshipXP;
+        friendshipLevel = GetLevelFromXP(friendshipXP);
+
+        this.danceXP = danceXP;
+        danceLevel = GetLevelFromXP(danceXP);
+
         this.element = element;
         this.job = job;
         this.colorPalette = colorPalette;
+
         friends = new List<UnitInstance>();
-        this.json = json;
     }
 
     public UnitInstance Copy()
     {
         var copy = CreateInstance<UnitInstance>();
-        copy.Initialize(Data, Id, FriendshipPoints, element, job, ColorPalette);
+        copy.Initialize(Data, Id, FriendshipXP, DanceXP, element, job, ColorPalette);
         return copy;
     }
     public static string GenerateMongoLikeId()
@@ -96,21 +134,40 @@ public class UnitInstance : ScriptableObject
         return BitConverter.ToString(bytes).Replace("-", "").ToLower();
     }
 
-    public void IncreaseFriendship(float value)
+    public void IncreaseSkillXP(Skill skill, float value)
     {
-        SetFriendshipPoints(friendshipPoints + value);
-        OnFriendshipPointsChanged?.Invoke(value);
+        var xp = GetXP(skill);
+        SetSkillXP(skill, xp + value);
+        OnXpChanged?.Invoke(skill, value);
     }
 
-    private void SetFriendshipPoints(float value)
+    private void SetSkillXP(Skill skill, float value)
     {
-        friendshipPoints = value;
+        switch (skill)
+        {
+            case Skill.FRIENDSHIP:
+                friendshipXP = value;
+                UpdateSkillLevel(skill, ref friendshipLevel, friendshipXP);
+                break;
 
-        var previousLevel = friendshipLevel;
-        friendshipLevel = GetLevelFromXP(friendshipPoints);
-
-        if (previousLevel != friendshipLevel) OnFriendshipLevelChanged?.Invoke();
+            case Skill.DANCE:
+                danceXP = value;
+                UpdateSkillLevel(skill, ref danceLevel, danceXP);
+                break;
+        }
     }
+
+    private void UpdateSkillLevel(Skill skill, ref int currentLevel, float xp)
+    {
+        var previousLevel = currentLevel;
+        currentLevel = GetLevelFromXP(xp);
+
+        if (previousLevel != currentLevel)
+        {
+            OnLevelChanged?.Invoke(skill, currentLevel);
+        }
+    }
+
 
     public int GetLevelFromXP(float xp)
     {
@@ -120,7 +177,7 @@ public class UnitInstance : ScriptableObject
         for (int lvl = 1; lvl <= 120; lvl++) // RuneScape goes to 99/120, you can adjust cap
         {
             points += Math.Floor(lvl + 300 * Math.Pow(2, lvl / 7.0));
-            double output = Math.Floor(points / (4 * 10));
+            double output = Math.Floor(points / (4));
 
             if (output > xp)
             {
@@ -141,7 +198,7 @@ public class UnitInstance : ScriptableObject
             points += Math.Floor(lvl + 300 * Math.Pow(2, lvl / 7.0));
         }
 
-        return (int)Math.Floor(points / (4 * 10));
+        return (int)Math.Floor(points / (4));
     }
 
 

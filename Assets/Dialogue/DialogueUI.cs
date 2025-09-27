@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,8 +14,10 @@ public enum DialoguePage
 public class DialogueUI : MonoBehaviour
 {
     [Header("References")]
+    [SerializeField] private PlayerReference playerReference;
     [SerializeField] private DialogueReference dialogue;
     [SerializeField] private UnitListReference unitListReference;
+    [SerializeField] private DancefloorReference dancefloor;
 
     [Header("UI Components")]
     [SerializeField] private SpeakerUI speakerUI;
@@ -77,20 +80,31 @@ public class DialogueUI : MonoBehaviour
 
     private void OnChatPageClosed()
     {
-        if (dialogue.Dialogue.Type == DialogueType.CHAT && dialogue.Unit is FungalController)
+        Debug.Log("do action");
+
+        if (dialogue.Unit.Instance.Job == Job.DANCER)
         {
-            ShowPage(DialoguePage.FRIENDSHIP);
-        }
-        else if (dialogue.Dialogue.Type == DialogueType.FRIEND && friendshipPage.HasLeveledUp && dialogue.Unit.Instance.FriendshipLevel == 2)
-        {
-            var selectUnit = dialogue.Unit;
-            dialogue.CompleteDialogue();
-            unitListReference.SelectFungal(selectUnit.Instance);
+            var units = new List<UnitController> { dialogue.Unit, playerReference.Player };
+            dancefloor.StartDancefloor(units);
         }
         else
         {
             dialogue.CompleteDialogue();
         }
+        //if (dialogue.Dialogue.Type == DialogueType.CHAT && dialogue.Unit is FungalController)
+        //{
+        //    ShowPage(DialoguePage.FRIENDSHIP);
+        //}
+        //else if (dialogue.Dialogue.Type == DialogueType.FRIEND && friendshipPage.HasLeveledUp && dialogue.Unit.Instance.FriendshipLevel == 2)
+        //{
+        //    var selectUnit = dialogue.Unit;
+        //    dialogue.CompleteDialogue();
+        //    unitListReference.SelectFungal(selectUnit.Instance);
+        //}
+        //else
+        //{
+        //    dialogue.CompleteDialogue();
+        //}
     }
 
     private void FriendshipPage_OnClose()

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -10,13 +11,13 @@ public class DancefloorReference : ScriptableObject
     [SerializeField] private ViewReference dancefloorGameplay;
     [SerializeField] private PlayerReference playerReference;
 
-    [Header("Debug")]
-    [SerializeField] private bool skipIntro = false;
+    [Header("Runtime")]
+    [SerializeField] private Vector3 origin;
     [SerializeField] private List<UnitController> units = new List<UnitController>();
 
+    public Vector3 Origin => origin;
     public List<UnitController> Units => units;
 
-    public event UnityAction OnDancefloorEnter;
     public event UnityAction OnDancefloorStart;
     public event UnityAction OnDancefloorExit;
 
@@ -25,23 +26,18 @@ public class DancefloorReference : ScriptableObject
         units = new List<UnitController>();
     }
 
-    public void EnterDancefloor()
+    public void StartDancefloor(List<UnitController> units)
     {
-        units = new List<UnitController>();
-        units.Add(playerReference.Player);
-        if (skipIntro)
-        {
-            StartDancefloor();
-        }
-        else
-        {
-            navigation.Navigate(dancefloorIntro);
-            OnDancefloorEnter?.Invoke();
-        }
-    }
+        this.units = units;
 
-    public void StartDancefloor()
-    {
+        Vector3 sum = Vector3.zero;
+        foreach (var unit in units)
+        {
+            sum += unit.transform.position;
+        }
+
+        origin = sum / units.Count;
+
         navigation.Navigate(dancefloorGameplay);
         OnDancefloorStart?.Invoke();
     }
@@ -49,7 +45,7 @@ public class DancefloorReference : ScriptableObject
     public void ExitDancefloor()
     {
         OnDancefloorExit?.Invoke();
-        units.Remove(playerReference.Player);
+        this.units = new List<UnitController>();
         navigation.GoBackToRoot();
     }
 }

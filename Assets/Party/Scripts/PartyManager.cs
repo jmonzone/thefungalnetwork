@@ -149,7 +149,7 @@ public class PartyManager : MonoBehaviour
 
     private void PartyReference_OnVibeIncreased(int points, Vector3 position)
     {
-        valueBarParticleController.BurstFromWorld(points, position);
+        //valueBarParticleController.BurstFromWorld(points, position);
     }
 
 

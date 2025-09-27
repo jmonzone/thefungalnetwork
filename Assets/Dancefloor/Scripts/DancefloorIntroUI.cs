@@ -9,7 +9,7 @@ public class DancefloorIntroUI : MonoBehaviour
 
     private void Awake()
     {
-        readyButton.onClick.AddListener(dancefloorReference.StartDancefloor);
+        //readyButton.onClick.AddListener(dancefloorReference.StartDancefloor);
         exitButton.onClick.AddListener(dancefloorReference.ExitDancefloor);
     }
 }

@@ -71,7 +71,7 @@ public class DialogueReference : ScriptableObject
         Debug.Log($"ContinueDialogue {dialogue.Next.Action}");
 
         if (dialogue.Next != null) dialogue = dialogue.Next;
-        relationship += 5f;
+        relationship += 50f;
     }
 
     public void CompleteDialogue()
