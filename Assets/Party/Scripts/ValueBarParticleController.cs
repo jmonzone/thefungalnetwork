@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -17,7 +18,7 @@ public class ValueBarParticleController : MonoBehaviour
     [SerializeField] private AnimationCurve arcCurve;
 
     private Canvas canvas;
-    private int activeParticles;
+    private List<GameObject> activeParticles = new List<GameObject>();
 
     public event UnityAction OnParticleReached;
     public event UnityAction OnAllParticleReached;
@@ -25,6 +26,16 @@ public class ValueBarParticleController : MonoBehaviour
     private void Awake()
     {
         canvas = GetComponentInParent<Canvas>();
+    }
+
+    private void OnDisable()
+    {
+        foreach(var particle in activeParticles)
+        {
+            Destroy(particle);
+        }
+
+        activeParticles = new List<GameObject>();
     }
 
     public void SetStartColor(Color color)
@@ -39,11 +50,10 @@ public class ValueBarParticleController : MonoBehaviour
 
     public void BurstFromWorld(int count, Vector3 screenPos)
     {
-        activeParticles = count;
-
         for (int i = 0; i < count; i++)
         {
             GameObject p = Instantiate(particlePrefab, canvas.transform);
+            activeParticles.Add(p);
             StartCoroutine(AnimateParticle(p, screenPos));
         }
     }
@@ -94,10 +104,10 @@ public class ValueBarParticleController : MonoBehaviour
             yield return null;
         }
 
+        activeParticles.Remove(particle);
         Destroy(particle);
         OnParticleReached?.Invoke();
-        activeParticles--;
 
-        if (activeParticles == 0) OnAllParticleReached?.Invoke();
+        if (activeParticles.Count == 0) OnAllParticleReached?.Invoke();
     }
 }

@@ -23,9 +23,6 @@ public class FungalController : UnitController
     [SerializeField] private GameObject chatIcon;
     [SerializeField] private DialogueReference dialogueReference;
 
-    public bool IsAtDestination => unitDestination.IsAtDestination;
-
-    private UnitDestination unitDestination;
     private UnitFollow unitFollow;
     private Animator animator;
 
@@ -33,7 +30,6 @@ public class FungalController : UnitController
     {
         base.Awake();
 
-        unitDestination = GetComponent<UnitDestination>();
         unitFollow = GetComponent<UnitFollow>();
     }
 
@@ -62,15 +58,9 @@ public class FungalController : UnitController
         base.Initialize(instance);
     }
 
-    public void SetDestination(Vector3 destination)
+    public void Follow(UnitFollow leader)
     {
-        unitDestination.SetDestination(destination);
-        ApplyBehaviour(unitDestination);
-    }
-
-    public void SetTarget(Transform target)
-    {
-        unitFollow.SetTarget(target);
+        unitFollow.FollowUnit(leader);
         ApplyBehaviour(unitFollow);
     }
 
@@ -87,6 +77,6 @@ public class FungalController : UnitController
     public override void OnProximityChanged(bool value)
     {
         base.OnProximityChanged(value);
-        chatIcon.SetActive(!dialogueReference.IsActive && value);
+        //chatIcon.SetActive(!dialogueReference.IsActive && value);
     }
 }

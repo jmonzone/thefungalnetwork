@@ -38,14 +38,36 @@ public class DialogueActionsUI : DialoguePageUI
 
     private void UseAction()
     {
-        var unit = dialogue.Unit;
+        // Collect all possible units (player, dialogue unit, followers)
+        var allUnits = new List<UnitController>
+        {
+            playerReference.Player,
+            dialogue.Unit
+        };
 
         InvokeClose();
 
-        if (unit.Instance.Job == Job.DANCER)
+        allUnits.AddRange(playerReference.Player
+            .GetComponent<UnitFollow>()
+            .Followers
+            .Select(f => f.Unit));
+
+        // Deduplicate, but keep player first
+        var uniqueUnits = allUnits
+            .Distinct()
+            .OrderBy(u => u != playerReference.Player) // ensures player stays first
+            .ToList();
+
+        // Stop all followers
+        foreach (var unit in uniqueUnits)
         {
-            var units = new List<UnitController> { playerReference.Player, unit };
-            dancefloorReference.StartDancefloor(units.Select(unit => unit.GetComponent<UnitDance>()).ToList());
+            unit.GetComponent<UnitFollow>().StopFollowing();
         }
+
+        // Start dancefloor
+        dancefloorReference.StartDancefloor(
+            uniqueUnits.Select(u => u.GetComponent<UnitDance>()).ToList()
+        );
     }
+
 }

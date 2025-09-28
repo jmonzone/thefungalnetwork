@@ -8,7 +8,6 @@ public class PlayerController : UnitController
     [SerializeField] private InventoryReference inventoryReference;
 
     private UnitFollow unitFollow;
-    private UnitDestination unitDestination;
     private UnitDrum unitDrum;
     private UnitGlyphCollect unitGlyphCollect;
 
@@ -17,7 +16,6 @@ public class PlayerController : UnitController
         base.Awake();
 
         unitFollow = GetComponent<UnitFollow>();
-        unitDestination = GetComponent<UnitDestination>();
         unitDrum = GetComponent<UnitDrum>();
         unitGlyphCollect = GetComponent<UnitGlyphCollect>();
 
@@ -76,8 +74,8 @@ public class PlayerController : UnitController
         if (playerReference.TargetInteractable == null)
         {
             SetLookPosition(playerReference.TargetPosition);
-            unitDestination.SetDestination(playerReference.TargetPosition);
-            ApplyBehaviour(unitDestination);
+            UnitDestination.SetDestination(playerReference.TargetPosition);
+            ApplyBehaviour(UnitDestination);
         }
     }
 }

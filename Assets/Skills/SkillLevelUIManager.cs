@@ -21,8 +21,14 @@ public class SkillLevelUIManager : MonoBehaviour
         foreach(var unit in units)
         {
             skillLevelUIViews[i].SetUnit(unit);
-
+            skillLevelUIViews[i].gameObject.SetActive(true);
             UnitLevelViewMap.Add(unit, skillLevelUIViews[i]);
+            i++;
+        }
+
+        while (i < skillLevelUIViews.Count)
+        {
+            skillLevelUIViews[i].gameObject.SetActive(false);
             i++;
         }
     }

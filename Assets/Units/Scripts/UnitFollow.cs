@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
@@ -7,6 +8,10 @@ public class UnitFollow : UnitBehaviour
 {
     [Header("Runtime")]
     [SerializeField] private Transform target;
+    [SerializeField] private UnitFollow leader;
+    [SerializeField] private List<UnitFollow> followers;
+
+    public List<UnitFollow> Followers => followers;
 
     private NavMeshAgent navMeshAgent;
 
@@ -16,6 +21,26 @@ public class UnitFollow : UnitBehaviour
     {
         base.Awake();
         navMeshAgent = GetComponent<NavMeshAgent>();
+        followers = new List<UnitFollow>();
+    }
+
+
+    public void FollowUnit(UnitFollow unit)
+    {
+        leader = unit;
+        leader.RegisterFollower(this);
+        SetTarget(unit.transform);
+    }
+
+    private void RegisterFollower(UnitFollow unit)
+    {
+        followers.Add(unit);
+    }
+    
+    public void StopFollowing()
+    {
+        leader = null;
+        followers = new List<UnitFollow>();
     }
 
     public void SetTarget(Transform target)

@@ -28,6 +28,7 @@ public class DancefloorReference : ScriptableObject
 
     public void StartDancefloor(List<UnitDance> units)
     {
+        Debug.Log("Starting dancefloor");
         this.units = units;
 
         Vector3 sum = Vector3.zero;
@@ -37,6 +38,23 @@ public class DancefloorReference : ScriptableObject
         }
 
         origin = sum / units.Count;
+
+        int count = units.Count;
+
+        for (int i = 0; i < count; i++)
+        {
+            // Evenly spaced angle around circle, but clockwise
+            float angle = -(i / (float)count) * Mathf.PI * 2f;
+
+            // Direction from center (clockwise order)
+            Vector3 direction = new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle));
+
+            // Position offset outward from center
+            Vector3 destination = origin + direction * 1f;
+
+            units[i].Unit.SetDestination(destination);
+            units[i].Unit.SetLookPosition(origin);
+        }
 
         navigation.Navigate(dancefloorGameplay);
         OnDancefloorStart?.Invoke();

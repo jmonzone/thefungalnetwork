@@ -58,7 +58,7 @@ public class StoryFirstParty : MonoBehaviour
 
         //dialogueReference.StartDialogue(playerReference.Player, new Dialogue(lostDialogue, DialogueType.STORY));
 
-        yield return new WaitUntil(() => timesInteractedWithGuests > 3);
+        yield return new WaitUntil(() => timesInteractedWithGuests > 5);
         yield return new WaitWhile(() => dialogueReference.IsActive);
         yield return new WaitForSeconds(1f);
 

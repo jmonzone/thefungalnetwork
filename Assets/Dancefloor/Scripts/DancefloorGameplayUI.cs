@@ -32,17 +32,7 @@ public class DancefloorGameplayUI : MonoBehaviour
 
     private void MusicVideoReference_OnMusicVideoStart()
     {
-        foreach(var dancer in dancefloorReference.Dancers)
-        {
-            dancer.Unit.SetBehaviour(dancer);
-        }
-
         skillLevelUIManager.SetUnits(dancefloorReference.Dancers.Select(unit => unit.Instance));
-
-        foreach (var dancer in dancefloorReference.Dancers)
-        {
-            skillLevelUIManager.UnitLevelViewMap[dancer.Instance].SetColor(dancer.CurrentColor);
-        }
 
         StartCoroutine(DanceRoutine());
     }
@@ -59,6 +49,14 @@ public class DancefloorGameplayUI : MonoBehaviour
 
     private IEnumerator DanceRoutine()
     {
+        yield return new WaitUntil(() => dancefloorReference.Dancers.All(dancer => dancer.Unit.IsAtDestination));
+
+        foreach (var dancer in dancefloorReference.Dancers)
+        {
+            dancer.Unit.SetBehaviour(dancer);
+            skillLevelUIManager.UnitLevelViewMap[dancer.Instance].SetColor(dancer.CurrentColor);
+        }
+
         var timer = 0f;
         while (true)
         {

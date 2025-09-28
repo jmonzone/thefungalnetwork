@@ -16,12 +16,16 @@ public class UnitController : MonoBehaviour, IInteractable
     [SerializeField] private Transform target;
 
     private CinemachineVirtualCamera virtualCamera;
+    private UnitDestination unitDestination;
+    protected UnitDestination UnitDestination => unitDestination;
 
     public UnitInstance Instance => instance;
     protected Transform RenderRoot => renderRoot;
     public bool IsDefaultBehaviour => currentBehaviour == defaultBehaviour;
 
     Transform ITarget.Transform => transform;
+
+    public bool IsAtDestination => unitDestination.IsAtDestination;
 
     public event UnityAction OnInitialized;
     public event UnityAction OnBehaviourChanged;
@@ -37,6 +41,7 @@ public class UnitController : MonoBehaviour, IInteractable
         }
 
         virtualCamera = GetComponentInChildren<CinemachineVirtualCamera>();
+        unitDestination = GetComponent<UnitDestination>();
     }
 
     protected virtual void Start()
@@ -101,6 +106,12 @@ public class UnitController : MonoBehaviour, IInteractable
     public void SetLookPosition(Vector3 targetPosition)
     {
         targetLookPosition = targetPosition;
+    }
+
+    public void SetDestination(Vector3 destination)
+    {
+        unitDestination.SetDestination(destination);
+        ApplyBehaviour(unitDestination);
     }
 
     public void SetLookTarget(Transform target)

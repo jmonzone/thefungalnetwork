@@ -119,7 +119,7 @@ public class DialogueReference : ScriptableObject
     {
         if (Unit is FungalController fungal)
         {
-            fungal.SetTarget(playerReference.Player.transform);
+            fungal.Follow(playerReference.Player.GetComponent<UnitFollow>());
             CompleteDialogue();
         }
     }
