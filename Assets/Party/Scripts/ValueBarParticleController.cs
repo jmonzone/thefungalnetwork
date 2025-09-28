@@ -10,6 +10,7 @@ public class ValueBarParticleController : MonoBehaviour
     [SerializeField] private GameObject particlePrefab;
 
     [Header("Settings")]
+    [SerializeField] private Color startColor;
     [SerializeField] private Color targetColor;
     [SerializeField] private float mintravelTime = 0.75f;
     [SerializeField] private float maxtravelTime = 1.25f;
@@ -26,20 +27,28 @@ public class ValueBarParticleController : MonoBehaviour
         canvas = GetComponentInParent<Canvas>();
     }
 
-    /// <summary>Call to spawn a burst from world space to this bar.</summary>
-    public void BurstFromWorld(int count, Color from, Color to, Vector3 screenPos)
+    public void SetStartColor(Color color)
     {
-        targetColor = to;
+        startColor = color;
+    }
+
+    public void SetTargetColor(Color color)
+    {
+        targetColor = color;
+    }
+
+    public void BurstFromWorld(int count, Vector3 screenPos)
+    {
         activeParticles = count;
 
         for (int i = 0; i < count; i++)
         {
             GameObject p = Instantiate(particlePrefab, canvas.transform);
-            StartCoroutine(AnimateParticle(p, from, screenPos));
+            StartCoroutine(AnimateParticle(p, screenPos));
         }
     }
 
-    private IEnumerator AnimateParticle(GameObject particle, Color color, Vector3 screenPos)
+    private IEnumerator AnimateParticle(GameObject particle, Vector3 screenPos)
     {
         RectTransform canvasRect = canvas.transform as RectTransform;
 
@@ -54,7 +63,7 @@ public class ValueBarParticleController : MonoBehaviour
         rect.anchoredPosition = localStart;
 
         var image = particle.GetComponentInChildren<Image>();
-        image.color = color;
+        image.color = startColor;
 
         float t = 0;
         float randomOffset = Random.Range(-100f, 100f);
@@ -78,7 +87,7 @@ public class ValueBarParticleController : MonoBehaviour
             pos.x += arcCurve.Evaluate(t / travelTime) * randomOffset * (1 - t);
 
             targetColor.a = 1 - t;
-            var lerpColor = Color.Lerp(color, targetColor, t);
+            var lerpColor = Color.Lerp(startColor, targetColor, t);
             image.color = lerpColor;
 
             rect.anchoredPosition = pos;

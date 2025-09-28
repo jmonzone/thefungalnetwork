@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,16 +11,17 @@ public class SkillLevelUIManager : MonoBehaviour
     {
         skillLevelUIViews = new List<SkillLevelUI>();
         GetComponentsInChildren(true, skillLevelUIViews);
-
-        UnitLevelViewMap = new Dictionary<UnitInstance, SkillLevelUI>();
     }
 
     public void SetUnits(IEnumerable<UnitInstance> units)
     {
+        UnitLevelViewMap = new Dictionary<UnitInstance, SkillLevelUI>();
+
         var i = 0;
         foreach(var unit in units)
         {
             skillLevelUIViews[i].SetUnit(unit);
+
             UnitLevelViewMap.Add(unit, skillLevelUIViews[i]);
             i++;
         }

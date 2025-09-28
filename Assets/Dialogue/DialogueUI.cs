@@ -40,6 +40,7 @@ public class DialogueUI : MonoBehaviour
         glyphPage.Hide();
         friendshipPage.Hide();
 
+        actionPage.OnClose += ActionPage_OnClose;
         chatPage.OnClose += OnChatPageClosed;
         glyphPage.OnClose += OnChatPageClosed;
         friendshipPage.OnClose += FriendshipPage_OnClose;
@@ -69,7 +70,7 @@ public class DialogueUI : MonoBehaviour
         }
         else
         {
-            ShowPage(DialoguePage.CHAT);
+            ShowPage(DialoguePage.ACTION);
         }
     }
 
@@ -78,17 +79,14 @@ public class DialogueUI : MonoBehaviour
         ShowPage(DialoguePage.CHAT);
     }
 
+    private void ActionPage_OnClose()
+    {
+        dialogue.CompleteDialogue();
+    }
+
     private void OnChatPageClosed()
     {
-        var unit = dialogue.Unit;
-
         dialogue.CompleteDialogue();
-
-        if (unit.Instance.Job == Job.DANCER)
-        {
-            var units = new List<UnitController> { playerReference.Player, unit };
-            dancefloor.StartDancefloor(units);
-        }
 
 
         //if (dialogue.Dialogue.Type == DialogueType.CHAT && dialogue.Unit is FungalController)

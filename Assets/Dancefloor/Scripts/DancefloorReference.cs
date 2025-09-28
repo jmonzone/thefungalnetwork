@@ -13,20 +13,20 @@ public class DancefloorReference : ScriptableObject
 
     [Header("Runtime")]
     [SerializeField] private Vector3 origin;
-    [SerializeField] private List<UnitController> units = new List<UnitController>();
+    [SerializeField] private List<UnitDance> units = new List<UnitDance>();
 
     public Vector3 Origin => origin;
-    public List<UnitController> Units => units;
+    public List<UnitDance> Dancers => units;
 
     public event UnityAction OnDancefloorStart;
     public event UnityAction OnDancefloorExit;
 
     public void Initialize()
     {
-        units = new List<UnitController>();
+        units = new List<UnitDance>();
     }
 
-    public void StartDancefloor(List<UnitController> units)
+    public void StartDancefloor(List<UnitDance> units)
     {
         this.units = units;
 
@@ -45,7 +45,7 @@ public class DancefloorReference : ScriptableObject
     public void ExitDancefloor()
     {
         OnDancefloorExit?.Invoke();
-        units = new List<UnitController>();
+        units = new List<UnitDance>();
         navigation.GoBackToRoot();
     }
 }

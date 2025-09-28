@@ -5,7 +5,8 @@ public abstract class UnitBehaviour : MonoBehaviour
 {
     [SerializeField] private bool isActive;
 
-    protected UnitController Unit { get; private set; }
+    public UnitController Unit { get; private set; }
+    public UnitInstance Instance => Unit.Instance;
     public bool IsActive => isActive;
 
     public event UnityAction OnBehaviourRequest;

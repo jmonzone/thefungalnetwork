@@ -41,13 +41,19 @@ public class SkillLevelUI : MonoBehaviour
         level = instance.GetLevel(skill);
 
         if (valueBarController) valueBarController.Initialize(instance.GetXP(skill), instance.GetMinXP(skill), instance.GetMaxXP(skill));
+        if (valueBarParticleController) valueBarParticleController.SetTargetColor(fillImage.color);
         if (fillImage) fillImage.fillAmount = Mathf.Lerp(0, 1, (instance.GetXP(skill) - instance.GetMinXP(skill)) / (instance.GetMaxXP(skill) - instance.GetMinXP(skill)));
         if (nextLevelText) nextLevelText.text = $"{instance.GetXPUntilNextLevel(skill)} xp until next level";
     }
 
-    public void Increase(float value, Color color, Vector3 screenPos)
+    public void SetColor(Color color)
     {
-        valueBarParticleController.BurstFromWorld((int)value, color, fillImage.color, screenPos);
+        valueBarParticleController.SetStartColor(color);
+    }
+
+    public void Increase(float value, Vector3 screenPos)
+    {
+        valueBarParticleController.BurstFromWorld((int)value, screenPos);
         if (useAudio) audioSource.Play();
     }
 
@@ -78,13 +84,41 @@ public class SkillLevelUI : MonoBehaviour
 
     private IEnumerator LevelUpRoutine()
     {
-        if (valueBarController) valueBarController.SetTargetScale(1.1f);
-        yield return new WaitForSeconds(1f);
+        if (valueBarController)
+        {
+            valueBarController.SetTargetScale(1.1f);
+            yield return new WaitForSeconds(1f);
+        }
+
+        if (fillImage)
+        {
+            yield return PulseFill();
+        }
+
         if (nextLevelText) nextLevelText.text = $"{skill} Level Increased";
 
         OnLevelUp?.Invoke();
         levelUpRoutine = null;
         level = instance.GetLevel(skill);
+    }
 
+    private IEnumerator PulseFill()
+    {
+        if (!fillImage) yield break;
+
+        float time = 0;
+
+        var startScale = fillImage.transform.localScale.x;
+        while (time < 1f)
+        {
+            float progress = time / 1f;
+            float scale = Mathf.Lerp(startScale, startScale * 1.1f, Mathf.Sin(progress * Mathf.PI));
+            fillImage.transform.localScale = Vector3.one * scale;
+
+            time += Time.deltaTime;
+            yield return null;
+        }
+
+        fillImage.transform.localScale = Vector3.one * startScale;
     }
 }
