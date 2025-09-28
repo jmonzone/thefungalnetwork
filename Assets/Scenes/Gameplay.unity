@@ -4533,6 +4533,7 @@ MonoBehaviour:
   djReference: {fileID: 11400000, guid: 3bda1116fcf8f49e696cd21c6b5092da, type: 2}
   sporeSkill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
   sporeBall: {fileID: 1703077660}
+  virtualCamera: {fileID: 1901447078}
 --- !u!4 &192682053
 Transform:
   m_ObjectHideFlags: 0
@@ -7722,6 +7723,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pass The Spore Zone
       objectReference: {fileID: 0}
+    - target: {fileID: 8886752474777110385, guid: 954a49a3ff2aa4c68ab67484028a9a35,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: dda82a1e2711042aba3a629396648c38, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:

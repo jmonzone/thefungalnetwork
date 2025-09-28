@@ -1,6 +1,6 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using UnityEngine;
 
 public class PassTheSpore : ActivityController
@@ -9,23 +9,27 @@ public class PassTheSpore : ActivityController
     [SerializeField] private DJTableReference djReference;
     [SerializeField] private Skill sporeSkill;
     [SerializeField] private Transform sporeBall;
+    [SerializeField] private CinemachineVirtualCamera virtualCamera;
 
     protected override IEnumerator OnActivityStart()
     {
         int currentUnitIndex = 0;
         var activePlayers = new List<UnitController>(Activity.Units);
-        var currentPlayer = GetNextActivePlayer(ref currentUnitIndex, ref activePlayers);
+        var currentPlayer = activePlayers[currentUnitIndex];
 
         sporeBall.position = currentPlayer.transform.position + Vector3.up;
         sporeBall.gameObject.SetActive(true);
 
+        virtualCamera.Priority = 11;
+
         while (true)
         {
-            currentPlayer = GetNextActivePlayer(ref currentUnitIndex, ref activePlayers);
-
             IncreaseXP(currentPlayer, 3);
+
+            currentPlayer = GetNextActivePlayer(ref currentUnitIndex, ref activePlayers);
             Vector3 targetPos = currentPlayer.transform.position + Vector3.up;
-            yield return TossBall(sporeBall.position, targetPos, djReference.BeatDuration);
+            yield return TossBall(sporeBall.position, targetPos, djReference.BeatDuration * 2);
+
         }
     }
 
@@ -67,5 +71,6 @@ public class PassTheSpore : ActivityController
         base.OnActivityEnded();
         StopAllCoroutines();
         sporeBall.gameObject.SetActive(false);
+        virtualCamera.Priority = 0;
     }
 }
