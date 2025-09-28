@@ -26,11 +26,6 @@ public class PlayerController : UnitController
 
         playerReference.SetPlayer(this);
         playerReference.SetTargetPosition(transform.position);
-
-        var instance = ScriptableObject.CreateInstance<UnitInstance>();
-        instance.Initialize(playerUnit);
-
-        Initialize(instance);
     }
 
     private void UnitGlyphCollect_OnNoteHit(DJTrack track)

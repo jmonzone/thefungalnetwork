@@ -2,11 +2,16 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class SkillLevelUI : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI levelText;
     [SerializeField] private TextMeshProUGUI nextLevelText;
+    [SerializeField] private ValueBarController valueBarController;
+    [SerializeField] private ValueBarParticleController valueBarParticleController;
+    [SerializeField] private Image fillImage;
+    [SerializeField] private Image unitImage;
     [SerializeField] private Skill skill;
     [SerializeField] private bool useAudio = true;
 
@@ -15,8 +20,6 @@ public class SkillLevelUI : MonoBehaviour
     public bool HasLeveledUp => instance.GetLevel(skill) > level;
 
     private AudioSource audioSource;
-    private ValueBarController valueBarController;
-    private ValueBarParticleController valueBarParticleController;
 
     public event UnityAction OnLevelUp;
     public event UnityAction OnAllParticlesReached;
@@ -24,34 +27,27 @@ public class SkillLevelUI : MonoBehaviour
     private void Awake()
     {
         audioSource = GetComponent<AudioSource>();
+        valueBarParticleController.OnParticleReached += ValueBarParticleController_OnParticlesReached;
+        valueBarParticleController.OnAllParticleReached += ValueBarParticleController_OnAllParticleReached;
     }
 
-    private void Update()
+    public void SetUnit(UnitInstance instance)
     {
-        nextLevelText.color = valueBarController.AnimatedColor;
-    }
-
-    public void Show(UnitInstance instance)
-    {
-        if (!valueBarController)
-        {
-            valueBarController = GetComponent<ValueBarController>();
-            valueBarParticleController = GetComponent<ValueBarParticleController>();
-            valueBarParticleController.OnParticleReached += ValueBarParticleController_OnParticlesReached;
-            valueBarParticleController.OnAllParticleReached += ValueBarParticleController_OnAllParticleReached;
-        }
-       
         this.instance = instance;
 
-        valueBarController.Initialize(instance.GetXP(skill), instance.GetMinXP(skill), instance.GetMaxXP(skill));
+        unitImage.sprite = instance.Data.Sprite;
+
         levelText.text = $"Level {instance.GetLevel(skill)}";
         level = instance.GetLevel(skill);
-        nextLevelText.text = $"{instance.GetXPUntilNextLevel(skill)} xp until next level";
+
+        if (valueBarController) valueBarController.Initialize(instance.GetXP(skill), instance.GetMinXP(skill), instance.GetMaxXP(skill));
+        if (fillImage) fillImage.fillAmount = Mathf.Lerp(0, 1, (instance.GetXP(skill) - instance.GetMinXP(skill)) / (instance.GetMaxXP(skill) - instance.GetMinXP(skill)));
+        if (nextLevelText) nextLevelText.text = $"{instance.GetXPUntilNextLevel(skill)} xp until next level";
     }
 
     public void Increase(float value, Color color, Vector3 screenPos)
     {
-        valueBarParticleController.BurstFromWorld((int)value, color, screenPos);
+        valueBarParticleController.BurstFromWorld((int)value, color, fillImage.color, screenPos);
         if (useAudio) audioSource.Play();
     }
 
@@ -59,8 +55,9 @@ public class SkillLevelUI : MonoBehaviour
     {
         if (levelUpRoutine == null)
         {
-            valueBarController.Increment();
-            nextLevelText.text = $"{instance.GetXPUntilNextLevel(skill)} xp until next level";
+            if (valueBarController) valueBarController.Increment();
+            if (fillImage) fillImage.fillAmount = Mathf.Lerp(0, 1, (instance.GetXP(skill) - instance.GetMinXP(skill)) / (instance.GetMaxXP(skill) - instance.GetMinXP(skill)));
+            if (nextLevelText) nextLevelText.text = $"{instance.GetXPUntilNextLevel(skill)} xp until next level";
         }
     }
 
@@ -81,9 +78,9 @@ public class SkillLevelUI : MonoBehaviour
 
     private IEnumerator LevelUpRoutine()
     {
-        valueBarController.SetTargetScale(1.1f);
+        if (valueBarController) valueBarController.SetTargetScale(1.1f);
         yield return new WaitForSeconds(1f);
-        nextLevelText.text = $"{skill} Level Increased";
+        if (nextLevelText) nextLevelText.text = $"{skill} Level Increased";
 
         OnLevelUp?.Invoke();
         levelUpRoutine = null;

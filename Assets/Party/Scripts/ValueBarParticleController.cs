@@ -8,9 +8,9 @@ public class ValueBarParticleController : MonoBehaviour
     [Header("References")]
     [SerializeField] private RectTransform targetUI;
     [SerializeField] private GameObject particlePrefab;
-    [SerializeField] private ValueBarController barController;
 
     [Header("Settings")]
+    [SerializeField] private Color targetColor;
     [SerializeField] private float mintravelTime = 0.75f;
     [SerializeField] private float maxtravelTime = 1.25f;
     [SerializeField] private AnimationCurve arcCurve;
@@ -27,14 +27,15 @@ public class ValueBarParticleController : MonoBehaviour
     }
 
     /// <summary>Call to spawn a burst from world space to this bar.</summary>
-    public void BurstFromWorld(int count, Color color, Vector3 screenPos)
+    public void BurstFromWorld(int count, Color from, Color to, Vector3 screenPos)
     {
+        targetColor = to;
         activeParticles = count;
 
         for (int i = 0; i < count; i++)
         {
             GameObject p = Instantiate(particlePrefab, canvas.transform);
-            StartCoroutine(AnimateParticle(p, color, screenPos));
+            StartCoroutine(AnimateParticle(p, from, screenPos));
         }
     }
 
@@ -76,7 +77,6 @@ public class ValueBarParticleController : MonoBehaviour
             pos.y += Mathf.Sin(t * Mathf.PI) * randomOffset * (1 - t);
             pos.x += arcCurve.Evaluate(t / travelTime) * randomOffset * (1 - t);
 
-            var targetColor = barController.AnimatedColor;
             targetColor.a = 1 - t;
             var lerpColor = Color.Lerp(color, targetColor, t);
             image.color = lerpColor;

@@ -24,7 +24,7 @@ public class DialogueFriendshipUI : DialoguePageUI
         unit = dialogue.Unit;
 
         Vector3 screenPos = Camera.main.WorldToScreenPoint(dialogue.Unit.transform.position);
-        skillLevelUI.Show(unit.Instance);
+        skillLevelUI.SetUnit(unit.Instance);
         skillLevelUI.Increase(dialogue.Relationship, color, screenPos);
     }
 

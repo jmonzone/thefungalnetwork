@@ -10,6 +10,7 @@ public class UnitManager : MonoBehaviour
     [SerializeField] private UnitListReference unitList;
     [SerializeField] private UnitController unitPrefab;
     [SerializeField] private Transform unitSpawnAnchor;
+    [SerializeField] private PlayerController playerController;
 
     [Header("Runtime")]
     [SerializeField] private List<UnitController> unitControllers;
@@ -27,7 +28,9 @@ public class UnitManager : MonoBehaviour
 
     private void Start()
     {
-        foreach(var unit in unitList.Units)
+        playerController.Initialize(unitList.Units[0]);
+
+        foreach (var unit in unitList.Units)
         {
             if (unit.FriendshipLevel >= 2) SummonUnit(unit);
         }

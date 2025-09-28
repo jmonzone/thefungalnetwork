@@ -10,24 +10,12 @@ public class DancefloorGameplayUI : MonoBehaviour
     [SerializeField] private DancefloorReference dancefloorReference;
     [SerializeField] private DJTableReference djReference;
     [SerializeField] private DancefloorBackground background;
-    [SerializeField] private SkillLevelUI skillLevelUI;
+    [SerializeField] private SkillLevelUIManager skillLevelUIManager;
     [SerializeField] private Button exitButton;
 
     private void Start()
     {
         exitButton.onClick.AddListener(dancefloorReference.ExitDancefloor);
-        skillLevelUI.OnLevelUp += SkillLevelUI_OnLevelUp;
-    }
-
-    private void SkillLevelUI_OnLevelUp()
-    {
-        StartCoroutine(LevelUpRoutine());
-    }
-
-    private IEnumerator LevelUpRoutine()
-    {
-        yield return new WaitForSeconds(2f);
-        skillLevelUI.Show(playerReference.Player.Instance);
     }
 
     private void OnEnable()
@@ -44,14 +32,12 @@ public class DancefloorGameplayUI : MonoBehaviour
 
     private void MusicVideoReference_OnMusicVideoStart()
     {
-
         foreach(var dancer in dancefloorReference.Units)
         {
             dancer.SetBehaviour(dancer.GetComponent<UnitDance>());
         }
 
-
-        skillLevelUI.Show(playerReference.Player.Instance);
+        skillLevelUIManager.SetUnits(dancefloorReference.Units.Select(unit => unit.Instance));
 
         StartCoroutine(DanceRoutine());
     }
@@ -68,19 +54,18 @@ public class DancefloorGameplayUI : MonoBehaviour
 
     private IEnumerator DanceRoutine()
     {
+        yield return new WaitForFixedUpdate();
+
         var timer = 0f;
         while (true)
         {
             timer += Time.deltaTime;
 
-
             if (timer > djReference.BeatDuration * 2f)
             {
                 foreach (var dancer in dancefloorReference.Units)
                 {
-                    dancer.Instance.IncreaseSkillXP(Skill.DANCE, 1f);
-                    IncreaseDanceXP(dancer.GetComponent<UnitDance>(), 1f);
-
+                    IncreaseDanceXP(dancer, 1f);
                 }
 
                 timer = 0;
@@ -89,20 +74,20 @@ public class DancefloorGameplayUI : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             {
                 playerReference.Player.GetComponent<UnitDance>().IncrementDancePower();
-                IncreaseDanceXP(playerReference.Player.GetComponent<UnitDance>(), 1f);
+                IncreaseDanceXP(playerReference.Player, 1f);
             }
 
             yield return null;
         }
     }
 
-    private void IncreaseDanceXP(UnitDance dancer, float value)
+    private void IncreaseDanceXP(UnitController unit, float value)
     {
+        unit.Instance.IncreaseSkillXP(Skill.DANCE, 1f);
+
+        var dancer = unit.GetComponent<UnitDance>();
         var worldPos = dancer.transform.position + Vector3.up;
         Vector3 viewportPos = background.DominantCamera.WorldToScreenPoint(worldPos);
-        //Vector3 viewportPos = Camera.main.WorldToScreenPoint(worldPos);
-        skillLevelUI.Increase(value, dancer.CurrentColor, viewportPos);
+        skillLevelUIManager.UnitLevelViewMap[unit.Instance].Increase(value, dancer.CurrentColor, viewportPos);
     }
-
-    
 }

@@ -24,12 +24,24 @@ public class UnitDance : UnitBehaviour
 
     private Animator animator;
     private Material[] materialsToAnimate;
-    private Color[] originalColors;
     private Color currentColor;
 
-
     [SerializeField] private int currentStage = 0;
-    public Color CurrentColor => currentColor;
+
+    public Color CurrentColor
+    {
+        get
+        {
+            if (Unit is PlayerController)
+            {
+                return currentColor;
+            }
+            else
+            {
+                return originalColor;
+            }
+        }
+    }
 
     protected override void OnInitialized()
     {
@@ -54,16 +66,13 @@ public class UnitDance : UnitBehaviour
 
         materialsToAnimate = mats.ToArray();
 
-        // store original colors
-        originalColors = new Color[materialsToAnimate.Length];
-        for (int i = 0; i < materialsToAnimate.Length; i++)
+        if (Unit is PlayerController)
         {
-            originalColors[i] = materialsToAnimate[i].GetColor(colorID);
+            originalColor = materialsToAnimate[0].GetColor(colorID);
         }
-
-        if (originalColors.Length > 0)
+        else
         {
-            originalColor = originalColors[0];
+            originalColor = GetComponent<UnitColorPalette>().PrimaryColor;
         }
     }
 
@@ -106,7 +115,7 @@ public class UnitDance : UnitBehaviour
         {
             var clip = clipInfo[0].clip;
             SetAnimatorSpeedFromClip(clip, beatDuration);
-            Debug.Log($"Synced to clip '{clip.name}' (len {clip.length:F2}s) for beat {beatDuration:F2} {danceSpeedModifier:F2} s");
+            //Debug.Log($"Synced to clip '{clip.name}' (len {clip.length:F2}s) for beat {beatDuration:F2} {danceSpeedModifier:F2} s");
             yield break;
         }
 
@@ -141,13 +150,11 @@ public class UnitDance : UnitBehaviour
     {
         if (clip == null) return;
 
-        Debug.Log(clip.length);
+        //Debug.Log(clip.length);
         float safeBeat = Mathf.Max(0.0001f, beatDuration);
         // one loop of animation == one beat. Adjust if you want N beats per loop (e.g. clip.length / (beatDuration * beatsPerLoop))
         animator.speed = clip.length / safeBeat;
     }
-
-
 
     public override void StopBehaviour()
     {

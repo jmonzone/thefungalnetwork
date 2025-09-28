@@ -80,11 +80,9 @@ public class DialogueUI : MonoBehaviour
 
     private void OnChatPageClosed()
     {
-        Debug.Log("do action");
-
         if (dialogue.Unit.Instance.Job == Job.DANCER)
         {
-            var units = new List<UnitController> { dialogue.Unit, playerReference.Player };
+            var units = new List<UnitController> { playerReference.Player, dialogue.Unit};
             dancefloor.StartDancefloor(units);
         }
         else
