@@ -96,7 +96,7 @@ public class ValueBarParticleController : MonoBehaviour
             pos.y += Mathf.Sin(t * Mathf.PI) * randomOffset * (1 - t);
             pos.x += arcCurve.Evaluate(t / travelTime) * randomOffset * (1 - t);
 
-            targetColor.a = 1 - t;
+            //targetColor.a = 1 - t;
             var lerpColor = Color.Lerp(startColor, targetColor, t);
             image.color = lerpColor;
 

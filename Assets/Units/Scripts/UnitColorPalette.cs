@@ -1,4 +1,3 @@
-using System.Linq;
 using UnityEngine;
 
 public class UnitColorPalette : UnitBehaviour
@@ -15,11 +14,15 @@ public class UnitColorPalette : UnitBehaviour
 
         // Cache the original texture for this Fungal
         Renderer rend = Unit.GetComponentInChildren<Renderer>();
-        if (rend.material.mainTexture is Texture2D tex)
+
+        if (Unit is FungalController)
         {
-            originalCache = new Texture2D(tex.width, tex.height, TextureFormat.RGBA32, false);
-            originalCache.SetPixels32(tex.GetPixels32());
-            originalCache.Apply();
+            if (rend.material.mainTexture is Texture2D tex)
+            {
+                originalCache = new Texture2D(tex.width, tex.height, TextureFormat.RGBA32, false);
+                originalCache.SetPixels32(tex.GetPixels32());
+                originalCache.Apply();
+            }
         }
 
         SetColorPalette(Unit.Instance.ColorPalette);
@@ -42,7 +45,7 @@ public class UnitColorPalette : UnitBehaviour
     public void SetColorPalette(ColorPalette colorPalette)
     {
         this.colorPalette = colorPalette;
-        ApplyColorPalette();
+        if (Unit is FungalController) ApplyColorPalette();
     }
 
     private void ApplyColorPalette()
@@ -72,7 +75,6 @@ public class UnitColorPalette : UnitBehaviour
             primaryColor = GetPrimaryColor(tex);
             return;
         }
-
 
         for (int by = 0; by < blocksY; by++)
         {

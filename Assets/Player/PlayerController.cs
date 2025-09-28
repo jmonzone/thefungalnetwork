@@ -11,6 +11,9 @@ public class PlayerController : UnitController
     private UnitDrum unitDrum;
     private UnitGlyphCollect unitGlyphCollect;
 
+    private Material material;
+    public override Color Color => material.GetColor("_Outer_Color");
+
     protected override void Awake()
     {
         base.Awake();
@@ -19,6 +22,7 @@ public class PlayerController : UnitController
         unitDrum = GetComponent<UnitDrum>();
         unitGlyphCollect = GetComponent<UnitGlyphCollect>();
 
+        material = GetComponentInChildren<Renderer>().material;
         unitFollow.OnDestinationReached += UnitFollow_OnDestinationReached;
         unitGlyphCollect.OnNoteHit += UnitGlyphCollect_OnNoteHit;
 

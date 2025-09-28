@@ -45,7 +45,7 @@ public class DialogueActionsUI : DialoguePageUI
         {
             actionBackground.color = unit.Instance.Job.ActionColor;
             actionImage.sprite = unit.Instance.Job.ActionSprite;
-            actionText.text = unit.Instance.Job.Id;
+            actionText.text = unit.Instance.Job.ActionName;
         }
 
         actionButton.gameObject.SetActive(unit.Instance.Job);
@@ -82,7 +82,7 @@ public class DialogueActionsUI : DialoguePageUI
             unit.GetComponent<UnitFollow>().StopFollowing();
         }
 
-        unit.Instance.Job.StartJob(uniqueUnits);
+        unit.Instance.Job.Activity.StartActivity(uniqueUnits);
     }
 
 }

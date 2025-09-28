@@ -12,12 +12,11 @@ public class SkillLevelUI : MonoBehaviour
     [SerializeField] private ValueBarParticleController valueBarParticleController;
     [SerializeField] private Image fillImage;
     [SerializeField] private Image unitImage;
-    [SerializeField] private Skill skill;
+    [SerializeField] private UnitSkill skill;
     [SerializeField] private bool useAudio = true;
 
-    private UnitInstance instance;
-    private int level;
-    public bool HasLeveledUp => instance.GetLevel(skill) > level;
+    private int currentLevel;
+    public bool HasLeveledUp => skill.Level > currentLevel;
 
     private AudioSource audioSource;
 
@@ -27,23 +26,21 @@ public class SkillLevelUI : MonoBehaviour
     private void Awake()
     {
         audioSource = GetComponent<AudioSource>();
+        valueBarParticleController.SetTargetColor(fillImage.color);
         valueBarParticleController.OnParticleReached += ValueBarParticleController_OnParticlesReached;
         valueBarParticleController.OnAllParticleReached += ValueBarParticleController_OnAllParticleReached;
     }
 
-    public void SetUnit(UnitInstance instance)
+    public void SetUnit(UnitInstance instance, UnitSkill skill)
     {
-        this.instance = instance;
+        this.skill = skill;
 
         unitImage.sprite = instance.Data.Sprite;
 
-        levelText.text = $"Level {instance.GetLevel(skill)}";
-        level = instance.GetLevel(skill);
+        currentLevel = skill.Level;
 
-        if (valueBarController) valueBarController.Initialize(instance.GetXP(skill), instance.GetMinXP(skill), instance.GetMaxXP(skill));
-        if (valueBarParticleController) valueBarParticleController.SetTargetColor(fillImage.color);
-        if (fillImage) fillImage.fillAmount = Mathf.Lerp(0, 1, (instance.GetXP(skill) - instance.GetMinXP(skill)) / (instance.GetMaxXP(skill) - instance.GetMinXP(skill)));
-        if (nextLevelText) nextLevelText.text = $"{instance.GetXPUntilNextLevel(skill)} xp until next level";
+        if (valueBarController) valueBarController.Initialize(skill.XP, skill.MinXP, skill.MaxXP);
+        UpdateView();
     }
 
     public void SetColor(Color color)
@@ -62,9 +59,15 @@ public class SkillLevelUI : MonoBehaviour
         if (levelUpRoutine == null)
         {
             if (valueBarController) valueBarController.Increment();
-            if (fillImage) fillImage.fillAmount = Mathf.Lerp(0, 1, (instance.GetXP(skill) - instance.GetMinXP(skill)) / (instance.GetMaxXP(skill) - instance.GetMinXP(skill)));
-            if (nextLevelText) nextLevelText.text = $"{instance.GetXPUntilNextLevel(skill)} xp until next level";
+            UpdateView();
         }
+    }
+
+    private void UpdateView()
+    {
+        levelText.text = $"Level {skill.Level}";
+        if (fillImage) fillImage.fillAmount = Mathf.Lerp(0, 1, (skill.XP - skill.MinXP) / (skill.MaxXP - skill.MinXP));
+        if (nextLevelText) nextLevelText.text = $"{skill.XPUntilNextLevel} xp until next level";
     }
 
     private Coroutine levelUpRoutine;
@@ -74,7 +77,7 @@ public class SkillLevelUI : MonoBehaviour
         {
             if (levelUpRoutine == null)
             {
-                levelText.text = $"Level {instance.GetLevel(skill)}";
+                UpdateView();
                 levelUpRoutine = StartCoroutine(LevelUpRoutine());
             }
         }
@@ -99,7 +102,7 @@ public class SkillLevelUI : MonoBehaviour
 
         OnLevelUp?.Invoke();
         levelUpRoutine = null;
-        level = instance.GetLevel(skill);
+        currentLevel = skill.Level;
     }
 
     private IEnumerator PulseFill()

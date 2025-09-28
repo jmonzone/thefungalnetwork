@@ -75,9 +75,8 @@ public class PartyManager : MonoBehaviour
         //todo: don't spawn host or guests already spawned;
         foreach(var predefinedGuest in partyReference.CurrentParty.Guests)
         {
-            var copyGuest = predefinedGuest.Copy();
-            var predefinedInstance = unitList.RegisterUnit(copyGuest);
-            allGuests.Add(predefinedInstance);
+            var copyGuest = unitList.CopyUnit(predefinedGuest, false);
+            allGuests.Add(copyGuest);
         }
 
         // todo: include direct invites

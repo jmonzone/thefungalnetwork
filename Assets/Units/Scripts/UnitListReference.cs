@@ -17,7 +17,8 @@ public class UnitListReference : ScriptableObject
     [Header("Collections")]
     [SerializeField] private List<UnitInstance> initialUnits;
     [SerializeField] private List<Unit> unitCollection;
-    [SerializeField] private List<Job> jobs;
+    [SerializeField] private List<Job> jobCollection;
+    [SerializeField] private List<Skill> skillCollection;
     [SerializeField] private List<ColorPalette> colorPalettes;
 
     [Header("Runtime")]
@@ -68,15 +69,27 @@ public class UnitListReference : ScriptableObject
                     var element = System.Enum.TryParse(elementId, ignoreCase: true, out Element elementResult) ? elementResult : Element.NONE;
 
                     var jobId = unitJson.Value<string>("job");
-                    var matchingJob = jobs.Find(job => job.Id == jobId);
+                    var matchingJob = jobCollection.Find(job => job.Id == jobId);
 
                     var matchingColorPalette = colorPalettes.Find(p => p?.Id == elementId);
 
                     float friendshipXP = unitJson.Value<float?>("friendshipXP") ?? 0f;
-                    float danceXP = unitJson.Value<float?>("danceXP") ?? 0f;
+
+                    var skillsJson = unitJson.Value<JArray>("skills") ?? new JArray();
+                    var skills = new List<UnitSkill>();
+
+                    foreach (var skill in skillCollection)
+                    {
+                        var skillJson = skillsJson
+                            .FirstOrDefault(x => x?["id"]?.ToString() == skill.Id);
+
+                        float xp = skillJson?.Value<float?>("xp") ?? 0f;
+
+                        skills.Add(new UnitSkill(skill, xp));
+                    }
 
                     var instance = CreateInstance<UnitInstance>();
-                    instance.Initialize(matchingUnit, unitId, friendshipXP, danceXP, element, matchingJob, matchingColorPalette, unitJson);
+                    instance.Initialize(matchingUnit, unitId, friendshipXP, skills, element, matchingJob, matchingColorPalette, unitJson);
                     RegisterUnit(instance, false);
                 };
             }
@@ -105,18 +118,32 @@ public class UnitListReference : ScriptableObject
         {
             foreach(var unit in initialUnits)
             {
-                RegisterUnit(unit.Copy(), false);
+                CopyUnit(unit, false);
             }
 
             foreach (var unit in initialUnits)
             {
                 var matchingUnit = units.Find(x => x.Id == unit.Id);
                 matchingUnit.Friends.AddRange(unit.Friends.Select(friend => units.Find(x => x.Id == friend.Id)));
-                RegisterUnit(unit.Copy(), false);
+                CopyUnit(unit, false);
             }
         }
 
         SaveData();
+    }
+
+    public UnitInstance CopyUnit(UnitInstance instance, bool saveData = true)
+    {
+        var skills = new List<UnitSkill>();
+
+        foreach (var skill in skillCollection)
+        {
+            skills.Add(new UnitSkill(skill, 0));
+        }
+
+        var copy = CreateInstance<UnitInstance>();
+        copy.Initialize(instance.Data, instance.Id, instance.FriendshipXP, skills, instance.Element, instance.Job, instance.ColorPalette);
+        return RegisterUnit(copy, saveData);
     }
 
     public (Unit unit, ColorPalette color) PickNewFriend()
@@ -225,8 +252,9 @@ public class UnitListReference : ScriptableObject
         }
 
         // Otherwise, register new instance
-        unit.OnXpChanged += (skill, xp) => SaveData();
-        unit.OnLevelChanged += (skill, level) => OnFungalUpdated?.Invoke();
+        unit.OnXpChanged += SaveData;
+
+        //unit.OnLevelChanged += (skill, level) => OnFungalUpdated?.Invoke();
 
         units.Add(unit);
 
@@ -242,18 +270,33 @@ public class UnitListReference : ScriptableObject
 
         foreach (var unit in units)
         {
-            unitsJson.Add(new JObject
+            var unitJson = new JObject
             {
                 ["id"] = unit.Id,
                 ["name"] = unit.Data.Name,
                 ["friendshipLevel"] = unit.FriendshipLevel,
                 ["friendshipXP"] = unit.FriendshipXP,
-                ["danceLevel"] = unit.DanceLevel,
-                ["danceXP"] = unit.DanceXP,
                 ["element"] = unit.Element.ToString().ToLower(),
                 ["job"] = unit.Job?.Id.ToString().ToLower() ?? "none",
                 ["friends"] = new JArray(unit.Friends.Select(friend => friend.Id)),
-            });
+            };
+
+            var skillsJson = new JArray();
+
+            foreach(var skill in unit.Skills.Keys)
+            {
+                var skillJson = new JObject
+                {
+                    ["id"] = skill.Id,
+                    ["level"] = unit.Skills[skill].Level,
+                    ["xp"] = unit.Skills[skill].XP,
+                };
+
+                skillsJson.Add(skillJson);
+            }
+
+            unitJson["skills"] = skillsJson;
+            unitsJson.Add(unitJson);
         }
 
         localData.SaveData(UNIT_KEY, unitsJson);

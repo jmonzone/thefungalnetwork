@@ -7,6 +7,9 @@ public class DancefloorGameplayUI : ActivityController
     [SerializeField] private PlayerReference playerReference;
     [SerializeField] private DJTableReference djReference;
     [SerializeField] private DancefloorBackground background;
+    [SerializeField] private Skill danceSkill;
+
+    protected override Camera Camera => background.DominantCamera;
 
     protected override IEnumerator OnActivityStart()
     {
@@ -14,7 +17,7 @@ public class DancefloorGameplayUI : ActivityController
         {
             var dance = unit.GetComponent<UnitDance>();
             unit.SetBehaviour(dance);
-            LevelUI.UnitLevelViewMap[unit.Instance].SetColor(dance.CurrentColor);
+            LevelUI.UnitLevelViewMap[unit.Instance].SetColor(unit.Color);
         }
 
         var timer = 0f;
@@ -26,7 +29,7 @@ public class DancefloorGameplayUI : ActivityController
             {
                 foreach (var unit in Activity.Units)
                 {
-                    IncreaseDanceXP(unit, 1f);
+                    IncreaseXP(unit, 1f);
                 }
 
                 timer = 0;
@@ -35,23 +38,16 @@ public class DancefloorGameplayUI : ActivityController
             if (Input.GetMouseButtonDown(0))
             {
                 Activity.Units[0].GetComponent<UnitDance>().IncrementDancePower();
-                IncreaseDanceXP(Activity.Units[0], 1f);
+                IncreaseXP(Activity.Units[0], 1f);
             }
 
             yield return null;
         }
     }
 
-    private void IncreaseDanceXP(UnitController unit, float value)
+    protected override void OnActivityEnded()
     {
-        unit.Instance.IncreaseSkillXP(Skill.DANCE, 1f);
-
-
-        var dancer = unit.GetComponent<UnitDance>();
-
-        var worldPos = unit.transform.position + Vector3.up;
-        Vector3 viewportPos = background.DominantCamera.WorldToScreenPoint(worldPos);
-        LevelUI.UnitLevelViewMap[unit.Instance].SetColor(dancer.CurrentColor);
-        LevelUI.UnitLevelViewMap[unit.Instance].Increase(value, viewportPos);
+        base.OnActivityEnded();
+        StopAllCoroutines();
     }
 }

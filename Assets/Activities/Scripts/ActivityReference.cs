@@ -49,7 +49,6 @@ public class ActivityReference : ScriptableObject
             units[i].SetLookPosition(origin);
         }
 
-
         navigation.Navigate(activityView);
         OnActivityHasStarted?.Invoke();
     }

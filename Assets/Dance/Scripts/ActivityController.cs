@@ -8,12 +8,17 @@ public abstract class ActivityController : MonoBehaviour
     [SerializeField] private ActivityReference activity;
     [SerializeField] private Button exitButton;
     [SerializeField] private SkillLevelUIManager levelUI;
+    [SerializeField] private Skill primarySkill;
 
     protected ActivityReference Activity => activity;
     protected SkillLevelUIManager LevelUI => levelUI;
 
-    private void Awake()
+    private Camera mainCamera;
+    protected virtual Camera Camera => mainCamera;
+
+    protected virtual void Awake()
     {
+        mainCamera = Camera.main;
         exitButton.onClick.AddListener(activity.EndActivity);
     }
 
@@ -36,8 +41,9 @@ public abstract class ActivityController : MonoBehaviour
 
     private IEnumerator OnActivityStartRoutine()
     {
-        yield return new WaitUntil(() => activity.Units.All(unit => unit.IsAtDestination));
+        yield return new WaitUntil(() => levelUI.gameObject.activeInHierarchy);
         levelUI.SetUnits(activity.Units.Select(unit => unit.Instance));
+        yield return new WaitUntil(() => activity.Units.All(unit => unit.IsAtDestination));
         yield return OnActivityStart();
     }
 
@@ -49,6 +55,16 @@ public abstract class ActivityController : MonoBehaviour
         {
             unit.SetDefaultBehaviour();
         }
+    }
+
+    protected void IncreaseXP(UnitController unit, float value)
+    {
+        unit.Instance.Skills[primarySkill].IncreaseSkillXP(1f);
+
+        var worldPos = unit.transform.position + Vector3.up;
+        Vector3 viewportPos = mainCamera.WorldToScreenPoint(worldPos);
+        LevelUI.UnitLevelViewMap[unit.Instance].SetColor(unit.Color);
+        LevelUI.UnitLevelViewMap[unit.Instance].Increase(value, viewportPos);
     }
 
 }

@@ -24,13 +24,17 @@ public class FungalController : UnitController
     [SerializeField] private DialogueReference dialogueReference;
 
     private UnitFollow unitFollow;
+    private UnitColorPalette colorPalette;
     private Animator animator;
+
+    public override Color Color => colorPalette.PrimaryColor;
 
     protected override void Awake()
     {
         base.Awake();
 
         unitFollow = GetComponent<UnitFollow>();
+        colorPalette = GetComponent<UnitColorPalette>();
     }
 
     protected override void OnEnable()

@@ -15,9 +15,5 @@ public class Job : ScriptableObject
     public string ActionName => actionName;
     public Color ActionColor => actionColor;
     public Sprite ActionSprite => actionSprite;
-
-    public void StartJob(List<UnitController> units)
-    {
-        activity.StartActivity(units);
-    }
+    public ActivityReference Activity => activity;
 }

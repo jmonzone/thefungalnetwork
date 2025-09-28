@@ -76,7 +76,7 @@ public class DialogueReference : ScriptableObject
 
     public void CompleteDialogue()
     {
-        Debug.Log($"CompleteDialogue");
+        //Debug.Log($"CompleteDialogue");
 
         unit.Unfocus();
         OnDialogueComplete?.Invoke();
