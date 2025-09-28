@@ -80,15 +80,17 @@ public class DialogueUI : MonoBehaviour
 
     private void OnChatPageClosed()
     {
-        if (dialogue.Unit.Instance.Job == Job.DANCER)
+        var unit = dialogue.Unit;
+
+        dialogue.CompleteDialogue();
+
+        if (unit.Instance.Job == Job.DANCER)
         {
-            var units = new List<UnitController> { playerReference.Player, dialogue.Unit};
+            var units = new List<UnitController> { playerReference.Player, unit };
             dancefloor.StartDancefloor(units);
         }
-        else
-        {
-            dialogue.CompleteDialogue();
-        }
+
+
         //if (dialogue.Dialogue.Type == DialogueType.CHAT && dialogue.Unit is FungalController)
         //{
         //    ShowPage(DialoguePage.FRIENDSHIP);

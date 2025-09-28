@@ -45,7 +45,7 @@ public class DancefloorReference : ScriptableObject
     public void ExitDancefloor()
     {
         OnDancefloorExit?.Invoke();
-        this.units = new List<UnitController>();
+        units = new List<UnitController>();
         navigation.GoBackToRoot();
     }
 }

@@ -25,9 +25,6 @@ public class DancefloorController : MonoBehaviour
     {
         // Animate scale down and hide zone
         StartCoroutine(HideZone());
-
-        // Move player to zone entry
-        playerReference.SetTargetPosition(zoneController.EntryPosition);
     }
 
     private IEnumerator HideZone()
