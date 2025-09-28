@@ -4,13 +4,6 @@ using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-public enum Job
-{
-    NONE,
-    DJ,
-    DANCER
-}
-
 public enum Skill
 {
     FRIENDSHIP,
@@ -83,7 +76,7 @@ public class UnitInstance : ScriptableObject
     public event UnityAction<Skill, float> OnXpChanged;
     public event UnityAction<Skill, int> OnLevelChanged;
 
-    public void Initialize(Unit unit, string id = null, float friendshipXP = 0, float danceXP = 0, Element element = Element.NONE, Job job = Job.NONE, ColorPalette colorPalette = null, JObject json = null)
+    public void Initialize(Unit unit, string id = null, float friendshipXP = 0, float danceXP = 0, Element element = Element.NONE, Job job = null, ColorPalette colorPalette = null, JObject json = null)
     {
         this.id = string.IsNullOrEmpty(id) ? GenerateMongoLikeId() : id;
         this.unit = unit;

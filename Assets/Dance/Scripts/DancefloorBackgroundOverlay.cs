@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class DancefloorBackgroundOverlay : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private DancefloorReference dancefloorReference;
+    [SerializeField] private ActivityReference dancefloorReference;
     [SerializeField] private DJTableReference dJTableReference;
 
     [Header("Overlay Settings")]
@@ -20,14 +20,14 @@ public class DancefloorBackgroundOverlay : MonoBehaviour
 
     private void OnEnable()
     {
-        dancefloorReference.OnDancefloorStart += OnDancefloorEnter;
-        dancefloorReference.OnDancefloorExit += OnDancefloorExit;
+        dancefloorReference.OnActivityHasStarted += OnDancefloorEnter;
+        dancefloorReference.OnActivityHasEnded += OnDancefloorExit;
     }
 
     private void OnDisable()
     {
-        dancefloorReference.OnDancefloorStart -= OnDancefloorEnter;
-        dancefloorReference.OnDancefloorExit -= OnDancefloorExit;
+        dancefloorReference.OnActivityHasStarted -= OnDancefloorEnter;
+        dancefloorReference.OnActivityHasEnded -= OnDancefloorExit;
 
         if (dJTableReference != null)
             dJTableReference.OnBeat -= OnBeatStep;

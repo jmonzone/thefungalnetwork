@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-
 public class UnitDJ : UnitBehaviour
 {
     [SerializeField] private DJTableReference djReference;

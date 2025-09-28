@@ -17,6 +17,7 @@ public class UnitListReference : ScriptableObject
     [Header("Collections")]
     [SerializeField] private List<UnitInstance> initialUnits;
     [SerializeField] private List<Unit> unitCollection;
+    [SerializeField] private List<Job> jobs;
     [SerializeField] private List<ColorPalette> colorPalettes;
 
     [Header("Runtime")]
@@ -67,7 +68,7 @@ public class UnitListReference : ScriptableObject
                     var element = System.Enum.TryParse(elementId, ignoreCase: true, out Element elementResult) ? elementResult : Element.NONE;
 
                     var jobId = unitJson.Value<string>("job");
-                    var job = System.Enum.TryParse(jobId, ignoreCase: true, out Job jobResult) ? jobResult : Job.NONE;
+                    var matchingJob = jobs.Find(job => job.Id == jobId);
 
                     var matchingColorPalette = colorPalettes.Find(p => p?.Id == elementId);
 
@@ -75,7 +76,7 @@ public class UnitListReference : ScriptableObject
                     float danceXP = unitJson.Value<float?>("danceXP") ?? 0f;
 
                     var instance = CreateInstance<UnitInstance>();
-                    instance.Initialize(matchingUnit, unitId, friendshipXP, danceXP, element, job, matchingColorPalette, unitJson);
+                    instance.Initialize(matchingUnit, unitId, friendshipXP, danceXP, element, matchingJob, matchingColorPalette, unitJson);
                     RegisterUnit(instance, false);
                 };
             }
@@ -250,7 +251,7 @@ public class UnitListReference : ScriptableObject
                 ["danceLevel"] = unit.DanceLevel,
                 ["danceXP"] = unit.DanceXP,
                 ["element"] = unit.Element.ToString().ToLower(),
-                ["job"] = unit.Job.ToString().ToLower(),
+                ["job"] = unit.Job?.Id.ToString().ToLower() ?? "none",
                 ["friends"] = new JArray(unit.Friends.Select(friend => friend.Id)),
             });
         }

@@ -12,14 +12,10 @@ public class DialogueGlyphUI : DialoguePageUI
         glyphUI.OnGlyphDialogueComplete += OnGlyphDialogueComplete;
     }
 
-    public override void Show()
+    public override IEnumerator Show()
     {
-        base.Show();
-        StartCoroutine(StartRoutine());
-    }
+        yield return base.Show();
 
-    private IEnumerator StartRoutine()
-    {
         var brain = Camera.main.GetComponent<CinemachineBrain>();
         if (brain == null) yield break;
 

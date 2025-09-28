@@ -1,10 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.Events;
 
-public class PassTheSpore : MonoBehaviour
+public class PassTheSpore : ActivityController
 {
     [Header("References")]
     [SerializeField] private PartyReference partyReference;
@@ -23,101 +21,60 @@ public class PassTheSpore : MonoBehaviour
     private bool isMidAir = false;
     private Material sporeMaterial;
 
-    private class PassTheSporePlayer
-    {
-        public FungalController Fungal;
-        public bool isDone;
-    }
-
-    private PassTheSporePlayer currentPlayer;
-    private List<PassTheSporePlayer> players = new List<PassTheSporePlayer>();
+    private UnitController currentPlayer;
     public Vector3 AnchorPosition => gameCenter.transform.position + Vector3.up * 2.5f;
-
-    public event UnityAction OnGameStart;
-    public event UnityAction OnGameComplete;
 
     private void Awake()
     {
         sporeMaterial = sporeOuterShell.material;
-        Reset();
     }
 
-    public void StartGame()
+    protected override IEnumerator OnActivityStart()
     {
-        //virtualCamera.Priority = 11;
-
-        foreach(var unit in partyReference.Guests)
-        {
-            players.Add(new PassTheSporePlayer
-            {
-                Fungal = unit as FungalController,
-                isDone = false,
-            });
-        };
-
-        int count = players.Count;
-
-        for (int i = 0; i < count; i++)
-        {
-            var fungalController = players[i].Fungal.GetComponent<FungalController>();
-
-            // Evenly spaced angle around circle, but clockwise
-            float angle = -(i / (float)count) * Mathf.PI * 2f;
-
-            // Direction from center (clockwise order)
-            Vector3 direction = new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle));
-
-            // Position offset outward from center
-            Vector3 destination = gameCenter.position + direction * 1f;
-
-            fungalController.SetDestination(destination);
-            fungalController.SetLookPosition(gameCenter.transform.position);
-        }
-
-        //cameraPanController.CenterTargetInView(gameCenter.position);
-        //navigation.Navigate(passTheSporeView);
-
-        StartCoroutine(GameInput());
-        StartCoroutine(GameUpdate());
-
-        OnGameStart?.Invoke();
-    }
-
-    private IEnumerator GameInput()
-    {
-        yield return new WaitUntil(() => players.All(player => player.Fungal.IsAtDestination));
-
         int currentUnitIndex = 0;
+        var activePlayers = new List<UnitController>(Activity.Units);
+        currentPlayer = GetNextActivePlayer(ref currentUnitIndex, ref activePlayers);
+
+        sporeBall.position = currentPlayer.transform.position + Vector3.up;
         sporeBall.gameObject.SetActive(true);
 
-        // Find first active player
-        currentPlayer = GetNextActivePlayer(ref currentUnitIndex);
-        sporeBall.position = currentPlayer.Fungal.transform.position + Vector3.up;
-
+        var t = 0f;
         while (true)
         {
-            // Move to next active player
-            currentPlayer = GetNextActivePlayer(ref currentUnitIndex);
+            t += Time.deltaTime;
+            sporeMaterial.SetColor("_Outer_Color", Color.Lerp(startColor, endColor, t / heatDuration));
 
-            Vector3 targetPos = currentPlayer.Fungal.transform.position + Vector3.up;
-            yield return TossBall(sporeBall.position, targetPos, 0.5f);
-            yield return new WaitForSeconds(1f);
+            if (!isMidAir)
+            {
+                currentPlayer = GetNextActivePlayer(ref currentUnitIndex, ref activePlayers);
+                Vector3 targetPos = currentPlayer.transform.position + Vector3.up;
+                StartCoroutine(TossBall(sporeBall.position, targetPos, 0.5f));
+
+                if (t >= heatDuration)
+                {
+                    activePlayers.Remove(currentPlayer);
+
+                    if (activePlayers.Count <= 1)
+                    {
+                        yield return new WaitForSeconds(2f);
+                        Activity.EndActivity();
+                        yield break; // stop coroutine
+                    }
+
+                    // reset
+                    t = 0f;
+                    sporeMaterial.SetColor("_Outer_Color", startColor);
+                }
+            }
+
+            yield return null;
         }
     }
 
     // Helper to get next player who isn't done
-    private PassTheSporePlayer GetNextActivePlayer(ref int index)
+    private UnitController GetNextActivePlayer(ref int index, ref List<UnitController> players)
     {
-        int startIndex = index;
-
-        do
-        {
-            index = (index + 1) % players.Count;
-            if (!players[index].isDone) return players[index];
-
-        } while (index != startIndex); // looped all players
-
-        // Fallback if everyone is done
+        index = (index + 1) % players.Count;
         return players[index];
     }
 
@@ -149,69 +106,13 @@ public class PassTheSpore : MonoBehaviour
         partyReference.IncrementScore(10, sporeBall.position);
         isMidAir = false;
     }
-    private IEnumerator GameUpdate()
+
+    protected override void OnActivityEnded()
     {
-        float elapsed = 0f;
-
-        // Wait until all players are at destination OR timeout reached
-        yield return new WaitUntil(() =>
-        {
-            elapsed += Time.deltaTime;
-            return players.All(player => player.Fungal.IsAtDestination) || elapsed >= 2f;
-        });
-
-        sporeMaterial.SetColor("_Outer_Color", startColor);
-
-        var t = 0f;
-        while (true)
-        {
-            sporeMaterial.SetColor("_Outer_Color", Color.Lerp(startColor, endColor, t / heatDuration));
-            t += Time.deltaTime;
-
-            if (!isMidAir && t >= heatDuration)
-            {
-                // trigger your code when fully heated
-                currentPlayer.Fungal.TriggerDeath();
-                currentPlayer.isDone = true;
-
-                // Check if only one player is left
-                int activePlayers = players.Count(p => !p.isDone);
-                if (activePlayers <= 1)
-                {
-                    yield return new WaitForSeconds(2f);
-                    EndGame();
-                    yield break; // stop coroutine
-                }
-
-                // reset
-                t = 0f;
-                sporeMaterial.SetColor("_Outer_Color", startColor);
-            }
-
-            yield return null;
-        }
-    }
-
-    private void EndGame()
-    {
-        Reset();
-
-        foreach (var player in players)
-        {
-            var fungalController = player.Fungal.GetComponent<FungalController>();
-            fungalController.SetDefaultBehaviour();
-            fungalController.TriggerRespawn();
-        }
-
-        players = new List<PassTheSporePlayer>();
-
-        OnGameComplete?.Invoke();
-    }
-
-    private void Reset()
-    {
+        base.OnActivityEnded();
         StopAllCoroutines();
-        //virtualCamera.Priority = 0;
         sporeBall.gameObject.SetActive(false);
     }
+
+    
 }

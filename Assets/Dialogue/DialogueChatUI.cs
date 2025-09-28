@@ -16,9 +16,9 @@ public class DialogueChatUI : DialoguePageUI
         continueButton.onClick.AddListener(() => OnGlyphDialogueComplete());
     }
 
-    public override void Show()
+    public override IEnumerator Show()
     {
-        base.Show();
+        yield return base.Show();
         unitImage.sprite = dialogue.Unit.Instance.Data.Sprite;
         unitNameText.text = dialogue.Unit.Instance.Data.Name;
         dialogueText.text = dialogue.Dialogue.Text;
@@ -32,30 +32,17 @@ public class DialogueChatUI : DialoguePageUI
         {
             var response = targetDialogue.Responses[0];
             dialogue.RespondToChat(response);
-            if (response.Next != null) Show();
+            if (response.Next != null) StartCoroutine(Show());
             else InvokeClose();
         }
         else if (targetDialogue.Next != null)
         {
             dialogue.ContinueDialogue();
-            Show();
+            StartCoroutine(Show());
         }
         else
         {
             InvokeClose();
         }
     }
-
-    //private IEnumerator ContinueRoutine()
-    //{
-    //    yield return new WaitForSeconds(1f);
-    //    dialogue.ContinueDialogue();
-    //    Show();
-    //}
-
-    //private IEnumerator CloseRoutine()
-    //{
-    //    yield return new WaitForSeconds(2f);
-    //    InvokeClose();
-    //}
 }

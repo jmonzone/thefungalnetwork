@@ -17,9 +17,9 @@ public class DialogueFriendshipUI : DialoguePageUI
         skillLevelUI.OnAllParticlesReached += SkillLevelUI_OnAllParticlesReached;
     }
 
-    public override void Show()
+    public override IEnumerator Show()
     {
-        base.Show();
+        yield return base.Show();
 
         unit = dialogue.Unit;
 

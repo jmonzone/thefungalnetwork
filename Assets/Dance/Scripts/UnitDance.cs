@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class UnitDance : UnitBehaviour
@@ -85,15 +87,15 @@ public class UnitDance : UnitBehaviour
 
         // Replace with the exact state name your Animator uses.
         // Try "Base Layer.Dance" if the layer is "Base Layer", or just "Dance" if unique.
-        StartCoroutine(SetAnimationSpeedWhenStateEntered(danceAnimationClipName, djReference.BeatDuration * danceSpeedModifier, 0, 2f));
+        StartCoroutine(SetAnimationSpeedWhenStateEntered(danceAnimationClipName, djReference.BeatDuration * danceSpeedModifier, 0));
     }
 
-    private IEnumerator SetAnimationSpeedWhenStateEntered(string requiredStateName, float beatDuration, int layer = 0, float timeoutSeconds = 2f)
+    private IEnumerator SetAnimationSpeedWhenStateEntered(string requiredStateName, float beatDuration, int layer = 0)
     {
         float elapsed = 0f;
 
         // Wait until the animator is *in the target state* and not in transition (or timeout)
-        while (elapsed < timeoutSeconds)
+        while (true)
         {
             var stateInfo = animator.GetCurrentAnimatorStateInfo(layer);
             // IsName requires layerName.stateName or just stateName when unique.
@@ -102,11 +104,6 @@ public class UnitDance : UnitBehaviour
 
             elapsed += Time.deltaTime;
             yield return null;
-        }
-
-        if (elapsed >= timeoutSeconds)
-        {
-            Debug.LogWarning($"Timed out waiting for animator state '{requiredStateName}'. Trying best-effort clip lookup.");
         }
 
         // Safely get current clip info

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.Events;
 
 public abstract class DialoguePageUI : MonoBehaviour
@@ -23,9 +24,9 @@ public abstract class DialoguePageUI : MonoBehaviour
 
     }
 
-    public virtual void Show()
+    public virtual IEnumerator Show()
     {
-        if (!fadeCanvasGroup.IsVisible) StartCoroutine(fadeCanvasGroup.FadeIn());
+        if (!fadeCanvasGroup.IsVisible) yield return fadeCanvasGroup.FadeIn();
     }
 
     public virtual void Hide()

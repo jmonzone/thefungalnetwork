@@ -1,12 +1,13 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class DialogueActionsUI : DialoguePageUI
 {
     [SerializeField] private PlayerReference playerReference;
-    [SerializeField] private DancefloorReference dancefloorReference;
 
     [SerializeField] private FadeCanvasGroup actionButtons;
     [SerializeField] private TypewriterEffect dialogueTypewriter;
@@ -15,7 +16,13 @@ public class DialogueActionsUI : DialoguePageUI
     [SerializeField] private Button photoButton;
     [SerializeField] private Button giveButton;
     [SerializeField] private Button followButton;
+
     [SerializeField] private Button actionButton;
+    [SerializeField] private Image actionBackground;
+    [SerializeField] private Image actionImage;
+    [SerializeField] private TextMeshProUGUI actionText;
+
+    private UnitController unit;
 
     protected override void Awake()
     {
@@ -27,13 +34,24 @@ public class DialogueActionsUI : DialoguePageUI
         actionButton.onClick.AddListener(UseAction);
     }
 
-    public override void Show()
+    public override IEnumerator Show()
     {
-        base.Show();
+        yield return base.Show();
         actionButtons.Hide();
 
-        var intro = dialogue.Unit.Instance.RandomDialogue;
-        StartCoroutine(dialogueTypewriter.TypeRoutine(intro.Text, () => StartCoroutine(actionButtons.FadeIn())));
+        unit = dialogue.Unit;
+
+        if (unit.Instance.Job)
+        {
+            actionBackground.color = unit.Instance.Job.ActionColor;
+            actionImage.sprite = unit.Instance.Job.ActionSprite;
+            actionText.text = unit.Instance.Job.Id;
+        }
+
+        actionButton.gameObject.SetActive(unit.Instance.Job);
+
+        var intro = unit.Instance.RandomDialogue;
+        yield return dialogueTypewriter.TypeRoutine(intro.Text, () => StartCoroutine(actionButtons.FadeIn()));
     }
 
     private void UseAction()
@@ -64,10 +82,7 @@ public class DialogueActionsUI : DialoguePageUI
             unit.GetComponent<UnitFollow>().StopFollowing();
         }
 
-        // Start dancefloor
-        dancefloorReference.StartDancefloor(
-            uniqueUnits.Select(u => u.GetComponent<UnitDance>()).ToList()
-        );
+        unit.Instance.Job.StartJob(uniqueUnits);
     }
 
 }

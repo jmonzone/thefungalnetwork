@@ -81,7 +81,7 @@ public class DJNoteManager : MonoBehaviour
     {
         var targets = track.PartyMode switch
         {
-            _=> unitManager.AllUnits
+            _ => unitManager.AllUnits
                 .Select(unit => unit.GetComponent<INoteTarget>())
                 .Concat(new List<INoteTarget> { playerReference.Player.GetComponent<INoteTarget>() }),
             //_ => plants.Cast<INoteTarget>()
@@ -90,7 +90,7 @@ public class DJNoteManager : MonoBehaviour
         return targets.Where(target =>
         {
             var unit = target?.Transform.GetComponent<UnitController>();
-            return unit && unit.Instance.Job != Job.DJ;
+            return unit && (!unit.Instance.Job || unit.Instance.Job.Id != "dj");
         });
     }
 

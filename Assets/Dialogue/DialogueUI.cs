@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,7 +16,6 @@ public class DialogueUI : MonoBehaviour
     [SerializeField] private PlayerReference playerReference;
     [SerializeField] private DialogueReference dialogue;
     [SerializeField] private UnitListReference unitListReference;
-    [SerializeField] private DancefloorReference dancefloor;
 
     [Header("UI Components")]
     [SerializeField] private SpeakerUI speakerUI;
@@ -40,12 +38,11 @@ public class DialogueUI : MonoBehaviour
         glyphPage.Hide();
         friendshipPage.Hide();
 
-        actionPage.OnClose += ActionPage_OnClose;
-        chatPage.OnClose += OnChatPageClosed;
-        glyphPage.OnClose += OnChatPageClosed;
-        friendshipPage.OnClose += FriendshipPage_OnClose;
-
-        closeButton.onClick.AddListener(() => dialogue.CompleteDialogue());
+        actionPage.OnClose += CompleteDialogue;
+        chatPage.OnClose += CompleteDialogue;
+        glyphPage.OnClose += CompleteDialogue;
+        friendshipPage.OnClose += CompleteDialogue;
+        closeButton.onClick.AddListener(CompleteDialogue);
     }
 
     private void OnEnable()
@@ -79,33 +76,7 @@ public class DialogueUI : MonoBehaviour
         ShowPage(DialoguePage.CHAT);
     }
 
-    private void ActionPage_OnClose()
-    {
-        dialogue.CompleteDialogue();
-    }
-
-    private void OnChatPageClosed()
-    {
-        dialogue.CompleteDialogue();
-
-
-        //if (dialogue.Dialogue.Type == DialogueType.CHAT && dialogue.Unit is FungalController)
-        //{
-        //    ShowPage(DialoguePage.FRIENDSHIP);
-        //}
-        //else if (dialogue.Dialogue.Type == DialogueType.FRIEND && friendshipPage.HasLeveledUp && dialogue.Unit.Instance.FriendshipLevel == 2)
-        //{
-        //    var selectUnit = dialogue.Unit;
-        //    dialogue.CompleteDialogue();
-        //    unitListReference.SelectFungal(selectUnit.Instance);
-        //}
-        //else
-        //{
-        //    dialogue.CompleteDialogue();
-        //}
-    }
-
-    private void FriendshipPage_OnClose()
+    private void CompleteDialogue()
     {
         dialogue.CompleteDialogue();
     }
@@ -125,6 +96,6 @@ public class DialogueUI : MonoBehaviour
             _ => actionPage,
         };
 
-        currentPage.Show();
+        StartCoroutine(currentPage.Show());
     }
 }

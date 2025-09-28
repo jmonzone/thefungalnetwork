@@ -5,8 +5,7 @@ using UnityEngine.UI;
 public class DancefloorBackground : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private DancefloorReference dancefloorReference;
-    [SerializeField] private ZoneController zoneController;
+    [SerializeField] private ActivityReference dancefloorReference;
     [SerializeField] private DJTableReference dJTableReference;
     [SerializeField] private DancefloorBackgroundOverlay overlayEffects;
     [SerializeField] private FadeCanvasGroup fadeCanvasGroup;
@@ -48,14 +47,14 @@ public class DancefloorBackground : MonoBehaviour
 
     private void OnEnable()
     {
-        dancefloorReference.OnDancefloorStart += MusicVideoReference_OnMusicVideoStart;
-        dancefloorReference.OnDancefloorExit += MusicVideoReference_OnMusicVideoEnd;
+        dancefloorReference.OnActivityHasStarted += MusicVideoReference_OnMusicVideoStart;
+        dancefloorReference.OnActivityHasEnded += MusicVideoReference_OnMusicVideoEnd;
     }
 
     private void OnDisable()
     {
-        dancefloorReference.OnDancefloorStart -= MusicVideoReference_OnMusicVideoStart;
-        dancefloorReference.OnDancefloorExit -= MusicVideoReference_OnMusicVideoEnd;
+        dancefloorReference.OnActivityHasStarted -= MusicVideoReference_OnMusicVideoStart;
+        dancefloorReference.OnActivityHasEnded -= MusicVideoReference_OnMusicVideoEnd;
     }
 
     private void MusicVideoReference_OnMusicVideoStart()
@@ -140,7 +139,7 @@ public class DancefloorBackground : MonoBehaviour
             orbitAngleA += deltaAngle;
             orbitAngleB -= deltaAngle;
 
-            Vector3 center = zoneController.transform.position;
+            Vector3 center = dancefloorReference.Origin;
 
             float radA = Mathf.Deg2Rad * orbitAngleA;
             float radB = Mathf.Deg2Rad * orbitAngleB;
