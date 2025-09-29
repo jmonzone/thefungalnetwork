@@ -22,9 +22,16 @@ public class DanceMoveUIManager : MonoBehaviour
         var moves = new List<string> { "Die01_SwordAndShield", "Attack04_SwordAndShiled" };
 
         var i = 0;
-        foreach(var move in moveViews)
+        foreach (var move in dancer.DanceMoves)
         {
-            move.SetMove(dancer, moves[i]);
+            moveViews[i].SetMove(dancer, move);
+            moveViews[i].gameObject.SetActive(true);
+            i++;
+        }
+
+        while (i < moveViews.Count)
+        {
+            moveViews[i].gameObject.SetActive(false);
             i++;
         }
     }

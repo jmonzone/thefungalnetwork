@@ -27,6 +27,10 @@ public class UnitDance : UnitBehaviour
     [SerializeField] private float pulseOffset = 1;
     [SerializeField] private int currentStage = 0;
 
+    [SerializeField] private List<DanceMove> danceMoves;
+
+    public List<DanceMove> DanceMoves => danceMoves;
+
     private Animator animator;
     private Material[] materials;
 
