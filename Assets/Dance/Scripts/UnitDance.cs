@@ -6,6 +6,7 @@ using UnityEngine;
 // fungal material vs player material
 public class UnitDance : UnitBehaviour
 {
+    [SerializeField] private ActivityReference danceReference;
     [SerializeField] private DJTableReference djReference;
     [SerializeField] private Material targetMaterial; // assign in inspector
     [SerializeField] private string intensityID = "_Intensity";
@@ -33,6 +34,8 @@ public class UnitDance : UnitBehaviour
     private Coroutine cheerRoutine;
     private Coroutine moveRoutine;
     private Coroutine highlightRoutine;
+
+    private Vector3 originalPosition;
 
     private float BeatDuration => djReference.BeatDuration * danceBeat;
 
@@ -64,6 +67,8 @@ public class UnitDance : UnitBehaviour
 
     protected override void OnBehaviourStart()
     {
+        originalPosition = transform.position;
+
         currentStage = 0;
 
         animator.SetBool("IsDancing", true);
@@ -108,22 +113,32 @@ public class UnitDance : UnitBehaviour
         cheerRoutine = StartCoroutine(IncreaseDancePowerRoutine());
     }
 
-    public void PlayAnimation(string animationName)
+    public void UseDanceMove(string animationName)
     {
         danceBeat = moveDanceBeat;
+
+        if (moveRoutine != null) StopCoroutine(moveRoutine);
+        moveRoutine = StartCoroutine(DanceMoveRoutine(animationName));
+    }
+
+    private IEnumerator DanceMoveRoutine(string animationName)
+    {
+        Unit.SetDestination(danceReference.Origin);
+        yield return new WaitUntil(() => Unit.IsAtDestination);
+        yield return new WaitForSeconds(1f);
+
         animator.ResetTrigger("Complete");
         animator.Play(animationName);
 
-        if (moveRoutine != null) StopCoroutine(moveRoutine);
-        moveRoutine = StartCoroutine(PlayHoldExitRoutine());
-    }
-
-    private IEnumerator PlayHoldExitRoutine()
-    {
         yield return new WaitForSeconds(animator.speed * BeatDuration);
-        // Exit to desired state
+
         animator.SetTrigger("Complete");
         danceBeat = baseDanceBeat;
+        yield return new WaitForSeconds(1f);
+
+        Unit.SetDestination(originalPosition);
+        yield return new WaitUntil(() => Unit.IsAtDestination);
+        animator.SetBool("IsDancing", true);
     }
 
     public void Highlight()

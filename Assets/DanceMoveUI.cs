@@ -24,6 +24,6 @@ public class DanceMoveUI : MonoBehaviour
 
     private void UseMove()
     {
-        dancer.PlayAnimation(danceMove);
+        dancer.UseDanceMove(danceMove);
     }
 }

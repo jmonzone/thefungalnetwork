@@ -62,7 +62,6 @@ public class DanceActivityUI : ActivityController
 
                         danceMoveUIManager.Show(selectedUnit);
 
-                        spotlight.transform.position = selectedUnit.transform.position + Vector3.up * 5f;
                         spotlight.gameObject.SetActive(true);
 
                         IncreaseXP(selectedUnit.Unit, 1f);
@@ -73,6 +72,11 @@ public class DanceActivityUI : ActivityController
                     UnselectUnit();
                 }
 
+            }
+
+            if (selectedUnit)
+            {
+                spotlight.transform.position = selectedUnit.transform.position + Vector3.up * 5f;
             }
 
             yield return null;
