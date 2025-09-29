@@ -12,6 +12,7 @@ public class DanceActivityUI : ActivityController
     [SerializeField] private DanceMoveUIManager danceMoveUIManager;
     [SerializeField] private Skill danceSkill;
     [SerializeField] private Image touchIndicator;
+    [SerializeField] private Light spotlight;
 
     [Header("Settings")]
     [SerializeField] private float touchDuration = 0.2f;
@@ -54,22 +55,36 @@ public class DanceActivityUI : ActivityController
                 {
                     if (unit != selectedUnit)
                     {
-                        if (selectedUnit) selectedUnit.Unhighlight();
+                        UnselectUnit();
 
                         selectedUnit = unit.GetComponent<UnitDance>();
-                        danceMoveUIManager.Show(selectedUnit);
                         selectedUnit.Highlight();
+
+                        danceMoveUIManager.Show(selectedUnit);
+
+                        spotlight.transform.position = selectedUnit.transform.position + Vector3.up * 5f;
+                        spotlight.gameObject.SetActive(true);
+
                         IncreaseXP(selectedUnit.Unit, 1f);
                     }
                 }
                 else if (!EventSystem.current.IsPointerOverGameObject())
                 {
-                    if (selectedUnit) selectedUnit.Unhighlight();
+                    UnselectUnit();
                 }
 
             }
 
             yield return null;
+        }
+    }
+
+    private void UnselectUnit()
+    {
+        if (selectedUnit)
+        {
+            selectedUnit.Unhighlight();
+            spotlight.gameObject.SetActive(false);
         }
     }
 
