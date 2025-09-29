@@ -24,7 +24,6 @@ public class UnitListReference : ScriptableObject
     [Header("Runtime")]
     [SerializeField] private List<UnitInstance> units;
 
-
     public List<UnitInstance> Units => units;
     public List<UnitInstance> Friends => units.Where(unit => unit.IsFriends).ToList();
     public List<ColorPalette> ColorPalettes => colorPalettes;
@@ -33,7 +32,6 @@ public class UnitListReference : ScriptableObject
     private const string UNIT_KEY = "units";
 
     public event UnityAction<UnitInstance> OnFungalSelected;
-    public event UnityAction OnFungalUpdated;
 
     public void Initialize()
     {

@@ -25,7 +25,7 @@ public class DancefloorGameplayUI : ActivityController
         {
             timer += Time.deltaTime;
 
-            if (timer > djReference.BeatDuration)
+            if (timer > djReference.BeatDuration * 2f)
             {
                 foreach (var unit in Activity.Units)
                 {
@@ -39,8 +39,11 @@ public class DancefloorGameplayUI : ActivityController
             {
                 if (TryRaycastUnit(out UnitController unit))
                 {
-                    unit.GetComponent<UnitDance>().IncrementDancePower();
-                    IncreaseXP(unit, 1f);
+                    if (Activity.Units.Contains(unit))
+                    {
+                        unit.GetComponent<UnitDance>().IncrementDancePower();
+                        IncreaseXP(unit, 1f);
+                    }
                 }
             }
 

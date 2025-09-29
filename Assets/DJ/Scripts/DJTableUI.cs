@@ -28,23 +28,14 @@ public class DJTableUI : MonoBehaviour
         trackSlider.onValueChanged.AddListener(value =>
         {
             dJTableReference.SetTrackValue(value);
-            dJTableController.SetSlider(value);
-
-            if (value > 0.5)
-            {
-                StartPartyLights(dJTableReference.LeftTrack);
-            }
-            else
-            {
-                StartPartyLights(dJTableReference.RightTrack);
-            }
         });
+
+        dJTableReference.OnTrackValueChanged += StartPartyLights;
 
         bpmSlider.value = dJTableReference.BPM;
         bpmSlider.onValueChanged.AddListener(value =>
         {
             dJTableReference.SetBPM(value);
-            UpdateTrackPitch();
         });
     }
 
@@ -64,15 +55,6 @@ public class DJTableUI : MonoBehaviour
         build.OnBuildUpdated -= Build_OnBuildLoaded;
     }
 
-    private void UpdateTrackPitch()
-    {
-        var bpm = dJTableReference.BPM;
-        float pitch1 = bpm / dJTableReference.LeftTrack.Bpm;
-        dJTableController.SetLeftPitch(pitch1);
-        float pitch2 = bpm / dJTableReference.RightTrack.Bpm;
-        dJTableController.SetRightPitch(pitch2);
-    }
-
     private void Build_OnBuildLoaded()
     {
         partyLights = FindObjectsOfType<PartyLightController>().ToList();
@@ -83,9 +65,7 @@ public class DJTableUI : MonoBehaviour
 
             if (dJTableController)
             {
-                dJTableController.SetSlider(0);
-                UpdateTrackPitch();
-                StartPartyLights(dJTableReference.LeftTrack);
+                StartPartyLights();
             }
         }
 
@@ -104,23 +84,18 @@ public class DJTableUI : MonoBehaviour
         }
     }
 
-    private void StartPartyLights(DJTrack track)
+    private void StartPartyLights()
     {
-        currentTrack = track;
-
         if (partyCoroutine != null) StopCoroutine(partyCoroutine);
 
         partyCoroutine = StartCoroutine(PartyLightsRoutine());
     }
 
-    private DJTrack currentTrack;
-
-
     private IEnumerator PartyLightsRoutine()
     {
         while (true)
         {
-            switch (currentTrack.PartyMode)
+            switch (dJTableReference.DominantTrack.PartyMode)
             {
                 case PartyMode.Regular:
                     foreach (var light in partyLights)

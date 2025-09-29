@@ -58,7 +58,7 @@ public class DJNoteManager : MonoBehaviour
 
     private void DjReference_OnBeat(int beat)
     {
-        if (!djReference.DjTable) return;
+        if (!djReference.Controller) return;
 
         var phaseOffset = Random.Range(0f, Mathf.PI * 2f);
 
@@ -109,7 +109,7 @@ public class DJNoteManager : MonoBehaviour
 
             var note = GetFromPool();
             note.gameObject.SetActive(true);
-            note.transform.position = djReference.DjTable.transform.position;
+            note.transform.position = djReference.Controller.transform.position;
             note.Initialize(target, track, phaseOffset, value);
 
             void OnReached()

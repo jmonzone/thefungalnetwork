@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -9,10 +8,14 @@ public class DJTableReference : ScriptableObject
     [Header("References")]
     [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference tracklistView;
+    [SerializeField] private BackgroundMusicDelegate backgroundMusic;
     [SerializeField] private List<DJTrack> allTracks;
 
+    [Header("Settings")]
+    [SerializeField] private float crossFadeBeats;
+
     [Header("Runtime")]
-    [SerializeField] private DJTableController djTable;
+    [SerializeField] private DJTableController controller;
     [SerializeField] private DJTrack leftTrack;
     [SerializeField] private DJTrack rightTrack;
     [SerializeField] private float leftValue;
@@ -21,38 +24,56 @@ public class DJTableReference : ScriptableObject
     [SerializeField] private float bpm = 90;
 
     public List<DJTrack> Tracks => allTracks;
-    public DJTableController DjTable => djTable;
+    public DJTableController Controller => controller;
+
     public DJTrack LeftTrack => leftTrack;
     public DJTrack RightTrack => rightTrack;
+    public DJTrack DominantTrack => leftValue > 0.5 ? LeftTrack : RightTrack;
+
     public float LeftValue => leftValue;
     public float RightValue => rightValue;
 
+    public float CrossFadeDuration => BeatDuration * crossFadeBeats;
     public float BPM => bpm;
     public float BeatDuration => 60f / bpm; // seconds per beat
 
     public event UnityAction OnBPMChanged;
     public event UnityAction<int> OnBeat;
-    public event UnityAction OnLeftTrackChanged;
-    public event UnityAction OnRightTrackChanged;
+    public event UnityAction OnTrackValueChanged;
+    public event UnityAction<DJTrack> OnLeftTrackChanged;
+    public event UnityAction<DJTrack> OnRightTrackChanged;
 
-    public event UnityAction OnLeftTrackComplete;
-    public event UnityAction OnRightTrackComplete;
-
-    public event UnityAction OnMusicStarted;
-
-    public void Initialize()
+    public void Initialize(DJTableController controller)
     {
-        bpm = 90;
-        djTable = null;
+        Debug.Log("initialized");
+        this.controller = controller;
+    }
 
-        leftTrack = allTracks[0];
-        rightTrack = allTracks[1];
+    public void StartTrack(DJTrack track)
+    {
+        backgroundMusic.HideMusic();
+        SetLeftTrack(track);
+        SetBPM(track.Bpm);
         SetTrackValue(0);
     }
 
-    public void SetDJTable(DJTableController djTable)
+    public void SetLeftTrack(DJTrack track)
     {
-        this.djTable = djTable;
+        leftTrack = track;
+        OnLeftTrackChanged?.Invoke(track);
+    }
+
+    public void SetRightTrack(DJTrack track)
+    {
+        rightTrack = track;
+        OnRightTrackChanged?.Invoke(track);
+    }
+
+    public void SetTrackValue(float value)
+    {
+        leftValue = Mathf.Clamp(1 - value, 0, 1);
+        rightValue = Mathf.Clamp(value, 0, 1);
+        OnTrackValueChanged?.Invoke();
     }
 
     public void SetBPM(float bpm)
@@ -64,24 +85,6 @@ public class DJTableReference : ScriptableObject
     public void InvokeBeat(int beat)
     {
         OnBeat?.Invoke(beat);
-    }
-
-    public void SetLeftTrack(DJTrack track)
-    {
-        leftTrack = track;
-        OnLeftTrackChanged?.Invoke();
-    }
-
-    public void SetRightTrack(DJTrack track)
-    {
-        rightTrack = track;
-        OnRightTrackChanged?.Invoke();
-    }
-
-    public void SetTrackValue(float value)
-    {
-        leftValue = 1 - value;
-        rightValue = value;
     }
 
     private int trackToSwap = 0;
@@ -100,16 +103,5 @@ public class DJTableReference : ScriptableObject
         else SetRightTrack(track);
 
         navigation.GoBack();
-    }
-
-    public void InvokeOnMusicStarted()
-    {
-        OnMusicStarted?.Invoke();
-    }
-
-    public void InvokeOnTrackComplete(int track)
-    {
-        if (track == 0) OnLeftTrackComplete?.Invoke();
-        else OnRightTrackComplete?.Invoke();
     }
 }
