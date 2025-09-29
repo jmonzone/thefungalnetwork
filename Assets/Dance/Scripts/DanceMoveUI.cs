@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class DanceMoveUI : MonoBehaviour
@@ -10,6 +11,9 @@ public class DanceMoveUI : MonoBehaviour
 
     private UnitDance dancer;
     private DanceMove danceMove;
+
+    public event UnityAction OnDanceMoveStart;
+    public event UnityAction OnDanceMoveComplete;
 
     private void Awake()
     {
@@ -26,6 +30,7 @@ public class DanceMoveUI : MonoBehaviour
 
     private void UseMove()
     {
-        dancer.UseDanceMove(danceMove.AnimationName);
+        dancer.UseDanceMove(danceMove.AnimationName, OnDanceMoveComplete);
+        OnDanceMoveStart?.Invoke();
     }
 }

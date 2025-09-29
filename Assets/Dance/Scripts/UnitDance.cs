@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 // fungal material vs player material
 public class UnitDance : UnitBehaviour
@@ -117,15 +118,15 @@ public class UnitDance : UnitBehaviour
         cheerRoutine = StartCoroutine(IncreaseDancePowerRoutine());
     }
 
-    public void UseDanceMove(string animationName)
+    public void UseDanceMove(string animationName, UnityAction onComplete)
     {
         danceBeat = moveDanceBeat;
 
         if (moveRoutine != null) StopCoroutine(moveRoutine);
-        moveRoutine = StartCoroutine(DanceMoveRoutine(animationName));
+        moveRoutine = StartCoroutine(DanceMoveRoutine(animationName, onComplete));
     }
 
-    private IEnumerator DanceMoveRoutine(string animationName)
+    private IEnumerator DanceMoveRoutine(string animationName, UnityAction onComplete)
     {
         Unit.SetDestination(danceReference.Origin);
         yield return new WaitUntil(() => Unit.IsAtDestination);
@@ -141,8 +142,12 @@ public class UnitDance : UnitBehaviour
         yield return new WaitForSeconds(1f);
 
         Unit.SetDestination(originalPosition);
+
+        Debug.Log($"{originalPosition} {danceReference.Origin}");
         yield return new WaitUntil(() => Unit.IsAtDestination);
         animator.SetBool("IsDancing", true);
+
+        onComplete?.Invoke();
     }
 
     public void Highlight()

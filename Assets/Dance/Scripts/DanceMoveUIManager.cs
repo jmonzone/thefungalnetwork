@@ -3,23 +3,29 @@ using UnityEngine;
 
 public class DanceMoveUIManager : MonoBehaviour
 {
+    private CanvasGroup canvasGroup;
     private FadeCanvasGroup fadeCanvasGroup;
     private List<DanceMoveUI> moveViews = new List<DanceMoveUI>();
 
     private void Awake()
     {
+        canvasGroup = GetComponent<CanvasGroup>();
         fadeCanvasGroup = GetComponent<FadeCanvasGroup>();
+
+        moveViews = new List<DanceMoveUI>();
+        GetComponentsInChildren(true, moveViews);
+
+        foreach (var view in moveViews)
+        {
+            view.OnDanceMoveStart += () => canvasGroup.interactable = false;
+            view.OnDanceMoveComplete += () => canvasGroup.interactable = true;
+        }
     }
 
     public void Show(UnitDance dancer)
     {
-        moveViews = new List<DanceMoveUI>();
-        GetComponentsInChildren(true, moveViews);
-
         gameObject.SetActive(true);
         StartCoroutine(fadeCanvasGroup.FadeIn());
-
-        var moves = new List<string> { "Die01_SwordAndShield", "Attack04_SwordAndShiled" };
 
         var i = 0;
         foreach (var move in dancer.DanceMoves)
