@@ -41,7 +41,7 @@ public class UnitDance : UnitBehaviour
         {
             foreach (var mat in rend.materials)
             {
-                if (mat.name.StartsWith(targetMaterial.name))
+                if (!targetMaterial || mat.name.StartsWith(targetMaterial.name))
                 {
                     mats.Add(mat);
                 }
