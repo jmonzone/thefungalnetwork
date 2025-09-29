@@ -35,6 +35,9 @@ public class DJTableReference : ScriptableObject
     public event UnityAction OnLeftTrackChanged;
     public event UnityAction OnRightTrackChanged;
 
+    public event UnityAction OnLeftTrackComplete;
+    public event UnityAction OnRightTrackComplete;
+
     public event UnityAction OnMusicStarted;
 
     public void Initialize()
@@ -89,9 +92,11 @@ public class DJTableReference : ScriptableObject
         navigation.Navigate(tracklistView);
     }
 
-    public void SwapTrack(DJTrack track)
+    public void SwapTrack(DJTrack track, int index = -1)
     {
-        if (trackToSwap == 0) SetLeftTrack(track);
+        if (index < 0) index = trackToSwap;
+
+        if (index == 0) SetLeftTrack(track);
         else SetRightTrack(track);
 
         navigation.GoBack();
@@ -100,5 +105,11 @@ public class DJTableReference : ScriptableObject
     public void InvokeOnMusicStarted()
     {
         OnMusicStarted?.Invoke();
+    }
+
+    public void InvokeOnTrackComplete(int track)
+    {
+        if (track == 0) OnLeftTrackComplete?.Invoke();
+        else OnRightTrackComplete?.Invoke();
     }
 }

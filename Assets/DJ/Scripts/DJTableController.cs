@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class DJTableController : MonoBehaviour, IInteractable
 {
@@ -73,14 +74,14 @@ public class DJTableController : MonoBehaviour, IInteractable
         Debug.Log("playing left track");
         audioSource1.clip = audioClip;
         if (leftCoroutine != null) StopCoroutine(leftCoroutine);
-        leftCoroutine = StartCoroutine(PlayAndFadeIn(audioSource1, 1, 5f));
+        leftCoroutine = StartCoroutine(PlayAndFadeIn(0, 1, 5f));
     }
 
     public void PlayRightTrack(AudioClip audioClip)
     {
         audioSource2.clip = audioClip;
         if (rightCoroutine != null) StopCoroutine(rightCoroutine);
-        rightCoroutine = StartCoroutine(PlayAndFadeIn(audioSource2, 0, 5f));
+        rightCoroutine = StartCoroutine(PlayAndFadeIn(1, 0, 5f));
     }
 
     public void SetSlider(float value)
@@ -102,8 +103,10 @@ public class DJTableController : MonoBehaviour, IInteractable
         audioSource2.pitch = value;
     }
 
-    private IEnumerator PlayAndFadeIn(AudioSource source, float targetVolume, float duration)
+    private IEnumerator PlayAndFadeIn(int index, float targetVolume, float duration)
     {
+        var source = index == 0 ? audioSource1 : audioSource2;
+
         source.volume = 0f;
         source.Play();
 
@@ -115,6 +118,11 @@ public class DJTableController : MonoBehaviour, IInteractable
             yield return null;
         }
         source.volume = targetVolume;
+
+
+        // Wait for the clip to end
+        yield return new WaitForSeconds(source.clip.length - duration * 2f);
+        djReference.InvokeOnTrackComplete(index);
     }
 
     void IInteractable.OnProximityChanged(bool value)
