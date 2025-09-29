@@ -24,7 +24,9 @@ public class UnitController : MonoBehaviour, IInteractable
     public bool IsDefaultBehaviour => currentBehaviour == defaultBehaviour;
 
     Transform ITarget.Transform => transform;
-    public virtual Color Color { get; }
+
+    public virtual Color Color { get; set; }
+
     public bool IsAtDestination => unitDestination.IsAtDestination;
 
     public event UnityAction OnInitialized;

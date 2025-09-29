@@ -3,18 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// fungal material vs player material
 public class UnitDance : UnitBehaviour
 {
     [SerializeField] private DJTableReference djReference;
     [SerializeField] private Material targetMaterial; // assign in inspector
-    [SerializeField] private string colorID = "_Outer_Color";
+    [SerializeField] private string intensityID = "_Intensity";
     [SerializeField] private string danceAnimationClipName = "";
     [SerializeField] private float danceSpeedModifier = 1;
 
     [SerializeField] private Color targetColor;
     [SerializeField] private Color originalColor;
     [SerializeField] private Color stageColor;
-    [SerializeField] private Color pulseColor;
 
     [SerializeField] private float pulseSpeed = 10f;      // speed of pulse lerp
     [SerializeField] private float targetIntensity = 0f;      // speed of return to stage color
@@ -22,16 +22,10 @@ public class UnitDance : UnitBehaviour
     [SerializeField] private float stageSpeed = 2f; // time to drop one stage if idle
     [SerializeField] private int maxProgress = 3;
     [SerializeField] private float pulseOffset = 1;
-
-    private Animator animator;
-    private Material[] materialsToAnimate;
-
     [SerializeField] private int currentStage = 0;
 
-    protected override void Awake()
-    {
-        base.Awake();
-    }
+    private Animator animator;
+    private Material[] materials;
 
     protected override void OnInitialized()
     {
@@ -47,14 +41,15 @@ public class UnitDance : UnitBehaviour
         {
             foreach (var mat in rend.materials)
             {
-                if (mat.shader == targetMaterial.shader && mat.name.StartsWith(targetMaterial.name))
+                if (mat.name.StartsWith(targetMaterial.name))
                 {
                     mats.Add(mat);
                 }
             }
         }
 
-        materialsToAnimate = mats.ToArray();
+        materials = mats.ToArray();
+
         originalColor = Unit.Color;
     }
 
@@ -146,28 +141,28 @@ public class UnitDance : UnitBehaviour
         currentStage = Mathf.Clamp(currentStage + 1, 0, maxProgress);
 
         StopAllCoroutines();
-        StartCoroutine(IncreaseRoutine());
+        StartCoroutine(IncreaseDancePowerRoutine());
+
     }
 
-    private IEnumerator IncreaseRoutine()
+    private IEnumerator IncreaseDancePowerRoutine()
     {
         var pulseValue = (float)(currentStage) / (maxProgress);
 
-        pulseColor = Color.Lerp(originalColor, targetColor, pulseValue);
+        var pulseColor = Color.Lerp(originalColor, targetColor, pulseValue);
         var pulseIntensity = Mathf.Lerp(originalIntensity, targetIntensity, pulseValue);
 
-        var currentIntensity = materialsToAnimate[0].GetFloat("_Intensity");
-
         var startColor = Unit.Color;
+        var startIntensity = materials[0].GetFloat(intensityID);
 
         float t = 0f;
         while (t < 1f)
         {
             t += Time.deltaTime * pulseSpeed;
-            for (int i = 0; i < materialsToAnimate.Length; i++)
+            Unit.Color = Color.Lerp(startColor, pulseColor, t);
+            for (int i = 0; i < materials.Length; i++)
             {
-                materialsToAnimate[i].SetColor(colorID, Color.Lerp(startColor, pulseColor, t));
-                materialsToAnimate[i].SetFloat("_Intensity", Mathf.Lerp(currentIntensity, pulseIntensity, t));
+                materials[i].SetFloat(intensityID, Mathf.Lerp(startIntensity, pulseIntensity, t));
             }
             yield return null;
         }
@@ -178,16 +173,16 @@ public class UnitDance : UnitBehaviour
             stageColor = Color.Lerp(originalColor, targetColor, (float)(currentStage - pulseOffset) / (maxProgress));
 
             startColor = Unit.Color;
-            currentIntensity = materialsToAnimate[0].GetFloat("_Intensity");
+            startIntensity = materials[0].GetFloat(intensityID);
 
             t = 0f;
             while (t < 1f)
             {
                 t += Time.deltaTime * stageSpeed;
-                for (int i = 0; i < materialsToAnimate.Length; i++)
+                Unit.Color = Color.Lerp(startColor, stageColor, t);
+                for (int i = 0; i < materials.Length; i++)
                 {
-                    materialsToAnimate[i].SetColor(colorID, Color.Lerp(startColor, stageColor, t));
-                    materialsToAnimate[i].SetFloat("_Intensity", Mathf.Lerp(currentIntensity, originalIntensity, t));
+                    materials[i].SetFloat(intensityID, Mathf.Lerp(startIntensity, originalIntensity, t));
                 }
                 yield return null;
             }

@@ -5,8 +5,12 @@ public class UnitColorPalette : UnitBehaviour
     [SerializeField] private Texture2D originalCache; // assign prefab's texture
     [SerializeField] private ColorPalette colorPalette; // the 8 base colors
     [SerializeField] private Color primaryColor;
+    [SerializeField] private Color secondaryColor;
 
     public Color PrimaryColor => primaryColor;
+    public Color SecondaryColor => secondaryColor;
+
+    private Texture2D tex;
 
     protected override void OnInitialized()
     {
@@ -24,6 +28,11 @@ public class UnitColorPalette : UnitBehaviour
                 originalCache.Apply();
             }
         }
+
+        tex = new Texture2D(originalCache.width, originalCache.height, TextureFormat.RGBA32, false);
+        tex.SetPixels32(originalCache.GetPixels32());
+        primaryColor = GetTextureColor(0);
+        secondaryColor = GetTextureColor(1);
 
         SetColorPalette(Unit.Instance.ColorPalette);
     }
@@ -45,7 +54,7 @@ public class UnitColorPalette : UnitBehaviour
     public void SetColorPalette(ColorPalette colorPalette)
     {
         this.colorPalette = colorPalette;
-        if (Unit is FungalController) ApplyColorPalette();
+        ApplyColorPalette();
     }
 
     private void ApplyColorPalette()
@@ -59,22 +68,12 @@ public class UnitColorPalette : UnitBehaviour
     private void ApplySelectedPalette(Renderer renderer)
     {
         if (!originalCache) return;
+        if (!colorPalette) return;
 
-        Texture2D tex = new Texture2D(originalCache.width, originalCache.height, TextureFormat.RGBA32, false);
         tex.SetPixels32(originalCache.GetPixels32());
 
         int blockSize = 2;
         int blocksY = tex.height / blockSize; // 4 / 2 = 2
-
-        if (colorPalette)
-        {
-            primaryColor = colorPalette.PrimaryColor;
-        }
-        else if (!colorPalette)
-        {
-            primaryColor = GetPrimaryColor(tex);
-            return;
-        }
 
         for (int by = 0; by < blocksY; by++)
         {
@@ -120,7 +119,7 @@ public class UnitColorPalette : UnitBehaviour
         renderer.material.mainTexture = tex;
     }
 
-    private Color GetPrimaryColor(Texture2D tex, int blockSize = 2)
+    private void SetTextureColor(int mapIndex, Color newColor, int blockSize = 2)
     {
         int blocksY = tex.height / blockSize;
         int blocksX = tex.width / blockSize;
@@ -129,10 +128,60 @@ public class UnitColorPalette : UnitBehaviour
         {
             for (int bx = 0; bx < blocksX; bx++)
             {
-                int mapIndex = Unit.Instance.Data.ColumnMapping[bx];
+                int px = bx * blockSize;
+                int py = by * blockSize;
 
-                // Only care about PrimaryColor
-                if (mapIndex == 0)
+                // Get mapping for this column
+                int columnMap = Unit.Instance.Data.ColumnMapping[bx];
+                if (columnMap != mapIndex) continue;
+
+                // Recolor 2x2 block
+                for (int y = 0; y < blockSize; y++)
+                {
+                    for (int x = 0; x < blockSize; x++)
+                    {
+                        tex.SetPixel(px + x, py + y, newColor);
+                    }
+                }
+            }
+        }
+
+        tex.Apply();
+
+        foreach (var renderer in Unit.GetComponentsInChildren<Renderer>())
+        {
+            renderer.material.mainTexture = tex;
+        }
+
+    }
+
+    // Public helpers
+    public void SetPrimaryColor(Color color)
+    {
+        primaryColor = color;
+        SetTextureColor(0, color);
+    }
+
+    public void SetSecondaryColor(Color color)
+    {
+        secondaryColor = color;
+        SetTextureColor(1, color);
+    }
+
+    public void SetAccentColor(Color color) => SetTextureColor(2, color);
+
+    private Color GetTextureColor(int mapIndex, int blockSize = 2)
+    {
+        int blocksY = tex.height / blockSize;
+        int blocksX = tex.width / blockSize;
+
+        for (int by = 0; by < blocksY; by++)
+        {
+            for (int bx = 0; bx < blocksX; bx++)
+            {
+                int index = Unit.Instance.Data.ColumnMapping[bx];
+
+                if (index == mapIndex)
                 {
                     int px = bx * blockSize;
                     int py = by * blockSize;

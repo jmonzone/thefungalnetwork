@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : UnitController
@@ -11,8 +12,19 @@ public class PlayerController : UnitController
     private UnitDrum unitDrum;
     private UnitGlyphCollect unitGlyphCollect;
 
-    private Material material;
-    public override Color Color => material.GetColor("_Outer_Color");
+    private Material[] materials;
+
+    public override Color Color
+    {
+        get => materials[0].GetColor("_Outer_Color");
+        set
+        {
+            foreach(var material in materials)
+            {
+                material.SetColor("_Outer_Color", value);
+            }
+        }
+    }
 
     protected override void Awake()
     {
@@ -21,10 +33,25 @@ public class PlayerController : UnitController
         unitFollow = GetComponent<UnitFollow>();
         unitDrum = GetComponent<UnitDrum>();
         unitGlyphCollect = GetComponent<UnitGlyphCollect>();
-
-        material = GetComponentInChildren<Renderer>().material;
         unitFollow.OnDestinationReached += UnitFollow_OnDestinationReached;
         unitGlyphCollect.OnNoteHit += UnitGlyphCollect_OnNoteHit;
+
+        // collect only the materials that are the same instance as targetMaterial
+        var mats = new List<Material>();
+
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        foreach (var rend in renderers)
+        {
+            foreach (var mat in rend.materials)
+            {
+                if (mat.name.StartsWith("Player Material"))
+                {
+                    mats.Add(mat);
+                }
+            }
+        }
+
+        materials = mats.ToArray();
 
         playerReference.SetPlayer(this);
         playerReference.SetTargetPosition(transform.position);

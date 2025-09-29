@@ -27,7 +27,14 @@ public class FungalController : UnitController
     private UnitColorPalette colorPalette;
     private Animator animator;
 
-    public override Color Color => colorPalette.PrimaryColor;
+    public override Color Color
+    {
+        get => colorPalette.SecondaryColor;
+        set
+        {
+            colorPalette.SetSecondaryColor(value);
+        }
+    }
 
     protected override void Awake()
     {
