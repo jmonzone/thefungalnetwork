@@ -157,6 +157,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isActive: 0
   target: {fileID: 0}
+  leader: {fileID: 0}
+  followers: []
 --- !u!114 &4440137496922120304
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -325,12 +327,14 @@ MonoBehaviour:
   isActive: 0
   djReference: {fileID: 11400000, guid: 3bda1116fcf8f49e696cd21c6b5092da, type: 2}
   targetMaterial: {fileID: 2100000, guid: 806224b540ec7465496fd51b01d3f02f, type: 2}
-  colorID: _Outer_Color
+  intensityID: _Intensity
   danceAnimationClipName: Dance_SwordAndShield
+  danceBeat: 4
+  baseDanceBeat: 4
+  moveDanceBeat: 1
   targetColor: {r: 0.5411765, g: 0.80784315, b: 0, a: 1}
   originalColor: {r: 0, g: 0.8206897, b: 1, a: 1}
   stageColor: {r: 0, g: 0.8206897, b: 1, a: 1}
-  pulseColor: {r: 0.5411765, g: 0.80784315, b: 0, a: 1}
   pulseSpeed: 10
   targetIntensity: 0
   originalIntensity: 1.5

@@ -9,19 +9,21 @@ public class DanceMoveUI : MonoBehaviour
     [SerializeField] private Button button;
 
     private UnitDance dancer;
+    private string danceMove;
 
     private void Awake()
     {
         button.onClick.AddListener(UseMove);
     }
 
-    public void SetMove(UnitDance dancer)
+    public void SetMove(UnitDance dancer, string danceMove)
     {
         this.dancer = dancer;
+        this.danceMove = danceMove;
     }
 
     private void UseMove()
     {
-        dancer.PlayAnimation("Die02_SwordAndShield");
+        dancer.PlayAnimation(danceMove);
     }
 }

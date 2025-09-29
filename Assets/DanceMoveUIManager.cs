@@ -19,9 +19,13 @@ public class DanceMoveUIManager : MonoBehaviour
         gameObject.SetActive(true);
         StartCoroutine(fadeCanvasGroup.FadeIn());
 
+        var moves = new List<string> { "Die02_SwordAndShield", "GetUp_SwordAndShield" };
+
+        var i = 0;
         foreach(var move in moveViews)
         {
-            move.SetMove(dancer);
+            move.SetMove(dancer, moves[i]);
+            i++;
         }
     }
 }
