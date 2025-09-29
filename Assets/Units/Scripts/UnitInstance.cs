@@ -137,11 +137,7 @@ public class UnitInstance : ScriptableObject
         foreach(var skill in this.skills)
         {
             Skills.Add(skill.Skill, skill);
-            skill.OnXpChanged += () =>
-            {
-                Debug.Log("on xp changed");
-                OnXpChanged?.Invoke();
-            };
+            skill.OnXpChanged += OnXpChanged;
         }
 
         this.element = element;

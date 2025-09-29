@@ -37,8 +37,11 @@ public class DancefloorGameplayUI : ActivityController
 
             if (Input.GetMouseButtonDown(0))
             {
-                Activity.Units[0].GetComponent<UnitDance>().IncrementDancePower();
-                IncreaseXP(Activity.Units[0], 1f);
+                if (TryRaycastUnit(out UnitController unit))
+                {
+                    unit.GetComponent<UnitDance>().IncrementDancePower();
+                    IncreaseXP(unit, 1f);
+                }
             }
 
             yield return null;
@@ -49,5 +52,21 @@ public class DancefloorGameplayUI : ActivityController
     {
         base.OnActivityEnded();
         StopAllCoroutines();
+    }
+
+    private bool TryRaycastUnit(out UnitController unit)
+    {
+        var ray = Camera.ScreenPointToRay(Input.mousePosition);
+
+        var raycastHits = Physics.RaycastAll(ray);
+
+        foreach(var hit in raycastHits)
+        {
+            unit = hit.transform.GetComponentInParent<UnitController>();
+            if (unit) return unit;
+        }
+
+        unit = null;
+        return false;
     }
 }
