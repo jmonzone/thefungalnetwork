@@ -2,12 +2,12 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DancefloorBackground : MonoBehaviour
+public class DanceBackground : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private ActivityReference dancefloorReference;
     [SerializeField] private DJTableReference dJTableReference;
-    [SerializeField] private DancefloorBackgroundOverlay overlayEffects;
+    [SerializeField] private DanceBackgroundOverlay overlayEffects;
     [SerializeField] private FadeCanvasGroup fadeCanvasGroup;
 
     [Header("UI Crossfade")]

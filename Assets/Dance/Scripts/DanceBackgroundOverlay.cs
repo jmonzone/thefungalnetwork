@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DancefloorBackgroundOverlay : MonoBehaviour
+public class DanceBackgroundOverlay : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private ActivityReference dancefloorReference;

@@ -55,7 +55,6 @@ public class UnitDance : UnitBehaviour
 
     protected override void OnBehaviourStart()
     {
-        targetColor = djReference.LeftTrack.Glyph.Color;
         currentStage = 0;
 
         animator.SetBool("IsDancing", true);
@@ -149,7 +148,6 @@ public class UnitDance : UnitBehaviour
     {
         var pulseValue = (float)(currentStage) / (maxProgress);
 
-        var pulseColor = Color.Lerp(originalColor, targetColor, pulseValue);
         var pulseIntensity = Mathf.Lerp(originalIntensity, targetIntensity, pulseValue);
 
         var startColor = Unit.Color;
@@ -158,6 +156,8 @@ public class UnitDance : UnitBehaviour
         float t = 0f;
         while (t < 1f)
         {
+            var pulseColor = Color.Lerp(originalColor, targetColor, pulseValue);
+
             t += Time.deltaTime * pulseSpeed;
             Unit.Color = Color.Lerp(startColor, pulseColor, t);
             for (int i = 0; i < materials.Length; i++)
@@ -170,14 +170,14 @@ public class UnitDance : UnitBehaviour
         // Decrement stage timer
         while (currentStage > 0)
         {
-            stageColor = Color.Lerp(originalColor, targetColor, (float)(currentStage - pulseOffset) / (maxProgress));
-
             startColor = Unit.Color;
             startIntensity = materials[0].GetFloat(intensityID);
 
             t = 0f;
             while (t < 1f)
             {
+                stageColor = Color.Lerp(originalColor, targetColor, (float)(currentStage - pulseOffset) / (maxProgress));
+
                 t += Time.deltaTime * stageSpeed;
                 Unit.Color = Color.Lerp(startColor, stageColor, t);
                 for (int i = 0; i < materials.Length; i++)
@@ -190,5 +190,24 @@ public class UnitDance : UnitBehaviour
             currentStage = Mathf.Clamp(currentStage - 1, 0, maxProgress);
             yield return null;
         }
+    }
+
+    private void DjReference_OnTrackValueChanged()
+    {
+        if (djReference.LeftTrack && djReference.RightTrack)
+        {
+            targetColor = Color.Lerp(djReference.LeftTrack.Glyph.Color, djReference.RightTrack.Glyph.Color, djReference.RightValue);
+        }
+        else targetColor = djReference.DominantTrack.Glyph.Color;
+    }
+
+    private void OnEnable()
+    {
+        djReference.OnTrackValueChanged += DjReference_OnTrackValueChanged;
+    }
+
+    private void OnDisable()
+    {
+        djReference.OnTrackValueChanged -= DjReference_OnTrackValueChanged;
     }
 }

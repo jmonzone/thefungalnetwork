@@ -121,9 +121,9 @@ public class DJTableController : MonoBehaviour, IInteractable
 
         source.volume = targetVolume;
 
-
         // Wait for the clip to end
         yield return new WaitForSeconds(source.clip.length - djReference.CrossFadeDuration * 1.5f);
+
         if (index == 0)
         {
             OnLeftTrackComplete?.Invoke();
