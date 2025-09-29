@@ -27,6 +27,9 @@ public class UnitDance : UnitBehaviour
     private Animator animator;
     private Material[] materials;
 
+    private Coroutine animationSpeedRoutine;
+    private Coroutine cheerRoutine;
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
@@ -61,69 +64,31 @@ public class UnitDance : UnitBehaviour
 
         // Replace with the exact state name your Animator uses.
         // Try "Base Layer.Dance" if the layer is "Base Layer", or just "Dance" if unique.
-        StartCoroutine(SetAnimationSpeedWhenStateEntered(danceAnimationClipName, djReference.BeatDuration * danceSpeedModifier, 0));
+        animationSpeedRoutine = StartCoroutine(UpdateAnimationSpeedLoop(djReference.BeatDuration * danceSpeedModifier, 0));
     }
 
-    private IEnumerator SetAnimationSpeedWhenStateEntered(string requiredStateName, float beatDuration, int layer = 0)
+    private IEnumerator UpdateAnimationSpeedLoop(float beatDuration, int layer)
     {
-        float elapsed = 0f;
-
-        // Wait until the animator is *in the target state* and not in transition (or timeout)
         while (true)
         {
-            var stateInfo = animator.GetCurrentAnimatorStateInfo(layer);
-            // IsName requires layerName.stateName or just stateName when unique.
-            if (!animator.IsInTransition(layer) && stateInfo.IsName(requiredStateName))
-                break;
-
-            elapsed += Time.deltaTime;
-            yield return null;
-        }
-
-        // Safely get current clip info
-        var clipInfo = animator.GetCurrentAnimatorClipInfo(layer);
-        if (clipInfo != null && clipInfo.Length > 0 && clipInfo[0].clip != null)
-        {
-            var clip = clipInfo[0].clip;
-            SetAnimatorSpeedFromClip(clip, beatDuration);
-            //Debug.Log($"Synced to clip '{clip.name}' (len {clip.length:F2}s) for beat {beatDuration:F2} {danceSpeedModifier:F2} s");
-            yield break;
-        }
-
-        // Fallback: search controller clips for a name that matches the state
-        var controller = animator.runtimeAnimatorController;
-        if (controller != null)
-        {
-            AnimationClip fallback = null;
-            foreach (var c in controller.animationClips)
+            if (!animator.IsInTransition(layer))
             {
-                if (c == null) continue;
-                if (c.name.Equals(requiredStateName, StringComparison.OrdinalIgnoreCase) ||
-                    c.name.IndexOf(requiredStateName, StringComparison.OrdinalIgnoreCase) >= 0)
+                var clipInfo = animator.GetCurrentAnimatorClipInfo(layer);
+                if (clipInfo != null && clipInfo.Length > 0 && clipInfo[0].clip != null)
                 {
-                    fallback = c;
-                    break;
+                    SetAnimatorSpeedFromClip(clipInfo[0].clip, beatDuration);
                 }
             }
 
-            if (fallback != null)
-            {
-                SetAnimatorSpeedFromClip(fallback, beatDuration);
-                Debug.Log($"Fallback: synced to clip '{fallback.name}' (len {fallback.length:F2}s)");
-                yield break;
-            }
+            yield return null; // check every frame
         }
-
-        Debug.LogWarning("Could not find an animation clip to sync to. Consider using a StateMachineBehaviour on the target state to set animator.speed in OnStateEnter.");
     }
 
     private void SetAnimatorSpeedFromClip(AnimationClip clip, float beatDuration)
     {
         if (clip == null) return;
 
-        //Debug.Log(clip.length);
         float safeBeat = Mathf.Max(0.0001f, beatDuration);
-        // one loop of animation == one beat. Adjust if you want N beats per loop (e.g. clip.length / (beatDuration * beatsPerLoop))
         animator.speed = clip.length / safeBeat;
     }
 
@@ -131,6 +96,7 @@ public class UnitDance : UnitBehaviour
     {
         base.StopBehaviour();
         animator.SetBool("IsDancing", false);
+        StopCoroutine(animationSpeedRoutine);
     }
 
     public void IncrementDancePower()
@@ -139,14 +105,93 @@ public class UnitDance : UnitBehaviour
 
         currentStage = Mathf.Clamp(currentStage + 1, 0, maxProgress);
 
-        StopAllCoroutines();
-        StartCoroutine(IncreaseDancePowerRoutine());
+        if (cheerRoutine != null) StopCoroutine(cheerRoutine);
+        cheerRoutine = StartCoroutine(IncreaseDancePowerRoutine());
+    }
 
+    public void PlayAnimation(string animationName)
+    {
+        animator.ResetTrigger("Complete");
+        animator.Play(animationName);
+
+        if (moveRoutine != null) StopCoroutine(moveRoutine);
+        moveRoutine = StartCoroutine(PlayHoldExitRoutine());
+    }
+
+    private Coroutine moveRoutine;
+    private IEnumerator PlayHoldExitRoutine()
+    {
+        yield return new WaitForSeconds(animator.speed * djReference.BeatDuration * (danceSpeedModifier + 1));
+        // Exit to desired state
+        animator.SetTrigger("Complete");
+    }
+
+    private Coroutine highlightRoutine;
+    public void Highlight()
+    {
+        if (highlightRoutine != null) StopCoroutine(highlightRoutine);
+        highlightRoutine = StartCoroutine(HighlightRoutine());
+    }
+
+    public void Unhighlight()
+    {
+        if (highlightRoutine != null) StopCoroutine(highlightRoutine);
+        highlightRoutine = StartCoroutine(UnhighlightRoutine());
+    }
+
+    private IEnumerator HighlightRoutine()
+    {
+        //var pulseValue = (float)(currentStage) / (maxProgress);
+        var pulseValue = 1f;
+
+        var pulseIntensity = Mathf.Lerp(originalIntensity, targetIntensity, pulseValue);
+
+        var startColor = Unit.Color;
+        var startIntensity = materials[0].GetFloat(intensityID);
+
+        float t = 0f;
+        while (t < 1f)
+        {
+            var pulseColor = Color.Lerp(originalColor, targetColor, pulseValue);
+
+            t += Time.deltaTime * pulseSpeed;
+            Unit.Color = Color.Lerp(startColor, pulseColor, t);
+            for (int i = 0; i < materials.Length; i++)
+            {
+                materials[i].SetFloat(intensityID, Mathf.Lerp(startIntensity, pulseIntensity, t));
+            }
+            yield return null;
+        }
+    }
+
+    private IEnumerator UnhighlightRoutine()
+    {
+        var pulseValue = 0;
+
+        var pulseIntensity = Mathf.Lerp(originalIntensity, targetIntensity, pulseValue);
+
+        var startColor = Unit.Color;
+        var startIntensity = materials[0].GetFloat(intensityID);
+
+        float t = 0f;
+        while (t < 1f)
+        {
+            var pulseColor = Color.Lerp(originalColor, targetColor, pulseValue);
+
+            t += Time.deltaTime * pulseSpeed;
+            Unit.Color = Color.Lerp(startColor, pulseColor, t);
+            for (int i = 0; i < materials.Length; i++)
+            {
+                materials[i].SetFloat(intensityID, Mathf.Lerp(startIntensity, pulseIntensity, t));
+            }
+            yield return null;
+        }
     }
 
     private IEnumerator IncreaseDancePowerRoutine()
     {
-        var pulseValue = (float)(currentStage) / (maxProgress);
+        //var pulseValue = (float)(currentStage) / (maxProgress);
+        var pulseValue = 1f;
 
         var pulseIntensity = Mathf.Lerp(originalIntensity, targetIntensity, pulseValue);
 
@@ -167,29 +212,29 @@ public class UnitDance : UnitBehaviour
             yield return null;
         }
 
-        // Decrement stage timer
-        while (currentStage > 0)
-        {
-            startColor = Unit.Color;
-            startIntensity = materials[0].GetFloat(intensityID);
+        //// Decrement stage timer
+        //while (currentStage > 0)
+        //{
+        //    startColor = Unit.Color;
+        //    startIntensity = materials[0].GetFloat(intensityID);
 
-            t = 0f;
-            while (t < 1f)
-            {
-                stageColor = Color.Lerp(originalColor, targetColor, (float)(currentStage - pulseOffset) / (maxProgress));
+        //    t = 0f;
+        //    while (t < 1f)
+        //    {
+        //        stageColor = Color.Lerp(originalColor, targetColor, (float)(currentStage - pulseOffset) / (maxProgress));
 
-                t += Time.deltaTime * stageSpeed;
-                Unit.Color = Color.Lerp(startColor, stageColor, t);
-                for (int i = 0; i < materials.Length; i++)
-                {
-                    materials[i].SetFloat(intensityID, Mathf.Lerp(startIntensity, originalIntensity, t));
-                }
-                yield return null;
-            }
+        //        t += Time.deltaTime * stageSpeed;
+        //        Unit.Color = Color.Lerp(startColor, stageColor, t);
+        //        for (int i = 0; i < materials.Length; i++)
+        //        {
+        //            materials[i].SetFloat(intensityID, Mathf.Lerp(startIntensity, originalIntensity, t));
+        //        }
+        //        yield return null;
+        //    }
 
-            currentStage = Mathf.Clamp(currentStage - 1, 0, maxProgress);
-            yield return null;
-        }
+        //    currentStage = Mathf.Clamp(currentStage - 1, 0, maxProgress);
+        //    yield return null;
+        //}
     }
 
     private void DjReference_OnTrackValueChanged()

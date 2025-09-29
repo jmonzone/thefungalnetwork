@@ -50,21 +50,30 @@ public class DanceActivityUI : ActivityController
                     ShowTouchIndicator(Input.mousePosition);
                 }
 
-                if (TryRaycastUnit(out UnitController unit))
+                if (TryRaycastUnit(out UnitController unit) && Activity.Units.Contains(unit))
                 {
-                    if (Activity.Units.Contains(unit))
+                    if (unit != selectedUnit)
                     {
-                        var dancer = unit.GetComponent<UnitDance>();
-                        danceMoveUIManager.Show(dancer);
-                        dancer.IncrementDancePower();
-                        IncreaseXP(unit, 1f);
+                        if (selectedUnit) selectedUnit.Unhighlight();
+
+                        selectedUnit = unit.GetComponent<UnitDance>();
+                        danceMoveUIManager.Show(selectedUnit);
+                        selectedUnit.Highlight();
+                        IncreaseXP(selectedUnit.Unit, 1f);
                     }
                 }
+                else if (!EventSystem.current.IsPointerOverGameObject())
+                {
+                    if (selectedUnit) selectedUnit.Unhighlight();
+                }
+
             }
 
             yield return null;
         }
     }
+
+    private UnitDance selectedUnit;
 
     protected override void OnActivityEnded()
     {

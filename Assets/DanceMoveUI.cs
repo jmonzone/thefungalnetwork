@@ -22,6 +22,6 @@ public class DanceMoveUI : MonoBehaviour
 
     private void UseMove()
     {
-        dancer.IncrementDancePower();
+        dancer.PlayAnimation("Die02_SwordAndShield");
     }
 }
