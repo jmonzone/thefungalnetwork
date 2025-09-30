@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class DanceActivityUI : ActivityController
@@ -25,6 +24,7 @@ public class DanceActivityUI : ActivityController
         foreach (var unit in Activity.Units)
         {
             var dance = unit.GetComponent<UnitDance>();
+            dance.OnDanceMoveUsed += Dance_OnDanceMoveUsed;
             unit.SetBehaviour(dance);
             LevelUI.UnitLevelViewMap[unit.Instance].SetColor(unit.Color);
         }
@@ -46,10 +46,7 @@ public class DanceActivityUI : ActivityController
 
             if (Input.GetMouseButtonDown(0))
             {
-                if (!EventSystem.current.IsPointerOverGameObject())
-                {
-                    ShowTouchIndicator(Input.mousePosition);
-                }
+                ShowTouchIndicator(Input.mousePosition);
 
                 if (TryRaycastUnit(out UnitController unit) && Activity.Units.Contains(unit))
                 {
@@ -67,11 +64,6 @@ public class DanceActivityUI : ActivityController
                         IncreaseXP(selectedUnit.Unit, 1f);
                     }
                 }
-                else if (!EventSystem.current.IsPointerOverGameObject())
-                {
-                    UnselectUnit();
-                }
-
             }
 
             if (selectedUnit)
@@ -81,6 +73,11 @@ public class DanceActivityUI : ActivityController
 
             yield return null;
         }
+    }
+
+    private void Dance_OnDanceMoveUsed(UnitController unit, DanceMove danceMove)
+    {
+        IncreaseXP(unit, danceMove.Xp);
     }
 
     private void UnselectUnit()
@@ -97,7 +94,14 @@ public class DanceActivityUI : ActivityController
     protected override void OnActivityEnded()
     {
         base.OnActivityEnded();
+        UnselectUnit();
         StopAllCoroutines();
+
+        foreach (var unit in Activity.Units)
+        {
+            var dance = unit.GetComponent<UnitDance>();
+            dance.OnDanceMoveUsed -= Dance_OnDanceMoveUsed;
+        }
     }
 
     private bool TryRaycastUnit(out UnitController unit)

@@ -18,8 +18,8 @@ public class DJTableReference : ScriptableObject
     [SerializeField] private DJTableController controller;
     [SerializeField] private DJTrack leftTrack;
     [SerializeField] private DJTrack rightTrack;
-    [SerializeField] private float leftValue;
-    [SerializeField] private float rightValue;
+    [SerializeField] private float leftValue = 0;
+    [SerializeField] private float rightValue = 0;
 
     [SerializeField] private float bpm = 90;
 
@@ -52,9 +52,9 @@ public class DJTableReference : ScriptableObject
     public void StartTrack(DJTrack track)
     {
         backgroundMusic.HideMusic();
-        SetLeftTrack(track);
-        SetBPM(track.Bpm);
         SetTrackValue(0);
+        SetBPM(track.Bpm);
+        SetLeftTrack(track);
     }
 
     public void SetLeftTrack(DJTrack track)

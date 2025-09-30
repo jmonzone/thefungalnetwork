@@ -48,17 +48,17 @@ public class ValueBarParticleController : MonoBehaviour
         targetColor = color;
     }
 
-    public void BurstFromWorld(int count, Vector3 screenPos)
+    public void BurstFromWorld(int count, Vector3 screenPos, UnityAction onComplete)
     {
         for (int i = 0; i < count; i++)
         {
             GameObject p = Instantiate(particlePrefab, canvas.transform);
             activeParticles.Add(p);
-            StartCoroutine(AnimateParticle(p, screenPos));
+            StartCoroutine(AnimateParticle(p, screenPos, onComplete));
         }
     }
 
-    private IEnumerator AnimateParticle(GameObject particle, Vector3 screenPos)
+    private IEnumerator AnimateParticle(GameObject particle, Vector3 screenPos, UnityAction onComplete)
     {
         RectTransform canvasRect = canvas.transform as RectTransform;
 
@@ -107,6 +107,7 @@ public class ValueBarParticleController : MonoBehaviour
         activeParticles.Remove(particle);
         Destroy(particle);
         OnParticleReached?.Invoke();
+        onComplete?.Invoke();
 
         if (activeParticles.Count == 0) OnAllParticleReached?.Invoke();
     }

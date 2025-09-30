@@ -25,7 +25,7 @@ public class PartyManager : MonoBehaviour
         valueBarController = GetComponent<ValueBarController>();
         valueBarParticleController = GetComponent<ValueBarParticleController>();
 
-        valueBarParticleController.OnParticleReached += ValueBarParticleController_OnParticlesReached;
+        //valueBarParticleController.OnParticleReached += ValueBarParticleController_OnParticlesReached;
     }
 
     private void ValueBarParticleController_OnParticlesReached()

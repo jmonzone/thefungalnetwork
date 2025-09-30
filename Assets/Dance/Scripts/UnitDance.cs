@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,7 +10,6 @@ public class UnitDance : UnitBehaviour
     [SerializeField] private DJTableReference djReference;
     [SerializeField] private Material targetMaterial; // assign in inspector
     [SerializeField] private string intensityID = "_Intensity";
-    [SerializeField] private string danceAnimationClipName = "";
     [SerializeField] private float danceBeat = 1;
     [SerializeField] private float baseDanceBeat = 1;
     [SerializeField] private float moveDanceBeat = 1;
@@ -43,6 +41,8 @@ public class UnitDance : UnitBehaviour
     private Vector3 originalPosition;
 
     private float BeatDuration => djReference.BeatDuration * danceBeat;
+
+    public event UnityAction<UnitController, DanceMove> OnDanceMoveUsed;
 
     protected override void OnInitialized()
     {
@@ -118,40 +118,44 @@ public class UnitDance : UnitBehaviour
         cheerRoutine = StartCoroutine(IncreaseDancePowerRoutine());
     }
 
-    public void UseDanceMove(string animationName, UnityAction onComplete)
+    public void UseDanceMove(DanceMove danceMove, UnityAction onComplete)
     {
         danceBeat = moveDanceBeat;
 
         if (moveRoutine != null) StopCoroutine(moveRoutine);
-        moveRoutine = StartCoroutine(DanceMoveRoutine(animationName, onComplete));
+        moveRoutine = StartCoroutine(DanceMoveRoutine(danceMove, onComplete));
     }
 
-    private IEnumerator DanceMoveRoutine(string animationName, UnityAction onComplete)
+    private IEnumerator DanceMoveRoutine(DanceMove danceMove, UnityAction onComplete)
     {
         Unit.SetDestination(danceReference.Origin);
+
         yield return new WaitUntil(() => Unit.IsAtDestination);
         yield return new WaitForSeconds(1f);
 
         animator.ResetTrigger("Complete");
-        animator.Play(animationName);
+        animator.Play(danceMove.AnimationName);
 
         yield return new WaitForSeconds(animator.speed * BeatDuration);
 
         animator.SetTrigger("Complete");
         danceBeat = baseDanceBeat;
+
         yield return new WaitForSeconds(1f);
 
         Unit.SetDestination(originalPosition);
+        OnDanceMoveUsed?.Invoke(Unit, danceMove);
 
-        Debug.Log($"{originalPosition} {danceReference.Origin}");
         yield return new WaitUntil(() => Unit.IsAtDestination);
-        animator.SetBool("IsDancing", true);
 
+        animator.SetBool("IsDancing", true);
         onComplete?.Invoke();
     }
 
+    private bool isHighlighted = false;
     public void Highlight()
     {
+        isHighlighted = true;
         animator.SetTrigger("Cheer");
 
         if (highlightRoutine != null) StopCoroutine(highlightRoutine);
@@ -160,6 +164,7 @@ public class UnitDance : UnitBehaviour
 
     public void Unhighlight()
     {
+        isHighlighted = false;
         if (highlightRoutine != null) StopCoroutine(highlightRoutine);
         highlightRoutine = StartCoroutine(UnhighlightRoutine());
     }
@@ -266,8 +271,13 @@ public class UnitDance : UnitBehaviour
         if (djReference.LeftTrack && djReference.RightTrack)
         {
             targetColor = Color.Lerp(djReference.LeftTrack.Glyph.Color, djReference.RightTrack.Glyph.Color, djReference.RightValue);
+
+            if (isHighlighted && highlightRoutine == null)
+            {
+                highlightRoutine = StartCoroutine(HighlightRoutine());
+            }
         }
-        else targetColor = djReference.DominantTrack.Glyph.Color;
+        else if (djReference.DominantTrack) targetColor = djReference.DominantTrack.Glyph.Color;
     }
 
     private void OnEnable()

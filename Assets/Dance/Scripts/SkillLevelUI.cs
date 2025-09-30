@@ -27,7 +27,7 @@ public class SkillLevelUI : MonoBehaviour
     {
         audioSource = GetComponent<AudioSource>();
         valueBarParticleController.SetTargetColor(fillImage.color);
-        valueBarParticleController.OnParticleReached += ValueBarParticleController_OnParticlesReached;
+        valueBarParticleController.OnParticleReached += ValueBarParticleController_OnParticleReached;
         valueBarParticleController.OnAllParticleReached += ValueBarParticleController_OnAllParticleReached;
     }
 
@@ -40,6 +40,7 @@ public class SkillLevelUI : MonoBehaviour
         currentLevel = skill.Level;
 
         if (valueBarController) valueBarController.Initialize(skill.XP, skill.MinXP, skill.MaxXP);
+        if (fillImage) fillImage.fillAmount = Mathf.Lerp(0, 1, (skill.XP - skill.MinXP) / (skill.MaxXP - skill.MinXP));
         UpdateView();
     }
 
@@ -48,16 +49,17 @@ public class SkillLevelUI : MonoBehaviour
         valueBarParticleController.SetStartColor(color);
     }
 
-    public void Increase(float value, Vector3 screenPos)
+    public void Increase(float value, Vector3 screenPos, UnityAction onComplete)
     {
-        valueBarParticleController.BurstFromWorld((int)value, screenPos);
+        valueBarParticleController.BurstFromWorld((int)value, screenPos, onComplete);
         if (useAudio) audioSource.Play();
     }
 
-    private void ValueBarParticleController_OnParticlesReached()
+    private void ValueBarParticleController_OnParticleReached()
     {
         if (levelUpRoutine == null)
         {
+            if (fillImage) fillImage.fillAmount = Mathf.Lerp(0, 1, (skill.XP - skill.MinXP) / (skill.MaxXP - skill.MinXP)); ;
             if (valueBarController) valueBarController.Increment();
             UpdateView();
         }
@@ -66,7 +68,6 @@ public class SkillLevelUI : MonoBehaviour
     private void UpdateView()
     {
         levelText.text = $"Level {skill.Level}";
-        if (fillImage) fillImage.fillAmount = Mathf.Lerp(0, 1, (skill.XP - skill.MinXP) / (skill.MaxXP - skill.MinXP));
         if (nextLevelText) nextLevelText.text = $"{skill.XPUntilNextLevel} xp until next level";
     }
 

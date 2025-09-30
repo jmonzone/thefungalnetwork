@@ -6,9 +6,11 @@ public class UnitColorPalette : UnitBehaviour
     [SerializeField] private ColorPalette colorPalette; // the 8 base colors
     [SerializeField] private Color primaryColor;
     [SerializeField] private Color secondaryColor;
+    [SerializeField] private Color accentColor;
 
     public Color PrimaryColor => primaryColor;
     public Color SecondaryColor => secondaryColor;
+    public Color AccentColor => accentColor;
 
     private Texture2D tex;
 
@@ -33,6 +35,7 @@ public class UnitColorPalette : UnitBehaviour
         tex.SetPixels32(originalCache.GetPixels32());
         primaryColor = GetTextureColor(0);
         secondaryColor = GetTextureColor(1);
+        accentColor = GetTextureColor(2);
 
         SetColorPalette(Unit.Instance.ColorPalette);
     }
@@ -168,7 +171,11 @@ public class UnitColorPalette : UnitBehaviour
         SetTextureColor(1, color);
     }
 
-    public void SetAccentColor(Color color) => SetTextureColor(2, color);
+    public void SetAccentColor(Color color)
+    {
+        accentColor = color;
+        SetTextureColor(2, color);
+    }
 
     private Color GetTextureColor(int mapIndex, int blockSize = 2)
     {

@@ -30,7 +30,7 @@ public class DanceMoveUI : MonoBehaviour
 
     private void UseMove()
     {
-        dancer.UseDanceMove(danceMove.AnimationName, OnDanceMoveComplete);
+        dancer.UseDanceMove(danceMove, OnDanceMoveComplete);
         OnDanceMoveStart?.Invoke();
     }
 }

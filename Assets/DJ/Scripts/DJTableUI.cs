@@ -92,6 +92,7 @@ public class DJTableUI : MonoBehaviour
 
     private IEnumerator PartyLightsRoutine()
     {
+        yield return new WaitUntil(() => dJTableReference.DominantTrack);
         while (true)
         {
             switch (dJTableReference.DominantTrack.PartyMode)

@@ -264,6 +264,7 @@ public class UnitListReference : ScriptableObject
 
     public void SaveData()
     {
+        Debug.Log("saving data");
         var unitsJson = new JArray();
 
         foreach (var unit in units)

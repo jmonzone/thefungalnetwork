@@ -61,13 +61,15 @@ public abstract class ActivityController : MonoBehaviour
     {
         if (activity.Units.Contains(unit))
         {
-            unit.Instance.Skills[primarySkill].IncreaseSkillXP(1f);
-
-            var worldPos = unit.transform.position + Vector3.up;
+            var worldPos = unit.transform.position + Vector3.up * 0.5f;
             Vector3 viewportPos = Camera.WorldToScreenPoint(worldPos);
 
             LevelUI.UnitLevelViewMap[unit.Instance].SetColor(unit.Color);
-            LevelUI.UnitLevelViewMap[unit.Instance].Increase(value, viewportPos);
+            LevelUI.UnitLevelViewMap[unit.Instance].Increase(value, viewportPos, () =>
+            {
+                unit.Instance.Skills[primarySkill].IncreaseSkillXP(1);
+            });
+
         }
     }
 

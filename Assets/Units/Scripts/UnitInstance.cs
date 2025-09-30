@@ -31,6 +31,8 @@ public class UnitSkill
 
     public void IncreaseSkillXP(float value)
     {
+        Debug.Log("increasing skill xp");
+
         var previousLevel = level;
 
         xp += value;
@@ -137,7 +139,7 @@ public class UnitInstance : ScriptableObject
         foreach(var skill in this.skills)
         {
             Skills.Add(skill.Skill, skill);
-            skill.OnXpChanged += OnXpChanged;
+            skill.OnXpChanged += () => OnXpChanged?.Invoke();
         }
 
         this.element = element;
