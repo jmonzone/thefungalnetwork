@@ -124,6 +124,7 @@ public class UnitInstance : ScriptableObject
     public JObject Json => json;
 
     public event UnityAction OnXpChanged;
+    public event UnityAction<UnitInstance, DanceMove> OnMoveUnlocked;
 
     public void Initialize(Unit unit, string id = null, float friendshipXP = 0, List<UnitSkill> skills = null, Element element = Element.NONE, Job job = null, ColorPalette colorPalette = null, JObject json = null)
     {
@@ -140,6 +141,7 @@ public class UnitInstance : ScriptableObject
         {
             Skills.Add(skill.Skill, skill);
             skill.OnXpChanged += () => OnXpChanged?.Invoke();
+            skill.OnLevelUp += () => Skill_OnLevelUp(skill.Skill);
         }
 
         this.element = element;
@@ -147,6 +149,17 @@ public class UnitInstance : ScriptableObject
         this.colorPalette = colorPalette;
 
         friends = new List<UnitInstance>();
+    }
+
+    private void Skill_OnLevelUp(Skill skill)
+    {
+        foreach (var move in Data.Moves)
+        {
+            if (move.LevelRequirement == Skills[skill].Level)
+            {
+                OnMoveUnlocked?.Invoke(this, move);
+            }
+        }
     }
 
     public static string GenerateMongoLikeId()

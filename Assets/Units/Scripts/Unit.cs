@@ -10,16 +10,16 @@ public class Unit : ScriptableObject
     [SerializeField] private Sprite sprite;
     [SerializeField] private GameObject prefab;
 
-    [Header("Palette")]
     [Tooltip("Column mapping for this Unit. -1 = keep original, 0–7 = palette index.")]
     [SerializeField] private int[] columnMapping = new int[8] { -1, -1, -1, -1, -1, -1, -1, -1 };
 
-    [Header("Dialogue")]
     [SerializeField] private List<Dialogue> chatDialogue;
+    [SerializeField] private List<DanceMove> moves;
 
     public string Name => name;
     public Sprite Sprite => sprite;
     public GameObject Prefab => prefab;
+    public List<DanceMove> Moves => moves;
 
     public int[] ColumnMapping => columnMapping;
 

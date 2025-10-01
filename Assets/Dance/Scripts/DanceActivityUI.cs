@@ -12,6 +12,8 @@ public class DanceActivityUI : ActivityController
     [SerializeField] private Skill danceSkill;
     [SerializeField] private Image touchIndicator;
     [SerializeField] private Light spotlight;
+    [SerializeField] private FadeCanvasGroup gameplayCanvas;
+    [SerializeField] private FadeCanvasGroup levelupCanvas;
 
     [Header("Settings")]
     [SerializeField] private float touchDuration = 0.2f;
@@ -19,15 +21,31 @@ public class DanceActivityUI : ActivityController
 
     protected override Camera Camera => background.DominantCamera;
 
+    protected override void Awake()
+    {
+        base.Awake();
+        gameplayCanvas.Hide();
+        levelupCanvas.Hide();
+    }
+
     protected override IEnumerator OnActivityStart()
     {
+
+        Debug.Log("fading in");
+        yield return gameplayCanvas.FadeIn();
+        Debug.Log("fading in complete");
+
         foreach (var unit in Activity.Units)
         {
+            unit.Instance.OnMoveUnlocked += Instance_OnMoveUnlocked;
             var dance = unit.GetComponent<UnitDance>();
             dance.OnDanceMoveUsed += Dance_OnDanceMoveUsed;
             unit.SetBehaviour(dance);
             LevelUI.UnitLevelViewMap[unit.Instance].SetColor(unit.Color);
         }
+
+        SelectUnit(Activity.Units[0].GetComponent<UnitDance>());
+
 
         var timer = 0f;
         while (true)
@@ -50,18 +68,10 @@ public class DanceActivityUI : ActivityController
 
                 if (TryRaycastUnit(out UnitController unit) && Activity.Units.Contains(unit))
                 {
-                    if (unit != selectedUnit)
+                    var dancer = unit.GetComponent<UnitDance>();
+                    if (selectedUnit != dancer)
                     {
-                        UnselectUnit();
-
-                        selectedUnit = unit.GetComponent<UnitDance>();
-                        selectedUnit.Highlight();
-
-                        danceMoveUIManager.Show(selectedUnit);
-
-                        spotlight.gameObject.SetActive(true);
-
-                        IncreaseXP(selectedUnit.Unit, 1f);
+                        SelectUnit(dancer);
                     }
                 }
             }
@@ -73,6 +83,28 @@ public class DanceActivityUI : ActivityController
 
             yield return null;
         }
+    }
+
+    private void SelectUnit(UnitDance unit)
+    {
+        UnselectUnit();
+
+        selectedUnit = unit;
+        selectedUnit.Highlight();
+        spotlight.gameObject.SetActive(true);
+        danceMoveUIManager.Show(selectedUnit);
+    }
+
+    private void Instance_OnMoveUnlocked(UnitInstance unit, DanceMove move)
+    {
+        Debug.Log($"{unit.name} unlocked {move.name}");
+        StartCoroutine(LevelUpRoutine());
+    }
+
+    private IEnumerator LevelUpRoutine()
+    {
+        yield return gameplayCanvas.FadeOut();
+        yield return levelupCanvas.FadeIn();
     }
 
     private void Dance_OnDanceMoveUsed(UnitController unit, DanceMove danceMove)
