@@ -15,6 +15,10 @@ public class StoryFirstParty : MonoBehaviour
     [SerializeField] private PhotoReference photoReference;
     [SerializeField] private Transform guestPictureAnchor;
     [SerializeField] private Transform cameraPositionAnchor;
+
+    [SerializeField] private ActivityReference danceActivity;
+    [SerializeField] private Transform danceZoneAnchor;
+
     [SerializeField] private InitialUI initialUI;
     [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference gameplayView;
@@ -57,6 +61,7 @@ public class StoryFirstParty : MonoBehaviour
         var partyFrog = unitManager.UnitControllers[0];
         //dialogueReference.StartDialogue(playerReference.Player, new Dialogue(lostDialogue, DialogueType.STORY));
 
+        danceActivity.StartActivity(danceZoneAnchor.position, new List<UnitController>());
         yield break;
 
         yield return new WaitUntil(() => timesInteractedWithGuests > 5);

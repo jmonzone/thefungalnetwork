@@ -18,19 +18,21 @@ public class ActivityReference : ScriptableObject
 
     public event UnityAction OnActivityHasStarted;
     public event UnityAction OnActivityHasEnded;
+    public event UnityAction OnPlayerJoined;
 
-    public void StartActivity(List<UnitController> units)
+    public void StartActivity(Vector3 origin, List<UnitController> units)
     {
         Debug.Log($"Starting activity {name}");
         this.units = units;
 
-        Vector3 sum = Vector3.zero;
-        foreach (var unit in units)
-        {
-            sum += unit.transform.position;
-        }
+        //Vector3 sum = Vector3.zero;
+        //foreach (var unit in units)
+        //{
+        //    sum += unit.transform.position;
+        //}
 
-        origin = sum / units.Count;
+        this.origin = origin;
+        //origin = sum / units.Count;
 
         int count = units.Count;
 
@@ -49,8 +51,13 @@ public class ActivityReference : ScriptableObject
             units[i].SetLookPosition(origin);
         }
 
-        navigation.Navigate(activityView);
         OnActivityHasStarted?.Invoke();
+    }
+
+    public void JoinActivity()
+    {
+        navigation.Navigate(activityView);
+        OnPlayerJoined?.Invoke();
     }
 
     public void EndActivity()

@@ -47,13 +47,13 @@ public class DanceBackground : MonoBehaviour
 
     private void OnEnable()
     {
-        dancefloorReference.OnActivityHasStarted += MusicVideoReference_OnMusicVideoStart;
+        dancefloorReference.OnPlayerJoined += MusicVideoReference_OnMusicVideoStart;
         dancefloorReference.OnActivityHasEnded += MusicVideoReference_OnMusicVideoEnd;
     }
 
     private void OnDisable()
     {
-        dancefloorReference.OnActivityHasStarted -= MusicVideoReference_OnMusicVideoStart;
+        dancefloorReference.OnPlayerJoined -= MusicVideoReference_OnMusicVideoStart;
         dancefloorReference.OnActivityHasEnded -= MusicVideoReference_OnMusicVideoEnd;
     }
 

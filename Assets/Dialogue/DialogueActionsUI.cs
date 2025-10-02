@@ -82,7 +82,7 @@ public class DialogueActionsUI : DialoguePageUI
             unit.GetComponent<UnitFollow>().StopFollowing();
         }
 
-        unit.Instance.Job.Activity.StartActivity(uniqueUnits);
+        //unit.Instance.Job.Activity.StartActivity(uniqueUnits);
     }
 
 }
