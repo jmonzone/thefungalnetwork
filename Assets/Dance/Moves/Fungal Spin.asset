@@ -15,7 +15,14 @@ MonoBehaviour:
   label: Fungal Spin
   sprite: {fileID: 21300000, guid: 160665d22651a437d93eace34980892e, type: 3}
   description: now im spinning like a ballerina
-  animationName: Spin/Splash
-  xp: 35
+  xp: 25
   levelRequirement: 1
-  upgrades: []
+  upgrades:
+  - level: 3
+    description: +1 spin
+  - level: 6
+    description: +1 spin
+  - level: 9
+    description: +1 spin
+  animationName: Spin/Splash
+  useCompleteTrigger: 0

@@ -85,20 +85,33 @@ public class UnitDance : UnitBehaviour
     {
         while (true)
         {
+            // Only update if not in transition
             if (!animator.IsInTransition(0))
             {
-                var clipInfo = animator.GetCurrentAnimatorClipInfo(0);
-                if (clipInfo != null && clipInfo.Length > 0 && clipInfo[0].clip != null)
+                var clipInfos = animator.GetCurrentAnimatorClipInfo(0);
+                if (clipInfos.Length > 0)
                 {
+                    var clip = clipInfos[0].clip;
+                    if (clip != null)
+                    {
+                        float safeBeat = Mathf.Max(0.0001f, BeatDuration);
+                        animator.speed = clip.length / safeBeat;
 
-                    float safeBeat = Mathf.Max(0.0001f, BeatDuration);
-                    animator.speed = clipInfo[0].clip.length / safeBeat;
+                        Debug.Log(
+                            $"[UpdateAnimationSpeedLoop] BeatDuration={BeatDuration:F3}, " +
+                            $"DanceBeat={danceBeat}, " +
+                            $"ClipLength={clip.length:F3}, " +
+                            $"AnimatorSpeed={animator.speed:F3}"
+                        );
+                    }
                 }
             }
 
-            yield return null; // check every frame
+            // no need to check *every* frame, a small wait is usually fine
+            yield return new WaitForSeconds(0.05f);
         }
     }
+
 
     public override void StopBehaviour()
     {
@@ -119,10 +132,6 @@ public class UnitDance : UnitBehaviour
 
     public void UseDanceMove(DanceMoveInstance danceMove, UnityAction onComplete)
     {
-        Debug.Log($"UseDanceMove {animator.speed}");
-        danceBeat = moveDanceBeat;
-        Debug.Log($"UseDanceMove {animator.speed}");
-
         if (moveRoutine != null) StopCoroutine(moveRoutine);
         moveRoutine = StartCoroutine(DanceMoveRoutine(danceMove, onComplete));
     }
@@ -131,6 +140,7 @@ public class UnitDance : UnitBehaviour
     {
         Unit.SetDestination(danceReference.Origin);
 
+        animator.ResetTrigger("Complete");
         yield return new WaitUntil(() => Unit.IsAtDestination);
         yield return new WaitForSeconds(1f);
 
@@ -142,26 +152,22 @@ public class UnitDance : UnitBehaviour
         // let the animator update so state info becomes valid
         yield return null;
 
-        Debug.Log($"DanceMoveRoutine {animator.speed}");
-
         // wait until the animator is actually in the spin state
         while (!animator.GetCurrentAnimatorStateInfo(0).IsName(animationName))
             yield return null;
 
-        Debug.Log($"DanceMoveRoutine {animator.speed}");
+        danceBeat = moveDanceBeat;
 
         // wait until we've completed `loops` iterations
         while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1 + danceMove.Loops)
             yield return null;
 
-        danceBeat = baseDanceBeat;
 
-        Debug.Log($"DanceMoveRoutine {animator.speed}");
-
-        // Return to base dance
-        animator.Play(baseDanceAnimation, 0, 0);
+        if (danceMove.Data.UseCompleteTrigger) animator.SetTrigger("Complete");
+        else animator.Play(baseDanceAnimation, 0, 0);
 
         yield return new WaitForSeconds(1f);
+        danceBeat = baseDanceBeat;
 
         Unit.SetDestination(originalPosition);
         OnDanceMoveUsed?.Invoke(Unit, danceMove);
@@ -176,7 +182,7 @@ public class UnitDance : UnitBehaviour
     public void Highlight()
     {
         isHighlighted = true;
-        animator.SetTrigger("Cheer");
+        //animator.SetTrigger("Cheer");
 
         if (highlightRoutine != null) StopCoroutine(highlightRoutine);
         highlightRoutine = StartCoroutine(HighlightRoutine());

@@ -9,18 +9,22 @@ public class DanceMove : ScriptableObject
     [SerializeField] private string label;
     [SerializeField] private Sprite sprite;
     [SerializeField] private string description;
-    [SerializeField] private string animationName;
     [SerializeField] private float xp = 5;
     [SerializeField] private int levelRequirement = 1;
     [SerializeField] private List<DanceMoveUpgrade> upgrades;
 
+    [SerializeField] private string animationName;
+    [SerializeField] private bool useCompleteTrigger;
+
     public string Label => label;
     public Sprite Sprite => sprite;
     public string Description => description;
-    public string AnimationName => animationName;
     public float Xp => xp;
     public int LevelRequirement => levelRequirement;
     public List<DanceMoveUpgrade> Upgrades => upgrades;
+
+    public string AnimationName => animationName;
+    public bool UseCompleteTrigger => useCompleteTrigger;
 }
 
 [Serializable]
@@ -37,13 +41,13 @@ public class DanceMoveInstance : ScriptableObject
 {
     [SerializeField] private DanceMove data;
     [SerializeField] private UnitSkill skill;
-    [SerializeField] private int upgradeLevel;
+    [SerializeField] private int upgradeLevel = 0;
 
     public DanceMove Data => data;
     public int Loops => upgradeLevel;
     public float Xp => data.Xp * (upgradeLevel + 1);
-    public string Label => upgradeLevel > 0 ? data.Label : data.Label + new string('+', upgradeLevel);
-    public string Description => upgradeLevel > 0 ? data.Description : data.Upgrades[upgradeLevel].Description;
+    public string Label => upgradeLevel == 0 ? data.Label : data.Label + " " + new string('+', upgradeLevel);
+    public string Description => upgradeLevel == 0 ? data.Description : data.Upgrades[upgradeLevel - 1].Description;
 
     public event UnityAction OnUpgrade;
 
