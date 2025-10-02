@@ -55,7 +55,6 @@ public class StoryFirstParty : MonoBehaviour
         yield return new WaitForFixedUpdate();
         partyReference.StartParty(tutorialParty);
         var partyFrog = unitManager.UnitControllers[0];
-
         //dialogueReference.StartDialogue(playerReference.Player, new Dialogue(lostDialogue, DialogueType.STORY));
 
         yield break;
@@ -104,7 +103,7 @@ public class StoryFirstParty : MonoBehaviour
         yield return new WaitWhile(() => dialogueReference.IsActive);
         yield return new WaitForSeconds(1f);
 
-        partyFrog.SetDefaultBehaviour();
+        partyFrog.ApplyDefaultBehaviour();
 
         yield return new WaitForSeconds(1f);
 

@@ -190,7 +190,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   renderRoot: {fileID: 0}
   defaultBehaviour: {fileID: 3042677307364813546}
-  selectBehaviour: {fileID: 7313902277107358435}
+  unitDialogue: {fileID: 7313902277107358435}
   instance: {fileID: 0}
   currentBehaviour: {fileID: 0}
   targetLookPosition: {x: 0, y: 0, z: 0}
@@ -243,7 +243,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a051968eeea74528b48fad3e9e998b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isActive: 0
   dialogue: {fileID: 11400000, guid: 66db6a8c7a0524bd8b89b88de939507f, type: 2}
   playerReference: {fileID: 11400000, guid: 746148e8242954418b04a3ab83ac9260, type: 2}
   lookAtTarget: 1
@@ -455,6 +454,7 @@ MonoBehaviour:
   colorPalette: {fileID: 0}
   primaryColor: {r: 0, g: 0, b: 0, a: 0}
   secondaryColor: {r: 0, g: 0, b: 0, a: 0}
+  accentColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!114 &2571860531010250894
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -491,10 +491,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isActive: 0
   danceReference: {fileID: 11400000, guid: 0651293cfe83f4f34bdd7eb7e76e7477, type: 2}
+  danceSkill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
   djReference: {fileID: 11400000, guid: 3bda1116fcf8f49e696cd21c6b5092da, type: 2}
   targetMaterial: {fileID: 0}
   intensityID: _Emission
-  danceAnimationClipName: Bounce
   danceBeat: 1
   baseDanceBeat: 1
   moveDanceBeat: 4

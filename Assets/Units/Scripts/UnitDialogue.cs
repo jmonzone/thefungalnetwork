@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Linq;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class UnitDialogue : UnitBehaviour
+public class UnitDialogue : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private DialogueReference dialogue;
@@ -11,29 +9,30 @@ public class UnitDialogue : UnitBehaviour
     [Header("Settings")]
     [SerializeField] private bool lookAtTarget = true;
 
-    protected override void OnInitialized()
+    private UnitController Unit;
+    private Vector3 originalLook;
+
+    private void Awake()
     {
-        base.OnInitialized();
+        Unit = GetComponent<UnitController>();
     }
 
-    protected override void OnBehaviourStart()
+    public void StartDialogue()
     {
         dialogue.StartInteraction(Unit, Unit.Instance.RandomDialogue);
 
-        if (lookAtTarget) Unit.SetLookPosition(playerReference.Player.transform.position);
+        if (lookAtTarget)
+        {
+            originalLook = Unit.LookPosition;
+            Unit.SetLookPosition(playerReference.Player.transform.position);
+        }
 
         dialogue.OnDialogueComplete += Dialogue_OnDialogueComplete;
-        dialogue.OnDialogueResponse += Dialogue_OnDialogueResponse;
-    }
-
-    private void Dialogue_OnDialogueResponse(Response arg0)
-    {
     }
 
     private void Dialogue_OnDialogueComplete()
     {
         dialogue.OnDialogueComplete -= Dialogue_OnDialogueComplete;
-        StopBehaviour();
-
+        Unit.SetLookPosition(originalLook);
     }
 }

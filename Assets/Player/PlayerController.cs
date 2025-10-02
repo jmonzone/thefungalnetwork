@@ -72,7 +72,7 @@ public class PlayerController : UnitController
                 break;
             default:
                 playerReference.TargetInteractable.Select();
-                SetDefaultBehaviour();
+                ApplyDefaultBehaviour();
                 break;
         }
     }

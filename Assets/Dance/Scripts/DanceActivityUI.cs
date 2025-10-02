@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,11 +10,10 @@ public class DanceActivityUI : ActivityController
     [SerializeField] private DJTableReference djReference;
     [SerializeField] private DanceBackground background;
     [SerializeField] private DanceMoveUIManager danceMoveUIManager;
-    [SerializeField] private Skill danceSkill;
     [SerializeField] private Image touchIndicator;
     [SerializeField] private Light spotlight;
     [SerializeField] private FadeCanvasGroup gameplayCanvas;
-    [SerializeField] private FadeCanvasGroup levelupCanvas;
+    [SerializeField] private LevelUpUI levelUpUI;
 
     [Header("Settings")]
     [SerializeField] private float touchDuration = 0.2f;
@@ -24,28 +24,31 @@ public class DanceActivityUI : ActivityController
     protected override void Awake()
     {
         base.Awake();
-        gameplayCanvas.Hide();
-        levelupCanvas.Hide();
+        levelUpUI.gameObject.SetActive(false);
+        levelUpUI.OnExit += () => StartCoroutine(LevelUI_OnExitRoutine());
+    }
+
+    private IEnumerator LevelUI_OnExitRoutine()
+    {
+        yield return levelUpUI.Hide();
+        yield return gameplayCanvas.FadeIn();
     }
 
     protected override IEnumerator OnActivityStart()
     {
-
-        Debug.Log("fading in");
         yield return gameplayCanvas.FadeIn();
-        Debug.Log("fading in complete");
 
         foreach (var unit in Activity.Units)
         {
             unit.Instance.OnMoveUnlocked += Instance_OnMoveUnlocked;
-            var dance = unit.GetComponent<UnitDance>();
-            dance.OnDanceMoveUsed += Dance_OnDanceMoveUsed;
-            unit.SetBehaviour(dance);
+            var dancer = unit.GetComponent<UnitDance>();
+            dancer.OnDanceMoveUsed += Dance_OnDanceMoveUsed;
+            dancer.OnDanceMovesUpdated += Dance_OnDanceMovesUpdated;
+            unit.SetBehaviour(dancer);
             LevelUI.UnitLevelViewMap[unit.Instance].SetColor(unit.Color);
         }
 
         SelectUnit(Activity.Units[0].GetComponent<UnitDance>());
-
 
         var timer = 0f;
         while (true)
@@ -85,6 +88,27 @@ public class DanceActivityUI : ActivityController
         }
     }
 
+    private void Dance_OnDanceMovesUpdated()
+    {
+        if (selectedUnit)
+        {
+            StartCoroutine(danceMoveUIManager.Show(selectedUnit));
+            //LevelUI.SetUnits(Activity.Units.Select(unit => unit.Instance));
+        }
+    }
+
+    protected override void IncreaseXP(UnitController unit, float value)
+    {
+        if (gameplayCanvas.IsVisible)
+        {
+            base.IncreaseXP(unit, value);
+        }
+        else
+        {
+            unit.Instance.Skills[PrimarySkill].IncreaseSkillXP(value);
+        }
+    }
+
     private void SelectUnit(UnitDance unit)
     {
         UnselectUnit();
@@ -92,19 +116,19 @@ public class DanceActivityUI : ActivityController
         selectedUnit = unit;
         selectedUnit.Highlight();
         spotlight.gameObject.SetActive(true);
-        danceMoveUIManager.Show(selectedUnit);
+        StartCoroutine(danceMoveUIManager.Show(selectedUnit));
     }
 
     private void Instance_OnMoveUnlocked(UnitInstance unit, DanceMove move)
     {
         Debug.Log($"{unit.name} unlocked {move.name}");
-        StartCoroutine(LevelUpRoutine());
+        StartCoroutine(LevelUpRoutine(unit, move));
     }
 
-    private IEnumerator LevelUpRoutine()
+    private IEnumerator LevelUpRoutine(UnitInstance unit, DanceMove move)
     {
         yield return gameplayCanvas.FadeOut();
-        yield return levelupCanvas.FadeIn();
+        yield return levelUpUI.Show(unit, unit.Skills[PrimarySkill], move);
     }
 
     private void Dance_OnDanceMoveUsed(UnitController unit, DanceMove danceMove)

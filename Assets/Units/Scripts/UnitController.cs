@@ -7,7 +7,7 @@ public class UnitController : MonoBehaviour, IInteractable
     [Header("Unit References")]
     [SerializeField] protected Transform renderRoot;
     [SerializeField] private UnitBehaviour defaultBehaviour;
-    [SerializeField] private UnitBehaviour selectBehaviour;
+    [SerializeField] private UnitDialogue unitDialogue;
 
     [Header("Runtime")]
     [SerializeField] private UnitInstance instance;
@@ -15,19 +15,20 @@ public class UnitController : MonoBehaviour, IInteractable
     [SerializeField] private Vector3 targetLookPosition;
     [SerializeField] private Transform target;
 
-    private CinemachineVirtualCamera virtualCamera;
-    private UnitDestination unitDestination;
-    protected UnitDestination UnitDestination => unitDestination;
-
     public UnitInstance Instance => instance;
-    protected Transform RenderRoot => renderRoot;
     public bool IsDefaultBehaviour => currentBehaviour == defaultBehaviour;
-
-    Transform ITarget.Transform => transform;
+    public bool IsAtDestination => unitDestination.IsAtDestination;
+    public Vector3 LookPosition => targetLookPosition;
 
     public virtual Color Color { get; set; }
 
-    public bool IsAtDestination => unitDestination.IsAtDestination;
+    Transform ITarget.Transform => transform;
+
+    protected UnitDestination UnitDestination => unitDestination;
+    protected Transform RenderRoot => renderRoot;
+
+    private CinemachineVirtualCamera virtualCamera;
+    private UnitDestination unitDestination;
 
     public event UnityAction OnInitialized;
     public event UnityAction OnBehaviourChanged;
@@ -48,7 +49,7 @@ public class UnitController : MonoBehaviour, IInteractable
 
     protected virtual void Start()
     {
-        SetDefaultBehaviour();
+        ApplyDefaultBehaviour();
     }
 
     protected virtual void OnEnable()
@@ -83,7 +84,7 @@ public class UnitController : MonoBehaviour, IInteractable
     {
         if (currentBehaviour)
         {
-            currentBehaviour.OnBehaviourComplete -= SetDefaultBehaviour;
+            currentBehaviour.OnBehaviourComplete -= ApplyDefaultBehaviour;
             currentBehaviour.StopBehaviour();
         }
 
@@ -91,7 +92,7 @@ public class UnitController : MonoBehaviour, IInteractable
 
         if (currentBehaviour)
         {
-            currentBehaviour.OnBehaviourComplete += SetDefaultBehaviour;
+            currentBehaviour.OnBehaviourComplete += ApplyDefaultBehaviour;
             currentBehaviour.StartBehaviour();
         }
 
@@ -121,7 +122,13 @@ public class UnitController : MonoBehaviour, IInteractable
         this.target = target;
     }
 
-    public void SetDefaultBehaviour()
+    public void SetDefaultBehaviour(UnitBehaviour behaviour)
+    {
+        defaultBehaviour = behaviour;
+        ApplyDefaultBehaviour();
+    }
+
+    public void ApplyDefaultBehaviour()
     {
         ApplyBehaviour(defaultBehaviour);
     }
@@ -133,7 +140,7 @@ public class UnitController : MonoBehaviour, IInteractable
 
     void IInteractable.Select()
     {
-        ApplyBehaviour(selectBehaviour);
+        unitDialogue.StartDialogue();
     }
 
     public virtual void OnProximityChanged(bool value)

@@ -1,4 +1,6 @@
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class DanceMoveUIManager : MonoBehaviour
@@ -22,10 +24,9 @@ public class DanceMoveUIManager : MonoBehaviour
         }
     }
 
-    public void Show(UnitDance dancer)
+    public IEnumerator Show(UnitDance dancer)
     {
         gameObject.SetActive(true);
-        StartCoroutine(fadeCanvasGroup.FadeIn());
 
         var i = 0;
         foreach (var move in dancer.DanceMoves)
@@ -40,5 +41,8 @@ public class DanceMoveUIManager : MonoBehaviour
             moveViews[i].gameObject.SetActive(false);
             i++;
         }
+
+        yield return fadeCanvasGroup.FadeIn();
+
     }
 }

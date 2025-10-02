@@ -249,8 +249,20 @@ public class UnitListReference : ScriptableObject
             return existing; // Return the already-registered instance
         }
 
-        // Otherwise, register new instance
-        unit.OnXpChanged += SaveData;
+        float sum = 0f;
+        float lastSaveTime = 0f;
+
+        unit.OnXpChanged += value =>
+        {
+            sum += value;
+
+            if (sum > 10f || Time.time - lastSaveTime > 30f)
+            {
+                sum = 0;
+                lastSaveTime = Time.time;
+                SaveData();
+            }
+        };
 
         //unit.OnLevelChanged += (skill, level) => OnFungalUpdated?.Invoke();
 

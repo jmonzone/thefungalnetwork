@@ -12,6 +12,7 @@ public abstract class ActivityController : MonoBehaviour
 
     protected ActivityReference Activity => activity;
     protected SkillLevelUIManager LevelUI => levelUI;
+    protected Skill PrimarySkill => primarySkill;
 
     private Camera mainCamera;
     protected virtual Camera Camera => mainCamera;
@@ -53,11 +54,11 @@ public abstract class ActivityController : MonoBehaviour
     {
         foreach (var unit in activity.Units)
         {
-            unit.SetDefaultBehaviour();
+            unit.ApplyDefaultBehaviour();
         }
     }
 
-    protected void IncreaseXP(UnitController unit, float value)
+    protected virtual void IncreaseXP(UnitController unit, float value)
     {
         if (activity.Units.Contains(unit))
         {

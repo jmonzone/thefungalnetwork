@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -7,6 +8,7 @@ using UnityEngine.Events;
 public class UnitDance : UnitBehaviour
 {
     [SerializeField] private ActivityReference danceReference;
+    [SerializeField] private Skill danceSkill;
     [SerializeField] private DJTableReference djReference;
     [SerializeField] private Material targetMaterial; // assign in inspector
     [SerializeField] private string intensityID = "_Intensity";
@@ -43,6 +45,7 @@ public class UnitDance : UnitBehaviour
     private float BeatDuration => djReference.BeatDuration * danceBeat;
 
     public event UnityAction<UnitController, DanceMove> OnDanceMoveUsed;
+    public event UnityAction OnDanceMovesUpdated;
 
     protected override void OnInitialized()
     {
@@ -68,6 +71,15 @@ public class UnitDance : UnitBehaviour
         materials = mats.ToArray();
 
         originalColor = Unit.Color;
+
+        Unit.Instance.Skills[danceSkill].OnLevelUp += UpdateDanceMoves;
+        UpdateDanceMoves();
+    }
+
+    private void UpdateDanceMoves()
+    {
+        danceMoves = new List<DanceMove>(Unit.Instance.Data.Moves.Where(move => Unit.Instance.Skills[danceSkill].Level >= move.LevelRequirement));
+        OnDanceMovesUpdated?.Invoke();
     }
 
     protected override void OnBehaviourStart()
@@ -192,6 +204,8 @@ public class UnitDance : UnitBehaviour
             }
             yield return null;
         }
+
+        highlightRoutine = null;
     }
 
     private IEnumerator UnhighlightRoutine()
@@ -216,6 +230,8 @@ public class UnitDance : UnitBehaviour
             }
             yield return null;
         }
+
+        highlightRoutine = null;
     }
 
     private IEnumerator IncreaseDancePowerRoutine()
@@ -277,7 +293,10 @@ public class UnitDance : UnitBehaviour
                 highlightRoutine = StartCoroutine(HighlightRoutine());
             }
         }
-        else if (djReference.DominantTrack) targetColor = djReference.DominantTrack.Glyph.Color;
+        else if (djReference.DominantTrack)
+        {
+            targetColor = djReference.DominantTrack.Glyph.Color;
+        }
     }
 
     private void OnEnable()

@@ -19,7 +19,7 @@ public class UnitSkill
     public float MaxXP => GetXPFromLevel(Level + 1);
     public float XPUntilNextLevel => MaxXP - XP;
 
-    public event UnityAction OnXpChanged;
+    public event UnityAction<float> OnXpChanged;
     public event UnityAction OnLevelUp;
 
     public UnitSkill(Skill skill, float xp)
@@ -36,7 +36,7 @@ public class UnitSkill
         var previousLevel = level;
 
         xp += value;
-        OnXpChanged?.Invoke();
+        OnXpChanged?.Invoke(value);
 
         level = GetLevelFromXP(xp);
 
@@ -123,7 +123,7 @@ public class UnitInstance : ScriptableObject
 
     public JObject Json => json;
 
-    public event UnityAction OnXpChanged;
+    public event UnityAction<float> OnXpChanged;
     public event UnityAction<UnitInstance, DanceMove> OnMoveUnlocked;
 
     public void Initialize(Unit unit, string id = null, float friendshipXP = 0, List<UnitSkill> skills = null, Element element = Element.NONE, Job job = null, ColorPalette colorPalette = null, JObject json = null)
@@ -140,7 +140,7 @@ public class UnitInstance : ScriptableObject
         foreach(var skill in this.skills)
         {
             Skills.Add(skill.Skill, skill);
-            skill.OnXpChanged += () => OnXpChanged?.Invoke();
+            skill.OnXpChanged += value => OnXpChanged?.Invoke(value);
             skill.OnLevelUp += () => Skill_OnLevelUp(skill.Skill);
         }
 

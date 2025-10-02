@@ -97,7 +97,6 @@ public class UnitDJ : UnitBehaviour
     public override void StopBehaviour()
     {
         base.StopBehaviour();
-        navMeshAgent.enabled = true;
         djReference.Controller.OnLeftTrackComplete -= OnLeftTrackEnding;
         djReference.Controller.OnRightTrackComplete -= OnRightTrackEnding;
     }

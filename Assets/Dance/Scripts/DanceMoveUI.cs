@@ -22,6 +22,8 @@ public class DanceMoveUI : MonoBehaviour
 
     public void SetMove(UnitDance dancer, DanceMove danceMove)
     {
+        Debug.Log("DanceMoveUI SetMove");
+
         this.dancer = dancer;
         this.danceMove = danceMove;
         moveNameText.text = danceMove.Label;
@@ -30,6 +32,7 @@ public class DanceMoveUI : MonoBehaviour
 
     private void UseMove()
     {
+        Debug.Log("DanceMoveUI UseMove");
         dancer.UseDanceMove(danceMove, OnDanceMoveComplete);
         OnDanceMoveStart?.Invoke();
     }

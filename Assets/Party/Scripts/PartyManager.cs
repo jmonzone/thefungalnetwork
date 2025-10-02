@@ -67,7 +67,7 @@ public class PartyManager : MonoBehaviour
     {
         //todo: apply jobs to all units - party frog as dj is default
         var partyFrog = unitManager.UnitControllers[0];
-        partyFrog.SetBehaviour(partyFrog.GetComponent<UnitDJ>());
+        partyFrog.SetDefaultBehaviour(partyFrog.GetComponent<UnitDJ>());
 
         //todo: assemble guests predefined by party + newly introduced friends
         var allGuests = new List<UnitInstance>();

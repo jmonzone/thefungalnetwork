@@ -5,7 +5,10 @@ public class ActivityZoneController : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private ActivityReference activity;
+    [SerializeField] private DJTableReference djReference;
     [SerializeField] private GameObject zoneController;
+
+    private Material material; 
 
     [Header("Settings")]
     [SerializeField] private float scaleDuration = 0.5f;
@@ -14,12 +17,29 @@ public class ActivityZoneController : MonoBehaviour
 
     private void OnEnable()
     {
+        djReference.OnTrackValueChanged += DjReference_OnTrackValueChanged;
         activity.OnActivityHasStarted += OnActivityStart;
         activity.OnActivityHasEnded += OnActivityHasEnded;
+        material = zoneController.GetComponentInChildren<Renderer>().material;
+        DjReference_OnTrackValueChanged();
+    }
+
+    private void DjReference_OnTrackValueChanged()
+    {
+        if (djReference.LeftTrack && djReference.RightTrack)
+        {
+            var targetColor = Color.Lerp(djReference.LeftTrack.Glyph.Color, djReference.RightTrack.Glyph.Color, djReference.RightValue);
+            material.SetColor("_BottomColor", targetColor);
+        }
+        else if (djReference.DominantTrack)
+        {
+            material.SetColor("_BottomColor", djReference.DominantTrack.Glyph.Color);
+        }
     }
 
     private void OnDisable()
     {
+        djReference.OnTrackValueChanged -= DjReference_OnTrackValueChanged;
         activity.OnActivityHasStarted -= OnActivityStart;
         activity.OnActivityHasEnded -= OnActivityHasEnded;
     }

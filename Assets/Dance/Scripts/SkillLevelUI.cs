@@ -15,8 +15,7 @@ public class SkillLevelUI : MonoBehaviour
     [SerializeField] private UnitSkill skill;
     [SerializeField] private bool useAudio = true;
 
-    private int currentLevel;
-    public bool HasLeveledUp => skill.Level > currentLevel;
+    //public bool HasLeveledUp => skill.Level > currentLevel;
 
     private AudioSource audioSource;
 
@@ -37,7 +36,7 @@ public class SkillLevelUI : MonoBehaviour
 
         unitImage.sprite = instance.Data.Sprite;
 
-        currentLevel = skill.Level;
+        //currentLevel = skill.Level;
 
         if (valueBarController) valueBarController.Initialize(skill.XP, skill.MinXP, skill.MaxXP);
         if (fillImage) fillImage.fillAmount = Mathf.Lerp(0, 1, (skill.XP - skill.MinXP) / (skill.MaxXP - skill.MinXP));
@@ -74,37 +73,37 @@ public class SkillLevelUI : MonoBehaviour
     private Coroutine levelUpRoutine;
     private void ValueBarParticleController_OnAllParticleReached()
     {
-        if (HasLeveledUp)
-        {
+        //if (HasLeveledUp)
+        //{
             if (levelUpRoutine == null)
             {
                 UpdateView();
-                levelUpRoutine = StartCoroutine(LevelUpRoutine());
+                //levelUpRoutine = StartCoroutine(LevelUpRoutine());
             }
-        }
+        //}
 
         OnAllParticlesReached?.Invoke();
     }
 
-    private IEnumerator LevelUpRoutine()
-    {
-        if (valueBarController)
-        {
-            valueBarController.SetTargetScale(1.1f);
-            yield return new WaitForSeconds(1f);
-        }
+    //private IEnumerator LevelUpRoutine()
+    //{
+    //    if (valueBarController)
+    //    {
+    //        valueBarController.SetTargetScale(1.1f);
+    //        yield return new WaitForSeconds(1f);
+    //    }
 
-        if (fillImage)
-        {
-            yield return PulseFill();
-        }
+    //    if (fillImage)
+    //    {
+    //        yield return PulseFill();
+    //    }
 
-        if (nextLevelText) nextLevelText.text = $"{skill} Level Increased";
+    //    if (nextLevelText) nextLevelText.text = $"{skill} Level Increased";
 
-        OnLevelUp?.Invoke();
-        levelUpRoutine = null;
-        currentLevel = skill.Level;
-    }
+    //    OnLevelUp?.Invoke();
+    //    levelUpRoutine = null;
+    //    currentLevel = skill.Level;
+    //}
 
     private IEnumerator PulseFill()
     {
