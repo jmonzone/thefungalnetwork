@@ -47,6 +47,14 @@ public abstract class UnitBehaviour : MonoBehaviour
         }
     }
 
+    public virtual void PauseBehaviour()
+    {
+    }
+
+    public virtual void UnpauseBehaviour()
+    {
+    }
+
     protected void InvokeOnBehaviourRequest()
     {
         OnBehaviourRequest?.Invoke();

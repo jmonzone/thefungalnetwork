@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 
 public class UnitDialogue : MonoBehaviour
 {
@@ -9,22 +10,24 @@ public class UnitDialogue : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private bool lookAtTarget = true;
 
-    private UnitController Unit;
-    private Vector3 originalLook;
+    private UnitController unit;
+    private Vector3 originalLookPosition;
+
+    public event UnityAction OnComplete;
 
     private void Awake()
     {
-        Unit = GetComponent<UnitController>();
+        unit = GetComponent<UnitController>();
     }
 
     public void StartDialogue()
     {
-        dialogue.StartInteraction(Unit, Unit.Instance.RandomDialogue);
+        dialogue.StartInteraction(unit, unit.Instance.RandomDialogue);
 
         if (lookAtTarget)
         {
-            originalLook = Unit.LookPosition;
-            Unit.SetLookPosition(playerReference.Player.transform.position);
+            originalLookPosition = unit.LookPosition;
+            unit.SetLookPosition(playerReference.Player.transform.position);
         }
 
         dialogue.OnDialogueComplete += Dialogue_OnDialogueComplete;
@@ -33,6 +36,7 @@ public class UnitDialogue : MonoBehaviour
     private void Dialogue_OnDialogueComplete()
     {
         dialogue.OnDialogueComplete -= Dialogue_OnDialogueComplete;
-        Unit.SetLookPosition(originalLook);
+        unit.SetLookPosition(originalLookPosition);
+        OnComplete?.Invoke();
     }
 }

@@ -45,6 +45,14 @@ public class UnitController : MonoBehaviour, IInteractable
 
         virtualCamera = GetComponentInChildren<CinemachineVirtualCamera>();
         unitDestination = GetComponent<UnitDestination>();
+
+        unitDialogue = GetComponent<UnitDialogue>();
+
+        if (unitDialogue)
+        {
+            unitDialogue.OnComplete += () => currentBehaviour.UnpauseBehaviour();
+
+        }
     }
 
     protected virtual void Start()
@@ -140,7 +148,11 @@ public class UnitController : MonoBehaviour, IInteractable
 
     void IInteractable.Select()
     {
-        unitDialogue.StartDialogue();
+        if (unitDialogue)
+        {
+            currentBehaviour.PauseBehaviour();
+            unitDialogue.StartDialogue();
+        }
     }
 
     public virtual void OnProximityChanged(bool value)

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,6 +7,7 @@ namespace GURU
     /// <summary>
     /// Manages a list of UI items, allowing for dynamic creation and updating of list item data.
     /// </summary>
+    [Obsolete]
     public class ListUI : MonoBehaviour
     {
         /// <summary>

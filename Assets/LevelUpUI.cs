@@ -7,11 +7,14 @@ using UnityEngine.UI;
 public class LevelUpUI : MonoBehaviour
 {
     [SerializeField] private FadeCanvasGroup fadeCanvasGroup;
+
     [SerializeField] private TextMeshProUGUI levelText;
     [SerializeField] private TextMeshProUGUI levelUpText;
-    [SerializeField] private Image unlockImage;
-    [SerializeField] private TextMeshProUGUI unlockNameText;
-    [SerializeField] private TextMeshProUGUI unlockDescriptionText;
+
+    [SerializeField] private Image milestoneImage;
+    [SerializeField] private TextMeshProUGUI milestoneName;
+    [SerializeField] private TextMeshProUGUI milestoneDescription;
+
     [SerializeField] private Button backButton;
 
     public event UnityAction OnExit;
@@ -21,13 +24,14 @@ public class LevelUpUI : MonoBehaviour
         backButton.onClick.AddListener(() => OnExit?.Invoke());
     }
 
-    public IEnumerator Show(UnitInstance instance, UnitSkill skill, DanceMove unlock)
+    public IEnumerator Show(UnitInstance instance, UnitSkill skill, DanceMoveInstance unlock)
     {
         levelText.text = skill.Level.ToString();
         levelUpText.text = $"{instance.Data.Name} Leveled Up! How Sweet\nWhat's your dancing level now?";
 
-        unlockImage.sprite = unlock.Sprite;
-        unlockNameText.text = unlock.Label.ToString();
+        milestoneImage.sprite = unlock.Data.Sprite;
+        milestoneName.text = unlock.Label.ToString();
+        milestoneDescription.text = unlock.Description;
 
         yield return fadeCanvasGroup.FadeIn();
     }

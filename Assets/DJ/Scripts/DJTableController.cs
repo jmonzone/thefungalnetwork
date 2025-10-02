@@ -91,7 +91,7 @@ public class DJTableController : MonoBehaviour, IInteractable
 
         if (track)
         {
-            Debug.Log($"playing right clip {track.name}");
+            //Debug.Log($"playing right clip {track.name}");
             audioSource2.clip = track.AudioClip;
             rightCoroutine = StartCoroutine(PlayAndFadeIn(1));
         }

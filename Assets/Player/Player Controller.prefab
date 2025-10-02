@@ -89,7 +89,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   renderRoot: {fileID: 1647962025224334118}
   defaultBehaviour: {fileID: 0}
-  selectBehaviour: {fileID: 0}
+  unitDialogue: {fileID: 0}
   instance: {fileID: 0}
   currentBehaviour: {fileID: 0}
   targetLookPosition: {x: 0, y: 0, z: 0}
@@ -330,9 +330,10 @@ MonoBehaviour:
   djReference: {fileID: 11400000, guid: 3bda1116fcf8f49e696cd21c6b5092da, type: 2}
   targetMaterial: {fileID: 2100000, guid: 806224b540ec7465496fd51b01d3f02f, type: 2}
   intensityID: _Intensity
-  danceBeat: 4
-  baseDanceBeat: 4
-  moveDanceBeat: 1
+  baseDanceAnimation: Dance_SwordAndShield
+  danceBeat: 8
+  baseDanceBeat: 8
+  moveDanceBeat: 4
   targetColor: {r: 0.5411765, g: 0.80784315, b: 0, a: 1}
   originalColor: {r: 0, g: 0.8206897, b: 1, a: 1}
   stageColor: {r: 0, g: 0.8206897, b: 1, a: 1}
@@ -343,9 +344,6 @@ MonoBehaviour:
   maxProgress: 3
   pulseOffset: 2
   currentStage: 2
-  danceMoves:
-  - {fileID: 11400000, guid: 6396f1cfb6fe1496cbf571c96b16abb5, type: 2}
-  - {fileID: 11400000, guid: 3bf3318a348704d81bc51066f2f46275, type: 2}
 --- !u!1001 &3542599120507107562
 PrefabInstance:
   m_ObjectHideFlags: 0

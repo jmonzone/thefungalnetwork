@@ -52,6 +52,7 @@ public class UnitListReference : ScriptableObject
             {
                 if (unit is JObject unitJson)
                 {
+
                     var unitName = unitJson.Value<string>("name");
                     var matchingUnit = unitCollection.Find(u => u.Name == unitName);
 
@@ -73,6 +74,9 @@ public class UnitListReference : ScriptableObject
 
                     float friendshipXP = unitJson.Value<float?>("friendshipXP") ?? 0f;
 
+                    var instance = CreateInstance<UnitInstance>();
+                    instance.Initialize(matchingUnit, unitId, friendshipXP, element, matchingJob, matchingColorPalette, unitJson);
+
                     var skillsJson = unitJson.Value<JArray>("skills") ?? new JArray();
                     var skills = new List<UnitSkill>();
 
@@ -83,11 +87,11 @@ public class UnitListReference : ScriptableObject
 
                         float xp = skillJson?.Value<float?>("xp") ?? 0f;
 
-                        skills.Add(new UnitSkill(skill, xp));
+                        skills.Add(new UnitSkill(instance, skill, xp));
                     }
 
-                    var instance = CreateInstance<UnitInstance>();
-                    instance.Initialize(matchingUnit, unitId, friendshipXP, skills, element, matchingJob, matchingColorPalette, unitJson);
+                    instance.InitializeSkills(skills);
+
                     RegisterUnit(instance, false);
                 };
             }
@@ -132,16 +136,18 @@ public class UnitListReference : ScriptableObject
 
     public UnitInstance CopyUnit(UnitInstance instance, bool saveData = true)
     {
+        var copiedSkills = CreateInstance<UnitInstance>();
+        copiedSkills.Initialize(instance.Data, instance.Id, instance.FriendshipXP, instance.Element, instance.Job, instance.ColorPalette);
+
         var skills = new List<UnitSkill>();
 
         foreach (var skill in skillCollection)
         {
-            skills.Add(new UnitSkill(skill, 0));
+            skills.Add(new UnitSkill(copiedSkills, skill, 0));
         }
 
-        var copy = CreateInstance<UnitInstance>();
-        copy.Initialize(instance.Data, instance.Id, instance.FriendshipXP, skills, instance.Element, instance.Job, instance.ColorPalette);
-        return RegisterUnit(copy, saveData);
+        copiedSkills.InitializeSkills(skills);
+        return RegisterUnit(copiedSkills, saveData);
     }
 
     public (Unit unit, ColorPalette color) PickNewFriend()
@@ -276,7 +282,7 @@ public class UnitListReference : ScriptableObject
 
     public void SaveData()
     {
-        Debug.Log("saving data");
+        //Debug.Log("saving data");
         var unitsJson = new JArray();
 
         foreach (var unit in units)

@@ -10,7 +10,7 @@ public class DanceMoveUI : MonoBehaviour
     [SerializeField] private Button button;
 
     private UnitDance dancer;
-    private DanceMove danceMove;
+    private DanceMoveInstance danceMove;
 
     public event UnityAction OnDanceMoveStart;
     public event UnityAction OnDanceMoveComplete;
@@ -20,14 +20,14 @@ public class DanceMoveUI : MonoBehaviour
         button.onClick.AddListener(UseMove);
     }
 
-    public void SetMove(UnitDance dancer, DanceMove danceMove)
+    public void SetMove(UnitDance dancer, DanceMoveInstance danceMove)
     {
         Debug.Log("DanceMoveUI SetMove");
 
         this.dancer = dancer;
         this.danceMove = danceMove;
         moveNameText.text = danceMove.Label;
-        moveImage.sprite = danceMove.Sprite;
+        moveImage.sprite = danceMove.Data.Sprite;
     }
 
     private void UseMove()

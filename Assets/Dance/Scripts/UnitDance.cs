@@ -12,6 +12,7 @@ public class UnitDance : UnitBehaviour
     [SerializeField] private DJTableReference djReference;
     [SerializeField] private Material targetMaterial; // assign in inspector
     [SerializeField] private string intensityID = "_Intensity";
+    [SerializeField] private string baseDanceAnimation;
     [SerializeField] private float danceBeat = 1;
     [SerializeField] private float baseDanceBeat = 1;
     [SerializeField] private float moveDanceBeat = 1;
@@ -28,10 +29,6 @@ public class UnitDance : UnitBehaviour
     [SerializeField] private float pulseOffset = 1;
     [SerializeField] private int currentStage = 0;
 
-    [SerializeField] private List<DanceMove> danceMoves;
-
-    public List<DanceMove> DanceMoves => danceMoves;
-
     private Animator animator;
     private Material[] materials;
 
@@ -44,8 +41,7 @@ public class UnitDance : UnitBehaviour
 
     private float BeatDuration => djReference.BeatDuration * danceBeat;
 
-    public event UnityAction<UnitController, DanceMove> OnDanceMoveUsed;
-    public event UnityAction OnDanceMovesUpdated;
+    public event UnityAction<UnitController, DanceMoveInstance> OnDanceMoveUsed;
 
     protected override void OnInitialized()
     {
@@ -71,15 +67,6 @@ public class UnitDance : UnitBehaviour
         materials = mats.ToArray();
 
         originalColor = Unit.Color;
-
-        Unit.Instance.Skills[danceSkill].OnLevelUp += UpdateDanceMoves;
-        UpdateDanceMoves();
-    }
-
-    private void UpdateDanceMoves()
-    {
-        danceMoves = new List<DanceMove>(Unit.Instance.Data.Moves.Where(move => Unit.Instance.Skills[danceSkill].Level >= move.LevelRequirement));
-        OnDanceMovesUpdated?.Invoke();
     }
 
     protected override void OnBehaviourStart()
@@ -130,28 +117,49 @@ public class UnitDance : UnitBehaviour
         cheerRoutine = StartCoroutine(IncreaseDancePowerRoutine());
     }
 
-    public void UseDanceMove(DanceMove danceMove, UnityAction onComplete)
+    public void UseDanceMove(DanceMoveInstance danceMove, UnityAction onComplete)
     {
+        Debug.Log($"UseDanceMove {animator.speed}");
         danceBeat = moveDanceBeat;
+        Debug.Log($"UseDanceMove {animator.speed}");
 
         if (moveRoutine != null) StopCoroutine(moveRoutine);
         moveRoutine = StartCoroutine(DanceMoveRoutine(danceMove, onComplete));
     }
 
-    private IEnumerator DanceMoveRoutine(DanceMove danceMove, UnityAction onComplete)
+    private IEnumerator DanceMoveRoutine(DanceMoveInstance danceMove, UnityAction onComplete)
     {
         Unit.SetDestination(danceReference.Origin);
 
         yield return new WaitUntil(() => Unit.IsAtDestination);
         yield return new WaitForSeconds(1f);
 
-        animator.ResetTrigger("Complete");
-        animator.Play(danceMove.AnimationName);
+        var animationName = danceMove.Data.AnimationName;
 
-        yield return new WaitForSeconds(animator.speed * BeatDuration);
+        // Play the spin
+        animator.Play(animationName, 0, 0);
 
-        animator.SetTrigger("Complete");
+        // let the animator update so state info becomes valid
+        yield return null;
+
+        Debug.Log($"DanceMoveRoutine {animator.speed}");
+
+        // wait until the animator is actually in the spin state
+        while (!animator.GetCurrentAnimatorStateInfo(0).IsName(animationName))
+            yield return null;
+
+        Debug.Log($"DanceMoveRoutine {animator.speed}");
+
+        // wait until we've completed `loops` iterations
+        while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1 + danceMove.Loops)
+            yield return null;
+
         danceBeat = baseDanceBeat;
+
+        Debug.Log($"DanceMoveRoutine {animator.speed}");
+
+        // Return to base dance
+        animator.Play(baseDanceAnimation, 0, 0);
 
         yield return new WaitForSeconds(1f);
 

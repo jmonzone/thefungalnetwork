@@ -24,12 +24,12 @@ public class DanceMoveUIManager : MonoBehaviour
         }
     }
 
-    public IEnumerator Show(UnitDance dancer)
+    public IEnumerator Show(UnitDance dancer, List<DanceMoveInstance> moves)
     {
         gameObject.SetActive(true);
 
         var i = 0;
-        foreach (var move in dancer.DanceMoves)
+        foreach (var move in moves)
         {
             moveViews[i].SetMove(dancer, move);
             moveViews[i].gameObject.SetActive(true);

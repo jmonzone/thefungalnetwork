@@ -4,81 +4,6 @@ using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-[Serializable]
-public class UnitSkill
-{
-    [SerializeField] private Skill skill;
-    [SerializeField] private int level;
-    [SerializeField] private float xp;
-
-    public Skill Skill => skill;
-    public int Level => level;
-    public float XP => xp;
-
-    public float MinXP => GetXPFromLevel(Level);
-    public float MaxXP => GetXPFromLevel(Level + 1);
-    public float XPUntilNextLevel => MaxXP - XP;
-
-    public event UnityAction<float> OnXpChanged;
-    public event UnityAction OnLevelUp;
-
-    public UnitSkill(Skill skill, float xp)
-    {
-        this.skill = skill;
-        this.xp = xp;
-        level = GetLevelFromXP(xp);
-    }
-
-    public void IncreaseSkillXP(float value)
-    {
-        Debug.Log("increasing skill xp");
-
-        var previousLevel = level;
-
-        xp += value;
-        OnXpChanged?.Invoke(value);
-
-        level = GetLevelFromXP(xp);
-
-        if (previousLevel != level)
-        {
-            OnLevelUp?.Invoke();
-        }
-    }
-
-    public static int GetLevelFromXP(float xp)
-    {
-        int level = 1;
-        double points = 0;
-
-        for (int lvl = 1; lvl <= 120; lvl++) // RuneScape goes to 99/120, you can adjust cap
-        {
-            points += Math.Floor(lvl + 300 * Math.Pow(2, lvl / 7.0));
-            double output = Math.Floor(points / (4));
-
-            if (output > xp)
-            {
-                level = lvl;
-                break;
-            }
-        }
-
-        return level;
-    }
-
-    public static int GetXPFromLevel(int level)
-    {
-        double points = 0;
-
-        for (int lvl = 1; lvl < level; lvl++)
-        {
-            points += Math.Floor(lvl + 300 * Math.Pow(2, lvl / 7.0));
-        }
-
-        return (int)Math.Floor(points / (4));
-    }
-}
-
 [CreateAssetMenu]
 public class UnitInstance : ScriptableObject
 {
@@ -124,9 +49,8 @@ public class UnitInstance : ScriptableObject
     public JObject Json => json;
 
     public event UnityAction<float> OnXpChanged;
-    public event UnityAction<UnitInstance, DanceMove> OnMoveUnlocked;
 
-    public void Initialize(Unit unit, string id = null, float friendshipXP = 0, List<UnitSkill> skills = null, Element element = Element.NONE, Job job = null, ColorPalette colorPalette = null, JObject json = null)
+    public void Initialize(Unit unit, string id = null, float friendshipXP = 0, Element element = Element.NONE, Job job = null, ColorPalette colorPalette = null, JObject json = null)
     {
         this.id = string.IsNullOrEmpty(id) ? GenerateMongoLikeId() : id;
         this.unit = unit;
@@ -135,15 +59,6 @@ public class UnitInstance : ScriptableObject
         this.friendshipXP = friendshipXP;
         friendshipLevel = UnitSkill.GetLevelFromXP(friendshipXP);
 
-        this.skills = skills ?? new List<UnitSkill>();
-        Skills = new Dictionary<Skill, UnitSkill>();
-        foreach(var skill in this.skills)
-        {
-            Skills.Add(skill.Skill, skill);
-            skill.OnXpChanged += value => OnXpChanged?.Invoke(value);
-            skill.OnLevelUp += () => Skill_OnLevelUp(skill.Skill);
-        }
-
         this.element = element;
         this.job = job;
         this.colorPalette = colorPalette;
@@ -151,17 +66,17 @@ public class UnitInstance : ScriptableObject
         friends = new List<UnitInstance>();
     }
 
-    private void Skill_OnLevelUp(Skill skill)
+    public void InitializeSkills(List<UnitSkill> skills)
     {
-        foreach (var move in Data.Moves)
+        this.skills = skills;
+        Skills = new Dictionary<Skill, UnitSkill>();
+        foreach (var skill in this.skills)
         {
-            if (move.LevelRequirement == Skills[skill].Level)
-            {
-                OnMoveUnlocked?.Invoke(this, move);
-            }
+            Skills.Add(skill.Skill, skill);
+            skill.OnXpChanged += value => OnXpChanged?.Invoke(value);
         }
     }
-
+    
     public static string GenerateMongoLikeId()
     {
         byte[] bytes = new byte[12];

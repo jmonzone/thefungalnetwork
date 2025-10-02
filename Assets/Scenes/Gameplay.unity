@@ -16680,7 +16680,7 @@ GameObject:
   - component: {fileID: 561002404}
   - component: {fileID: 561002403}
   m_Layer: 5
-  m_Name: Unlock Description Text
+  m_Name: Milestone Description
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16702,8 +16702,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 200, y: -75}
-  m_SizeDelta: {x: 400, y: 50}
+  m_AnchoredPosition: {x: 175, y: -107.5}
+  m_SizeDelta: {x: 350, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &561002403
 MonoBehaviour:
@@ -16725,7 +16725,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Increases XP per beat
+  m_text: here comes the hurricane hitch
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b4e44b235567b440caf4e04d3269a48c, type: 2}
   m_sharedMaterial: {fileID: -4893521127105691677, guid: b4e44b235567b440caf4e04d3269a48c,
@@ -16753,10 +16753,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 40
+  m_fontSize: 31.65
   m_fontSizeBase: 40
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -21105,7 +21105,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 350, y: -50}
-  m_SizeDelta: {x: 400, y: 100}
+  m_SizeDelta: {x: 350, y: 145}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &824507525
 MonoBehaviour:
@@ -21125,7 +21125,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 3
-  m_Spacing: 0
+  m_Spacing: 10
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 1
@@ -43418,9 +43418,9 @@ MonoBehaviour:
   fadeCanvasGroup: {fileID: 1685977535}
   levelText: {fileID: 1992174474}
   levelUpText: {fileID: 2049850435}
-  unlockImage: {fileID: 1990397746}
-  unlockNameText: {fileID: 1742106642}
-  unlockDescriptionText: {fileID: 561002403}
+  milestoneImage: {fileID: 1990397746}
+  milestoneName: {fileID: 1742106642}
+  milestoneDescription: {fileID: 561002403}
   backButton: {fileID: 1114018429}
 --- !u!1 &1686815685
 GameObject:
@@ -46360,7 +46360,7 @@ GameObject:
   - component: {fileID: 1742106643}
   - component: {fileID: 1742106642}
   m_Layer: 5
-  m_Name: Unlock Name Text
+  m_Name: Milestone Name
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -46382,8 +46382,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 200, y: -25}
-  m_SizeDelta: {x: 400, y: 50}
+  m_AnchoredPosition: {x: 175, y: -30}
+  m_SizeDelta: {x: 350, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1742106642
 MonoBehaviour:
@@ -46433,10 +46433,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 50
+  m_fontSize: 50.7
   m_fontSizeBase: 50
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -50790,7 +50790,7 @@ GameObject:
   - component: {fileID: 1990397747}
   - component: {fileID: 1990397746}
   m_Layer: 5
-  m_Name: Unlock Image
+  m_Name: Milestone Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -50812,7 +50812,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: -50}
+  m_AnchoredPosition: {x: 75, y: -50}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1990397746
@@ -54934,6 +54934,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2460149997562740352, guid: b5a65936c7fe74e3ca085c517af15846,
+        type: 3}
+      propertyPath: m_Extents.x
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2460149997562740352, guid: b5a65936c7fe74e3ca085c517af15846,
+        type: 3}
+      propertyPath: m_Extents.z
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 2526129002911352718, guid: b5a65936c7fe74e3ca085c517af15846,
         type: 3}
       propertyPath: m_LocalPosition.x

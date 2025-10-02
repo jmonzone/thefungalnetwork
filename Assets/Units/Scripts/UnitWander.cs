@@ -28,14 +28,36 @@ public class UnitWander : UnitBehaviour
 
     protected override void OnBehaviourStart()
     {
-        navMeshAgent.stoppingDistance = 0.1f;
-        navMeshAgent.isStopped = false;
-        StartCoroutine(WanderRoutine());
+        StartWander();
     }
 
     public override void StopBehaviour()
     {
         base.StopBehaviour();
+        PauseBehaviour();
+    }
+
+    public override void PauseBehaviour()
+    {
+        base.PauseBehaviour();
+        StopWander();
+    }
+
+    public override void UnpauseBehaviour()
+    {
+        base.UnpauseBehaviour();
+        StartWander();
+    }
+
+    private void StartWander()
+    {
+        navMeshAgent.stoppingDistance = 0.1f;
+        navMeshAgent.isStopped = false;
+        StartCoroutine(WanderRoutine());
+    }
+
+    private void StopWander()
+    {
         navMeshAgent.isStopped = true;
         StopAllCoroutines();
     }

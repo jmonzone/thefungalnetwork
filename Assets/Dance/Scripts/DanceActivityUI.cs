@@ -40,10 +40,10 @@ public class DanceActivityUI : ActivityController
 
         foreach (var unit in Activity.Units)
         {
-            unit.Instance.OnMoveUnlocked += Instance_OnMoveUnlocked;
+            unit.Instance.Skills[PrimarySkill].OnMilestoneReached += Instance_OnMoveUnlocked;
+
             var dancer = unit.GetComponent<UnitDance>();
             dancer.OnDanceMoveUsed += Dance_OnDanceMoveUsed;
-            dancer.OnDanceMovesUpdated += Dance_OnDanceMovesUpdated;
             unit.SetBehaviour(dancer);
             LevelUI.UnitLevelViewMap[unit.Instance].SetColor(unit.Color);
         }
@@ -88,11 +88,11 @@ public class DanceActivityUI : ActivityController
         }
     }
 
-    private void Dance_OnDanceMovesUpdated()
+    private void UpdateDanceMovesUI()
     {
         if (selectedUnit)
         {
-            StartCoroutine(danceMoveUIManager.Show(selectedUnit));
+            StartCoroutine(danceMoveUIManager.Show(selectedUnit, selectedUnit.Instance.Skills[PrimarySkill].Moves));
             //LevelUI.SetUnits(Activity.Units.Select(unit => unit.Instance));
         }
     }
@@ -116,22 +116,23 @@ public class DanceActivityUI : ActivityController
         selectedUnit = unit;
         selectedUnit.Highlight();
         spotlight.gameObject.SetActive(true);
-        StartCoroutine(danceMoveUIManager.Show(selectedUnit));
+        UpdateDanceMovesUI();
     }
 
-    private void Instance_OnMoveUnlocked(UnitInstance unit, DanceMove move)
+    private void Instance_OnMoveUnlocked(UnitInstance unit, DanceMoveInstance move, bool isUpgrade)
     {
         Debug.Log($"{unit.name} unlocked {move.name}");
-        StartCoroutine(LevelUpRoutine(unit, move));
+        StartCoroutine(LevelUpRoutine(unit, move, isUpgrade));
+        UpdateDanceMovesUI();
     }
 
-    private IEnumerator LevelUpRoutine(UnitInstance unit, DanceMove move)
+    private IEnumerator LevelUpRoutine(UnitInstance unit, DanceMoveInstance move, bool isUpgrade)
     {
         yield return gameplayCanvas.FadeOut();
         yield return levelUpUI.Show(unit, unit.Skills[PrimarySkill], move);
     }
 
-    private void Dance_OnDanceMoveUsed(UnitController unit, DanceMove danceMove)
+    private void Dance_OnDanceMoveUsed(UnitController unit, DanceMoveInstance danceMove)
     {
         IncreaseXP(unit, danceMove.Xp);
     }
