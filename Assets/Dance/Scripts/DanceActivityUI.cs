@@ -22,28 +22,9 @@ public class DanceActivityUI : ActivityUI
     protected override void Awake()
     {
         base.Awake();
-        danceActivity.OnUnitSelected += OnUnitSelected;
         levelUpUI.gameObject.SetActive(false);
         levelUpUI.OnExit += () => StartCoroutine(LevelUI_OnExitRoutine());
         danceMoveUIManager.Initialize();
-    }
-
-    private void OnUnitSelected()
-    {
-        if (danceActivity.SelectedUnit)
-        {
-            var moves = danceActivity.SelectedUnit.Instance.Skills[Activity.PrimarySkill].Moves;
-            StartCoroutine(danceMoveUIManager.Show(danceActivity.SelectedUnit, moves, () =>
-            {
-                canSelect = false;
-                SetExitButtonInteractable(false);
-            },
-            () =>
-            {
-                canSelect = true;
-                SetExitButtonInteractable(true);
-            }));
-        }
     }
 
     private IEnumerator LevelUI_OnExitRoutine()
@@ -55,6 +36,9 @@ public class DanceActivityUI : ActivityUI
     protected override void OnPlayerEnter(PlayerController player)
     {
         base.OnPlayerEnter(player);
+        danceActivity.OnUnitSelected += OnUnitSelected;
+        OnUnitSelected();
+
 
         StartCoroutine(EnterRoutine());
     }
@@ -84,8 +68,27 @@ public class DanceActivityUI : ActivityUI
     protected override void OnPlayerExit(PlayerController player)
     {
         base.OnPlayerExit(player);
+        danceActivity.OnUnitSelected -= OnUnitSelected;
         background.EndDanceBackground();
         StopAllCoroutines();
+    }
+
+    private void OnUnitSelected()
+    {
+        if (danceActivity.SelectedUnit)
+        {
+            var moves = danceActivity.SelectedUnit.Instance.Skills[Activity.PrimarySkill].Moves;
+            StartCoroutine(danceMoveUIManager.Show(danceActivity.SelectedUnit, moves, () =>
+            {
+                canSelect = false;
+                SetExitButtonInteractable(false);
+            },
+            () =>
+            {
+                canSelect = true;
+                SetExitButtonInteractable(true);
+            }));
+        }
     }
 
     private void Instance_OnMoveUnlocked(UnitInstance unit, DanceMoveInstance move, bool isUpgrade)

@@ -112,12 +112,24 @@ public class DanceActivityController : ActivityController
     {
         if (selectedUnit == unit) return;
 
+        Debug.Log($"SelectUnit {unit.name}");
         UnselectUnit();
 
         selectedUnit = unit;
         selectedUnit.GetComponent<UnitDance>().Highlight();
+
         spotlight.gameObject.SetActive(true);
         OnUnitSelected?.Invoke();
+    }
+
+    private void AutoSelectDanceMove()
+    {
+        if (!PlayerIsActive)
+        {
+            var moves = selectedUnit.Instance.Skills[Activity.PrimarySkill].Moves;
+            var randomMove = moves[Random.Range(0, moves.Count)];
+            selectedUnit.GetComponent<UnitDance>().UseDanceMove(randomMove, () => AutoSelectDanceMove());
+        }
     }
 
     private void UnselectUnit()

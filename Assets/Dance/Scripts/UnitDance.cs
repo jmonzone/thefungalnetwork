@@ -149,6 +149,8 @@ public class UnitDance : UnitBehaviour
         yield return new WaitForSeconds(1f);
         danceBeat = baseDanceBeat;
 
+        Debug.Log("OnDanceMoveUsed");
+
         OnDanceMoveUsed?.Invoke(Unit, danceMove);
 
         animator.SetBool("IsDancing", false);
@@ -158,6 +160,7 @@ public class UnitDance : UnitBehaviour
 
         yield return new WaitForSeconds(1f);
 
+        Debug.Log("OnDanceMoveComplete");
         onComplete?.Invoke();
         OnDanceMoveComplete?.Invoke(Unit, danceMove);
     }

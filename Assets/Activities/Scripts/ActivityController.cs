@@ -4,9 +4,11 @@ public abstract class ActivityController : MonoBehaviour
 {
     [SerializeField] private ActivityReference activity;
     [SerializeField] private Skill primarySkill;
+    [SerializeField] private bool playerIsActive;
 
     protected ActivityReference Activity => activity;
     protected Skill PrimarySkill => primarySkill;
+    protected bool PlayerIsActive => playerIsActive;
 
     protected virtual void Awake()
     {
@@ -34,10 +36,12 @@ public abstract class ActivityController : MonoBehaviour
 
     protected virtual void OnPlayerEnter(PlayerController player)
     {
+        playerIsActive = true;
     }
 
     protected virtual void OnPlayerExit(PlayerController player)
     {
+        playerIsActive = false;
     }
 
     protected virtual void OnActivityStart()
