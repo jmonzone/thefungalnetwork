@@ -58,62 +58,60 @@ public class StoryFirstParty : MonoBehaviour
     {
         yield return new WaitForFixedUpdate();
         partyReference.StartParty(tutorialParty);
-        var partyFrog = unitManager.UnitControllers[0];
-        //dialogueReference.StartDialogue(playerReference.Player, new Dialogue(lostDialogue, DialogueType.STORY));
 
         danceActivity.StartActivity(danceZoneAnchor.position, new List<UnitController>());
-        yield break;
+        danceActivity.AddUnit(partyReference.Guests[0]);
 
-        yield return new WaitUntil(() => timesInteractedWithGuests > 5);
-        yield return new WaitWhile(() => dialogueReference.IsActive);
-        yield return new WaitForSeconds(1f);
+        //yield return new WaitUntil(() => timesInteractedWithGuests > 5);
+        //yield return new WaitWhile(() => dialogueReference.IsActive);
+        //yield return new WaitForSeconds(1f);
 
-        dialogueReference.StartDialogue(partyFrog, new Dialogue(letsTakeAPhotoDialogue, DialogueType.STORY));
+        //dialogueReference.StartDialogue(partyFrog, new Dialogue(letsTakeAPhotoDialogue, DialogueType.STORY));
 
-        yield return new WaitUntil(() => navigation.CurrentView == gameplayView);
-        yield return new WaitForSeconds(1f);
+        //yield return new WaitUntil(() => navigation.CurrentView == gameplayView);
+        //yield return new WaitForSeconds(1f);
 
-        foreach(var guest in partyReference.Guests)
-        {
-            guest.SetBehaviour(guest.GetComponent<UnitDJ>());
-        }
+        //foreach(var guest in partyReference.Guests)
+        //{
+        //    guest.SetBehaviour(guest.GetComponent<UnitDJ>());
+        //}
 
-        foreach (var unit in unitManager.AllUnits)
-        {
-            var randomDirection = (Vector3)Random.insideUnitCircle.normalized;
-            randomDirection.z = randomDirection.y;
-            randomDirection.y = 0;
+        //foreach (var unit in unitManager.AllUnits)
+        //{
+        //    var randomDirection = (Vector3)Random.insideUnitCircle.normalized;
+        //    randomDirection.z = randomDirection.y;
+        //    randomDirection.y = 0;
 
-            unit.transform.position = guestPictureAnchor.transform.position + randomDirection * 1f;
-        }
+        //    unit.transform.position = guestPictureAnchor.transform.position + randomDirection * 1f;
+        //}
 
-        playerReference.Player.transform.position = cameraPositionAnchor.position;
+        //playerReference.Player.transform.position = cameraPositionAnchor.position;
 
-        yield return new WaitForSeconds(1f);
+        //yield return new WaitForSeconds(1f);
 
-        photoReference.SetLookTarget(guestPictureAnchor.transform);
-        photoReference.StartPhotoView();
+        //photoReference.SetLookTarget(guestPictureAnchor.transform);
+        //photoReference.StartPhotoView();
 
-        foreach (var unit in unitManager.AllUnits)
-        {
-            unit.SetLookTarget(playerReference.Player.transform);
-        }
+        //foreach (var unit in unitManager.AllUnits)
+        //{
+        //    unit.SetLookTarget(playerReference.Player.transform);
+        //}
 
 
-        yield return new WaitWhile(() => photoReference.IsActive);
-        yield return new WaitForSeconds(1f);
+        //yield return new WaitWhile(() => photoReference.IsActive);
+        //yield return new WaitForSeconds(1f);
 
-        dialogueReference.StartDialogue(partyFrog, new Dialogue(afterPhotoTakenDialogue, DialogueType.STORY));
+        //dialogueReference.StartDialogue(partyFrog, new Dialogue(afterPhotoTakenDialogue, DialogueType.STORY));
 
-        yield return new WaitWhile(() => dialogueReference.IsActive);
-        yield return new WaitForSeconds(1f);
+        //yield return new WaitWhile(() => dialogueReference.IsActive);
+        //yield return new WaitForSeconds(1f);
 
-        partyFrog.ApplyDefaultBehaviour();
+        //partyFrog.ApplyDefaultBehaviour();
 
-        yield return new WaitForSeconds(1f);
+        //yield return new WaitForSeconds(1f);
 
-        partyReference.StopParty();
-        storyReference.CompleteStory(firstParty);
+        //partyReference.StopParty();
+        //storyReference.CompleteStory(firstParty);
     }
 
     private void DialogueReference_OnDialogueStart()

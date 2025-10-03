@@ -2,50 +2,37 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class UnitDestination : UnitBehaviour
+public class UnitDestination : MonoBehaviour
 {
     [Header("Runtime")]
     [SerializeField] private Vector3 destination;
-    [SerializeField] private bool isAtDestination;
+    [SerializeField] private bool isAtDestination = true;
 
     public bool IsAtDestination => isAtDestination;
 
     private NavMeshAgent navMeshAgent;
 
-    protected override void Awake()
+    protected void Awake()
     {
-        base.Awake();
+        //base.Awake();
         navMeshAgent = GetComponent<NavMeshAgent>();
     }
 
     public void SetDestination(Vector3 destination)
     {
         this.destination = destination;
-    }
-
-    protected override void OnBehaviourStart()
-    {
         isAtDestination = false;
         navMeshAgent.isStopped = false;
         navMeshAgent.SetDestination(destination);
-        StartCoroutine(DestinationRoutine());
     }
 
-    private IEnumerator DestinationRoutine()
+    private void Update()
     {
-        while(Vector3.Distance(destination, transform.position) > 0.5f)
+        if (!isAtDestination && Vector3.Distance(destination, transform.position) < 0.5f)
         {
-            yield return null;
+            isAtDestination = true;
+            navMeshAgent.isStopped = true;
         }
 
-        isAtDestination = true;
-        navMeshAgent.isStopped = true;
-    }
-
-    public override void StopBehaviour()
-    {
-        base.StopBehaviour();
-        navMeshAgent.isStopped = false;
-        StopAllCoroutines();
     }
 }

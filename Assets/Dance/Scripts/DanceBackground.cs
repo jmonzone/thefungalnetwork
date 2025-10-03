@@ -45,19 +45,7 @@ public class DanceBackground : MonoBehaviour
         dominantCamera = camA;
     }
 
-    private void OnEnable()
-    {
-        dancefloorReference.OnPlayerJoined += MusicVideoReference_OnMusicVideoStart;
-        dancefloorReference.OnActivityHasEnded += MusicVideoReference_OnMusicVideoEnd;
-    }
-
-    private void OnDisable()
-    {
-        dancefloorReference.OnPlayerJoined -= MusicVideoReference_OnMusicVideoStart;
-        dancefloorReference.OnActivityHasEnded -= MusicVideoReference_OnMusicVideoEnd;
-    }
-
-    private void MusicVideoReference_OnMusicVideoStart()
+    public void StartDanceBackground()
     {
         rawImageA.color = baseColorA;
         rawImageB.color = new Color(baseColorB.r, baseColorB.g, baseColorB.b, 0f);
@@ -68,7 +56,7 @@ public class DanceBackground : MonoBehaviour
         StartCoroutine(fadeCanvasGroup.FadeIn(1));
     }
 
-    private void MusicVideoReference_OnMusicVideoEnd()
+    public void EndDanceBackground()
     {
         dJTableReference.OnBeat -= OnBeatStep;
 

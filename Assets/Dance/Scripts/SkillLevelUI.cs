@@ -8,14 +8,11 @@ public class SkillLevelUI : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI levelText;
     [SerializeField] private TextMeshProUGUI nextLevelText;
-    [SerializeField] private ValueBarController valueBarController;
-    [SerializeField] private ValueBarParticleController valueBarParticleController;
+    [SerializeField] private ValueBarParticleManager valueBarParticleManager;
     [SerializeField] private Image fillImage;
     [SerializeField] private Image unitImage;
     [SerializeField] private UnitSkill skill;
     [SerializeField] private bool useAudio = true;
-
-    //public bool HasLeveledUp => skill.Level > currentLevel;
 
     private AudioSource audioSource;
 
@@ -25,43 +22,52 @@ public class SkillLevelUI : MonoBehaviour
     private void Awake()
     {
         audioSource = GetComponent<AudioSource>();
-        valueBarParticleController.SetTargetColor(fillImage.color);
-        valueBarParticleController.OnParticleReached += ValueBarParticleController_OnParticleReached;
-        valueBarParticleController.OnAllParticleReached += ValueBarParticleController_OnAllParticleReached;
+        valueBarParticleManager.SetTargetColor(fillImage.color);
+        valueBarParticleManager.OnParticleReached += ValueBarParticleController_OnParticleReached;
+        valueBarParticleManager.OnAllParticleReached += ValueBarParticleController_OnAllParticleReached;
     }
 
-    public void SetUnit(UnitInstance instance, UnitSkill skill)
+    public void SetUnit(UnitController unit, UnitSkill skill)
     {
         this.skill = skill;
 
-        unitImage.sprite = instance.Data.Sprite;
-
-        //currentLevel = skill.Level;
-
-        if (valueBarController) valueBarController.Initialize(skill.XP, skill.MinXP, skill.MaxXP);
-        if (fillImage) fillImage.fillAmount = Mathf.Lerp(0, 1, (skill.XP - skill.MinXP) / (skill.MaxXP - skill.MinXP));
+        unitImage.sprite = unit.Instance.Data.Sprite;
+        SetDisplayedXP(skill.XP);
+        SetColor(unit.Color);
         UpdateView();
     }
 
     public void SetColor(Color color)
     {
-        valueBarParticleController.SetStartColor(color);
+        valueBarParticleManager.SetStartColor(color);
     }
 
-    public void Increase(float value, Vector3 screenPos, UnityAction onComplete)
+    private float displayedXP;
+
+    public void Increase(float value, Vector3 screenPos)
     {
-        valueBarParticleController.BurstFromWorld((int)value, screenPos, onComplete);
+        valueBarParticleManager.BurstFromWorld((int)value, screenPos);
         if (useAudio) audioSource.Play();
     }
 
     private void ValueBarParticleController_OnParticleReached()
     {
+        SetDisplayedXP(displayedXP + 1);
+
         if (levelUpRoutine == null)
         {
-            if (fillImage) fillImage.fillAmount = Mathf.Lerp(0, 1, (skill.XP - skill.MinXP) / (skill.MaxXP - skill.MinXP)); ;
-            if (valueBarController) valueBarController.Increment();
             UpdateView();
         }
+    }
+
+    private void SetDisplayedXP(float xp)
+    {
+        displayedXP = xp;
+        var level = UnitSkill.GetLevelFromXP(displayedXP);
+        var minXP = UnitSkill.GetXPFromLevel(level);
+        var maxXP = UnitSkill.GetXPFromLevel(level + 1);
+
+        if (fillImage) fillImage.fillAmount = Mathf.Lerp(0, 1, (displayedXP - minXP) / (maxXP - minXP));
     }
 
     private void UpdateView()

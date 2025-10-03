@@ -57,7 +57,7 @@ public class UnitController : MonoBehaviour, IInteractable
 
     protected virtual void Start()
     {
-        ApplyDefaultBehaviour();
+        if(!currentBehaviour) ApplyDefaultBehaviour();
     }
 
     protected virtual void OnEnable()
@@ -122,7 +122,7 @@ public class UnitController : MonoBehaviour, IInteractable
     public void SetDestination(Vector3 destination)
     {
         unitDestination.SetDestination(destination);
-        ApplyBehaviour(unitDestination);
+        //ApplyBehaviour(unitDestination);
     }
 
     public void SetLookTarget(Transform target)

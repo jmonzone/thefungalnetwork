@@ -1,37 +1,39 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class DanceMoveUIManager : MonoBehaviour
 {
-    private CanvasGroup canvasGroup;
     private FadeCanvasGroup fadeCanvasGroup;
     private List<DanceMoveUI> moveViews = new List<DanceMoveUI>();
 
-    private void Awake()
+    public void Initialize()
     {
-        canvasGroup = GetComponent<CanvasGroup>();
         fadeCanvasGroup = GetComponent<FadeCanvasGroup>();
 
         moveViews = new List<DanceMoveUI>();
         GetComponentsInChildren(true, moveViews);
-
-        foreach (var view in moveViews)
-        {
-            view.OnDanceMoveStart += () => canvasGroup.interactable = false;
-            view.OnDanceMoveComplete += () => canvasGroup.interactable = true;
-        }
     }
 
-    public IEnumerator Show(UnitDance dancer, List<DanceMoveInstance> moves)
+    public IEnumerator Show(UnitController unit, List<DanceMoveInstance> moves, UnityAction onMoveUsed, UnityAction onMoveComplete)
     {
-        gameObject.SetActive(true);
+        yield return fadeCanvasGroup.FadeIn();
 
         var i = 0;
         foreach (var move in moves)
         {
-            moveViews[i].SetMove(dancer, move);
+            moveViews[i].SetMove(move, () =>
+            {
+                fadeCanvasGroup.SetInteractable(false);
+                onMoveUsed?.Invoke();
+
+                unit.GetComponent<UnitDance>().UseDanceMove(move, () =>
+                {
+                    fadeCanvasGroup.SetInteractable(true);
+                    onMoveComplete?.Invoke();
+                });
+            });
             moveViews[i].gameObject.SetActive(true);
             i++;
         }
@@ -41,8 +43,5 @@ public class DanceMoveUIManager : MonoBehaviour
             moveViews[i].gameObject.SetActive(false);
             i++;
         }
-
-        yield return fadeCanvasGroup.FadeIn();
-
     }
 }

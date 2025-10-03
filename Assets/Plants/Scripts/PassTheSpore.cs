@@ -11,7 +11,13 @@ public class PassTheSpore : ActivityController
     [SerializeField] private Transform sporeBall;
     [SerializeField] private CinemachineVirtualCamera virtualCamera;
 
-    protected override IEnumerator OnActivityStart()
+    protected override void OnActivityStart()
+    {
+        base.OnActivityStart();
+        StartCoroutine(ActivityRoutine());
+    }
+
+    private IEnumerator ActivityRoutine()
     {
         int currentUnitIndex = 0;
         var activePlayers = new List<UnitController>(Activity.Units);
@@ -24,7 +30,7 @@ public class PassTheSpore : ActivityController
 
         while (true)
         {
-            IncreaseXP(currentPlayer, 3);
+            //IncreaseXP(currentPlayer, 3);
 
             currentPlayer = GetNextActivePlayer(ref currentUnitIndex, ref activePlayers);
             Vector3 targetPos = currentPlayer.transform.position + Vector3.up;

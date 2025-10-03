@@ -9,31 +9,15 @@ public class DanceMoveUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI moveNameText;
     [SerializeField] private Button button;
 
-    private UnitDance dancer;
-    private DanceMoveInstance danceMove;
-
-    public event UnityAction OnDanceMoveStart;
-    public event UnityAction OnDanceMoveComplete;
-
-    private void Awake()
+    public void SetMove(DanceMoveInstance danceMove, UnityAction onClick)
     {
-        button.onClick.AddListener(UseMove);
-    }
-
-    public void SetMove(UnitDance dancer, DanceMoveInstance danceMove)
-    {
-        Debug.Log("DanceMoveUI SetMove");
-
-        this.dancer = dancer;
-        this.danceMove = danceMove;
         moveNameText.text = danceMove.Label;
         moveImage.sprite = danceMove.Data.Sprite;
-    }
 
-    private void UseMove()
-    {
-        Debug.Log("DanceMoveUI UseMove");
-        dancer.UseDanceMove(danceMove, OnDanceMoveComplete);
-        OnDanceMoveStart?.Invoke();
+        button.onClick.RemoveAllListeners();
+        button.onClick.AddListener(() =>
+        {
+            onClick?.Invoke();
+        });
     }
 }

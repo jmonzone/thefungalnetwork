@@ -96,6 +96,7 @@ public class UnitSkill
         return level;
     }
 
+
     public static int GetXPFromLevel(int level)
     {
         double points = 0;

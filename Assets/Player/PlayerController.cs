@@ -106,7 +106,7 @@ public class PlayerController : UnitController
         {
             SetLookPosition(playerReference.TargetPosition);
             UnitDestination.SetDestination(playerReference.TargetPosition);
-            ApplyBehaviour(UnitDestination);
+            //ApplyBehaviour(UnitDestination);
         }
     }
 }

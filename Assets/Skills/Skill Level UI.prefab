@@ -54,11 +54,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelText: {fileID: 5551653857031142368}
   nextLevelText: {fileID: 0}
-  valueBarController: {fileID: 0}
-  valueBarParticleController: {fileID: 6911909307996401976}
+  valueBarParticleManager: {fileID: 6911909307996401976}
   fillImage: {fileID: 4136429412190254778}
   unitImage: {fileID: 236057480455705078}
-  skill: 1
+  skill:
+    unit: {fileID: 0}
+    skill: {fileID: 0}
+    level: 0
+    xp: 0
+    moves: []
   useAudio: 0
 --- !u!114 &6911909307996401976
 MonoBehaviour:
@@ -69,39 +73,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 39928495812496192}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b20b85cdc33e8443d9fa549318b53d95, type: 3}
+  m_Script: {fileID: 11500000, guid: 2cd48f9ee15cd4f72b4304310f3589c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetUI: {fileID: 6429213967849091002}
-  particlePrefab: {fileID: 1348427375487834283, guid: 9440ae4f82ca2485faaa9b37455b9072,
+  canvas: {fileID: 0}
+  targetUI: {fileID: 8181227068897540332}
+  particlePrefab: {fileID: 1423092696513772740, guid: 9440ae4f82ca2485faaa9b37455b9072,
     type: 3}
+  startColor: {r: 0, g: 0, b: 0, a: 0}
   targetColor: {r: 0, g: 0, b: 0, a: 0}
-  mintravelTime: 0.75
-  maxtravelTime: 1.25
-  arcCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!82 &2160861993441905277
 AudioSource:
   m_ObjectHideFlags: 0

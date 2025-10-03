@@ -18,12 +18,12 @@ public class PartyManager : MonoBehaviour
     [SerializeField] private FadeCanvasGroup vibeMeterCanvas;
 
     private ValueBarController valueBarController;
-    private ValueBarParticleController valueBarParticleController;
+    private ValueBarParticleManager valueBarParticleController;
 
     private void Awake()
     {
         valueBarController = GetComponent<ValueBarController>();
-        valueBarParticleController = GetComponent<ValueBarParticleController>();
+        valueBarParticleController = GetComponent<ValueBarParticleManager>();
 
         //valueBarParticleController.OnParticleReached += ValueBarParticleController_OnParticlesReached;
     }

@@ -72,4 +72,9 @@ public class FadeCanvasGroup : MonoBehaviour
 
         onComplete?.Invoke();
     }
+
+    public void SetInteractable(bool interactable)
+    {
+        canvasGroup.interactable = interactable;
+    }
 }

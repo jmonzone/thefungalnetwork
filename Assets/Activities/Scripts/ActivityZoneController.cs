@@ -8,6 +8,8 @@ public class ActivityZoneController : MonoBehaviour
     [SerializeField] private DJTableReference djReference;
     [SerializeField] private GameObject zoneController;
 
+    public ActivityReference Activity => activity;
+
     private Material material; 
 
     [Header("Settings")]

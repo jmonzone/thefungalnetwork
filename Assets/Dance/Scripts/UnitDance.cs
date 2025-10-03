@@ -32,7 +32,6 @@ public class UnitDance : UnitBehaviour
     private Animator animator;
     private Material[] materials;
 
-    private Coroutine animationSpeedRoutine;
     private Coroutine cheerRoutine;
     private Coroutine moveRoutine;
     private Coroutine highlightRoutine;
@@ -42,6 +41,7 @@ public class UnitDance : UnitBehaviour
     private float BeatDuration => djReference.BeatDuration * danceBeat;
 
     public event UnityAction<UnitController, DanceMoveInstance> OnDanceMoveUsed;
+    public event UnityAction<UnitController, DanceMoveInstance> OnDanceMoveComplete;
 
     protected override void OnInitialized()
     {
@@ -69,55 +69,32 @@ public class UnitDance : UnitBehaviour
         originalColor = Unit.Color;
     }
 
+    public void SetOriginalPosition(Vector3 position)
+    {
+        originalPosition = position;
+    }
+
     protected override void OnBehaviourStart()
     {
-        originalPosition = transform.position;
-
+        Debug.Log($"UnitDance.OnBehaviourStart");
         currentStage = 0;
-
-        animator.SetBool("IsDancing", true);
-
         danceBeat = baseDanceBeat;
-        animationSpeedRoutine = StartCoroutine(UpdateAnimationSpeedLoop());
+
+        StartCoroutine(DanceRoutine());
     }
 
-    private IEnumerator UpdateAnimationSpeedLoop()
+    private IEnumerator DanceRoutine()
     {
-        while (true)
-        {
-            // Only update if not in transition
-            if (!animator.IsInTransition(0))
-            {
-                var clipInfos = animator.GetCurrentAnimatorClipInfo(0);
-                if (clipInfos.Length > 0)
-                {
-                    var clip = clipInfos[0].clip;
-                    if (clip != null)
-                    {
-                        float safeBeat = Mathf.Max(0.0001f, BeatDuration);
-                        animator.speed = clip.length / safeBeat;
-
-                        Debug.Log(
-                            $"[UpdateAnimationSpeedLoop] BeatDuration={BeatDuration:F3}, " +
-                            $"DanceBeat={danceBeat}, " +
-                            $"ClipLength={clip.length:F3}, " +
-                            $"AnimatorSpeed={animator.speed:F3}"
-                        );
-                    }
-                }
-            }
-
-            // no need to check *every* frame, a small wait is usually fine
-            yield return new WaitForSeconds(0.05f);
-        }
+        yield return new WaitUntil(() => Unit.IsAtDestination);
+        animator.SetBool("IsDancing", true);
     }
-
 
     public override void StopBehaviour()
     {
+        Debug.Log($"UnitDance.StopBehaviour");
         base.StopBehaviour();
         animator.SetBool("IsDancing", false);
-        StopCoroutine(animationSpeedRoutine);
+        animator.speed = 1;
     }
 
     public void IncrementDancePower()
@@ -138,10 +115,13 @@ public class UnitDance : UnitBehaviour
 
     private IEnumerator DanceMoveRoutine(DanceMoveInstance danceMove, UnityAction onComplete)
     {
-        Unit.SetDestination(danceReference.Origin);
-
         animator.ResetTrigger("Complete");
+
+        animator.SetBool("IsDancing", false);
+        Unit.SetDestination(danceReference.Origin);
         yield return new WaitUntil(() => Unit.IsAtDestination);
+        animator.SetBool("IsDancing", true);
+
         yield return new WaitForSeconds(1f);
 
         var animationName = danceMove.Data.AnimationName;
@@ -169,13 +149,17 @@ public class UnitDance : UnitBehaviour
         yield return new WaitForSeconds(1f);
         danceBeat = baseDanceBeat;
 
-        Unit.SetDestination(originalPosition);
         OnDanceMoveUsed?.Invoke(Unit, danceMove);
 
+        animator.SetBool("IsDancing", false);
+        Unit.SetDestination(originalPosition);
         yield return new WaitUntil(() => Unit.IsAtDestination);
-
         animator.SetBool("IsDancing", true);
+
+        yield return new WaitForSeconds(1f);
+
         onComplete?.Invoke();
+        OnDanceMoveComplete?.Invoke(Unit, danceMove);
     }
 
     private bool isHighlighted = false;

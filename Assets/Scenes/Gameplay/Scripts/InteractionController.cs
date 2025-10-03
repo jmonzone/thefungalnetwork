@@ -102,6 +102,13 @@ public class InteractionController : MonoBehaviour
                     selected = interactable.Transform;
                     return;
                 }
+
+                var zone = hit.transform.GetComponentInParent<ActivityZoneController>();
+                if (zone)
+                {
+                    zone.Activity.EnterActivity(playerReference.Player);
+                    return;
+                }
             }
 
             if (Physics.Raycast(ray, out hit, raycastMaxDistance, groundMask))
