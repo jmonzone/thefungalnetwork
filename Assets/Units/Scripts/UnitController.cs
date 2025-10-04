@@ -16,9 +16,12 @@ public class UnitController : MonoBehaviour, IInteractable
     [SerializeField] private Transform target;
 
     public UnitInstance Instance => instance;
+    public UnitBehaviour CurrentBehaviour => currentBehaviour;
+
+    public Vector3 LookPosition => targetLookPosition;
+
     public bool IsDefaultBehaviour => currentBehaviour == defaultBehaviour;
     public bool IsAtDestination => unitDestination.IsAtDestination;
-    public Vector3 LookPosition => targetLookPosition;
 
     public virtual Color Color { get; set; }
 
@@ -57,7 +60,7 @@ public class UnitController : MonoBehaviour, IInteractable
 
     protected virtual void Start()
     {
-        if(!currentBehaviour) ApplyDefaultBehaviour();
+        if (!currentBehaviour) ApplyDefaultBehaviour();
     }
 
     protected virtual void OnEnable()

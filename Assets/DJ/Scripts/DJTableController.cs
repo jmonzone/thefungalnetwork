@@ -33,7 +33,7 @@ public class DJTableController : MonoBehaviour, IInteractable
 
     private void BuildController_OnBuildComplete()
     {
-        djReference.Initialize(this);
+        djReference.RegisterController(this);
         StopAllCoroutines();
         StartCoroutine(InvokeBeat());
     }

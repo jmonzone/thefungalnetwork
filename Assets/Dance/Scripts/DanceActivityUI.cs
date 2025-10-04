@@ -1,10 +1,13 @@
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class DanceActivityUI : ActivityUI
 {
     [Header("References")]
+    [SerializeField] private UnitManager unitManager;
+    [SerializeField] private DJTableReference djTableReference;
     [SerializeField] private DanceActivityController danceActivity;
     [SerializeField] private DanceBackground background;
     [SerializeField] private DanceMoveUIManager danceMoveUIManager;
@@ -20,6 +23,31 @@ public class DanceActivityUI : ActivityUI
     {
         base.Awake();
         danceMoveUIManager.Initialize();
+    }
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        djTableReference.OnDominantTrackChanged += DjTableReference_OnDominantTrackChanged;
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        djTableReference.OnDominantTrackChanged -= DjTableReference_OnDominantTrackChanged;
+    }
+
+    private void DjTableReference_OnDominantTrackChanged(DJTrack track)
+    {
+        var filteredUnits = unitManager.UnitControllers.Where(unit =>
+        {
+            return unit.CurrentBehaviour is UnitWander;
+        });
+
+        if (filteredUnits.Count() > 0)
+        {
+            Activity.AddUnit(filteredUnits.First());
+        }
     }
 
     protected override void OnPlayerEnter(PlayerController player)

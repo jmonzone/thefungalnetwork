@@ -6,6 +6,7 @@ public class DanceActivityController : ActivityController
 {
     [SerializeField] private DJTableReference djReference;
     [SerializeField] private Light spotlight;
+    [SerializeField] private UnitManager unitManager;
 
     private int selectedIndex;
     private UnitController selectedUnit;

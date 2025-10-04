@@ -1,12 +1,10 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class UnitManager : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private PartyReference partyReference;
     [SerializeField] private UnitListReference unitList;
     [SerializeField] private UnitController unitPrefab;
     [SerializeField] private Transform unitSpawnAnchor;
@@ -16,7 +14,6 @@ public class UnitManager : MonoBehaviour
     [SerializeField] private List<UnitController> unitControllers;
 
     public List<UnitController> UnitControllers => unitControllers;
-    public List<UnitController> AllUnits => unitControllers.Concat(partyReference.Guests).ToList();
 
     public event UnityAction<UnitController> OnUnitSummoned;
     public event UnityAction OnAllUnitsSummoned;
@@ -38,7 +35,7 @@ public class UnitManager : MonoBehaviour
         OnAllUnitsSummoned?.Invoke();
     }
 
-    private void SummonUnit(UnitInstance unit)
+    public UnitController SummonUnit(UnitInstance unit)
     {
         var spawnPosition = unitSpawnAnchor.transform.position;
         var randomDirection = Random.insideUnitSphere;
@@ -50,5 +47,6 @@ public class UnitManager : MonoBehaviour
         unitControllers.Add(unitController);
 
         OnUnitSummoned?.Invoke(unitController);
+        return unitController;
     }
 }

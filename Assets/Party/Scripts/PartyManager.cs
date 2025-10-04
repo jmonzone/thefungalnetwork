@@ -93,24 +93,8 @@ public class PartyManager : MonoBehaviour
 
         foreach (var guest in allGuests)
         {
-            // Try to find a valid random position near the spawn anchor
-            Vector3 randomPoint = Random.insideUnitSphere * 2f; // radius = 5 units
-            randomPoint.y = spawnAnchor.transform.position.y; // keep roughly at same height
-
-            if (NavMesh.SamplePosition(randomPoint, out NavMeshHit hit, 10f, NavMesh.AllAreas))
-            {
-                // Use closest valid point on NavMesh
-                randomPoint = hit.position;
-            }
-            else
-            {
-                // Fallback: spawn at anchor
-                randomPoint = spawnAnchor.transform.position;
-            }
-
-            var controller = Instantiate(unitPrefab, randomPoint, Quaternion.identity);
-            controller.Initialize(guest);
-            partyReference.AddGuest(controller);
+            var unit = unitManager.SummonUnit(guest);
+            partyReference.AddGuest(unit);
         }
 
         StartCoroutine(vibeMeterCanvas.FadeIn());

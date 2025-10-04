@@ -18,6 +18,7 @@ public class DJTableReference : ScriptableObject
     [SerializeField] private DJTableController controller;
     [SerializeField] private DJTrack leftTrack;
     [SerializeField] private DJTrack rightTrack;
+    [SerializeField] private DJTrack dominantTrack;
     [SerializeField] private float leftValue = 0;
     [SerializeField] private float rightValue = 0;
 
@@ -28,7 +29,7 @@ public class DJTableReference : ScriptableObject
 
     public DJTrack LeftTrack => leftTrack;
     public DJTrack RightTrack => rightTrack;
-    public DJTrack DominantTrack => leftValue > 0.5 ? LeftTrack : RightTrack;
+    public DJTrack DominantTrack => dominantTrack;
 
     public float LeftValue => leftValue;
     public float RightValue => rightValue;
@@ -42,15 +43,21 @@ public class DJTableReference : ScriptableObject
     public event UnityAction OnTrackValueChanged;
     public event UnityAction<DJTrack> OnLeftTrackChanged;
     public event UnityAction<DJTrack> OnRightTrackChanged;
+    public event UnityAction<DJTrack> OnDominantTrackChanged;
 
-    public void Initialize(DJTableController controller)
+    public void Initialize()
     {
-        Debug.Log("initialized");
+        dominantTrack = null;
+    }
+
+    public void RegisterController(DJTableController controller)
+    {
         this.controller = controller;
     }
 
     public void StartTrack(DJTrack track)
     {
+        dominantTrack = track;
         backgroundMusic.HideMusic();
         SetTrackValue(0);
         SetBPM(track.Bpm);
@@ -74,6 +81,13 @@ public class DJTableReference : ScriptableObject
         leftValue = Mathf.Clamp(1 - value, 0, 1);
         rightValue = Mathf.Clamp(value, 0, 1);
         OnTrackValueChanged?.Invoke();
+
+        var track = leftValue > 0.5 ? LeftTrack : RightTrack;
+        if (track != dominantTrack)
+        {
+            dominantTrack = track;
+            OnDominantTrackChanged?.Invoke(dominantTrack);
+        }
     }
 
     public void SetBPM(float bpm)

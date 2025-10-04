@@ -4720,6 +4720,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   activity: {fileID: 11400000, guid: 20234f3cd19d34d52ba858ad98b27405, type: 2}
   primarySkill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+  playerIsActive: 0
   djReference: {fileID: 11400000, guid: 3bda1116fcf8f49e696cd21c6b5092da, type: 2}
   sporeSkill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
   sporeBall: {fileID: 1703077660}
@@ -12755,7 +12756,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 368671804}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b556fbf383f5547728e41e085e96a452, type: 3}
   m_Name: 
@@ -13789,8 +13790,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   activity: {fileID: 11400000, guid: 0651293cfe83f4f34bdd7eb7e76e7477, type: 2}
   primarySkill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
+  playerIsActive: 0
   djReference: {fileID: 11400000, guid: 3bda1116fcf8f49e696cd21c6b5092da, type: 2}
   spotlight: {fileID: 1421094098}
+  unitManager: {fileID: 2087691131}
 --- !u!1 &408944356
 GameObject:
   m_ObjectHideFlags: 0
@@ -22000,6 +22003,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4377193916735545544, guid: f23314b20d06648f5ab783843339b5f6,
+        type: 3}
+      propertyPath: djReference
+      value: 
+      objectReference: {fileID: 11400000, guid: 3bda1116fcf8f49e696cd21c6b5092da,
+        type: 2}
     - target: {fileID: 8756789636704506592, guid: f23314b20d06648f5ab783843339b5f6,
         type: 3}
       propertyPath: m_Name
@@ -30943,7 +30952,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1145510282}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.06869, y: 0.00000001822998, z: -0.000000001255182, w: 0.99763805}
+  m_LocalRotation: {x: 0.06868998, y: -0.0000000166458, z: 0.0000000011461067, w: 0.99763805}
   m_LocalPosition: {x: 0, y: 0.75, z: 0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -31664,7 +31673,6 @@ GameObject:
   - component: {fileID: 1170789628}
   - component: {fileID: 1170789629}
   - component: {fileID: 1170789630}
-  - component: {fileID: 1170789631}
   m_Layer: 0
   m_Name: Party Manager
   m_TagString: Untagged
@@ -31767,18 +31775,6 @@ MonoBehaviour:
   colorPulseStrength: 0.1
   targetValue: 0
   animatedColor: {r: 0, g: 0, b: 0, a: 0}
---- !u!114 &1170789631
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1170789626}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b20b85cdc33e8443d9fa549318b53d95, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1175904108
 GameObject:
   m_ObjectHideFlags: 0
@@ -34930,15 +34926,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   activity: {fileID: 11400000, guid: 0651293cfe83f4f34bdd7eb7e76e7477, type: 2}
+  gameplayUI: {fileID: 992836761}
   levelUI: {fileID: 814677947}
+  levelUpUI: {fileID: 1685977537}
   playerReference: {fileID: 11400000, guid: 746148e8242954418b04a3ab83ac9260, type: 2}
   exitButton: {fileID: 1530633239}
+  unitManager: {fileID: 2087691131}
+  djTableReference: {fileID: 11400000, guid: 3bda1116fcf8f49e696cd21c6b5092da, type: 2}
   danceActivity: {fileID: 408548840}
   background: {fileID: 1024366496}
   danceMoveUIManager: {fileID: 335020474}
   touchIndicator: {fileID: 1050412013}
-  gameplayUI: {fileID: 992836761}
-  levelUpUI: {fileID: 1685977537}
   touchDuration: 1
   touchScale: 2
 --- !u!1 &1307552609
@@ -52680,7 +52678,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c47aaccae7a1347f2bdda3ca9bd978a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  partyReference: {fileID: 11400000, guid: d2092e9896dc047a3939198bb6a0204c, type: 2}
   unitList: {fileID: 11400000, guid: 558326713f6b14f45ab4db31d34472f2, type: 2}
   unitPrefab: {fileID: 4106141727428995005, guid: e9f8a044aacf9498eb482430f1da38f4,
     type: 3}
@@ -53843,7 +53840,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4024781346382530002, guid: c22151d9a7e2b4fb2acea4f47566e1cb, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

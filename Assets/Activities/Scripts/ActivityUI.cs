@@ -26,7 +26,7 @@ public abstract class ActivityUI : MonoBehaviour
         levelUpUI.gameObject.SetActive(false);
     }
 
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         activity.OnUnitEnter += OnUnitEnter;
         activity.OnUnitExit += OnUnitExit;
@@ -34,7 +34,7 @@ public abstract class ActivityUI : MonoBehaviour
         activity.OnPlayerExit += OnPlayerExit;
     }
 
-    private void OnDisable()
+    protected virtual void OnDisable()
     {
         activity.OnUnitEnter -= OnUnitEnter;
         activity.OnUnitExit -= OnUnitExit;

@@ -58,7 +58,6 @@ public class UnitWander : UnitBehaviour
 
     private void StopWander()
     {
-        navMeshAgent.isStopped = true;
         StopAllCoroutines();
     }
 

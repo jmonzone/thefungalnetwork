@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private StoryReference partyLogReference;
     [SerializeField] private SporeReference sporeReference;
     [SerializeField] private GlyphCollection glyphCollection;
+    [SerializeField] private DJTableReference djReference;
 
     [SerializeField] private Volume volume;
 
@@ -73,6 +74,7 @@ public class GameManager : MonoBehaviour
         partyLogReference.Initialize();
         sporeReference.Initialize();
         glyphCollection.Initialize();
+        djReference.Initialize();
     }
 
     private IEnumerator Start()
