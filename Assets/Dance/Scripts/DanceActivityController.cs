@@ -22,33 +22,19 @@ public class DanceActivityController : ActivityController
 
     private IEnumerator ActivityRoutine()
     {
-        var timer = 0f;
+        //var timer = 0f;
         while (true)
         {
-            timer += Time.deltaTime;
+            //timer += Time.deltaTime;
 
-            if (timer > djReference.BeatDuration * 2f)
-            {
-                foreach (var unit in Activity.Units)
-                {
-                    Activity.IncreaseXP(unit, 1f);
-                }
-
-                timer = 0;
-            }
-
-            //if (Input.GetMouseButtonDown(0))
+            //if (timer > djReference.BeatDuration * 2f)
             //{
-            //    ShowTouchIndicator(Input.mousePosition);
-
-            //    if (TryRaycastUnit(out UnitController unit) && Activity.Units.Contains(unit))
+            //    foreach (var unit in Activity.Units)
             //    {
-            //        var dancer = unit.GetComponent<UnitDance>();
-            //        if (selectedUnit != dancer)
-            //        {
-            //            SelectUnit(dancer);
-            //        }
+            //        Activity.IncreaseXP(unit, 1f);
             //    }
+
+            //    timer = 0;
             //}
 
             if (selectedUnit)

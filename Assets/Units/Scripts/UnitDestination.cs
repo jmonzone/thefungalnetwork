@@ -14,15 +14,14 @@ public class UnitDestination : MonoBehaviour
 
     protected void Awake()
     {
-        //base.Awake();
         navMeshAgent = GetComponent<NavMeshAgent>();
     }
 
     public void SetDestination(Vector3 destination)
     {
         this.destination = destination;
-        isAtDestination = false;
         navMeshAgent.isStopped = false;
+        isAtDestination = false;
         navMeshAgent.SetDestination(destination);
     }
 

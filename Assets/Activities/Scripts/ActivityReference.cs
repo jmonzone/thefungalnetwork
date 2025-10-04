@@ -86,11 +86,12 @@ public class ActivityReference : ScriptableObject
         Debug.Log("UpdateUnits");
 
         int count = units.Count;
+        var offset = Random.Range(0, Mathf.PI * 2);
 
         for (int i = 0; i < count; i++)
         {
             // Evenly spaced angle around circle, but clockwise
-            float angle = -(i / (float)count) * Mathf.PI * 2f;
+            float angle = -(i / (float)count) * Mathf.PI * 2f + offset;
 
             // Direction from center (clockwise order)
             Vector3 direction = new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle));

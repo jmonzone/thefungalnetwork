@@ -14,7 +14,7 @@ public class DialogueFriendshipUI : DialoguePageUI
     {
         base.Awake();
         skillLevelUI.OnLevelUp += SkillLevelUI_OnLevelUp;
-        skillLevelUI.OnAllParticlesReached += SkillLevelUI_OnAllParticlesReached;
+        //skillLevelUI.OnAllParticlesReached += SkillLevelUI_OnAllParticlesReached;
     }
 
     public override IEnumerator Show()
@@ -25,10 +25,10 @@ public class DialogueFriendshipUI : DialoguePageUI
 
         Vector3 screenPos = Camera.main.WorldToScreenPoint(dialogue.Unit.transform.position);
         //skillLevelUI.SetUnit(unit.Instance, Skill.FRIENDSHIP);
-        skillLevelUI.Increase(dialogue.Relationship, screenPos);
+        skillLevelUI.Increase(dialogue.Relationship, screenPos, SkillLevelUI_OnAllParticlesReached);
     }
 
-    private void SkillLevelUI_OnAllParticlesReached()
+    private void SkillLevelUI_OnAllParticlesReached(bool hasLeveledUp)
     {
         StartCoroutine(CloseRoutine());
     }

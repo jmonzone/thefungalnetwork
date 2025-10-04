@@ -3,6 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+public interface IMilestone
+{
+    public string Label { get; }
+    public Sprite Sprite { get; }
+    public string Description { get; }
+}
+
 [Serializable]
 public class UnitSkill
 {
@@ -16,13 +23,14 @@ public class UnitSkill
     public int Level => level;
     public float XP => xp;
     public List<DanceMoveInstance> Moves => moves;
+    public List<IMilestone> Milestones { get; private set; }
 
     public float MinXP => GetXPFromLevel(Level);
     public float MaxXP => GetXPFromLevel(Level + 1);
     public float XPUntilNextLevel => MaxXP - XP;
 
     public event UnityAction<float> OnXpChanged;
-    public event UnityAction OnLevelUp;
+    public event UnityAction<UnitInstance> OnLevelUp;
     public event UnityAction<UnitInstance, DanceMoveInstance, bool> OnMilestoneReached;
 
     public UnitSkill(UnitInstance unit, Skill skill, float xp)
@@ -55,15 +63,18 @@ public class UnitSkill
 
         if (previousLevel != level)
         {
+            Milestones = new List<IMilestone>();
+
             foreach (var move in unit.Data.Moves)
             {
                 if (move.LevelRequirement == level)
                 {
                     RegisterMove(move);
+                    Milestones.Add(move);
                 }
             }
 
-            OnLevelUp?.Invoke();
+            OnLevelUp?.Invoke(unit);
         }
     }
 

@@ -1,10 +1,13 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.UI;
 
 public abstract class ActivityUI : MonoBehaviour
 {
     [SerializeField] private ActivityReference activity;
+    [SerializeField] private FadeCanvasGroup gameplayUI;
     [SerializeField] private SkillLevelUIManager levelUI;
+    [SerializeField] private LevelUpUI levelUpUI;
     [SerializeField] private PlayerReference playerReference;
     [SerializeField] private Button exitButton;
 
@@ -19,32 +22,41 @@ public abstract class ActivityUI : MonoBehaviour
     {
         mainCamera = Camera.main;
         exitButton.onClick.AddListener(() => activity.ExitActivity(playerReference.Player));
+
+        levelUpUI.gameObject.SetActive(false);
     }
 
     private void OnEnable()
     {
-        activity.OnUnitEnter += Activity_OnUnitEnter;
+        activity.OnUnitEnter += OnUnitEnter;
+        activity.OnUnitExit += OnUnitExit;
         activity.OnPlayerEnter += OnPlayerEnter;
         activity.OnPlayerExit += OnPlayerExit;
     }
 
-    private void Activity_OnUnitEnter(UnitController arg0)
-    {
-        //unit.Instance.Skills[PrimarySkill].OnMilestoneReached += Instance_OnMoveUnlocked;
-    }
-
     private void OnDisable()
     {
+        activity.OnUnitEnter -= OnUnitEnter;
+        activity.OnUnitExit -= OnUnitExit;
         activity.OnPlayerEnter -= OnPlayerEnter;
         activity.OnPlayerExit -= OnPlayerExit;
-        activity.OnUnitXpIncreased -= OnUnitXpIncreased;
+    }
+
+    protected virtual void OnUnitEnter(UnitController unit)
+    {
+    }
+
+    protected virtual void OnUnitExit(UnitController unit)
+    {
     }
 
     protected virtual void OnPlayerEnter(PlayerController player)
     {
         levelUI.Show(activity.Units);
         activity.OnUnitXpIncreased += OnUnitXpIncreased;
+        StartCoroutine(gameplayUI.FadeIn());
     }
+
     protected virtual void OnPlayerExit(PlayerController player)
     {
         activity.OnUnitXpIncreased -= OnUnitXpIncreased;
@@ -57,8 +69,29 @@ public abstract class ActivityUI : MonoBehaviour
             var unitWorldPos = unit.transform.position + Vector3.up * 0.5f;
             var unitScreenPos = Camera.WorldToScreenPoint(unitWorldPos);
             LevelUI.UnitLevelViewMap[unit].SetColor(unit.Color);
-            LevelUI.UnitLevelViewMap[unit].Increase(value, unitScreenPos);
+            LevelUI.UnitLevelViewMap[unit].Increase(value, unitScreenPos, hasLeveledUp =>
+            {
+                if (hasLeveledUp)
+                {
+                    StartCoroutine(LevelUpRoutine(unit.Instance));
+                }
+            });
         }
+    }
+
+    protected virtual IEnumerator LevelUpRoutine(UnitInstance unit)
+    {
+        yield return gameplayUI.FadeOut();
+        yield return levelUpUI.Show(unit, unit.Skills[Activity.PrimarySkill], () =>
+        {
+            StartCoroutine(LevelUI_OnExitRoutine());
+        });
+    }
+
+    protected virtual IEnumerator LevelUI_OnExitRoutine()
+    {
+        yield return levelUpUI.Hide();
+        yield return gameplayUI.FadeIn();
     }
 
     protected void SetExitButtonInteractable(bool value)

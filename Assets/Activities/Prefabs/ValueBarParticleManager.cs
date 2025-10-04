@@ -16,7 +16,6 @@ public class ValueBarParticleManager : MonoBehaviour
     private List<ValueParticleController> activeParticles = new List<ValueParticleController>();
 
     public event UnityAction OnParticleReached;
-    public event UnityAction OnAllParticleReached;
 
     private void OnDisable()
     {
@@ -46,7 +45,7 @@ public class ValueBarParticleManager : MonoBehaviour
         }
     }
 
-    public void BurstFromWorld(int count, Vector3 screenPos)
+    public void BurstFromWorld(int count, Vector3 screenPos, UnityAction onComplete)
     {
         for (int i = 0; i < count; i++)
         {
@@ -56,7 +55,10 @@ public class ValueBarParticleManager : MonoBehaviour
                 activeParticles.Remove(p);
                 Destroy(p.gameObject);
                 OnParticleReached?.Invoke();
-                if (activeParticles.Count == 0) OnAllParticleReached?.Invoke();
+                if (activeParticles.Count == 0)
+                {
+                    onComplete?.Invoke();
+                }
             });
 
             p.startColor = startColor;

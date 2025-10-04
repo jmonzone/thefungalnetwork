@@ -17,21 +17,22 @@ public class LevelUpUI : MonoBehaviour
 
     [SerializeField] private Button backButton;
 
-    public event UnityAction OnExit;
-
-    private void Awake()
-    {
-        backButton.onClick.AddListener(() => OnExit?.Invoke());
-    }
-
-    public IEnumerator Show(UnitInstance instance, UnitSkill skill, DanceMoveInstance unlock)
+    public IEnumerator Show(UnitInstance instance, UnitSkill skill, UnityAction onComplete)
     {
         levelText.text = skill.Level.ToString();
         levelUpText.text = $"{instance.Data.Name} Leveled Up! How Sweet\nWhat's your dancing level now?";
 
-        milestoneImage.sprite = unlock.Data.Sprite;
-        milestoneName.text = unlock.Label.ToString();
-        milestoneDescription.text = unlock.Description;
+        var milestones = skill.Milestones;
+        if (milestones.Count > 0)
+        {
+            var firstMilestone = skill.Milestones[0];
+            milestoneImage.sprite = firstMilestone.Sprite;
+            milestoneName.text = firstMilestone.Label.ToString();
+            milestoneDescription.text = firstMilestone.Description;
+        }
+
+        backButton.onClick.RemoveAllListeners();
+        backButton.onClick.AddListener(() => onComplete?.Invoke());
 
         yield return fadeCanvasGroup.FadeIn();
     }

@@ -152,11 +152,14 @@ public class UnitDance : UnitBehaviour
         Debug.Log("OnDanceMoveUsed");
 
         OnDanceMoveUsed?.Invoke(Unit, danceMove);
-
+        Debug.Log($"OnDanceMoveComplete1 {originalPosition} {Unit.IsAtDestination}");
         animator.SetBool("IsDancing", false);
         Unit.SetDestination(originalPosition);
+        Debug.Log($"OnDanceMoveComplete2 {originalPosition} {Unit.IsAtDestination}");
+
         yield return new WaitUntil(() => Unit.IsAtDestination);
         animator.SetBool("IsDancing", true);
+        Debug.Log("OnDanceMoveComplete");
 
         yield return new WaitForSeconds(1f);
 

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [CreateAssetMenu]
-public class DanceMove : ScriptableObject
+public class DanceMove : ScriptableObject, IMilestone
 {
     [SerializeField] private string label;
     [SerializeField] private Sprite sprite;
@@ -67,7 +67,7 @@ public class DanceMoveInstance : ScriptableObject
         skill.OnLevelUp += CheckForUpgrades;
     }
 
-    private void CheckForUpgrades()
+    private void CheckForUpgrades(UnitInstance unit)
     {
         foreach (var upgrade in data.Upgrades)
         {
