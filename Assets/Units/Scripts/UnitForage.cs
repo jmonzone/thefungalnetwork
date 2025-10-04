@@ -22,7 +22,7 @@ public class UnitForage : UnitBehaviour
         agent = GetComponent<NavMeshAgent>();
         agent.updateRotation = false;
 
-        Unit.OnBehaviourChanged += UpdateTargets;
+        Controller.OnBehaviourChanged += UpdateTargets;
     }
 
     private void OnEnable()
@@ -48,7 +48,7 @@ public class UnitForage : UnitBehaviour
 
         if (targetSpore)
         {
-            if (Unit.IsDefaultBehaviour)
+            if (Controller.IsDefaultBehaviour)
             {
                 InvokeOnBehaviourRequest();
             }
@@ -70,7 +70,7 @@ public class UnitForage : UnitBehaviour
         while (targetSpore)
         {
             agent.SetDestination(targetSpore.transform.position);
-            Unit.SetLookPosition(targetSpore.transform.position);
+            Controller.SetLookPosition(targetSpore.transform.position);
             yield return null;
         }
 

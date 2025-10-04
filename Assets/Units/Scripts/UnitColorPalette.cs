@@ -19,9 +19,9 @@ public class UnitColorPalette : UnitBehaviour
         base.OnInitialized();
 
         // Cache the original texture for this Fungal
-        Renderer rend = Unit.GetComponentInChildren<Renderer>();
+        Renderer rend = Controller.GetComponentInChildren<Renderer>();
 
-        if (Unit is FungalController)
+        if (Controller is FungalController)
         {
             if (rend.material.mainTexture is Texture2D tex)
             {
@@ -37,7 +37,7 @@ public class UnitColorPalette : UnitBehaviour
         secondaryColor = GetTextureColor(1);
         accentColor = GetTextureColor(2);
 
-        SetColorPalette(Unit.Instance.ColorPalette);
+        SetColorPalette(Controller.Instance.ColorPalette);
     }
 
     protected override void OnBehaviourStart()
@@ -62,7 +62,7 @@ public class UnitColorPalette : UnitBehaviour
 
     private void ApplyColorPalette()
     {
-        foreach (var renderer in Unit.GetComponentsInChildren<Renderer>())
+        foreach (var renderer in Controller.GetComponentsInChildren<Renderer>())
         {
             ApplySelectedPalette(renderer);
         }
@@ -89,7 +89,7 @@ public class UnitColorPalette : UnitBehaviour
                 Color origColor = tex.GetPixel(px, py);
 
                 // Get mapping for this column
-                int mapIndex = Unit.Instance.Data.ColumnMapping[bx];
+                int mapIndex = Controller.Instance.Data.ColumnMapping[bx];
 
                 // -1 = keep original
                 Color newColor = origColor;
@@ -135,7 +135,7 @@ public class UnitColorPalette : UnitBehaviour
                 int py = by * blockSize;
 
                 // Get mapping for this column
-                int columnMap = Unit.Instance.Data.ColumnMapping[bx];
+                int columnMap = Controller.Instance.Data.ColumnMapping[bx];
                 if (columnMap != mapIndex) continue;
 
                 // Recolor 2x2 block
@@ -151,7 +151,7 @@ public class UnitColorPalette : UnitBehaviour
 
         tex.Apply();
 
-        foreach (var renderer in Unit.GetComponentsInChildren<Renderer>())
+        foreach (var renderer in Controller.GetComponentsInChildren<Renderer>())
         {
             renderer.material.mainTexture = tex;
         }
@@ -186,7 +186,7 @@ public class UnitColorPalette : UnitBehaviour
         {
             for (int bx = 0; bx < blocksX; bx++)
             {
-                int index = Unit.Instance.Data.ColumnMapping[bx];
+                int index = Controller.Instance.Data.ColumnMapping[bx];
 
                 if (index == mapIndex)
                 {

@@ -68,7 +68,7 @@ public class DialogueActionsUI : DialoguePageUI
         allUnits.AddRange(playerReference.Player
             .GetComponent<UnitFollow>()
             .Followers
-            .Select(f => f.Unit));
+            .Select(f => f.Controller));
 
         // Deduplicate, but keep player first
         var uniqueUnits = allUnits

@@ -13,6 +13,7 @@ public abstract class ActivityUI : MonoBehaviour
 
     protected ActivityReference Activity => activity;
     protected SkillLevelUIManager LevelUI => levelUI;
+    public bool IsGameplayUI => gameplayUI.IsVisible;
 
     protected virtual Camera Camera => mainCamera;
 
@@ -21,7 +22,10 @@ public abstract class ActivityUI : MonoBehaviour
     protected virtual void Awake()
     {
         mainCamera = Camera.main;
-        exitButton.onClick.AddListener(() => activity.ExitActivity(playerReference.Player));
+        exitButton.onClick.AddListener(() =>
+        {
+            activity.ExitActivity(playerReference.ActivityUnit);
+        });
 
         levelUpUI.gameObject.SetActive(false);
     }
@@ -42,30 +46,31 @@ public abstract class ActivityUI : MonoBehaviour
         activity.OnPlayerExit -= OnPlayerExit;
     }
 
-    protected virtual void OnUnitEnter(UnitController unit)
-    {
-    }
-
-    protected virtual void OnUnitExit(UnitController unit)
-    {
-    }
-
-    protected virtual void OnPlayerEnter(PlayerController player)
+    protected virtual void OnUnitEnter(ActivityUnit unit)
     {
         levelUI.Show(activity.Units);
-        activity.OnUnitXpIncreased += OnUnitXpIncreased;
+    }
+
+    protected virtual void OnUnitExit(ActivityUnit unit)
+    {
+    }
+
+    protected virtual void OnPlayerEnter(ActivityUnit player)
+    {
+        activity.OnXPIncreased += OnXPIncreased;
         StartCoroutine(gameplayUI.FadeIn());
     }
 
-    protected virtual void OnPlayerExit(PlayerController player)
+    protected virtual void OnPlayerExit(ActivityUnit player)
     {
-        activity.OnUnitXpIncreased -= OnUnitXpIncreased;
+        activity.OnXPIncreased -= OnXPIncreased;
     }
 
-    private void OnUnitXpIncreased(UnitController unit, float value)
+    private void OnXPIncreased(ActivityUnit unit, float value)
     {
         if (LevelUI.gameObject.activeInHierarchy)
         {
+            Debug.Log("ActivityUI.OnXPIncreased");
             var unitWorldPos = unit.transform.position + Vector3.up * 0.5f;
             var unitScreenPos = Camera.WorldToScreenPoint(unitWorldPos);
             LevelUI.UnitLevelViewMap[unit].SetColor(unit.Color);
@@ -73,16 +78,16 @@ public abstract class ActivityUI : MonoBehaviour
             {
                 if (hasLeveledUp)
                 {
-                    StartCoroutine(LevelUpRoutine(unit.Instance));
+                    StartCoroutine(LevelUpRoutine(unit));
                 }
             });
         }
     }
 
-    protected virtual IEnumerator LevelUpRoutine(UnitInstance unit)
+    protected virtual IEnumerator LevelUpRoutine(ActivityUnit unit)
     {
         yield return gameplayUI.FadeOut();
-        yield return levelUpUI.Show(unit, unit.Skills[Activity.PrimarySkill], () =>
+        yield return levelUpUI.Show(unit, () =>
         {
             StartCoroutine(LevelUI_OnExitRoutine());
         });

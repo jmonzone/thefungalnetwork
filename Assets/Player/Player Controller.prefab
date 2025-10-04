@@ -51,6 +51,8 @@ GameObject:
   - component: {fileID: 8520475437556092179}
   - component: {fileID: 7412468969747994918}
   - component: {fileID: 5880526443589518393}
+  - component: {fileID: 133544065979608274}
+  - component: {fileID: 5708693116198860716}
   m_Layer: 0
   m_Name: Player Controller
   m_TagString: Untagged
@@ -324,6 +326,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 0
+  activityReference: {fileID: 11400000, guid: 0651293cfe83f4f34bdd7eb7e76e7477, type: 2}
   danceReference: {fileID: 11400000, guid: 0651293cfe83f4f34bdd7eb7e76e7477, type: 2}
   danceSkill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
   djReference: {fileID: 11400000, guid: 3bda1116fcf8f49e696cd21c6b5092da, type: 2}
@@ -343,6 +346,32 @@ MonoBehaviour:
   maxProgress: 3
   pulseOffset: 2
   currentStage: 2
+--- !u!114 &133544065979608274
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 421527447816816506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 216c26c64ab0c4921bcb5efe7472f269, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5708693116198860716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 421527447816816506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc749b9992fc24935991c1d850518651, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isActive: 0
+  activityReference: {fileID: 11400000, guid: 20234f3cd19d34d52ba858ad98b27405, type: 2}
 --- !u!1001 &3542599120507107562
 PrefabInstance:
   m_ObjectHideFlags: 0

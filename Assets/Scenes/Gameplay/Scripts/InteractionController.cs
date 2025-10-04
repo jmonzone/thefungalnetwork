@@ -106,7 +106,8 @@ public class InteractionController : MonoBehaviour
                 var zone = hit.transform.GetComponentInParent<ActivityZoneController>();
                 if (zone)
                 {
-                    zone.Activity.EnterActivity(playerReference.Player);
+                    zone.Activity.EnterActivity(playerReference.Player
+                        .GetComponent<ActivityUnit>());
                     return;
                 }
             }

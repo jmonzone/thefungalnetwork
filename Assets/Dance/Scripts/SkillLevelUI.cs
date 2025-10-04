@@ -17,7 +17,6 @@ public class SkillLevelUI : MonoBehaviour
 
     private float displayedXP;
     private int currentLevel;
-    private bool hasLeveledUp;
     private Coroutine levelUpRoutine;
 
     public event UnityAction OnLevelUp;
@@ -29,10 +28,10 @@ public class SkillLevelUI : MonoBehaviour
         valueBarParticleManager.OnParticleReached += ValueBarParticleController_OnParticleReached;
     }
 
-    public void SetUnit(UnitController unit, UnitSkill skill)
+    public void SetUnit(ActivityUnit unit)
     {
-        unitImage.sprite = unit.Instance.Data.Sprite;
-        SetDisplayedXP(skill.XP);
+        unitImage.sprite = unit.Sprite;
+        SetDisplayedXP(unit.Skill.XP);
         SetColor(unit.Color);
     }
 
@@ -88,7 +87,6 @@ public class SkillLevelUI : MonoBehaviour
         fillImage.transform.localScale = Vector3.one * startScale;
 
         levelUpRoutine = null;
-        hasLeveledUp = false;
         OnLevelUp?.Invoke();
     }
 

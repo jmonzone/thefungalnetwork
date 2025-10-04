@@ -9,7 +9,10 @@ public class PlayerReference : ScriptableObject
     [SerializeField] private Vector3 targetPosition;
     [SerializeField] private IInteractable targetInteractable;
 
+    private ActivityUnit activityUnit;
+
     public PlayerController Player => player;
+    public ActivityUnit ActivityUnit => activityUnit;
     public Vector3 TargetPosition => targetPosition;
     public IInteractable TargetInteractable => targetInteractable;
 
@@ -19,6 +22,7 @@ public class PlayerReference : ScriptableObject
     public void SetPlayer(PlayerController player)
     {
         this.player = player;
+        activityUnit = player.GetComponent<ActivityUnit>();
     }
 
     public void SetTargetPosition(Vector3 targetPosition)

@@ -5,8 +5,8 @@ public abstract class UnitBehaviour : MonoBehaviour
 {
     [SerializeField] private bool isActive;
 
-    public UnitController Unit { get; private set; }
-    public UnitInstance Instance => Unit.Instance;
+    public UnitController Controller { get; private set; }
+    public UnitInstance Instance => Controller.Instance;
     public bool IsActive => isActive;
 
     public event UnityAction OnBehaviourRequest;
@@ -14,8 +14,8 @@ public abstract class UnitBehaviour : MonoBehaviour
 
     protected virtual void Awake()
     {
-        Unit = GetComponent<UnitController>();
-        Unit.OnInitialized += OnInitialized;
+        Controller = GetComponent<UnitController>();
+        Controller.OnInitialized += OnInitialized;
     }
 
     protected virtual void OnInitialized()

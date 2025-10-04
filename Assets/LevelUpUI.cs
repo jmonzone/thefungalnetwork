@@ -11,21 +11,23 @@ public class LevelUpUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI levelText;
     [SerializeField] private TextMeshProUGUI levelUpText;
 
+    [SerializeField] private GameObject milestoneContainer;
     [SerializeField] private Image milestoneImage;
     [SerializeField] private TextMeshProUGUI milestoneName;
     [SerializeField] private TextMeshProUGUI milestoneDescription;
 
     [SerializeField] private Button backButton;
 
-    public IEnumerator Show(UnitInstance instance, UnitSkill skill, UnityAction onComplete)
+    public IEnumerator Show(ActivityUnit unit, UnityAction onComplete)
     {
-        levelText.text = skill.Level.ToString();
-        levelUpText.text = $"{instance.Data.Name} Leveled Up! How Sweet\nWhat's your dancing level now?";
+        levelText.text = unit.Skill.Level.ToString();
+        levelUpText.text = $"{unit.Name} Leveled Up! How Sweet\nWhat's your {unit.Skill.Label} level now?";
 
-        var milestones = skill.Milestones;
+        var milestones = unit.Skill.Milestones;
+        milestoneContainer.SetActive(milestones.Count > 0);
         if (milestones.Count > 0)
         {
-            var firstMilestone = skill.Milestones[0];
+            var firstMilestone = unit.Skill.Milestones[0];
             milestoneImage.sprite = firstMilestone.Sprite;
             milestoneName.text = firstMilestone.Label.ToString();
             milestoneDescription.text = firstMilestone.Description;

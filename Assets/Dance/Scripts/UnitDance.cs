@@ -1,11 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-// fungal material vs player material
-public class UnitDance : UnitBehaviour
+public class UnitDance : ActivityBehaviour
 {
     [SerializeField] private ActivityReference danceReference;
     [SerializeField] private Skill danceSkill;
@@ -36,12 +34,10 @@ public class UnitDance : UnitBehaviour
     private Coroutine moveRoutine;
     private Coroutine highlightRoutine;
 
-    private Vector3 originalPosition;
-
     private float BeatDuration => djReference.BeatDuration * danceBeat;
 
-    public event UnityAction<UnitController, DanceMoveInstance> OnDanceMoveUsed;
-    public event UnityAction<UnitController, DanceMoveInstance> OnDanceMoveComplete;
+    public event UnityAction<UnitDance, DanceMoveInstance> OnDanceMoveUsed;
+    public event UnityAction<UnitDance, DanceMoveInstance> OnDanceMoveComplete;
 
     protected override void OnInitialized()
     {
@@ -66,17 +62,12 @@ public class UnitDance : UnitBehaviour
 
         materials = mats.ToArray();
 
-        originalColor = Unit.Color;
-    }
-
-    public void SetOriginalPosition(Vector3 position)
-    {
-        originalPosition = position;
+        originalColor = Controller.Color;
     }
 
     protected override void OnBehaviourStart()
     {
-        Debug.Log($"UnitDance.OnBehaviourStart");
+        //Debug.Log($"UnitDance.OnBehaviourStart");
         currentStage = 0;
         danceBeat = baseDanceBeat;
 
@@ -85,13 +76,13 @@ public class UnitDance : UnitBehaviour
 
     private IEnumerator DanceRoutine()
     {
-        yield return new WaitUntil(() => Unit.IsAtDestination);
+        yield return new WaitUntil(() => Controller.IsAtDestination);
         animator.SetBool("IsDancing", true);
     }
 
     public override void StopBehaviour()
     {
-        Debug.Log($"UnitDance.StopBehaviour");
+        //Debug.Log($"UnitDance.StopBehaviour");
         base.StopBehaviour();
         animator.SetBool("IsDancing", false);
         animator.speed = 1;
@@ -118,8 +109,8 @@ public class UnitDance : UnitBehaviour
         animator.ResetTrigger("Complete");
 
         animator.SetBool("IsDancing", false);
-        Unit.SetDestination(danceReference.Origin);
-        yield return new WaitUntil(() => Unit.IsAtDestination);
+        Controller.SetDestination(danceReference.Origin);
+        yield return new WaitUntil(() => Controller.IsAtDestination);
         animator.SetBool("IsDancing", true);
 
         yield return new WaitForSeconds(1f);
@@ -151,13 +142,11 @@ public class UnitDance : UnitBehaviour
 
         Debug.Log("OnDanceMoveUsed");
 
-        OnDanceMoveUsed?.Invoke(Unit, danceMove);
-        Debug.Log($"OnDanceMoveComplete1 {originalPosition} {Unit.IsAtDestination}");
+        OnDanceMoveUsed?.Invoke(this, danceMove);
         animator.SetBool("IsDancing", false);
-        Unit.SetDestination(originalPosition);
-        Debug.Log($"OnDanceMoveComplete2 {originalPosition} {Unit.IsAtDestination}");
+        Controller.SetDestination(ActivityPosition);
 
-        yield return new WaitUntil(() => Unit.IsAtDestination);
+        yield return new WaitUntil(() => Controller.IsAtDestination);
         animator.SetBool("IsDancing", true);
         Debug.Log("OnDanceMoveComplete");
 
@@ -165,7 +154,7 @@ public class UnitDance : UnitBehaviour
 
         Debug.Log("OnDanceMoveComplete");
         onComplete?.Invoke();
-        OnDanceMoveComplete?.Invoke(Unit, danceMove);
+        OnDanceMoveComplete?.Invoke(this, danceMove);
     }
 
     private bool isHighlighted = false;
@@ -192,7 +181,7 @@ public class UnitDance : UnitBehaviour
 
         var pulseIntensity = Mathf.Lerp(originalIntensity, targetIntensity, pulseValue);
 
-        var startColor = Unit.Color;
+        var startColor = Controller.Color;
         var startIntensity = materials[0].GetFloat(intensityID);
 
         float t = 0f;
@@ -201,7 +190,7 @@ public class UnitDance : UnitBehaviour
             var pulseColor = Color.Lerp(originalColor, targetColor, pulseValue);
 
             t += Time.deltaTime * pulseSpeed;
-            Unit.Color = Color.Lerp(startColor, pulseColor, t);
+            Controller.Color = Color.Lerp(startColor, pulseColor, t);
             for (int i = 0; i < materials.Length; i++)
             {
                 materials[i].SetFloat(intensityID, Mathf.Lerp(startIntensity, pulseIntensity, t));
@@ -218,7 +207,7 @@ public class UnitDance : UnitBehaviour
 
         var pulseIntensity = Mathf.Lerp(originalIntensity, targetIntensity, pulseValue);
 
-        var startColor = Unit.Color;
+        var startColor = Controller.Color;
         var startIntensity = materials[0].GetFloat(intensityID);
 
         float t = 0f;
@@ -227,7 +216,7 @@ public class UnitDance : UnitBehaviour
             var pulseColor = Color.Lerp(originalColor, targetColor, pulseValue);
 
             t += Time.deltaTime * pulseSpeed;
-            Unit.Color = Color.Lerp(startColor, pulseColor, t);
+            Controller.Color = Color.Lerp(startColor, pulseColor, t);
             for (int i = 0; i < materials.Length; i++)
             {
                 materials[i].SetFloat(intensityID, Mathf.Lerp(startIntensity, pulseIntensity, t));
@@ -244,7 +233,7 @@ public class UnitDance : UnitBehaviour
 
         var pulseIntensity = Mathf.Lerp(originalIntensity, targetIntensity, pulseValue);
 
-        var startColor = Unit.Color;
+        var startColor = Controller.Color;
         var startIntensity = materials[0].GetFloat(intensityID);
 
         float t = 0f;
@@ -253,7 +242,7 @@ public class UnitDance : UnitBehaviour
             var pulseColor = Color.Lerp(originalColor, targetColor, pulseValue);
 
             t += Time.deltaTime * pulseSpeed;
-            Unit.Color = Color.Lerp(startColor, pulseColor, t);
+            Controller.Color = Color.Lerp(startColor, pulseColor, t);
             for (int i = 0; i < materials.Length; i++)
             {
                 materials[i].SetFloat(intensityID, Mathf.Lerp(startIntensity, pulseIntensity, t));
@@ -264,7 +253,7 @@ public class UnitDance : UnitBehaviour
         //// Decrement stage timer
         while (currentStage > 0)
         {
-            startColor = Unit.Color;
+            startColor = Controller.Color;
             startIntensity = materials[0].GetFloat(intensityID);
 
             t = 0f;
@@ -273,7 +262,7 @@ public class UnitDance : UnitBehaviour
                 stageColor = Color.Lerp(originalColor, targetColor, (float)(currentStage - pulseOffset) / (maxProgress));
 
                 t += Time.deltaTime * stageSpeed;
-                Unit.Color = Color.Lerp(startColor, stageColor, t);
+                Controller.Color = Color.Lerp(startColor, stageColor, t);
                 for (int i = 0; i < materials.Length; i++)
                 {
                     materials[i].SetFloat(intensityID, Mathf.Lerp(startIntensity, originalIntensity, t));

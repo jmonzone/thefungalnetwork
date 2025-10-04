@@ -77,7 +77,7 @@ public class UnitFollow : UnitBehaviour
 
             Vector3 destination = GetAdjacentPoint(target, 1f);
             navMeshAgent.SetDestination(destination);
-            Unit.SetLookPosition(target.transform.position);
+            Controller.SetLookPosition(target.transform.position);
             yield return null;
 
             var destinationReached = Vector3.Distance(destination, transform.position) < 0.5f;

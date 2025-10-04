@@ -12,79 +12,82 @@ public class ActivityReference : ScriptableObject
 
     [Header("Runtime")]
     [SerializeField] private Vector3 origin;
-    [SerializeField] private List<UnitController> units = new List<UnitController>();
+    [SerializeField] private List<ActivityUnit> units = new List<ActivityUnit>();
 
     public Vector3 Origin => origin;
     public Skill PrimarySkill => primarySkill;
-    public List<UnitController> Units => units;
+    public List<ActivityUnit> Units => units;
 
     public event UnityAction OnActivityHasStarted;
     public event UnityAction OnActivityHasEnded;
 
-    public event UnityAction<UnitController> OnUnitEnter;
-    public event UnityAction<UnitController> OnUnitExit;
+    public event UnityAction<ActivityUnit> OnUnitEnter;
+    public event UnityAction<ActivityUnit> OnUnitExit;
 
-    public event UnityAction<UnitController, float> OnUnitXpIncreased;
+    public event UnityAction<ActivityUnit, float> OnXPIncreased;
 
-    public event UnityAction<PlayerController> OnPlayerEnter;
-    public event UnityAction<PlayerController> OnPlayerExit;
+    public event UnityAction<ActivityUnit> OnPlayerEnter;
+    public event UnityAction<ActivityUnit> OnPlayerExit;
 
     public void StartActivity(Vector3 origin, List<UnitController> units)
     {
         Debug.Log($"Starting activity {name}");
-        this.units = units;
         this.origin = origin;
+        this.units = new List<ActivityUnit>();
+
+        foreach(var unit in units)
+        {
+            AddUnit(unit.GetComponent<ActivityUnit>());
+        }
+
         OnActivityHasStarted?.Invoke();
     }
 
     public void EndActivity()
     {
         OnActivityHasEnded?.Invoke();
-        units = new List<UnitController>();
+        units = new List<ActivityUnit>();
     }
 
-    public void EnterActivity(PlayerController player)
+    public void EnterActivity(ActivityUnit player)
     {
         AddUnit(player);
         navigation.Navigate(activityView);
         OnPlayerEnter?.Invoke(player);
     }
 
-    public void ExitActivity(PlayerController player)
+    public void ExitActivity(ActivityUnit player)
     {
         RemoveUnit(player);
         navigation.GoBackToRoot();
         OnPlayerExit?.Invoke(player);
     }
 
-    public void RemoveUnit(UnitController unit)
+    public void RemoveUnit(ActivityUnit unit)
     {
+        unit.ExitActivity();
         units.Remove(unit);
+        unit.OnXPIncreased -= Unit_OnXPIncreased;
         UpdateUnits();
         OnUnitExit?.Invoke(unit);
     }
 
-    public void AddUnit(UnitController unit)
+    public void AddUnit(ActivityUnit unit)
     {
-        Debug.Log("AddUnit");
+        unit.JoinActivity(this);
         units.Add(unit);
+        unit.OnXPIncreased += Unit_OnXPIncreased;
         UpdateUnits();
         OnUnitEnter?.Invoke(unit);
     }
 
-    public void IncreaseXP(UnitController unit, float value)
+    private void Unit_OnXPIncreased(ActivityUnit unit, float value)
     {
-        if (Units.Contains(unit))
-        {
-            unit.Instance.Skills[primarySkill].IncreaseSkillXP(value);
-            OnUnitXpIncreased?.Invoke(unit, value);
-        }
+        OnXPIncreased?.Invoke(unit, value);
     }
 
     private void UpdateUnits()
     {
-        Debug.Log("UpdateUnits");
-
         int count = units.Count;
         var offset = Random.Range(0, Mathf.PI * 2);
 
@@ -99,9 +102,7 @@ public class ActivityReference : ScriptableObject
             // Position offset outward from center
             Vector3 destination = origin + direction * 1f;
 
-            units[i].GetComponent<UnitDance>().SetOriginalPosition(destination);
-            units[i].SetDestination(destination);
-            units[i].SetLookPosition(origin);
+            units[i].UpdatePosition(destination);
         }
     }
 }

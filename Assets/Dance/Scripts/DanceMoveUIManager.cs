@@ -16,7 +16,7 @@ public class DanceMoveUIManager : MonoBehaviour
         GetComponentsInChildren(true, moveViews);
     }
 
-    public IEnumerator Show(UnitController unit, List<DanceMoveInstance> moves, UnityAction onMoveUsed, UnityAction onMoveComplete)
+    public IEnumerator Show(UnitDance unit, List<DanceMoveInstance> moves, UnityAction onMoveUsed, UnityAction onMoveComplete)
     {
         yield return fadeCanvasGroup.FadeIn();
 
@@ -28,7 +28,7 @@ public class DanceMoveUIManager : MonoBehaviour
                 fadeCanvasGroup.SetInteractable(false);
                 onMoveUsed?.Invoke();
 
-                unit.GetComponent<UnitDance>().UseDanceMove(move, () =>
+                unit.UseDanceMove(move, () =>
                 {
                     fadeCanvasGroup.SetInteractable(true);
                     onMoveComplete?.Invoke();

@@ -1,19 +1,11 @@
 ﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.Events;
 
-public class DanceActivityController : ActivityController
+public class DanceActivityController : ActivityController<UnitDance>
 {
     [SerializeField] private DJTableReference djReference;
     [SerializeField] private Light spotlight;
     [SerializeField] private UnitManager unitManager;
-
-    private int selectedIndex;
-    private UnitController selectedUnit;
-
-    public UnitController SelectedUnit => selectedUnit;
-
-    public event UnityAction OnUnitSelected;
 
     protected override void OnActivityStart()
     {
@@ -38,9 +30,9 @@ public class DanceActivityController : ActivityController
             //    timer = 0;
             //}
 
-            if (selectedUnit)
+            if (SelectedUnit)
             {
-                spotlight.transform.position = selectedUnit.transform.position + Vector3.up * 5f;
+                spotlight.transform.position = SelectedUnit.transform.position + Vector3.up * 5f;
             }
 
             yield return null;
@@ -53,80 +45,52 @@ public class DanceActivityController : ActivityController
         StopAllCoroutines();
     }
 
-    protected override void OnUnitEnter(UnitController unit)
+    protected override void OnUnitBehaviourApplied(UnitDance unit)
     {
-        base.OnUnitEnter(unit);
-        var dancer = unit.GetComponent<UnitDance>();
-        dancer.OnDanceMoveUsed += OnDanceMoveUsed;
-        dancer.OnDanceMoveComplete += OnDanceMoveComplete;
-        unit.SetBehaviour(dancer);
+        base.OnUnitBehaviourApplied(unit);
+        unit.OnDanceMoveUsed += OnDanceMoveUsed;
+        unit.OnDanceMoveComplete += OnDanceMoveComplete;
     }
 
-    protected override void OnUnitExit(UnitController unit)
+    protected override void OnUnitBehaviourRemoved(UnitDance unit)
     {
-        base.OnUnitExit(unit);
-        var dancer = unit.GetComponent<UnitDance>();
-        unit.ApplyDefaultBehaviour();
-        dancer.OnDanceMoveUsed -= OnDanceMoveUsed;
-        dancer.OnDanceMoveComplete -= OnDanceMoveComplete;
+        base.OnUnitBehaviourRemoved(unit);
+        unit.OnDanceMoveUsed -= OnDanceMoveUsed;
+        unit.OnDanceMoveComplete -= OnDanceMoveComplete;
     }
 
-    private void OnDanceMoveUsed(UnitController unit, DanceMoveInstance danceMove)
+    private void OnDanceMoveUsed(UnitDance unit, DanceMoveInstance danceMove)
     {
-        Activity.IncreaseXP(unit, danceMove.Xp);
+        unit.IncreaseXP(danceMove.Xp);
     }
 
-    private void OnDanceMoveComplete(UnitController unit, DanceMoveInstance danceMove)
+    private void OnDanceMoveComplete(UnitDance unit, DanceMoveInstance danceMove)
     {
-        selectedIndex = (selectedIndex + 1) % Activity.Units.Count;
-        SelectUnit(Activity.Units[selectedIndex]);
-    }
-
-    protected override void OnPlayerEnter(PlayerController player)
-    {
-        base.OnPlayerEnter(player);
-        selectedIndex = Activity.Units.FindIndex(unit => unit == player);
-        SelectUnit(player);
-    }
-
-    protected override void OnPlayerExit(PlayerController player)
-    {
-        base.OnPlayerExit(player);
-        if (player == selectedUnit) UnselectUnit();
-    }
-
-    public void SelectUnit(UnitController unit)
-    {
-        if (selectedUnit == unit) return;
-
-        Debug.Log($"SelectUnit {unit.name}");
-        UnselectUnit();
-
-        selectedUnit = unit;
-        selectedUnit.GetComponent<UnitDance>().Highlight();
-
-        spotlight.gameObject.SetActive(true);
-        OnUnitSelected?.Invoke();
+        SelectNextUnit();
     }
 
     private void AutoSelectDanceMove()
     {
         if (!PlayerIsActive)
         {
-            var moves = selectedUnit.Instance.Skills[Activity.PrimarySkill].Moves;
+            var moves = SelectedUnit.Instance.Skills[Activity.PrimarySkill].Moves;
             var randomMove = moves[Random.Range(0, moves.Count)];
-            selectedUnit.GetComponent<UnitDance>().UseDanceMove(randomMove, () => AutoSelectDanceMove());
+            SelectedUnit.UseDanceMove(randomMove, () => AutoSelectDanceMove());
         }
     }
 
-    private void UnselectUnit()
+    protected override void OnUnitSelected(UnitDance unit)
     {
-        if (selectedUnit)
-        {
-            selectedUnit.GetComponent<UnitDance>().Unhighlight();
-            spotlight.gameObject.SetActive(false);
+        base.OnUnitSelected(unit);
+        unit.Highlight();
+        spotlight.gameObject.SetActive(true);
 
-            selectedUnit = null;
-        }
+    }
+
+    protected override void OnUnitUnselected(UnitDance unit)
+    {
+        base.OnUnitUnselected(unit);
+        unit.Unhighlight();
+        spotlight.gameObject.SetActive(false);
     }
 }

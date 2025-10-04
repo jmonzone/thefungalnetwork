@@ -65,22 +65,22 @@ public class UnitWander : UnitBehaviour
     {
         while (true)
         {
-            var idleTargetTime = Random.Range(minIdleTime, maxIdleTime);
-            isIdle = true;
-            navMeshAgent.isStopped = true;
-            yield return new WaitForSeconds(idleTargetTime);
-            isIdle = false;
-            navMeshAgent.isStopped = false;
-
             var targetPosition = GetReachableRandomDestination(transform.position, wanderRadius, NavMesh.AllAreas);
             navMeshAgent.SetDestination(targetPosition);
             navMeshAgent.speed = baseSpeed * Random.Range(0.8f, 1.2f);
 
             while (navMeshAgent.pathPending || navMeshAgent.remainingDistance > navMeshAgent.stoppingDistance)
             {
-                Unit.SetLookPosition(targetPosition);
+                Controller.SetLookPosition(targetPosition);
                 yield return null;
             }
+
+            var idleTargetTime = Random.Range(minIdleTime, maxIdleTime);
+            isIdle = true;
+            navMeshAgent.isStopped = true;
+            yield return new WaitForSeconds(idleTargetTime);
+            isIdle = false;
+            navMeshAgent.isStopped = false;
         }
     }
 

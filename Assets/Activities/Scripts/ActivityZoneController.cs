@@ -19,11 +19,12 @@ public class ActivityZoneController : MonoBehaviour
 
     private void OnEnable()
     {
-        djReference.OnTrackValueChanged += DjReference_OnTrackValueChanged;
+        //djReference.OnTrackValueChanged += DjReference_OnTrackValueChanged;
         activity.OnActivityHasStarted += OnActivityStart;
         activity.OnActivityHasEnded += OnActivityHasEnded;
-        material = zoneController.GetComponentInChildren<Renderer>().material;
-        DjReference_OnTrackValueChanged();
+
+        //material = zoneController.GetComponentInChildren<Renderer>().material;
+        //DjReference_OnTrackValueChanged();
     }
 
     private void DjReference_OnTrackValueChanged()
@@ -41,7 +42,7 @@ public class ActivityZoneController : MonoBehaviour
 
     private void OnDisable()
     {
-        djReference.OnTrackValueChanged -= DjReference_OnTrackValueChanged;
+        //djReference.OnTrackValueChanged -= DjReference_OnTrackValueChanged;
         activity.OnActivityHasStarted -= OnActivityStart;
         activity.OnActivityHasEnded -= OnActivityHasEnded;
     }

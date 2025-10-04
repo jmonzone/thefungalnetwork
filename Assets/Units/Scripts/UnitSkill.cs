@@ -19,6 +19,7 @@ public class UnitSkill
     [SerializeField] private float xp;
     [SerializeField] private List<DanceMoveInstance> moves;
 
+    public string Label => skill.Id;
     public Skill Skill => skill;
     public int Level => level;
     public float XP => xp;

@@ -57,11 +57,11 @@ public class DJTableReference : ScriptableObject
 
     public void StartTrack(DJTrack track)
     {
-        dominantTrack = track;
         backgroundMusic.HideMusic();
         SetTrackValue(0);
         SetBPM(track.Bpm);
         SetLeftTrack(track);
+        dominantTrack = track;
     }
 
     public void SetLeftTrack(DJTrack track)

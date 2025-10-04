@@ -24,10 +24,7 @@ public class DJTableUI : MonoBehaviour
 
     private void Awake()
     {
-        trackSlider.onValueChanged.AddListener(value =>
-        {
-            dJTableReference.SetTrackValue(value);
-        });
+        
 
         dJTableReference.OnTrackValueChanged += StartPartyLights;
 
@@ -41,6 +38,12 @@ public class DJTableUI : MonoBehaviour
     private IEnumerator Start()
     {
         yield return new WaitForFixedUpdate();
+
+        trackSlider.onValueChanged.AddListener(value =>
+        {
+            dJTableReference.SetTrackValue(value);
+        });
+
         Build_OnBuildLoaded();
     }
 

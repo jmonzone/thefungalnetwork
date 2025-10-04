@@ -18,6 +18,8 @@ public class StoryFirstParty : MonoBehaviour
 
     [SerializeField] private ActivityReference danceActivity;
     [SerializeField] private Transform danceZoneAnchor;
+    [SerializeField] private ActivityReference sporeActivity;
+    [SerializeField] private Transform sporeZoneAnchor;
 
     [SerializeField] private InitialUI initialUI;
     [SerializeField] private Navigation navigation;
@@ -59,8 +61,8 @@ public class StoryFirstParty : MonoBehaviour
         yield return new WaitForFixedUpdate();
         partyReference.StartParty(tutorialParty);
 
-        danceActivity.StartActivity(danceZoneAnchor.position, new List<UnitController>());
-        danceActivity.AddUnit(partyReference.Guests[0]);
+        danceActivity.StartActivity(danceZoneAnchor.position, new List<UnitController> { partyReference.Guests[0] });
+        sporeActivity.StartActivity(sporeZoneAnchor.position, new List<UnitController> { partyReference.Guests[1] });
 
         //yield return new WaitUntil(() => timesInteractedWithGuests > 5);
         //yield return new WaitWhile(() => dialogueReference.IsActive);

@@ -1,53 +1,44 @@
 using System.Collections;
-using System.Collections.Generic;
-using Cinemachine;
 using UnityEngine;
 
-public class PassTheSpore : ActivityController
+public class PassTheSpore : ActivityController<PassTheSporeUnit>
 {
     [Header("References")]
     [SerializeField] private DJTableReference djReference;
-    [SerializeField] private Skill sporeSkill;
     [SerializeField] private Transform sporeBall;
-    [SerializeField] private CinemachineVirtualCamera virtualCamera;
+
+    private int currentUnitIndex;
+    private PassTheSporeUnit currentUnit;
 
     protected override void OnActivityStart()
     {
         base.OnActivityStart();
+
+        currentUnitIndex = 0;
+        currentUnit = Units[currentUnitIndex];
+
+        sporeBall.position = currentUnit.transform.position + Vector3.up;
+        sporeBall.gameObject.SetActive(true);
+
         StartCoroutine(ActivityRoutine());
     }
 
     private IEnumerator ActivityRoutine()
     {
-        int currentUnitIndex = 0;
-        var activePlayers = new List<UnitController>(Activity.Units);
-        var currentPlayer = activePlayers[currentUnitIndex];
-
-        sporeBall.position = currentPlayer.transform.position + Vector3.up;
-        sporeBall.gameObject.SetActive(true);
-
-        virtualCamera.Priority = 11;
-
         while (true)
         {
-            //IncreaseXP(currentPlayer, 3);
+            yield return currentUnit.PassRoutine();
 
-            currentPlayer = GetNextActivePlayer(ref currentUnitIndex, ref activePlayers);
-            Vector3 targetPos = currentPlayer.transform.position + Vector3.up;
-            yield return TossBall(sporeBall.position, targetPos, djReference.BeatDuration * 2);
+            currentUnitIndex = (currentUnitIndex + 1) % Units.Count;
+            currentUnit = Units[currentUnitIndex];
 
+            yield return TossBall(sporeBall.position, currentUnit, djReference.BeatDuration * 2);
+
+            currentUnit.GiveSpore(sporeBall);
         }
     }
 
-    // Helper to get next player who isn't done
-    private UnitController GetNextActivePlayer(ref int index, ref List<UnitController> players)
-    {
-        index = (index + 1) % players.Count;
-        return players[index];
-    }
-
-
-    private IEnumerator TossBall(Vector3 start, Vector3 end, float duration)
+    private IEnumerator TossBall(Vector3 start, PassTheSporeUnit target, float duration)
     {
         float elapsed = 0f;
 
@@ -60,7 +51,7 @@ public class PassTheSpore : ActivityController
             float t = elapsed / duration;
 
             // Lerp position
-            Vector3 horizontal = Vector3.Lerp(start, end, t);
+            Vector3 horizontal = Vector3.Lerp(start, target.SporePosition, t);
 
             // Add simple vertical arc (parabola)
             float height = Mathf.Sin(t * Mathf.PI) * arcHeight;
@@ -68,8 +59,6 @@ public class PassTheSpore : ActivityController
 
             yield return null;
         }
-
-        sporeBall.position = end;
     }
 
     protected override void OnActivityEnded()
@@ -77,6 +66,7 @@ public class PassTheSpore : ActivityController
         base.OnActivityEnded();
         StopAllCoroutines();
         sporeBall.gameObject.SetActive(false);
-        virtualCamera.Priority = 0;
     }
+
+   
 }

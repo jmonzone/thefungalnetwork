@@ -1,7 +1,7 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class DanceActivityUI : ActivityUI
 {
@@ -11,11 +11,6 @@ public class DanceActivityUI : ActivityUI
     [SerializeField] private DanceActivityController danceActivity;
     [SerializeField] private DanceBackground background;
     [SerializeField] private DanceMoveUIManager danceMoveUIManager;
-    [SerializeField] private Image touchIndicator;
-
-    [Header("Settings")]
-    [SerializeField] private float touchDuration = 0.2f;
-    [SerializeField] private float touchScale = 1.5f;
 
     protected override Camera Camera => background.DominantCamera;
 
@@ -25,64 +20,19 @@ public class DanceActivityUI : ActivityUI
         danceMoveUIManager.Initialize();
     }
 
-    protected override void OnEnable()
-    {
-        base.OnEnable();
-        djTableReference.OnDominantTrackChanged += DjTableReference_OnDominantTrackChanged;
-    }
-
-    protected override void OnDisable()
-    {
-        base.OnDisable();
-        djTableReference.OnDominantTrackChanged -= DjTableReference_OnDominantTrackChanged;
-    }
-
-    private void DjTableReference_OnDominantTrackChanged(DJTrack track)
-    {
-        var filteredUnits = unitManager.UnitControllers.Where(unit =>
-        {
-            return unit.CurrentBehaviour is UnitWander;
-        });
-
-        if (filteredUnits.Count() > 0)
-        {
-            Activity.AddUnit(filteredUnits.First());
-        }
-    }
-
-    protected override void OnPlayerEnter(PlayerController player)
+    protected override void OnPlayerEnter(ActivityUnit player)
     {
         base.OnPlayerEnter(player);
-        danceActivity.OnUnitSelected += UpdateMovesUI;
+        danceActivity.OnUnitWasSelected += UpdateMovesUI;
         UpdateMovesUI();
 
-        StartCoroutine(EnterRoutine());
-    }
-
-    private IEnumerator EnterRoutine()
-    {
         background.StartDanceBackground();
-
-        while (true)
-        {
-            if (Input.GetMouseButtonDown(0))
-            {
-                ShowTouchIndicator(Input.mousePosition);
-
-                //if (canSelect && TryRaycastUnit(out UnitController unit) && Activity.Units.Contains(unit))
-                //{
-                //    danceActivity.SelectUnit(unit);
-                //}
-            }
-
-            yield return null;
-        }
     }
 
-    protected override void OnPlayerExit(PlayerController player)
+    protected override void OnPlayerExit(ActivityUnit player)
     {
         base.OnPlayerExit(player);
-        danceActivity.OnUnitSelected -= UpdateMovesUI;
+        danceActivity.OnUnitWasSelected -= UpdateMovesUI;
         background.EndDanceBackground();
         StopAllCoroutines();
     }
@@ -101,11 +51,6 @@ public class DanceActivityUI : ActivityUI
                 SetExitButtonInteractable(true);
             }));
         }
-    }
-
-    protected override IEnumerator LevelUpRoutine(UnitInstance unit)
-    {
-        yield return base.LevelUpRoutine(unit);
     }
 
     protected override IEnumerator LevelUI_OnExitRoutine()
@@ -128,41 +73,5 @@ public class DanceActivityUI : ActivityUI
 
         unit = null;
         return false;
-    }
-
-    private Coroutine touchRoutine;
-    private void ShowTouchIndicator(Vector3 screenPos)
-    {
-        if (!touchIndicator) return;
-
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(
-            touchIndicator.transform.parent as RectTransform,
-            screenPos,
-            null,
-            out Vector2 localPos
-        );
-
-        touchIndicator.rectTransform.anchoredPosition = localPos;
-
-        if (touchRoutine != null) StopCoroutine(touchRoutine);
-        touchRoutine = StartCoroutine(TouchIndicatorRoutine());
-    }
-
-    private IEnumerator TouchIndicatorRoutine()
-    {
-        touchIndicator.gameObject.SetActive(true);
-        touchIndicator.transform.localScale = Vector3.zero;
-
-        float elapsed = 0f;
-        while (elapsed < touchDuration)
-        {
-            elapsed += Time.deltaTime;
-            float t = elapsed / touchDuration;
-            touchIndicator.transform.localScale = Vector3.Lerp(Vector3.zero, Vector3.one * touchScale, t);
-            //touchIndicator.color = Color.Lerp(djReference.DominantTrack.Glyph.Color, Color.clear, t);
-            yield return null;
-        }
-
-        touchIndicator.gameObject.SetActive(false);
     }
 }
