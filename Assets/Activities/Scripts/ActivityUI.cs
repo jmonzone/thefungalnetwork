@@ -97,6 +97,7 @@ public abstract class ActivityUI : MonoBehaviour
     {
         yield return levelUpUI.Hide();
         yield return gameplayUI.FadeIn();
+        levelUI.Show(activity.Units);
     }
 
     protected void SetExitButtonInteractable(bool value)
