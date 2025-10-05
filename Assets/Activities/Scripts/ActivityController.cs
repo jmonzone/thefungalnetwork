@@ -10,19 +10,21 @@ public abstract class ActivityController<T> : MonoBehaviour where T : ActivityBe
 
     [Header("Activity Runtime")]
     [SerializeField] private bool playerIsActive;
-    [SerializeField] private bool playerIsSelected;
-    [SerializeField] private int selectedIndex;
-    [SerializeField] private T selectedUnit;
+    [SerializeField] private int currentIndex;
+    [SerializeField] private T currentUnit;
     [SerializeField] private List<T> units;
 
     protected ActivityReference Activity => activity;
     protected Skill PrimarySkill => primarySkill;
     protected bool PlayerIsActive => playerIsActive;
-    protected bool PlayerIsSelected => playerIsActive;
-    public T SelectedUnit => selectedUnit;
+    protected bool PlayerIsSelected => currentUnit.IsPlayer;
+
+    public T CurrentUnit => currentUnit;
+    public T NextUnit => units[(currentIndex + 1) % units.Count];
+
     protected List<T> Units => units;
 
-    public event UnityAction OnUnitWasSelected;
+    public event UnityAction<T> OnUnitSelected;
 
     protected virtual void Awake()
     {
@@ -51,18 +53,20 @@ public abstract class ActivityController<T> : MonoBehaviour where T : ActivityBe
     protected void OnPlayerEnter(ActivityUnit player)
     {
         playerIsActive = true;
-        selectedIndex = units.FindIndex(unit => unit == player);
-        SelectUnit(player.GetComponent<T>());
+        //currentIndex = units.FindIndex(unit => unit == player);
+        //SelectUnit(player.GetComponent<T>());
     }
 
     protected void OnPlayerExit(ActivityUnit player)
     {
         playerIsActive = false;
-        if (playerIsSelected) UnselectUnit();
+        //if (PlayerIsSelected) UnselectUnit();
     }
 
     protected virtual void OnActivityStart()
     {
+        currentIndex = -1;
+        SelectNextUnit();
     }
 
     protected virtual void OnActivityEnded()
@@ -93,48 +97,28 @@ public abstract class ActivityController<T> : MonoBehaviour where T : ActivityBe
         units.Remove(unit);
     }
 
-    public void SelectUnit(T unit)
+    public virtual void SelectUnit(T unit)
     {
-        if (selectedUnit == unit) return;
+        if (currentUnit == unit) return;
 
-        Debug.Log($"SelectUnit {unit.name}");
         UnselectUnit();
 
-        selectedUnit = unit;
-        playerIsSelected = unit.Controller is PlayerController;
-        OnUnitSelected(selectedUnit);
-        OnUnitWasSelected?.Invoke();
+        currentIndex = Units.IndexOf(unit);
+        currentUnit = unit;
+        OnUnitSelected?.Invoke(unit);
     }
 
-
-    protected void UnselectUnit()
+    protected virtual void UnselectUnit()
     {
-        if (selectedUnit)
+        if (currentUnit)
         {
-            if (playerIsSelected && selectedUnit.Controller is PlayerController)
-            {
-                playerIsSelected = false;
-            }
-
-            OnUnitUnselected(selectedUnit);
-
-            selectedUnit = null;
+            currentUnit = null;
         }
-    }
-
-    protected virtual void OnUnitSelected(T unit)
-    {
-
-    }
-
-    protected virtual void OnUnitUnselected(T unit)
-    {
-
     }
 
     protected void SelectNextUnit()
     {
-        selectedIndex = (selectedIndex + 1) % Activity.Units.Count;
-        SelectUnit(units[selectedIndex]);
+        currentIndex = (currentIndex + 1) % Activity.Units.Count;
+        SelectUnit(units[currentIndex]);
     }
 }

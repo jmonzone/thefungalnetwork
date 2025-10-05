@@ -30,9 +30,9 @@ public class DanceActivityController : ActivityController<UnitDance>
             //    timer = 0;
             //}
 
-            if (SelectedUnit)
+            if (CurrentUnit)
             {
-                spotlight.transform.position = SelectedUnit.transform.position + Vector3.up * 5f;
+                spotlight.transform.position = CurrentUnit.transform.position + Vector3.up * 5f;
             }
 
             yield return null;
@@ -73,24 +73,27 @@ public class DanceActivityController : ActivityController<UnitDance>
     {
         if (!PlayerIsActive)
         {
-            var moves = SelectedUnit.Instance.Skills[Activity.PrimarySkill].Moves;
+            var moves = CurrentUnit.Instance.Skills[Activity.PrimarySkill].Moves;
             var randomMove = moves[Random.Range(0, moves.Count)];
-            SelectedUnit.UseDanceMove(randomMove, () => AutoSelectDanceMove());
+            CurrentUnit.UseDanceMove(randomMove, () => AutoSelectDanceMove());
         }
     }
 
-    protected override void OnUnitSelected(UnitDance unit)
+    public override void SelectUnit(UnitDance unit)
     {
-        base.OnUnitSelected(unit);
+        base.SelectUnit(unit);
         unit.Highlight();
         spotlight.gameObject.SetActive(true);
-
     }
 
-    protected override void OnUnitUnselected(UnitDance unit)
+    protected override void UnselectUnit()
     {
-        base.OnUnitUnselected(unit);
-        unit.Unhighlight();
-        spotlight.gameObject.SetActive(false);
+        base.UnselectUnit();
+
+        if (CurrentUnit)
+        {
+            CurrentUnit.Unhighlight();
+            spotlight.gameObject.SetActive(false);
+        }
     }
 }

@@ -20,7 +20,7 @@ public abstract class ActivityBehaviour : UnitBehaviour
 
     public void IncreaseXP(float value)
     {
-        Debug.Log("ActivityBehaviour.IncreaseXP");
+        //Debug.Log("ActivityBehaviour.IncreaseXP");
         unit.IncreaseXP(value);
     }
 }

@@ -2,22 +2,29 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public abstract class ActivityUI : MonoBehaviour
+public abstract class ActivityUI<T1, T2> : MonoBehaviour where T1 : ActivityBehaviour where T2: ActivityController<T1>
 {
     [SerializeField] private ActivityReference activity;
-    [SerializeField] private FadeCanvasGroup gameplayUI;
+    [SerializeField] private T2 controller;
+
     [SerializeField] private SkillLevelUIManager levelUI;
+    [SerializeField] private FadeCanvasGroup gameplayUI;
     [SerializeField] private LevelUpUI levelUpUI;
     [SerializeField] private PlayerReference playerReference;
     [SerializeField] private Button exitButton;
 
     protected ActivityReference Activity => activity;
+    protected T2 Controller => controller;
     protected SkillLevelUIManager LevelUI => levelUI;
+
     public bool IsGameplayUI => gameplayUI.IsVisible;
 
-    protected virtual Camera Camera => mainCamera;
-
     private Camera mainCamera;
+    private T1 player;
+
+    protected virtual Camera Camera => mainCamera;
+    protected T1 Player => player;
+
 
     protected virtual void Awake()
     {
@@ -57,20 +64,29 @@ public abstract class ActivityUI : MonoBehaviour
 
     protected virtual void OnPlayerEnter(ActivityUnit player)
     {
+        this.player = player.GetComponent<T1>();
         activity.OnXPIncreased += OnXPIncreased;
+        controller.OnUnitSelected += OnUnitSelected;
+
         StartCoroutine(gameplayUI.FadeIn());
     }
 
     protected virtual void OnPlayerExit(ActivityUnit player)
     {
+        this.player = null;
         activity.OnXPIncreased -= OnXPIncreased;
+        controller.OnUnitSelected -= OnUnitSelected;
+    }
+
+    protected virtual void OnUnitSelected(T1 unit)
+    {
     }
 
     private void OnXPIncreased(ActivityUnit unit, float value)
     {
         if (LevelUI.gameObject.activeInHierarchy)
         {
-            Debug.Log("ActivityUI.OnXPIncreased");
+            //Debug.Log("ActivityUI.OnXPIncreased");
             var unitWorldPos = unit.transform.position + Vector3.up * 0.5f;
             var unitScreenPos = Camera.WorldToScreenPoint(unitWorldPos);
             LevelUI.UnitLevelViewMap[unit].SetColor(unit.Color);

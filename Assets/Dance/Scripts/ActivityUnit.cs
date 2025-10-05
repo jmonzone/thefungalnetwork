@@ -49,7 +49,7 @@ public class ActivityUnit : MonoBehaviour
 
     public void IncreaseXP(float value)
     {
-        Debug.Log("ActivityUnit.IncreaseXP");
+        //Debug.Log("ActivityUnit.IncreaseXP");
         controller.Instance.Skills[activity.PrimarySkill].IncreaseSkillXP(value);
         OnXPIncreased?.Invoke(this, value);
     }

@@ -151,9 +151,9 @@ GameObject:
   - component: {fileID: 493320410429043383}
   - component: {fileID: 6929509154742900535}
   - component: {fileID: 2571860531010250894}
-  - component: {fileID: 8272772892265704648}
   - component: {fileID: 675605172840391509}
-  - component: {fileID: 8120102627794752331}
+  - component: {fileID: 8272772892265704648}
+  - component: {fileID: 3445689529040859860}
   m_Layer: 8
   m_Name: Fungal Controller
   m_TagString: Untagged
@@ -478,6 +478,18 @@ MonoBehaviour:
   scaleUp: 1.5
   scaleDuration: 0.25
   jumpHeight: 0.5
+--- !u!114 &675605172840391509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5390423667600184729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 216c26c64ab0c4921bcb5efe7472f269, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &8272772892265704648
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -511,7 +523,7 @@ MonoBehaviour:
   maxProgress: 3
   pulseOffset: 2
   currentStage: 2
---- !u!114 &675605172840391509
+--- !u!114 &3445689529040859860
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -520,24 +532,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 5390423667600184729}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 216c26c64ab0c4921bcb5efe7472f269, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &8120102627794752331
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5390423667600184729}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e363bf6533a54434aa25453e750c1b0b, type: 3}
+  m_Script: {fileID: 11500000, guid: c6988f0c1c9984a148dee97f31a208a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 0
   activityReference: {fileID: 11400000, guid: 20234f3cd19d34d52ba858ad98b27405, type: 2}
-  djReference: {fileID: 11400000, guid: 3bda1116fcf8f49e696cd21c6b5092da, type: 2}
 --- !u!1001 &1899791931242643327
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -1,12 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
-public class PassTheSporePlayer : PassTheSporeUnit
+[Obsolete]
+public class PassTheSporePlayer : PTS_Unit
 {
-    [SerializeField] private PassTheSporeUI passTheSporeUI;
-
-    protected override IEnumerator WaitForPassInput()
-    {
-        yield return new WaitUntil(() => Input.GetMouseButton(0) && passTheSporeUI.IsGameplayUI);
-    }
 }

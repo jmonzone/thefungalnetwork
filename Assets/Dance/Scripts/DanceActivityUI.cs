@@ -1,9 +1,8 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 
-public class DanceActivityUI : ActivityUI
+public class DanceActivityUI : ActivityUI<UnitDance, DanceActivityController>
 {
     [Header("References")]
     [SerializeField] private UnitManager unitManager;
@@ -23,7 +22,6 @@ public class DanceActivityUI : ActivityUI
     protected override void OnPlayerEnter(ActivityUnit player)
     {
         base.OnPlayerEnter(player);
-        danceActivity.OnUnitWasSelected += UpdateMovesUI;
         UpdateMovesUI();
 
         background.StartDanceBackground();
@@ -32,17 +30,22 @@ public class DanceActivityUI : ActivityUI
     protected override void OnPlayerExit(ActivityUnit player)
     {
         base.OnPlayerExit(player);
-        danceActivity.OnUnitWasSelected -= UpdateMovesUI;
         background.EndDanceBackground();
         StopAllCoroutines();
     }
 
+    protected override void OnUnitSelected(UnitDance unit)
+    {
+        base.OnUnitSelected(unit);
+        UpdateMovesUI();
+    }
+
     private void UpdateMovesUI()
     {
-        if (danceActivity.SelectedUnit)
+        if (danceActivity.CurrentUnit)
         {
-            var moves = danceActivity.SelectedUnit.Instance.Skills[Activity.PrimarySkill].Moves;
-            StartCoroutine(danceMoveUIManager.Show(danceActivity.SelectedUnit, moves, () =>
+            var moves = danceActivity.CurrentUnit.Instance.Skills[Activity.PrimarySkill].Moves;
+            StartCoroutine(danceMoveUIManager.Show(danceActivity.CurrentUnit, moves, () =>
             {
                 SetExitButtonInteractable(false);
             },
