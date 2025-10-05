@@ -1,10 +1,8 @@
-using Cinemachine;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class PTS_ActivityUI : ActivityUI<PTS_Unit, PTS_ActivityController>
 {
-    [SerializeField] private CinemachineVirtualCamera virtualCamera;
     [SerializeField] private Button passButton;
 
     protected override void Awake()
@@ -20,13 +18,13 @@ public class PTS_ActivityUI : ActivityUI<PTS_Unit, PTS_ActivityController>
     protected override void OnPlayerEnter(ActivityUnit player)
     {
         base.OnPlayerEnter(player);
-        virtualCamera.Priority = 11;
+        PlayerReference.TogglePOVCamera(true);
     }
 
     protected override void OnPlayerExit(ActivityUnit player)
     {
         base.OnPlayerExit(player);
-        virtualCamera.Priority = 0;
+        PlayerReference.TogglePOVCamera(false);
     }
 
     protected override void OnUnitSelected(PTS_Unit unit)

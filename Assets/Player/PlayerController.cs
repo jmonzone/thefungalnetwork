@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Cinemachine;
 using UnityEngine;
 
 public class PlayerController : UnitController
@@ -7,6 +8,7 @@ public class PlayerController : UnitController
     [SerializeField] private PlayerReference playerReference;
     [SerializeField] private Unit playerUnit;
     [SerializeField] private InventoryReference inventoryReference;
+    [SerializeField] private CinemachineVirtualCamera povCamera;
 
     private UnitFollow unitFollow;
     private UnitDrum unitDrum;
@@ -81,7 +83,13 @@ public class PlayerController : UnitController
     {
         base.OnEnable();
         playerReference.OnTargetPositionChanged += PlayerReference_OnTargetPositionChanged;
-        playerReference.OnTargetInteractableChanged += PlayerReference_OnTargetInteractableChanged; ;
+        playerReference.OnTargetInteractableChanged += PlayerReference_OnTargetInteractableChanged;
+        playerReference.OnPOVCameraToggled += PlayerReference_OnPOVCameraToggled;
+    }
+
+    private void PlayerReference_OnPOVCameraToggled(bool value)
+    {
+        povCamera.Priority = value ? 11 : 0;
     }
 
     protected override void OnDisable()
@@ -89,6 +97,7 @@ public class PlayerController : UnitController
         base.OnDisable();
         playerReference.OnTargetPositionChanged -= PlayerReference_OnTargetPositionChanged;
         playerReference.OnTargetInteractableChanged -= PlayerReference_OnTargetInteractableChanged;
+        playerReference.OnPOVCameraToggled -= PlayerReference_OnPOVCameraToggled;
     }
 
     private void PlayerReference_OnTargetInteractableChanged()

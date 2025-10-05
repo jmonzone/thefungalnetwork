@@ -61,7 +61,7 @@ public class DanceActivityController : ActivityController<UnitDance>
 
     private void OnDanceMoveUsed(UnitDance unit, DanceMoveInstance danceMove)
     {
-        unit.IncreaseXP(danceMove.Xp);
+        unit.IncreaseXP(danceMove.Xp, unit.transform.position + Vector3.up * 0.5f);
     }
 
     private void OnDanceMoveComplete(UnitDance unit, DanceMoveInstance danceMove)

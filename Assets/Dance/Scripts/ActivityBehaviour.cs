@@ -10,6 +10,7 @@ public abstract class ActivityBehaviour : UnitBehaviour
 
     protected ActivityReference Activity => activityReference;
     protected Vector3 ActivityPosition => unit.ActivityPosition;
+    protected Quaternion LookRotation => unit.LookRotation;
     public bool IsPlayer => unit.IsPlayer;
 
     protected override void Awake()
@@ -18,9 +19,9 @@ public abstract class ActivityBehaviour : UnitBehaviour
         unit = GetComponent<ActivityUnit>();
     }
 
-    public void IncreaseXP(float value)
+    public void IncreaseXP(float value, Vector3 sourcePosition)
     {
         //Debug.Log("ActivityBehaviour.IncreaseXP");
-        unit.IncreaseXP(value);
+        unit.IncreaseXP(value, sourcePosition);
     }
 }

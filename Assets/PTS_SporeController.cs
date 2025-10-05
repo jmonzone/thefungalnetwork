@@ -5,6 +5,7 @@ using UnityEngine.Events;
 public class PTS_SporeController : MonoBehaviour
 {
     [SerializeField] private DJTableReference djReference;
+    [SerializeField] private float arcHeight = 0.5f;
 
     public void Pass(PTS_Unit target, UnityAction onComplete)
     {
@@ -14,9 +15,6 @@ public class PTS_SporeController : MonoBehaviour
     private IEnumerator PassRoutine(PTS_Unit target, UnityAction onComplete)
     {
         float elapsed = 0f;
-
-        // Optional: add an arc height for a nicer toss
-        float arcHeight = 1f;
 
         var start = transform.position;
         var duration = djReference.BeatDuration * 2f;

@@ -24,7 +24,7 @@ public class ActivityReference : ScriptableObject
     public event UnityAction<ActivityUnit> OnUnitEnter;
     public event UnityAction<ActivityUnit> OnUnitExit;
 
-    public event UnityAction<ActivityUnit, float> OnXPIncreased;
+    public event UnityAction<OnXpIncreasedEventArgs> OnXPIncreased;
 
     public event UnityAction<ActivityUnit> OnPlayerEnter;
     public event UnityAction<ActivityUnit> OnPlayerExit;
@@ -81,9 +81,9 @@ public class ActivityReference : ScriptableObject
         OnUnitEnter?.Invoke(unit);
     }
 
-    private void Unit_OnXPIncreased(ActivityUnit unit, float value)
+    private void Unit_OnXPIncreased(OnXpIncreasedEventArgs args)
     {
-        OnXPIncreased?.Invoke(unit, value);
+        OnXPIncreased?.Invoke(args);
     }
 
     private void UpdateUnits()

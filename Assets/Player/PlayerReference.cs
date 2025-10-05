@@ -18,6 +18,7 @@ public class PlayerReference : ScriptableObject
 
     public event UnityAction OnTargetInteractableChanged;
     public event UnityAction OnTargetPositionChanged;
+    public event UnityAction<bool> OnPOVCameraToggled;
 
     public void SetPlayer(PlayerController player)
     {
@@ -37,5 +38,10 @@ public class PlayerReference : ScriptableObject
     {
         this.targetInteractable = targetInteractable;
         OnTargetInteractableChanged?.Invoke();
+    }
+
+    public void TogglePOVCamera(bool value)
+    {
+        OnPOVCameraToggled?.Invoke(value);
     }
 }

@@ -3,7 +3,8 @@ using UnityEngine.Events;
 
 public class PTS_Unit : ActivityBehaviour
 {
-    public Vector3 SporePosition => transform.position + Vector3.up;
+    [SerializeField] private Vector3 sporeOffset;
+    public Vector3 SporePosition => transform.position + LookRotation * sporeOffset;
 
     private PTS_SporeController spore;
 
@@ -19,7 +20,7 @@ public class PTS_Unit : ActivityBehaviour
 
     public void PassSpore(PTS_Unit target, UnityAction<PTS_Unit> onComplete)
     {
-        IncreaseXP(100);
+        IncreaseXP(15, spore.transform.position + Vector3.up * 0.5f);
         spore.Pass(target, () => onComplete?.Invoke(target));
         spore = null;
     }

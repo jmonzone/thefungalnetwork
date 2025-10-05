@@ -5,26 +5,26 @@ using UnityEngine.UI;
 public abstract class ActivityUI<T1, T2> : MonoBehaviour where T1 : ActivityBehaviour where T2: ActivityController<T1>
 {
     [SerializeField] private ActivityReference activity;
+    [SerializeField] private PlayerReference playerReference;
+    [SerializeField] private T1 player;
     [SerializeField] private T2 controller;
 
     [SerializeField] private SkillLevelUIManager levelUI;
     [SerializeField] private FadeCanvasGroup gameplayUI;
     [SerializeField] private LevelUpUI levelUpUI;
-    [SerializeField] private PlayerReference playerReference;
     [SerializeField] private Button exitButton;
 
-    protected ActivityReference Activity => activity;
-    protected T2 Controller => controller;
-    protected SkillLevelUIManager LevelUI => levelUI;
-
-    public bool IsGameplayUI => gameplayUI.IsVisible;
-
     private Camera mainCamera;
-    private T1 player;
 
     protected virtual Camera Camera => mainCamera;
-    protected T1 Player => player;
 
+    protected ActivityReference Activity => activity;
+    protected PlayerReference PlayerReference => playerReference;
+    protected T1 Player => player;
+    protected T2 Controller => controller;
+
+    protected SkillLevelUIManager LevelUI => levelUI;
+    public bool IsGameplayUI => gameplayUI.IsVisible;
 
     protected virtual void Awake()
     {
@@ -82,19 +82,19 @@ public abstract class ActivityUI<T1, T2> : MonoBehaviour where T1 : ActivityBeha
     {
     }
 
-    private void OnXPIncreased(ActivityUnit unit, float value)
+    private void OnXPIncreased(OnXpIncreasedEventArgs args)
     {
         if (LevelUI.gameObject.activeInHierarchy)
         {
             //Debug.Log("ActivityUI.OnXPIncreased");
-            var unitWorldPos = unit.transform.position + Vector3.up * 0.5f;
+            var unitWorldPos = args.SourcePosition;
             var unitScreenPos = Camera.WorldToScreenPoint(unitWorldPos);
-            LevelUI.UnitLevelViewMap[unit].SetColor(unit.Color);
-            LevelUI.UnitLevelViewMap[unit].Increase(value, unitScreenPos, hasLeveledUp =>
+            LevelUI.UnitLevelViewMap[args.Unit].SetColor(args.Unit.Color);
+            LevelUI.UnitLevelViewMap[args.Unit].Increase(args.XP, unitScreenPos, hasLeveledUp =>
             {
                 if (hasLeveledUp)
                 {
-                    StartCoroutine(LevelUpRoutine(unit));
+                    StartCoroutine(LevelUpRoutine(args.Unit));
                 }
             });
         }

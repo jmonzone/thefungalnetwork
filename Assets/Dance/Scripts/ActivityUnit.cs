@@ -1,6 +1,13 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 
+public struct OnXpIncreasedEventArgs
+{
+    public ActivityUnit Unit;
+    public float XP;
+    public Vector3 SourcePosition;
+}
+
 // interface between activity and unit controller
 public class ActivityUnit : MonoBehaviour
 {
@@ -9,6 +16,7 @@ public class ActivityUnit : MonoBehaviour
     private Vector3 activityPosition;
 
     public Vector3 ActivityPosition => activityPosition;
+    public Quaternion LookRotation => Quaternion.LookRotation(controller.LookPosition - transform.position);
     public bool IsPlayer => controller is PlayerController;
     public bool CanJoinActivity => activity && !IsPlayer;
     public bool CanLeaveActivity => activity && !IsPlayer;
@@ -18,7 +26,7 @@ public class ActivityUnit : MonoBehaviour
     public Color Color => controller.Color;
     public UnitSkill Skill => controller.Instance.Skills[activity.PrimarySkill];
 
-    public event UnityAction<ActivityUnit,float> OnXPIncreased;
+    public event UnityAction<OnXpIncreasedEventArgs> OnXPIncreased;
 
     private void Awake()
     {
@@ -47,10 +55,15 @@ public class ActivityUnit : MonoBehaviour
         controller.SetDestination(position);
     }
 
-    public void IncreaseXP(float value)
+    public void IncreaseXP(float value, Vector3 sourcePosition)
     {
         //Debug.Log("ActivityUnit.IncreaseXP");
         controller.Instance.Skills[activity.PrimarySkill].IncreaseSkillXP(value);
-        OnXPIncreased?.Invoke(this, value);
+        OnXPIncreased?.Invoke(new OnXpIncreasedEventArgs
+        {
+            Unit = this,
+            XP = value,
+            SourcePosition = sourcePosition
+        });
     }
 }
