@@ -5,26 +5,25 @@ using UnityEngine;
 
 public class FresnelMaterialController : MonoBehaviour
 {
-   // speed of return to stage color
-
-    [SerializeField] private float pulseOffset = 1;
-    [SerializeField] private float pulseDuration = 0.1f;      // speed of pulse lerp
-    [SerializeField] private float stageDuration = 0.1f;      // speed of pulse lerp
-
-    [SerializeField] private int currentStage = 0;
-    [SerializeField] private int maxProgress = 3;
-
-    [SerializeField] private Color originalColor;
-    [SerializeField] private Color startColor;
-    [SerializeField] private Color targetColor;
-    [SerializeField] private Color stageColor;
-
     [SerializeField] private Material targetMaterial;
-    [SerializeField] private float originalIntensity = 1f;
-    [SerializeField] private float startIntensity;
-    [SerializeField] private float targetIntensity = 0f;
+
+    [SerializeField] private Color baseColor;
+    [SerializeField] private Color highlightColor;
+
+    [SerializeField] private float baseIntensity = 1f;
+    [SerializeField] private float highlightIntensity = 0f;
+
+    [SerializeField] private float pulseDuration = 0.1f;      // speed of pulse lerp
+    [SerializeField] private float pulseValue = 0.1f;      // speed of pulse lerp
+
+    private float pulseTimer = 0;
 
     private Material[] materials;
+    private bool isHighlighted = false;
+    public bool IsHighlighted => isHighlighted;
+
+    private Color CurrentColor => materials[0].GetColor("_Outer_Color");
+    private float CurrentIntensity => materials[0].GetFloat("_Intensity");
 
     private void Awake()
     {
@@ -50,71 +49,83 @@ public class FresnelMaterialController : MonoBehaviour
 
 
         materials = mats.ToArray();
+        baseColor = CurrentColor;
+        baseIntensity = CurrentIntensity;
     }
-
 
     public void SetTargetColor(Color color)
     {
-        targetColor = color;
+        highlightColor = color;
+    }
+
+    public void Highlight()
+    {
+        isHighlighted = true;
+        StopAllCoroutines();
+        StartCoroutine(ColorRoutine(highlightColor));
+        SetIntensity(highlightIntensity);
+    }
+
+    public void Unhighlight()
+    {
+        isHighlighted = false;
+        StopAllCoroutines();
+        StartCoroutine(ColorRoutine(baseColor));
+        SetIntensity(baseIntensity);
     }
 
     public void Pulse()
     {
-        currentStage = Mathf.Clamp(currentStage + 1, 0, maxProgress);
-        startColor = CurrentColor;
-        startIntensity = CurrentIntensity;
+        pulseTimer += pulseValue;
         StopAllCoroutines();
         StartCoroutine(PulseRoutine());
     }
 
-    private IEnumerator PulseRoutine()
+    private IEnumerator ColorRoutine(Color targetColor)
     {
-        var pulseValue = (float)(currentStage) / (maxProgress);
-        var pulseIntensity = Mathf.Lerp(originalIntensity, targetIntensity, pulseValue);
+        var startColor = CurrentColor;
 
-        float t = 0f;
+        var t = 0f;
         while (t < pulseDuration)
         {
-            var pulseColor = Color.Lerp(originalColor, targetColor, pulseValue);
-
             t += Time.deltaTime;
-            SetColor(pulseColor, pulseIntensity, t / pulseDuration);
-            yield return null;
-        }
-
-        //// Decrement stage timer
-        while (currentStage > 0)
-        {
-            startColor = CurrentColor;
-            startIntensity = CurrentIntensity;
-
-            t = 0f;
-            while (t < stageDuration)
-            {
-                stageColor = Color.Lerp(originalColor, targetColor, (float)(currentStage - pulseOffset) / (maxProgress));
-
-                t += Time.deltaTime;
-
-                SetColor(stageColor, originalIntensity, t / stageDuration);
-
-                yield return null;
-            }
-
-            currentStage = Mathf.Clamp(currentStage - 1, 0, maxProgress);
+            var lerpColor = Color.Lerp(startColor, targetColor, t / pulseDuration);
+            SetColor(lerpColor);
             yield return null;
         }
     }
 
-    private Color CurrentColor => materials[0].GetColor("_Outer_Color");
-    private float CurrentIntensity => materials[0].GetFloat("_Intensity");
+    private IEnumerator PulseRoutine()
+    {
 
-    private void SetColor(Color targetColor, float targetIntensity, float t)
+        var pulseColor = Color.Lerp(baseColor, highlightColor, pulseTimer);
+        yield return ColorRoutine(pulseColor);
+
+        while (pulseTimer > 0)
+        {
+            pulseTimer -= Time.deltaTime;
+
+            var decayColor = Color.Lerp(baseColor, highlightColor, pulseTimer);
+
+            SetColor(decayColor);
+            SetIntensity(pulseTimer);
+            yield return null;
+        }
+    }
+
+    private void SetColor(Color targetColor)
     {
         foreach(var material in materials)
         {
-            material.SetColor("_Outer_Color", Color.Lerp(startColor, targetColor, t));
-            material.SetFloat("_Intensity", Mathf.Lerp(startIntensity, targetIntensity, t));
+            material.SetColor("_Outer_Color", targetColor);
+        }
+    }
 
+    private void SetIntensity(float value)
+    {
+        foreach (var material in materials)
+        {
+            material.SetFloat("_Intensity", value);
         }
     }
 }

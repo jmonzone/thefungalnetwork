@@ -75,6 +75,7 @@ public class FadeCanvasGroup : MonoBehaviour
 
     public void SetInteractable(bool interactable)
     {
+        if (!canvasGroup) canvasGroup = GetComponent<CanvasGroup>();
         canvasGroup.interactable = interactable;
     }
 }

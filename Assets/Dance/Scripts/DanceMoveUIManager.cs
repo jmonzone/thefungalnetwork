@@ -25,12 +25,10 @@ public class DanceMoveUIManager : MonoBehaviour
         {
             moveViews[i].SetMove(move, () =>
             {
-                fadeCanvasGroup.SetInteractable(false);
                 onMoveUsed?.Invoke();
 
                 unit.UseDanceMove(move, () =>
                 {
-                    fadeCanvasGroup.SetInteractable(true);
                     onMoveComplete?.Invoke();
                 });
             });
@@ -44,4 +42,10 @@ public class DanceMoveUIManager : MonoBehaviour
             i++;
         }
     }
+
+    public void ToggleInteractable(bool value)
+    {
+        fadeCanvasGroup.SetInteractable(value);
+    }
 }
+

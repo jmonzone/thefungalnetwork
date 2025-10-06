@@ -7,7 +7,6 @@ public class DanceActivityUI : ActivityUI<UnitDance, DanceActivityController>
     [Header("References")]
     [SerializeField] private UnitManager unitManager;
     [SerializeField] private DJTableReference djTableReference;
-    [SerializeField] private DanceActivityController danceActivity;
     [SerializeField] private DanceBackground background;
     [SerializeField] private DanceMoveUIManager danceMoveUIManager;
 
@@ -42,15 +41,26 @@ public class DanceActivityUI : ActivityUI<UnitDance, DanceActivityController>
 
     private void UpdateMovesUI()
     {
-        if (danceActivity.CurrentUnit)
+        if (Controller.CurrentUnit)
         {
-            var moves = danceActivity.CurrentUnit.Instance.Skills[Activity.PrimarySkill].Moves;
-            StartCoroutine(danceMoveUIManager.Show(danceActivity.CurrentUnit, moves, () =>
+            if (Controller.CurrentUnit.IsUsingDanceMove)
             {
+                danceMoveUIManager.ToggleInteractable(false);
+            }
+            else
+            {
+                danceMoveUIManager.ToggleInteractable(Controller.CurrentUnit.IsPlayer);
+            }
+
+            var moves = Controller.CurrentUnit.Instance.Skills[Activity.PrimarySkill].Moves;
+            StartCoroutine(danceMoveUIManager.Show(Controller.CurrentUnit, moves, () =>
+            {
+                danceMoveUIManager.ToggleInteractable(false);
                 SetExitButtonInteractable(false);
             },
             () =>
             {
+                Controller.SelectNextUnit();
                 SetExitButtonInteractable(true);
             }));
         }

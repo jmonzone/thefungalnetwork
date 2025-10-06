@@ -29,4 +29,14 @@ public abstract class ActivityBehaviour : UnitBehaviour
     {
         unit.LookAt(target);
     }
+
+    public virtual void OnSelect()
+    {
+
+    }
+
+    public virtual void OnUnselect()
+    {
+
+    }
 }

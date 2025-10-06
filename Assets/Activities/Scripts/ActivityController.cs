@@ -107,6 +107,7 @@ public abstract class ActivityController<T> : MonoBehaviour where T : ActivityBe
 
         currentIndex = Units.IndexOf(unit);
         currentUnit = unit;
+        unit.OnSelect();
         OnUnitSelected?.Invoke(unit);
     }
 
@@ -114,11 +115,12 @@ public abstract class ActivityController<T> : MonoBehaviour where T : ActivityBe
     {
         if (currentUnit)
         {
+            currentUnit.OnUnselect();
             currentUnit = null;
         }
     }
 
-    protected void SelectNextUnit()
+    public void SelectNextUnit()
     {
         currentIndex = (currentIndex + 1) % Activity.Units.Count;
         SelectUnit(units[currentIndex]);

@@ -49,6 +49,8 @@ public class PTS_ActivityUI : ActivityUI<PTS_Unit, PTS_ActivityController>
 
     protected override void OnPlayerExit(ActivityUnit player)
     {
+        StopAllCoroutines();
+
         if (PlayerIsSelected)
         {
             foreach (var glyph in glyphs)
@@ -63,7 +65,6 @@ public class PTS_ActivityUI : ActivityUI<PTS_Unit, PTS_ActivityController>
 
         base.OnPlayerExit(player);
         virtualCamera.Priority = 0;
-        StopAllCoroutines();
     }
 
     protected override void OnUnitSelected(PTS_Unit unit)

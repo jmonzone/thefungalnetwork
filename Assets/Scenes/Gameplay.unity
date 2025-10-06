@@ -30546,7 +30546,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1145510282}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.06869, y: 0.00000001822998, z: -0.000000001255182, w: 0.99763805}
+  m_LocalRotation: {x: 0.06868998, y: -0.0000000166458, z: 0.0000000011461067, w: 0.99763805}
   m_LocalPosition: {x: 0, y: 0.75, z: 0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -34623,14 +34623,13 @@ MonoBehaviour:
   activity: {fileID: 11400000, guid: 0651293cfe83f4f34bdd7eb7e76e7477, type: 2}
   playerReference: {fileID: 11400000, guid: 746148e8242954418b04a3ab83ac9260, type: 2}
   player: {fileID: 0}
-  controller: {fileID: 0}
+  controller: {fileID: 408548840}
   levelUI: {fileID: 814677947}
   gameplayUI: {fileID: 992836761}
   levelUpUI: {fileID: 1685977537}
   exitButton: {fileID: 1530633239}
   unitManager: {fileID: 2087691131}
   djTableReference: {fileID: 11400000, guid: 3bda1116fcf8f49e696cd21c6b5092da, type: 2}
-  danceActivity: {fileID: 408548840}
   background: {fileID: 1024366496}
   danceMoveUIManager: {fileID: 335020474}
 --- !u!1 &1307552609
@@ -51526,19 +51525,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 537fc6826d4f04289aa90ef648333b75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pulseOffset: 1
-  pulseDuration: 0.1
-  stageDuration: 0.1
-  currentStage: 0
-  maxProgress: 3
-  originalColor: {r: 0, g: 0, b: 0, a: 0}
-  startColor: {r: 0, g: 0, b: 0, a: 0}
-  targetColor: {r: 0, g: 0, b: 0, a: 0}
-  stageColor: {r: 0, g: 0, b: 0, a: 0}
   targetMaterial: {fileID: 2100000, guid: 806224b540ec7465496fd51b01d3f02f, type: 2}
-  originalIntensity: 1
-  startIntensity: 0
-  targetIntensity: 0
+  baseColor: {r: 0, g: 0, b: 0, a: 0}
+  highlightColor: {r: 0, g: 0, b: 0, a: 0}
+  baseIntensity: 1
+  highlightIntensity: 0.5
+  pulseDuration: 1
+  pulseValue: 1
 --- !u!1001 &2048171602
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -63306,19 +63299,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 537fc6826d4f04289aa90ef648333b75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pulseOffset: 1
-  pulseDuration: 1
-  stageDuration: 1
-  currentStage: 25
-  maxProgress: 25
-  originalColor: {r: 0.60784316, g: 0.84705883, b: 0.88235295, a: 1}
-  startColor: {r: 0.79607844, g: 0.972549, b: 0.4352941, a: 1}
-  targetColor: {r: 0.79607844, g: 0.972549, b: 0.43529412, a: 1}
-  stageColor: {r: 0.788549, g: 0.9675294, b: 0.4531765, a: 1}
   targetMaterial: {fileID: 2100000, guid: bc42afe95340d477a8be76b554cf4815, type: 2}
-  originalIntensity: 5
-  startIntensity: -1
-  targetIntensity: -1
+  baseColor: {r: 0, g: 0, b: 0, a: 0}
+  highlightColor: {r: 0, g: 0, b: 0, a: 0}
+  baseIntensity: 1
+  highlightIntensity: 0
+  pulseDuration: 1
+  pulseValue: 0.1
 --- !u!1001 &9165303570867922266
 PrefabInstance:
   m_ObjectHideFlags: 0
