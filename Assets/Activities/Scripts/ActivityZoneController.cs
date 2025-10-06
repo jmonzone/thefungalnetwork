@@ -49,9 +49,6 @@ public class ActivityZoneController : MonoBehaviour
 
     private void OnActivityStart()
     {
-        // Move player to origin
-        transform.position = activity.Origin;
-
         // Show and animate zone
         zoneController.SetActive(true);
         StartCoroutine(ElasticScale(zoneController.transform, startScale, endScale, scaleDuration));

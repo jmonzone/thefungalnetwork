@@ -7,6 +7,8 @@ public class PTS_ActivityController : ActivityController<PTS_Unit>
     [SerializeField] private DJTableReference djReference;
     [SerializeField] private PTS_SporeController sporeController;
 
+    public PTS_SporeController SporeController => sporeController;
+
     protected override void OnActivityStart()
     {
         base.OnActivityStart();
@@ -35,6 +37,14 @@ public class PTS_ActivityController : ActivityController<PTS_Unit>
 
     public void PassSpore()
     {
+
         CurrentUnit.PassSpore(NextUnit, unit => SelectUnit(unit));
+
+
+    }
+
+    protected virtual void Update()
+    {
+       
     }
 }

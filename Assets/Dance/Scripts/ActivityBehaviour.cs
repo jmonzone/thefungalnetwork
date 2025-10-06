@@ -24,4 +24,9 @@ public abstract class ActivityBehaviour : UnitBehaviour
         //Debug.Log("ActivityBehaviour.IncreaseXP");
         unit.IncreaseXP(value, sourcePosition);
     }
+
+    public void LookAt(Vector3 target)
+    {
+        unit.LookAt(target);
+    }
 }

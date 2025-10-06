@@ -99,6 +99,7 @@ MonoBehaviour:
   playerReference: {fileID: 11400000, guid: 746148e8242954418b04a3ab83ac9260, type: 2}
   playerUnit: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477, type: 2}
   inventoryReference: {fileID: 11400000, guid: e9c2fc38b99d8404f8495af08b4889fc, type: 2}
+  povCamera: {fileID: 0}
 --- !u!195 &225081015780643707
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -113,7 +114,7 @@ NavMeshAgent:
   m_Acceleration: 100
   avoidancePriority: 0
   m_AngularSpeed: 0
-  m_StoppingDistance: 0.5
+  m_StoppingDistance: 0.05
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -372,6 +373,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isActive: 0
   activityReference: {fileID: 11400000, guid: 20234f3cd19d34d52ba858ad98b27405, type: 2}
+  sporeOffset: {x: 0, y: 0.1, z: 0.4}
 --- !u!1001 &3542599120507107562
 PrefabInstance:
   m_ObjectHideFlags: 0

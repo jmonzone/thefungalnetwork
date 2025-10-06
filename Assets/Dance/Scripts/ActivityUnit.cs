@@ -55,6 +55,11 @@ public class ActivityUnit : MonoBehaviour
         controller.SetDestination(position);
     }
 
+    public void LookAt(Vector3 target)
+    {
+        controller.SetLookPosition(target);
+    }
+
     public void IncreaseXP(float value, Vector3 sourcePosition)
     {
         //Debug.Log("ActivityUnit.IncreaseXP");

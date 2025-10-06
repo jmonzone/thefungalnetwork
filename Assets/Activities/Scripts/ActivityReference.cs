@@ -89,20 +89,23 @@ public class ActivityReference : ScriptableObject
     private void UpdateUnits()
     {
         int count = units.Count;
-        var offset = Random.Range(0, Mathf.PI * 2);
+        if (count == 0) return;
+
+        float radius = 1.0f; // radius of the circle
+        float offset = Random.Range(0f, Mathf.PI * 2f); // random rotation of the circle
 
         for (int i = 0; i < count; i++)
         {
-            // Evenly spaced angle around circle, but clockwise
+            // Evenly spaced angle around the circle
             float angle = -(i / (float)count) * Mathf.PI * 2f + offset;
 
-            // Direction from center (clockwise order)
-            Vector3 direction = new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle));
+            // Compute position on circle
+            Vector3 direction = new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle)) * radius;
+            Vector3 destination = origin + direction;
 
-            // Position offset outward from center
-            Vector3 destination = origin + direction * 1f;
-
+            // Update unit
             units[i].UpdatePosition(destination);
+            units[i].LookAt(origin); // face the center
         }
     }
 }

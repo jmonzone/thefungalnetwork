@@ -20,9 +20,13 @@ public class PTS_Unit : ActivityBehaviour
 
     public void PassSpore(PTS_Unit target, UnityAction<PTS_Unit> onComplete)
     {
-        IncreaseXP(15, spore.transform.position + Vector3.up * 0.5f);
         spore.Pass(target, () => onComplete?.Invoke(target));
         spore = null;
+    }
+
+    public void CollectSpore()
+    {
+        IncreaseXP(1, spore.transform.position + Vector3.up * 0.5f);
     }
 
     protected override void Update()
@@ -30,7 +34,8 @@ public class PTS_Unit : ActivityBehaviour
         base.Update();
         if (spore)
         {
-            spore.transform.position = SporePosition;
+            float lerpSpeed = 5f; // tweak for how fast it follows
+            spore.transform.position = Vector3.Lerp(spore.transform.position, SporePosition, Time.deltaTime * lerpSpeed);
         }
     }
 }

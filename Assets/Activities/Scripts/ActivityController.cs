@@ -65,6 +65,8 @@ public abstract class ActivityController<T> : MonoBehaviour where T : ActivityBe
 
     protected virtual void OnActivityStart()
     {
+        transform.position = activity.Origin;
+
         currentIndex = -1;
         SelectNextUnit();
     }

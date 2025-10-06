@@ -34,8 +34,6 @@ public class UnitDance : ActivityBehaviour
     private Coroutine moveRoutine;
     private Coroutine highlightRoutine;
 
-    private float BeatDuration => djReference.BeatDuration * danceBeat;
-
     public event UnityAction<UnitDance, DanceMoveInstance> OnDanceMoveUsed;
     public event UnityAction<UnitDance, DanceMoveInstance> OnDanceMoveComplete;
 
@@ -45,22 +43,7 @@ public class UnitDance : ActivityBehaviour
 
         animator = GetComponentInChildren<Animator>();
 
-        // collect only the materials that are the same instance as targetMaterial
-        var mats = new List<Material>();
-
-        Renderer[] renderers = GetComponentsInChildren<Renderer>();
-        foreach (var rend in renderers)
-        {
-            foreach (var mat in rend.materials)
-            {
-                if (!targetMaterial || mat.name.StartsWith(targetMaterial.name))
-                {
-                    mats.Add(mat);
-                }
-            }
-        }
-
-        materials = mats.ToArray();
+       
 
         originalColor = Controller.Color;
     }

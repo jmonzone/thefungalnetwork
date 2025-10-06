@@ -22,6 +22,7 @@ public abstract class ActivityUI<T1, T2> : MonoBehaviour where T1 : ActivityBeha
     protected PlayerReference PlayerReference => playerReference;
     protected T1 Player => player;
     protected T2 Controller => controller;
+    protected bool PlayerIsSelected => player == controller.CurrentUnit;
 
     protected SkillLevelUIManager LevelUI => levelUI;
     public bool IsGameplayUI => gameplayUI.IsVisible;
