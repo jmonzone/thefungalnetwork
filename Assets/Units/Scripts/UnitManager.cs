@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -29,7 +30,8 @@ public class UnitManager : MonoBehaviour
 
         foreach (var unit in unitList.Units)
         {
-            if (unit.FriendshipLevel >= 2) SummonUnit(unit);
+            if (unit == playerController.Instance) continue;
+            SummonUnit(unit);
         }
 
         OnAllUnitsSummoned?.Invoke();

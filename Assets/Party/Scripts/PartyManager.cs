@@ -69,27 +69,29 @@ public class PartyManager : MonoBehaviour
         var partyFrog = unitManager.UnitControllers[0];
         partyFrog.SetDefaultBehaviour(partyFrog.GetComponent<UnitDJ>());
 
+        return;
+
         //todo: assemble guests predefined by party + newly introduced friends
         var allGuests = new List<UnitInstance>();
 
         //todo: don't spawn host or guests already spawned;
-        foreach(var predefinedGuest in partyReference.CurrentParty.Guests)
-        {
-            var copyGuest = unitList.CopyUnit(predefinedGuest, false);
-            allGuests.Add(copyGuest);
-        }
+        //foreach(var predefinedGuest in partyReference.CurrentParty.Guests)
+        //{
+        //    var copyGuest = unitList.CopyUnit(predefinedGuest, false);
+        //    allGuests.Add(copyGuest);
+        //}
 
-        // todo: include direct invites
-        // todo: introduces guests
-        foreach (var guest in unitList.Friends)
-        {
-            var friendshipLevel = guest.FriendshipLevel;
+        //// todo: include direct invites
+        //// todo: introduces guests
+        //foreach (var guest in unitList.Friends)
+        //{
+        //    var friendshipLevel = guest.FriendshipLevel;
 
-            if (friendshipLevel >= 2 && unitList.TryGetFriend(guest, out UnitInstance friend, allGuests))
-            {
-                allGuests.Add(friend);
-            }
-        }
+        //    if (friendshipLevel >= 2 && unitList.TryGetFriend(guest, out UnitInstance friend, allGuests))
+        //    {
+        //        allGuests.Add(friend);
+        //    }
+        //}
 
         foreach (var guest in allGuests)
         {

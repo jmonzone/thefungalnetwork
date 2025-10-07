@@ -33,6 +33,11 @@ public class UnitListReference : ScriptableObject
 
     public event UnityAction<UnitInstance> OnFungalSelected;
 
+    public ColorPalette GetColorPaletteByElement(Element element)
+    {
+        return colorPalettes.Find(p => p?.Element == element);
+    }
+
     public void Initialize()
     {
         foreach(var unit in unitCollection)
@@ -66,11 +71,10 @@ public class UnitListReference : ScriptableObject
 
                     var elementId = unitJson.Value<string>("element");
                     var element = System.Enum.TryParse(elementId, ignoreCase: true, out Element elementResult) ? elementResult : Element.NONE;
+                    var matchingColorPalette = GetColorPaletteByElement(element);
 
                     var jobId = unitJson.Value<string>("job");
                     var matchingJob = jobCollection.Find(job => job.Id == jobId);
-
-                    var matchingColorPalette = colorPalettes.Find(p => p?.Id == elementId);
 
                     float friendshipXP = unitJson.Value<float?>("friendshipXP") ?? 0f;
 
@@ -150,9 +154,9 @@ public class UnitListReference : ScriptableObject
         return RegisterUnit(copiedSkills, saveData);
     }
 
-    public (Unit unit, ColorPalette color) PickNewFriend()
+    public (Unit unit, Element element) PickNewFriend()
     {
-        // Step 1: units the instance hasn’t had yet globally
+        // Step 1: pick a unit the instance hasn’t seen yet
         var unseenUnits = unitCollection
             .Where(u => !Units.Any(ui => ui.Data == u))
             .ToList();
@@ -160,56 +164,50 @@ public class UnitListReference : ScriptableObject
         if (unseenUnits.Count > 0)
         {
             var chosenUnit = unseenUnits[Random.Range(0, unseenUnits.Count)];
-            TryPickUnseenColorForUnit(chosenUnit, out ColorPalette chosenColor);
-            return (chosenUnit, chosenColor);
+            TryPickUnseenElementForUnit(chosenUnit, out Element chosenElement);
+            return (chosenUnit, chosenElement);
         }
 
-        // Step 2: all units have been seen → prioritize units with unused colors
-        var unitsWithUnseenColors = unitCollection
-            .Where(u => TryPickUnseenColorForUnit(u, out ColorPalette colorPalette))
-            .ToList();
-
-        if (unitsWithUnseenColors.Count > 0)
+        // Step 2: all units have been seen → pick a unit that still has unseen elements
+        var availablePairs = new List<(Unit, Element)>();
+        foreach (var u in unitCollection)
         {
-            var chosenUnit = unitsWithUnseenColors[Random.Range(0, unitsWithUnseenColors.Count)];
-            TryPickUnseenColorForUnit(chosenUnit, out ColorPalette chosenColor);
-            return (chosenUnit, chosenColor);
+            if (TryPickUnseenElementForUnit(u, out Element e))
+                availablePairs.Add((u, e));
         }
 
-        // Step 3: fallback → any unit and any color
+        if (availablePairs.Count > 0)
+            return availablePairs[Random.Range(0, availablePairs.Count)];
+
+        // Step 3: fallback → any unit and any element
         var fallbackUnit = unitCollection[Random.Range(0, unitCollection.Count)];
-        var fallbackColor = colorPalettes[Random.Range(0, colorPalettes.Count)];
-        return (fallbackUnit, fallbackColor);
+        var allElements = (Element[])System.Enum.GetValues(typeof(Element));
+        var fallbackElement = allElements[Random.Range(0, allElements.Length)];
+
+        return (fallbackUnit, fallbackElement);
     }
 
-    /// <summary>
-    /// Returns a color palette that hasn't been used yet for the given unit type. 
-    /// Returns null if all colors are already used.
-    /// </summary>
-    private bool TryPickUnseenColorForUnit(Unit unit, out ColorPalette colorPalette)
+    private bool TryPickUnseenElementForUnit(Unit unit, out Element element)
     {
-        // Get all colors already used for this unit type
-        var usedColors = Units
+        var usedElements = Units
             .Where(ui => ui.Data == unit)
-            .Select(ui => ui.ColorPalette)
+            .Select(ui => ui.Element)
             .ToHashSet();
 
-        // Find all unseen colors
-        var unseenColors = colorPalettes
-            .Where(c => !usedColors.Contains(c))
+        var allElements = (Element[])System.Enum.GetValues(typeof(Element));
+        var unseenElements = allElements
+            .Where(e => !usedElements.Contains(e) && e != Element.NONE)
             .ToList();
 
-        if (unseenColors.Count > 0)
+        if (unseenElements.Count > 0)
         {
-            colorPalette = unseenColors[Random.Range(0, unseenColors.Count)];
+            element = unseenElements[Random.Range(0, unseenElements.Count)];
             return true;
         }
-        else
-        {
-            colorPalette = colorPalettes[Random.Range(0, colorPalettes.Count)];
-            return false;
-        }
 
+        // fallback: all elements used → pick any
+        element = allElements[Random.Range(0, allElements.Length)];
+        return false;
     }
 
     public bool TryGetFriend(UnitInstance unit, out UnitInstance friend, List<UnitInstance> blacklist)
@@ -242,9 +240,12 @@ public class UnitListReference : ScriptableObject
 
     private UnitInstance CreateNewFriend(UnitInstance unit)
     {
-        var (newUnit, newColor) = PickNewFriend();
+        var (newUnit, newElement) = PickNewFriend();
         var friend = CreateInstance<UnitInstance>();
-        friend.Initialize(newUnit, colorPalette: newColor);
+
+        var matchingColorPalette = GetColorPaletteByElement(newElement);
+
+        friend.Initialize(newUnit, element: newElement, colorPalette: matchingColorPalette);
         unit.Friends.Add(friend);
         friend.Friends.Add(unit);
         RegisterUnit(friend);
