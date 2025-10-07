@@ -25,7 +25,6 @@ public class PTS_ActivityUI : ActivityUI<PTS_Unit, PTS_ActivityController>
     [SerializeField] private RectTransform glyphContainer;
     [SerializeField] private GlyphPattern glyphPattern = GlyphPattern.Fairy;
     [SerializeField, Min(1)] private int psychicLoops = 2; // number of full rotations for psychic pattern
-    [SerializeField] private float loopDuration = 1.2f;
 
 
     private List<PTS_Glyph> glyphs = new List<PTS_Glyph>();
@@ -55,7 +54,7 @@ public class PTS_ActivityUI : ActivityUI<PTS_Unit, PTS_ActivityController>
         {
             foreach (var glyph in glyphs)
             {
-                Destroy(glyph.gameObject);
+                if (glyph) Destroy(glyph.gameObject);
             }
 
             glyphs = new List<PTS_Glyph>();
@@ -78,34 +77,42 @@ public class PTS_ActivityUI : ActivityUI<PTS_Unit, PTS_ActivityController>
         }
     }
 
-    private IEnumerator GlyphRoutine()
+    public IEnumerator GlyphRoutine()
     {
         if (glyphCount <= 0) yield break;
 
-        // Generate pattern positions (now time-aware for Psychic)
+        // Compute pattern positions for all glyphs
         Vector3[] positions = GeneratePatternPositions(glyphPattern, glyphCount);
+
+        int collected = 0;
+        float spawnDelay = glyphDuration / glyphCount * 0.3f; // proportionate to total duration
 
         for (int i = 0; i < glyphCount; i++)
         {
-            // Spawn glyph
             var glyphController = Instantiate(glyphPrefab, glyphContainer);
             glyphController.InitializeAtPosition(positions[i], glyphContainer);
+
             glyphController.OnCollected += _ =>
             {
-                Player.CollectSpore();
+                collected++;
+
+                // Trigger mild vibration once per loop
+                if (collected >= Mathf.Floor(glyphCount / psychicLoops))
+                {
+                    collected = 0;
+                    Handheld.Vibrate();
+                }
+
+                Player.CollectSpore(Controller.SporeController.transform.position + Vector3.up * 0.5f);
                 Controller.SporeController.LightSpore();
                 glyphs.Remove(glyphController);
             };
 
             glyphs.Add(glyphController);
-
-            // Sequential overlap
-            yield return new WaitForSeconds(glyphDuration * 0.3f);
+            yield return new WaitForSeconds(spawnDelay);
         }
 
-        // Wait for all glyphs to finish animating
-        yield return new WaitForSeconds(glyphDuration + 0.1f);
-
+        yield return new WaitForSeconds(glyphPrefab.Duration * 2f);
         Controller.PassSpore();
     }
 
@@ -119,57 +126,14 @@ public class PTS_ActivityUI : ActivityUI<PTS_Unit, PTS_ActivityController>
 
         switch (pattern)
         {
-            case GlyphPattern.Fairy:
-                // Spiral pattern
-                for (int i = 0; i < count; i++)
-                {
-                    float t = i / (float)count;
-                    float angle = t * Mathf.PI * 4f;
-                    float radiusX = Mathf.Lerp(0f, halfWidth, t);
-                    float radiusY = Mathf.Lerp(0f, halfHeight, t);
-                    float yOffset = Mathf.Lerp(-halfHeight, halfHeight, t);
-                    positions[i] = new Vector3(Mathf.Cos(angle) * radiusX, yOffset, Mathf.Sin(angle) * radiusY);
-                }
-                break;
-
-            case GlyphPattern.Lightning:
-                // Jagged zig-zag bolt
-                for (int i = 0; i < count; i++)
-                {
-                    float t = i / (float)(count - 1);
-                    float xOffset = Mathf.Sin(t * Mathf.PI * 6f) * halfWidth;
-                    float yOffset = Mathf.Lerp(-halfHeight, halfHeight, t);
-                    positions[i] = new Vector3(xOffset, yOffset, 0f);
-                }
-                break;
-
-            case GlyphPattern.Grass:
-                // Flowing wave
-                for (int i = 0; i < count; i++)
-                {
-                    float t = i / (float)(count - 1);
-                    float xOffset = Mathf.Lerp(-halfWidth, halfWidth, t);
-                    float yOffset = Mathf.Sin(t * Mathf.PI * 2f) * (halfHeight * 0.5f);
-                    positions[i] = new Vector3(xOffset, yOffset, 0f);
-                }
-                break;
-
             case GlyphPattern.Psychic:
-                // Circular orbit — time-aware for loop speed
                 float radius = Mathf.Min(halfWidth, halfHeight) * 0.8f;
                 float totalAngle = psychicLoops * Mathf.PI * 2f;
 
                 for (int i = 0; i < count; i++)
                 {
                     float t = i / (float)count;
-
-                    // Base angle based on total loops
                     float angle = t * totalAngle;
-
-                    // Use loopDuration to control angular speed
-                    // The faster the duration, the more spread-out the pattern appears over time
-                    float angularSpeed = totalAngle / loopDuration;
-                    angle = t * angularSpeed * loopDuration;
 
                     float x = Mathf.Cos(angle) * radius;
                     float y = Mathf.Sin(angle) * radius;
@@ -180,7 +144,5 @@ public class PTS_ActivityUI : ActivityUI<PTS_Unit, PTS_ActivityController>
 
         return positions;
     }
-
-
 
 }

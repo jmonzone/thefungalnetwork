@@ -27,7 +27,7 @@ public class UnitDestination : MonoBehaviour
 
     private void Update()
     {
-        if (!isAtDestination && Vector3.Distance(destination, transform.position) < 0.05f)
+        if (!isAtDestination && Vector3.Distance(destination, transform.position) < 0.5f)
         {
             isAtDestination = true;
             //navMeshAgent.isStopped = true;

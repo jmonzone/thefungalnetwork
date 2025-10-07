@@ -60,7 +60,7 @@ public abstract class ActivityController<T> : MonoBehaviour where T : ActivityBe
     protected void OnPlayerExit(ActivityUnit player)
     {
         playerIsActive = false;
-        //if (PlayerIsSelected) UnselectUnit();
+        if (PlayerIsSelected) SelectNextUnit();
     }
 
     protected virtual void OnActivityStart()

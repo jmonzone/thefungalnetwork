@@ -1,8 +1,7 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UIElements;
 
-public class DanceActivityUI : ActivityUI<UnitDance, DanceActivityController>
+public class DanceActivityUI : ActivityUI<DanceActivityUnit, DanceActivityController>
 {
     [Header("References")]
     [SerializeField] private UnitManager unitManager;
@@ -33,7 +32,7 @@ public class DanceActivityUI : ActivityUI<UnitDance, DanceActivityController>
         StopAllCoroutines();
     }
 
-    protected override void OnUnitSelected(UnitDance unit)
+    protected override void OnUnitSelected(DanceActivityUnit unit)
     {
         base.OnUnitSelected(unit);
         UpdateMovesUI();
@@ -52,17 +51,24 @@ public class DanceActivityUI : ActivityUI<UnitDance, DanceActivityController>
                 danceMoveUIManager.ToggleInteractable(Controller.CurrentUnit.IsPlayer);
             }
 
-            var moves = Controller.CurrentUnit.Instance.Skills[Activity.PrimarySkill].Moves;
-            StartCoroutine(danceMoveUIManager.Show(Controller.CurrentUnit, moves, () =>
+            if (Controller.CurrentUnit.IsPlayer)
             {
-                danceMoveUIManager.ToggleInteractable(false);
-                SetExitButtonInteractable(false);
-            },
-            () =>
+                var moves = Controller.CurrentUnit.Instance.Skills[Activity.PrimarySkill].Moves;
+                StartCoroutine(danceMoveUIManager.Show(Controller.CurrentUnit, moves, () =>
+                {
+                    danceMoveUIManager.ToggleInteractable(false);
+                    SetExitButtonInteractable(false);
+                },
+                () =>
+                {
+                    Controller.SelectNextUnit();
+                    SetExitButtonInteractable(true);
+                }));
+            }
+            else
             {
-                Controller.SelectNextUnit();
-                SetExitButtonInteractable(true);
-            }));
+                danceMoveUIManager.Hide();
+            }
         }
     }
 

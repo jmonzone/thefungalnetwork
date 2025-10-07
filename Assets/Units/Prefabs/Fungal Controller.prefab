@@ -49,6 +49,11 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -70,6 +75,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 10
@@ -220,7 +226,7 @@ NavMeshAgent:
   m_Height: 1
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 3
+  m_ObstacleAvoidanceType: 0
 --- !u!114 &4509796270662811225
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -352,7 +358,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: bcd1bfb81b6924142a09e3f6c29f50f3, type: 3}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: bcd1bfb81b6924142a09e3f6c29f50f3, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -499,30 +506,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 5390423667600184729}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab2b86bc7abaf4cd1b8c1172b4e34303, type: 3}
+  m_Script: {fileID: 11500000, guid: d037ad6d3749f4d51b2f5293908c7ced, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 0
   activityReference: {fileID: 11400000, guid: 0651293cfe83f4f34bdd7eb7e76e7477, type: 2}
-  danceReference: {fileID: 11400000, guid: 0651293cfe83f4f34bdd7eb7e76e7477, type: 2}
-  danceSkill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
   djReference: {fileID: 11400000, guid: 3bda1116fcf8f49e696cd21c6b5092da, type: 2}
-  targetMaterial: {fileID: 0}
-  intensityID: _Emission
   baseDanceAnimation: Bounce
-  danceBeat: 1
-  baseDanceBeat: 1
-  moveDanceBeat: 4
-  targetColor: {r: 0.5411765, g: 0.80784315, b: 0, a: 1}
-  originalColor: {r: 0, g: 0.8206897, b: 1, a: 1}
-  stageColor: {r: 0, g: 0.8206897, b: 1, a: 1}
-  pulseSpeed: 10
-  targetIntensity: 5
-  originalIntensity: 0.5
-  stageSpeed: 1
-  maxProgress: 3
-  pulseOffset: 2
-  currentStage: 2
 --- !u!114 &3445689529040859860
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -15,8 +15,9 @@ public class FresnelMaterialController : MonoBehaviour
 
     [SerializeField] private float pulseDuration = 0.1f;      // speed of pulse lerp
     [SerializeField] private float pulseValue = 0.1f;      // speed of pulse lerp
+    [SerializeField] private float pulseTimer = 0f;
+    [SerializeField] private float decaySpeed = 0.1f;      // speed of pulse lerp
 
-    private float pulseTimer = 0;
 
     private Material[] materials;
     private bool isHighlighted = false;
@@ -49,8 +50,6 @@ public class FresnelMaterialController : MonoBehaviour
 
 
         materials = mats.ToArray();
-        baseColor = CurrentColor;
-        baseIntensity = CurrentIntensity;
     }
 
     public void SetTargetColor(Color color)
@@ -76,7 +75,7 @@ public class FresnelMaterialController : MonoBehaviour
 
     public void Pulse()
     {
-        pulseTimer += pulseValue;
+        pulseTimer = Mathf.Clamp01(pulseTimer + pulseValue);
         StopAllCoroutines();
         StartCoroutine(PulseRoutine());
     }
@@ -84,13 +83,16 @@ public class FresnelMaterialController : MonoBehaviour
     private IEnumerator ColorRoutine(Color targetColor)
     {
         var startColor = CurrentColor;
+        var startIntensity = CurrentIntensity;
 
         var t = 0f;
         while (t < pulseDuration)
         {
             t += Time.deltaTime;
             var lerpColor = Color.Lerp(startColor, targetColor, t / pulseDuration);
+            var lerpIntensity = Mathf.Lerp(startIntensity, highlightIntensity, pulseTimer);
             SetColor(lerpColor);
+            SetIntensity(lerpIntensity);
             yield return null;
         }
     }
@@ -99,16 +101,31 @@ public class FresnelMaterialController : MonoBehaviour
     {
 
         var pulseColor = Color.Lerp(baseColor, highlightColor, pulseTimer);
-        yield return ColorRoutine(pulseColor);
+        var pulseIntensity = Mathf.Lerp(baseIntensity, highlightIntensity, pulseTimer);
+
+        var startColor = CurrentColor;
+        var startIntensity = CurrentIntensity;
+
+        var t = 0f;
+        while (t < pulseDuration)
+        {
+            t += Time.deltaTime;
+            var lerpColor = Color.Lerp(startColor, pulseColor, t / pulseDuration);
+            var lerpIntensity = Mathf.Lerp(startIntensity, pulseIntensity, t / pulseDuration);
+            SetColor(lerpColor);
+            SetIntensity(lerpIntensity);
+            yield return null;
+        }
 
         while (pulseTimer > 0)
         {
-            pulseTimer -= Time.deltaTime;
+            pulseTimer = Mathf.Clamp01(pulseTimer - Time.deltaTime * decaySpeed);
 
             var decayColor = Color.Lerp(baseColor, highlightColor, pulseTimer);
-
             SetColor(decayColor);
-            SetIntensity(pulseTimer);
+
+            var decayIntensity = Mathf.Lerp(baseIntensity, highlightIntensity, pulseTimer);
+            SetIntensity(decayIntensity);
             yield return null;
         }
     }

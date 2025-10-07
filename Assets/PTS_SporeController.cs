@@ -6,13 +6,6 @@ public class PTS_SporeController : MonoBehaviour
 {
     [SerializeField] private DJTableReference djReference;
     [SerializeField] private float arcHeight = 0.5f;
-    [SerializeField] private Renderer shellRenderer;
-    [SerializeField] private Color startColor;
-    [SerializeField] private Color endColor;
-    [SerializeField] private float startIntensity;
-    [SerializeField] private float endIntensity;
-    [SerializeField] private float increaseSpeed;
-    [SerializeField] private float decreaseSpeed;
 
     private FresnelMaterialController fresnelMaterial;
 

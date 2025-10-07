@@ -50,9 +50,10 @@ GameObject:
   - component: {fileID: 6363586532240370566}
   - component: {fileID: 8520475437556092179}
   - component: {fileID: 7412468969747994918}
-  - component: {fileID: 5880526443589518393}
   - component: {fileID: 133544065979608274}
+  - component: {fileID: 5880526443589518393}
   - component: {fileID: 1735357340148595598}
+  - component: {fileID: 495309119734572904}
   m_Layer: 0
   m_Name: Player Controller
   m_TagString: Untagged
@@ -113,7 +114,7 @@ NavMeshAgent:
   m_Speed: 2
   m_Acceleration: 100
   avoidancePriority: 0
-  m_AngularSpeed: 0
+  m_AngularSpeed: 1250
   m_StoppingDistance: 0.05
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
@@ -121,7 +122,7 @@ NavMeshAgent:
   m_Height: 1
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
+  m_ObstacleAvoidanceType: 0
 --- !u!114 &8264549079356023806
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -206,7 +207,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: c1a2583afe9254f42aea97784095f264, type: 3}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: c1a2583afe9254f42aea97784095f264, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -314,39 +316,6 @@ MonoBehaviour:
   scaleUp: 1.5
   scaleDuration: 0.25
   jumpHeight: 0.5
---- !u!114 &5880526443589518393
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 421527447816816506}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab2b86bc7abaf4cd1b8c1172b4e34303, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isActive: 0
-  activityReference: {fileID: 11400000, guid: 0651293cfe83f4f34bdd7eb7e76e7477, type: 2}
-  danceReference: {fileID: 11400000, guid: 0651293cfe83f4f34bdd7eb7e76e7477, type: 2}
-  danceSkill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
-  djReference: {fileID: 11400000, guid: 3bda1116fcf8f49e696cd21c6b5092da, type: 2}
-  targetMaterial: {fileID: 2100000, guid: 806224b540ec7465496fd51b01d3f02f, type: 2}
-  intensityID: _Intensity
-  baseDanceAnimation: Dance_SwordAndShield
-  danceBeat: 4
-  baseDanceBeat: 4
-  moveDanceBeat: 4
-  targetColor: {r: 0.5411765, g: 0.80784315, b: 0, a: 1}
-  originalColor: {r: 0, g: 0.8206897, b: 1, a: 1}
-  stageColor: {r: 0, g: 0.8206897, b: 1, a: 1}
-  pulseSpeed: 10
-  targetIntensity: -1
-  originalIntensity: 1.5
-  stageSpeed: 1
-  maxProgress: 3
-  pulseOffset: 2
-  currentStage: 2
 --- !u!114 &133544065979608274
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -359,6 +328,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 216c26c64ab0c4921bcb5efe7472f269, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5880526443589518393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 421527447816816506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d037ad6d3749f4d51b2f5293908c7ced, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isActive: 0
+  activityReference: {fileID: 11400000, guid: 0651293cfe83f4f34bdd7eb7e76e7477, type: 2}
+  djReference: {fileID: 11400000, guid: 3bda1116fcf8f49e696cd21c6b5092da, type: 2}
+  baseDanceAnimation: Dance_SwordAndShield
 --- !u!114 &1735357340148595598
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -374,6 +359,27 @@ MonoBehaviour:
   isActive: 0
   activityReference: {fileID: 11400000, guid: 20234f3cd19d34d52ba858ad98b27405, type: 2}
   sporeOffset: {x: 0, y: 0.1, z: 0.4}
+--- !u!114 &495309119734572904
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 421527447816816506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 537fc6826d4f04289aa90ef648333b75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetMaterial: {fileID: 2100000, guid: 806224b540ec7465496fd51b01d3f02f, type: 2}
+  baseColor: {r: 0.35686275, g: 0.8235294, b: 0.9254902, a: 1}
+  highlightColor: {r: 0.35686275, g: 0.8235294, b: 0.9254902, a: 1}
+  baseIntensity: 1
+  highlightIntensity: 0.5
+  pulseDuration: 1
+  pulseValue: 1
+  pulseTimer: 0
+  decaySpeed: 0.1
 --- !u!1001 &3542599120507107562
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -758,12 +764,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2706990786035198946, guid: 9e89634fe9474125ab42aefdc22a787d,
         type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 806224b540ec7465496fd51b01d3f02f, type: 2}
     - target: {fileID: 2706990786035198946, guid: 9e89634fe9474125ab42aefdc22a787d,
         type: 3}
-      propertyPath: m_Materials.Array.data[1]
+      propertyPath: 'm_Materials.Array.data[1]'
       value: 
       objectReference: {fileID: 2100000, guid: 806224b540ec7465496fd51b01d3f02f, type: 2}
     - target: {fileID: 2838267163965576514, guid: 9e89634fe9474125ab42aefdc22a787d,
@@ -1793,7 +1799,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8907300813736130153, guid: 9e89634fe9474125ab42aefdc22a787d,
         type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 806224b540ec7465496fd51b01d3f02f, type: 2}
     - target: {fileID: 8951615198464756160, guid: 9e89634fe9474125ab42aefdc22a787d,

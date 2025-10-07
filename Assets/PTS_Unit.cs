@@ -13,6 +13,11 @@ public class PTS_Unit : ActivityBehaviour
 
     }
 
+    public override void OnUnselect()
+    {
+        base.OnUnselect();
+    }
+
     public void GiveSpore(PTS_SporeController spore)
     {
         this.spore = spore;
@@ -24,9 +29,9 @@ public class PTS_Unit : ActivityBehaviour
         spore = null;
     }
 
-    public void CollectSpore()
+    public void CollectSpore(Vector3 source)
     {
-        IncreaseXP(1, spore.transform.position + Vector3.up * 0.5f);
+        IncreaseXP(1, source);
     }
 
     protected override void Update()

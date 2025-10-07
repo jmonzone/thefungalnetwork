@@ -10,10 +10,12 @@ public class PTS_Glyph : MonoBehaviour, IPointerEnterHandler
     [SerializeField] private float duration = 1f;
     [SerializeField] private float minScale = 0.5f;
     [SerializeField] private float maxScale = 1.2f;
+    [SerializeField] private float collectScale = 2f;
+    [SerializeField] private float collectDuration = 0.75f;
+
 
     [Header("Float / Bounce Curve")]
     [SerializeField] private AnimationCurve floatCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
-    // Designers can edit this curve in inspector for arcs, bounces, etc.
 
     [Header("References")]
     [SerializeField] private RectTransform rectTransform;
@@ -21,6 +23,8 @@ public class PTS_Glyph : MonoBehaviour, IPointerEnterHandler
 
     private Vector3 targetLocalPosition;
     private bool isCollected = false;
+
+    public float Duration => duration;
 
     public UnityAction<PTS_Glyph> OnCollected;
 
@@ -54,13 +58,7 @@ public class PTS_Glyph : MonoBehaviour, IPointerEnterHandler
             float yOffset = floatCurve.Evaluate(t) * 20f; // 20 units max, or scale as needed
             rectTransform.localPosition = targetLocalPosition + new Vector3(0f, yOffset, 0f);
 
-            // Fade out
-            if (image != null)
-            {
-                Color c = image.color;
-                c.a = Mathf.Lerp(0f, 1f, scaleT);
-                image.color = c;
-            }
+            image.color = Color.Lerp(Color.clear, Color.white, scaleT);
 
             yield return null;
         }
@@ -80,27 +78,22 @@ public class PTS_Glyph : MonoBehaviour, IPointerEnterHandler
 
     private IEnumerator LerpOutAndDestroy()
     {
-        float elapsed = 0f;
-        float fadeDuration = 0.4f;
         Vector3 startScale = rectTransform.localScale;
         Color startColor = image.color;
 
-        while (elapsed < fadeDuration)
+        var targetScale = collectScale * Vector3.one;
+
+        float elapsed = 0f;
+        while (elapsed < collectDuration)
         {
             elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / fadeDuration);
+            float t = Mathf.Clamp01(elapsed / collectDuration);
 
-            rectTransform.localScale = Vector3.Lerp(startScale, Vector3.zero, t);
-
-            if (image != null)
-            {
-                Color c = startColor;
-                c.a = Mathf.Lerp(startColor.a, 0f, t);
-                image.color = c;
-            }
+            rectTransform.localScale = Vector3.Lerp(startScale, targetScale, t);
+            image.color = Color.Lerp(startColor, Color.clear, t);
 
             // Optional upward drift
-            rectTransform.localPosition += Vector3.up * Time.deltaTime * 20f * (1 - t);
+            rectTransform.localPosition += (1 - t) * 20f * Time.deltaTime * Vector3.up;
 
             yield return null;
         }

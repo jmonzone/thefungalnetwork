@@ -3,22 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class UnitDance : ActivityBehaviour
+public class DanceActivityUnit : ActivityBehaviour
 {
-    [SerializeField] private ActivityReference danceReference;
-    [SerializeField] private Skill danceSkill;
     [SerializeField] private DJTableReference djReference;
     [SerializeField] private string baseDanceAnimation;
-    [SerializeField] private float danceBeat = 1;
-    [SerializeField] private float baseDanceBeat = 1;
-    [SerializeField] private float moveDanceBeat = 1;
 
     private Animator animator;
     private FresnelMaterialController materialController;
 
     private Coroutine moveRoutine;
 
-    public event UnityAction<UnitDance, DanceMoveInstance> OnDanceMoveUsed;
+    public event UnityAction<DanceActivityUnit, DanceMoveInstance> OnDanceMoveUsed;
 
     protected override void OnInitialized()
     {
@@ -33,7 +28,6 @@ public class UnitDance : ActivityBehaviour
     protected override void OnBehaviourStart()
     {
         //Debug.Log($"UnitDance.OnBehaviourStart");
-        danceBeat = baseDanceBeat;
         StartCoroutine(DanceRoutine());
 
     }
@@ -70,10 +64,12 @@ public class UnitDance : ActivityBehaviour
 
     private IEnumerator DanceMoveRoutine(DanceMoveInstance danceMove, UnityAction onComplete)
     {
+        Debug.Log("OnDanceMoveStarted");
+
         animator.ResetTrigger("Complete");
 
         animator.SetBool("IsDancing", false);
-        Controller.SetDestination(danceReference.Origin);
+        Controller.SetDestination(Activity.Origin);
         yield return new WaitUntil(() => Controller.IsAtDestination);
         animator.SetBool("IsDancing", true);
 
@@ -91,7 +87,6 @@ public class UnitDance : ActivityBehaviour
         while (!animator.GetCurrentAnimatorStateInfo(0).IsName(animationName))
             yield return null;
 
-        danceBeat = moveDanceBeat;
 
         // wait until we've completed `loops` iterations
         while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1 + danceMove.Loops)
@@ -102,7 +97,6 @@ public class UnitDance : ActivityBehaviour
         else animator.Play(baseDanceAnimation, 0, 0);
 
         yield return new WaitForSeconds(1f);
-        danceBeat = baseDanceBeat;
 
         Debug.Log("OnDanceMoveUsed");
 
@@ -112,7 +106,6 @@ public class UnitDance : ActivityBehaviour
 
         yield return new WaitUntil(() => Controller.IsAtDestination);
         animator.SetBool("IsDancing", true);
-        Debug.Log("OnDanceMoveComplete");
 
         yield return new WaitForSeconds(1f);
 
@@ -121,7 +114,7 @@ public class UnitDance : ActivityBehaviour
         isUsingDanceMove = false;
     }
 
-    private void DjReference_OnTrackValueChanged()
+    private void UpdateTargetColor()
     {
         if (!materialController) return;
 
@@ -140,19 +133,23 @@ public class UnitDance : ActivityBehaviour
 
     private void OnEnable()
     {
-        djReference.OnTrackValueChanged += DjReference_OnTrackValueChanged;
+        djReference.OnTrackValueChanged += UpdateTargetColor;
     }
 
     private void OnDisable()
     {
-        djReference.OnTrackValueChanged -= DjReference_OnTrackValueChanged;
+        djReference.OnTrackValueChanged -= UpdateTargetColor;
     }
 
     public override void OnSelect()
     {
         base.OnSelect();
 
-        if (materialController) materialController.Highlight();
+        if (materialController)
+        {
+            UpdateTargetColor();
+            materialController.Highlight();
+        }
     }
 
     public override void OnUnselect()

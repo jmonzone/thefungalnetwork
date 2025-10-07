@@ -16,10 +16,8 @@ public class DanceMoveUIManager : MonoBehaviour
         GetComponentsInChildren(true, moveViews);
     }
 
-    public IEnumerator Show(UnitDance unit, List<DanceMoveInstance> moves, UnityAction onMoveUsed, UnityAction onMoveComplete)
+    public IEnumerator Show(DanceActivityUnit unit, List<DanceMoveInstance> moves, UnityAction onMoveUsed, UnityAction onMoveComplete)
     {
-        yield return fadeCanvasGroup.FadeIn();
-
         var i = 0;
         foreach (var move in moves)
         {
@@ -41,11 +39,19 @@ public class DanceMoveUIManager : MonoBehaviour
             moveViews[i].gameObject.SetActive(false);
             i++;
         }
+
+        yield return fadeCanvasGroup.FadeIn();
+
     }
 
     public void ToggleInteractable(bool value)
     {
         fadeCanvasGroup.SetInteractable(value);
+    }
+
+    public void Hide()
+    {
+        fadeCanvasGroup.gameObject.SetActive(false);
     }
 }
 

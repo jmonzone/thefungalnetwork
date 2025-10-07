@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class DanceActivityController : ActivityController<UnitDance>
+public class DanceActivityController : ActivityController<DanceActivityUnit>
 {
     [SerializeField] private DJTableReference djReference;
     [SerializeField] private Light spotlight;
@@ -45,24 +45,24 @@ public class DanceActivityController : ActivityController<UnitDance>
         StopAllCoroutines();
     }
 
-    protected override void OnUnitBehaviourApplied(UnitDance unit)
+    protected override void OnUnitBehaviourApplied(DanceActivityUnit unit)
     {
         base.OnUnitBehaviourApplied(unit);
         unit.OnDanceMoveUsed += OnDanceMoveUsed;
     }
 
-    protected override void OnUnitBehaviourRemoved(UnitDance unit)
+    protected override void OnUnitBehaviourRemoved(DanceActivityUnit unit)
     {
         base.OnUnitBehaviourRemoved(unit);
         unit.OnDanceMoveUsed -= OnDanceMoveUsed;
     }
 
-    private void OnDanceMoveUsed(UnitDance unit, DanceMoveInstance danceMove)
+    private void OnDanceMoveUsed(DanceActivityUnit unit, DanceMoveInstance danceMove)
     {
         unit.IncreaseXP(danceMove.Xp, unit.transform.position + Vector3.up * 0.5f);
     }
 
-    public override void SelectUnit(UnitDance unit)
+    public override void SelectUnit(DanceActivityUnit unit)
     {
         base.SelectUnit(unit);
         spotlight.gameObject.SetActive(true);
@@ -71,6 +71,7 @@ public class DanceActivityController : ActivityController<UnitDance>
 
     private IEnumerator PassRoutine()
     {
+        yield return new WaitUntil(() => CurrentUnit.Controller.IsAtDestination);
         yield return new WaitForSeconds(djReference.BeatDuration * 2);
 
         var moves = CurrentUnit.Instance.Skills[Activity.PrimarySkill].Moves;
