@@ -12,6 +12,8 @@ public class DialogueActionsUI : DialoguePageUI
     [SerializeField] private FadeCanvasGroup actionButtons;
     [SerializeField] private TypewriterEffect dialogueTypewriter;
 
+    [SerializeField] private DialogueChatUI chatUI;
+
     [SerializeField] private Button chatButton;
     [SerializeField] private Button photoButton;
     [SerializeField] private Button giveButton;
@@ -27,7 +29,10 @@ public class DialogueActionsUI : DialoguePageUI
     protected override void Awake()
     {
         base.Awake();
-        chatButton.onClick.AddListener(dialogue.StartChat);
+        chatButton.onClick.AddListener(() =>
+        {
+            dialogue.StartChat();
+        });
         photoButton.onClick.AddListener(dialogue.StartPhoto);
         giveButton.onClick.AddListener(dialogue.StartGive);
         followButton.onClick.AddListener(dialogue.StartFollow);

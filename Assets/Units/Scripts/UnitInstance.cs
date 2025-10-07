@@ -8,30 +8,29 @@ using UnityEngine.Events;
 public class UnitInstance : ScriptableObject
 {
     [SerializeField] private string id;
-    [SerializeField] private Unit unit;
+    [SerializeField] private Unit data;
 
     [SerializeField] private int friendshipLevel;
     [SerializeField] private float friendshipXP;
 
     [SerializeField] private List<UnitSkill> skills;
 
-    public Dictionary<Skill, UnitSkill> Skills = new Dictionary<Skill, UnitSkill>(); 
+    public Dictionary<Skill, UnitSkill> Skills = new Dictionary<Skill, UnitSkill>();
 
+    [SerializeField] private JObject json;
     [SerializeField] private Element element;
     [SerializeField] private Job job;
     [SerializeField] private ColorPalette colorPalette;
     [SerializeField] private List<UnitInstance> friends;
-    [SerializeField] private JObject json;
 
     public string Id => id;
-    public Unit Data => unit;
+    public Unit Data => data;
     public Element Element => element;
     public Job Job => job;
     public ColorPalette ColorPalette => colorPalette;
-
+    
     public List<Dialogue> Dialogue => Data.ElementalDialogue[element];
     public Dialogue RandomDialogue => Dialogue[UnityEngine.Random.Range(0, Dialogue.Count)];
-
 
     public UnitSkill GetSkill(Skill skill) => Skills[skill];
 
@@ -50,10 +49,10 @@ public class UnitInstance : ScriptableObject
 
     public event UnityAction<float> OnXpChanged;
 
-    public void Initialize(Unit unit, string id = null, float friendshipXP = 0, Element element = Element.NONE, Job job = null, ColorPalette colorPalette = null, JObject json = null)
+    public void Initialize(Unit data, string id = null, float friendshipXP = 0, Element element = Element.NONE, Job job = null, ColorPalette colorPalette = null, JObject json = null)
     {
         this.id = string.IsNullOrEmpty(id) ? GenerateMongoLikeId() : id;
-        this.unit = unit;
+        this.data = data;
         this.json = json;
 
         this.friendshipXP = friendshipXP;

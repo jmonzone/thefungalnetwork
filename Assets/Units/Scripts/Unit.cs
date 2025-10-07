@@ -23,8 +23,7 @@ public class Unit : ScriptableObject
 
     public int[] ColumnMapping => columnMapping;
 
-    // Key: element, Value: list of dialogue chains
-    public Dictionary<Element, List<Dialogue>> ElementalDialogue = new Dictionary<Element, List<Dialogue>>();
+    public Dictionary<Element, List<Dialogue>> ElementalDialogue { get; private set; } = new();
 
     public void Initialize(JObject data)
     {
@@ -32,41 +31,51 @@ public class Unit : ScriptableObject
 
         foreach (var elementProp in data.Properties())
         {
-            if (!Enum.TryParse<Element>(elementProp.Name, true, out var element))
+            if (!Enum.TryParse(elementProp.Name, true, out Element element))
                 element = Element.NONE;
 
-            if (elementProp.Value is JObject elementObj && elementObj["lines"] is JArray linesArray)
-            {
-                var dialogues = new List<Dialogue>();
+            if (elementProp.Value is not JObject elementObj)
+                continue;
 
-                foreach (JArray lineGroup in linesArray)
-                {
-                    Dialogue first = null;
-                    Dialogue previous = null;
-
-                    foreach (var lineToken in lineGroup)
-                    {
-                        string text = lineToken.ToString();
-                        var dialogue = new Dialogue(text, element.ToString());
-
-                        if (first == null)
-                            first = dialogue;
-
-                        if (previous != null)
-                            previous.SetNext(dialogue);
-
-                        previous = dialogue;
-                    }
-
-                    if (first != null)
-                        dialogues.Add(first); // add the head of the chain
-                }
-
-                ElementalDialogue[element] = dialogues;
-            }
+            // Reusable helper
+            AddDialogueGroup(elementObj, "lines", ElementalDialogue, element);
         }
     }
 
+    private void AddDialogueGroup(JObject elementObj, string key, Dictionary<Element, List<Dialogue>> targetDict, Element element)
+    {
+        if (elementObj[key] is not JArray groupArray)
+            return;
+
+        var dialogues = new List<Dialogue>();
+
+        foreach (JArray lineGroup in groupArray)
+        {
+            Dialogue head = BuildDialogueChain(lineGroup, element);
+            if (head != null)
+                dialogues.Add(head);
+        }
+
+        targetDict[element] = dialogues;
+    }
+
+    private Dialogue BuildDialogueChain(JArray lineGroup, Element element)
+    {
+        Dialogue first = null;
+        Dialogue previous = null;
+
+        foreach (var lineToken in lineGroup)
+        {
+            var dialogue = new Dialogue(lineToken.ToString(), element.ToString());
+            if (first == null)
+                first = dialogue;
+
+            previous?.SetNext(dialogue);
+            previous = dialogue;
+        }
+
+        return first;
+    }
     // Get random dialogue chain for element
     public Dialogue GetDialogue(Element element)
     {

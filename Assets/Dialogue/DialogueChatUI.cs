@@ -13,36 +13,38 @@ public class DialogueChatUI : DialoguePageUI
     protected override void Awake()
     {
         base.Awake();
-        continueButton.onClick.AddListener(() => OnGlyphDialogueComplete());
+        continueButton.onClick.AddListener(() => ContinueDialogue());
     }
 
     public override IEnumerator Show()
     {
-        yield return base.Show();
         unitImage.sprite = dialogue.Unit.Instance.Data.Sprite;
         unitNameText.text = dialogue.Unit.Instance.Data.Name;
-        dialogueText.text = dialogue.Dialogue.Text;
+        dialogueText.text = "I just invited my friend, they should be coming by here soon.";
+        yield return base.Show();
     }
 
-    private void OnGlyphDialogueComplete()
+    private void ContinueDialogue()
     {
-        var targetDialogue = dialogue.Dialogue;
+        InvokeClose();
 
-        if (targetDialogue.Responses.Count >= 2)
-        {
-            var response = targetDialogue.Responses[0];
-            dialogue.RespondToChat(response);
-            if (response.Next != null) StartCoroutine(Show());
-            else InvokeClose();
-        }
-        else if (targetDialogue.Next != null)
-        {
-            dialogue.ContinueDialogue();
-            StartCoroutine(Show());
-        }
-        else
-        {
-            InvokeClose();
-        }
+        //var targetDialogue = dialogue.Dialogue;
+
+        //if (targetDialogue.Responses.Count >= 2)
+        //{
+        //    var response = targetDialogue.Responses[0];
+        //    dialogue.RespondToChat(response);
+        //    if (response.Next != null) StartCoroutine(Show());
+        //    else InvokeClose();
+        //}
+        //else if (targetDialogue.Next != null)
+        //{
+        //    dialogue.ContinueDialogue();
+        //    StartCoroutine(Show());
+        //}
+        //else
+        //{
+        //    InvokeClose();
+        //}
     }
 }
