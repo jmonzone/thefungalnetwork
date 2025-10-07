@@ -226,12 +226,7 @@ public class UnitListReference : ScriptableObject
 
         if (unit.Friends.Count < 3 && Random.value < introduceNewFriend)
         {
-            var (newUnit, newColor) = PickNewFriend();
-            friend = CreateInstance<UnitInstance>();
-            friend.Initialize(newUnit, colorPalette: newColor);
-            unit.Friends.Add(friend);
-            friend.Friends.Add(unit);
-            RegisterUnit(friend);
+            friend = CreateNewFriend(unit);
         }
         else
         {
@@ -243,7 +238,17 @@ public class UnitListReference : ScriptableObject
         }
 
         return friend;
+    }
 
+    private UnitInstance CreateNewFriend(UnitInstance unit)
+    {
+        var (newUnit, newColor) = PickNewFriend();
+        var friend = CreateInstance<UnitInstance>();
+        friend.Initialize(newUnit, colorPalette: newColor);
+        unit.Friends.Add(friend);
+        friend.Friends.Add(unit);
+        RegisterUnit(friend);
+        return friend;
     }
 
     public UnitInstance RegisterUnit(UnitInstance unit, bool saveData = true)
@@ -328,5 +333,13 @@ public class UnitListReference : ScriptableObject
     {
         OnFungalSelected?.Invoke(unit);
         navigation.Navigate(fungalView);
+    }
+
+    public event UnityAction<UnitInstance> OnFriendInvited;
+
+    public void InviteFriend(UnitInstance unit)
+    {
+        var friend = CreateNewFriend(unit);
+        OnFriendInvited?.Invoke(friend);
     }
 }

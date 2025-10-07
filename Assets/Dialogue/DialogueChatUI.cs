@@ -9,6 +9,7 @@ public class DialogueChatUI : DialoguePageUI
     [SerializeField] private TextMeshProUGUI unitNameText;
     [SerializeField] private TextMeshProUGUI dialogueText;
     [SerializeField] private Button continueButton;
+    [SerializeField] private UnitListReference unitReference;
 
     protected override void Awake()
     {
@@ -26,6 +27,7 @@ public class DialogueChatUI : DialoguePageUI
 
     private void ContinueDialogue()
     {
+        unitReference.InviteFriend(dialogue.Unit.Instance);
         InvokeClose();
 
         //var targetDialogue = dialogue.Dialogue;

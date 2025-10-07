@@ -35,6 +35,21 @@ public class UnitManager : MonoBehaviour
         OnAllUnitsSummoned?.Invoke();
     }
 
+    private void OnEnable()
+    {
+        unitList.OnFriendInvited += UnitList_OnFriendInvited;
+    }
+
+    private void OnDisable()
+    {
+        unitList.OnFriendInvited -= UnitList_OnFriendInvited;
+    }
+
+    private void UnitList_OnFriendInvited(UnitInstance unit)
+    {
+        SummonUnit(unit);
+    }
+
     public UnitController SummonUnit(UnitInstance unit)
     {
         var spawnPosition = unitSpawnAnchor.transform.position;
