@@ -4,7 +4,9 @@ using UnityEngine.Events;
 public class PTS_Unit : ActivityBehaviour
 {
     [SerializeField] private Vector3 sporeOffset;
-    public Vector3 SporePosition => transform.position + LookRotation * sporeOffset;
+
+    public Vector3 SporePosition => transform.position + Controller.RenderRoot.forward * sporeOffset.z + Vector3.up * sporeOffset.y;
+
 
     private PTS_SporeController spore;
 

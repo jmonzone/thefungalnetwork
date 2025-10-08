@@ -27,7 +27,7 @@ public class DialogueChatUI : DialoguePageUI
 
     private void ContinueDialogue()
     {
-        unitReference.InviteFriend(dialogue.Unit.Instance);
+        unitReference.InviteFriend(dialogue.Unit);
         InvokeClose();
 
         //var targetDialogue = dialogue.Dialogue;

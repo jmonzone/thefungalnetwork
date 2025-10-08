@@ -109,6 +109,13 @@ public class ActivityReference : ScriptableObject
         int count = units.Count;
         if (count == 0) return;
 
+        if (count == 1)
+        {
+            units[0].UpdatePosition(origin);
+            units[0].LookAt(origin); // face the center
+            return;
+        }
+
         float radius = 1.0f; // radius of the circle
         float offset = Random.Range(0f, Mathf.PI * 2f); // random rotation of the circle
 

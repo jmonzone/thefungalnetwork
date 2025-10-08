@@ -10,13 +10,6 @@ public interface IJob
     public event UnityAction OnIsMovingChanged;
 }
 
-public enum FungalState
-{
-    WANDER,
-    DIALOGUE,
-    FOLLOW
-}
-
 public class FungalController : UnitController
 {
     [Header("Fungal References")]
@@ -89,5 +82,10 @@ public class FungalController : UnitController
     {
         base.OnProximityChanged(value);
         //chatIcon.SetActive(!dialogueReference.IsActive && value);
+    }
+
+    public void GreetFriend(UnitController friend)
+    {
+        SetDestination(friend.transform);
     }
 }

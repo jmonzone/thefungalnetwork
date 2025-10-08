@@ -27,8 +27,7 @@ public class UnitController : MonoBehaviour, IInteractable
 
     Transform ITarget.Transform => transform;
 
-    protected UnitDestination UnitDestination => unitDestination;
-    protected Transform RenderRoot => renderRoot;
+    public Transform RenderRoot => renderRoot;
 
     private CinemachineVirtualCamera virtualCamera;
     private UnitDestination unitDestination;
@@ -125,7 +124,11 @@ public class UnitController : MonoBehaviour, IInteractable
     public void SetDestination(Vector3 destination)
     {
         unitDestination.SetDestination(destination);
-        //ApplyBehaviour(unitDestination);
+    }
+
+    public void SetDestination(Transform target)
+    {
+        unitDestination.SetTarget(target);
     }
 
     public void SetLookTarget(Transform target)

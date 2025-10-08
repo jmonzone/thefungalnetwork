@@ -37,6 +37,7 @@ public class ActivityUnit : MonoBehaviour
 
     public void JoinActivity(ActivityReference activity)
     {
+        Debug.Log($" {name} joining activity {activity.name}");
         this.activity = activity;
         controller.SetLookPosition(activity.Origin);
     }

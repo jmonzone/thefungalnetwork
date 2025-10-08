@@ -346,11 +346,11 @@ public class UnitListReference : ScriptableObject
         navigation.Navigate(fungalView);
     }
 
-    public event UnityAction<UnitInstance> OnFriendInvited;
+    public event UnityAction<UnitController, UnitInstance> OnFriendInvited;
 
-    public void InviteFriend(UnitInstance unit)
+    public void InviteFriend(UnitController unit)
     {
-        var friend = CreateNewFriend(unit);
-        OnFriendInvited?.Invoke(friend);
+        var friend = CreateNewFriend(unit.Instance);
+        OnFriendInvited?.Invoke(unit, friend);
     }
 }

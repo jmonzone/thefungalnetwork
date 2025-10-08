@@ -15,6 +15,13 @@ public class UnitManager : MonoBehaviour
     [Header("Runtime")]
     [SerializeField] private List<UnitController> unitControllers;
 
+
+    [Header("Spawn Settings")]
+    [SerializeField] private PortalController portalPrefab;
+    [SerializeField] private float spawnOffsetY = -1f; // how deep the Fungal starts below ground
+    [SerializeField] private AnimationCurve riseCurve;
+    [SerializeField] private float riseDuration = 1f;
+
     public List<UnitController> UnitControllers => unitControllers;
 
     public event UnityAction<UnitController> OnUnitSummoned;
@@ -38,21 +45,6 @@ public class UnitManager : MonoBehaviour
         OnAllUnitsSummoned?.Invoke();
     }
 
-    private void OnEnable()
-    {
-        unitList.OnFriendInvited += UnitList_OnFriendInvited;
-    }
-
-    private void OnDisable()
-    {
-        unitList.OnFriendInvited -= UnitList_OnFriendInvited;
-    }
-
-    private void UnitList_OnFriendInvited(UnitInstance unit)
-    {
-        StartCoroutine(SpawnRoutine(unit));
-    }
-
     protected UnitController SummonUnit(UnitInstance unit, Vector3 spawnPosition)
     {
         var unitController = Instantiate(unitPrefab, spawnPosition, Quaternion.identity);
@@ -72,15 +64,25 @@ public class UnitManager : MonoBehaviour
         return spawnPosition;
     }
 
-    [SerializeField] private PortalController portalPrefab;
-
-    [Header("Spawn Settings")]
-    [SerializeField] private float spawnOffsetY = -1f; // how deep the Fungal starts below ground
-    [SerializeField] private AnimationCurve riseCurve;
-    [SerializeField] private float riseDuration = 1f;
-
-    private IEnumerator SpawnRoutine(UnitInstance unit)
+    private void OnEnable()
     {
+        unitList.OnFriendInvited += UnitList_OnFriendInvited;
+    }
+
+    private void OnDisable()
+    {
+        unitList.OnFriendInvited -= UnitList_OnFriendInvited;
+    }
+
+    private void UnitList_OnFriendInvited(UnitController unit, UnitInstance friend)
+    {
+        StartCoroutine(SpawnRoutine(unit, friend));
+    }
+
+    private IEnumerator SpawnRoutine(UnitController unit, UnitInstance friend)
+    {
+        yield return new WaitForSeconds(2f);
+
         var spawnPosition = GetRandomSpawnPosition();
 
         // Step 1: create portal
@@ -93,21 +95,26 @@ public class UnitManager : MonoBehaviour
         yield return new WaitUntil(() => portalOpened);
 
         // Step 2: spawn fungal
-        var fungal = SummonUnit(unit, spawnPosition + Vector3.down);
+        var summonedUnit = SummonUnit(friend, spawnPosition + Vector3.down);
 
         // Animate the fungal rising out of the portal
         float elapsed = 0f;
-        Vector3 start = fungal.transform.position;
+        Vector3 start = summonedUnit.transform.position;
         Vector3 end = spawnPosition;
 
         while (elapsed < riseDuration)
         {
             elapsed += Time.deltaTime;
             float t = riseCurve.Evaluate(elapsed / riseDuration);
-            fungal.transform.position = Vector3.LerpUnclamped(start, end, t);
+            summonedUnit.transform.position = Vector3.LerpUnclamped(start, end, t);
             yield return null;
         }
 
-        fungal.transform.position = end;
+        summonedUnit.transform.position = end;
+
+        if (unit is FungalController fungal)
+        {
+            fungal.GreetFriend(summonedUnit);
+        }
     }
 }

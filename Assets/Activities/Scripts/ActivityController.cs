@@ -79,6 +79,7 @@ public abstract class ActivityController<T> : MonoBehaviour where T : ActivityBe
 
     protected void OnUnitEnter(ActivityUnit unit)
     {
+        Debug.Log($"{unit.name} OnUnitEnter");
         var activityBehaviour = unit.GetComponent<T>();
         unit.SetBehaviour(activityBehaviour);
         OnUnitBehaviourApplied(activityBehaviour);
