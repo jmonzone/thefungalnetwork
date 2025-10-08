@@ -86,18 +86,23 @@ public class UnitWander : UnitBehaviour
 
     private Vector3 GetReachableRandomDestination(Vector3 origin, float radius, int layermask, int maxAttempts = 10)
     {
+        // assume center of the NavMesh is Vector3.zero (or origin of surface)
+        Vector3 navMeshCenter = Vector3.back * 4f;
+
         for (int i = 0; i < maxAttempts; i++)
         {
-            // 1. Pick a random point in a sphere around origin
-            Vector3 randomPoint = origin + Random.insideUnitSphere * radius;
+            // 1. Pick a random direction + radius (nonlinear to favor inner area)
+            Vector3 randomDirection = Random.onUnitSphere;
+            float biasedRadius = Mathf.Pow(Random.value, 2f) * radius; // square favors inner points
+            Vector3 randomPoint = origin + randomDirection * biasedRadius;
 
-            // 2. Apply gravitation toward the center
-            randomPoint = Vector3.Lerp(randomPoint, Vector3.zero, gravitateStrength);
+            // 3. Apply gravitation (optional extra pull)
+            randomPoint = Vector3.Lerp(randomPoint, navMeshCenter, gravitateStrength);
 
-            // 3. Project onto NavMesh
+            // 4. Project onto NavMesh
             if (NavMesh.SamplePosition(randomPoint, out NavMeshHit hit, radius, layermask))
             {
-                // 4. Check if a valid path exists
+                // 5. Validate path
                 NavMeshPath path = new NavMeshPath();
                 if (navMeshAgent.CalculatePath(hit.position, path) && path.status == NavMeshPathStatus.PathComplete)
                 {
@@ -109,4 +114,5 @@ public class UnitWander : UnitBehaviour
         // Fallback
         return origin;
     }
+
 }

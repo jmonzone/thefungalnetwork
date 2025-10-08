@@ -153,7 +153,7 @@ public class UnitController : MonoBehaviour, IInteractable
     {
         if (unitDialogue)
         {
-            currentBehaviour.PauseBehaviour();
+            if (currentBehaviour) currentBehaviour.PauseBehaviour();
             unitDialogue.StartDialogue();
         }
     }
