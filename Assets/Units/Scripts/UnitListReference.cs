@@ -16,6 +16,7 @@ public class UnitListReference : ScriptableObject
 
     [Header("Collections")]
     [SerializeField] private List<UnitInstance> initialUnits;
+    [SerializeField] private Unit playerUnit;
     [SerializeField] private List<Unit> unitCollection;
     [SerializeField] private List<Job> jobCollection;
     [SerializeField] private List<Skill> skillCollection;
@@ -140,24 +141,33 @@ public class UnitListReference : ScriptableObject
 
     public UnitInstance CopyUnit(UnitInstance instance, bool saveData = true)
     {
-        var copiedSkills = CreateInstance<UnitInstance>();
-        copiedSkills.Initialize(instance.Data, instance.Id, instance.FriendshipXP, instance.Element, instance.Job, instance.ColorPalette);
+        var copiedUnit = CreateInstance<UnitInstance>();
+        copiedUnit.Initialize(instance.Data, instance.Id, instance.FriendshipXP, instance.Element, instance.Job, instance.ColorPalette);
 
         var skills = new List<UnitSkill>();
 
         foreach (var skill in skillCollection)
         {
-            skills.Add(new UnitSkill(copiedSkills, skill, 0));
+            skills.Add(new UnitSkill(copiedUnit, skill, 0));
         }
 
-        copiedSkills.InitializeSkills(skills);
-        return RegisterUnit(copiedSkills, saveData);
+        copiedUnit.InitializeSkills(skills);
+        return RegisterUnit(copiedUnit, saveData);
     }
 
-    public (Unit unit, Element element) PickNewFriend()
+    public (Unit unit, Element element) GenerateNewUnit()
     {
+        // Skip the player's own unit
+        var availableUnits = unitCollection
+            .Where(unit => unit != playerUnit)
+            .ToList();
+
+        // Safety check: if no available units, fallback to player unit
+        if (availableUnits.Count == 0)
+            availableUnits.Add(playerUnit);
+
         // Step 1: pick a unit the instance hasn’t seen yet
-        var unseenUnits = unitCollection
+        var unseenUnits = availableUnits
             .Where(u => !Units.Any(ui => ui.Data == u))
             .ToList();
 
@@ -170,7 +180,7 @@ public class UnitListReference : ScriptableObject
 
         // Step 2: all units have been seen → pick a unit that still has unseen elements
         var availablePairs = new List<(Unit, Element)>();
-        foreach (var u in unitCollection)
+        foreach (var u in availableUnits)
         {
             if (TryPickUnseenElementForUnit(u, out Element e))
                 availablePairs.Add((u, e));
@@ -180,7 +190,7 @@ public class UnitListReference : ScriptableObject
             return availablePairs[Random.Range(0, availablePairs.Count)];
 
         // Step 3: fallback → any unit and any element
-        var fallbackUnit = unitCollection[Random.Range(0, unitCollection.Count)];
+        var fallbackUnit = availableUnits[Random.Range(0, availableUnits.Count)];
         var allElements = (Element[])System.Enum.GetValues(typeof(Element));
         var fallbackElement = allElements[Random.Range(0, allElements.Length)];
 
@@ -240,7 +250,7 @@ public class UnitListReference : ScriptableObject
 
     private UnitInstance CreateNewFriend(UnitInstance unit)
     {
-        var (newUnit, newElement) = PickNewFriend();
+        var (newUnit, newElement) = GenerateNewUnit();
         var friend = CreateInstance<UnitInstance>();
 
         var matchingColorPalette = GetColorPaletteByElement(newElement);

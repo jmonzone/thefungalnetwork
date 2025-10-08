@@ -93,11 +93,11 @@ public class PartyManager : MonoBehaviour
         //    }
         //}
 
-        foreach (var guest in allGuests)
-        {
-            var unit = unitManager.SummonUnit(guest);
-            partyReference.AddGuest(unit);
-        }
+        //foreach (var guest in allGuests)
+        //{
+        //    var unit = unitManager.SummonUnit(guest);
+        //    partyReference.AddGuest(unit);
+        //}
 
         StartCoroutine(vibeMeterCanvas.FadeIn());
         StartCoroutine(PartyRoutine());

@@ -41,8 +41,16 @@ public class UnitSkill
         this.xp = xp;
         level = GetLevelFromXP(xp);
 
+        
         moves = new List<DanceMoveInstance>();
-        foreach(var move in unit.Data.Moves)
+
+        if (!unit.Data)
+        {
+            Debug.LogWarning($"UnitSkill: missing unit data {unit.Id}");
+            return;
+        }
+
+        foreach (var move in unit.Data.Moves)
         {
             if (level >= move.LevelRequirement)
             {
