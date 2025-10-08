@@ -29,10 +29,6 @@ public class UnitInstance : ScriptableObject
     public Job Job => job;
     public ColorPalette ColorPalette => colorPalette;
     
-    public List<Dialogue> Dialogue => Data.ElementalDialogue[element];
-    public Dialogue InviteAFriendDialogue => new Dialogue(data, "I just invited my friend, they should be coming by here soon.");
-    public Dialogue RandomDialogue => Dialogue[UnityEngine.Random.Range(0, Dialogue.Count)];
-
     public UnitSkill GetSkill(Skill skill) => Skills[skill];
 
     public int FriendshipLevel => friendshipLevel;

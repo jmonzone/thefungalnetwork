@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -19,9 +21,9 @@ public class GreetingDialogue
 
         dialogue = new Dialogue(new List<Dialogue>
         {
-            new Dialogue(unitA.Instance.Data, "Hey this is my friend! Say hi :)"),
-            new Dialogue(unitB.Instance.Data, "Hey it's great to meet you!"),
-            new Dialogue(unitB.Instance.Data, "The party looks fun over here"),
+            new Dialogue(unitA, "Hey this is my friend! Say hi :)"),
+            new Dialogue(unitB, "Hey it's great to meet you!"),
+            new Dialogue(unitB, "The party looks fun over here"),
         });
     }
 }
@@ -96,5 +98,74 @@ public class UnitDialogue : MonoBehaviour
 
         unit.SetLookPosition(originalLookPosition);
         OnDialogueCompleted?.Invoke();
+    }
+
+    public List<Dialogue> Dialogue => ElementalDialogue[unit.Instance.Element];
+    public Dialogue InviteAFriendDialogue => new Dialogue(unit, "I just invited my friend, they should be coming by here soon.");
+    public Dialogue RandomDialogue => Dialogue[UnityEngine.Random.Range(0, Dialogue.Count)];
+
+    public Dictionary<Element, List<Dialogue>> ElementalDialogue { get; private set; } = new();
+
+    public void Initialize(JObject data)
+    {
+        ElementalDialogue.Clear();
+
+        foreach (var elementProp in data.Properties())
+        {
+            if (!Enum.TryParse(elementProp.Name, true, out Element element))
+                element = Element.NONE;
+
+            if (elementProp.Value is not JObject elementObj)
+                continue;
+
+            // Reusable helper
+            AddDialogueGroup(elementObj, "lines", ElementalDialogue, element);
+        }
+    }
+
+    private void AddDialogueGroup(JObject elementObj, string key, Dictionary<Element, List<Dialogue>> targetDict, Element element)
+    {
+        if (elementObj[key] is not JArray groupArray)
+            return;
+
+        var dialogues = new List<Dialogue>();
+
+        foreach (JArray lineGroup in groupArray)
+        {
+            Dialogue head = BuildDialogueChain(lineGroup, element);
+            if (head != null)
+                dialogues.Add(head);
+        }
+
+        targetDict[element] = dialogues;
+    }
+
+    private Dialogue BuildDialogueChain(JArray lineGroup, Element element)
+    {
+        Dialogue first = null;
+        Dialogue previous = null;
+
+        foreach (var lineToken in lineGroup)
+        {
+            var dialogue = new Dialogue(unit, lineToken.ToString(), element.ToString());
+            if (first == null)
+                first = dialogue;
+
+            previous?.SetNext(dialogue);
+            previous = dialogue;
+        }
+
+        return first;
+    }
+
+    // Get random dialogue chain for element
+    public Dialogue GetDialogue(Element element)
+    {
+        if (ElementalDialogue.TryGetValue(element, out var list) && list.Count > 0)
+        {
+            int index = UnityEngine.Random.Range(0, list.Count);
+            return list[index];
+        }
+        return null;
     }
 }

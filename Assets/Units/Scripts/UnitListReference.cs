@@ -12,7 +12,6 @@ public class UnitListReference : ScriptableObject
     [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference fungalView;
     [SerializeField] private ViewReference fungalListView;
-    [SerializeField] private TextAsset textAsset;
 
     [Header("Collections")]
     [SerializeField] private List<UnitInstance> initialUnits;
@@ -41,14 +40,6 @@ public class UnitListReference : ScriptableObject
 
     public void Initialize()
     {
-        foreach(var unit in unitCollection)
-        {
-            string json = textAsset.text;
-            JObject root = JObject.Parse(json);
-            JObject data = (JObject)root[unit.Name.ToLower()];
-            unit.Initialize(data);
-        }
-
         units = new List<UnitInstance>();
 
         if (localData.JsonFile.ContainsKey(UNIT_KEY))

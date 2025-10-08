@@ -31,7 +31,7 @@ public class DialogueActionsUI : DialoguePageUI
         base.Awake();
         chatButton.onClick.AddListener(() =>
         {
-            dialogue.StartDialogue(unit, unit.Instance.RandomDialogue);
+            dialogue.StartDialogue(unit, unit.Dialogue.RandomDialogue);
         });
 
         photoButton.onClick.AddListener(dialogue.StartPhoto);
@@ -56,7 +56,7 @@ public class DialogueActionsUI : DialoguePageUI
 
         actionButton.gameObject.SetActive(unit.Instance.Job);
 
-        var intro = unit.Instance.RandomDialogue;
+        var intro = unit.Dialogue.RandomDialogue;
         yield return dialogueTypewriter.TypeRoutine(intro.Text, () => StartCoroutine(actionButtons.FadeIn()));
     }
 

@@ -49,7 +49,7 @@ public enum DialogueType
 [Serializable]
 public class Dialogue
 {
-    [SerializeField] private Unit unit;
+    [SerializeField] private UnitController unit;
     [SerializeField] [TextArea] private string text;
     [SerializeField] private List<Response> responses;
     [SerializeField] private Dialogue next; // next line in the chain
@@ -57,6 +57,7 @@ public class Dialogue
     [SerializeField] private DialogueAction action;
     [SerializeField] private string element;
 
+    public UnitController Unit => unit;
     public string Text => text;
     public List<Response> Responses => responses;
     public Dialogue Next => next;
@@ -65,7 +66,7 @@ public class Dialogue
     public string Element => element;
 
     // Single-line constructor
-    public Dialogue(Unit unit, string text, string element = "neutral", DialogueType type = DialogueType.CHAT, DialogueAction action = DialogueAction.DEFAULT)
+    public Dialogue(UnitController unit, string text, string element = "neutral", DialogueType type = DialogueType.CHAT, DialogueAction action = DialogueAction.DEFAULT)
     {
         this.unit = unit;
         this.text = text;

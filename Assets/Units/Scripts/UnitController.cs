@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Cinemachine;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -122,7 +123,8 @@ public class UnitController : MonoBehaviour, IInteractable
     public virtual void Initialize(UnitInstance instance)
     {
         this.instance = instance;
-        name = "Unit Controller - " + instance.Data.Name;
+        name = "Unit - " + instance.Data.Name;
+
         OnInitialized?.Invoke();
     }
 

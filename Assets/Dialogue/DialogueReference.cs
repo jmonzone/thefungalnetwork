@@ -32,7 +32,7 @@ public class DialogueReference : ScriptableObject
 
     public void StartIntroDialogue(UnitController unit)
     {
-        ApplyStartDialogue(unit, unit.Instance.RandomDialogue);
+        ApplyStartDialogue(unit, unit.Dialogue.RandomDialogue);
         OnInteractionStart?.Invoke();
     }
 
@@ -77,7 +77,18 @@ public class DialogueReference : ScriptableObject
     {
         Debug.Log($"ContinueDialogue {dialogue.Next.Action}");
 
-        if (dialogue.Next != null) dialogue = dialogue.Next;
+        if (dialogue.Next != null)
+        {
+            if (unit != dialogue.Next.Unit)
+            {
+                unit.Unfocus();
+                unit = dialogue.Next.Unit;
+                unit.Focus();
+            }
+
+            dialogue = dialogue.Next;
+        }
+
         relationship += 50f;
     }
 
@@ -112,7 +123,7 @@ public class DialogueReference : ScriptableObject
     private void Inventory_OnItemSelected(Item arg0)
     {
         inventory.OnItemSelected -= Inventory_OnItemSelected;
-        dialogue = unit.Instance.Dialogue[0];
+        dialogue = unit.Dialogue.Dialogue[0];
         OnGiveComplete?.Invoke();
         navigation.GoBack();
     }

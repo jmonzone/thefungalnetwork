@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -11,6 +12,7 @@ public class UnitManager : MonoBehaviour
     [SerializeField] private UnitController unitPrefab;
     [SerializeField] private Transform unitSpawnAnchor;
     [SerializeField] private PlayerController playerController;
+    [SerializeField] private TextAsset textAsset;
 
     [Header("Runtime")]
     [SerializeField] private List<UnitController> unitControllers;
@@ -49,6 +51,13 @@ public class UnitManager : MonoBehaviour
     {
         var unitController = Instantiate(unitPrefab, spawnPosition, Quaternion.identity);
         unitController.Initialize(unit);
+
+
+        string json = textAsset.text;
+        JObject root = JObject.Parse(json);
+        JObject data = (JObject)root[unit.Data.Name.ToLower()];
+        unitController.Dialogue.Initialize(data);
+
         unitControllers.Add(unitController);
 
         OnUnitSummoned?.Invoke(unitController);

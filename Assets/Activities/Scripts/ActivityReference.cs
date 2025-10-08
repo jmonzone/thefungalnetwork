@@ -63,7 +63,7 @@ public class ActivityReference : ScriptableObject
         // todo: add logic to select specific unit
         // todo: add logic to make this conditional
         var targetUnit = unitsToRemove[0];
-        dialogueReference.StartDialogue(targetUnit.Controller, targetUnit.Controller.Instance.InviteAFriendDialogue);
+        dialogueReference.StartDialogue(targetUnit.Controller, targetUnit.Controller.Dialogue.InviteAFriendDialogue);
     }
 
     public void EnterActivity(ActivityUnit player)
