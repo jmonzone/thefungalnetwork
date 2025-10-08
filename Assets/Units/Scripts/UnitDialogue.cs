@@ -4,7 +4,7 @@ using UnityEngine.Events;
 public class UnitDialogue : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private DialogueReference dialogue;
+    [SerializeField] private DialogueReference dialogueReference;
     [SerializeField] private PlayerReference playerReference;
 
     [Header("Settings")]
@@ -13,30 +13,31 @@ public class UnitDialogue : MonoBehaviour
     private UnitController unit;
     private Vector3 originalLookPosition;
 
-    public event UnityAction OnComplete;
+    public event UnityAction OnDialogueStarted;
+    public event UnityAction OnDialogueCompleted;
 
     private void Awake()
     {
         unit = GetComponent<UnitController>();
     }
 
-    public void StartDialogue()
+    public void OnInteractionStarted()
     {
-        dialogue.StartInteraction(unit, unit.Instance.RandomDialogue);
-
         if (lookAtTarget)
         {
             originalLookPosition = unit.LookPosition;
             unit.SetLookPosition(playerReference.Player.transform.position);
         }
 
-        dialogue.OnDialogueComplete += Dialogue_OnDialogueComplete;
+        dialogueReference.OnDialogueComplete += Dialogue_OnDialogueComplete;
+
+        OnDialogueStarted?.Invoke();
     }
 
     private void Dialogue_OnDialogueComplete()
     {
-        dialogue.OnDialogueComplete -= Dialogue_OnDialogueComplete;
+        dialogueReference.OnDialogueComplete -= Dialogue_OnDialogueComplete;
         unit.SetLookPosition(originalLookPosition);
-        OnComplete?.Invoke();
+        OnDialogueCompleted?.Invoke();
     }
 }

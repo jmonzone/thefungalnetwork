@@ -31,9 +31,9 @@ public class DialogueReference : ScriptableObject
     public event UnityAction OnGiveComplete;
     public event UnityAction OnDialogueComplete;
 
-    public void StartInteraction(UnitController unit, Dialogue dialogue)
+    public void StartInteraction(UnitController unit)
     {
-        ApplyStartDialogue(unit, dialogue);
+        ApplyStartDialogue(unit, unit.Instance.RandomDialogue);
         OnInteractionStart?.Invoke();
     }
 
@@ -47,7 +47,9 @@ public class DialogueReference : ScriptableObject
     {
         this.unit = unit;
         this.dialogue = dialogue;
-        //Debug.Log($"ApplyStartDialogue {dialogue}");
+
+        unit.GetComponent<UnitDialogue>().OnInteractionStarted();
+
         isActive = true;
         OnIsActiveChanged?.Invoke();
 
@@ -94,11 +96,6 @@ public class DialogueReference : ScriptableObject
         Unit.SetLookTarget(playerReference.Player.transform);
         photoReference.SetLookTarget(Unit.transform);
         photoReference.StartPhotoView();
-    }
-
-    public void StartChat()
-    {
-        StartDialogue(unit, unit.Instance.Dialogue[0]);
     }
 
     public void StartGive()

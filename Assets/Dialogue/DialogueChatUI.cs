@@ -21,7 +21,7 @@ public class DialogueChatUI : DialoguePageUI
     {
         unitImage.sprite = dialogue.Unit.Instance.Data.Sprite;
         unitNameText.text = dialogue.Unit.Instance.Data.Name;
-        dialogueText.text = "I just invited my friend, they should be coming by here soon.";
+        dialogueText.text = dialogue.Dialogue.Text;
         yield return base.Show();
     }
 

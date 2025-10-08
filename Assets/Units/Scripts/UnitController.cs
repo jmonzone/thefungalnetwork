@@ -53,8 +53,8 @@ public class UnitController : MonoBehaviour, IInteractable
 
         if (unitDialogue)
         {
-            unitDialogue.OnComplete += () => currentBehaviour.UnpauseBehaviour();
-
+            unitDialogue.OnDialogueStarted += () => currentBehaviour.PauseBehaviour();
+            unitDialogue.OnDialogueCompleted += () => currentBehaviour.UnpauseBehaviour();
         }
     }
 
@@ -151,11 +151,7 @@ public class UnitController : MonoBehaviour, IInteractable
 
     public void Select()
     {
-        if (unitDialogue)
-        {
-            if (currentBehaviour) currentBehaviour.PauseBehaviour();
-            unitDialogue.StartDialogue();
-        }
+
     }
 
     public virtual void OnProximityChanged(bool value)

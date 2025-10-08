@@ -31,8 +31,9 @@ public class DialogueActionsUI : DialoguePageUI
         base.Awake();
         chatButton.onClick.AddListener(() =>
         {
-            dialogue.StartChat();
+            dialogue.StartDialogue(unit, unit.Instance.RandomDialogue);
         });
+
         photoButton.onClick.AddListener(dialogue.StartPhoto);
         giveButton.onClick.AddListener(dialogue.StartGive);
         followButton.onClick.AddListener(dialogue.StartFollow);

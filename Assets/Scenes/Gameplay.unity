@@ -13653,7 +13653,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   activity: {fileID: 11400000, guid: 0651293cfe83f4f34bdd7eb7e76e7477, type: 2}
   primarySkill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
-  playerIsActive: 0
+  player: {fileID: 0}
   currentIndex: 0
   currentUnit: {fileID: 0}
   units: []
@@ -48577,12 +48577,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   activity: {fileID: 11400000, guid: 20234f3cd19d34d52ba858ad98b27405, type: 2}
   primarySkill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
-  playerIsActive: 0
+  player: {fileID: 0}
   currentIndex: 0
   currentUnit: {fileID: 0}
   units: []
   djReference: {fileID: 11400000, guid: 3bda1116fcf8f49e696cd21c6b5092da, type: 2}
   sporeController: {fileID: 9126668177178875350}
+  passes: 0
 --- !u!1 &1845373459
 GameObject:
   m_ObjectHideFlags: 0
@@ -63674,7 +63675,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   djReference: {fileID: 11400000, guid: 3bda1116fcf8f49e696cd21c6b5092da, type: 2}
+  fresnelMaterial: {fileID: 9126668177178875351}
   arcHeight: 0.5
+  popDuration: 0.25
+  popScaleCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!114 &9126668177178875351
 MonoBehaviour:
   m_ObjectHideFlags: 0

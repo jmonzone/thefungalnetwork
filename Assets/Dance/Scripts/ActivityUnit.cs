@@ -15,6 +15,8 @@ public class ActivityUnit : MonoBehaviour
     private UnitController controller;
     private Vector3 activityPosition;
 
+    public UnitController Controller => controller;
+
     public Vector3 ActivityPosition => activityPosition;
     public Quaternion LookRotation => Quaternion.LookRotation(controller.LookPosition - transform.position);
     public bool IsPlayer => controller is PlayerController;
@@ -70,10 +72,5 @@ public class ActivityUnit : MonoBehaviour
             XP = value,
             SourcePosition = sourcePosition
         });
-    }
-
-    public void Select()
-    {
-        controller.Select();
     }
 }

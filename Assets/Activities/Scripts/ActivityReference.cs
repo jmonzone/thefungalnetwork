@@ -8,6 +8,7 @@ public class ActivityReference : ScriptableObject
     [Header("References")]
     [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference activityView;
+    [SerializeField] private DialogueReference dialogueReference;
     [SerializeField] private Skill primarySkill;
 
     [Header("Runtime")]
@@ -60,7 +61,8 @@ public class ActivityReference : ScriptableObject
 
         // todo: add logic to select specific unit
         // todo: add logic to make this conditional
-        unitsToRemove[0].Select();
+        var targetUnit = unitsToRemove[0];
+        dialogueReference.StartDialogue(targetUnit.Controller, targetUnit.Controller.Instance.InviteAFriendDialogue);
     }
 
     public void EnterActivity(ActivityUnit player)
