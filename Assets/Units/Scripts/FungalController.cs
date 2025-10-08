@@ -92,7 +92,7 @@ public class FungalController : UnitController
 
     private IEnumerator GreetRoutine(UnitController friend)
     {
-        SetTarget(friend.transform);
+        Destination.SetTarget(friend.transform);
         yield return new WaitUntil(() => Destination.IsAtDestination);
         Dialogue.StartDialogue(friend);
         friend.Dialogue.StartDialogue(this);

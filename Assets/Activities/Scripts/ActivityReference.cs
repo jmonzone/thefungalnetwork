@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -106,31 +107,11 @@ public class ActivityReference : ScriptableObject
 
     private void UpdateUnits()
     {
-        int count = units.Count;
-        if (count == 0) return;
+        UnitController.ArrangeUnitsInRadius(origin, units.Select(unit => unit.Controller).ToList());
 
-        if (count == 1)
+        foreach(var unit in units)
         {
-            units[0].UpdatePosition(origin);
-            units[0].LookAt(origin); // face the center
-            return;
-        }
-
-        float radius = 1.0f; // radius of the circle
-        float offset = Random.Range(0f, Mathf.PI * 2f); // random rotation of the circle
-
-        for (int i = 0; i < count; i++)
-        {
-            // Evenly spaced angle around the circle
-            float angle = -(i / (float)count) * Mathf.PI * 2f + offset;
-
-            // Compute position on circle
-            Vector3 direction = new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle)) * radius;
-            Vector3 destination = origin + direction;
-
-            // Update unit
-            units[i].UpdatePosition(destination);
-            units[i].LookAt(origin); // face the center
+            unit.SetActivityPosition(unit.Controller.Destination.Destination);
         }
     }
 }

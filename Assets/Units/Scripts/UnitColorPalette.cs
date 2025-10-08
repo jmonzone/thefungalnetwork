@@ -199,7 +199,7 @@ public class UnitColorPalette : UnitBehaviour
             }
         }
 
-        Debug.LogWarning("No primary color found in texture!");
+        //Debug.LogWarning("No primary color found in texture!");
         return Color.white;
     }
 }

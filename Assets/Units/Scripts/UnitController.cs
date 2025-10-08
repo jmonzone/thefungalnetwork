@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Cinemachine;
 using UnityEngine;
 using UnityEngine.Events;
@@ -52,6 +53,12 @@ public class UnitController : MonoBehaviour, IInteractable
 
         destination = GetComponent<UnitDestination>();
         dialogue = GetComponent<UnitDialogue>();
+
+        if (destination)
+        {
+            destination.OnTargetSelected += () => SetLookTarget(destination.Target);
+        }
+
 
         if (dialogue)
         {
@@ -121,6 +128,7 @@ public class UnitController : MonoBehaviour, IInteractable
 
     public void SetLookPosition(Vector3 targetPosition)
     {
+        target = null;
         targetLookPosition = targetPosition;
     }
 
@@ -164,9 +172,33 @@ public class UnitController : MonoBehaviour, IInteractable
         if (virtualCamera) virtualCamera.Priority = 0;
     }
 
-    public void SetTarget(Transform target)
+    public static void ArrangeUnitsInRadius(Vector3 origin, List<UnitController> units)
     {
-        SetLookTarget(target);
-        Destination.SetTarget(target);
+        int count = units.Count;
+        if (count == 0) return;
+
+        if (count == 1)
+        {
+            units[0].Destination.SetDestination(origin);
+            units[0].SetLookPosition(origin); // face the center
+            return;
+        }
+
+        float radius = 1.0f; // radius of the circle
+        float offset = Random.Range(0f, Mathf.PI * 2f); // random rotation of the circle
+
+        for (int i = 0; i < count; i++)
+        {
+            // Evenly spaced angle around the circle
+            float angle = -(i / (float)count) * Mathf.PI * 2f + offset;
+
+            // Compute position on circle
+            Vector3 direction = new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle)) * radius;
+            Vector3 destination = origin + direction;
+
+            // Update unit
+            units[i].Destination.SetDestination(destination);
+            units[i].SetLookPosition(origin); // face the center
+        }
     }
 }

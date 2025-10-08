@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using UnityEngine;
@@ -6,13 +7,9 @@ public class PlayerController : UnitController
 {
     [Header("Player References")]
     [SerializeField] private PlayerReference playerReference;
-    [SerializeField] private DialogueReference dialogueReference;
-    [SerializeField] private Unit playerUnit;
     [SerializeField] private InventoryReference inventoryReference;
     [SerializeField] private CinemachineVirtualCamera povCamera;
 
-    private UnitFollow unitFollow;
-    private UnitDrum unitDrum;
     private UnitGlyphCollect unitGlyphCollect;
 
     private Material[] materials;
@@ -33,10 +30,7 @@ public class PlayerController : UnitController
     {
         base.Awake();
 
-        unitFollow = GetComponent<UnitFollow>();
-        unitDrum = GetComponent<UnitDrum>();
         unitGlyphCollect = GetComponent<UnitGlyphCollect>();
-        unitFollow.OnDestinationReached += UnitFollow_OnDestinationReached;
         unitGlyphCollect.OnNoteHit += UnitGlyphCollect_OnNoteHit;
 
         // collect only the materials that are the same instance as targetMaterial
@@ -65,25 +59,6 @@ public class PlayerController : UnitController
         inventoryReference.IncreaseShrune(track.Glyph);
     }
 
-    private void UnitFollow_OnDestinationReached()
-    {
-        switch (playerReference.TargetInteractable)
-        {
-            case PlantSporeEmitter plant:
-                unitDrum.SetPlant(plant);
-                ApplyBehaviour(unitDrum);
-                break;
-            case UnitController unit:
-                dialogueReference.StartInteraction(unit);
-                ApplyDefaultBehaviour();
-                break;
-            default:
-                playerReference.TargetInteractable.Select();
-                ApplyDefaultBehaviour();
-                break;
-        }
-    }
-
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -109,9 +84,17 @@ public class PlayerController : UnitController
     {
         if (playerReference.TargetInteractable != null)
         {
-            unitFollow.SetTarget(playerReference.TargetInteractable.Transform);
-            ApplyBehaviour(unitFollow);
+            if (interactRoutine != null) StopCoroutine(interactRoutine);
+            interactRoutine = StartCoroutine(InteractRoutine());
         }
+    }
+
+    private Coroutine interactRoutine;
+    private IEnumerator InteractRoutine()
+    {
+        Destination.SetTarget(playerReference.TargetInteractable.Transform);
+        yield return new WaitUntil(() => Destination.IsAtDestination);
+        playerReference.SelectInteractable(playerReference.TargetInteractable);
     }
 
     private void PlayerReference_OnTargetPositionChanged()

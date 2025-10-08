@@ -27,7 +27,7 @@ public abstract class ActivityBehaviour : UnitBehaviour
 
     public void LookAt(Vector3 target)
     {
-        unit.LookAt(target);
+        unit.Controller.SetLookPosition(target);
     }
 
     public virtual void OnSelect()

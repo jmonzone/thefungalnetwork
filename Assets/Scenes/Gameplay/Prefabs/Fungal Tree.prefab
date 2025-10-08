@@ -193,14 +193,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   renderRoot: {fileID: 3151439445404310248}
   defaultBehaviour: {fileID: 0}
-  selectBehaviour: {fileID: 4594485596784555639}
-  emissionStep: 4
+  destination: {fileID: 0}
+  dialogue: {fileID: 4594485596784555639}
   instance: {fileID: 0}
   currentBehaviour: {fileID: 0}
   targetLookPosition: {x: 0, y: 0, z: 0}
   target: {fileID: 0}
-  isDj: 0
-  dialogue: {fileID: 4900000, guid: 653e626fc96d2478fa72e028a19d495d, type: 3}
+  dialogueFile: {fileID: 4900000, guid: 653e626fc96d2478fa72e028a19d495d, type: 3}
   treeUnit: {fileID: 11400000, guid: 95347a15aaf7f4b40b23e8fdfbd3a26f, type: 2}
   glyphCollection: {fileID: 11400000, guid: 8ff2f86eb4f5142c8aa3e3c918fb7d61, type: 2}
 --- !u!114 &4594485596784555639
@@ -215,10 +214,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a051968eeea74528b48fad3e9e998b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isActive: 0
-  dialogue: {fileID: 11400000, guid: 66db6a8c7a0524bd8b89b88de939507f, type: 2}
   playerReference: {fileID: 11400000, guid: 746148e8242954418b04a3ab83ac9260, type: 2}
   lookAtTarget: 0
+  isActive: 0
+  targets: []
 --- !u!1 &6356769702680293515
 GameObject:
   m_ObjectHideFlags: 0
@@ -451,12 +450,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: 3be683ae2ae1544d9bcdde83fcd9fa7c,
         type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 5a7860f60ba784014a6a2ec8ff2586e8, type: 2}
     - target: {fileID: -7511558181221131132, guid: 3be683ae2ae1544d9bcdde83fcd9fa7c,
         type: 3}
-      propertyPath: m_Materials.Array.data[1]
+      propertyPath: 'm_Materials.Array.data[1]'
       value: 
       objectReference: {fileID: 2100000, guid: 5b54b86eacd41413f94f1db1e65f1382, type: 2}
     - target: {fileID: 919132149155446097, guid: 3be683ae2ae1544d9bcdde83fcd9fa7c,
@@ -524,7 +523,7 @@ NavMeshObstacle:
   m_Enabled: 1
   serializedVersion: 3
   m_Shape: 0
-  m_Extents: {x: 2.8140001, y: 3.3520002, z: 2.8140001}
+  m_Extents: {x: 3, y: 3.3520002, z: 3}
   m_MoveThreshold: 0.1
   m_Carve: 1
   m_CarveOnlyStationary: 1

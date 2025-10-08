@@ -52,15 +52,9 @@ public class ActivityUnit : MonoBehaviour
         controller.SetBehaviour(behaviour);
     }
 
-    public void UpdatePosition(Vector3 position)
+    public void SetActivityPosition(Vector3 position)
     {
         activityPosition = position;
-        controller.Destination.SetDestination(position);
-    }
-
-    public void LookAt(Vector3 target)
-    {
-        controller.SetLookPosition(target);
     }
 
     public void IncreaseXP(float value, Vector3 sourcePosition)

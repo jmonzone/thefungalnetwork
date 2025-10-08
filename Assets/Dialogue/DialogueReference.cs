@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-
 [CreateAssetMenu]
 public class DialogueReference : ScriptableObject
 {
@@ -31,10 +30,15 @@ public class DialogueReference : ScriptableObject
     public event UnityAction OnGiveComplete;
     public event UnityAction OnDialogueComplete;
 
-    public void StartInteraction(UnitController unit)
+    public void StartIntroDialogue(UnitController unit)
     {
         ApplyStartDialogue(unit, unit.Instance.RandomDialogue);
         OnInteractionStart?.Invoke();
+    }
+
+    public void StartGroupDialogue(Vector3 origin, List<UnitController> units)
+    {
+        UnitController.ArrangeUnitsInRadius(origin, units);
     }
 
     public void StartDialogue(UnitController unit, Dialogue dialogue)

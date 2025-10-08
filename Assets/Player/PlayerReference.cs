@@ -4,6 +4,9 @@ using UnityEngine.Events;
 [CreateAssetMenu]
 public class PlayerReference : ScriptableObject
 {
+    [Header("References")]
+    [SerializeField] private InteractionReference interactionReference;
+
     [Header("Runtime")]
     [SerializeField] private PlayerController player;
     [SerializeField] private Vector3 targetPosition;
@@ -43,5 +46,11 @@ public class PlayerReference : ScriptableObject
     public void TogglePOVCamera(bool value)
     {
         OnPOVCameraToggled?.Invoke(value);
+    }
+
+    public void SelectInteractable(IInteractable interactable)
+    {
+        interactionReference.StartInteraction(Player, interactable);
+        Player.ApplyDefaultBehaviour();
     }
 }

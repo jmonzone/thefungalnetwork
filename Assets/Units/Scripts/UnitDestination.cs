@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Events;
 
 public class UnitDestination : MonoBehaviour
 {
@@ -9,17 +10,24 @@ public class UnitDestination : MonoBehaviour
     [SerializeField] private Transform target;
     [SerializeField] private bool isAtDestination = true;
 
+    public Vector3 Destination => destination;
+    public Transform Target => target;
     public bool IsAtDestination => isAtDestination;
 
     private NavMeshAgent navMeshAgent;
 
+    public event UnityAction OnTargetSelected;
+
     protected void Awake()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
+        navMeshAgent.updateRotation = false;
+
     }
 
     public void SetDestination(Vector3 destination)
     {
+        Debug.Log("Setting destination");
         target = null;
         this.destination = destination;
         navMeshAgent.isStopped = false;
@@ -32,6 +40,8 @@ public class UnitDestination : MonoBehaviour
         this.target = target;
         navMeshAgent.isStopped = false;
         isAtDestination = false;
+
+        OnTargetSelected?.Invoke();
     }
 
     private void Update()

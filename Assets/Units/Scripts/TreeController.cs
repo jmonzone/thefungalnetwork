@@ -4,7 +4,7 @@ using UnityEngine;
 public class TreeController : UnitController
 {
     [Header("Tree References")]
-    [SerializeField] private TextAsset dialogue;
+    [SerializeField] private TextAsset dialogueFile;
     [SerializeField] private Unit treeUnit;
     [SerializeField] private GlyphCollection glyphCollection;
 
@@ -12,7 +12,7 @@ public class TreeController : UnitController
     {
         base.Awake();
 
-        string json = dialogue.text;
+        string json = dialogueFile.text;
         JObject root = JObject.Parse(json);
 
         JObject data = (JObject)root["tree"];
