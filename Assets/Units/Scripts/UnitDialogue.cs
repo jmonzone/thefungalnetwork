@@ -12,12 +12,14 @@ public class UnitDialogue : MonoBehaviour
 
     [Header("Runtime")]
     [SerializeField] private bool isActive = false;
+    [SerializeField] private UnitController greeter;
     [SerializeField] private List<UnitController> targets;
 
     private UnitController unit;
     private Vector3 originalLookPosition;
 
     public bool IsActive => isActive;
+    public UnitController Greeter => greeter;
     public List<UnitController> Targets => targets;
 
     public event UnityAction OnDialogueStarted;
@@ -27,6 +29,12 @@ public class UnitDialogue : MonoBehaviour
     {
         unit = GetComponent<UnitController>();
         targets = new List<UnitController>();
+    }
+
+    public void StartGreetDialogue(UnitController greeter, UnitController target)
+    {
+        this.greeter = greeter;
+        StartDialogue(target);
     }
 
     public void StartDialogue(UnitController target)
@@ -59,6 +67,7 @@ public class UnitDialogue : MonoBehaviour
     public void CompleteDialogue()
     {
         isActive = false;
+        greeter = null;
         targets = new List<UnitController>();
 
         unit.SetLookPosition(originalLookPosition);

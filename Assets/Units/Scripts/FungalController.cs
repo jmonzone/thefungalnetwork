@@ -94,8 +94,7 @@ public class FungalController : UnitController
     {
         Destination.SetTarget(friend.transform);
         yield return new WaitUntil(() => Destination.IsAtDestination);
-        Dialogue.StartDialogue(friend);
-        friend.Dialogue.StartDialogue(this);
-        Debug.Log("With greet, start dialogue");
+        Dialogue.StartGreetDialogue(this, friend);
+        friend.Dialogue.StartGreetDialogue(this, this);
     }
 }

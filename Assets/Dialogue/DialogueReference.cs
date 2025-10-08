@@ -36,39 +36,31 @@ public class DialogueReference : ScriptableObject
         OnInteractionStart?.Invoke();
     }
 
-    public void StartGroupDialogue(Vector3 origin, UnitController target, List<UnitController> units)
+    public void StartGroupDialogue(Vector3 origin, UnitController unit, List<UnitController> units)
     {
         UnitController.ArrangeUnitsInRadius(origin, units);
-        OnDialogueStarted(target);
+        ApplyStartDialogue(unit, new Dialogue("Hey, this is my friend!"));
         OnDialogueStart?.Invoke();
     }
 
     public void StartDialogue(UnitController unit, Dialogue dialogue)
     {
+        unit.Dialogue.StartDialogue(playerReference.Player);
         ApplyStartDialogue(unit, dialogue);
         OnDialogueStart?.Invoke();
     }
 
     private void ApplyStartDialogue(UnitController unit, Dialogue dialogue)
     {
+        //Debug.Log("setting target");
+        this.unit = unit;
         this.dialogue = dialogue;
 
-        unit.Dialogue.StartDialogue(playerReference.Player);
-
-        relationship = 0;
-
-        OnDialogueStarted(unit);
-    }
-
-    private void OnDialogueStarted(UnitController target)
-    {
-        Debug.Log("setting target");
-        unit = target;
 
         isActive = true;
         OnIsActiveChanged?.Invoke();
 
-        target.Focus();
+        unit.Focus();
         if (navigation.CurrentView != dialogueView) navigation.Navigate(dialogueView);
     }
 
