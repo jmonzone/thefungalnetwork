@@ -30,9 +30,6 @@ public class GreetingDialogue
 
 public class UnitDialogue : MonoBehaviour
 {
-    [Header("References")]
-    [SerializeField] private PlayerReference playerReference;
-
     [Header("Settings")]
     [SerializeField] private bool lookAtTarget = true;
 
@@ -101,7 +98,6 @@ public class UnitDialogue : MonoBehaviour
     }
 
     public List<Dialogue> Dialogue => ElementalDialogue[unit.Instance.Element];
-    public Dialogue InviteAFriendDialogue => new Dialogue(unit, "I just invited my friend, they should be coming by here soon.");
     public Dialogue RandomDialogue => Dialogue[UnityEngine.Random.Range(0, Dialogue.Count)];
 
     public Dictionary<Element, List<Dialogue>> ElementalDialogue { get; private set; } = new();

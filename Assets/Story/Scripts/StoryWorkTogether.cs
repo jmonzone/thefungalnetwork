@@ -53,7 +53,7 @@ public class StoryWorkTogether : MonoBehaviour
         playerReference.Player.transform.position = playerAnchor.position;
         playerReference.Player.SetLookPosition(frogAnchor.position);
 
-        dialogueReference.StartDialogue(partyFrog, new Dialogue(workTogetherDialogue, DialogueType.STORY));
+        dialogueReference.StartImmediateChat(partyFrog, new Dialogue(workTogetherDialogue, DialogueType.STORY));
 
         yield return new WaitUntil(() => dialogueReference.Dialogue.Action == DialogueAction.GIFT);
 
@@ -68,7 +68,7 @@ public class StoryWorkTogether : MonoBehaviour
 
         buildReference.EndBuild();
 
-        dialogueReference.StartDialogue(partyFrog, new Dialogue(buildCompleteDialogue, DialogueType.STORY));
+        dialogueReference.StartImmediateChat(partyFrog, new Dialogue(buildCompleteDialogue, DialogueType.STORY));
         yield return new WaitWhile(() => dialogueReference.IsActive);
 
         storyReference.CompleteStory(workTogether);

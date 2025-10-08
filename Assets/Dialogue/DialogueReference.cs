@@ -14,12 +14,14 @@ public class DialogueReference : ScriptableObject
 
     [Header("Runtime")]
     [SerializeField] private bool isActive;
-    [SerializeField] private UnitController unit;
+    [SerializeField] private UnitController currentUnit;
+    [SerializeField] private List<UnitController> units;
+
     [SerializeField] private Dialogue dialogue;
     [SerializeField] private float relationship;
 
     public bool IsActive => isActive;
-    public UnitController Unit => unit;
+    public UnitController Unit => currentUnit;
     public Dialogue Dialogue => dialogue;
     public float Relationship => relationship;
 
@@ -30,32 +32,41 @@ public class DialogueReference : ScriptableObject
     public event UnityAction OnGiveComplete;
     public event UnityAction OnDialogueComplete;
 
+    // used for when interating with a fungal by itself
+    // opens basic menu with action buttons
     public void StartIntroDialogue(UnitController unit)
     {
-        ApplyStartDialogue(unit, unit.Dialogue.RandomDialogue);
+        unit.Dialogue.StartDialogue(playerReference.Player);
+        ApplyDialogue(unit, unit.Dialogue.RandomDialogue);
         OnInteractionStart?.Invoke();
     }
 
-    public void StartGroupDialogue(Vector3 origin, GreetingDialogue dialogue, List<UnitController> units)
-    {
-        UnitController.ArrangeUnitsInRadius(origin, units);
-        ApplyStartDialogue(dialogue.UnitA, dialogue.Dialogue);
-        OnDialogueStart?.Invoke();
-    }
-
-    public void StartDialogue(UnitController unit, Dialogue dialogue)
+    private UnityAction onComplete;
+    // used for when interacting with a funal by itself
+    // immedialey opens dialogue, with no action buttons
+    public void StartImmediateChat(UnitController unit, Dialogue dialogue, UnityAction onComplete = null)
     {
         unit.Dialogue.StartDialogue(playerReference.Player);
-        ApplyStartDialogue(unit, dialogue);
+        ApplyDialogue(unit, dialogue);
+        OnDialogueStart?.Invoke();
+        this.onComplete = onComplete;
+    }
+
+    // used for when two fungals are already talking
+    // the player joining in, creates a group dialogue
+    public void StartGroupDialogue(Vector3 origin, GreetingDialogue dialogue, List<UnitController> units)
+    {
+        this.units = units;
+        UnitController.ArrangeUnitsInRadius(origin, units);
+        ApplyDialogue(dialogue.UnitA, dialogue.Dialogue);
         OnDialogueStart?.Invoke();
     }
 
-    private void ApplyStartDialogue(UnitController unit, Dialogue dialogue)
+    private void ApplyDialogue(UnitController unit, Dialogue dialogue)
     {
         //Debug.Log("setting target");
-        this.unit = unit;
+        currentUnit = unit;
         this.dialogue = dialogue;
-
 
         isActive = true;
         OnIsActiveChanged?.Invoke();
@@ -79,11 +90,11 @@ public class DialogueReference : ScriptableObject
 
         if (dialogue.Next != null)
         {
-            if (unit != dialogue.Next.Unit)
+            if (currentUnit != dialogue.Next.Unit)
             {
-                unit.Unfocus();
-                unit = dialogue.Next.Unit;
-                unit.Focus();
+                currentUnit.Unfocus();
+                currentUnit = dialogue.Next.Unit;
+                currentUnit.Focus();
             }
 
             dialogue = dialogue.Next;
@@ -96,15 +107,24 @@ public class DialogueReference : ScriptableObject
     {
         //Debug.Log($"CompleteDialogue");
 
-        unit.Unfocus();
+        currentUnit.Unfocus();
         OnDialogueComplete?.Invoke();
+
+        foreach(var unit in units)
+        {
+            unit.Dialogue.CompleteDialogue();
+        }
 
         navigation.GoBackToRoot();
 
-        unit = null;
+        currentUnit = null;
+        units = new List<UnitController>();
         dialogue = null;
         isActive = false;
         OnIsActiveChanged?.Invoke();
+
+        onComplete?.Invoke();
+        onComplete = null;
     }
 
     public void StartPhoto()
@@ -123,7 +143,7 @@ public class DialogueReference : ScriptableObject
     private void Inventory_OnItemSelected(Item arg0)
     {
         inventory.OnItemSelected -= Inventory_OnItemSelected;
-        dialogue = unit.Dialogue.Dialogue[0];
+        dialogue = currentUnit.Dialogue.Dialogue[0];
         OnGiveComplete?.Invoke();
         navigation.GoBack();
     }

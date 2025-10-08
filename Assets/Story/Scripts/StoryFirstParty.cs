@@ -63,10 +63,10 @@ public class StoryFirstParty : MonoBehaviour
         partyReference.StartParty(tutorialParty);
 
         yield return new WaitForSeconds(1f);
-        unitReference.InviteFriend(unitManager.UnitControllers[1]);
+        //unitReference.InviteFriend(unitManager.UnitControllers[1]);
 
-        //danceActivity.StartActivity(danceZoneAnchor.position, new List<UnitController> { partyReference.Guests[0] });
-        //sporeActivity.StartActivity(sporeZoneAnchor.position, new List<UnitController> { unitManager.UnitControllers[2] });
+        danceActivity.StartActivity(danceZoneAnchor.position, new List<UnitController> { unitManager.UnitControllers[1] });
+        sporeActivity.StartActivity(sporeZoneAnchor.position, new List<UnitController> { unitManager.UnitControllers[2] });
         //sporeActivity.StartActivity(sporeZoneAnchor.position, new List<UnitController> { partyReference.Guests[0], partyReference.Guests[1], partyReference.Guests[2] });
 
         //yield return new WaitUntil(() => timesInteractedWithGuests > 5);

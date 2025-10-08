@@ -63,8 +63,8 @@ public class UnitController : MonoBehaviour, IInteractable
 
         if (dialogue)
         {
-            dialogue.OnDialogueStarted += () => currentBehaviour.PauseBehaviour();
-            dialogue.OnDialogueCompleted += () => currentBehaviour.UnpauseBehaviour();
+            dialogue.OnDialogueStarted += () => currentBehaviour?.PauseBehaviour();
+            dialogue.OnDialogueCompleted += () => currentBehaviour?.UnpauseBehaviour();
         }
     }
 

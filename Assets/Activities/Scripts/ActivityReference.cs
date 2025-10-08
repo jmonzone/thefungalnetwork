@@ -10,6 +10,8 @@ public class ActivityReference : ScriptableObject
     [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference activityView;
     [SerializeField] private DialogueReference dialogueReference;
+    [SerializeField] private UnitListReference unitListReference;
+
     [SerializeField] private Skill primarySkill;
 
     [Header("Runtime")]
@@ -63,7 +65,13 @@ public class ActivityReference : ScriptableObject
         // todo: add logic to select specific unit
         // todo: add logic to make this conditional
         var targetUnit = unitsToRemove[0];
-        dialogueReference.StartDialogue(targetUnit.Controller, targetUnit.Controller.Dialogue.InviteAFriendDialogue);
+        dialogueReference.StartImmediateChat(
+            unit: targetUnit.Controller,
+            dialogue: new Dialogue(targetUnit.Controller, "I just invited my friend, they should be coming by here soon."),
+            onComplete: () =>
+            {
+                unitListReference.InviteFriend(targetUnit.Controller);
+            });
     }
 
     public void EnterActivity(ActivityUnit player)
