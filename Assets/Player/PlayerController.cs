@@ -6,6 +6,7 @@ public class PlayerController : UnitController
 {
     [Header("Player References")]
     [SerializeField] private PlayerReference playerReference;
+    [SerializeField] private DialogueReference dialogueReference;
     [SerializeField] private Unit playerUnit;
     [SerializeField] private InventoryReference inventoryReference;
     [SerializeField] private CinemachineVirtualCamera povCamera;
@@ -71,6 +72,10 @@ public class PlayerController : UnitController
             case PlantSporeEmitter plant:
                 unitDrum.SetPlant(plant);
                 ApplyBehaviour(unitDrum);
+                break;
+            case UnitController unit:
+                dialogueReference.StartInteraction(unit);
+                ApplyDefaultBehaviour();
                 break;
             default:
                 playerReference.TargetInteractable.Select();

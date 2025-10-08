@@ -7,7 +7,11 @@ public class UnitController : MonoBehaviour, IInteractable
     [Header("Unit References")]
     [SerializeField] protected Transform renderRoot;
     [SerializeField] private UnitBehaviour defaultBehaviour;
-    [SerializeField] private UnitDialogue unitDialogue;
+    [SerializeField] private UnitDestination destination;
+    [SerializeField] private UnitDialogue dialogue;
+
+    public UnitDestination Destination => destination;
+    public UnitDialogue Dialogue => dialogue;
 
     [Header("Runtime")]
     [SerializeField] private UnitInstance instance;
@@ -21,10 +25,6 @@ public class UnitController : MonoBehaviour, IInteractable
     public Vector3 LookPosition => targetLookPosition;
 
     public bool IsDefaultBehaviour => currentBehaviour == defaultBehaviour;
-
-
-    private UnitDestination destination;
-    public UnitDestination Destination => destination;
 
 
     public virtual Color Color { get; set; }
@@ -49,14 +49,14 @@ public class UnitController : MonoBehaviour, IInteractable
         }
 
         virtualCamera = GetComponentInChildren<CinemachineVirtualCamera>();
+
         destination = GetComponent<UnitDestination>();
+        dialogue = GetComponent<UnitDialogue>();
 
-        unitDialogue = GetComponent<UnitDialogue>();
-
-        if (unitDialogue)
+        if (dialogue)
         {
-            unitDialogue.OnDialogueStarted += () => currentBehaviour.PauseBehaviour();
-            unitDialogue.OnDialogueCompleted += () => currentBehaviour.UnpauseBehaviour();
+            dialogue.OnDialogueStarted += () => currentBehaviour.PauseBehaviour();
+            dialogue.OnDialogueCompleted += () => currentBehaviour.UnpauseBehaviour();
         }
     }
 

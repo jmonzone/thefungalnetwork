@@ -4,7 +4,6 @@ using UnityEngine.Events;
 public class UnitDialogue : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private DialogueReference dialogueReference;
     [SerializeField] private PlayerReference playerReference;
 
     [Header("Settings")]
@@ -21,22 +20,19 @@ public class UnitDialogue : MonoBehaviour
         unit = GetComponent<UnitController>();
     }
 
-    public void OnInteractionStarted()
+    public void StartDialogue(UnitController target)
     {
         if (lookAtTarget)
         {
             originalLookPosition = unit.LookPosition;
-            unit.SetLookPosition(playerReference.Player.transform.position);
+            unit.SetLookPosition(target.transform.position);
         }
-
-        dialogueReference.OnDialogueComplete += Dialogue_OnDialogueComplete;
 
         OnDialogueStarted?.Invoke();
     }
 
-    private void Dialogue_OnDialogueComplete()
+    public void CompleteDialogue()
     {
-        dialogueReference.OnDialogueComplete -= Dialogue_OnDialogueComplete;
         unit.SetLookPosition(originalLookPosition);
         OnDialogueCompleted?.Invoke();
     }

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -56,7 +57,7 @@ public class FungalController : UnitController
 
     public override void Initialize(UnitInstance instance)
     {
-        Quaternion randomYRotation = Quaternion.Euler(0, UnityEngine.Random.Range(135f, 225f), 0);
+        Quaternion randomYRotation = Quaternion.Euler(0, Random.Range(135f, 225f), 0);
         renderRoot = Instantiate(instance.Data.Prefab, Vector3.zero, randomYRotation, transform).transform;
         animator = GetComponentInChildren<Animator>();
         base.Initialize(instance);
@@ -86,6 +87,15 @@ public class FungalController : UnitController
 
     public void GreetFriend(UnitController friend)
     {
+        StartCoroutine(GreetRoutine(friend));
+    }
+
+    private IEnumerator GreetRoutine(UnitController friend)
+    {
         SetTarget(friend.transform);
+        yield return new WaitUntil(() => Destination.IsAtDestination);
+        Dialogue.StartDialogue(friend);
+        friend.Dialogue.StartDialogue(this);
+        Debug.Log("With greet, start dialogue");
     }
 }

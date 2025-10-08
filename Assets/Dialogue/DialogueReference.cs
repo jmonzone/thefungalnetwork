@@ -48,7 +48,7 @@ public class DialogueReference : ScriptableObject
         this.unit = unit;
         this.dialogue = dialogue;
 
-        unit.GetComponent<UnitDialogue>().OnInteractionStarted();
+        unit.Dialogue.StartDialogue(playerReference.Player);
 
         isActive = true;
         OnIsActiveChanged?.Invoke();
