@@ -57,6 +57,10 @@ public class ActivityReference : ScriptableObject
 
         OnActivityHasEnded?.Invoke();
         units = new List<ActivityUnit>();
+
+        // todo: add logic to select specific unit
+        // todo: add logic to make this conditional
+        unitsToRemove[0].Select();
     }
 
     public void EnterActivity(ActivityUnit player)

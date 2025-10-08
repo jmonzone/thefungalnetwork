@@ -71,4 +71,9 @@ public class ActivityUnit : MonoBehaviour
             SourcePosition = sourcePosition
         });
     }
+
+    public void Select()
+    {
+        controller.Select();
+    }
 }

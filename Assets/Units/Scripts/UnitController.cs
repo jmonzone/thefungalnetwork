@@ -149,7 +149,7 @@ public class UnitController : MonoBehaviour, IInteractable
         ApplyBehaviour(behaviour);
     }
 
-    void IInteractable.Select()
+    public void Select()
     {
         if (unitDialogue)
         {
