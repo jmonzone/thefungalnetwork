@@ -29,6 +29,15 @@ public class PTS_Unit : ActivityBehaviour
         spore = null;
     }
 
+    public void RemoveSpore(UnityAction onComplete)
+    {
+        spore.PopAndDestroy(() =>
+        {
+            spore = null;
+            onComplete?.Invoke();
+        });
+    }
+
     public void CollectSpore(Vector3 source)
     {
         IncreaseXP(1, source);

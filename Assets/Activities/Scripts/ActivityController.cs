@@ -9,15 +9,17 @@ public abstract class ActivityController<T> : MonoBehaviour where T : ActivityBe
     [SerializeField] private Skill primarySkill;
 
     [Header("Activity Runtime")]
-    [SerializeField] private bool playerIsActive;
+    [SerializeField] private T player;
     [SerializeField] private int currentIndex;
     [SerializeField] private T currentUnit;
     [SerializeField] private List<T> units;
 
     protected ActivityReference Activity => activity;
     protected Skill PrimarySkill => primarySkill;
-    protected bool PlayerIsActive => playerIsActive;
+    protected bool PlayerIsActive => activity.PlayerIsActive;
     protected bool PlayerIsSelected => currentUnit.IsPlayer;
+
+    protected T Player => player;
 
     public T CurrentUnit => currentUnit;
     public T NextUnit => units[(currentIndex + 1) % units.Count];
@@ -50,16 +52,16 @@ public abstract class ActivityController<T> : MonoBehaviour where T : ActivityBe
         activity.OnPlayerExit -= OnPlayerExit;
     }
 
-    protected void OnPlayerEnter(ActivityUnit player)
+    protected virtual void OnPlayerEnter(ActivityUnit player)
     {
-        playerIsActive = true;
+        this.player = player.GetComponent<T>();
+
         //currentIndex = units.FindIndex(unit => unit == player);
         //SelectUnit(player.GetComponent<T>());
     }
 
-    protected void OnPlayerExit(ActivityUnit player)
+    protected virtual void OnPlayerExit(ActivityUnit player)
     {
-        playerIsActive = false;
         if (PlayerIsSelected) SelectNextUnit();
     }
 

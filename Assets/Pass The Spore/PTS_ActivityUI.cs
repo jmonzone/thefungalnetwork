@@ -35,7 +35,7 @@ public class PTS_ActivityUI : ActivityUI<PTS_Unit, PTS_ActivityController>
 
         passButton.onClick.AddListener(() =>
         {
-            Controller.PassSpore();
+            Controller.OnSporeComplete();
         });
     }
 
@@ -59,7 +59,7 @@ public class PTS_ActivityUI : ActivityUI<PTS_Unit, PTS_ActivityController>
 
             glyphs = new List<PTS_Glyph>();
 
-            Controller.PassSpore();
+            Controller.OnSporeComplete();
         }
 
         base.OnPlayerExit(player);
@@ -113,7 +113,7 @@ public class PTS_ActivityUI : ActivityUI<PTS_Unit, PTS_ActivityController>
         }
 
         yield return new WaitForSeconds(glyphPrefab.Duration * 2f);
-        Controller.PassSpore();
+        Controller.OnSporeComplete();
     }
 
     private Vector3[] GeneratePatternPositions(GlyphPattern pattern, int count)
