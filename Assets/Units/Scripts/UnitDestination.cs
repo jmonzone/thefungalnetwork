@@ -20,10 +20,7 @@ public class UnitDestination : MonoBehaviour
 
     public void SetDestination(Vector3 destination)
     {
-        Debug.Log("setting destination");
-
         target = null;
-
         this.destination = destination;
         navMeshAgent.isStopped = false;
         isAtDestination = false;
@@ -32,8 +29,6 @@ public class UnitDestination : MonoBehaviour
 
     public void SetTarget(Transform target)
     {
-        Debug.Log("setting target");
-
         this.target = target;
         navMeshAgent.isStopped = false;
         isAtDestination = false;
@@ -43,16 +38,19 @@ public class UnitDestination : MonoBehaviour
     {
         if (target)
         {
-            Debug.Log("updating targett");
-            destination = target.position;
+            // Direction from self to target
+            Vector3 direction = (target.position - transform.position).normalized;
+
+            // Desired stopping position 1 unit away
+            Vector3 offsetDestination = target.position - direction * 1f;
+
+            destination = offsetDestination;
             navMeshAgent.SetDestination(destination);
         }
 
         if (!isAtDestination && Vector3.Distance(destination, transform.position) < 0.5f)
         {
-
             isAtDestination = true;
         }
-
     }
 }

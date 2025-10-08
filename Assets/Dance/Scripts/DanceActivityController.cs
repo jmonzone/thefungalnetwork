@@ -71,7 +71,7 @@ public class DanceActivityController : ActivityController<DanceActivityUnit>
 
     private IEnumerator PassRoutine()
     {
-        yield return new WaitUntil(() => CurrentUnit.Controller.IsAtDestination);
+        yield return new WaitUntil(() => CurrentUnit.Controller.Destination.IsAtDestination);
         yield return new WaitForSeconds(djReference.BeatDuration * 2);
 
         var moves = CurrentUnit.Instance.Skills[Activity.PrimarySkill].Moves;

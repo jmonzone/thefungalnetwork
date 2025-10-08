@@ -8,6 +8,7 @@ public class StoryFirstParty : MonoBehaviour
     [SerializeField] private PartyData tutorialParty;
     [SerializeField] private StoryData firstParty;
     [SerializeField] private SceneNavigation sceneNavigation;
+    [SerializeField] private UnitListReference unitReference;
     [SerializeField] private UnitManager unitManager;
     [SerializeField] private PlayerReference playerReference;
     [SerializeField] private PartyReference partyReference;
@@ -61,8 +62,11 @@ public class StoryFirstParty : MonoBehaviour
         yield return new WaitForFixedUpdate();
         partyReference.StartParty(tutorialParty);
 
+        yield return new WaitForSeconds(1f);
+        unitReference.InviteFriend(unitManager.UnitControllers[1]);
+
         //danceActivity.StartActivity(danceZoneAnchor.position, new List<UnitController> { partyReference.Guests[0] });
-        sporeActivity.StartActivity(sporeZoneAnchor.position, new List<UnitController> { unitManager.UnitControllers[2] });
+        //sporeActivity.StartActivity(sporeZoneAnchor.position, new List<UnitController> { unitManager.UnitControllers[2] });
         //sporeActivity.StartActivity(sporeZoneAnchor.position, new List<UnitController> { partyReference.Guests[0], partyReference.Guests[1], partyReference.Guests[2] });
 
         //yield return new WaitUntil(() => timesInteractedWithGuests > 5);

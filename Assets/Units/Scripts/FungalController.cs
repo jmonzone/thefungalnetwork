@@ -86,6 +86,6 @@ public class FungalController : UnitController
 
     public void GreetFriend(UnitController friend)
     {
-        SetDestination(friend.transform);
+        SetTarget(friend.transform);
     }
 }

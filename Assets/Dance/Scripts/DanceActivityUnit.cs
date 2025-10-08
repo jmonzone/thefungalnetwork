@@ -34,7 +34,7 @@ public class DanceActivityUnit : ActivityBehaviour
 
     private IEnumerator DanceRoutine()
     {
-        yield return new WaitUntil(() => Controller.IsAtDestination);
+        yield return new WaitUntil(() => Controller.Destination.IsAtDestination);
         animator.SetBool("IsDancing", true);
     }
 
@@ -69,8 +69,8 @@ public class DanceActivityUnit : ActivityBehaviour
         animator.ResetTrigger("Complete");
 
         animator.SetBool("IsDancing", false);
-        Controller.SetDestination(Activity.Origin);
-        yield return new WaitUntil(() => Controller.IsAtDestination);
+        Controller.Destination.SetDestination(Activity.Origin);
+        yield return new WaitUntil(() => Controller.Destination.IsAtDestination);
         animator.SetBool("IsDancing", true);
 
         yield return new WaitForSeconds(1f);
@@ -102,9 +102,9 @@ public class DanceActivityUnit : ActivityBehaviour
 
         OnDanceMoveUsed?.Invoke(this, danceMove);
         animator.SetBool("IsDancing", false);
-        Controller.SetDestination(ActivityPosition);
+        Controller.Destination.SetDestination(ActivityPosition);
 
-        yield return new WaitUntil(() => Controller.IsAtDestination);
+        yield return new WaitUntil(() => Controller.Destination.IsAtDestination);
         animator.SetBool("IsDancing", true);
 
         yield return new WaitForSeconds(1f);

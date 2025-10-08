@@ -21,7 +21,11 @@ public class UnitController : MonoBehaviour, IInteractable
     public Vector3 LookPosition => targetLookPosition;
 
     public bool IsDefaultBehaviour => currentBehaviour == defaultBehaviour;
-    public bool IsAtDestination => unitDestination.IsAtDestination;
+
+
+    private UnitDestination destination;
+    public UnitDestination Destination => destination;
+
 
     public virtual Color Color { get; set; }
 
@@ -30,7 +34,6 @@ public class UnitController : MonoBehaviour, IInteractable
     public Transform RenderRoot => renderRoot;
 
     private CinemachineVirtualCamera virtualCamera;
-    private UnitDestination unitDestination;
 
     public event UnityAction OnInitialized;
     public event UnityAction OnBehaviourChanged;
@@ -46,7 +49,7 @@ public class UnitController : MonoBehaviour, IInteractable
         }
 
         virtualCamera = GetComponentInChildren<CinemachineVirtualCamera>();
-        unitDestination = GetComponent<UnitDestination>();
+        destination = GetComponent<UnitDestination>();
 
         unitDialogue = GetComponent<UnitDialogue>();
 
@@ -121,16 +124,6 @@ public class UnitController : MonoBehaviour, IInteractable
         targetLookPosition = targetPosition;
     }
 
-    public void SetDestination(Vector3 destination)
-    {
-        unitDestination.SetDestination(destination);
-    }
-
-    public void SetDestination(Transform target)
-    {
-        unitDestination.SetTarget(target);
-    }
-
     public void SetLookTarget(Transform target)
     {
         this.target = target;
@@ -169,5 +162,11 @@ public class UnitController : MonoBehaviour, IInteractable
     public void Unfocus()
     {
         if (virtualCamera) virtualCamera.Priority = 0;
+    }
+
+    public void SetTarget(Transform target)
+    {
+        SetLookTarget(target);
+        Destination.SetTarget(target);
     }
 }

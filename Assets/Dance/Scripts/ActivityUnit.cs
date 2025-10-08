@@ -55,7 +55,7 @@ public class ActivityUnit : MonoBehaviour
     public void UpdatePosition(Vector3 position)
     {
         activityPosition = position;
-        controller.SetDestination(position);
+        controller.Destination.SetDestination(position);
     }
 
     public void LookAt(Vector3 target)

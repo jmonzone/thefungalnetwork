@@ -114,7 +114,7 @@ public class PlayerController : UnitController
         if (playerReference.TargetInteractable == null)
         {
             SetLookPosition(playerReference.TargetPosition);
-            SetDestination(playerReference.TargetPosition);
+            Destination.SetDestination(playerReference.TargetPosition);
         }
     }
 }
