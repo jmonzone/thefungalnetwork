@@ -36,9 +36,11 @@ public class DialogueReference : ScriptableObject
         OnInteractionStart?.Invoke();
     }
 
-    public void StartGroupDialogue(Vector3 origin, List<UnitController> units)
+    public void StartGroupDialogue(Vector3 origin, UnitController target, List<UnitController> units)
     {
         UnitController.ArrangeUnitsInRadius(origin, units);
+        OnDialogueStarted(target);
+        OnDialogueStart?.Invoke();
     }
 
     public void StartDialogue(UnitController unit, Dialogue dialogue)
@@ -49,17 +51,24 @@ public class DialogueReference : ScriptableObject
 
     private void ApplyStartDialogue(UnitController unit, Dialogue dialogue)
     {
-        this.unit = unit;
         this.dialogue = dialogue;
 
         unit.Dialogue.StartDialogue(playerReference.Player);
 
+        relationship = 0;
+
+        OnDialogueStarted(unit);
+    }
+
+    private void OnDialogueStarted(UnitController target)
+    {
+        Debug.Log("setting target");
+        unit = target;
+
         isActive = true;
         OnIsActiveChanged?.Invoke();
 
-        relationship = 0;
-
-        unit.Focus();
+        target.Focus();
         if (navigation.CurrentView != dialogueView) navigation.Navigate(dialogueView);
     }
 

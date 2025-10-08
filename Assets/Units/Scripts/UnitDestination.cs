@@ -27,7 +27,7 @@ public class UnitDestination : MonoBehaviour
 
     public void SetDestination(Vector3 destination)
     {
-        Debug.Log("Setting destination");
+        //Debug.Log("Setting destination");
         target = null;
         this.destination = destination;
         navMeshAgent.isStopped = false;

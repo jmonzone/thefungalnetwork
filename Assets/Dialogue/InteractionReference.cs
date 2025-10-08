@@ -25,7 +25,7 @@ public class InteractionReference : ScriptableObject
 
                 var origin = GetMidpoint(unit);
 
-                dialogueReference.StartGroupDialogue(origin, units);
+                dialogueReference.StartGroupDialogue(origin, unit, units);
             }
             else
             {
