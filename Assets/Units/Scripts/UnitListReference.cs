@@ -45,7 +45,6 @@ public class UnitListReference : ScriptableObject
         {
             string json = textAsset.text;
             JObject root = JObject.Parse(json);
-            // Example: load "fox"
             JObject data = (JObject)root[unit.Name.ToLower()];
             unit.Initialize(data);
         }

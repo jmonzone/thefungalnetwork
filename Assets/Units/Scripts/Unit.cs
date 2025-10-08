@@ -66,7 +66,7 @@ public class Unit : ScriptableObject
 
         foreach (var lineToken in lineGroup)
         {
-            var dialogue = new Dialogue(lineToken.ToString(), element.ToString());
+            var dialogue = new Dialogue(this, lineToken.ToString(), element.ToString());
             if (first == null)
                 first = dialogue;
 

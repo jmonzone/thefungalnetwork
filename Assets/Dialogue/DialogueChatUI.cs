@@ -27,10 +27,10 @@ public class DialogueChatUI : DialoguePageUI
 
     private void ContinueDialogue()
     {
-        unitReference.InviteFriend(dialogue.Unit);
-        InvokeClose();
+        //unitReference.InviteFriend(dialogue.Unit);
+        //InvokeClose();
 
-        //var targetDialogue = dialogue.Dialogue;
+        var targetDialogue = dialogue.Dialogue;
 
         //if (targetDialogue.Responses.Count >= 2)
         //{
@@ -39,14 +39,15 @@ public class DialogueChatUI : DialoguePageUI
         //    if (response.Next != null) StartCoroutine(Show());
         //    else InvokeClose();
         //}
-        //else if (targetDialogue.Next != null)
-        //{
-        //    dialogue.ContinueDialogue();
-        //    StartCoroutine(Show());
-        //}
-        //else
-        //{
-        //    InvokeClose();
-        //}
+
+        if (targetDialogue.Next != null)
+        {
+            dialogue.ContinueDialogue();
+            StartCoroutine(Show());
+        }
+        else
+        {
+            InvokeClose();
+        }
     }
 }

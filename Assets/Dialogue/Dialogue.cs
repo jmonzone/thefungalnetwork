@@ -49,6 +49,7 @@ public enum DialogueType
 [Serializable]
 public class Dialogue
 {
+    [SerializeField] private Unit unit;
     [SerializeField] [TextArea] private string text;
     [SerializeField] private List<Response> responses;
     [SerializeField] private Dialogue next; // next line in the chain
@@ -64,8 +65,9 @@ public class Dialogue
     public string Element => element;
 
     // Single-line constructor
-    public Dialogue(string text, string element = "neutral", DialogueType type = DialogueType.CHAT, DialogueAction action = DialogueAction.DEFAULT)
+    public Dialogue(Unit unit, string text, string element = "neutral", DialogueType type = DialogueType.CHAT, DialogueAction action = DialogueAction.DEFAULT)
     {
+        this.unit = unit;
         this.text = text;
         this.element = element;
         this.type = type;
@@ -79,6 +81,7 @@ public class Dialogue
         if (dialogueList == null || dialogueList.Count == 0)
             throw new ArgumentException("Dialogue list cannot be null or empty");
 
+        unit = dialogueList[0].unit;
         text = dialogueList[0].text;
         action = dialogueList[0].action;
         element = dialogueList[0].element;

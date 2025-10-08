@@ -2,6 +2,30 @@
 using UnityEngine;
 using UnityEngine.Events;
 
+public class GreetingDialogue
+{
+    [SerializeField] private UnitController unitA;
+    [SerializeField] private UnitController unitB;
+    [SerializeField] private Dialogue dialogue;
+
+    public UnitController UnitA => unitA;
+    public UnitController UnitB => unitB;
+    public Dialogue Dialogue => dialogue;
+
+    public GreetingDialogue(UnitController unitA, UnitController unitB)
+    {
+        this.unitA = unitA;
+        this.unitB = unitB;
+
+        dialogue = new Dialogue(new List<Dialogue>
+        {
+            new Dialogue(unitA.Instance.Data, "Hey this is my friend! Say hi :)"),
+            new Dialogue(unitB.Instance.Data, "Hey it's great to meet you!"),
+            new Dialogue(unitB.Instance.Data, "The party looks fun over here"),
+        });
+    }
+}
+
 public class UnitDialogue : MonoBehaviour
 {
     [Header("References")]
@@ -12,14 +36,14 @@ public class UnitDialogue : MonoBehaviour
 
     [Header("Runtime")]
     [SerializeField] private bool isActive = false;
-    [SerializeField] private UnitController greeter;
+    [SerializeField] private GreetingDialogue greetingDialogue;
     [SerializeField] private List<UnitController> targets;
 
     private UnitController unit;
     private Vector3 originalLookPosition;
 
     public bool IsActive => isActive;
-    public UnitController Greeter => greeter;
+    public GreetingDialogue GreetingDialogue => greetingDialogue;
     public List<UnitController> Targets => targets;
 
     public event UnityAction OnDialogueStarted;
@@ -31,9 +55,9 @@ public class UnitDialogue : MonoBehaviour
         targets = new List<UnitController>();
     }
 
-    public void StartGreetDialogue(UnitController greeter, UnitController target)
+    public void StartGreetDialogue(GreetingDialogue greetingDialogue, UnitController target)
     {
-        this.greeter = greeter;
+        this.greetingDialogue = greetingDialogue;
         StartDialogue(target);
     }
 
@@ -67,7 +91,7 @@ public class UnitDialogue : MonoBehaviour
     public void CompleteDialogue()
     {
         isActive = false;
-        greeter = null;
+        greetingDialogue = null;
         targets = new List<UnitController>();
 
         unit.SetLookPosition(originalLookPosition);

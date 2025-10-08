@@ -10,7 +10,7 @@ public class InteractionReference : ScriptableObject
     {
         if (interactable is UnitController unit)
         {
-            if (unit.Dialogue.Greeter)
+            if (unit.Dialogue.GreetingDialogue != null)
             {
                 var units = new List<UnitController>
                 {
@@ -25,7 +25,8 @@ public class InteractionReference : ScriptableObject
 
                 var origin = GetMidpoint(unit);
 
-                dialogueReference.StartGroupDialogue(origin, unit.Dialogue.Greeter, units);
+               
+                dialogueReference.StartGroupDialogue(origin, unit.Dialogue.GreetingDialogue, units);
             }
             else
             {

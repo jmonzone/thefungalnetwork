@@ -36,10 +36,10 @@ public class DialogueReference : ScriptableObject
         OnInteractionStart?.Invoke();
     }
 
-    public void StartGroupDialogue(Vector3 origin, UnitController unit, List<UnitController> units)
+    public void StartGroupDialogue(Vector3 origin, GreetingDialogue dialogue, List<UnitController> units)
     {
         UnitController.ArrangeUnitsInRadius(origin, units);
-        ApplyStartDialogue(unit, new Dialogue("Hey, this is my friend!"));
+        ApplyStartDialogue(dialogue.UnitA, dialogue.Dialogue);
         OnDialogueStart?.Invoke();
     }
 
